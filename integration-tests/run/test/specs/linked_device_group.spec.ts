@@ -1,13 +1,13 @@
-import { androidIt, iosIt } from "../../types/sessionIt";
-import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils";
-import { newUser } from "./utils/create_account";
-import { createGroup } from "./utils/create_group";
-import { linkedDevice } from "./utils/link_device";
+import { androidIt, iosIt } from '../../types/sessionIt';
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
+import { newUser } from './utils/create_account';
+import { createGroup } from './utils/create_group';
+import { linkedDevice } from './utils/link_device';
 import {
+  SupportedPlatformsType,
   closeApp,
   openAppFourDevices,
-  SupportedPlatformsType,
-} from "./utils/open_app";
+} from './utils/open_app';
 
 async function groupCreationandNameChangeLinkedDevice(
   platform: SupportedPlatformsType
@@ -16,14 +16,14 @@ async function groupCreationandNameChangeLinkedDevice(
     platform
   );
 
-  const userA = await linkedDevice(device1, device2, "Alice", platform);
+  const userA = await linkedDevice(device1, device2, 'Alice', platform);
 
   const [userB, userC] = await Promise.all([
-    newUser(device3, "Bob", platform),
-    newUser(device4, "Charlie", platform),
+    newUser(device3, 'Bob', platform),
+    newUser(device4, 'Charlie', platform),
   ]);
-  const testGroupName = "Linked device group";
-  const newGroupName = "New group name";
+  const testGroupName = 'Linked device group';
+  const newGroupName = 'New group name';
   await createGroup(
     platform,
     device1,
@@ -36,40 +36,40 @@ async function groupCreationandNameChangeLinkedDevice(
   );
   // Test that group has loaded on linked device
   await device2.clickOnElementAll({
-    strategy: "accessibility id",
-    selector: "Conversation list item",
+    strategy: 'accessibility id',
+    selector: 'Conversation list item',
     text: testGroupName,
   });
   // Test group name change syncs
   // Change group name in device 1
   // Click on settings/more info
-  await device1.clickOnElement("More options");
+  await device1.clickOnElement('More options');
   // Edit group
   await sleepFor(100);
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("Edit group"));
+  await runOnlyOnIOS(platform, () => device1.clickOnElement('Edit group'));
   await runOnlyOnAndroid(platform, () =>
     device1.clickOnTextElementById(
       `network.loki.messenger:id/title`,
-      "Edit group"
+      'Edit group'
     )
   );
   // click on group name to change it
-  await device1.clickOnElement("Group name");
+  await device1.clickOnElement('Group name');
   // Type in new name
   await runOnlyOnAndroid(platform, () =>
-    device1.inputText("accessibility id", "Group name", newGroupName)
+    device1.inputText('accessibility id', 'Group name', newGroupName)
   );
   await runOnlyOnIOS(platform, () =>
-    device1.inputText("accessibility id", "Group name text field", newGroupName)
+    device1.inputText('accessibility id', 'Group name text field', newGroupName)
   );
   // Confirm change (tick on android/ first done on ios)
-  await device1.clickOnElement("Accept name change");
+  await device1.clickOnElement('Accept name change');
   // Apply changes (Apply on android/ second done on ios)
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("Apply changes"));
+  await runOnlyOnIOS(platform, () => device1.clickOnElement('Apply changes'));
   await runOnlyOnAndroid(platform, () =>
     device1.clickOnTextElementById(
       `network.loki.messenger:id/action_apply`,
-      "APPLY"
+      'APPLY'
     )
   );
   // If ios click back to match android (which goes back to conversation screen)
@@ -87,11 +87,11 @@ async function groupCreationandNameChangeLinkedDevice(
   await sleepFor(5000);
   // Check linked device for name change (conversation header name)
   await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Conversation header name",
+    strategy: 'accessibility id',
+    selector: 'Conversation header name',
     text: newGroupName,
   });
-  if (platform === "ios") {
+  if (platform === 'ios') {
     await Promise.all([
       device2.waitForControlMessageToBePresent(
         `Title is now '${newGroupName}'.`
@@ -105,7 +105,7 @@ async function groupCreationandNameChangeLinkedDevice(
     ]);
   }
   // control on Linked device: Android is "You renamed the group to blah"
-  if (platform === "android") {
+  if (platform === 'android') {
     await Promise.all([
       device2.waitForControlMessageToBePresent(
         `You renamed the group to ${newGroupName}`
@@ -122,15 +122,15 @@ async function groupCreationandNameChangeLinkedDevice(
 }
 
 async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
-  const testGroupName = "Leave group linked device";
+  const testGroupName = 'Leave group linked device';
   const { device1, device2, device3, device4 } = await openAppFourDevices(
     platform
   );
-  const userC = await linkedDevice(device3, device4, "Charlie", platform);
+  const userC = await linkedDevice(device3, device4, 'Charlie', platform);
   // Create users A, B and C
   const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
+    newUser(device1, 'Alice', platform),
+    newUser(device2, 'Bob', platform),
   ]);
 
   // Create group with user A, user B and User C
@@ -145,25 +145,25 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
     testGroupName
   );
   await sleepFor(1000);
-  await device3.clickOnElement("More options");
+  await device3.clickOnElement('More options');
   await sleepFor(1000);
   await runOnlyOnAndroid(platform, () =>
     device3.clickOnTextElementById(
       `network.loki.messenger:id/title`,
-      "Leave group"
+      'Leave group'
     )
   );
 
-  await runOnlyOnIOS(platform, () => device3.clickOnElement("Leave group"));
-  await runOnlyOnIOS(platform, () => device3.clickOnElement("Leave"));
+  await runOnlyOnIOS(platform, () => device3.clickOnElement('Leave group'));
+  await runOnlyOnIOS(platform, () => device3.clickOnElement('Leave'));
   await runOnlyOnAndroid(platform, () =>
-    device3.clickOnElementAll({ strategy: "accessibility id", selector: "Yes" })
+    device3.clickOnElementAll({ strategy: 'accessibility id', selector: 'Yes' })
   );
   await device3.navigateBack(platform);
   // Check for control message
   await sleepFor(5000);
   await runOnlyOnIOS(platform, () =>
-    device4.hasTextElementBeenDeleted("Conversation list item", testGroupName)
+    device4.hasTextElementBeenDeleted('Conversation list item', testGroupName)
   );
   await runOnlyOnIOS(platform, () =>
     device2.waitForControlMessageToBePresent(
@@ -188,12 +188,12 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3, device4);
 }
 
-describe("Linked device - group tests", () => {
-  iosIt("Group and name syncs", groupCreationandNameChangeLinkedDevice);
-  androidIt("Group and name syncs", groupCreationandNameChangeLinkedDevice);
+describe('Linked device - group tests', () => {
+  iosIt('Group and name syncs', groupCreationandNameChangeLinkedDevice);
+  androidIt('Group and name syncs', groupCreationandNameChangeLinkedDevice);
 
-  iosIt("Leaving group syncs", leaveGroupLinkedDevice);
-  androidIt("Leaving group syncs", leaveGroupLinkedDevice);
+  iosIt('Leaving group syncs', leaveGroupLinkedDevice);
+  androidIt('Leaving group syncs', leaveGroupLinkedDevice);
 });
 
 // Remove user
