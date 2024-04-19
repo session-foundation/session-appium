@@ -1,13 +1,14 @@
-import { W3CCapabilities } from "@wdio/types/build/Capabilities";
-import { isArray, isEmpty } from "lodash";
-import { AppiumNextElementType } from "../../appium_next";
-import { clickOnCoordinates, sleepFor } from "../test/specs/utils";
-import { SupportedPlatformsType } from "../test/specs/utils/open_app";
+import { W3CCapabilities } from '@wdio/types/build/Capabilities';
+import { isArray, isEmpty } from 'lodash';
+import { AppiumNextElementType } from '../../appium_next';
+import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
+import { getIosFirstSimulator } from '../test/specs/utils/config';
+import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 import {
   isDeviceAndroid,
   isDeviceIOS,
   runScriptAndLog,
-} from "../test/specs/utils/utilities";
+} from '../test/specs/utils/utilities';
 import {
   AccessibilityId,
   ControlMessage,
@@ -18,7 +19,7 @@ import {
   StrategyExtractionObj,
   User,
   XPath,
-} from "./testing";
+} from './testing';
 
 export type Coordinates = {
   x: number;
@@ -28,7 +29,7 @@ export type ActionSequence = {
   actions: string;
 };
 
-type Action = Coordinates & { type: "pointer"; duration?: number };
+type Action = Coordinates & { type: 'pointer'; duration?: number };
 
 type SharedDeviceInterface = {
   getPageSource: () => Promise<string>;
@@ -174,21 +175,21 @@ export class DeviceWrapper implements SharedDeviceInterface {
   ): Promise<void> {
     const actions = [
       {
-        type: "pointer",
-        id: "finger1",
-        parameters: { pointerType: "touch" },
+        type: 'pointer',
+        id: 'finger1',
+        parameters: { pointerType: 'touch' },
         actions: [
-          { type: "pointerMove", duration: 0, x: start.x, y: start.y },
-          { type: "pointerDown", button: 0 },
-          { type: "pause", duration: 500 },
+          { type: 'pointerMove', duration: 0, x: start.x, y: start.y },
+          { type: 'pointerDown', button: 0 },
+          { type: 'pause', duration: 500 },
           {
-            type: "pointerMove",
+            type: 'pointerMove',
             duration,
-            origin: "pointer",
+            origin: 'pointer',
             x: end.x - start.x,
             y: end.y - start.y,
           },
-          { type: "pointerUp", button: 0 },
+          { type: 'pointerUp', button: 0 },
         ],
       },
     ];
@@ -202,20 +203,20 @@ export class DeviceWrapper implements SharedDeviceInterface {
   ): Promise<void> {
     const actions = [
       {
-        type: "pointer",
-        id: "finger1",
-        parameters: { pointerType: "touch" },
+        type: 'pointer',
+        id: 'finger1',
+        parameters: { pointerType: 'touch' },
         actions: [
           {
-            type: "pointerMove",
+            type: 'pointerMove',
             duration: 0,
             x: xCoOrdinates,
             y: yCoOrdinates,
           },
-          { type: "pointerDown", button: 0 },
-          { type: "pause", duration: 200 },
+          { type: 'pointerDown', button: 0 },
+          { type: 'pause', duration: 200 },
 
-          { type: "pointerUp", button: 0 },
+          { type: 'pointerUp', button: 0 },
         ],
       },
     ];
@@ -229,7 +230,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     duration?: number
   ): Promise<void> {
     const action: Action = {
-      type: "pointer",
+      type: 'pointer',
       x: xCoOrdinates,
       y: yCoOrdinates,
       duration: duration,
@@ -248,7 +249,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async pushFile(path: string, data: string): Promise<void> {
-    console.log("Did file get pushed", path);
+    console.log('Did file get pushed', path);
     return this.toShared().pushFile(path, data);
   }
 
@@ -315,7 +316,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     maxWait?: number
   ): Promise<void> {
     const el = await this.waitForTextElementToBePresent({
-      strategy: "accessibility id",
+      strategy: 'accessibility id',
       selector: accessibilityId,
       maxWait,
     });
@@ -332,13 +333,13 @@ export class DeviceWrapper implements SharedDeviceInterface {
     } catch (error: unknown) {
       if (
         error instanceof Error &&
-        error.name === "StaleElementReferenceError"
+        error.name === 'StaleElementReferenceError'
       ) {
         console.log(
-          "Element is stale, refinding element and attempting second click"
+          'Element is stale, refinding element and attempting second click'
         );
         await this.waitForTextElementToBePresent({
-          strategy: "accessibility id",
+          strategy: 'accessibility id',
           selector: accessibilityId,
           maxWait: 500,
         });
@@ -375,7 +376,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async clickOnElementXPath(xpath: XPath, maxWait?: number) {
     await this.waitForTextElementToBePresent({
-      strategy: "xpath",
+      strategy: 'xpath',
       selector: xpath,
       maxWait: maxWait,
     });
@@ -385,15 +386,15 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async clickOnElementById(id: string) {
-    await this.waitForTextElementToBePresent({ strategy: "id", selector: id });
-    const el = await this.findElement("id", id);
+    await this.waitForTextElementToBePresent({ strategy: 'id', selector: id });
+    const el = await this.findElement('id', id);
     await this.click(el.ELEMENT);
   }
 
   public async clickOnTextElementById(id: string, text: string) {
     const el = await this.findTextElementArrayById(id, text);
     await this.waitForTextElementToBePresent({
-      strategy: "id",
+      strategy: 'id',
       selector: id,
       text,
     });
@@ -416,7 +417,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async longPress(accessibilityId: AccessibilityId) {
     const el = await this.waitForTextElementToBePresent({
-      strategy: "accessibility id",
+      strategy: 'accessibility id',
       selector: accessibilityId,
     });
     if (!el) {
@@ -430,13 +431,13 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async longPressMessage(textToLookFor: string) {
     try {
       const el = await this.waitForTextElementToBePresent({
-        strategy: "accessibility id",
-        selector: "Message body",
+        strategy: 'accessibility id',
+        selector: 'Message body',
         text: textToLookFor,
       });
 
       await this.longClick(el, 2000);
-      console.log("LongClick successful");
+      console.log('LongClick successful');
       if (!el) {
         throw new Error(
           `longPress on message: ${textToLookFor} unsuccessful, couldn't find message`
@@ -449,8 +450,8 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async longPressConversation(userName: string) {
     const el = await this.waitForTextElementToBePresent({
-      strategy: "accessibility id",
-      selector: "Conversation list item",
+      strategy: 'accessibility id',
+      selector: 'Conversation list item',
       text: userName,
     });
     await this.longClick(el, 2000);
@@ -458,7 +459,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async pressAndHold(accessibilityId: AccessibilityId) {
     const el = await this.waitForTextElementToBePresent({
-      strategy: "accessibility id",
+      strategy: 'accessibility id',
       selector: accessibilityId,
     });
     await this.longClick(el, 2000);
@@ -466,7 +467,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async selectByText(accessibilityId: AccessibilityId, text: string) {
     await this.waitForTextElementToBePresent({
-      strategy: "accessibility id",
+      strategy: 'accessibility id',
       selector: accessibilityId,
       text,
     });
@@ -491,7 +492,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     accessibilityId: AccessibilityId
   ): Promise<string> {
     const elementId = await this.waitForTextElementToBePresent({
-      strategy: "accessibility id",
+      strategy: 'accessibility id',
       selector: accessibilityId,
     });
     const text = await this.getTextFromElement(elementId);
@@ -503,9 +504,9 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.longClick(el, 500);
     if (this.isIOS()) {
       await this.clickOnElementByText({
-        strategy: "id",
-        selector: "Select All",
-        text: "Select All",
+        strategy: 'id',
+        selector: 'Select All',
+        text: 'Select All',
       });
     }
     await this.clear(el.ELEMENT);
@@ -518,7 +519,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async findElementByAccessibilityId(
     accessibilityId: AccessibilityId
   ): Promise<AppiumNextElementType> {
-    const element = await this.findElement("accessibility id", accessibilityId);
+    const element = await this.findElement('accessibility id', accessibilityId);
     if (!element || isArray(element)) {
       throw new Error(
         `findElementByAccessibilityId: Did not find accessibilityId: ${accessibilityId} or it was an array `
@@ -531,7 +532,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     accessibilityId: AccessibilityId
   ): Promise<Array<AppiumNextElementType>> {
     const elements = await this.findElements(
-      "accessibility id",
+      'accessibility id',
       accessibilityId
     );
     if (!elements || !isArray(elements) || isEmpty(elements)) {
@@ -544,7 +545,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async findElementByXPath(xpath: XPath) {
-    const element = await this.findElement("xpath", xpath);
+    const element = await this.findElement('xpath', xpath);
     if (!element) {
       throw new Error(`findElementByXpath: Did not find xpath: ${xpath}`);
     }
@@ -555,7 +556,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async findElementByClass(
     androidClassName: string
   ): Promise<AppiumNextElementType> {
-    const element = await this.findElement("class name", androidClassName);
+    const element = await this.findElement('class name', androidClassName);
     if (!element) {
       throw new Error(
         `findElementByClass: Did not find classname: ${androidClassName}`
@@ -567,7 +568,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async findElementsByClass(
     androidClassName: string
   ): Promise<Array<AppiumNextElementType>> {
-    const elements = await this.findElements("class name", androidClassName);
+    const elements = await this.findElements('class name', androidClassName);
     if (!elements) {
       throw new Error(
         `findElementsByClass: Did not find classname: ${androidClassName}`
@@ -581,7 +582,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     id: string,
     textToLookFor: string
   ): Promise<AppiumNextElementType> {
-    const elementArray = await this.findElements("id", id);
+    const elementArray = await this.findElements('id', id);
     const selector = await this.findMatchingTextInElementArray(
       elementArray,
       textToLookFor
@@ -682,13 +683,13 @@ export class DeviceWrapper implements SharedDeviceInterface {
     textToLookFor: string
   ): Promise<AppiumNextElementType> {
     await this.waitForTextElementToBePresent({
-      strategy: "accessibility id",
-      selector: "Message body",
+      strategy: 'accessibility id',
+      selector: 'Message body',
       text: textToLookFor,
     });
 
     const message = await this.findMatchingTextAndAccessibilityId(
-      "Message body",
+      'Message body',
       textToLookFor
     );
     return message;
@@ -806,7 +807,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
         throw e;
       }
     }
-    console.log(accessibilityId, ": ", text, "is not visible, congratulations");
+    console.log(accessibilityId, ': ', text, 'is not visible, congratulations');
   }
   // WAIT FOR FUNCTIONS
 
@@ -820,7 +821,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     maxWait?: number;
   } & StrategyExtractionObj): Promise<AppiumNextElementType> {
     let el: null | AppiumNextElementType = null;
-    const maxWaitMSec: number = typeof maxWait === "number" ? maxWait : 15000;
+    const maxWaitMSec: number = typeof maxWait === 'number' ? maxWait : 15000;
     let currentWait = 0;
     const waitPerLoop = 100;
     while (el === null) {
@@ -838,7 +839,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
           el = await this.findElement(strategy, selector);
         }
       } catch (e: any) {
-        console.warn("waitForTextElementToBePresent threw: ", e.message);
+        console.warn('waitForTextElementToBePresent threw: ', e.message);
       }
 
       if (!el) {
@@ -847,7 +848,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       currentWait += waitPerLoop;
 
       if (currentWait >= maxWaitMSec) {
-        console.log("Waited too long");
+        console.log('Waited too long');
         throw new Error(
           `Waited for too long looking for '${selector}' and '${text}`
         );
@@ -862,26 +863,26 @@ export class DeviceWrapper implements SharedDeviceInterface {
     maxWait?: number
   ): Promise<AppiumNextElementType> {
     let el: null | AppiumNextElementType = null;
-    const maxWaitMSec: number = typeof maxWait === "number" ? maxWait : 15000;
+    const maxWaitMSec: number = typeof maxWait === 'number' ? maxWait : 15000;
     let currentWait = 0;
     const waitPerLoop = 100;
     while (el === null) {
       try {
         console.log(`Waiting for control message to be present with ${text}`);
         const els = await this.findElements(
-          "accessibility id",
-          "Control message"
+          'accessibility id',
+          'Control message'
         );
         el = await this.findMatchingTextInElementArray(els, text);
       } catch (e: any) {
-        console.warn("waitForControlMessageToBePresent threw: ", e.message);
+        console.warn('waitForControlMessageToBePresent threw: ', e.message);
       }
       if (!el) {
         await sleepFor(waitPerLoop);
       }
       currentWait += waitPerLoop;
       if (currentWait >= maxWaitMSec) {
-        console.log("Waited too long");
+        console.log('Waited too long');
         throw new Error(
           `Waited for too long looking for Control message ${text}`
         );
@@ -897,28 +898,28 @@ export class DeviceWrapper implements SharedDeviceInterface {
     do {
       try {
         loadingAnimation = await this.waitForTextElementToBePresent({
-          strategy: "id",
-          selector: "network.loki.messenger:id/thumbnail_load_indicator",
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/thumbnail_load_indicator',
           maxWait: 1000,
         });
         await sleepFor(100);
-        console.info("loading-animation was found, waiting for it to be gone");
+        console.info('loading-animation was found, waiting for it to be gone');
       } catch (e: any) {
-        console.log("Loading animation not found");
+        console.log('Loading animation not found');
       }
     } while (loadingAnimation);
-    console.info("Loading animation has finished");
+    console.info('Loading animation has finished');
   }
 
   // UTILITY FUNCTIONS
 
   public async sendMessage(message: string) {
-    await this.inputText("accessibility id", "Message input box", message);
+    await this.inputText('accessibility id', 'Message input box', message);
     // Click send
-    await this.clickOnElement("Send message button");
+    await this.clickOnElement('Send message button');
     // Wait for tick
     await this.waitForTextElementToBePresent({
-      strategy: "accessibility id",
+      strategy: 'accessibility id',
       selector: `Message sent status: Sent`,
       maxWait: 50000,
     });
@@ -928,18 +929,18 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async waitForSentConfirmation() {
     let pendingStatus = await this.waitForTextElementToBePresent({
-      strategy: "accessibility id",
-      selector: "Message sent status: Sending",
+      strategy: 'accessibility id',
+      selector: 'Message sent status: Sending',
     });
     let failedStatus = await this.waitForTextElementToBePresent({
-      strategy: "accessibility id",
-      selector: "Message sent status: Failed to send",
+      strategy: 'accessibility id',
+      selector: 'Message sent status: Failed to send',
     });
     if (pendingStatus || failedStatus) {
       await sleepFor(100);
       pendingStatus = await this.waitForTextElementToBePresent({
-        strategy: "accessibility id",
-        selector: "Message sent status: Sending",
+        strategy: 'accessibility id',
+        selector: 'Message sent status: Sending',
       });
     }
   }
@@ -947,27 +948,27 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async sendNewMessage(user: User, message: string) {
     // Sender workflow
     // Click on plus button
-    await this.clickOnElement("New conversation button");
+    await this.clickOnElement('New conversation button');
     // Select direct message option
-    await this.clickOnElement("New direct message");
+    await this.clickOnElement('New direct message');
     // Enter User B's session ID into input box
     await this.inputText(
-      "accessibility id",
-      "Session id input box",
+      'accessibility id',
+      'Session id input box',
       user.sessionID
     );
     // Click next
     await this.scrollDown();
-    await this.clickOnElement("Next");
+    await this.clickOnElement('Next');
     // Type message into message input box
 
-    await this.inputText("accessibility id", "Message input box", message);
+    await this.inputText('accessibility id', 'Message input box', message);
     // Click send
-    await this.clickOnElement("Send message button");
+    await this.clickOnElement('Send message button');
     // Wait for tick
 
     await this.waitForTextElementToBePresent({
-      strategy: "accessibility id",
+      strategy: 'accessibility id',
       selector: `Message sent status: Sent`,
       maxWait: 50000,
     });
@@ -978,14 +979,14 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async sendMessageTo(sender: User, receiver: User | Group) {
     const message = `${sender.userName} to ${receiver.userName}`;
     await this.waitForTextElementToBePresent({
-      strategy: "accessibility id",
-      selector: "Conversation list item",
+      strategy: 'accessibility id',
+      selector: 'Conversation list item',
       text: receiver.userName,
     });
     await sleepFor(100);
     await this.clickOnElementAll({
-      strategy: "accessibility id",
-      selector: "Conversation list item",
+      strategy: 'accessibility id',
+      selector: 'Conversation list item',
       text: receiver.userName,
     });
     console.log(`${sender.userName} + " sent message to ${receiver.userName}`);
@@ -1000,7 +1001,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     // Long press on imageSent element
     await this.longPressMessage(body);
     // Select 'Reply' option
-    await this.clickOnElement("Reply to message");
+    await this.clickOnElement('Reply to message');
     // Send message
     const sentMessage = await this.sendMessage(
       `${user.userName} message reply`
@@ -1023,7 +1024,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async inputText(
-    strategy: Extract<Strategy, "accessibility id">,
+    strategy: Extract<Strategy, 'accessibility id'>,
     selector: AccessibilityId,
     text: string
   ) {
@@ -1050,11 +1051,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
         `//*[./*[@name='${timeOption}']]/*[2]`
       );
 
-      const attr = await this.getAttribute("value", radioButton.ELEMENT);
-      if (attr === "selected") {
-        console.log("Great success - default time is correct");
+      const attr = await this.getAttribute('value', radioButton.ELEMENT);
+      if (attr === 'selected') {
+        console.log('Great success - default time is correct');
       } else {
-        throw new Error("Dammit - default time was not correct");
+        throw new Error('Dammit - default time was not correct');
       }
     } catch (e) {
       console.log(`Couldn't find radioButton ${timeOption}`);
@@ -1066,30 +1067,30 @@ export class DeviceWrapper implements SharedDeviceInterface {
     message?: string,
     community?: boolean
   ) {
-    if (platform === "ios") {
-      const ronSwansonBirthday = "196705060700.00";
-      await this.clickOnElement("Attachments button");
+    if (platform === 'ios') {
+      const ronSwansonBirthday = '196705060700.00';
+      await this.clickOnElement('Attachments button');
       await sleepFor(5000);
       await clickOnCoordinates(
         this.device,
         InteractionPoints.ImagesFolderKeyboardClosed
       );
       const permissions = await this.doesElementExist({
-        strategy: "accessibility id",
-        selector: "Allow Full Access",
+        strategy: 'accessibility id',
+        selector: 'Allow Full Access',
         maxWait: 1000,
       });
       if (permissions) {
         try {
           await this.clickOnElement(`Allow Full Access`);
         } catch (e) {
-          console.log("No permissions dialog");
+          console.log('No permissions dialog');
         }
       } else {
-        console.log("No permissions dialog");
+        console.log('No permissions dialog');
       }
       const testImage = await this.doesElementExist({
-        strategy: "accessibility id",
+        strategy: 'accessibility id',
         selector: `1967-05-05 21:00:00 +0000`,
         maxWait: 2000,
       });
@@ -1100,7 +1101,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
         await runScriptAndLog(
           `xcrun simctl addmedia ${
-            process.env.IOS_FIRST_SIMULATOR || ""
+            getIosFirstSimulator() || ''
           } 'run/test/specs/media/test_image.jpg'`,
           true
         );
@@ -1108,28 +1109,28 @@ export class DeviceWrapper implements SharedDeviceInterface {
       await sleepFor(100);
       await this.clickOnElement(`1967-05-05 21:00:00 +0000`);
       if (message) {
-        await this.clickOnElement("Text input box");
-        await this.inputText("accessibility id", "Text input box", message);
+        await this.clickOnElement('Text input box');
+        await this.inputText('accessibility id', 'Text input box', message);
       }
-      await this.clickOnElement("Send button");
+      await this.clickOnElement('Send button');
       await this.waitForTextElementToBePresent({
-        strategy: "accessibility id",
-        selector: "Message sent status: Sent",
+        strategy: 'accessibility id',
+        selector: 'Message sent status: Sent',
         maxWait: 50000,
       });
     } else {
-      await this.clickOnElement("Attachments button");
+      await this.clickOnElement('Attachments button');
       await sleepFor(100);
-      await this.clickOnElement("Documents folder");
-      await this.clickOnElement("Show roots");
+      await this.clickOnElement('Documents folder');
+      await this.clickOnElement('Show roots');
       await sleepFor(100);
-      await this.clickOnTextElementById(`android:id/title`, "Downloads");
+      await this.clickOnTextElementById(`android:id/title`, 'Downloads');
       await sleepFor(100);
       const testImage = await this.doesElementExist({
-        strategy: "id",
-        selector: "android:id/title",
+        strategy: 'id',
+        selector: 'android:id/title',
         maxWait: 2000,
-        text: "test_image.jpg",
+        text: 'test_image.jpg',
       });
       if (!testImage) {
         await runScriptAndLog(
@@ -1138,12 +1139,12 @@ export class DeviceWrapper implements SharedDeviceInterface {
         );
       }
       await sleepFor(100);
-      await this.clickOnTextElementById("android:id/title", "test_image.jpg");
+      await this.clickOnTextElementById('android:id/title', 'test_image.jpg');
       if (community) {
         await this.scrollToBottom(platform);
       }
       await this.waitForTextElementToBePresent({
-        strategy: "accessibility id",
+        strategy: 'accessibility id',
         selector: `Message sent status: Sent`,
         maxWait: 50000,
       });
@@ -1151,30 +1152,30 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async sendVideo(platform: SupportedPlatformsType) {
-    if (platform === "android") {
+    if (platform === 'android') {
       // Click on attachments button
-      await this.clickOnElement("Attachments button");
+      await this.clickOnElement('Attachments button');
       await sleepFor(100);
       // Select images button/tab
-      await this.clickOnElement("Documents folder");
+      await this.clickOnElement('Documents folder');
       await sleepFor(200);
       // Select video
       const mediaButtons = await this.findElementsByClass(
-        "android.widget.Button"
+        'android.widget.Button'
       );
       const videosButton = await this.findMatchingTextInElementArray(
         mediaButtons,
-        "Videos"
+        'Videos'
       );
       if (!videosButton) {
-        throw new Error("videosButton was not found");
+        throw new Error('videosButton was not found');
       }
       await this.click(videosButton.ELEMENT);
       const testVideo = await this.doesElementExist({
-        strategy: "id",
-        selector: "android:id/title",
+        strategy: 'id',
+        selector: 'android:id/title',
         maxWait: 1000,
-        text: "test_video.mp4",
+        text: 'test_video.mp4',
       });
       if (!testVideo) {
         // Adds video to downloads folder if it isn't already there
@@ -1184,9 +1185,9 @@ export class DeviceWrapper implements SharedDeviceInterface {
         );
       }
       await sleepFor(100);
-      await this.clickOnTextElementById("android:id/title", "test_video.mp4");
+      await this.clickOnTextElementById('android:id/title', 'test_video.mp4');
       await this.waitForTextElementToBePresent({
-        strategy: "accessibility id",
+        strategy: 'accessibility id',
         selector: `Message sent status: Sent`,
         maxWait: 50000,
       });
@@ -1196,7 +1197,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   // ACTIONS
   public async swipeLeftAny(selector: AccessibilityId) {
     const el = await this.waitForTextElementToBePresent({
-      strategy: "accessibility id",
+      strategy: 'accessibility id',
       selector,
     });
 
@@ -1204,7 +1205,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     console.log(loc);
 
     if (!loc) {
-      throw new Error("did not find element rectangle");
+      throw new Error('did not find element rectangle');
     }
     await this.scroll(
       { x: loc.x + loc.width, y: loc.y + loc.height / 2 },
@@ -1212,7 +1213,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       1000
     );
 
-    console.warn("Swiped left on ", selector);
+    console.warn('Swiped left on ', selector);
   }
 
   public async swipeLeft(accessibilityId: AccessibilityId, text: string) {
@@ -1225,7 +1226,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     console.log(loc);
 
     if (!loc) {
-      throw new Error("did not find element rectangle");
+      throw new Error('did not find element rectangle');
     }
     await this.scroll(
       { x: loc.x + loc.width, y: loc.y + loc.height / 2 },
@@ -1233,7 +1234,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       1000
     );
 
-    console.warn("Swiped left on ", el);
+    console.warn('Swiped left on ', el);
     // let some time for swipe action to happen and UI to update
   }
 
@@ -1242,41 +1243,41 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async scrollToBottom(platform: SupportedPlatformsType) {
-    if (platform === "android") {
+    if (platform === 'android') {
       await this.clickOnElementAll({
-        strategy: "id",
-        selector: "network.loki.messenger:id/scrollToBottomButton",
+        strategy: 'id',
+        selector: 'network.loki.messenger:id/scrollToBottomButton',
       });
     } else {
       await this.clickOnElementAll({
-        strategy: "accessibility id",
-        selector: "Scroll button",
+        strategy: 'accessibility id',
+        selector: 'Scroll button',
       });
     }
   }
 
   public async navigateBack(platform: SupportedPlatformsType) {
-    if (platform === "ios") {
-      await this.clickOnElement("Back");
+    if (platform === 'ios') {
+      await this.clickOnElement('Back');
     } else {
-      await this.clickOnElement("Navigate up");
+      await this.clickOnElement('Navigate up');
     }
   }
 
   /* ======= Settings functions =========*/
 
   public async turnOnReadReceipts(platform: SupportedPlatformsType) {
-    if (platform === "android") {
+    if (platform === 'android') {
       await this.navigateBack(platform);
       await sleepFor(100);
-      await this.clickOnElement("User settings");
+      await this.clickOnElement('User settings');
       await sleepFor(500);
       await this.clickOnElementById(`network.loki.messenger:id/privacyButton`);
       await sleepFor(2000);
       await this.clickOnElementAll({
-        strategy: "id",
-        selector: "android:id/summary",
-        text: "Send read receipts in one-to-one chats.",
+        strategy: 'id',
+        selector: 'android:id/summary',
+        text: 'Send read receipts in one-to-one chats.',
       });
       await this.navigateBack(platform);
       await sleepFor(100);
@@ -1284,15 +1285,15 @@ export class DeviceWrapper implements SharedDeviceInterface {
     } else {
       await this.navigateBack(platform);
       await sleepFor(100);
-      await this.clickOnElement("User settings");
-      await this.clickOnElementAll({ strategy: "id", selector: "Privacy" });
+      await this.clickOnElement('User settings');
+      await this.clickOnElementAll({ strategy: 'id', selector: 'Privacy' });
       await this.clickOnElementAll({
-        strategy: "xpath",
+        strategy: 'xpath',
         selector: `//XCUIElementTypeSwitch[@name="Read Receipts, Send read receipts in one-to-one chats."]`,
       });
       await this.navigateBack(platform);
       await sleepFor(100);
-      await this.clickOnElement("Close button");
+      await this.clickOnElement('Close button');
     }
   }
 
@@ -1307,14 +1308,14 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   private toIOS(): IOSDeviceInterface {
     if (!this.isIOS()) {
-      throw new Error("Not an ios device");
+      throw new Error('Not an ios device');
     }
     return this.device as unknown as IOSDeviceInterface;
   }
 
   private toAndroid(): AndroidDeviceInterface {
     if (!this.isAndroid()) {
-      throw new Error("Not an android device");
+      throw new Error('Not an android device');
     }
     return this.device as unknown as AndroidDeviceInterface;
   }

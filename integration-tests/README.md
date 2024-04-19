@@ -16,9 +16,42 @@ Then, create a second emulator following the exact same steps (the tests need 2 
 
 Once done, you should be able to start each emulators and have them running at the same time. They will need to be running for the tests to work, because Appium won't start them.
 
-## Environment variables needed
+## Config updates needed
 
-Before you can start the tests, you need to setup some environment variables:
+Before you can start the tests, you need to setup a config file with your own values.
+To do this, create copy the default config to a local.ts file and update it:
+
+```
+cp config/default.ts config/local.ts
+```
+
+Edit config/local.ts and **NOT** the default.ts file. local.ts is not tracked in git, because everyone has a different setup.
+
+Here is my current local.ts file
+```ts
+export default {
+  programs: {
+    adbPath: '/home/plop/Android/Sdk/platform-tools/adb',
+    sdkManagerPath: '/home/plop/Android/Sdk/tools/bin/sdkmanager',
+    emulatorPath: '/home/plop/Android/Sdk/emulator/emulator',
+    androidSystemImage: 'system-images;android-34;google_atd;x86_64',
+  },
+  emulators: {
+    ios: { first: '1', second: '2', third: '3', fourth: '4' }, // don't care
+    android: {
+      first: 'emulator-5554',
+      second: 'emulator-5556',
+      third: 'emulator-5558',
+      fourth: 'emulator-5560',
+    }, // those are emulator udid
+  },
+  testedApps: {
+    ios: 'dontcare',
+    android: '/home/plop/Downloads/session-1.18.2-universal.apk',
+  },
+};
+
+```
 
 #### ANDROID_SDK_ROOT
 

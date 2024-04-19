@@ -1679,6 +1679,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/config@npm:^3":
+  version: 3.3.4
+  resolution: "@types/config@npm:3.3.4"
+  checksum: 10c0/99504bdec62fbc62bc32d6c9cefd016c9b73245cd8811d72daa4a69d3b465f340b8ef1b45a0477df4cee44a752dbea6faf09bc99aa0158f1c1007eda6697a079
+  languageName: node
+  linkType: hard
+
 "@types/connect@npm:*":
   version: 3.4.38
   resolution: "@types/connect@npm:3.4.38"
@@ -3717,6 +3724,15 @@ __metadata:
   version: 0.0.1
   resolution: "concat-map@npm:0.0.1"
   checksum: 10c0/c996b1cfdf95b6c90fee4dae37e332c8b6eb7d106430c17d538034c0ad9a1630cb194d2ab37293b1bdd4d779494beee7786d586a50bd9376fd6f7bcc2bd4c98f
+  languageName: node
+  linkType: hard
+
+"config@npm:^3.3.11":
+  version: 3.3.11
+  resolution: "config@npm:3.3.11"
+  dependencies:
+    json5: "npm:^2.2.3"
+  checksum: 10c0/c0e1e855aa3e15c764e469f4da0e84df64fe182e135c3fa820f875950b5eed6d8357b6ec5587cb71130655d4a63d07d95b48d96659f09abf0d9c87b768649c92
   languageName: node
   linkType: hard
 
@@ -8351,6 +8367,7 @@ __metadata:
   dependencies:
     "@appium/execute-driver-plugin": "npm:^3.0.1"
     "@appium/images-plugin": "npm:^2.0.1"
+    "@types/config": "npm:^3"
     "@types/jest": "npm:^29.2.5"
     "@types/lodash": "npm:^4.14.191"
     "@typescript-eslint/eslint-plugin": "npm:^5.51.0"
@@ -8360,6 +8377,7 @@ __metadata:
     appium-uiautomator2-driver: "patch:appium-uiautomator2-driver@file%3A../patched-appium/node_modules/appium-uiautomator2-driver%23../patched-appium/node_modules/appium-uiautomator2-driver%3A%3Ahash=ed7690&locator=root-workspace-0b6124%2540workspace%253A.#./patches/appium-uiautomator2-driver-file-af32bb34eb.patch"
     appium-xcuitest-driver: "file:../patched-appium/node_modules/appium-xcuitest-driver"
     ci: "npm:^2.2.0"
+    config: "npm:^3.3.11"
     eslint: "npm:^8.33.0"
     jest: "npm:^29.3.1"
     lodash: "npm:^4.17.21"

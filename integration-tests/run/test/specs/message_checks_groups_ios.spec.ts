@@ -1,6 +1,7 @@
 import { iosIt } from "../../types/sessionIt";
 import { InteractionPoints } from "../../types/testing";
 import { sleepFor, clickOnCoordinates } from "./utils";
+import { getIosFirstSimulator } from "./utils/config";
 import { newUser } from "./utils/create_account";
 import { createGroup } from "./utils/create_group";
 import {
@@ -67,7 +68,7 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
 
     await runScriptAndLog(
       `xcrun simctl addmedia ${
-        process.env.IOS_FIRST_SIMULATOR || ""
+        getIosFirstSimulator()
       } 'run/test/specs/media/test_image.jpg'`,
       true
     );
@@ -170,7 +171,7 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
     );
     await runScriptAndLog(
       `xcrun simctl addmedia ${
-        process.env.IOS_FIRST_SIMULATOR || ""
+        getIosFirstSimulator()
       } 'run/test/specs/media/test_video.mp4'`,
       true
     );

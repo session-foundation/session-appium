@@ -1,6 +1,7 @@
 import { iosIt } from "../../types/sessionIt";
 import { InteractionPoints } from "../../types/testing";
 import { clickOnCoordinates, sleepFor } from "./utils";
+import { getIosFirstSimulator } from "./utils/config";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { createGroup } from "./utils/create_group";
@@ -66,7 +67,7 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
 
     await runScriptAndLog(
       `xcrun simctl addmedia ${
-        process.env.IOS_FIRST_SIMULATOR || ""
+        getIosFirstSimulator()
       } 'run/test/specs/media/test_image.jpg'`,
       true
     );
@@ -165,7 +166,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
     );
     await runScriptAndLog(
       `xcrun simctl addmedia ${
-        process.env.IOS_FIRST_SIMULATOR || ""
+        getIosFirstSimulator()
       } 'run/test/specs/media/test_video.mp4'`,
       true
     );
@@ -533,7 +534,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
 
     await runScriptAndLog(
       `xcrun simctl addmedia ${
-        process.env.IOS_FIRST_SIMULATOR || ""
+        getIosFirstSimulator()
       } 'run/test/specs/media/test_image.jpg'`,
       true
     );
@@ -645,7 +646,7 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
     );
     await runScriptAndLog(
       `xcrun simctl addmedia ${
-        process.env.IOS_FIRST_SIMULATOR || ""
+        getIosFirstSimulator()
       } 'run/test/specs/media/test_video.mp4'`,
       true
     );

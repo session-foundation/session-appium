@@ -1,5 +1,6 @@
 import { androidIt, iosIt } from "../../types/sessionIt";
 import { parseDataImage } from "./utils/check_colour";
+import { getIosFirstSimulator } from "./utils/config";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils/index";
@@ -252,7 +253,7 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
 
     await runScriptAndLog(
       `xcrun simctl addmedia ${
-        process.env.IOS_FIRST_SIMULATOR || ""
+        getIosFirstSimulator() || ""
       } 'run/test/specs/media/profile_picture.jpg'`,
       true
     );

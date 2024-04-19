@@ -1,10 +1,10 @@
-import { pick } from "lodash";
-import * as util from "util";
-import { sleepFor } from ".";
-import { DeviceWrapper } from "../../../types/DeviceWrapper";
-import { getAdbFullPath } from "./binaries";
+import { pick } from 'lodash';
+import * as util from 'util';
+import { sleepFor } from '.';
+import { DeviceWrapper } from '../../../types/DeviceWrapper';
 
-import { exec as execNotPromised } from "child_process";
+import { exec as execNotPromised } from 'child_process';
+import { getAdbFullPath } from './config';
 const exec = util.promisify(execNotPromised);
 
 export async function runScriptAndLog(
@@ -13,7 +13,7 @@ export async function runScriptAndLog(
 ): Promise<string> {
   try {
     if (verbose) {
-      console.log("running ", toRun);
+      console.log('running ', toRun);
     }
     const result = await exec(toRun);
 
@@ -21,26 +21,26 @@ export async function runScriptAndLog(
       result &&
       result.stderr &&
       !result.stderr.startsWith(
-        "All files should be loaded. Notifying the device"
+        'All files should be loaded. Notifying the device'
       )
     ) {
       if (verbose) {
         console.log(`cmd which failed: "${toRun}"`);
         console.log(`result: "${result.stderr}"`);
       }
-      return "".concat(result.stderr, result.stdout);
+      return ''.concat(result.stderr, result.stdout);
     }
     if (verbose) {
-      console.log("was run: ", toRun, result);
+      console.log('was run: ', toRun, result);
     }
-    return "".concat(result.stderr, result.stdout);
+    return ''.concat(result.stderr, result.stdout);
   } catch (e: any) {
     const cmd = e.cmd;
     if (verbose) {
       console.warn(`cmd which failed: "${cmd as string}"`);
-      console.warn(pick(e, ["stdout", "stderr"]));
+      console.warn(pick(e, ['stdout', 'stderr']));
     }
-    return "".concat(e.stderr as string, e.stdout as string);
+    return ''.concat(e.stderr as string, e.stdout as string);
   }
 }
 
@@ -57,10 +57,9 @@ export const installAppToDeviceName = async (
   emulatorName: string
 ) => {
   if (!emulatorName) {
-    throw new Error("emulatorName must be set");
+    throw new Error('emulatorName must be set');
   }
   // await runScriptAndLog(`emulator -avd ${emulatorName}`, true);
-  const start = Date.now();
   const adb = getAdbFullPath();
 
   await runScriptAndLog(
@@ -107,6 +106,19 @@ export const installAppToDeviceName = async (
     `${adb} -s ${emulatorName} install -g -t ${appFullPath}`
   );
 
+  await runScriptAndLog(
+    `${adb} -s ${emulatorName} shell settings put global window_animation_scale 0.0`,
+    true
+  );
+  await runScriptAndLog(
+    `${adb} -s ${emulatorName} shell settings put global transition_animation_scale 0.0`,
+    true
+  );
+  await runScriptAndLog(
+    `${adb} -s ${emulatorName} shell settings put global animator_duration_scale 0.0`,
+    true
+  );
+
   // await sleepFor(100);
   // console.warn("we are at 5 and took ", Date.now() - start);
 };
@@ -114,8 +126,8 @@ export const installAppToDeviceName = async (
 export const isDeviceIOS = (device: DeviceWrapper) => {
   return (
     (device as any).originalCaps.alwaysMatch[
-      "appium:platformName"
-    ]?.toLowerCase() === "ios"
+      'appium:platformName'
+    ]?.toLowerCase() === 'ios'
   );
 };
 
