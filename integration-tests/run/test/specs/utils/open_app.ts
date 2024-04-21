@@ -19,7 +19,6 @@ import {
 import { sleepFor } from './sleep_for';
 
 const APPIUM_PORT = 4728;
-export const APPIUM_IOS_PORT = 8110;
 
 export type SupportedPlatformsType = 'android' | 'ios';
 
@@ -117,12 +116,11 @@ async function createAndroidEmulator(emulatorName: string) {
 async function startAndroidEmulator(emulatorName: string) {
   await runScriptAndLog(`echo "hw.lcd.density=440" >> ~/.android/avd/${emulatorName}.avd/config.ini
   `);
-  const startEmulatorCmd = `${getEmulatorFullPath()} @${emulatorName}  -no-snapshot`;
+  const startEmulatorCmd = `${getEmulatorFullPath()} @${emulatorName}  `;
   console.warn(`${startEmulatorCmd} & ; disown`);
   await runScriptAndLog(
     startEmulatorCmd // -netdelay none -no-snapshot -wipe-data
   );
-
 }
 
 async function isEmulatorRunning(emulatorName: string) {
@@ -201,16 +199,19 @@ const openAndroidApp = async (
 
   await runScriptAndLog(`adb -s ${targetName} shell settings put global heads_up_notifications_enabled 0
   `);
-
+  const startSession = Date.now();
   await wrappedDevice.createSession(getAndroidCapabilities(capabilitiesIndex));
+  console.warn(`${Date.now() - startSession}ms taken by createSession() `);
   // this is required to make PopupWindow show up from the Android SDK
-  // this `any` was approved by Audric
+  const startUpdateSetting = Date.now();
   await (device as any).updateSettings({
     ignoreUnimportantViews: false,
     allowInvisibleElements: true,
     enableMultiWindows: true,
   });
-  // console.warn(`SessionID for android:${capabilitiesIndex}: "${sess[0]}"`);
+  console.warn(
+    `${Date.now() - startUpdateSetting}ms taken by updateSettings() `
+  );
 
   return { device: wrappedDevice };
 };

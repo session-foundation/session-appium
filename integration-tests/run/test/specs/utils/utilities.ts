@@ -11,6 +11,7 @@ export async function runScriptAndLog(
   toRun: string,
   verbose = false
 ): Promise<string> {
+  const start = Date.now();
   try {
     if (verbose) {
       console.log('running ', toRun);
@@ -41,6 +42,8 @@ export async function runScriptAndLog(
       console.warn(pick(e, ['stdout', 'stderr']));
     }
     return ''.concat(e.stderr as string, e.stdout as string);
+  } finally {
+    console.info(`${Date.now() - start}ms taken by: "${toRun}"`);
   }
 }
 

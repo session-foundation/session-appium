@@ -1,8 +1,5 @@
-import { clearBufferOfTest, printBufferAndClear } from "../test/specs/utils/logger";
-import {
-
-  SupportedPlatformsType,
-} from "../test/specs/utils/open_app";
+// import { clearBufferOfTest, printBufferAndClear } from "../test/specs/utils/logger";
+import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 
 // async function itWithBufferHandling(testNameWithoutPlatform: string, platform: SupportedPlatformsType, testToRun: () => Promise<void>) {
 //   try {
@@ -18,10 +15,10 @@ export function androidIt(
   title: string,
   test: (platform: SupportedPlatformsType) => Promise<void>
 ) {
-  const testName = `${title} android`
+  const testName = `${title} android`;
   return it(testName, async () => {
     console.info(`\n\n==========> Running "${testName}"\n\n`);
-    await test("android");
+    await test('android');
   });
 }
 
