@@ -1,20 +1,13 @@
 import { androidIt, iosIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { runOnlyOnAndroid, sleepFor } from "./utils/index";
-import {
-  SupportedPlatformsType,
-  closeApp,
-  openAppTwoDevices,
-} from "./utils/open_app";
+import { SupportedPlatformsType, closeApp, openAppTwoDevices } from "./utils/open_app";
 
 async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // Open app
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and User B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+  const [userA, userB] = await Promise.all([newUser(device1, "Alice", platform), newUser(device2, "Bob", platform)]);
   await device1.sendNewMessage(userB, "Testing calls");
   // Look for phone icon (shouldnt be there)
   await device1.hasElementBeenDeleted("accessibility id", "Call");
@@ -24,13 +17,9 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   await device2.clickOnElement("Message request");
   await device2.clickOnElement("Accept message request");
   // Type into message input box
-  await device2.sendMessage(
-    `Reply-message-${userB.userName}-to-${userA.userName}`
-  );
+  await device2.sendMessage(`Reply-message-${userB.userName}-to-${userA.userName}`);
   // Verify config message states message request was accepted
-  await device1.waitForControlMessageToBePresent(
-    "Your message request has been accepted."
-  );
+  await device1.waitForControlMessageToBePresent("Your message request has been accepted.");
   // Phone icon should appear now that conversation has been approved
   await device1.clickOnElement("Call");
   // Enabled voice calls in privacy settings
@@ -54,12 +43,9 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // Navigate back to conversation
   await device1.waitForTextElementToBePresent({
     strategy: "id",
-    selector:
-      "com.android.permissioncontroller:id/permission_allow_foreground_only_button",
+    selector: "com.android.permissioncontroller:id/permission_allow_foreground_only_button",
   });
-  await device1.clickOnElementById(
-    "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
-  );
+  await device1.clickOnElementById("com.android.permissioncontroller:id/permission_allow_foreground_only_button");
 
   await device1.clickOnElement("Navigate up");
   // Enable voice calls on device 2 for User B
@@ -86,28 +72,21 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // TO FIX (SOMETHING WRONG WITH ANSWER CALL)
   await device2.waitForTextElementToBePresent({
     strategy: "id",
-    selector:
-      "com.android.permissioncontroller:id/permission_allow_foreground_only_button",
+    selector: "com.android.permissioncontroller:id/permission_allow_foreground_only_button",
   });
-  await device2.clickOnElementById(
-    "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
-  );
+  await device2.clickOnElementById("com.android.permissioncontroller:id/permission_allow_foreground_only_button");
   await device2.clickOnElement("Navigate up");
   // Make call on device 1 (userA)
   await device1.clickOnElement("Call");
   // Answer call on device 2
-  await device2.clickOnElementById(
-    "network.loki.messenger:id/acceptCallButton"
-  );
+  await device2.clickOnElementById("network.loki.messenger:id/acceptCallButton");
   // Wait 5 seconds
   await sleepFor(5000);
   // Hang up
   await device1.clickOnElementById("network.loki.messenger:id/endCallButton");
   // Check for config message 'Called User B' on device 1
   await device1.waitForControlMessageToBePresent(`Called ${userB.userName}`);
-  await device2.waitForControlMessageToBePresent(
-    `${userA.userName} called you`
-  );
+  await device2.waitForControlMessageToBePresent(`${userA.userName} called you`);
   // Excellent
   await closeApp(device1, device2);
 }
@@ -116,10 +95,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   // Open app
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and User B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+  const [userA, userB] = await Promise.all([newUser(device1, "Alice", platform), newUser(device2, "Bob", platform)]);
   await device1.sendNewMessage(userB, "Testing calls");
   // Look for phone icon (shouldnt be there)
   await device1.hasElementBeenDeleted("accessibility id", "Call");
@@ -127,18 +103,12 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device2.clickOnElement("Message requests banner");
   // Select message from User A
   await device2.clickOnElement("Message request");
-  await runOnlyOnAndroid(platform, () =>
-    device2.clickOnElement("Accept message request")
-  );
+  await runOnlyOnAndroid(platform, () => device2.clickOnElement("Accept message request"));
   // Type into message input box
-  await device2.sendMessage(
-    `Reply-message-${userB.userName}-to-${userA.userName}`
-  );
+  await device2.sendMessage(`Reply-message-${userB.userName}-to-${userA.userName}`);
 
   // Verify config message states message request was accepted
-  await device1.waitForControlMessageToBePresent(
-    "Your message request has been accepted."
-  );
+  await device1.waitForControlMessageToBePresent("Your message request has been accepted.");
   // Phone icon should appear now that conversation has been approved
   await device1.clickOnElement("Call");
   // Enabled voice calls in privacy settings
@@ -176,12 +146,8 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   // Hang up
   await device1.clickOnElement("End call button");
   // Check for control messages on both devices
-  await device1.waitForControlMessageToBePresent(
-    `You called ${userB.userName}`
-  );
-  await device2.waitForControlMessageToBePresent(
-    `${userA.userName} called you`
-  );
+  await device1.waitForControlMessageToBePresent(`You called ${userB.userName}`);
+  await device2.waitForControlMessageToBePresent(`${userA.userName} called you`);
   // Excellent
   await closeApp(device1, device2);
 }

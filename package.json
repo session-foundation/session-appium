@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "lint": "yarn prettier . --write \"**/*.+(ts)\" && yarn eslint . --ignore-pattern '*.js'",
     "tsc": "yarn clean-tsc && tsc",
     "clean-tsc": "find run/test/specs -type f -name '*.js' -delete",
     "tsc-watch": "yarn clean-tsc && tsc -w",
@@ -9,7 +10,8 @@
     "test-ios": "_TESTING=1 mocha --timeout 300000 -retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep ios",
     "test-android": "_TESTING=1 mocha --timeout 300000 -retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep android",
     "build-and-test": "yarn tsc && yarn test",
-    "test-grep": "_TESTING=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep \"$TEST_GREP\""
+    "test-grep": "_TESTING=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep \"$TEST_GREP\"",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@appium/execute-driver-plugin": "3.0.23",
@@ -26,10 +28,13 @@
     "ci": "^2.2.0",
     "config": "^3.3.11",
     "eslint": "^8.33.0",
+    "eslint-config-prettier": "^9.1.0",
+    "husky": "^8.0.0",
     "jest": "^29.3.1",
     "lodash": "^4.17.21",
     "mocha": "^10.2.0",
     "png-js": "^1.0.0",
+    "prettier": "^3.2.5",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.3",
     "wd": "^1.14.0",

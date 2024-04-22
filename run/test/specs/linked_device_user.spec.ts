@@ -5,12 +5,7 @@ import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils/index";
 import { linkedDevice } from "./utils/link_device";
-import {
-  closeApp,
-  openAppThreeDevices,
-  openAppTwoDevices,
-  SupportedPlatformsType,
-} from "./utils/open_app";
+import { SupportedPlatformsType, closeApp, openAppThreeDevices, openAppTwoDevices } from "./utils/open_app";
 import { runScriptAndLog } from "./utils/utilities";
 
 async function linkDevice(platform: SupportedPlatformsType) {
@@ -19,10 +14,7 @@ async function linkDevice(platform: SupportedPlatformsType) {
   // link device
   const userA = await linkedDevice(device1, device2, "Alice", platform);
   // Check that 'Youre almost finished' reminder doesn't pop up on device2
-  await device2.hasElementBeenDeleted(
-    "accessibility id",
-    "Recovery phrase reminder"
-  );
+  await device2.hasElementBeenDeleted("accessibility id", "Recovery phrase reminder");
   // Verify username and session ID match
   await device2.clickOnElement("User settings");
   // Check username
@@ -52,10 +44,7 @@ async function contactsSyncLinkedDevice(platform: SupportedPlatformsType) {
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Back"));
   await runOnlyOnAndroid(platform, () => device1.clickOnElement("Navigate up"));
   // Check that user synced on linked device
-  await device2.findMatchingTextAndAccessibilityId(
-    "Conversation list item",
-    userB.userName
-  );
+  await device2.findMatchingTextAndAccessibilityId("Conversation list item", userB.userName);
   await closeApp(device1, device2, device3);
 }
 // TO FIX (USERNAME ISN'T CORRECT)
@@ -80,9 +69,7 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   await device2.clickOnElement("User settings");
   await runOnlyOnAndroid(platform, () => device2.navigateBack(platform));
   await sleepFor(1000);
-  await runOnlyOnAndroid(platform, () =>
-    device2.clickOnElement("User settings")
-  );
+  await runOnlyOnAndroid(platform, () => device2.clickOnElement("User settings"));
   const changedUsername = await device2.grabTextFromAccessibilityId("Username");
   console.log("Username is now: ", changedUsername);
   await sleepFor(100);
@@ -123,9 +110,7 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   // Select delete
   await device1.clickOnElement("Delete message");
   // Select delete for everyone
-  await runOnlyOnAndroid(platform, () =>
-    device1.clickOnElement("Delete just for me")
-  );
+  await runOnlyOnAndroid(platform, () => device1.clickOnElement("Delete just for me"));
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Delete for me"));
 
   // await waitForLoadingAnimation(device1);
@@ -192,9 +177,7 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
   await device1.clickOnElement("More options");
   // Select block (menu option for android and toggle for ios)
   await sleepFor(100);
-  await runOnlyOnAndroid(platform, () =>
-    device1.clickOnTextElementById(`network.loki.messenger:id/title`, "Block")
-  );
+  await runOnlyOnAndroid(platform, () => device1.clickOnTextElementById(`network.loki.messenger:id/title`, "Block"));
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Block"));
   // Confirm block
   await device1.clickOnElement("Confirm block");
@@ -256,24 +239,22 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   // Check if image is already on device
   const profilePicture = await device1.doesElementExist({
     strategy: "accessibility id",
+    // eslint-disable-next-line no-irregular-whitespace
     selector: `Photo, 01 May 1998, 7:00 am`,
     maxWait: 2000,
   });
   // If no image, push file to device
   if (!profilePicture) {
-    await runScriptAndLog(
-      `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/profile_picture.jpg'`
-    );
+    await runScriptAndLog(`touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/profile_picture.jpg'`);
 
     await runScriptAndLog(
-      `xcrun simctl addmedia ${
-        getIosFirstSimulator()
-      } 'run/test/specs/media/profile_picture.jpg'`,
-      true
+      `xcrun simctl addmedia ${getIosFirstSimulator()} 'run/test/specs/media/profile_picture.jpg'`,
+      true,
     );
   }
   await sleepFor(100);
   // Select file
+  // eslint-disable-next-line no-irregular-whitespace
   await device1.clickOnElement(`Photo, 01 May 1998, 7:00 am`);
   await device1.clickOnElement("Done");
   await device1.clickOnElement("Save");
@@ -326,9 +307,7 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
     strategy: "accessibility id",
     selector: "Upload",
   });
-  await device1.clickOnElementById(
-    "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
-  );
+  await device1.clickOnElementById("com.android.permissioncontroller:id/permission_allow_foreground_only_button");
   await sleepFor(500);
   await device1.clickOnElementAll({
     strategy: "xpath",
@@ -343,13 +322,11 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   });
   // If no image, push file to device
   if (!profilePicture) {
-    await runScriptAndLog(
-      `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/profile_picture.jpg'`
-    );
+    await runScriptAndLog(`touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/profile_picture.jpg'`);
 
     await runScriptAndLog(
       `adb -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /storage/emulated/0/Download`,
-      true
+      true,
     );
     await device1.clickOnElementAll({
       strategy: "accessibility id",
@@ -362,9 +339,7 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   }
   await sleepFor(100);
   await device1.clickOnElement(`profile_picture.jpg, 27.75 kB, May 2, 1999`);
-  await device1.clickOnElementById(
-    "network.loki.messenger:id/crop_image_menu_crop"
-  );
+  await device1.clickOnElementById("network.loki.messenger:id/crop_image_menu_crop");
   await sleepFor(2000);
   // Wait for change
   // Verify change

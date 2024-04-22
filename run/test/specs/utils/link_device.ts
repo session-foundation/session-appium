@@ -9,18 +9,14 @@ export const linkedDevice = async (
   device1: DeviceWrapper,
   device2: DeviceWrapper,
   userName: Username,
-  platform: SupportedPlatformsType
+  platform: SupportedPlatformsType,
 ) => {
   const user = await newUser(device1, userName, platform);
   // Log in with recovery seed on device 2
 
   await device2.clickOnElement("Link a device");
   // Enter recovery phrase into input box
-  await device2.inputText(
-    "accessibility id",
-    "Enter your recovery phrase",
-    user.recoveryPhrase
-  );
+  await device2.inputText("accessibility id", "Enter your recovery phrase", user.recoveryPhrase);
   await sleepFor(1000);
   // Continue with recovery phrase
   await device2.clickOnElement("Continue");
@@ -41,10 +37,7 @@ export const linkedDevice = async (
   await sleepFor(1000);
   await device2.hasElementBeenDeleted("accessibility id", "Continue");
   await runOnlyOnAndroid(platform, () =>
-    device2.clickOnTextElementById(
-      `com.android.permissioncontroller:id/permission_allow_button`,
-      "Allow"
-    )
+    device2.clickOnTextElementById(`com.android.permissioncontroller:id/permission_allow_button`, "Allow"),
   );
   // Check that button was clicked
   await device2.waitForTextElementToBePresent({

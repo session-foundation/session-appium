@@ -4,19 +4,12 @@ import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { joinCommunity } from "./utils/join_community";
 
-import {
-  closeApp,
-  openAppTwoDevices,
-  SupportedPlatformsType,
-} from "./utils/open_app";
+import { closeApp, openAppTwoDevices, SupportedPlatformsType } from "./utils/open_app";
 import { runScriptAndLog } from "./utils/utilities";
 
 async function sendImage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+  const [userA, userB] = await Promise.all([newUser(device1, "Alice", platform), newUser(device2, "Bob", platform)]);
   const replyMessage = `Replying to image from ${userA.userName}`;
   await newContact(platform, device1, userA, device2, userB);
   await device1.sendImage(platform, "Sending image");
@@ -46,10 +39,7 @@ async function sendImage(platform: SupportedPlatformsType) {
 async function sendDocument(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
 
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+  const [userA, userB] = await Promise.all([newUser(device1, "Alice", platform), newUser(device2, "Bob", platform)]);
   const replyMessage = `Replying to document from ${userA.userName}`;
   await newContact(platform, device1, userA, device2, userB);
   await device1.clickOnElement("Attachments button");
@@ -75,7 +65,7 @@ async function sendDocument(platform: SupportedPlatformsType) {
   if (!testDocument) {
     await runScriptAndLog(
       `adb -s emulator-5554 push 'run/test/specs/media/test_file.pdf' /storage/emulated/0/Download`,
-      true
+      true,
     );
   }
   await sleepFor(100);
@@ -104,10 +94,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
   // open devices
   const { device1, device2 } = await openAppTwoDevices(platform);
   // create user a and user b
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+  const [userA, userB] = await Promise.all([newUser(device1, "Alice", platform), newUser(device2, "Bob", platform)]);
   const replyMessage = `Replying to video from ${userA.userName}`;
   // create contact
   await newContact(platform, device1, userA, device2, userB);
@@ -132,7 +119,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
     // Adds video to downloads folder if it isn't already there
     await runScriptAndLog(
       `adb -s emulator-5554 push 'run/test/specs/media/test_video.mp4' /storage/emulated/0/Download`,
-      true
+      true,
     );
   }
 
@@ -170,10 +157,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
 async function sendVoiceMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // create user a and user b
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+  const [userA, userB] = await Promise.all([newUser(device1, "Alice", platform), newUser(device2, "Bob", platform)]);
   const replyMessage = `Replying to voice message from ${userA.userName}`;
   await newContact(platform, device1, userA, device2, userB);
   // Select voice message button to activate recording state
@@ -181,7 +165,7 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
 
   await device1.clickOnElement("Continue");
   await device1.clickOnElementXPath(
-    `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
+    `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`,
   );
   await device1.pressAndHold("New voice message");
   // await device1.waitForTextElementToBePresent("Voice message");
@@ -205,10 +189,7 @@ async function sendGif(platform: SupportedPlatformsType) {
   // open devices and server
   const { device1, device2 } = await openAppTwoDevices(platform);
   // create user a and user b
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+  const [userA, userB] = await Promise.all([newUser(device1, "Alice", platform), newUser(device2, "Bob", platform)]);
   const replyMessage = `Replying to GIF from ${userA.userName}`;
   // create contact
   await newContact(platform, device1, userA, device2, userB);
@@ -225,7 +206,7 @@ async function sendGif(platform: SupportedPlatformsType) {
   // Select gif
   await sleepFor(3000);
   await device1.clickOnElementXPath(
-    `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`
+    `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`,
   );
 
   // Check if the 'Tap to download media' config appears
@@ -257,10 +238,7 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
   // Open device and server
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and User B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+  const [userA, userB] = await Promise.all([newUser(device1, "Alice", platform), newUser(device2, "Bob", platform)]);
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Send a long message from User A to User B
@@ -281,10 +259,7 @@ async function sendLink(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const testLink = `https://example.org/`;
   // Create two users
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+  const [userA, userB] = await Promise.all([newUser(device1, "Alice", platform), newUser(device2, "Bob", platform)]);
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Send a link
@@ -314,10 +289,7 @@ async function sendCommunityInviteMessage(platform: SupportedPlatformsType) {
   const communityLink = `https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17`;
   const communityName = "Testing All The Things!";
   // Create two users
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+  const [userA, userB] = await Promise.all([newUser(device1, "Alice", platform), newUser(device2, "Bob", platform)]);
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Join community
@@ -345,17 +317,12 @@ async function sendCommunityInviteMessage(platform: SupportedPlatformsType) {
 async function unsendMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create two users
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+  const [userA, userB] = await Promise.all([newUser(device1, "Alice", platform), newUser(device2, "Bob", platform)]);
 
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // send message from User A to User B
-  const sentMessage = await device1.sendMessage(
-    "Checking unsend functionality"
-  );
+  const sentMessage = await device1.sendMessage("Checking unsend functionality");
   // await sleepFor(1000);
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -381,16 +348,11 @@ async function unsendMessage(platform: SupportedPlatformsType) {
 async function deleteMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create two users
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+  const [userA, userB] = await Promise.all([newUser(device1, "Alice", platform), newUser(device2, "Bob", platform)]);
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // send message from User A to User B
-  const sentMessage = await device1.sendMessage(
-    "Checking deletion functionality"
-  );
+  const sentMessage = await device1.sendMessage("Checking deletion functionality");
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
@@ -416,10 +378,7 @@ async function deleteMessage(platform: SupportedPlatformsType) {
 async function checkPerformance(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create two users
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+  const [userA, userB] = await Promise.all([newUser(device1, "Alice", platform), newUser(device2, "Bob", platform)]);
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   const timesArray1: Array<number> = [];

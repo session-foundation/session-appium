@@ -1,22 +1,22 @@
 const config = {
   programs: {
-    adbPath: '',
-    sdkManagerPath: '',
-    emulatorPath: '',
-    androidSystemImage: '',
+    adbPath: "",
+    sdkManagerPath: "",
+    emulatorPath: "",
+    androidSystemImage: "",
   },
   emulators: {
-    ios: { first: '', second: '', third: '', fourth: '' },
+    ios: { first: "", second: "", third: "", fourth: "" },
     android: {
-      first: '',
-      second: '',
-      third: '',
-      fourth: '',
+      first: "",
+      second: "",
+      third: "",
+      fourth: "",
     }, // those are emulator udid
   },
   testedApps: {
-    ios: '',
-    android: '',
+    ios: "",
+    android: "",
   },
 };
 

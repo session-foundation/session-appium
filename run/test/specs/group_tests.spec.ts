@@ -3,12 +3,7 @@ import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { createGroup } from "./utils/create_group";
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils/index";
-import {
-  closeApp,
-  openAppFourDevices,
-  openAppThreeDevices,
-  SupportedPlatformsType,
-} from "./utils/open_app";
+import { closeApp, openAppFourDevices, openAppThreeDevices, SupportedPlatformsType } from "./utils/open_app";
 
 async function groupCreation(platform: SupportedPlatformsType) {
   const testGroupName = "Test group";
@@ -20,16 +15,7 @@ async function groupCreation(platform: SupportedPlatformsType) {
     newUser(device3, "Charlie", platform),
   ]);
   // Create contact between User A and User B and User C
-  await createGroup(
-    platform,
-    device1,
-    userA,
-    device2,
-    userB,
-    device3,
-    userC,
-    testGroupName
-  );
+  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   // Close server and devices
   await closeApp(device1, device2, device3);
 }
@@ -46,26 +32,14 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   ]);
   // Create group
 
-  await createGroup(
-    platform,
-    device1,
-    userA,
-    device2,
-    userB,
-    device3,
-    userC,
-    testGroupName
-  );
+  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   // Now change the group name
 
   // Click on settings or three dots
   await device1.clickOnElement("More options");
   // Click on Edit group option
   await sleepFor(1000);
-  await device1.clickOnTextElementById(
-    `network.loki.messenger:id/title`,
-    "Edit group"
-  );
+  await device1.clickOnTextElementById(`network.loki.messenger:id/title`, "Edit group");
 
   // Click on current group name
   await device1.clickOnElement("Group name");
@@ -84,9 +58,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnElementById("network.loki.messenger:id/action_apply");
   // Check config message for changed name (different on ios and android)
   // Config on Android is "You renamed the group to blah"
-  await device1.waitForControlMessageToBePresent(
-    `You renamed the group to ${newGroupName}`
-  );
+  await device1.waitForControlMessageToBePresent(`You renamed the group to ${newGroupName}`);
 
   await closeApp(device1, device2, device3);
 }
@@ -103,16 +75,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   ]);
   // Create group
 
-  await createGroup(
-    platform,
-    device1,
-    userA,
-    device2,
-    userB,
-    device3,
-    userC,
-    testGroupName
-  );
+  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   // Now change the group name
 
   // Click on settings or three dots
@@ -136,11 +99,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   // Enter new group name
   await device1.clickOnElement("Group name");
 
-  await device1.inputText(
-    "accessibility id",
-    "Group name text field",
-    newGroupName
-  );
+  await device1.inputText("accessibility id", "Group name text field", newGroupName);
   // Click done/apply
   await device1.clickOnElement("Accept name change");
 
@@ -148,18 +107,14 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
   // Config message on ios is "Title is now blah"
-  await device1.waitForControlMessageToBePresent(
-    `Title is now '${newGroupName}'.`
-  );
+  await device1.waitForControlMessageToBePresent(`Title is now '${newGroupName}'.`);
   // Config on Android is "You renamed the group to blah"
 
   await closeApp(device1, device2, device3);
 }
 
 async function addContactToGroup(platform: SupportedPlatformsType) {
-  const { device1, device2, device3, device4 } = await openAppFourDevices(
-    platform
-  );
+  const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -167,16 +122,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     newUser(device3, "Charlie", platform),
   ]);
   const testGroupName = "Group to test adding contact";
-  const group = await createGroup(
-    platform,
-    device1,
-    userA,
-    device2,
-    userB,
-    device3,
-    userC,
-    testGroupName
-  );
+  const group = await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   const userD = await newUser(device4, "Dracula", platform);
   await device1.navigateBack(platform);
   await newContact(platform, device1, userA, device4, userD);
@@ -190,10 +136,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Edit group"));
   await sleepFor(1000);
   await runOnlyOnAndroid(platform, () =>
-    device1.clickOnTextElementById(
-      `network.loki.messenger:id/title`,
-      "Edit group"
-    )
+    device1.clickOnTextElementById(`network.loki.messenger:id/title`, "Edit group"),
   );
   // Add contact to group
   await device1.clickOnElement("Add members");
@@ -204,30 +147,18 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Click done/apply again
   await sleepFor(1000);
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Apply changes"));
-  await runOnlyOnAndroid(platform, () =>
-    device1.clickOnElementById("network.loki.messenger:id/action_apply")
-  );
+  await runOnlyOnAndroid(platform, () => device1.clickOnElementById("network.loki.messenger:id/action_apply"));
   // Check config message
-  await runOnlyOnIOS(platform, () =>
-    device1.waitForControlMessageToBePresent(
-      `${userD.userName} joined the group.`
-    )
-  );
+  await runOnlyOnIOS(platform, () => device1.waitForControlMessageToBePresent(`${userD.userName} joined the group.`));
   await runOnlyOnAndroid(platform, () =>
-    device1.waitForControlMessageToBePresent(
-      `You added ${userD.userName} to the group.`
-    )
+    device1.waitForControlMessageToBePresent(`You added ${userD.userName} to the group.`),
   );
   // Exit to conversation list
   await device4.navigateBack(platform);
   // Select group conversation in list
   await device4.selectByText("Conversation list item", group.userName);
   // Check config
-  await runOnlyOnIOS(platform, () =>
-    device4.waitForControlMessageToBePresent(
-      `${userD.userName} joined the group.`
-    )
-  );
+  await runOnlyOnIOS(platform, () => device4.waitForControlMessageToBePresent(`${userD.userName} joined the group.`));
   await closeApp(device1, device2, device3, device4);
 }
 
@@ -241,16 +172,7 @@ async function mentionsForGroupsIos(platform: SupportedPlatformsType) {
   ]);
   const testGroupName = "Mentions test group";
   // Create contact between User A and User B
-  await createGroup(
-    platform,
-    device1,
-    userA,
-    device2,
-    userB,
-    device3,
-    userC,
-    testGroupName
-  );
+  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   await device1.inputText("accessibility id", "Message input box", "@");
   // Check that all users are showing in mentions box
   await device1.findElement("accessibility id", "Mentions list");
@@ -281,16 +203,7 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   ]);
   const testGroupName = "Mentions test group";
   // Create contact between User A and User B
-  await createGroup(
-    platform,
-    device1,
-    userA,
-    device2,
-    userB,
-    device3,
-    userC,
-    testGroupName
-  );
+  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   await device1.inputText("accessibility id", "Message input box", "@");
   // Check that all users are showing in mentions box
   await device1.waitForTextElementToBePresent({
@@ -358,28 +271,15 @@ async function leaveGroupIos(platform: SupportedPlatformsType) {
   ]);
 
   // Create group with user A, user B and User C
-  await createGroup(
-    platform,
-    device1,
-    userA,
-    device2,
-    userB,
-    device3,
-    userC,
-    testGroupName
-  );
+  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   await device3.clickOnElement("More options");
   await sleepFor(1000);
   await device3.clickOnElement("Leave group");
   await device3.clickOnElement("Leave");
   await device3.navigateBack(platform);
   // Check for control message
-  await device2.waitForControlMessageToBePresent(
-    `${userC.userName} left the group.`
-  );
-  await device1.waitForControlMessageToBePresent(
-    `${userC.userName} left the group.`
-  );
+  await device2.waitForControlMessageToBePresent(`${userC.userName} left the group.`);
+  await device1.waitForControlMessageToBePresent(`${userC.userName} left the group.`);
   await closeApp(device1, device2, device3);
 }
 // TO FIX (LEAVE GROUP CONFIRMATION ON DIALOG NOT WORKING)
@@ -394,33 +294,17 @@ async function leaveGroupAndroid(platform: SupportedPlatformsType) {
   ]);
 
   // Create group with user A, user B and User C
-  await createGroup(
-    platform,
-    device1,
-    userA,
-    device2,
-    userB,
-    device3,
-    userC,
-    testGroupName
-  );
+  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   await device3.clickOnElement("More options");
   await sleepFor(1000);
-  await device3.clickOnTextElementById(
-    `network.loki.messenger:id/title`,
-    "Leave group"
-  );
+  await device3.clickOnTextElementById(`network.loki.messenger:id/title`, "Leave group");
   await device3.clickOnElementAll({
     strategy: "accessibility id",
     selector: "Yes",
   });
   // Check for control message
-  await device2.waitForControlMessageToBePresent(
-    `${userC.userName} has left the group.`
-  );
-  await device1.waitForControlMessageToBePresent(
-    `${userC.userName} has left the group.`
-  );
+  await device2.waitForControlMessageToBePresent(`${userC.userName} has left the group.`);
+  await device1.waitForControlMessageToBePresent(`${userC.userName} has left the group.`);
   await closeApp(device1, device2, device3);
 }
 

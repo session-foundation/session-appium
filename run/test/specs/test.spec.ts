@@ -1,13 +1,7 @@
-import { DeviceWrapper } from "../../types/DeviceWrapper";
 import { androidIt, iosIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
-import { linkedDevice } from "./utils/link_device";
 
-import {
-  openAppOnPlatformSingleDevice,
-  openAppTwoDevices,
-  SupportedPlatformsType,
-} from "./utils/open_app";
+import { openAppOnPlatformSingleDevice, SupportedPlatformsType } from "./utils/open_app";
 
 async function tinyTest(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);

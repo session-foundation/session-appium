@@ -6,7 +6,7 @@ import { DeviceWrapper } from "../../../types/DeviceWrapper";
 export const newUser = async (
   device: DeviceWrapper,
   userName: Username,
-  platform: SupportedPlatformsType
+  platform: SupportedPlatformsType,
 ): Promise<User> => {
   // Click create session ID
   const createSessionId = "Create session ID";
@@ -34,9 +34,7 @@ export const newUser = async (
   await device.clickOnElement("Continue");
   // Choose message notification options
   // Want to choose 'Slow Mode' so notifications don't interrupt test
-  await runOnlyOnAndroid(platform, () =>
-    device.clickOnElement("Slow mode notifications option")
-  );
+  await runOnlyOnAndroid(platform, () => device.clickOnElement("Slow mode notifications option"));
   await device.clickOnElement("Continue with settings");
   // Need to add Don't allow notifications dismiss here
   await runOnlyOnIOS(platform, () => device.clickOnElement("Don’t Allow"));
@@ -46,7 +44,7 @@ export const newUser = async (
       strategy: "id",
       selector: `com.android.permissioncontroller:id/permission_allow_button`,
       text: "Allow",
-    })
+    }),
   );
   // Click on 'continue' button to open recovery phrase modal
   await device.waitForTextElementToBePresent({
@@ -57,9 +55,7 @@ export const newUser = async (
   // Long Press the recovery phrase to reveal recovery phrase
   await device.longPress("Recovery Phrase");
   // Save recovery phrase as variable
-  const recoveryPhrase = await device.grabTextFromAccessibilityId(
-    "Recovery Phrase"
-  );
+  const recoveryPhrase = await device.grabTextFromAccessibilityId("Recovery Phrase");
   console.log(`${userName}s recovery phrase is "${recoveryPhrase}"`);
   // Exit Modal
   await device.clickOnElement("Navigate up");

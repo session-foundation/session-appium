@@ -4,11 +4,7 @@ import { sleepFor, clickOnCoordinates } from "./utils";
 import { getIosFirstSimulator } from "./utils/config";
 import { newUser } from "./utils/create_account";
 import { createGroup } from "./utils/create_group";
-import {
-  SupportedPlatformsType,
-  openAppThreeDevices,
-  closeApp,
-} from "./utils/open_app";
+import { SupportedPlatformsType, openAppThreeDevices, closeApp } from "./utils/open_app";
 import { runScriptAndLog } from "./utils/utilities";
 
 async function sendImageGroup(platform: SupportedPlatformsType) {
@@ -23,23 +19,11 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
     newUser(device3, "Charlie", platform),
   ]);
   // Create contact between User A and User B
-  await createGroup(
-    platform,
-    device1,
-    userA,
-    device2,
-    userB,
-    device3,
-    userC,
-    testGroupName
-  );
+  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   // await device1.sendImage(platform, testMessage);
   await device1.clickOnElement("Attachments button");
   await sleepFor(5000);
-  await clickOnCoordinates(
-    device1,
-    InteractionPoints.ImagesFolderKeyboardClosed
-  );
+  await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardClosed);
 
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
@@ -62,15 +46,11 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
     maxWait: 2000,
   });
   if (!testImage) {
-    await runScriptAndLog(
-      `touch -a -m -t ${ronSwansonBirthday} 'run/test/specs/media/test_image.jpg'`
-    );
+    await runScriptAndLog(`touch -a -m -t ${ronSwansonBirthday} 'run/test/specs/media/test_image.jpg'`);
 
     await runScriptAndLog(
-      `xcrun simctl addmedia ${
-        getIosFirstSimulator()
-      } 'run/test/specs/media/test_image.jpg'`,
-      true
+      `xcrun simctl addmedia ${getIosFirstSimulator()} 'run/test/specs/media/test_image.jpg'`,
+      true,
     );
   }
   await sleepFor(100);
@@ -110,25 +90,13 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
   ]);
 
   // Create contact between User A and User B
-  await createGroup(
-    platform,
-    device1,
-    userA,
-    device2,
-    userB,
-    device3,
-    userC,
-    testGroupName
-  );
+  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   const bestDayOfYear = `198809090700.00`;
   const testMessage = "Testing-video-1";
   const replyMessage = `Replying to video from ${userA.userName} in ${testGroupName}`;
   await device1.clickOnElement("Attachments button");
   await sleepFor(100);
-  await clickOnCoordinates(
-    device1,
-    InteractionPoints.ImagesFolderKeyboardClosed
-  );
+  await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardClosed);
 
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
@@ -165,15 +133,10 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
     await device1.clickOnElement(`1988-09-08 21:00:00 +0000`);
   } else {
     console.log("Videos folder NOT found");
+    await runScriptAndLog(`touch -a -m -t ${bestDayOfYear} 'run/test/specs/media/test_video.mp4'`, true);
     await runScriptAndLog(
-      `touch -a -m -t ${bestDayOfYear} 'run/test/specs/media/test_video.mp4'`,
-      true
-    );
-    await runScriptAndLog(
-      `xcrun simctl addmedia ${
-        getIosFirstSimulator()
-      } 'run/test/specs/media/test_video.mp4'`,
-      true
+      `xcrun simctl addmedia ${getIosFirstSimulator()} 'run/test/specs/media/test_video.mp4'`,
+      true,
     );
     await device1.clickOnElement(`1988-09-08 21:00:00 +0000`, 5000);
   }
@@ -225,16 +188,7 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType) {
   ]);
 
   // Create contact between User A and User B
-  await createGroup(
-    platform,
-    device1,
-    userA,
-    device2,
-    userB,
-    device3,
-    userC,
-    testGroupName
-  );
+  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   const replyMessage = `Replying to voice message from ${userA.userName} in ${testGroupName}`;
   await device1.longPress("New voice message");
   // "Session" would like to access the microphone (Don't allow/ OK)
@@ -282,16 +236,7 @@ async function sendDocGroup(platform: SupportedPlatformsType) {
   ]);
 
   // Create contact between User A and User B
-  await createGroup(
-    platform,
-    device1,
-    userA,
-    device2,
-    userB,
-    device3,
-    userC,
-    testGroupName
-  );
+  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
 }
 
 async function sendGifGroup(platform: SupportedPlatformsType) {
@@ -306,16 +251,7 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
   const testMessage = "Testing-GIF-1";
   const replyMessage = `Replying to GIF from ${userA.userName}`;
   // Create contact between User A and User B
-  await createGroup(
-    platform,
-    device1,
-    userA,
-    device2,
-    userB,
-    device3,
-    userC,
-    testGroupName
-  );
+  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   await device1.clickOnElement("Attachments button");
   // Select GIF tab
   await clickOnCoordinates(device1, InteractionPoints.GifButtonKeyboardOpen);
@@ -323,9 +259,7 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
   await sleepFor(500);
   // Need to select Continue on GIF warning
   await device1.clickOnElement("Continue");
-  await device1.clickOnElementXPath(
-    `(//XCUIElementTypeImage[@name="gif cell"])[1]`
-  );
+  await device1.clickOnElementXPath(`(//XCUIElementTypeImage[@name="gif cell"])[1]`);
   await device1.clickOnElement("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
   await device1.clickOnElement("Send button");
@@ -371,16 +305,7 @@ async function sendLongMessageGroup(platform: SupportedPlatformsType) {
   ]);
 
   // Create contact between User A and User B
-  await createGroup(
-    platform,
-    device1,
-    userA,
-    device2,
-    userB,
-    device3,
-    userC,
-    testGroupName
-  );
+  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   await device1.sendMessage(longText);
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -419,16 +344,7 @@ async function sendLinkGroup(platform: SupportedPlatformsType) {
   ]);
 
   // Create contact between User A and User B
-  await createGroup(
-    platform,
-    device1,
-    userA,
-    device2,
-    userB,
-    device3,
-    userC,
-    testGroupName
-  );
+  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   await device1.inputText("accessibility id", "Message input box", testLink);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -478,19 +394,8 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
   ]);
 
   // Create contact between User A and User B
-  await createGroup(
-    platform,
-    device1,
-    userA,
-    device2,
-    userB,
-    device3,
-    userC,
-    testGroupName
-  );
-  const sentMessage = await device1.sendMessage(
-    "Checking delete functionality"
-  );
+  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
+  const sentMessage = await device1.sendMessage("Checking delete functionality");
   // await sleepFor(1000);
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",

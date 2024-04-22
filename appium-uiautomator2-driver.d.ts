@@ -1,1 +1,1 @@
-declare module 'appium-uiautomator2-driver' {}
+declare module "appium-uiautomator2-driver" {}

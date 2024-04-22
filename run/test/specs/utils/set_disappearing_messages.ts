@@ -7,15 +7,15 @@ export const setDisappearingMessage = async (
   platform: SupportedPlatformsType,
   device: DeviceWrapper,
   [conversationType, timerType, timerDuration]: MergedOptions,
-  device2?: DeviceWrapper
+  device2?: DeviceWrapper,
 ) => {
   const enforcedType: ConversationType = conversationType;
   await device.clickOnElement("More options");
   await sleepFor(500);
   if (platform === "ios") {
-    device.clickOnElement("Disappearing Messages");
+    await device.clickOnElement("Disappearing Messages");
   } else {
-    device.clickOnElementAll({
+    await device.clickOnElementAll({
       strategy: "id",
       selector: `network.loki.messenger:id/title`,
       text: "Disappearing messages",

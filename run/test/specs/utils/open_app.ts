@@ -1,26 +1,26 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { getAndroidCapabilities, getAndroidUdid } from './capabilities_android';
-import { CapabilitiesIndexType, getIosCapabilities } from './capabilities_ios';
-import { installAppToDeviceName, runScriptAndLog } from './utilities';
+import { getAndroidCapabilities, getAndroidUdid } from "./capabilities_android";
+import { CapabilitiesIndexType, getIosCapabilities } from "./capabilities_ios";
+import { installAppToDeviceName, runScriptAndLog } from "./utilities";
 
-import * as androidDriver from 'appium-uiautomator2-driver';
-import * as iosDriver from 'appium-xcuitest-driver';
+import * as androidDriver from "appium-uiautomator2-driver";
+import * as iosDriver from "appium-xcuitest-driver";
 
-import { DriverOpts } from 'appium/build/lib/appium';
-import { compact } from 'lodash';
-import { DeviceWrapper } from '../../../types/DeviceWrapper';
+import { DriverOpts } from "appium/build/lib/appium";
+import { compact } from "lodash";
+import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import {
   getAdbFullPath,
   getAndroidAppFulPath,
   getAndroidSystemImageToUse,
   getEmulatorFullPath,
   getSdkManagerFullPath,
-} from './config';
-import { sleepFor } from './sleep_for';
+} from "./config";
+import { sleepFor } from "./sleep_for";
 
 const APPIUM_PORT = 4728;
 
-export type SupportedPlatformsType = 'android' | 'ios';
+export type SupportedPlatformsType = "android" | "ios";
 
 /* ******************Command to run Appium Server: *************************************
 ./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --use-plugins=execute-driver --allow-cors
@@ -28,17 +28,15 @@ export type SupportedPlatformsType = 'android' | 'ios';
 
 const openAppOnPlatform = async (
   platform: SupportedPlatformsType,
-  capabilitiesIndex: CapabilitiesIndexType
+  capabilitiesIndex: CapabilitiesIndexType,
 ): Promise<{
   device: DeviceWrapper;
 }> => {
-  return platform === 'ios'
-    ? openiOSApp(capabilitiesIndex)
-    : openAndroidApp(capabilitiesIndex);
+  return platform === "ios" ? openiOSApp(capabilitiesIndex) : openAndroidApp(capabilitiesIndex);
 };
 
 export const openAppOnPlatformSingleDevice = async (
-  platform: SupportedPlatformsType
+  platform: SupportedPlatformsType,
 ): Promise<{
   device: DeviceWrapper;
 }> => {
@@ -46,21 +44,18 @@ export const openAppOnPlatformSingleDevice = async (
 };
 
 export const openAppTwoDevices = async (
-  platform: SupportedPlatformsType
+  platform: SupportedPlatformsType,
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
 }> => {
-  const [app1, app2] = await Promise.all([
-    openAppOnPlatform(platform, 0),
-    openAppOnPlatform(platform, 1),
-  ]);
+  const [app1, app2] = await Promise.all([openAppOnPlatform(platform, 0), openAppOnPlatform(platform, 1)]);
 
   return { device1: app1.device, device2: app2.device };
 };
 
 export const openAppThreeDevices = async (
-  platform: SupportedPlatformsType
+  platform: SupportedPlatformsType,
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
@@ -80,7 +75,7 @@ export const openAppThreeDevices = async (
 };
 
 export const openAppFourDevices = async (
-  platform: SupportedPlatformsType
+  platform: SupportedPlatformsType,
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
@@ -119,19 +114,14 @@ async function startAndroidEmulator(emulatorName: string) {
   const startEmulatorCmd = `${getEmulatorFullPath()} @${emulatorName}  `;
   console.warn(`${startEmulatorCmd} & ; disown`);
   await runScriptAndLog(
-    startEmulatorCmd // -netdelay none -no-snapshot -wipe-data
+    startEmulatorCmd, // -netdelay none -no-snapshot -wipe-data
   );
 }
 
 async function isEmulatorRunning(emulatorName: string) {
-  const failedWith = await runScriptAndLog(
-    `${getAdbFullPath()} -s ${emulatorName} get-state;`
-  );
+  const failedWith = await runScriptAndLog(`${getAdbFullPath()} -s ${emulatorName} get-state;`);
 
-  return (
-    !failedWith ||
-    !(failedWith.includes('error') || failedWith.includes('offline'))
-  );
+  return !failedWith || !(failedWith.includes("error") || failedWith.includes("offline"));
 }
 
 async function waitForEmulatorToBeRunning(emulatorName: string) {
@@ -151,10 +141,10 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
 
   do {
     const bootedOrNah = await runScriptAndLog(
-      `${getAdbFullPath()} -s  "${emulatorName}" shell getprop sys.boot_completed;`
+      `${getAdbFullPath()} -s  "${emulatorName}" shell getprop sys.boot_completed;`,
     );
 
-    found = bootedOrNah.includes('1');
+    found = bootedOrNah.includes("1");
 
     await sleepFor(500);
   } while (Date.now() - start < 25000 && !found);
@@ -163,7 +153,7 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
 }
 
 const openAndroidApp = async (
-  capabilitiesIndex: CapabilitiesIndexType
+  capabilitiesIndex: CapabilitiesIndexType,
 ): Promise<{
   device: DeviceWrapper;
 }> => {
@@ -171,24 +161,20 @@ const openAndroidApp = async (
   const targetName = getAndroidUdid(capabilitiesIndex);
 
   const emulatorAlreadyRunning = await isEmulatorRunning(targetName);
-  console.warn('emulatorAlreadyRunning', targetName, emulatorAlreadyRunning);
+  console.warn("emulatorAlreadyRunning", targetName, emulatorAlreadyRunning);
   if (!emulatorAlreadyRunning) {
     await createAndroidEmulator(targetName);
     void startAndroidEmulator(targetName);
   }
   await waitForEmulatorToBeRunning(targetName);
-  console.log(targetName, ' emulator booted');
+  console.log(targetName, " emulator booted");
 
   await installAppToDeviceName(getAndroidAppFulPath(), targetName);
 
   const driver = (androidDriver as any).AndroidUiautomator2Driver;
 
   // console.warn('installAppToDeviceName ', driver);
-  console.log(
-    `Android App Full Path: ${
-      getAndroidCapabilities(capabilitiesIndex)['alwaysMatch']['appium:app']
-    }`
-  );
+  console.log(`Android App Full Path: ${getAndroidCapabilities(capabilitiesIndex)["alwaysMatch"]["appium:app"] || ""}`);
 
   const opts: DriverOpts = {
     address: `http://localhost:${APPIUM_PORT}`,
@@ -209,26 +195,20 @@ const openAndroidApp = async (
     allowInvisibleElements: true,
     enableMultiWindows: true,
   });
-  console.warn(
-    `${Date.now() - startUpdateSetting}ms taken by updateSettings() `
-  );
+  console.warn(`${Date.now() - startUpdateSetting}ms taken by updateSettings() `);
 
   return { device: wrappedDevice };
 };
 
 const openiOSApp = async (
-  capabilitiesIndex: CapabilitiesIndexType
+  capabilitiesIndex: CapabilitiesIndexType,
 ): Promise<{
   device: DeviceWrapper;
 }> => {
-  console.warn('openiOSApp');
+  console.warn("openiOSApp");
 
   // Logging to check that app path is correct
-  console.log(
-    `iOS App Full Path: ${
-      getIosCapabilities(capabilitiesIndex)['alwaysMatch']['appium:app']
-    }`
-  );
+  console.log(`iOS App Full Path: ${getIosCapabilities(capabilitiesIndex)["alwaysMatch"]["appium:app"] || ""}`);
   const opts: DriverOpts = {
     address: `http://localhost:${APPIUM_PORT}`,
   } as DriverOpts;
@@ -247,11 +227,9 @@ export const closeApp = async (
   device1?: DeviceWrapper,
   device2?: DeviceWrapper,
   device3?: DeviceWrapper,
-  device4?: DeviceWrapper
+  device4?: DeviceWrapper,
 ) => {
-  await Promise.all(
-    compact([device1, device2, device3, device4]).map((d) => d.deleteSession())
-  );
+  await Promise.all(compact([device1, device2, device3, device4]).map((d) => d.deleteSession()));
 
-  console.info('sessions closed');
+  console.info("sessions closed");
 };

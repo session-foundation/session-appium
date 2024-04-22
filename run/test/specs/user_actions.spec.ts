@@ -4,12 +4,7 @@ import { getIosFirstSimulator } from "./utils/config";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils/index";
-import {
-  closeApp,
-  openAppOnPlatformSingleDevice,
-  openAppTwoDevices,
-  SupportedPlatformsType,
-} from "./utils/open_app";
+import { SupportedPlatformsType, closeApp, openAppOnPlatformSingleDevice, openAppTwoDevices } from "./utils/open_app";
 import { runScriptAndLog } from "./utils/utilities";
 
 async function createContact(platform: SupportedPlatformsType) {
@@ -23,17 +18,12 @@ async function createContact(platform: SupportedPlatformsType) {
   // Wait for tick
   await closeApp(device1, device2);
 }
-async function blockUserInConversationOptions(
-  platform: SupportedPlatformsType
-) {
+async function blockUserInConversationOptions(platform: SupportedPlatformsType) {
   // Open App
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A
   // Create Bob
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+  const [userA, userB] = await Promise.all([newUser(device1, "Alice", platform), newUser(device2, "Bob", platform)]);
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Block contact
@@ -42,9 +32,7 @@ async function blockUserInConversationOptions(
   // Select Block option
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Block"));
   await sleepFor(1000);
-  await runOnlyOnAndroid(platform, () =>
-    device1.clickOnTextElementById(`network.loki.messenger:id/title`, "Block")
-  );
+  await runOnlyOnAndroid(platform, () => device1.clickOnTextElementById(`network.loki.messenger:id/title`, "Block"));
   // Confirm block option
   await device1.clickOnElement("Confirm block");
   // On ios there is an alert that confirms that the user has been blocked
@@ -67,9 +55,7 @@ async function blockUserInConversationOptions(
   // Look for alert (shouldn't be there)
   await device1.hasElementBeenDeleted("accessibility id", "Blocked banner");
   // Has capabilities returned to blocked user (can they send message)
-  const hasUserBeenUnblockedMessage = await device2.sendMessage(
-    "Hey, am I unblocked?"
-  );
+  const hasUserBeenUnblockedMessage = await device2.sendMessage("Hey, am I unblocked?");
   // Check in device 1 for message
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -86,22 +72,15 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create Alice
   // Create Bob
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+  const [userA, userB] = await Promise.all([newUser(device1, "Alice", platform), newUser(device2, "Bob", platform)]);
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Navigate back to conversation list
   await runOnlyOnAndroid(platform, () => device1.clickOnElement("Navigate up"));
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Back"));
   // on ios swipe left on conversation
-  await runOnlyOnAndroid(platform, () =>
-    device1.longPressConversation(userB.userName)
-  );
-  await runOnlyOnIOS(platform, () =>
-    device1.swipeLeft("Conversation list item", userB.userName)
-  );
+  await runOnlyOnAndroid(platform, () => device1.longPressConversation(userB.userName));
+  await runOnlyOnIOS(platform, () => device1.swipeLeft("Conversation list item", userB.userName));
   await device1.clickOnElement("Block");
   await closeApp(device1, device2);
 }
@@ -129,10 +108,7 @@ async function changeUsername(platform: SupportedPlatformsType) {
     console.log("Username is still ", userA.userName);
   }
   if (changedUsername === "Username") {
-    console.log(
-      "Username is not picking up text but using access id text",
-      changedUsername
-    );
+    console.log("Username is not picking up text but using access id text", changedUsername);
   }
   // select tick
   await runOnlyOnAndroid(platform, () => device.clickOnElement("Apply"));
@@ -156,9 +132,7 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
     strategy: "accessibility id",
     selector: "Upload",
   });
-  await device.clickOnElementById(
-    "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
-  );
+  await device.clickOnElementById("com.android.permissioncontroller:id/permission_allow_foreground_only_button");
   await sleepFor(500);
   await device.clickOnElementAll({
     strategy: "id",
@@ -182,13 +156,11 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   });
   // If no image, push file to device
   if (!profilePicture) {
-    await runScriptAndLog(
-      `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/profile_picture.jpg'`
-    );
+    await runScriptAndLog(`touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/profile_picture.jpg'`);
 
     await runScriptAndLog(
       `adb -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /storage/emulated/0/Download`,
-      true
+      true,
     );
   }
   await device.clickOnElementAll({
@@ -196,9 +168,7 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
     selector: "profile_picture.jpg, 27.75 kB, May 2, 1999",
   });
   await device.clickOnElement(`profile_picture.jpg, 27.75 kB, May 2, 1999`);
-  await device.clickOnElementById(
-    "network.loki.messenger:id/crop_image_menu_crop"
-  );
+  await device.clickOnElementById("network.loki.messenger:id/crop_image_menu_crop");
   const el = await device.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "User settings",
@@ -243,24 +213,22 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   }
   const profilePicture = await device.doesElementExist({
     strategy: "accessibility id",
+    // eslint-disable-next-line no-irregular-whitespace
     selector: `Photo, 01 May 1998, 7:00 am`,
     maxWait: 2000,
   });
   if (!profilePicture) {
-    await runScriptAndLog(
-      `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/profile_picture.jpg'`
-    );
+    await runScriptAndLog(`touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/profile_picture.jpg'`);
 
     await runScriptAndLog(
-      `xcrun simctl addmedia ${
-        getIosFirstSimulator() || ""
-      } 'run/test/specs/media/profile_picture.jpg'`,
-      true
+      `xcrun simctl addmedia ${getIosFirstSimulator() || ""} 'run/test/specs/media/profile_picture.jpg'`,
+      true,
     );
   }
   // Click on Profile picture
   // Click on Photo library
   await sleepFor(100);
+  // eslint-disable-next-line no-irregular-whitespace
   await device.clickOnElement(`Photo, 01 May 1998, 7:00 am`);
   await device.clickOnElement("Done");
 
@@ -284,10 +252,7 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
 // TO FIX (WRONG ACCESSIBILITY ID ON CONVERSATION HEADER)
 async function setNicknameAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+  const [userA, userB] = await Promise.all([newUser(device1, "Alice", platform), newUser(device2, "Bob", platform)]);
   const nickName = "New nickname";
   await newContact(platform, device1, userA, device2, userB);
   // Go back to conversation list
@@ -359,10 +324,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
 async function setNicknameIos(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const nickName = "New nickname";
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+  const [userA, userB] = await Promise.all([newUser(device1, "Alice", platform), newUser(device2, "Bob", platform)]);
   await newContact(platform, device1, userA, device2, userB);
   // Click on settings/more info
   await device1.clickOnElement("More options");
@@ -377,21 +339,13 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Done");
   // Check it's changed in heading also
   await device1.navigateBack(platform);
-  const newNickname = await device1.grabTextFromAccessibilityId(
-    "Conversation header name"
-  );
-  await device1.findMatchingTextAndAccessibilityId(
-    "Conversation header name",
-    newNickname
-  );
+  const newNickname = await device1.grabTextFromAccessibilityId("Conversation header name");
+  await device1.findMatchingTextAndAccessibilityId("Conversation header name", newNickname);
   // Check in conversation list also
   await device1.navigateBack(platform);
   // Save text of conversation list item?
   await sleepFor(1000);
-  await device1.findMatchingTextAndAccessibilityId(
-    "Conversation list item",
-    nickName
-  );
+  await device1.findMatchingTextAndAccessibilityId("Conversation list item", nickName);
   // Set nickname back to original username
   await device1.selectByText("Conversation list item", nickName);
   // Click on settings/more info
@@ -401,41 +355,30 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   // Empty username input
   await device1.deleteText("Username");
   await device1.inputText("accessibility id", "Username", " ");
-  await await device1.clickOnElement("Done");
+  await device1.clickOnElement("Done");
   // Check in conversation header
   await device1.navigateBack(platform);
   await sleepFor(500);
-  const revertedNickname = await device1.grabTextFromAccessibilityId(
-    "Conversation header name"
-  );
+  const revertedNickname = await device1.grabTextFromAccessibilityId("Conversation header name");
   console.warn(`revertedNickname:` + revertedNickname);
   if (revertedNickname !== userB.userName) {
     throw new Error(`revertedNickname doesn't match username`);
   }
   await device1.navigateBack(platform);
   // Check in conversation list aswell
-  await device1.findMatchingTextAndAccessibilityId(
-    "Conversation list item",
-    userB.userName
-  );
+  await device1.findMatchingTextAndAccessibilityId("Conversation list item", userB.userName);
   // Close app
   await closeApp(device1, device2);
 }
 
 async function readStatus(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+  const [userA, userB] = await Promise.all([newUser(device1, "Alice", platform), newUser(device2, "Bob", platform)]);
   const testMessage = "Testing read status";
   await newContact(platform, device1, userA, device2, userB);
   // Go to settings to turn on read status
   // Device 1
-  await Promise.all([
-    device1.turnOnReadReceipts(platform),
-    device2.turnOnReadReceipts(platform),
-  ]);
+  await Promise.all([device1.turnOnReadReceipts(platform), device2.turnOnReadReceipts(platform)]);
   await device1.clickOnElementAll({
     strategy: "accessibility id",
     selector: "Conversation list item",
@@ -465,13 +408,13 @@ async function readStatus(platform: SupportedPlatformsType) {
       strategy: "id",
       selector: "network.loki.messenger:id/messageStatusTextView",
       text: "Read",
-    })
+    }),
   );
   await runOnlyOnIOS(platform, () =>
     device1.waitForTextElementToBePresent({
       strategy: "accessibility id",
       selector: "Message sent status: Read",
-    })
+    }),
   );
 
   await closeApp(device1, device2);
@@ -482,10 +425,7 @@ describe("User actions", () => {
   androidIt("Create contact", createContact);
 
   iosIt("Block user in conversation options", blockUserInConversationOptions);
-  androidIt(
-    "Block user in conversation options",
-    blockUserInConversationOptions
-  );
+  androidIt("Block user in conversation options", blockUserInConversationOptions);
 
   androidIt("Block user in conversation list", blockUserInConversationList);
 

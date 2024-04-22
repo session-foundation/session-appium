@@ -1,78 +1,78 @@
-import * as config from 'config';
+import * as config from "config";
 
-import { ConfigType } from '../../../../config/default';
+import { ConfigType } from "../../../../config/default";
 
 const typedConfig: ConfigType = config as any;
 
 function getFromConfigOrThrow(key: string) {
-  const slices = key.split('.');
+  const slices = key.split(".");
 
-  let value = '';
+  let value = "";
 
   switch (slices[0]) {
-    case 'programs':
+    case "programs":
       switch (slices[1]) {
-        case 'adbPath':
+        case "adbPath":
           value = typedConfig.programs.adbPath;
           break;
-        case 'emulatorPath':
+        case "emulatorPath":
           value = typedConfig.programs.emulatorPath;
           break;
-        case 'sdkManagerPath':
+        case "sdkManagerPath":
           value = typedConfig.programs.sdkManagerPath;
           break;
-        case 'androidSystemImage':
+        case "androidSystemImage":
           value = typedConfig.programs.androidSystemImage;
           break;
         default:
-          throw new Error('unhandled case programs');
+          throw new Error("unhandled case programs");
       }
       break;
-    case 'testedApps':
+    case "testedApps":
       switch (slices[1]) {
-        case 'ios':
+        case "ios":
           value = typedConfig.testedApps.ios;
           break;
-        case 'android':
+        case "android":
           value = typedConfig.testedApps.android;
           break;
 
         default:
-          throw new Error('unhandled case testedApps');
+          throw new Error("unhandled case testedApps");
       }
       break;
-    case 'emulators':
+    case "emulators":
       switch (slices[1]) {
-        case 'ios':
+        case "ios":
           switch (slices[2]) {
-            case 'first':
+            case "first":
               value = typedConfig.emulators.ios.first;
               break;
-            case 'second':
+            case "second":
               value = typedConfig.emulators.ios.second;
               break;
-            case 'third':
+            case "third":
               value = typedConfig.emulators.ios.third;
               break;
-            case 'fourth':
+            case "fourth":
               value = typedConfig.emulators.ios.fourth;
               break;
             default:
               throw new Error(`unhandled case emulators ios: ${slices[2]}`);
           }
           break;
-        case 'android':
+        case "android":
           switch (slices[2]) {
-            case 'first':
+            case "first":
               value = typedConfig.emulators.android.first;
               break;
-            case 'second':
+            case "second":
               value = typedConfig.emulators.android.second;
               break;
-            case 'third':
+            case "third":
               value = typedConfig.emulators.android.third;
               break;
-            case 'fourth':
+            case "fourth":
               value = typedConfig.emulators.android.fourth;
               break;
             default:
@@ -81,11 +81,11 @@ function getFromConfigOrThrow(key: string) {
           break;
 
         default:
-          throw new Error('unhandled case emulators:' + slices[1]);
+          throw new Error("unhandled case emulators:" + slices[1]);
       }
       break;
     default:
-      throw new Error('unhandled case:' + slices[0]);
+      throw new Error("unhandled case:" + slices[0]);
   }
 
   if (!value || !value.length) {
@@ -95,73 +95,73 @@ function getFromConfigOrThrow(key: string) {
 }
 
 export function getAdbFullPath() {
-  const key = 'programs.adbPath';
+  const key = "programs.adbPath";
   return getFromConfigOrThrow(key);
 }
 
 export function getEmulatorFullPath() {
-  const key = 'programs.emulatorPath';
+  const key = "programs.emulatorPath";
   return getFromConfigOrThrow(key);
 }
 
 export function getSdkManagerFullPath() {
-  const key = 'programs.sdkManagerPath';
+  const key = "programs.sdkManagerPath";
   return getFromConfigOrThrow(key);
 }
 
 export function getAndroidSystemImageToUse() {
-  const key = 'programs.androidSystemImage';
+  const key = "programs.androidSystemImage";
   return getFromConfigOrThrow(key);
 }
 
 export function getAndroidAppFulPath() {
-  const key = 'testedApps.android';
+  const key = "testedApps.android";
   return getFromConfigOrThrow(key);
 }
 
 export function getIosAppFulPath() {
-  const key = 'testedApps.ios';
+  const key = "testedApps.ios";
 
   return getFromConfigOrThrow(key);
 }
 
 export function getIosFirstSimulator() {
-  const key = 'emulators.ios.first';
+  const key = "emulators.ios.first";
 
   return getFromConfigOrThrow(key);
 }
 
 export function getIosSecondSimulator() {
-  const key = 'emulators.ios.second';
+  const key = "emulators.ios.second";
   return getFromConfigOrThrow(key);
 }
 
 export function getIosThirdSimulator() {
-  const key = 'emulators.ios.third';
+  const key = "emulators.ios.third";
   return getFromConfigOrThrow(key);
 }
 
 export function getIosFourthSimulator() {
-  const key = 'emulators.ios.fourth';
+  const key = "emulators.ios.fourth";
   return getFromConfigOrThrow(key);
 }
 
 export function getAndroidFirstSimulator() {
-  const key = 'emulators.android.first';
+  const key = "emulators.android.first";
   return getFromConfigOrThrow(key);
 }
 
 export function getAndroidSecondSimulator() {
-  const key = 'emulators.android.second';
+  const key = "emulators.android.second";
   return getFromConfigOrThrow(key);
 }
 
 export function getAndroidThirdSimulator() {
-  const key = 'emulators.android.third';
+  const key = "emulators.android.third";
   return getFromConfigOrThrow(key);
 }
 
 export function getAndroidFourthSimulator() {
-  const key = 'emulators.android.fourth';
+  const key = "emulators.android.fourth";
   return getFromConfigOrThrow(key);
 }

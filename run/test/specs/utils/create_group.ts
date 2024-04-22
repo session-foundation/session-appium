@@ -12,7 +12,7 @@ export const createGroup = async (
   userTwo: User,
   device3: DeviceWrapper,
   userThree: User,
-  userName: GroupName
+  userName: GroupName,
 ): Promise<Group> => {
   const group: Group = { userName, userOne, userTwo, userThree };
 
@@ -44,11 +44,9 @@ export const createGroup = async (
       strategy: "accessibility id",
       selector: "Empty list",
       maxWait: 5000,
-    })
+    }),
   );
-  await runOnlyOnAndroid(platform, () =>
-    device1.waitForControlMessageToBePresent("You created a new group.", 5000)
-  );
+  await runOnlyOnAndroid(platform, () => device1.waitForControlMessageToBePresent("You created a new group.", 5000));
   // Send message from User A to group to verify all working
   await device1.sendMessage(userAMessage);
   // Send message from User B to group

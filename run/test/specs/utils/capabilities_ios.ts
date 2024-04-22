@@ -20,8 +20,6 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
 } as AppiumXCUITestCapabilities;
 export type CapabilitiesIndexType = 0 | 1 | 2 | 3 | 4 | 5;
 
-
-
 const capabilities1: AppiumXCUITestCapabilities = {
   ...sharediOSCapabilities,
   "appium:udid": getIosFirstSimulator(),
@@ -47,9 +45,7 @@ const capabilities4: AppiumXCUITestCapabilities = {
 
 const countOfIosCapabilities = 4;
 
-export function getIosCapabilities(
-  capabilitiesIndex: CapabilitiesIndexType
-): W3CCapabilities {
+export function getIosCapabilities(capabilitiesIndex: CapabilitiesIndexType): W3CCapabilities {
   if (capabilitiesIndex >= countOfIosCapabilities) {
     throw new Error(`Asked invalid ios cap index: ${capabilitiesIndex}`);
   }
@@ -57,10 +53,10 @@ export function getIosCapabilities(
     capabilitiesIndex === 0
       ? capabilities1
       : capabilitiesIndex === 1
-      ? capabilities2
-      : capabilitiesIndex === 2
-      ? capabilities3
-      : capabilities4;
+        ? capabilities2
+        : capabilitiesIndex === 2
+          ? capabilities3
+          : capabilities4;
 
   return {
     firstMatch: [{}, {}],

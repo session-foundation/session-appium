@@ -1,1 +1,1 @@
-declare module 'appium-xcuitest-driver' {}
+declare module "appium-xcuitest-driver" {}

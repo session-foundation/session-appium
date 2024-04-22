@@ -2,11 +2,7 @@ import { androidIt, iosIt } from "../../types/sessionIt";
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { linkedDevice } from "./utils/link_device";
-import {
-  closeApp,
-  openAppThreeDevices,
-  SupportedPlatformsType,
-} from "./utils/open_app";
+import { closeApp, openAppThreeDevices, SupportedPlatformsType } from "./utils/open_app";
 
 async function acceptRequestLinked(platform: SupportedPlatformsType) {
   // Check 'accept' button
@@ -34,9 +30,7 @@ async function acceptRequestLinked(platform: SupportedPlatformsType) {
   // Bob clicks accept button on device 2 (original device)
   await device2.clickOnElement("Accept message request");
   // Verify config message for Alice 'Your message request has been accepted'
-  await device1.waitForControlMessageToBePresent(
-    "Your message request has been accepted."
-  );
+  await device1.waitForControlMessageToBePresent("Your message request has been accepted.");
 
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -73,12 +67,8 @@ async function declineRequestLinked(platform: SupportedPlatformsType) {
     selector: "Message request",
   });
   // Click on decline button
-  await runOnlyOnIOS(platform, () =>
-    device2.clickOnElement("Delete message request")
-  );
-  await runOnlyOnAndroid(platform, () =>
-    device2.clickOnElement("Decline message request")
-  );
+  await runOnlyOnIOS(platform, () => device2.clickOnElement("Delete message request"));
+  await runOnlyOnAndroid(platform, () => device2.clickOnElement("Decline message request"));
   // Are you sure you want to delete message request only for ios
   await sleepFor(3000);
   await runOnlyOnIOS(platform, () => device2.clickOnElement("Confirm delete"));
@@ -122,9 +112,7 @@ async function blockedRequestLinked(platform: SupportedPlatformsType) {
   // Confirm block on android
   await sleepFor(1000);
   await runOnlyOnIOS(platform, () => device2.clickOnElement("Block"));
-  await runOnlyOnAndroid(platform, () =>
-    device2.clickOnElement("Confirm block")
-  );
+  await runOnlyOnAndroid(platform, () => device2.clickOnElement("Confirm block"));
   const blockedMessage = `"${userA.userName} to ${userB.userName} - shouldn't get through"`;
   await device1.sendMessage(blockedMessage);
   await device2.navigateBack(platform);

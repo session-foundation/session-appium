@@ -4,11 +4,4 @@ import { runOnlyOnIOS, runOnlyOnAndroid } from "./run_on";
 
 import { clickOnCoordinates } from "./click_by_coordinates";
 
-export {
-  sleepFor,
-  saveSessionIDIos,
-  getSessionID,
-  runOnlyOnIOS,
-  runOnlyOnAndroid,
-  clickOnCoordinates,
-};
+export { sleepFor, saveSessionIDIos, getSessionID, runOnlyOnIOS, runOnlyOnAndroid, clickOnCoordinates };

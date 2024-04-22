@@ -41,25 +41,11 @@ export type Strategy = "accessibility id" | "xpath" | "id" | "class name";
 
 export type ConversationType = "1:1" | "Group" | "Community" | "Note to Self";
 
-export type DMTimeOption =
-  | "10 seconds"
-  | "30 seconds"
-  | "12 hours"
-  | "1 day"
-  | "1 week"
-  | "2 weeks";
+export type DMTimeOption = "10 seconds" | "30 seconds" | "12 hours" | "1 day" | "1 week" | "2 weeks";
 
-export type DisappearOpts1o1 = [
-  "1:1",
-  "Disappear after read option" | "Disappear after send option",
-  DMTimeOption
-];
+export type DisappearOpts1o1 = ["1:1", "Disappear after read option" | "Disappear after send option", DMTimeOption];
 
-export type DisappearOptsGroup = [
-  "Group" | "Note to Self",
-  "Disappear after send option",
-  DMTimeOption
-];
+export type DisappearOptsGroup = ["Group" | "Note to Self", "Disappear after send option", DMTimeOption];
 
 export type MergedOptions = DisappearOpts1o1 | DisappearOptsGroup;
 
