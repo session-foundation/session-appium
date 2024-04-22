@@ -12,14 +12,17 @@
     "test-grep": "_TESTING=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep \"$TEST_GREP\""
   },
   "devDependencies": {
-    "@appium/execute-driver-plugin": "^3.0.1",
-    "@appium/images-plugin": "^2.0.1",
+    "@appium/execute-driver-plugin": "3.0.23",
+    "@appium/images-plugin": "2.1.8",
     "@types/config": "^3",
     "@types/jest": "^29.2.5",
     "@types/lodash": "^4.14.191",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.59.5",
     "@wdio/types": "^8.1.2",
+    "appium": "2.4.1",
+    "appium-uiautomator2-driver": "patch:appium-uiautomator2-driver@npm%3A2.42.1#~/.yarn/patches/appium-uiautomator2-driver-npm-2.42.1-add306c387.patch",
+    "appium-xcuitest-driver": "5.14.0",
     "ci": "^2.2.0",
     "config": "^3.3.11",
     "eslint": "^8.33.0",
@@ -35,13 +38,8 @@
   "license": "MIT",
   "packageManager": "yarn@4.1.1",
   "resolutions": {
-    "@appium/support@npm:^4.1.10": "patch:@appium/support@npm%3A4.2.0#./patches/@appium-support-npm-4.2.0-d9ae1632eb.patch",
-    "@appium/support@npm:^4.2.0": "patch:@appium/support@npm%3A4.2.0#~/patches/@appium-support-npm-4.2.0-d9ae1632eb.patch",
-    "@appium/support@npm:^4.0.0": "patch:@appium/support@npm%3A4.2.0#~/patches/@appium-support-npm-4.2.0-d9ae1632eb.patch"
-  },
-  "dependencies": {
-    "appium": "^2.4.1",
-    "appium-uiautomator2-driver": "patch:appium-uiautomator2-driver@file%3A../patched-appium/node_modules/appium-uiautomator2-driver%23../patched-appium/node_modules/appium-uiautomator2-driver%3A%3Ahash=ed7690&locator=root-workspace-0b6124%2540workspace%253A.#./patches/appium-uiautomator2-driver-file-af32bb34eb.patch",
-    "appium-xcuitest-driver": "file:../patched-appium/node_modules/appium-xcuitest-driver"
+    "@appium/support@npm:^4.1.10": "patch:@appium/support@npm%3A4.2.5#~/.yarn/patches/@appium-support-npm-4.2.5-7b36475780.patch",
+    "@appium/support@npm:^4.2.0": "patch:@appium/support@npm%3A4.2.5#~/.yarn/patches/@appium-support-npm-4.2.5-7b36475780.patch",
+    "@appium/support@npm:^4.0.0": "patch:@appium/support@npm%3A4.2.5#~/.yarn/patches/@appium-support-npm-4.2.5-7b36475780.patch"
   }
 }

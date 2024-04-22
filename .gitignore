@@ -22,5 +22,8 @@ chromeDriver
 run/test/specs/to do 
 to do
 .vscode/
-.yarn/
+!.yarn/patches/*.patch
+.yarn/*.gz
 
+*.cjs
+*.mjs

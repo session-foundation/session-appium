@@ -26,11 +26,10 @@ export function iosIt(
   title: string,
   test: (platform: SupportedPlatformsType) => Promise<void>
 ) {
-  const testName = `${title} ios`
+  const testName = `${title} ios`;
 
   return it(testName, async () => {
     console.info(`\n\n==========> Running "${testName}"\n\n`);
-    await test("ios");
+    await test('ios');
   });
 }
-
