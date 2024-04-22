@@ -5,7 +5,7 @@ export const joinCommunity = async (
   platform: SupportedPlatformsType,
   device: DeviceWrapper,
   communityLink: string,
-  communityName: string,
+  communityName: string
 ) => {
   await device.clickOnElement("New conversation button");
   if (platform === "ios") {

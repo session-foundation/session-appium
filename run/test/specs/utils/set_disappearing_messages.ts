@@ -7,7 +7,7 @@ export const setDisappearingMessage = async (
   platform: SupportedPlatformsType,
   device: DeviceWrapper,
   [conversationType, timerType, timerDuration]: MergedOptions,
-  device2?: DeviceWrapper,
+  device2?: DeviceWrapper
 ) => {
   const enforcedType: ConversationType = conversationType;
   await device.clickOnElement("More options");

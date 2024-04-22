@@ -8,7 +8,7 @@ export const newContact = async (
   device1: DeviceWrapper,
   user1: User,
   device2: DeviceWrapper,
-  user2: User,
+  user2: User
 ) => {
   await device1.sendNewMessage(user2, `${user1.userName} to ${user2.userName}`);
 

@@ -11,8 +11,8 @@ export async function parseDataImage(base64: string) {
   const pxDataStart = (width * middleY + middleX) * 3;
   const pxDataEnd = pxDataStart + 3;
 
-  const px = await new Promise<Buffer>((resolve) => {
-    reader.decodePixels((decodedPx) => {
+  const px = await new Promise<Buffer>(resolve => {
+    reader.decodePixels(decodedPx => {
       resolve(decodedPx);
     });
   });

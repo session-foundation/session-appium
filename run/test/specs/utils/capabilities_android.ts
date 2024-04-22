@@ -65,7 +65,7 @@ function getAllCaps() {
 }
 
 export function getAndroidCapabilities(
-  capabilitiesIndex: CapabilitiesIndexType,
+  capabilitiesIndex: CapabilitiesIndexType
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): W3CCapabilities {
   const allCaps = getAllCaps();

@@ -179,7 +179,6 @@ export type AccessibilityId =
   | "Configuration message"
   | "Mentions list"
   | "Send message button"
-  | "Mentions list"
   | "Message sent status"
   | "Message sent status: Sent"
   | "Message sent status: Read"
@@ -191,7 +190,6 @@ export type AccessibilityId =
   | "Delete message request"
   | "Confirm delete"
   | "Delete"
-  | "Block message request"
   | "Block"
   | "Unblock"
   | "Confirm block"
@@ -223,7 +221,6 @@ export type AccessibilityId =
   | "Attachments button"
   | "Documents folder"
   | "Untrusted attachment message"
-  | "Download media"
   | "Download"
   | "Media message"
   | "Reply to message"
@@ -256,5 +253,4 @@ export type AccessibilityId =
   | "Invite"
   | "Follow setting"
   | "Follow Setting"
-  | "Set"
-  | "Allow Full Access";
+  | "Set";

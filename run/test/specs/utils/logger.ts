@@ -16,7 +16,7 @@ export function clearBufferOfTest(testName: string) {
 
 export function printBufferAndClear(testName: string) {
   if (buffer[testName]) {
-    forEach(buffer[testName], (line) => console.log(line));
+    forEach(buffer[testName], line => console.log(line));
   }
 
   clearBufferOfTest(testName);

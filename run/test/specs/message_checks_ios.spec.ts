@@ -46,7 +46,7 @@ async function sendImage(platform: SupportedPlatformsType) {
 
     await runScriptAndLog(
       `xcrun simctl addmedia ${getIosFirstSimulator()} 'run/test/specs/media/test_image.jpg'`,
-      true,
+      true
     );
   }
   await sleepFor(100);
@@ -210,7 +210,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
     await runScriptAndLog(`touch -a -m -t ${bestDayOfYear} 'run/test/specs/media/test_video.mp4'`, true);
     await runScriptAndLog(
       `xcrun simctl addmedia ${getIosFirstSimulator()} 'run/test/specs/media/test_video.mp4'`,
-      true,
+      true
     );
     await device1.clickOnElement("Add", 5000);
     await device1.clickOnElement(`1988-09-08 21:00:00 +0000`);
@@ -442,7 +442,7 @@ async function unsendMessage(platform: SupportedPlatformsType) {
     selector: "Message body",
     text: sentMessage,
   });
-  console.log("Doing a long click on" + `${sentMessage}`);
+  console.log(`Doing a long click on${sentMessage}`);
   // Select and long press on message to delete it
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",

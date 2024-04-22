@@ -110,7 +110,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async getElementRect(
-    elementId: string,
+    elementId: string
   ): Promise<undefined | { height: number; width: number; x: number; y: number }> {
     return this.toShared().getElementRect(elementId);
   }
@@ -412,7 +412,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       });
     }
     await this.clear(el.ELEMENT);
-    console.warn(`Text has been cleared ` + accessibilityId);
+    console.warn(`Text has been cleared ${accessibilityId}`);
     return;
   }
 
@@ -422,7 +422,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     const element = await this.findElement("accessibility id", accessibilityId);
     if (!element || isArray(element)) {
       throw new Error(
-        `findElementByAccessibilityId: Did not find accessibilityId: ${accessibilityId} or it was an array `,
+        `findElementByAccessibilityId: Did not find accessibilityId: ${accessibilityId} or it was an array `
       );
     }
     return element;
@@ -489,7 +489,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async findMatchingTextAndAccessibilityId(
     accessibilityId: AccessibilityId,
-    textToLookFor: string,
+    textToLookFor: string
   ): Promise<AppiumNextElementType> {
     const elements = await this.findElementsByAccessibilityId(accessibilityId);
 
@@ -503,10 +503,10 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async findMatchingTextInElementArray(
     elements: Array<AppiumNextElementType>,
-    textToLookFor: string,
+    textToLookFor: string
   ): Promise<AppiumNextElementType | null> {
     if (elements && elements.length) {
-      const matching = await this.findAsync(elements, async (e) => {
+      const matching = await this.findAsync(elements, async e => {
         const text = await this.getTextFromElement(e);
         // console.error(`text ${text} lookigfor ${textToLookFor}`);
 
@@ -523,11 +523,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async findAsync(
     arr: Array<AppiumNextElementType>,
-    asyncCallback: (opts: AppiumNextElementType) => Promise<boolean>,
+    asyncCallback: (opts: AppiumNextElementType) => Promise<boolean>
   ): Promise<AppiumNextElementType> {
     const promises = arr.map(asyncCallback);
     const results = await Promise.all(promises);
-    const index = results.findIndex((result) => result);
+    const index = results.findIndex(result => result);
     return arr[index];
   }
 
@@ -706,7 +706,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async waitForControlMessageToBePresent(
     text: ControlMessage,
-    maxWait?: number,
+    maxWait?: number
   ): Promise<AppiumNextElementType> {
     let el: null | AppiumNextElementType = null;
     const maxWaitMSec: number = typeof maxWait === "number" ? maxWait : 15000;
@@ -916,7 +916,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
         await runScriptAndLog(
           `xcrun simctl addmedia ${getIosFirstSimulator() || ""} 'run/test/specs/media/test_image.jpg'`,
-          true,
+          true
         );
       }
       await sleepFor(100);
@@ -948,7 +948,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       if (!testImage) {
         await runScriptAndLog(
           `adb -s emulator-5554 push 'run/test/specs/media/test_image.jpg' /storage/emulated/0/Download`,
-          true,
+          true
         );
       }
       await sleepFor(100);
@@ -989,7 +989,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
         // Adds video to downloads folder if it isn't already there
         await runScriptAndLog(
           `adb -s emulator-5554 push 'run/test/specs/media/test_video.mp4' /storage/emulated/0/Download`,
-          true,
+          true
         );
       }
       await sleepFor(100);
@@ -1018,7 +1018,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.scroll(
       { x: loc.x + loc.width, y: loc.y + loc.height / 2 },
       { x: loc.x + loc.width / 2, y: loc.y + loc.height / 2 },
-      1000,
+      1000
     );
 
     console.warn("Swiped left on ", selector);
@@ -1036,7 +1036,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.scroll(
       { x: loc.x + loc.width, y: loc.y + loc.height / 2 },
       { x: loc.x + loc.width / 2, y: loc.y + loc.height / 2 },
-      1000,
+      1000
     );
 
     console.warn("Swiped left on ", el);

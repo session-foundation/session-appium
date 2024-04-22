@@ -6,7 +6,7 @@ import { DeviceWrapper } from "../../../types/DeviceWrapper";
 export const newUser = async (
   device: DeviceWrapper,
   userName: Username,
-  platform: SupportedPlatformsType,
+  platform: SupportedPlatformsType
 ): Promise<User> => {
   // Click create session ID
   const createSessionId = "Create session ID";
@@ -44,7 +44,7 @@ export const newUser = async (
       strategy: "id",
       selector: `com.android.permissioncontroller:id/permission_allow_button`,
       text: "Allow",
-    }),
+    })
   );
   // Click on 'continue' button to open recovery phrase modal
   await device.waitForTextElementToBePresent({

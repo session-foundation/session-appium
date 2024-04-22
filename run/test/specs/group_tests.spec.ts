@@ -136,7 +136,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Edit group"));
   await sleepFor(1000);
   await runOnlyOnAndroid(platform, () =>
-    device1.clickOnTextElementById(`network.loki.messenger:id/title`, "Edit group"),
+    device1.clickOnTextElementById(`network.loki.messenger:id/title`, "Edit group")
   );
   // Add contact to group
   await device1.clickOnElement("Add members");
@@ -151,7 +151,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Check config message
   await runOnlyOnIOS(platform, () => device1.waitForControlMessageToBePresent(`${userD.userName} joined the group.`));
   await runOnlyOnAndroid(platform, () =>
-    device1.waitForControlMessageToBePresent(`You added ${userD.userName} to the group.`),
+    device1.waitForControlMessageToBePresent(`You added ${userD.userName} to the group.`)
   );
   // Exit to conversation list
   await device4.navigateBack(platform);

@@ -28,7 +28,7 @@ export type SupportedPlatformsType = "android" | "ios";
 
 const openAppOnPlatform = async (
   platform: SupportedPlatformsType,
-  capabilitiesIndex: CapabilitiesIndexType,
+  capabilitiesIndex: CapabilitiesIndexType
 ): Promise<{
   device: DeviceWrapper;
 }> => {
@@ -36,7 +36,7 @@ const openAppOnPlatform = async (
 };
 
 export const openAppOnPlatformSingleDevice = async (
-  platform: SupportedPlatformsType,
+  platform: SupportedPlatformsType
 ): Promise<{
   device: DeviceWrapper;
 }> => {
@@ -44,7 +44,7 @@ export const openAppOnPlatformSingleDevice = async (
 };
 
 export const openAppTwoDevices = async (
-  platform: SupportedPlatformsType,
+  platform: SupportedPlatformsType
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
@@ -55,7 +55,7 @@ export const openAppTwoDevices = async (
 };
 
 export const openAppThreeDevices = async (
-  platform: SupportedPlatformsType,
+  platform: SupportedPlatformsType
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
@@ -75,7 +75,7 @@ export const openAppThreeDevices = async (
 };
 
 export const openAppFourDevices = async (
-  platform: SupportedPlatformsType,
+  platform: SupportedPlatformsType
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
@@ -114,7 +114,7 @@ async function startAndroidEmulator(emulatorName: string) {
   const startEmulatorCmd = `${getEmulatorFullPath()} @${emulatorName}  `;
   console.warn(`${startEmulatorCmd} & ; disown`);
   await runScriptAndLog(
-    startEmulatorCmd, // -netdelay none -no-snapshot -wipe-data
+    startEmulatorCmd // -netdelay none -no-snapshot -wipe-data
   );
 }
 
@@ -141,7 +141,7 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
 
   do {
     const bootedOrNah = await runScriptAndLog(
-      `${getAdbFullPath()} -s  "${emulatorName}" shell getprop sys.boot_completed;`,
+      `${getAdbFullPath()} -s  "${emulatorName}" shell getprop sys.boot_completed;`
     );
 
     found = bootedOrNah.includes("1");
@@ -153,7 +153,7 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
 }
 
 const openAndroidApp = async (
-  capabilitiesIndex: CapabilitiesIndexType,
+  capabilitiesIndex: CapabilitiesIndexType
 ): Promise<{
   device: DeviceWrapper;
 }> => {
@@ -201,7 +201,7 @@ const openAndroidApp = async (
 };
 
 const openiOSApp = async (
-  capabilitiesIndex: CapabilitiesIndexType,
+  capabilitiesIndex: CapabilitiesIndexType
 ): Promise<{
   device: DeviceWrapper;
 }> => {
@@ -227,9 +227,9 @@ export const closeApp = async (
   device1?: DeviceWrapper,
   device2?: DeviceWrapper,
   device3?: DeviceWrapper,
-  device4?: DeviceWrapper,
+  device4?: DeviceWrapper
 ) => {
-  await Promise.all(compact([device1, device2, device3, device4]).map((d) => d.deleteSession()));
+  await Promise.all(compact([device1, device2, device3, device4]).map(d => d.deleteSession()));
 
   console.info("sessions closed");
 };

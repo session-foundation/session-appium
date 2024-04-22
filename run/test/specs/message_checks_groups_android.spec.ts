@@ -119,7 +119,7 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType) {
 
   await device1.clickOnElement("Continue");
   await device1.clickOnElementXPath(
-    `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`,
+    `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
   );
   await device1.pressAndHold("New voice message");
   await device2.waitForTextElementToBePresent({
@@ -182,7 +182,7 @@ async function sendDocumentGroup(platform: SupportedPlatformsType) {
   if (!testDocument) {
     await runScriptAndLog(
       `adb -s emulator-5554 push 'run/test/specs/media/test_file.pdf' /storage/emulated/0/Download`,
-      true,
+      true
     );
   }
   await sleepFor(1000);

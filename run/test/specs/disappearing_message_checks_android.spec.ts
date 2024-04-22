@@ -79,7 +79,7 @@ async function disappearingVoiceMessage(platform: SupportedPlatformsType) {
   await device1.longPress("New voice message");
   await device1.clickOnElement("Continue");
   await device1.clickOnElementXPath(
-    `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`,
+    `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
   );
   await device1.pressAndHold("New voice message");
   // await device1.clickOnElement("OK");
@@ -122,7 +122,7 @@ async function disappearingGifMessage(platform: SupportedPlatformsType) {
   // Select gif
   await sleepFor(3000);
   await device1.clickOnElementXPath(
-    `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`,
+    `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`
   );
   // Check if the 'Tap to download media' config appears
   // Click on config

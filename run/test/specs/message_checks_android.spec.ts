@@ -65,7 +65,7 @@ async function sendDocument(platform: SupportedPlatformsType) {
   if (!testDocument) {
     await runScriptAndLog(
       `adb -s emulator-5554 push 'run/test/specs/media/test_file.pdf' /storage/emulated/0/Download`,
-      true,
+      true
     );
   }
   await sleepFor(100);
@@ -119,7 +119,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
     // Adds video to downloads folder if it isn't already there
     await runScriptAndLog(
       `adb -s emulator-5554 push 'run/test/specs/media/test_video.mp4' /storage/emulated/0/Download`,
-      true,
+      true
     );
   }
 
@@ -165,7 +165,7 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
 
   await device1.clickOnElement("Continue");
   await device1.clickOnElementXPath(
-    `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`,
+    `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
   );
   await device1.pressAndHold("New voice message");
   // await device1.waitForTextElementToBePresent("Voice message");
@@ -206,7 +206,7 @@ async function sendGif(platform: SupportedPlatformsType) {
   // Select gif
   await sleepFor(3000);
   await device1.clickOnElementXPath(
-    `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`,
+    `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`
   );
 
   // Check if the 'Tap to download media' config appears

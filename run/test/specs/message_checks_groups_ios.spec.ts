@@ -50,7 +50,7 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
 
     await runScriptAndLog(
       `xcrun simctl addmedia ${getIosFirstSimulator()} 'run/test/specs/media/test_image.jpg'`,
-      true,
+      true
     );
   }
   await sleepFor(100);
@@ -136,7 +136,7 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
     await runScriptAndLog(`touch -a -m -t ${bestDayOfYear} 'run/test/specs/media/test_video.mp4'`, true);
     await runScriptAndLog(
       `xcrun simctl addmedia ${getIosFirstSimulator()} 'run/test/specs/media/test_video.mp4'`,
-      true,
+      true
     );
     await device1.clickOnElement(`1988-09-08 21:00:00 +0000`, 5000);
   }

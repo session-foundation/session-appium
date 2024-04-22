@@ -37,7 +37,7 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   await device1.clickOnElement("Confirm block");
   // On ios there is an alert that confirms that the user has been blocked
   await sleepFor(1000);
-  console.warn(`${userB.userName}` + " has been blocked");
+  console.warn(`${userB.userName} has been blocked`);
   // On ios, you need to navigate back to conversation screen to confirm block
   await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
   // Look for alert at top of screen (Bob is blocked. Unblock them?)
@@ -160,7 +160,7 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
 
     await runScriptAndLog(
       `adb -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /storage/emulated/0/Download`,
-      true,
+      true
     );
   }
   await device.clickOnElementAll({
@@ -222,7 +222,7 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
 
     await runScriptAndLog(
       `xcrun simctl addmedia ${getIosFirstSimulator() || ""} 'run/test/specs/media/profile_picture.jpg'`,
-      true,
+      true
     );
   }
   // Click on Profile picture
@@ -360,7 +360,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   await device1.navigateBack(platform);
   await sleepFor(500);
   const revertedNickname = await device1.grabTextFromAccessibilityId("Conversation header name");
-  console.warn(`revertedNickname:` + revertedNickname);
+  console.warn(`revertedNickname:${revertedNickname}`);
   if (revertedNickname !== userB.userName) {
     throw new Error(`revertedNickname doesn't match username`);
   }
@@ -408,13 +408,13 @@ async function readStatus(platform: SupportedPlatformsType) {
       strategy: "id",
       selector: "network.loki.messenger:id/messageStatusTextView",
       text: "Read",
-    }),
+    })
   );
   await runOnlyOnIOS(platform, () =>
     device1.waitForTextElementToBePresent({
       strategy: "accessibility id",
       selector: "Message sent status: Read",
-    }),
+    })
   );
 
   await closeApp(device1, device2);

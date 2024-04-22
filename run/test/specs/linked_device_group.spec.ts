@@ -28,7 +28,7 @@ async function groupCreationandNameChangeLinkedDevice(platform: SupportedPlatfor
   await sleepFor(100);
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Edit group"));
   await runOnlyOnAndroid(platform, () =>
-    device1.clickOnTextElementById(`network.loki.messenger:id/title`, "Edit group"),
+    device1.clickOnTextElementById(`network.loki.messenger:id/title`, "Edit group")
   );
   // click on group name to change it
   await device1.clickOnElement("Group name");
@@ -40,14 +40,14 @@ async function groupCreationandNameChangeLinkedDevice(platform: SupportedPlatfor
   // Apply changes (Apply on android/ second done on ios)
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Apply changes"));
   await runOnlyOnAndroid(platform, () =>
-    device1.clickOnTextElementById(`network.loki.messenger:id/action_apply`, "APPLY"),
+    device1.clickOnTextElementById(`network.loki.messenger:id/action_apply`, "APPLY")
   );
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
   // Config message on ios is "Title is now blah"
   await runOnlyOnIOS(platform, () => device1.waitForControlMessageToBePresent(`Title is now '${newGroupName}'.`));
   await runOnlyOnAndroid(platform, () =>
-    device1.waitForControlMessageToBePresent(`You renamed the group to ${newGroupName}`),
+    device1.waitForControlMessageToBePresent(`You renamed the group to ${newGroupName}`)
   );
   // Wait 5 seconds for name to update
   await sleepFor(5000);
@@ -88,7 +88,7 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   await device3.clickOnElement("More options");
   await sleepFor(1000);
   await runOnlyOnAndroid(platform, () =>
-    device3.clickOnTextElementById(`network.loki.messenger:id/title`, "Leave group"),
+    device3.clickOnTextElementById(`network.loki.messenger:id/title`, "Leave group")
   );
 
   await runOnlyOnIOS(platform, () => device3.clickOnElement("Leave group"));
@@ -101,10 +101,10 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   await runOnlyOnIOS(platform, () => device2.waitForControlMessageToBePresent(`${userC.userName} left the group.`));
   await runOnlyOnIOS(platform, () => device1.waitForControlMessageToBePresent(`${userC.userName} left the group.`));
   await runOnlyOnAndroid(platform, () =>
-    device2.waitForControlMessageToBePresent(`${userC.userName} has left the group.`),
+    device2.waitForControlMessageToBePresent(`${userC.userName} has left the group.`)
   );
   await runOnlyOnAndroid(platform, () =>
-    device1.waitForControlMessageToBePresent(`${userC.userName} has left the group.`),
+    device1.waitForControlMessageToBePresent(`${userC.userName} has left the group.`)
   );
   await closeApp(device1, device2, device3, device4);
 }

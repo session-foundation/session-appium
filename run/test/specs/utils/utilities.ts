@@ -62,17 +62,17 @@ export const installAppToDeviceName = async (appFullPath: string, emulatorName: 
   // console.warn("we are at 2 and took ", Date.now() - start);
 
   await runScriptAndLog(
-    `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-debug-androidTest.apk`,
+    `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-debug-androidTest.apk`
   );
   // await sleepFor(100);
   // console.warn("we are at 3 and took ", Date.now() - start);
 
   await runScriptAndLog(
-    `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-v4.27.0.apk`,
+    `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-v4.27.0.apk`
   );
   await sleepFor(100);
   await runScriptAndLog(
-    `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/io.appium.settings/apks/settings_apk-debug.apk`,
+    `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/io.appium.settings/apks/settings_apk-debug.apk`
   );
   // await sleepFor(100);
   // console.warn("we are at 4 and took ", Date.now() - start);

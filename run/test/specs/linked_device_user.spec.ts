@@ -182,7 +182,7 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
   // Confirm block
   await device1.clickOnElement("Confirm block");
   await sleepFor(1000);
-  console.log(`${userB.userName}` + " has been blocked");
+  console.log(`${userB.userName} has been blocked`);
   // On ios, you need to navigate back to conversation screen to confirm block
   await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
   // Check on device 3 if user B is blocked
@@ -249,7 +249,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
 
     await runScriptAndLog(
       `xcrun simctl addmedia ${getIosFirstSimulator()} 'run/test/specs/media/profile_picture.jpg'`,
-      true,
+      true
     );
   }
   await sleepFor(100);
@@ -274,7 +274,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   if (pixelColor === "04cbfe") {
     console.log("Colour is correct");
   } else {
-    throw new Error("Colour isn't 04cbfe, it is: " + pixelColor);
+    throw new Error(`Colour isn't 04cbfe, it is: ${pixelColor}`);
   }
   console.log("Now checking avatar on linked device");
   // Check avatar on device 2
@@ -325,8 +325,8 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
     await runScriptAndLog(`touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/profile_picture.jpg'`);
 
     await runScriptAndLog(
-      `adb -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /storage/emulated/0/Download`,
-      true,
+      "adb -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /storage/emulated/0/Download",
+      true
     );
     await device1.clickOnElementAll({
       strategy: "accessibility id",

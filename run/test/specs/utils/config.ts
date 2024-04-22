@@ -81,11 +81,11 @@ function getFromConfigOrThrow(key: string) {
           break;
 
         default:
-          throw new Error("unhandled case emulators:" + slices[1]);
+          throw new Error(`unhandled case emulators:${slices[1]}`);
       }
       break;
     default:
-      throw new Error("unhandled case:" + slices[0]);
+      throw new Error(`unhandled case:${slices[0]}`);
   }
 
   if (!value || !value.length) {
