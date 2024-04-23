@@ -100,5 +100,7 @@ export const installAppToDeviceName = async (appFullPath: string, emulatorName: 
 export const isDeviceIOS = (device: DeviceWrapper) => {
   return (device as any).originalCaps.alwaysMatch["appium:platformName"]?.toLowerCase() === "ios";
 };
-
+export const isCI = () => {
+  return process.env.NODE_CONFIG_ENV === "ci";
+};
 export const isDeviceAndroid = (device: DeviceWrapper) => !isDeviceIOS(device);

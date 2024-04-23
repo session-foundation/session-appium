@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { getAndroidCapabilities, getAndroidUdid } from "./capabilities_android";
 import { CapabilitiesIndexType, getIosCapabilities } from "./capabilities_ios";
-import { installAppToDeviceName, runScriptAndLog } from "./utilities";
+import { installAppToDeviceName, isCI, runScriptAndLog } from "./utilities";
 
 import * as androidDriver from "appium-uiautomator2-driver";
 import * as iosDriver from "appium-xcuitest-driver";
@@ -98,6 +98,10 @@ export const openAppFourDevices = async (
 };
 
 async function createAndroidEmulator(emulatorName: string) {
+  if (isCI()) {
+    // on CI, emulators are created on the docker build step.
+    return emulatorName;
+  }
   const installSystemImageCmd = `${getSdkManagerFullPath()} --install '${getAndroidSystemImageToUse()}'`;
   console.warn(installSystemImageCmd);
   await runScriptAndLog(installSystemImageCmd);
@@ -119,7 +123,7 @@ async function startAndroidEmulator(emulatorName: string) {
 }
 
 async function isEmulatorRunning(emulatorName: string) {
-  const failedWith = await runScriptAndLog(`${getAdbFullPath()} -s ${emulatorName} get-state;`);
+  const failedWith = await runScriptAndLog(`${getAdbFullPath()} -s ${emulatorName} get-state;`, true);
 
   return !failedWith || !(failedWith.includes("error") || failedWith.includes("offline"));
 }
@@ -134,6 +138,7 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
   } while (Date.now() - start < 25000 && !found);
 
   if (!found) {
+    console.warn('isEmulatorRunning failed for 25s')
     return;
   }
 
