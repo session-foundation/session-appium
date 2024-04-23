@@ -11,7 +11,8 @@
     "test-android": "_TESTING=1 mocha --timeout 300000 -retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep android",
     "build-and-test": "yarn tsc && yarn test",
     "test-grep": "_TESTING=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep \"$TEST_GREP\"",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test-ci": "NODE_CONFIG_ENV=ci yarn test"
   },
   "devDependencies": {
     "@appium/execute-driver-plugin": "3.0.23",
