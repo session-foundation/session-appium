@@ -11,7 +11,7 @@ emulator_name=${EMULATOR_NAME}
 device_name=${DEVICE_NAME}
 
 function wait_emulator_to_be_ready() {
-  emulator -avd "${emulator_name}" -no-boot-anim -gpu off -read-only
+  emulator -avd "${emulator_name}" -gpu off -read-only
   printf "${G}==>  ${BL}Emulator has ${YE}${EMULATOR_NAME} ${BL}started in headed mode! ${G}<==${NC}""\n"
 }
 
