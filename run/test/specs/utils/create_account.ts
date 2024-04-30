@@ -39,13 +39,13 @@ export const newUser = async (
   // Need to add Don't allow notifications dismiss here
   await runOnlyOnIOS(platform, () => device.clickOnElement("Don’t Allow"));
   await sleepFor(1000);
-  // await runOnlyOnAndroid(platform, () =>
-  //   device.clickOnElementAll({
-  //     strategy: "id",
-  //     selector: `com.android.permissioncontroller:id/permission_allow_button`,
-  //     text: "Allow",
-  //   })
-  // );
+  await runOnlyOnAndroid(platform, () =>
+    device.clickOnElementAll({
+      strategy: "id",
+      selector: `com.android.permissioncontroller:id/permission_allow_button`,
+      text: "Allow",
+    })
+  );
   // Click on 'continue' button to open recovery phrase modal
   await device.waitForTextElementToBePresent({
     strategy: "accessibility id",

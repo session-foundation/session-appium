@@ -1,0 +1,11 @@
+FROM android-emulator-base
+
+
+EXPOSE 8080
+# This will start one emulator on container boot.
+# Currently, you need to wait for it to be started, then close it (to make it save a snapshot)
+# and then
+# using those two commands, update the saved snapshot embedded into our dockerimage
+# sudo docker ps
+# sudo rm -rf avd; sudo docker cp 163d5195491b:/root/.android/avd/ ./avd
+ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord_rebuild.conf"]
