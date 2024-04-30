@@ -1,9 +1,9 @@
-FROM android-emulator-base
+FROM android-refresh-emulator
 
 CMD [ "/bin/bash" ]
 
 
-COPY avd /root/.android/avd
+# COPY avd /root/.android/avd
 
 # run this to start the supervisord (and the emulators)
 # /usr/bin/supervisord -c /etc/supervisord.conf

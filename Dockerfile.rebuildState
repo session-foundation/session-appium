@@ -1,4 +1,6 @@
 FROM android-emulator-base
+RUN chmod a+x /session-appium/docker/*.sh
+SHELL ["/bin/bash", "-c"]
 
 
 EXPOSE 8080
@@ -8,4 +10,6 @@ EXPOSE 8080
 # using those two commands, update the saved snapshot embedded into our dockerimage
 # sudo docker ps
 # sudo rm -rf avd; sudo docker cp 163d5195491b:/root/.android/avd/ ./avd
-ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord_rebuild.conf"]
+RUN /usr/bin/supervisord -c /etc/supervisord_rebuild.conf
+RUN /session-appium/docker/start_emu_for_state.sh
+RUN tree /root/.android/avd
