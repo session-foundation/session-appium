@@ -9,15 +9,19 @@
   steps: [
     {
       name: 'appium android tests',
-      image: "android-emulator",
+      image: "registry.oxen.rocks/appium-34-pixel6",
       environment: {
-        'APK_TO_TEST_URL': '',
+         'APK_URL': 'https://oxen.rocks/AL-Session/session-android/dev/session-android-20240402T225341Z-d3c863574-universal.tar.xz',
         'APK_TO_TEST_PATH':'/session.apk',
         'NODE_CONFIG_ENV': 'ci',
         },
       commands: [
+        'cp -r docker/etc/* /etc',
         '/usr/bin/supervisord -c /etc/supervisord_test.conf',
-        '/usr/bin/dl_and_test'
+        'chmod +x ./docker/*.sh',
+        './docker/start_emulators.sh',
+        './docker/dl.sh',
+        'yarn install --immutable && yarn tsc && yarn test-no-retry ""'
 
       ],
 

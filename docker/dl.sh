@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -ex
+
+echo "APK_URL: $APK_URL"
 apk_url=${APK_URL}
 apk_saved_on=${APK_TO_TEST_PATH}
 
