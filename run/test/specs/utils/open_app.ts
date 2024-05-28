@@ -138,7 +138,7 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
   } while (Date.now() - start < 25000 && !found);
 
   if (!found) {
-    console.warn('isEmulatorRunning failed for 25s')
+    console.warn("isEmulatorRunning failed for 25s");
     return;
   }
 

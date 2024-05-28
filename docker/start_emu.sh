@@ -11,7 +11,7 @@ emulator_name=${EMULATOR_NAME}
 device_name=${DEVICE_NAME}
 
 function start_emulator() {
-  emulator -avd "${emulator_name}" -gpu off -read-only
+  emulator -avd "${emulator_name}" -read-only -gpu off 
   printf "${G}==>  ${BL}Emulator has ${YE}${EMULATOR_NAME} ${BL}started in headed mode! ${G}<==${NC}""\n"
 }
 

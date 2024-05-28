@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "lint": "yarn prettier --cache . --write \"**/*.+(ts)\" && yarn eslint . --cache --ignore-pattern '*.js'",
+    "lint": "yarn prettier --cache . --write '!./avd' \"**/*.+(ts)\" && yarn eslint . --cache ",
     "tsc": "yarn clean-tsc && tsc",
     "clean-tsc": "find run/test/specs -type f -name '*.js' -delete",
     "tsc-watch": "yarn clean-tsc && tsc -w",
