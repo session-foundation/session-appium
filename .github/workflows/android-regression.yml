@@ -1,0 +1,186 @@
+name: Run android regression tests
+on:
+  workflow_dispatch:
+    inputs:
+      APK_URL:
+        description: 'APK.tar.gz url to test'
+        required: true
+        type: string
+        default: https://oxen.rocks/oxen-io/session-android/release/1.19.2/session-android-20240821T063349Z-20e1fbceb-universal.tar.xz
+
+      APPIUM_REPO:
+        description: 'appium repo to checkout'
+        required: true
+        type: choice
+        options:
+          - oxen-io/session-appium
+          - burtonemily/session-appium
+          - bilb/session-appium
+        default: oxen-io/session-appium
+
+      BRANCH_TO_CHECKOUT:
+        description: 'branch to checkout'
+        required: true
+        type: string
+        default: august
+
+      SHARD_NUMBER:
+        description: 'shard number'
+        required: true
+        type: choice
+        options:
+          - '0'
+          - '1'
+          - '2'
+          - '3'
+        default: '1'
+
+      SHARD_COUNT:
+        description: 'shard count'
+        required: true
+        type: choice
+        options:
+          - '0'
+          - '1'
+          - '2'
+          - '3'
+        default: '1'
+
+      PRINT_FAILED_TEST_LOGS:
+        description: 'print failed test logs (1 to enable)'
+        required: true
+        type: choice
+        options:
+          - '0'
+          - '1'
+        default: '0'
+
+      PRINT_ONGOING_TEST_LOGS:
+        description: 'print ongoing test logs (1 to enable)'
+        required: true
+        type: choice
+        options:
+          - '0'
+          - '1'
+        default: '0'
+
+# concurrency:
+#   group: ${{ github.workflow }}
+#   cancel-in-progress: true
+
+jobs:
+  android-regression:
+    runs-on: [self-hosted, linux, x64, qa-android]
+    env:
+      ANDROID_APP_PATH_PREFIX: "../extracted/session-android.apk"
+      APPIUM_ADB_FULL_PATH: "/opt/android/platform-tools/adb"
+      ANDROID_SDK_ROOT: "/opt/android"
+      PLAYWRIGHT_WORKERS_COUNT: 1
+      PLAYWRIGHT_RETRIES_COUNT: 0
+      PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
+      PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
+      IOS_APP_PATH_PREFIX: "just_not_empty"
+      IOS_FIRST_SIMULATOR: "just_not_empty"
+      IOS_SECOND_SIMULATOR: "just_not_empty"
+      IOS_THIRD_SIMULATOR: "just_not_empty"
+      IOS_FOURTH_SIMULATOR: "just_not_empty"
+      IOS_FIFTH_SIMULATOR: "just_not_empty"
+      IOS_SIXTH_SIMULATOR: "just_not_empty"
+      IOS_SEVENTH_SIMULATOR: "just_not_empty"
+      IOS_EIGHTH_SIMULATOR: "just_not_empty"
+
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Runner Details
+        run: |
+            echo "BRANCH_TO_CHECKOUT ${{ github.event.inputs.BRANCH_TO_CHECKOUT }}"
+            echo "APPIUM_REPO ${{ github.event.inputs.APPIUM_REPO }}"
+            echo "APK_URL ${{ github.event.inputs.APK_URL }}"
+            echo "SHARD_NUMBER ${{ github.event.inputs.SHARD_NUMBER }}"
+            echo "SHARD_COUNT ${{ github.event.inputs.SHARD_COUNT }}"
+
+      - name: Download APK
+        run: |
+            wget -q -O session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
+            ls
+            pwd
+
+      - name: Extract APK
+        run: |
+            tar xf session-android.apk.tar.xz
+            ls
+            pwd
+
+      - name: Rename extracted folder
+        run: |
+            mv session-android-*universal extracted
+            ls extracted
+            mv extracted/*.apk extracted/session-android.apk
+            ls extracted
+            pwd
+
+
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.inputs.APPIUM_REPO }}
+          ref: ${{ github.event.inputs.BRANCH_TO_CHECKOUT }}
+          path: 'forked-session-appium'
+
+      - uses: actions/setup-node@v4
+        with:
+          # node-version-file: 'forked-session-appium/.nvmrc'
+          node-version: 18.15.0
+
+
+      - name: Install yarn
+        run: |
+          npm install -g yarn
+          corepack enable
+          yarn set version 4.1.1
+
+      - name: Install test dependencies
+        run: |
+          cd forked-session-appium
+          ls
+          git status
+          touch yarn.lock
+          yarn install --immutable
+
+      - name: Build the Android tests
+        run: |
+          cd forked-session-appium
+          yarn tsc
+
+      - name: Restart adb server
+        shell: bash
+        continue-on-error: true # just so we don't fail if adb wasn't alreadu running
+        run: |
+          source ./scripts/ci.sh
+          adb kill-server;
+          adb start-server;
+
+      - name: Start 4 android emulators with snapshots
+        shell: bash
+        run: |
+          source ./scripts/ci.sh
+          start_with_snapshots
+
+      - name: Run the Android tests
+        run: |
+          cd forked-session-appium
+          pwd
+          yarn test-android-shard ${{ github.event.inputs.SHARD_NUMBER }}​​/${{ github.event.inputs.SHARD_COUNT }}​​
+
+      - name: Killall running emulators
+        if: always()
+        continue-on-error: true # just so we don't fail
+        shell: bash
+        run: |
+          source ./scripts/ci.sh
+          killall_emulators
+
+
+
+
+
