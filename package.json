@@ -16,7 +16,6 @@
     "test-parallel": "_TESTING=1 npx playwright test ./run/test/**/*.spec.ts --grep ios",
     "test-high-risk-android": "_TESTING=1 npx playwright test --timeout 300000 ./run/test/**/*.spec.ts --grep 'android @high-risk'",
     "test-high-risk-ios": "_TESTING=1 npx playwright test --timeout 300000 ./run/test/**/*.spec.ts --grep 'ios @high-risk'"
-
   },
   "devDependencies": {
     "@appium/execute-driver-plugin": "^3.0.1",
@@ -47,7 +46,8 @@
     "appium": "^2.4.1",
     "appium-uiautomator2-driver": "patch:appium-uiautomator2-driver@npm%3A3.7.3#~/patches/appium-uiautomator2-driver-npm-3.7.3-24e944f6c5.patch",
     "appium-xcuitest-driver": "^7.26.0",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "looks-same": "^9.0.1"
   },
   "packageManager": "yarn@4.0.2",
   "resolutions": {

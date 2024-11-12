@@ -1,4 +1,5 @@
 import PNG from 'png-js';
+import { colors } from 'looks-same';
 
 export async function parseDataImage(base64: string) {
   const buffer = Buffer.from(base64, 'base64');
@@ -22,4 +23,29 @@ export async function parseDataImage(base64: string) {
   const pixelColor = Buffer.from(middlePx).toString('hex');
   // console.info("Middle x:", middleX, "middleY:", middleY, "width:", width);
   return pixelColor;
+}
+
+// Function to compare two colors within a specified CIEDE2000 tolerance
+export async function compareColors(
+  hex1: string,
+  hex2: string,
+  tolerance: number = 2.3 // looks-same default value which is "enough for most cases"
+): Promise<boolean> {
+  // looks-same expects colors as RGB objects but parseDataImage outputs hex 
+  function hexToRgbObject(hex: string): { R: number; G: number; B: number } {
+    const bigint = parseInt(hex.replace('#', ''), 16);
+    return {
+      R: (bigint >> 16) & 255,
+      G: (bigint >> 8) & 255,
+      B: bigint & 255,
+    };
+  }
+  // RGB-HEX conversion
+  const rgb1 = hexToRgbObject(hex1);
+  const rgb2 = hexToRgbObject(hex2);
+
+  // Compare whether colors are within tolerance 
+  const isSameColor = colors(rgb1, rgb2, { tolerance });
+
+  return isSameColor
 }
