@@ -360,9 +360,9 @@ export type Id =
   | 'network.loki.messenger:id/action_apply'
   | 'Save'
   | 'android:id/content_preview_text'
-  | 'network.loki.messenger:id/search_result_title';
-  | 'Error message';
-  | 'network.loki.messenger:id/action_apply';
+  | 'network.loki.messenger:id/search_result_title'
+  | 'network.loki.messenger:id/action_apply'
+  | 'network.loki.messenger:id/singleModeImageView';
 
 export type testRisk = 
   | 'high' 

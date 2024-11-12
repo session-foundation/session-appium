@@ -8,3 +8,22 @@ export class MessageInput extends LocatorsInterface {
         } as const;
     }
 }
+
+export class ConversationSettings extends LocatorsInterface {
+    public build() {
+        return {
+            strategy: 'accessibility id',
+            selector: 'More options'
+        } as const;
+    }
+}
+
+// android-only locator for the avatar 
+export class ConversationAvatar extends LocatorsInterface {
+    public build() {
+        return {
+            strategy: 'id',
+            selector: 'network.loki.messenger:id/singleModeImageView'
+        } as const
+    }
+}
