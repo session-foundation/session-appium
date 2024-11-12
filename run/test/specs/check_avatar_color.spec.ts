@@ -11,8 +11,6 @@ import { ConversationAvatar, ConversationSettings } from './locators/conversatio
 bothPlatformsIt('Avatar color', 'medium', avatarColor);
 
 async function avatarColor(platform: SupportedPlatformsType) {
-  const result = compareColors("6fd0fa", "ffffff")
-  console.log(result)
   const { device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([
     newUser(device1, USERNAME.ALICE, platform),
@@ -36,7 +34,6 @@ async function avatarColor(platform: SupportedPlatformsType) {
   const device2Base64 = await device2.getElementScreenshot(device2Avatar.ELEMENT);
   const device2PixelColor = await parseDataImage(device2Base64)
   // Color comparison of devices 1 and 2 
-  console.log(`The colors are ${device1PixelColor} and ${device2PixelColor}`)
   const colorCompare = await compareColors(device1PixelColor, device2PixelColor)
   if (!colorCompare) {
     throw new Error (`The avatar color of ${userA.userName} does not match across devices. The colors are ${device1PixelColor} and ${device2PixelColor}`)
