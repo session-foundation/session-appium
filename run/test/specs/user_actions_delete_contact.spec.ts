@@ -7,7 +7,7 @@ import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
 import { openAppMultipleDevices, SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsIt('Delete contact', deleteContact);
+bothPlatformsIt('Delete contact', 'high', deleteContact);
 
 async function deleteContact(platform: SupportedPlatformsType) {
   const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);

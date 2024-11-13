@@ -326,7 +326,13 @@ export type AccessibilityId =
   | 'X'
   | 'Close'
   | 'Continue button'
-  | 'Error message';
+  | 'Error message'
+  | 'Open URL'
+  | 'Terms of Service'
+  | 'Privacy Policy'
+  | 'TabBarItemTitle'
+  | 'URL'
+  | 'Save';
 
 export type Id =
   | 'Modal heading'
@@ -360,12 +366,14 @@ export type Id =
   | 'network.loki.messenger:id/action_apply'
   | 'Save'
   | 'android:id/content_preview_text'
-  | 'network.loki.messenger:id/search_result_title';
-  | 'Error message';
-  | 'network.loki.messenger:id/action_apply';
+  | 'network.loki.messenger:id/search_result_title'
+  | 'network.loki.messenger:id/action_apply'
+  | 'com.android.chrome:id/url_bar'
+  | 'Terms of Service'
+  | 'Privacy Policy'
+  | 'com.android.chrome:id/signin_fre_dismiss_button'
+  | 'com.android.chrome:id/negative_button'
+  | 'network.loki.messenger:id/back_button'
+  | 'Quit';
 
-export type testRisk = 
-  | 'high' 
-  | 'medium' 
-  | 'low' 
-  | 'undefined';
+export type TestRisk = 'high' | 'medium' | 'low' | 'undefined';

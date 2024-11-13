@@ -5,7 +5,7 @@ import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-bothPlatformsIt("Message requests clear all", 'medium', clearAllRequests);
+bothPlatformsIt('Message requests clear all', 'medium', clearAllRequests);
 
 async function clearAllRequests(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

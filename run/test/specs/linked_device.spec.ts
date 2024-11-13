@@ -5,7 +5,7 @@ import { runOnlyOnAndroid, runOnlyOnIOS } from './utils';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-bothPlatformsIt("Link device", 'high', linkDevice);
+bothPlatformsIt('Link device', 'high', linkDevice);
 
 async function linkDevice(platform: SupportedPlatformsType) {
   // Open server and two devices

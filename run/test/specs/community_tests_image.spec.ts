@@ -7,7 +7,7 @@ import { newContact } from './utils/create_contact';
 import { joinCommunity } from './utils/join_community';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Send image to community','medium', sendImageCommunityiOS);
+iosIt('Send image to community', 'medium', sendImageCommunityiOS);
 androidIt('Send image to community', 'medium', sendImageCommunityAndroid);
 
 async function sendImageCommunityiOS(platform: SupportedPlatformsType) {

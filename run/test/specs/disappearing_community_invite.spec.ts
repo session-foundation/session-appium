@@ -10,7 +10,11 @@ import { setDisappearingMessage } from './utils/set_disappearing_messages';
 import { testCommunityLink, testCommunityName } from './../../constants/community';
 
 iosIt('Disappearing community invite message 1o1', 'low', disappearingCommunityInviteMessage1o1Ios);
-androidIt('Disappearing community invite message 1o1', 'low', disappearingCommunityInviteMessage1o1Android);
+androidIt(
+  'Disappearing community invite message 1o1',
+  'low',
+  disappearingCommunityInviteMessage1o1Android
+);
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';

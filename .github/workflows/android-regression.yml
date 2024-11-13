@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       tags:
-        description: "APK.tar.gz url to test"
+        description: 'APK.tar.gz url to test'
         required: true
         type: string
   # push:

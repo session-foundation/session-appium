@@ -7,7 +7,7 @@ import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/o
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
 iosIt('Disappearing image message to group', 'low', disappearingImageMessageGroup);
-// TODO write Android test 
+// TODO write Android test
 
 async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
