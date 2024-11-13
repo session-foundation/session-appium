@@ -26,11 +26,11 @@ export async function parseDataImage(base64: string) {
 }
 
 // Function to compare two colors within a specified CIEDE2000 tolerance
-export async function compareColors(
+export function compareColors(
   hex1: string,
   hex2: string,
   tolerance: number = 2.3 // looks-same default value which is "enough for most cases"
-): Promise<boolean> {
+) {
   // looks-same expects colors as RGB objects but parseDataImage outputs hex 
   function hexToRgbObject(hex: string): { R: number; G: number; B: number } {
     const bigint = parseInt(hex.replace('#', ''), 16);

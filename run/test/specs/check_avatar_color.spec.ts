@@ -23,8 +23,8 @@ async function avatarColor(platform: SupportedPlatformsType) {
   const device1Avatar = await device1.waitForTextElementToBePresent(new UserSettings(device1));
   const device1Base64 = await device1.getElementScreenshot(device1Avatar.ELEMENT);
   const device1PixelColor = await parseDataImage(device1Base64);
-  await device2.clickOnElementAll(new ConversationItem(device2))
   // Get Alice's avatar color on device 2 and turn it into a hex value 
+  await device2.clickOnElementAll(new ConversationItem(device2))
   let device2Avatar;
   if (platform === 'ios') {
     device2Avatar = await device2.waitForTextElementToBePresent(new ConversationSettings(device2));
@@ -34,7 +34,7 @@ async function avatarColor(platform: SupportedPlatformsType) {
   const device2Base64 = await device2.getElementScreenshot(device2Avatar.ELEMENT);
   const device2PixelColor = await parseDataImage(device2Base64)
   // Color comparison of devices 1 and 2 
-  const colorCompare = await compareColors(device1PixelColor, device2PixelColor)
+  const colorCompare = compareColors(device1PixelColor, device2PixelColor)
   if (!colorCompare) {
     throw new Error (`The avatar color of ${userA.userName} does not match across devices. The colors are ${device1PixelColor} and ${device2PixelColor}`)
   } else {
