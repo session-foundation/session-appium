@@ -1,3 +1,4 @@
+import { StrategyExtractionObj } from '../../../types/testing';
 import { LocatorsInterface } from './index';
 
 // SHARED LOCATORS
@@ -20,6 +21,32 @@ export class ErrorMessage extends LocatorsInterface {
   }
 }
 
+export class BackButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/back_button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Back',
+        } as const;
+    }
+  }
+}
+
+export class WarningModalQuitButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    return {
+      strategy: 'id', 
+      selector: 'Quit'
+    } as const
+  }
+}
+
 // SPLASH SCREEN
 export class CreateAccountButton extends LocatorsInterface {
   public build() {
@@ -31,12 +58,55 @@ export class CreateAccountButton extends LocatorsInterface {
 }
 
 export class AccountRestoreButton extends LocatorsInterface {
-  public build() {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Restore your session button',
-    } as const;
-  }
+    public build() {
+        return {
+            strategy: 'accessibility id',
+            selector: 'Restore your session button',
+        } as const;
+    }
+}
+
+export class SplashScreenLinks extends LocatorsInterface {
+    public build() {
+        return {
+            strategy: 'accessibility id',
+            selector: 'Open URL',
+        } as const;
+    }
+}
+
+export class TermsOfServiceButton extends LocatorsInterface {
+    public build() {
+        switch (this.platform) {  
+            case 'android':  
+                return {  
+                    strategy: 'id',  
+                    selector: 'Terms of Service',  
+                  } as const;  
+            case 'ios':  
+                return {  
+                    strategy: 'accessibility id',  
+                    selector: 'Terms of Service',  
+                  } as const;  
+              }  
+    }
+}
+
+export class PrivacyPolicyButton extends LocatorsInterface {
+    public build() {
+        switch (this.platform) {  
+            case 'android':  
+                return {  
+                    strategy: 'id',  
+                    selector: 'Privacy Policy',  
+                  } as const;  
+            case 'ios':  
+                return {  
+                    strategy: 'accessibility id',  
+                    selector: 'Privacy Policy',  
+                  } as const;  
+              }  
+    }
 }
 
 // CREATE ACCOUNT FLOW

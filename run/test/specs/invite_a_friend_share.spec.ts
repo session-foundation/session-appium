@@ -6,8 +6,7 @@ import { PlusButton } from './locators/home';
 import { AccountIDField, InviteAFriendOption, ShareButton } from './locators/start_conversation';
 import { IOS_XPATHS } from '../../constants';
 
-// TODO assign risk assessment value once PR 16 is merged (assumption: high)
-bothPlatformsIt('Invite a friend', inviteAFriend)
+bothPlatformsIt('Invite a friend', 'high', inviteAFriend)
 
 async function inviteAFriend(platform: SupportedPlatformsType) {
     const { device } = await openAppOnPlatformSingleDevice(platform);
@@ -44,4 +43,4 @@ async function inviteAFriend(platform: SupportedPlatformsType) {
         throw new Error(`The Invite a Friend message snippet does not contain the user's Account ID\nThe message goes ${retrievedShareMessage}`)
     }
     await closeApp(device);
-    };
+    }
