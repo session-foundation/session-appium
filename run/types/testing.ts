@@ -375,7 +375,8 @@ export type Id =
   | 'com.android.chrome:id/negative_button'
   | 'network.loki.messenger:id/back_button'
   | 'Quit'
-  | 'network.loki.messenger:id/singleModeImageView';
+  | 'network.loki.messenger:id/singleModeImageView'
+  | 'network.loki.messenger:id/emptyStateContainer';
 
 export type TestRisk = 
   | 'high' 
