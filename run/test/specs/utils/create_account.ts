@@ -1,4 +1,4 @@
-import { runOnlyOnAndroid, sleepFor } from '.';
+import { sleepFor } from '.';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User, USERNAME } from '../../../types/testing';
 import { ExitUserProfile, RevealRecoveryPhraseButton } from '../locators';
@@ -9,7 +9,7 @@ import { SupportedPlatformsType } from './open_app';
 export const newUser = async (
   device: DeviceWrapper,
   userName: USERNAME,
-  platform: SupportedPlatformsType
+  _platform: SupportedPlatformsType
 ): Promise<User> => {
   // Click create session ID
 

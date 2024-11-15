@@ -32,7 +32,7 @@ export const newContact = async (
 };
 
 const retryMsgSentForBanner = async (
-  platform: SupportedPlatformsType,
+  _platform: SupportedPlatformsType,
   device1: DeviceWrapper,
   device2: DeviceWrapper,
   timeout: number

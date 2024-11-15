@@ -1992,7 +1992,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"appium-adb@npm:^12.0.0, appium-adb@npm:^12.4.7, appium-adb@npm:^12.7.0":
+"appium-adb@npm:^12.0.0, appium-adb@npm:^12.7.0":
   version: 12.7.0
   resolution: "appium-adb@npm:12.7.0"
   dependencies:
@@ -2010,9 +2010,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"appium-android-driver@npm:^9.8.0":
-  version: 9.12.3
-  resolution: "appium-android-driver@npm:9.12.3"
+"appium-android-driver@npm:^9.12.3":
+  version: 9.13.0
+  resolution: "appium-android-driver@npm:9.13.0"
   dependencies:
     "@appium/support": "npm:^5.0.3"
     "@colors/colors": "npm:^1.6.0"
@@ -2034,28 +2034,7 @@ __metadata:
     ws: "npm:^8.0.0"
   peerDependencies:
     appium: ^2.0.0
-  checksum: 425fcb0dda40bbaae17f9dfd72638b62d3df33066c0eb2cb3f6f93b36f811deb23938eedca16780d105958232a3e16a13d3ff3a1b1d0b8b7166117981b2d53af
-  languageName: node
-  linkType: hard
-
-"appium-chromedriver@npm:^5.6.28":
-  version: 5.6.78
-  resolution: "appium-chromedriver@npm:5.6.78"
-  dependencies:
-    "@appium/base-driver": "npm:^9.1.0"
-    "@appium/support": "npm:^5.1.1"
-    "@xmldom/xmldom": "npm:^0.x"
-    appium-adb: "npm:^12.0.0"
-    asyncbox: "npm:^3.0.0"
-    axios: "npm:^1.6.5"
-    bluebird: "npm:^3.5.1"
-    compare-versions: "npm:^6.0.0"
-    lodash: "npm:^4.17.4"
-    semver: "npm:^7.0.0"
-    source-map-support: "npm:^0.x"
-    teen_process: "npm:^2.2.0"
-    xpath: "npm:^0.x"
-  checksum: 7d5e7adcb06b951a986165d4a6a565d131e6a381f23847f3b74a0b9cb9ebae7665bbcd4a45fe676f7c8bafe4c6ecac6442435d9dbe7a75c24fb00ec821f85ed1
+  checksum: 4f6e54c3367fdd0b1a08111d86846480d8f98eb1bb06d308e5f0ca073eb51edee35a609e7d3d49bd246a6772f83a977e0944a5ee327dc05e63d0a07caea43c5b
   languageName: node
   linkType: hard
 
@@ -2148,19 +2127,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"appium-uiautomator2-driver@npm:3.7.3":
-  version: 3.7.3
-  resolution: "appium-uiautomator2-driver@npm:3.7.3"
+"appium-uiautomator2-driver@npm:3.8.2":
+  version: 3.8.2
+  resolution: "appium-uiautomator2-driver@npm:3.8.2"
   dependencies:
-    appium-adb: "npm:^12.4.7"
-    appium-android-driver: "npm:^9.8.0"
-    appium-chromedriver: "npm:^5.6.28"
-    appium-uiautomator2-server: "npm:^7.0.14"
+    appium-adb: "npm:^12.7.0"
+    appium-android-driver: "npm:^9.12.3"
+    appium-uiautomator2-server: "npm:^7.0.24"
     asyncbox: "npm:^3.0.0"
     axios: "npm:^1.6.5"
     bluebird: "npm:^3.5.1"
     css-selector-parser: "npm:^3.0.0"
-    io.appium.settings: "npm:^5.12.0"
+    io.appium.settings: "npm:^5.12.11"
     lodash: "npm:^4.17.4"
     portscanner: "npm:^2.2.0"
     source-map-support: "npm:^0.x"
@@ -2168,23 +2146,22 @@ __metadata:
     type-fest: "npm:^4.4.0"
   peerDependencies:
     appium: ^2.4.1
-  checksum: 368479d86ac0507383f51ed4fe676560571136e662414c1ff8c382c579ea0459f1fb96506dc8e807f043a3299635de9a4aa458167ba3e31fbdc652127f15a243
+  checksum: 71dc7a39f51cda7f30fb1de810b175337baf7413094afce4f0189729cc6ba941bf4826fcdc5c4f0b54a26cb4053dc722f849e232ee1a77838a1b32eddae47f7b
   languageName: node
   linkType: hard
 
-"appium-uiautomator2-driver@patch:appium-uiautomator2-driver@npm%3A3.7.3#~/patches/appium-uiautomator2-driver-npm-3.7.3-24e944f6c5.patch":
-  version: 3.7.3
-  resolution: "appium-uiautomator2-driver@patch:appium-uiautomator2-driver@npm%3A3.7.3#~/patches/appium-uiautomator2-driver-npm-3.7.3-24e944f6c5.patch::version=3.7.3&hash=a0d581"
+"appium-uiautomator2-driver@patch:appium-uiautomator2-driver@npm%3A3.8.2#~/patches/appium-uiautomator2-driver-npm-3.8.2-1ce2a0f39e.patch":
+  version: 3.8.2
+  resolution: "appium-uiautomator2-driver@patch:appium-uiautomator2-driver@npm%3A3.8.2#~/patches/appium-uiautomator2-driver-npm-3.8.2-1ce2a0f39e.patch::version=3.8.2&hash=a0d581"
   dependencies:
-    appium-adb: "npm:^12.4.7"
-    appium-android-driver: "npm:^9.8.0"
-    appium-chromedriver: "npm:^5.6.28"
-    appium-uiautomator2-server: "npm:^7.0.14"
+    appium-adb: "npm:^12.7.0"
+    appium-android-driver: "npm:^9.12.3"
+    appium-uiautomator2-server: "npm:^7.0.24"
     asyncbox: "npm:^3.0.0"
     axios: "npm:^1.6.5"
     bluebird: "npm:^3.5.1"
     css-selector-parser: "npm:^3.0.0"
-    io.appium.settings: "npm:^5.12.0"
+    io.appium.settings: "npm:^5.12.11"
     lodash: "npm:^4.17.4"
     portscanner: "npm:^2.2.0"
     source-map-support: "npm:^0.x"
@@ -2192,11 +2169,11 @@ __metadata:
     type-fest: "npm:^4.4.0"
   peerDependencies:
     appium: ^2.4.1
-  checksum: 7c08e84c7b33025b6fa48d927e2d9b2a28bf1aa70800cc8b6cc91fe517cfeb4fc68e2acebff16a47219b5c4b344921fc7d069fba2736d2d9ed81423cba18d488
+  checksum: a026f90c2089a1c4fd7a8667d0b19999aa60297b36480d79d8056e8dd80e5da1177cd992ccc029350131ff2f442d9686136ce10c0e2ef1dcc175ea0b9a4e8bfb
   languageName: node
   linkType: hard
 
-"appium-uiautomator2-server@npm:^7.0.14":
+"appium-uiautomator2-server@npm:^7.0.24":
   version: 7.1.2
   resolution: "appium-uiautomator2-server@npm:7.1.2"
   checksum: d65128de60a6b0d030b7a5539d6d5041b6b6cfe9466a8fbad470ac535e1641774252586d5c93bf0bcd3c2df2fb619abf0fe916b36c71391536e1d820423c114d
@@ -4671,7 +4648,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"io.appium.settings@npm:^5.12.0":
+"io.appium.settings@npm:^5.12.0, io.appium.settings@npm:^5.12.11":
   version: 5.12.17
   resolution: "io.appium.settings@npm:5.12.17"
   dependencies:
@@ -6754,7 +6731,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:^5.59.5"
     "@wdio/types": "npm:^8.1.2"
     appium: "npm:^2.4.1"
-    appium-uiautomator2-driver: "patch:appium-uiautomator2-driver@npm%3A3.7.3#~/patches/appium-uiautomator2-driver-npm-3.7.3-24e944f6c5.patch"
+    appium-uiautomator2-driver: "patch:appium-uiautomator2-driver@npm%3A3.8.2#~/patches/appium-uiautomator2-driver-npm-3.8.2-1ce2a0f39e.patch"
     appium-xcuitest-driver: "npm:^7.26.0"
     dotenv: "npm:^16.4.5"
     eslint: "npm:^9.14.0"

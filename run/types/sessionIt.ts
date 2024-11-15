@@ -1,20 +1,10 @@
 import { test } from '@playwright/test';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
-import { testRisk } from './testing';
-
-// async function itWithBufferHandling(testNameWithoutPlatform: string, platform: SupportedPlatformsType, testToRun: () => Promise<void>) {
-//   try {
-//     await testToRun();
-//     clearBufferOfTest(testNameWithoutPlatform);
-//   } catch (e) {
-//     printBufferAndClear(testNameWithoutPlatform)
-//     throw e;
-//   }
-// }
+import { TestRisk } from './testing';
 
 export function androidIt(
   title: string,
-  testRisk: testRisk,
+  testRisk: TestRisk,
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip = false
 ) {
@@ -33,7 +23,7 @@ export function androidIt(
 
 export function iosIt(
   title: string,
-  testRisk: testRisk,
+  testRisk: TestRisk,
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip = false
 ) {
@@ -57,7 +47,7 @@ export function iosIt(
 function mobileIt(
   platform: SupportedPlatformsType,
   title: string,
-  testRisk: testRisk,
+  testRisk: TestRisk,
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip = false
 ) {
@@ -76,7 +66,7 @@ function mobileIt(
 
 export function bothPlatformsIt(
   title: string,
-  testRisk: testRisk,
+  testRisk: TestRisk,
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip = false
 ) {

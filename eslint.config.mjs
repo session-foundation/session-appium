@@ -1,32 +1,46 @@
+import eslint from '@eslint/js';
+import tseslint from 'typescript-eslint';
 import globals from 'globals';
-import pluginJs from '@eslint/js';
-import tseslint from '@typescript-eslint/eslint-plugin'; // Correct import for TypeScript ESLint plugin
-import parser from '@typescript-eslint/parser';
 
-/** @type {import('eslint').Linter.Config[]} */
-export default [
+export default tseslint.config(
   {
-    files: ['**/*.{js,mjs,cjs,ts,tsx}'], // Include TypeScript files as well
+    files: ['**/*.{ts,tsx,cts,mts,js,cjs,mjs}'],
+  },
+  {
+    ignores: ['**/node_modules/**', '.yarn/', 'eslint.config.mjs', 'run/**/*.js', 'avd/'],
+  },
+  eslint.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked, // see https://typescript-eslint.io/getting-started/typed-linting/
+  {
     languageOptions: {
-      parser, // Use TypeScript ESLint parser for parsing TypeScript code
       parserOptions: {
-        project: './tsconfig.json', // Specify the path to your tsconfig.json file
+        warnOnUnsupportedTypeScriptVersion: false,
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
       },
-      globals: globals.browser,
+      globals: globals.node,
     },
-    plugins: {
-      '@typescript-eslint': tseslint,
-    },
+  },
+  {
     rules: {
+      'no-unused-vars': 'off',
       '@typescript-eslint/no-floating-promises': 'error',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
-      '@typescript-eslint/no-inferrable-types': 'off',
+      '@typescript-eslint/no-redundant-type-constituents': 'off',
+      '@typescript-eslint/no-unsafe-enum-comparison': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          args: 'all',
+          caughtErrors: 'none',
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
     },
-  },
-  pluginJs.configs.recommended,
-  tseslint.configs.recommended,
-  tseslint.configs['recommended-requiring-type-checking'], // Add recommended-requiring-type-checking config
-];
+  }
+);

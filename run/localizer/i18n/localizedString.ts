@@ -125,7 +125,6 @@ const isStringWithArgs = (localizedString: string): localizedString is ArgString
  * @param message - The message to log.
  */
 export function i18nLog(message: string | unknown) {
-  // eslint-disable-next-line no-console
   console.log(`i18n: `, message);
 }
 

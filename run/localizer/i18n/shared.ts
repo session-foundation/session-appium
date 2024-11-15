@@ -6,7 +6,6 @@ let initialLocale: Locale | undefined;
  *
  */
 export function i18nLog(message: string) {
-  // eslint-disable-next-line no-console
   console.log(`i18n: ${message}`);
 }
 

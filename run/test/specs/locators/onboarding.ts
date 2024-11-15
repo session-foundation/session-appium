@@ -39,6 +39,49 @@ export class AccountRestoreButton extends LocatorsInterface {
   }
 }
 
+export class SplashScreenLinks extends LocatorsInterface {
+  public build() {
+    return {
+      strategy: 'accessibility id',
+      selector: 'Open URL',
+    } as const;
+  }
+}
+
+export class TermsOfServiceButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Terms of Service',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Terms of Service',
+        } as const;
+    }
+  }
+}
+
+export class PrivacyPolicyButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Privacy Policy',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Privacy Policy',
+        } as const;
+    }
+  }
+}
+
 // CREATE ACCOUNT FLOW
 
 export class DisplayNameInput extends LocatorsInterface {

@@ -18,7 +18,7 @@ Once done, you should be able to start each emulators and have them running at t
 
 ## Environment variables needed
 
-Before you can start the tests, you need to setup some environment variables:
+Before you can start the tests, you need to setup some environment variables. See the file .env.sample for an example.
 
 #### ANDROID_SDK_ROOT
 
@@ -54,7 +54,7 @@ Somehow, Appium asks for the sdk tools but do not force the adb binary to come f
 
 ## Running tests on iOS Emulators
 
-First you need to get correct branch of Session that you want to test from Github. See [(https://github.com/oxen-io/session-ios/releases/)] and download the latest **ipa** under **Assets**
+First you need to get correct branch of Session that you want to test from Github. See [(https://github.com/session-foundation/session-ios/releases/)] and download the latest **ipa** under **Assets**
 
 Then to access the **.app** file that Appium needs for testing you need to build in Xcode and then find .app in your **Derived Data** folder for Xcode.
 
