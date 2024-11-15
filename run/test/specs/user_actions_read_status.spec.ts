@@ -38,11 +38,11 @@ async function readStatus(platform: SupportedPlatformsType) {
   });
   // Check read status on device 1
   await device1.onAndroid().waitForTextElementToBePresent({
-      strategy: 'id',
-      selector: 'network.loki.messenger:id/messageStatusTextView',
-      text: 'Read',
-    })
-  
+    strategy: 'id',
+    selector: 'network.loki.messenger:id/messageStatusTextView',
+    text: 'Read',
+  });
+
   await device1.onIOS().waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message sent status: Read',

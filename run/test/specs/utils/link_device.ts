@@ -4,6 +4,7 @@ import { SupportedPlatformsType } from './open_app';
 
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { USERNAME } from '../../../types/testing';
+import { DisplayNameInput } from '../locators/onboarding';
 
 export const linkedDevice = async (
   device1: DeviceWrapper,
@@ -31,16 +32,9 @@ export const linkedDevice = async (
   await device2.clickOnByAccessibilityID('Continue');
   // Wait for loading animation to look for display name
   await device2.waitForLoadingOnboarding();
-  const displayName = await device2.doesElementExist({
-    strategy: 'accessibility id',
-    selector: 'Enter display name',
-    maxWait: 1000,
-  });
+  const displayName = await device2.doesElementExist(new DisplayNameInput(device2));
   if (displayName) {
-    await device2.inputText(userName, {
-      strategy: 'accessibility id',
-      selector: 'Enter display name',
-    });
+    await device2.inputText(userName, new DisplayNameInput(device2));
     await device2.clickOnByAccessibilityID('Continue');
   } else {
     console.info('Display name found: Loading account');

@@ -32,6 +32,7 @@ import {
   XPath,
 } from './testing';
 import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
+import { EnterAccountID } from '../test/specs/locators/start_conversation';
 
 export type Coordinates = {
   x: number;
@@ -979,10 +980,7 @@ export class DeviceWrapper {
     // Select direct message option
     await this.clickOnByAccessibilityID('New direct message');
     // Enter User B's session ID into input box
-    await this.inputText(user.accountID, {
-      strategy: 'accessibility id',
-      selector: 'Session id input box',
-    });
+    await this.inputText(user.accountID, new EnterAccountID(this));
     // Click next
     await this.scrollDown();
     await this.clickOnByAccessibilityID('Next');

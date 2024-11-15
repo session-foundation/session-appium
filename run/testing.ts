@@ -1,7 +1,6 @@
-import { DeviceWrapper } from './DeviceWrapper';
+import { DeviceWrapper } from '././types/DeviceWrapper';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- Used in docstring
-import { en } from '../localizer/locales';
 
 export type User = {
   userName: USERNAME;

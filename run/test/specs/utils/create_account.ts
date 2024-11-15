@@ -2,6 +2,7 @@ import { runOnlyOnAndroid, sleepFor } from '.';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User, USERNAME } from '../../../types/testing';
 import { ExitUserProfile, RevealRecoveryPhraseButton } from '../locators';
+import { DisplayNameInput } from '../locators/onboarding';
 import { UserSettings } from '../locators/settings';
 import { SupportedPlatformsType } from './open_app';
 
@@ -17,10 +18,7 @@ export const newUser = async (
     selector: 'Create account button',
   });
   // Input username
-  await device.inputText(userName, {
-    strategy: 'accessibility id',
-    selector: 'Enter display name',
-  });
+  await device.inputText(userName, new DisplayNameInput(device));
   // Click continue
   await device.clickOnByAccessibilityID('Continue');
   // Choose message notification options

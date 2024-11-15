@@ -43,10 +43,18 @@ export class AccountRestoreButton extends LocatorsInterface {
 
 export class DisplayNameInput extends LocatorsInterface {
   public build() {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Enter display name',
-    } as const;
+    switch (this.platform) {
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Enter display name',
+        } as const;
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Enter display name',
+        } as const;
+    }
   }
 }
 
