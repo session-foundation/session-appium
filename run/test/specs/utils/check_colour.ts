@@ -31,7 +31,7 @@ export function compareColors(
   hex2: string,
   tolerance: number = 2.3 // looks-same default value which is "enough for most cases"
 ): boolean {
-  // looks-same expects colors as RGB objects but parseDataImage outputs hex 
+  // looks-same expects colors as RGB objects but parseDataImage outputs hex
   function hexToRgbObject(hex: string): { R: number; G: number; B: number } {
     const bigint = parseInt(hex.replace('#', ''), 16);
     return {
@@ -44,8 +44,8 @@ export function compareColors(
   const rgb1 = hexToRgbObject(hex1);
   const rgb2 = hexToRgbObject(hex2);
 
-  // Compare whether colors are within tolerance 
+  // Compare whether colors are within tolerance
   const isSameColor: boolean = colors(rgb1, rgb2, { tolerance });
 
-  return isSameColor
+  return isSameColor;
 }
