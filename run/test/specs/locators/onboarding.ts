@@ -41,9 +41,9 @@ export class BackButton extends LocatorsInterface {
 export class WarningModalQuitButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     return {
-      strategy: 'id', 
-      selector: 'Quit'
-    } as const
+      strategy: 'id',
+      selector: 'Quit',
+    } as const;
   }
 }
 
