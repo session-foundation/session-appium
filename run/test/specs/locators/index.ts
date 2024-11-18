@@ -345,18 +345,52 @@ export class LeaveGroupButton extends LocatorsInterface {
   }
 }
 
-export class DeleteMessageConfirmation extends LocatorsInterface {
+export class DeleteMessageLocally extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'accessibility id',
-          selector: 'Delete just for me',
+          selector: 'Delete on this device only',
         };
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Delete for me',
+        };
+    }
+  }
+}
+
+export class DeleteMessageForEveryone extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Delete for everyone',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Delete for everyone',
+        };
+    }
+  }
+}
+
+export class DeleteMessageConfirmationModal extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Delete',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Delete',
         };
     }
   }

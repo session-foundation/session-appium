@@ -2,7 +2,7 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ExitUserProfile } from './locators';
 import { UserSettings } from './locators/settings';
-import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
+import { runOnlyOnAndroid, sleepFor } from './utils';
 import { parseDataImage } from './utils/check_colour';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
@@ -27,8 +27,8 @@ async function avatarRestored(platform: SupportedPlatformsType) {
   // Take screenshot
   const profilePicture = await device1.waitForTextElementToBePresent(new UserSettings(device1));
   await device2.clickOnElementAll(new UserSettings(device2));
-  await runOnlyOnIOS(platform, () => device1.waitForLoadingOnboarding());
-  await runOnlyOnAndroid(platform, () => sleepFor(10000));
+  await device1.onIOS().waitForLoadingOnboarding();
+  await runOnlyOnAndroid(platform, () => sleepFor(10000)); // we can't avoid this runOnlyOnAndroid
   const base64 = await device1.getElementScreenshot(profilePicture.ELEMENT);
   const actualPixelColor = await parseDataImage(base64);
   if (actualPixelColor === expectedPixelHexColour) {

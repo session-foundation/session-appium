@@ -1,5 +1,5 @@
 // import { iosIt } from "../../types/sessionIt";
-// import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils";
+// import { runOnlyOnAndroid,  sleepFor } from "./utils";
 // import { newUser } from "./utils/create_account";
 // import { newContact } from "./utils/create_contact";
 // import { linkedDevice } from "./utils/link_device";
@@ -91,17 +91,14 @@
 //     console.log("Username is not found`");
 //   }
 //   // select tick
-//   await runOnlyOnAndroid(platform, () =>
-//     device1.clickOnByAccessibilityID("Apply")
-//   );
-//   await runOnlyOnIOS(platform, () => device1.clickOnByAccessibilityID("Done"));
+//   await device1.onAndroid().clickOnByAccessibilityID("Apply");
+//   await device1.onIOS().clickOnByAccessibilityID("Done");
 //   // await device1.navigateBack();
-//   await runOnlyOnIOS(platform, () =>
-//     device1.clickOnElementAll({
+//     await device1.onIOS().clickOnElementAll({
 //       strategy: "accessibility id",
 //       selector: "Close button",
-//     })
-//   );
+//     });
+
 //   await Promise.all([
 //     device1.clickOnElementAll({
 //       strategy: "accessibility id",

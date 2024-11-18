@@ -1,3 +1,4 @@
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ContinueButton } from './locators/global';
@@ -25,15 +26,15 @@ async function hideRecoveryPassword(platform: SupportedPlatformsType) {
   // Wait for modal to appear
   // Check modal is correct
   await device1.checkModalStrings(
-    'recoveryPasswordHidePermanently',
-    'recoveryPasswordHidePermanentlyDescription1'
+    englishStripped('recoveryPasswordHidePermanently').toString(),
+    englishStripped('recoveryPasswordHidePermanentlyDescription1').toString()
   );
   // Click on continue
   await device1.clickOnElementAll(new ContinueButton(device1));
   // Check confirmation modal
   await device1.checkModalStrings(
-    'recoveryPasswordHidePermanently',
-    'recoveryPasswordHidePermanentlyDescription2'
+    englishStripped('recoveryPasswordHidePermanently').toString(),
+    englishStripped('recoveryPasswordHidePermanentlyDescription2').toString()
   );
   // Click on Yes
   await device1.clickOnElementAll(new YesButton(device1));

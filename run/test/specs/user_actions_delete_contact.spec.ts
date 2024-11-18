@@ -1,7 +1,6 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteContactModalConfirm } from './locators/global';
-import { runOnlyOnAndroid, runOnlyOnIOS } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
@@ -34,8 +33,8 @@ async function deleteContact(platform: SupportedPlatformsType) {
     }),
   ]);
   // Delete contact
-  await runOnlyOnIOS(platform, () => device1.swipeLeft('Conversation list item', Bob.userName));
-  await runOnlyOnAndroid(platform, () => device1.longPressConversation(Bob.userName));
+  await device1.onIOS().swipeLeft('Conversation list item', Bob.userName);
+  await device1.onAndroid().longPressConversation(Bob.userName);
   await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Delete' });
   // TODO Fix once args checks are merged
   // await device1.checkModalStrings('conversationsDelete', 'conversationsDeleteDescription');

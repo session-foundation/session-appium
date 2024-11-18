@@ -1,17 +1,6 @@
 import { test } from '@playwright/test';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
-import { DeviceWrapper } from './DeviceWrapper';
-import { SetupData, TestRisk, User } from './testing';
-
-// async function itWithBufferHandling(testNameWithoutPlatform: string, platform: SupportedPlatformsType, testToRun: () => Promise<void>) {
-//   try {
-//     await testToRun();
-//     clearBufferOfTest(testNameWithoutPlatform);
-//   } catch (e) {
-//     printBufferAndClear(testNameWithoutPlatform)
-//     throw e;
-//   }
-// }
+import { TestRisk } from './testing';
 
 export function androidIt(
   title: string,
@@ -19,7 +8,7 @@ export function androidIt(
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip = false
 ) {
-  const testName = `${title} android @${testRisk}-risk`;
+  const testName = `${title} android @${testRisk ?? 'default'}-risk`;
   if (shouldSkip) {
     test.skip(testName, () => {
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);
@@ -38,7 +27,7 @@ export function iosIt(
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip = false
 ) {
-  const testName = `${title} ios @${testRisk}-risk`;
+  const testName = `${title} ios @${testRisk ?? 'default'}-risk`;
 
   if (shouldSkip) {
     test.skip(testName, () => {
@@ -62,7 +51,7 @@ function mobileIt(
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip = false
 ) {
-  const testName = `${title} ${platform} @${testRisk}-risk`;
+  const testName = `${title} ${platform} @${testRisk ?? 'default'}-risk`;
   if (shouldSkip) {
     test.skip(testName, () => {
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);
@@ -77,7 +66,7 @@ function mobileIt(
 
 export function bothPlatformsIt(
   title: string,
-  testRisk: TestRisk, 
+  testRisk: TestRisk,
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip = false
 ) {

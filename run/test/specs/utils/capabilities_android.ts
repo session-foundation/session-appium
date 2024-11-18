@@ -6,16 +6,12 @@ import {
 import dotenv from 'dotenv';
 import { isString } from 'lodash';
 import { CapabilitiesIndexType } from './capabilities_ios';
+import { getAndroidApk } from './binaries';
 dotenv.config();
 // Access the environment variable
-const androidPathPrefix = process.env.ANDROID_APP_PATH_PREFIX;
-
-if (!androidPathPrefix) {
-  throw new Error('ANDROID_APP_PATH_PREFIX environment variable is not set');
-}
 
 // Concatenate the environment variable with the fixed part of the path
-const androidAppFullPath = `${androidPathPrefix}`;
+const androidAppFullPath = getAndroidApk();
 
 console.log(`Android app full path: ${androidAppFullPath}`);
 
@@ -86,10 +82,7 @@ function getAllCaps() {
   return emulatorCaps;
 }
 
-export function getAndroidCapabilities(
-  capabilitiesIndex: CapabilitiesIndexType
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): W3CCapabilities {
+export function getAndroidCapabilities(capabilitiesIndex: CapabilitiesIndexType): W3CCapabilities {
   const allCaps = getAllCaps();
   if (capabilitiesIndex >= allCaps.length) {
     throw new Error(`Asked invalid android capability index: ${capabilitiesIndex}`);

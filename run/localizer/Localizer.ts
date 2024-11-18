@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Dictionary } from './locales';
 import type { LOCALE_DEFAULTS } from './constants';
 

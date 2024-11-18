@@ -1,14 +1,7 @@
 /** An array of supported html tags to render if found in a string */
 export const supportedFormattingTags = ['b', 'i', 'u', 's', 'br', 'span'];
 /** NOTE: self-closing tags must also be listed in {@link supportedFormattingTags} */
-const supportedSelfClosingFormattingTags = ['br'];
-
-function createSupportedFormattingTagsRegex() {
-  return new RegExp(
-    `<(?:${supportedFormattingTags.join('|')})>.*?</(?:${supportedFormattingTags.join('|')})>|<(?:${supportedSelfClosingFormattingTags.join('|')})\\/>`,
-    'g'
-  );
-}
+// const supportedSelfClosingFormattingTags = ['br'];
 
 /**
  * Replaces all html tag identifiers with their escaped equivalents

@@ -1,4 +1,4 @@
-import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from '.';
+import { runOnlyOnIOS, sleepFor } from '.';
 import { englishStripped } from '../../../localizer/i18n/localizedString';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
@@ -14,12 +14,12 @@ export const newContact = async (
   await device1.sendNewMessage(Bob, `${Alice.userName} to ${Bob.userName}`);
   // Click on message request folder
   await sleepFor(100);
-  await runOnlyOnIOS(platform, () => retryMsgSentForBanner(platform, device1, device2, 30000));
+  await runOnlyOnIOS(platform, () => retryMsgSentForBanner(platform, device1, device2, 30000)); // this runOnlyOnIOS is needed
+
   await device2.clickOnByAccessibilityID('Message requests banner');
   await device2.clickOnByAccessibilityID('Message request');
-  await runOnlyOnAndroid(platform, () =>
-    device2.clickOnByAccessibilityID('Accept message request')
-  );
+  await device2.onAndroid().clickOnByAccessibilityID('Accept message request');
+
   // Type into message input box
   await device2.sendMessage(`Reply-message-${Bob.userName}-to-${Alice.userName}`);
   // Verify config message states message request was accepted
@@ -32,7 +32,7 @@ export const newContact = async (
 };
 
 const retryMsgSentForBanner = async (
-  platform: SupportedPlatformsType,
+  _platform: SupportedPlatformsType,
   device1: DeviceWrapper,
   device2: DeviceWrapper,
   timeout: number

@@ -5,8 +5,8 @@ import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppOnPlatformSingleDevice } from './utils/open_app';
 
-iosIt('Tiny test', 'undefined', tinyTest, true);
-androidIt('Tiny test', 'undefined', tinyTest, true);
+iosIt('Tiny test', undefined, tinyTest, true);
+androidIt('Tiny test', undefined, tinyTest, true);
 
 async function tinyTest(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);

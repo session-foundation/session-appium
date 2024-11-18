@@ -1,7 +1,7 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DownloadMediaButton } from './locators';
-import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
@@ -25,22 +25,19 @@ async function sendDocument(platform: SupportedPlatformsType) {
   await device2.clickOnElementAll(new DownloadMediaButton(device2));
   // Reply to message
 
-  await runOnlyOnIOS(platform, () =>
-    device2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: testMessage,
-    })
-  );
-  await runOnlyOnAndroid(platform, () =>
-    device2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Document',
-    })
-  );
+  await device2.onIOS().waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Message body',
+    text: testMessage,
+  });
 
-  await runOnlyOnIOS(platform, () => device2.longPressMessage(testMessage));
-  await runOnlyOnAndroid(platform, () => device2.longPress('Document'));
+  await device2.onAndroid().waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Document',
+  });
+
+  await device2.onIOS().longPressMessage(testMessage);
+  await device2.onAndroid().longPress('Document');
   await device2.clickOnByAccessibilityID('Reply to message');
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
