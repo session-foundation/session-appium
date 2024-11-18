@@ -1,7 +1,6 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { runOnlyOnAndroid, runOnlyOnIOS } from './utils';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
@@ -32,20 +31,17 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   const messageRequestPendingDescription = englishStripped(
     'messageRequestPendingDescription'
   ).toString();
-  await runOnlyOnIOS(platform, () =>
-    device1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Control message',
-      text: messageRequestPendingDescription,
-    })
-  );
-  await runOnlyOnAndroid(platform, () =>
-    device1.waitForTextElementToBePresent({
-      strategy: 'id',
-      selector: 'network.loki.messenger:id/textSendAfterApproval',
-      text: messageRequestPendingDescription,
-    })
-  );
+  await device1.onIOS().waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Control message',
+    text: messageRequestPendingDescription,
+  });
+  await device1.onAndroid().waitForTextElementToBePresent({
+    strategy: 'id',
+    selector: 'network.loki.messenger:id/textSendAfterApproval',
+    text: messageRequestPendingDescription,
+  });
+
   await device1.inputText(testMessage, {
     strategy: 'accessibility id',
     selector: 'Message input box',
@@ -71,16 +67,14 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   const messageRequestsAcceptDescription = englishStripped(
     'messageRequestsAcceptDescription'
   ).toString();
-  await runOnlyOnIOS(platform, () =>
-    device2.waitForControlMessageToBePresent(messageRequestsAcceptDescription)
-  );
-  await runOnlyOnAndroid(platform, () =>
-    device2.waitForTextElementToBePresent({
-      strategy: 'id',
-      selector: 'network.loki.messenger:id/sendAcceptsTextView',
-      text: messageRequestsAcceptDescription,
-    })
-  );
+  await device2.onIOS().waitForControlMessageToBePresent(messageRequestsAcceptDescription);
+
+  await device2.onAndroid().waitForTextElementToBePresent({
+    strategy: 'id',
+    selector: 'network.loki.messenger:id/sendAcceptsTextView',
+    text: messageRequestsAcceptDescription,
+  });
+
   // Send message from Bob to Alice
   await device2.sendMessage(`${userB.userName} to ${userA.userName}`);
   // Check control message for message request acceptance

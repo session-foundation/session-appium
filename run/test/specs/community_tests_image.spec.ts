@@ -1,13 +1,12 @@
 import { testCommunityLink, testCommunityName } from '../../constants/community';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { runOnlyOnIOS } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { joinCommunity } from './utils/join_community';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Send image to community','medium', sendImageCommunityiOS);
+iosIt('Send image to community', 'medium', sendImageCommunityiOS);
 androidIt('Send image to community', 'medium', sendImageCommunityAndroid);
 
 async function sendImageCommunityiOS(platform: SupportedPlatformsType) {
@@ -49,7 +48,7 @@ async function sendImageCommunityAndroid(platform: SupportedPlatformsType) {
   await device2.longPressMessage(testMessage);
   await device2.clickOnByAccessibilityID('Reply to message');
   await device2.sendMessage(replyMessage);
-  await runOnlyOnIOS(platform, () => device1.scrollToBottom(platform));
+  await device1.onIOS().scrollToBottom(platform);
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',

@@ -7,7 +7,6 @@ import {
   SetModalButton,
 } from '../locators/disappearing_messages';
 import { SupportedPlatformsType } from './open_app';
-import { runOnlyOnIOS } from './run_on';
 import { sleepFor } from './sleep_for';
 export const setDisappearingMessage = async (
   platform: SupportedPlatformsType,
@@ -34,7 +33,13 @@ export const setDisappearingMessage = async (
       await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.ONE_DAY);
     }
   } else if (enforcedType === 'Group' && timerType === 'Disappear after send option') {
-    await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.OFF);
+    await device.onIOS().disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.OFF_IOS);
+    await device.onAndroid().disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.OFF_ANDROID);
+    // if (platform === 'ios') {
+    //   await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.OFF_IOS);
+    // } else {
+    //   await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.OFF_ANDROID);
+    // }
   } else {
     await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.ONE_DAY);
   }
@@ -44,7 +49,7 @@ export const setDisappearingMessage = async (
     selector: timerDuration,
   });
   await device.clickOnElementAll(new SetDisappearMessagesButton(device));
-  await runOnlyOnIOS(platform, () => device.navigateBack());
+  await device.onIOS().navigateBack();
   await sleepFor(1000);
   if (device2) {
     await device2.clickOnElementAll(new FollowSettingsButton(device2));

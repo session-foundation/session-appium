@@ -2,7 +2,7 @@ import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { AccessibilityId, USERNAME } from '../../types/testing';
 import { DeleteMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
-import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
@@ -20,8 +20,8 @@ async function deleteRequest(platform: SupportedPlatformsType) {
   // Bob clicks on message request banner
   await device2.clickOnByAccessibilityID('Message requests banner');
   // Swipe left on ios
-  await runOnlyOnIOS(platform, () => device2.swipeLeftAny('Message request'));
-  await runOnlyOnAndroid(platform, () => device2.longPress('Message request'));
+  await device2.onIOS().swipeLeftAny('Message request');
+  await device2.onAndroid().longPress('Message request');
   await device2.clickOnElementAll(new DeleteMessageRequestButton(device2));
   await sleepFor(1000);
   await device2.clickOnElementAll(new DeleteMesssageRequestConfirmation(device2));

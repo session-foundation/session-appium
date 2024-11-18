@@ -70,9 +70,9 @@ export class DeleteContactModalConfirm extends LocatorsInterface {
 
 export class EnableLinkPreviewsModalButton extends LocatorsInterface {
   public build() {
-      return {
-          strategy: 'accessibility id',
-          selector: 'Enable',
-      } as const;
+    return {
+      strategy: 'accessibility id',
+      selector: 'Enable',
+    } as const;
   }
 }

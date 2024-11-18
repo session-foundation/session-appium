@@ -2,6 +2,7 @@ import { W3CCapabilities } from '@wdio/types/build/Capabilities';
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
 import { XCUITestDriver } from 'appium-xcuitest-driver/build/lib/driver';
 import { isArray, isEmpty } from 'lodash';
+import * as sinon from 'sinon';
 import {
   ChangeProfilePictureButton,
   ExitUserProfile,
@@ -16,7 +17,6 @@ import { englishStripped, TokenString } from '../localizer/i18n/localizedString'
 import { LocalizerDictionary } from '../localizer/Localizer';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
-import { getAdbFullPath } from '../test/specs/utils/binaries';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/specs/utils/utilities';
 import {
@@ -31,6 +31,7 @@ import {
   XPath,
 } from './testing';
 import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
+import { getAdbFullPath } from '../test/specs/utils/binaries';
 
 export type Coordinates = {
   x: number;
@@ -49,6 +50,20 @@ export class DeviceWrapper {
   constructor(device: AndroidUiautomator2Driver | XCUITestDriver, udid: string) {
     this.device = device;
     this.udid = udid;
+  }
+
+  public onIOS() {
+    if (this.isIOS()) {
+      return this;
+    }
+    return sinon.createStubInstance(DeviceWrapper) as DeviceWrapper;
+  }
+
+  public onAndroid() {
+    if (this.isAndroid()) {
+      return this;
+    }
+    return sinon.createStubInstance(DeviceWrapper) as DeviceWrapper;
   }
 
   /**  === all the shared actions ===  */
@@ -177,7 +192,7 @@ export class DeviceWrapper {
     return this.toShared().getPageSource();
   }
 
-  /* === all the device-specifc function ===  */
+  /* === all the device-specific function ===  */
 
   // ELEMENT INTERACTION
 
@@ -240,16 +255,7 @@ export class DeviceWrapper {
     args: { text?: string; maxWait?: number } & (StrategyExtractionObj | LocatorsInterface)
   ) {
     let el: null | AppiumNextElementType = null;
-    let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
-
-    if (args instanceof LocatorsInterface) {
-      locator = args.build();
-    } else {
-      locator = args as StrategyExtractionObj & {
-        text?: string;
-        maxWait?: number;
-      };
-    }
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
 
     el = await this.waitForTextElementToBePresent({ ...locator });
     await this.click(el.ELEMENT);
@@ -308,7 +314,7 @@ export class DeviceWrapper {
     }
     await this.click(el.ELEMENT);
   }
-// TODO update this function to handle new locator logic 
+  // TODO update this function to handle new locator logic
   public async longPress(accessibilityId: AccessibilityId, text?: string) {
     const el = await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',
@@ -453,15 +459,7 @@ export class DeviceWrapper {
     args: ({ text?: string; maxWait?: number } & StrategyExtractionObj) | LocatorsInterface
   ) {
     let el: null | AppiumNextElementType = null;
-    let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
-    if (args instanceof LocatorsInterface) {
-      locator = args.build();
-    } else {
-      locator = args as StrategyExtractionObj & {
-        text?: string;
-        maxWait?: number;
-      };
-    }
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
 
     el = await this.waitForTextElementToBePresent({ ...locator });
 
@@ -480,7 +478,7 @@ export class DeviceWrapper {
             maxWait: 1000,
           });
           success = true;
-        } catch (error) {
+        } catch (error: any) {
           console.info(`Retrying long press and select all, attempt ${retries + 1}`);
         }
       } else {
@@ -593,7 +591,7 @@ export class DeviceWrapper {
     if (elements && elements.length) {
       const matching = await this.findAsync(elements, async e => {
         const text = await this.getTextFromElement(e);
-        // console.info(`text ${text} lookingfor ${textToLookFor}`);
+        // console.info(`text ${text} looking for ${textToLookFor}`);
         if (text.toLowerCase().includes(textToLookFor.toLowerCase())) {
           console.info(`Text found to include ${textToLookFor}`);
         }
@@ -651,15 +649,7 @@ export class DeviceWrapper {
     const maxWaitMSec = maxWait || 30000;
     const waitPerLoop = 100;
     let element: AppiumNextElementType | null = null;
-    let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
-    if (args instanceof LocatorsInterface) {
-      locator = args.build();
-    } else {
-      locator = args as StrategyExtractionObj & {
-        text?: string;
-        maxWait?: number;
-      };
-    }
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
 
     while (element === null) {
       try {
@@ -679,11 +669,7 @@ export class DeviceWrapper {
           }
         }
       } catch (e: any) {
-        console.info(
-          `doesElementExist failed with`,
-          e.message,
-          `${locator.strategy} ${locator.selector}`
-        );
+        console.info(`doesElementExist failed with`, `${locator.strategy} ${locator.selector}`);
       }
       if (!element) {
         await sleepFor(waitPerLoop);
@@ -719,7 +705,7 @@ export class DeviceWrapper {
           });
           await sleepFor(100);
           console.log(`Element has been found, waiting for deletion`);
-        } catch (e) {
+        } catch (e: any) {
           element = undefined;
           console.log(`Element has been deleted, great success`);
         }
@@ -760,18 +746,10 @@ export class DeviceWrapper {
     } & (StrategyExtractionObj | LocatorsInterface)
   ): Promise<AppiumNextElementType> {
     let el: null | AppiumNextElementType = null;
-    let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
 
     const { text, maxWait } = args;
 
-    if (args instanceof LocatorsInterface) {
-      locator = args.build();
-    } else {
-      locator = args as StrategyExtractionObj & {
-        text?: string;
-        maxWait?: number;
-      };
-    }
     const maxWaitMSec: number = typeof maxWait === 'number' ? maxWait : 60000;
     let currentWait = 0;
     const waitPerLoop = 100;
@@ -790,7 +768,6 @@ export class DeviceWrapper {
       } catch (e: any) {
         console.info(
           'waitForTextElementToBePresent threw: ',
-          e.message,
           `${locator.strategy}: '${locator.selector}'`
         );
       }
@@ -856,8 +833,8 @@ export class DeviceWrapper {
         console.log(`Waiting for control message to be present with ${text}`);
         const els = await this.findElements('accessibility id', 'Control message');
         el = await this.findMatchingTextInElementArray(els, text);
-      } catch (e: any) {
-        console.info('disappearingControlMessage threw: ', e.message);
+      } catch (e) {
+        console.info('disappearingControlMessage threw: ', e);
       }
       if (!el) {
         await sleepFor(waitPerLoop);
@@ -1056,16 +1033,7 @@ export class DeviceWrapper {
     args: ({ maxWait?: number } & StrategyExtractionObj) | LocatorsInterface
   ) {
     let el: null | AppiumNextElementType = null;
-    let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
-
-    if (args instanceof LocatorsInterface) {
-      locator = args.build();
-    } else {
-      locator = args as StrategyExtractionObj & {
-        text?: string;
-        maxWait?: number;
-      };
-    }
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
 
     console.log('Locator being used:', locator);
 
@@ -1776,7 +1744,6 @@ export class DeviceWrapper {
     expectedStringHeading: TokenString<LocalizerDictionary>,
     expectedStringDescription: TokenString<LocalizerDictionary>,
     oldModalAndroid?: boolean
-    // args?: { [key: string]: string | number }
   ) {
     // Check modal heading is correct
     function removeNewLines(input: string): string {
@@ -1795,13 +1762,12 @@ export class DeviceWrapper {
       });
     }
     const actualHeading = await this.getTextFromElement(elHeading);
-    if (expectedHeading !== actualHeading) {
+    if (expectedStringHeading === actualHeading) {
+      console.log('Modal heading is correct');
+    } else {
       throw new Error(
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Modal heading is incorrect. Expected heading: ${expectedHeading}, Actual heading: ${actualHeading}`
       );
-    } else {
-      console.log('Modal heading is correct');
     }
     // Now check modal description
     // let expectedDescription;
@@ -1826,10 +1792,10 @@ export class DeviceWrapper {
     const formattedDescription = removeNewLines(actualDescription);
     if (expectedDescription !== formattedDescription) {
       throw new Error(
-        `Modal description is incorrect. Expected description: ${expectedDescription}, Actual description: ${formattedDescription}`
+        `Modal description is incorrect. Expected description: ${expectedStringDescription}, Actual description: ${formattedDescription}`
       );
     } else {
-      console.log('Modal description is correct')
+      console.log('Modal description is correct');
     }
   }
 

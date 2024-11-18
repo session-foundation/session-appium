@@ -4,7 +4,6 @@ import { USERNAME } from '../../types/testing';
 import { joinCommunity } from './utils/join_community';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
-import { runOnlyOnIOS } from './utils';
 
 bothPlatformsIt('Join community test', 'high', joinCommunityTest);
 
@@ -14,7 +13,7 @@ async function joinCommunityTest(platform: SupportedPlatformsType) {
   // Create user A and user B
   await linkedDevice(device1, device2, USERNAME.ALICE, platform);
   await joinCommunity(device1, testCommunityLink, testCommunityName);
-  await runOnlyOnIOS(platform, () => device1.scrollToBottom(platform));
+  await device1.onIOS().scrollToBottom(platform);
   await device1.sendMessage(testMessage);
   // Has community synced to device 2?
   await device2.waitForTextElementToBePresent({

@@ -4,7 +4,7 @@ import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-bothPlatformsIt("Create group", 'high', groupCreation);
+bothPlatformsIt('Create group', 'high', groupCreation);
 
 async function groupCreation(platform: SupportedPlatformsType) {
   const testGroupName = 'Test group';

@@ -1,6 +1,7 @@
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { DeleteMessageConfirmation } from './locators';
+import { DeleteMessageConfirmationModal, DeleteMessageLocally } from './locators';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
@@ -10,23 +11,18 @@ bothPlatformsIt('Deleted message linked device', 'high', deletedMessageLinkedDev
 
 async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-
   const userA = await linkedDevice(device1, device3, USERNAME.ALICE, platform);
-
   const userB = await newUser(device2, USERNAME.BOB, platform);
-
+  const testMessage = 'Howdy';
   await newContact(platform, device1, userA, device2, userB);
   // Send message from user a to user b
-  const sentMessage = await device1.sendMessage('Howdy');
+  const sentMessage = await device1.sendMessage(testMessage);
   // Check message came through on linked device(3)
   // Enter conversation with user B on device 3
-  // Need to wait for notifications to disappear
-
   await device3.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Conversation list item',
   });
-
   await device3.selectByText('Conversation list item', userB.userName);
   // Find message
   await device3.findMessageWithBody(sentMessage);
@@ -34,10 +30,39 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   await device1.longPressMessage(sentMessage);
   // Select delete
   await device1.clickOnByAccessibilityID('Delete message');
+  await device1
+    .onAndroid()
+    .checkModalStrings(
+      englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
+      englishStripped('deleteMessageConfirm').toString()
+    );
+
   // Select delete for everyone
-  await device1.clickOnElementAll(new DeleteMessageConfirmation(device1));
+  await device1.clickOnElementAll(new DeleteMessageLocally(device1));
+  // Confirm deletion Android only
+  await device1.onAndroid().clickOnElementAll(new DeleteMessageConfirmationModal(device1));
+
   // Check linked device for deleted message
-  await device1.hasTextElementBeenDeleted('Message body', sentMessage);
+  await device1.onIOS().hasTextElementBeenDeleted('Message body', sentMessage);
+
+  await device1.onAndroid().waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Deleted message',
+  });
+
+  // Check device 2 and 3 for no change
+  await Promise.all([
+    device2.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: sentMessage,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: sentMessage,
+    }),
+  ]);
   // Close app
   await closeApp(device1, device2, device3);
 }

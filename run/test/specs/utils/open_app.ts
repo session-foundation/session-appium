@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { getAndroidCapabilities, getAndroidUdid } from './capabilities_android';
 import { CapabilitiesIndexType, capabilityIsValid, getIosCapabilities } from './capabilities_ios';
-import { runScriptAndLog } from './utilities';
+import { isCI, runScriptAndLog } from './utilities';
 
 import { XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
 import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
@@ -11,14 +10,18 @@ import { compact } from 'lodash';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User, USERNAME } from '../../../types/testing';
 import { cleanPermissions } from './permissions';
-import { getAdbFullPath, getAvdManagerFullPath, getEmulatorFullPath } from './binaries';
 import { newUser } from './create_account';
 import { newContact } from './create_contact';
 import { linkedDevice } from './link_device';
 import { sleepFor } from './sleep_for';
+import {
+  getAdbFullPath,
+  getAndroidSystemImageToUse,
+  getEmulatorFullPath,
+  getSdkManagerFullPath,
+} from './binaries';
 
 const APPIUM_PORT = 4728;
-export const APPIUM_IOS_PORT = 8110;
 
 export type SupportedPlatformsType = 'android' | 'ios';
 
@@ -153,7 +156,15 @@ export const openAppFourDevices = async (
 };
 
 async function createAndroidEmulator(emulatorName: string) {
-  const createCmd = `echo "no" | ${getAvdManagerFullPath()} create avd --name ${emulatorName} -k 'system-images;android-31;google_apis;arm64-v8a' --force --skin pixel_5`;
+  if (isCI()) {
+    // on CI, emulators are created during the docker build step.
+    return emulatorName;
+  }
+  const installSystemImageCmd = `${getSdkManagerFullPath()} --install '${getAndroidSystemImageToUse()}'`;
+  console.warn(installSystemImageCmd);
+  await runScriptAndLog(installSystemImageCmd);
+
+  const createCmd = `echo "no" | ${getSdkManagerFullPath()} create avd --name ${emulatorName} -k '${getAndroidSystemImageToUse()}' --force --skin pixel_5`;
   console.info(createCmd);
   await runScriptAndLog(createCmd);
   return emulatorName;
@@ -162,7 +173,7 @@ async function createAndroidEmulator(emulatorName: string) {
 async function startAndroidEmulator(emulatorName: string) {
   await runScriptAndLog(`echo "hw.lcd.density=440" >> ~/.android/avd/${emulatorName}.avd/config.ini
   `);
-  const startEmulatorCmd = `${getEmulatorFullPath()} @${emulatorName} -no-snapshot`;
+  const startEmulatorCmd = `${getEmulatorFullPath()} @${emulatorName}`;
   console.info(`${startEmulatorCmd} & ; disown`);
   await runScriptAndLog(
     startEmulatorCmd // -netdelay none -no-snapshot -wipe-data
@@ -185,6 +196,7 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
   } while (Date.now() - start < 25000 && !found);
 
   if (!found) {
+    console.warn('isEmulatorRunning failed for 25s');
     throw new Error('timedout waiting for emulator to start');
   }
 
@@ -236,7 +248,6 @@ const openAndroidApp = async (
   const capabilities = getAndroidCapabilities(actualCapabilitiesIndex);
   console.log(
     `Android App Full Path: ${
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       getAndroidCapabilities(actualCapabilitiesIndex)['alwaysMatch']['appium:app'] as any
     }`
   );

@@ -1,0 +1,51 @@
+name: Session Appium Build
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - run: git config --global core.autocrlf false
+
+      - name: Checkout git repo
+        uses: actions/checkout@v4
+
+      - name: Install node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - uses: actions/cache/restore@v4
+        id: cache-appium-modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package.json', 'yarn.lock', 'patches/**') }}
+
+      - name: Install dependencies
+        shell: bash
+        if: steps.cache-appium-modules.outputs.cache-hit != 'true'
+        run: yarn install --immutable
+
+      - uses: actions/cache/save@v4
+        id: cache-appium-modules-save
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package.json', 'yarn.lock', 'patches/**') }}
+
+      - name: Generate and concat files
+        shell: bash
+        run: yarn tsc
+
+      - name: Lint Files
+        run: yarn lint-check

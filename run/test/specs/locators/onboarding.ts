@@ -41,9 +41,9 @@ export class BackButton extends LocatorsInterface {
 export class WarningModalQuitButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     return {
-      strategy: 'id', 
-      selector: 'Quit'
-    } as const
+      strategy: 'id',
+      selector: 'Quit',
+    } as const;
   }
 }
 
@@ -58,55 +58,55 @@ export class CreateAccountButton extends LocatorsInterface {
 }
 
 export class AccountRestoreButton extends LocatorsInterface {
-    public build() {
-        return {
-            strategy: 'accessibility id',
-            selector: 'Restore your session button',
-        } as const;
-    }
+  public build() {
+    return {
+      strategy: 'accessibility id',
+      selector: 'Restore your session button',
+    } as const;
+  }
 }
 
 export class SplashScreenLinks extends LocatorsInterface {
-    public build() {
-        return {
-            strategy: 'accessibility id',
-            selector: 'Open URL',
-        } as const;
-    }
+  public build() {
+    return {
+      strategy: 'accessibility id',
+      selector: 'Open URL',
+    } as const;
+  }
 }
 
 export class TermsOfServiceButton extends LocatorsInterface {
-    public build() {
-        switch (this.platform) {  
-            case 'android':  
-                return {  
-                    strategy: 'id',  
-                    selector: 'Terms of Service',  
-                  } as const;  
-            case 'ios':  
-                return {  
-                    strategy: 'accessibility id',  
-                    selector: 'Terms of Service',  
-                  } as const;  
-              }  
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Terms of Service',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Terms of Service',
+        } as const;
     }
+  }
 }
 
 export class PrivacyPolicyButton extends LocatorsInterface {
-    public build() {
-        switch (this.platform) {  
-            case 'android':  
-                return {  
-                    strategy: 'id',  
-                    selector: 'Privacy Policy',  
-                  } as const;  
-            case 'ios':  
-                return {  
-                    strategy: 'accessibility id',  
-                    selector: 'Privacy Policy',  
-                  } as const;  
-              }  
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Privacy Policy',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Privacy Policy',
+        } as const;
     }
+  }
 }
 
 // CREATE ACCOUNT FLOW

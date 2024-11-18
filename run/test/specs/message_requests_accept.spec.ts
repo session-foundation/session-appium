@@ -5,7 +5,7 @@ import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-bothPlatformsIt("Accept message request", 'high', acceptRequest);
+bothPlatformsIt('Accept message request', 'high', acceptRequest);
 
 async function acceptRequest(platform: SupportedPlatformsType) {
   // Check 'accept' button

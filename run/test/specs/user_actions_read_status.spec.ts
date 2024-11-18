@@ -2,7 +2,7 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
-import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils/index';
+import { sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
 bothPlatformsIt('Read status', 'medium', readStatus);
@@ -37,19 +37,16 @@ async function readStatus(platform: SupportedPlatformsType) {
     text: testMessage,
   });
   // Check read status on device 1
-  await runOnlyOnAndroid(platform, () =>
-    device1.waitForTextElementToBePresent({
-      strategy: 'id',
-      selector: 'network.loki.messenger:id/messageStatusTextView',
-      text: 'Read',
-    })
-  );
-  await runOnlyOnIOS(platform, () =>
-    device1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message sent status: Read',
-    })
-  );
+  await device1.onAndroid().waitForTextElementToBePresent({
+    strategy: 'id',
+    selector: 'network.loki.messenger:id/messageStatusTextView',
+    text: 'Read',
+  });
+
+  await device1.onIOS().waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Message sent status: Read',
+  });
 
   await closeApp(device1, device2);
 }

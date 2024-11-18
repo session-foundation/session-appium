@@ -13,7 +13,7 @@ import {
   FollowSettingsButton,
   SetDisappearMessagesButton,
 } from './locators/disappearing_messages';
-import { runOnlyOnIOS, sleepFor } from './utils';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { checkDisappearingControlMessage } from './utils/disappearing_control_messages';
@@ -56,7 +56,7 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new DisappearingMessagesMenuOption(device1));
   await device1.clickOnElementAll(new DisableDisappearingMessages(device1));
   await device1.clickOnElementAll(new SetDisappearMessagesButton(device1));
-  await runOnlyOnIOS(platform, () => device1.navigateBack());
+  await device1.onIOS().navigateBack();
   // Check control message for turning off disappearing messages
   // Check USER A'S CONTROL MESSAGE on device 1 and 3 (linked device)
   const disappearingMessagesTurnedOffYou = englishStripped(
@@ -75,8 +75,8 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
   await device2.clickOnElementAll(new FollowSettingsButton(device2));
   await sleepFor(500);
   await device2.checkModalStrings(
-    'disappearingMessagesFollowSetting',
-    'disappearingMessagesFollowSettingOff',
+    englishStripped('disappearingMessagesFollowSetting').toString(),
+    englishStripped('disappearingMessagesFollowSettingOff').toString(),
     true
   );
   await device2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Confirm' });

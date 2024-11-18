@@ -1,4 +1,3 @@
-let mappedBrowserLocaleDisplayed = false;
 let initialLocale: Locale | undefined;
 
 /**
@@ -7,7 +6,6 @@ let initialLocale: Locale | undefined;
  *
  */
 export function i18nLog(message: string) {
-  // eslint-disable-next-line no-console
   console.log(`i18n: ${message}`);
 }
 
@@ -25,27 +23,6 @@ export function getLocale(): Locale {
   return initialLocale;
 }
 
-/**
- * Returns the closest supported locale by the browser.
- */
-export function getBrowserLocale() {
-  const userLocaleDashed = getLocale();
-
-  const matchinglocales = Intl.DateTimeFormat.supportedLocalesOf(userLocaleDashed);
-  const mappingTo = matchinglocales?.[0] || 'en';
-
-  if (!mappedBrowserLocaleDisplayed) {
-    mappedBrowserLocaleDisplayed = true;
-    i18nLog(`userLocaleDashed: '${userLocaleDashed}', mapping to browser locale: ${mappingTo}`);
-  }
-
-  return mappingTo;
-}
-
 export function setInitialLocale(locale: Locale) {
   initialLocale = locale;
-}
-
-export function isLocaleSet() {
-  return initialLocale !== undefined;
 }

@@ -1,18 +1,199 @@
-name: Run android regression tests
+name: Android regression tests
+run-name: '${{ inputs.RISK }} regressions on: ${{ inputs.BRANCH_TO_CHECKOUT }} (${{ inputs.APPIUM_REPO }})'
+
 on:
   workflow_dispatch:
     inputs:
-      tags:
-        description: "APK.tar.gz url to test"
+      APK_URL:
+        description: 'APK.tar.gz url to test'
         required: true
         type: string
-  # push:
-  #   branches:
-  #     - test-docker-container
+        default: https://oxen.rocks/session-foundation/session-android/release/1.20.3/session-android-20241101T052421Z-be16d3bf9-universal.tar.xz
+
+      RISK:
+        description: 'risks to target'
+        required: false
+        type: choice
+        options:
+          - 'high-risk'
+          - 'medium-risk'
+          - 'low-risk'
+          - ''
+
+      APPIUM_REPO:
+        description: 'appium repo to checkout'
+        required: true
+        type: choice
+        options:
+          - session-foundation/session-appium
+          - burtonemily/session-appium
+          - bilb/session-appium
+        default: session-foundation/session-appium
+
+      BRANCH_TO_CHECKOUT:
+        description: 'branch to checkout'
+        required: true
+        type: string
+        default: test-ci-regression
+
+      # SHARD_NUMBER:
+      #   description: 'shard number'
+      #   required: true
+      #   type: choice
+      #   options:
+      #     - '1'
+      #     - '2'
+      #     - '3'
+      #     - '4'
+      #   default: '1'
+
+      # SHARD_COUNT:
+      #   description: 'shard count'
+      #   required: true
+      #   type: choice
+      #   options:
+      #     - '1'
+      #     - '2'
+      #     - '3'
+      #     - '4'
+      #   default: '1'
+
+      PLAYWRIGHT_RETRIES_COUNT:
+        description: 'retries of failing tests to do at most'
+        required: true
+        type: choice
+        options:
+          - '0'
+          - '1'
+          - '2'
+        default: '0'
+
+      PRINT_FAILED_TEST_LOGS:
+        description: 'print failed test logs (1 to enable)'
+        required: true
+        type: choice
+        options:
+          - '0'
+          - '1'
+        default: '0'
+      PRINT_ONGOING_TEST_LOGS:
+        description: 'print ongoing test logs (1 to enable)'
+        required: true
+        type: choice
+        options:
+          - '0'
+          - '1'
+        default: '0'
+
+# concurrency:
+#   group: ${{ github.workflow }}
+#   cancel-in-progress: true
 
 jobs:
   android-regression:
-    runs-on: [self-hosted, linux, x64, qa-android]
+    runs-on: [self-hosted, linux, X64, qa-android]
+    env:
+      ANDROID_APK: '../extracted/session-android.apk'
+      APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
+      ANDROID_SDK_ROOT: '/opt/android'
+      PLAYWRIGHT_WORKERS_COUNT: 1
+      PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
+      PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
+      PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
+      IOS_APP_PATH_PREFIX: 'just_not_empty'
+      IOS_FIRST_SIMULATOR: 'just_not_empty'
+      IOS_SECOND_SIMULATOR: 'just_not_empty'
+      IOS_THIRD_SIMULATOR: 'just_not_empty'
+      IOS_FOURTH_SIMULATOR: 'just_not_empty'
+      IOS_FIFTH_SIMULATOR: 'just_not_empty'
+      IOS_SIXTH_SIMULATOR: 'just_not_empty'
+      IOS_SEVENTH_SIMULATOR: 'just_not_empty'
+      IOS_EIGHTH_SIMULATOR: 'just_not_empty'
+
+      # echo "SHARD_NUMBER ${{ github.event.inputs.SHARD_NUMBER }}"
+      # echo "SHARD_COUNT ${{ github.event.inputs.SHARD_COUNT }}"
+
     steps:
-      - name: run tests in already running container
-        run: docker exec $(docker ps -q) sh -c "dl_and_test"
+      - uses: actions/checkout@v4
+      - name: Runner Details
+        run: |
+          echo "BRANCH_TO_CHECKOUT ${{ github.event.inputs.BRANCH_TO_CHECKOUT }}"
+          echo "APPIUM_REPO ${{ github.event.inputs.APPIUM_REPO }}"
+          echo "APK_URL ${{ github.event.inputs.APK_URL }}"
+          echo "RISK ${{ github.event.inputs.RISK }}"
+
+      - name: Download APK
+        run: |
+          wget -q -O session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
+          ls
+          pwd
+      - name: Extract APK
+        run: |
+          tar xf session-android.apk.tar.xz
+          ls
+          pwd
+      - name: Rename extracted folder
+        run: |
+          mv session-android-*universal extracted
+          ls extracted
+          mv extracted/*.apk extracted/session-android.apk
+          ls extracted
+          pwd
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.inputs.APPIUM_REPO }}
+          ref: ${{ github.event.inputs.BRANCH_TO_CHECKOUT }}
+          path: 'forked-session-appium'
+
+      - uses: actions/setup-node@v4
+        with:
+          # node-version-file: 'forked-session-appium/.nvmrc'
+          node-version: 18.15.0
+
+      - name: Install yarn
+        run: |
+          npm install -g yarn
+          corepack enable
+          yarn set version 4.1.1
+      - name: Install test dependencies
+        run: |
+          cd forked-session-appium
+          ls
+          git status
+          touch yarn.lock
+          yarn install --immutable
+      - name: Build the Android tests
+        run: |
+          cd forked-session-appium
+          yarn tsc
+      - name: Restart adb server
+        shell: bash
+        continue-on-error: true # just so we don't fail if adb wasn't alreadu running
+        run: |
+          source ./scripts/ci.sh
+          adb kill-server;
+          adb start-server;
+      - name: Start 4 android emulators with snapshots
+        shell: bash
+        run: |
+          source ./scripts/ci.sh
+          start_with_snapshots
+      - name: List all tests
+        run: |
+          cd forked-session-appium
+          pwd
+          npx playwright test --list
+
+      - name: Run the Android tests # ${{ github.event.inputs.SHARD_NUMBER }}​​/${{ github.event.inputs.SHARD_COUNT }}​​
+        run: |
+          cd forked-session-appium
+          pwd
+          yarn test 'android @${{ github.event.inputs.RISK }}'
+
+      - name: Killall running emulators
+        if: always()
+        continue-on-error: true # just so we don't fail
+        shell: bash
+        run: |
+          source ./scripts/ci.sh
+          killall_emulators

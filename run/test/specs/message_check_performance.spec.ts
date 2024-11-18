@@ -4,7 +4,7 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, openAppTwoDevices } from './utils/open_app';
 
-bothPlatformsIt('Check performance', 'undefined', checkPerformance);
+bothPlatformsIt('Check performance', undefined, checkPerformance);
 
 async function checkPerformance(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

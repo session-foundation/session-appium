@@ -3,7 +3,7 @@ import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ExitUserProfile } from './locators';
 import { newUser } from './utils/create_account';
-import { runOnlyOnAndroid, sleepFor } from './utils/index';
+import { sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
 androidIt('Voice calls', 'high', voiceCallAndroid, true);
@@ -27,9 +27,8 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Message requests banner');
   // Select message from User A
   await device2.clickOnByAccessibilityID('Message request');
-  await runOnlyOnAndroid(platform, () =>
-    device2.clickOnByAccessibilityID('Accept message request')
-  );
+  await device2.onAndroid().clickOnByAccessibilityID('Accept message request');
+
   // Type into message input box
   await device2.sendMessage(`Reply-message-${userB.userName}-to-${userA.userName}`);
 

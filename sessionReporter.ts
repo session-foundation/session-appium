@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type {
   FullConfig,
   FullResult,
@@ -139,7 +138,7 @@ class SessionReporter implements Reporter {
     const estimatedTotalMins = Math.floor(estimateLeftMs / (60 * 1000));
     console.log(
       chalk.bgWhite.black(
-        `\t\tRemaining tests: ${notPassedCount}, rougly ${estimatedTotalMins}min total left, so about ${Math.ceil(
+        `\t\tRemaining tests: ${notPassedCount}, roughly ${estimatedTotalMins}min total left, so about ${Math.ceil(
           estimatedTotalMins / this.countWorkers
         )}min as we have ${this.countWorkers} worker(s)...`
       )

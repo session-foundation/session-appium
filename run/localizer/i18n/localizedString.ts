@@ -1,6 +1,5 @@
 import { getFallbackDictionary, getTranslationDictionary } from './translationDictionaries';
 import { en } from '../locales';
-import { getLocale } from './shared';
 import { LOCALE_DEFAULTS } from '../constants';
 import { deSanitizeHtmlTags, sanitizeArgs } from '../component/Localizer';
 import type { LocalizerDictionary } from '../Localizer';
@@ -126,7 +125,6 @@ const isStringWithArgs = (localizedString: string): localizedString is ArgString
  * @param message - The message to log.
  */
 export function i18nLog(message: string | unknown) {
-  // eslint-disable-next-line no-console
   console.log(`i18n: `, message);
 }
 
@@ -261,7 +259,7 @@ export class LocalizedStringBuilder<
       }
     }
 
-    const currentLocale = getLocale();
+    const currentLocale = 'en';
     const cardinalRule = new Intl.PluralRules(currentLocale).select(num);
 
     const pluralString = getStringForCardinalRule(str, cardinalRule);

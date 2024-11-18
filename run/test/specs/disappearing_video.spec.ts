@@ -1,7 +1,7 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { DownloadMediaButton } from './locators';
-import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
@@ -22,23 +22,20 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
   ]);
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
-  await runOnlyOnIOS(platform, () => device1.sendVideoiOS(testMessage));
-  await runOnlyOnAndroid(platform, () => device1.sendVideoAndroid());
+  await device1.onIOS().sendVideoiOS(testMessage);
+  await device1.onAndroid().sendVideoAndroid();
   await device2.clickOnByAccessibilityID('Untrusted attachment message', 5000);
   await device2.clickOnElementAll(new DownloadMediaButton(device2));
-  await runOnlyOnIOS(platform, () =>
-    device2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: testMessage,
-    })
-  );
-  await runOnlyOnAndroid(platform, () =>
-    device2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Media message',
-    })
-  );
+  await device2.onIOS().waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Message body',
+    text: testMessage,
+  });
+  await device2.onAndroid().waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Media message',
+  });
+
   // Wait for 30 seconds
   await sleepFor(30000);
   if (platform === 'ios') {
