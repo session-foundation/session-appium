@@ -108,7 +108,7 @@ export class SeedPhraseInput extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
+          strategy: 'id',
           selector: 'Recovery phrase input',
         } as const;
       case 'ios':

@@ -69,7 +69,7 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
   await Promise.all([
     device1.disappearingControlMessage(disappearingMessagesTurnedOffYou),
     device2.disappearingControlMessage(disappearingMessagesTurnedOff),
-    // device3.disappearingControlMessage(disappearingMessagesTurnedOffYou),
+    device3.disappearingControlMessage(disappearingMessagesTurnedOffYou),
   ]);
   // Follow setting on device 2
   await device2.clickOnElementAll(new FollowSettingsButton(device2));

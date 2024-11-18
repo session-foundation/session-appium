@@ -369,6 +369,7 @@ export type Id =
   | 'Terms of Service'
   | 'Privacy Policy'
   | 'com.android.chrome:id/signin_fre_dismiss_button'
-  | 'com.android.chrome:id/negative_button';
+  | 'com.android.chrome:id/negative_button'
+  | 'Recovery phrase input';
 
 export type TestRisk = 'high' | 'medium' | 'low' | undefined;
