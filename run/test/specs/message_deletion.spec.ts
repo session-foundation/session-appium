@@ -29,6 +29,7 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   await device1.longPressMessage(sentMessage);
   // Select Delete icon
   await device1.clickOnByAccessibilityID('Delete message');
+  // There is no modal on iOS yet (to come)
   await device1
     .onAndroid()
     .checkModalStrings(
