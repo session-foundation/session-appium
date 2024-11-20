@@ -1,5 +1,5 @@
 import { existsSync } from 'fs';
-import { isNumber, toNumber } from 'lodash';
+import { toNumber } from 'lodash';
 
 function existsOrThrow(path: string, id: string) {
   if (!existsSync(path)) {
@@ -60,19 +60,16 @@ export const getAndroidSystemImageToUse = () => {
 };
 
 export const getRetriesCount = () => {
-  return isNumber(process.env.PLAYWRIGHT_RETRIES_COUNT)
-    ? toNumber(process.env.PLAYWRIGHT_RETRIES_COUNT)
-    : 0;
+  const asNumber = toNumber(process.env.PLAYWRIGHT_RETRIES_COUNT);
+  return isFinite(asNumber) ? asNumber : 0;
 };
 
 export const getRepeatEachCount = () => {
-  return isNumber(process.env.PLAYWRIGHT_REPEAT_COUNT)
-    ? toNumber(process.env.PLAYWRIGHT_REPEAT_COUNT)
-    : 0;
+  const asNumber = toNumber(process.env.PLAYWRIGHT_REPEAT_COUNT);
+  return isFinite(asNumber) ? asNumber : 0;
 };
 
 export const getWorkersCount = () => {
-  return isNumber(process.env.PLAYWRIGHT_WORKERS_COUNT)
-    ? toNumber(process.env.PLAYWRIGHT_WORKERS_COUNT)
-    : 1;
+  const asNumber = toNumber(process.env.PLAYWRIGHT_WORKERS_COUNT);
+  return isFinite(asNumber) ? asNumber : 1;
 };
