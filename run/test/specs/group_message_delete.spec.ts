@@ -42,7 +42,7 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
     .onAndroid()
     .checkModalStrings(
       englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
-      englishStripped('deleteMessageConfirm').toString()
+      englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()
     );
   // Select 'Delete for me'
   await device1.clickOnElementAll(new DeleteMessageLocally(device1));

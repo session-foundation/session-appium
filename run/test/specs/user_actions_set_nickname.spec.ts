@@ -5,8 +5,8 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Create nickname', 'high', setNicknameIos);
-androidIt('Create nickname', 'high', setNicknameAndroid);
+iosIt('Set nickname', 'high', setNicknameIos);
+androidIt('Set nickname', 'high', setNicknameAndroid);
 
 async function setNicknameIos(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

@@ -42,7 +42,7 @@ async function unsendMessageGroup(platform: SupportedPlatformsType) {
 
   await device1.checkModalStrings(
     englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
-    englishStripped('deleteMessageConfirm').toString()
+    englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()
   );
 
   // Select 'Delete for me'

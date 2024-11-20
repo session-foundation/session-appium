@@ -46,7 +46,8 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new EditGroup(device1));
   await sleepFor(1000);
   // Add contact to group
-  await device1.clickOnElementAll(new InviteContactsMenuItem(device1));
+  await device1.onIOS().clickOnElementAll(new InviteContactsMenuItem(device1));
+  await device1.onAndroid().clickOnElementAll(new InviteContactsButton(device1));
   // Select new user
   const addedContact = await device1.clickOnElementAll({
     strategy: 'accessibility id',
