@@ -322,9 +322,7 @@ export type AccessibilityId =
   | 'Error message'
   | 'Open URL'
   | 'Terms of Service'
-  | 'Terms of service button'
   | 'Privacy Policy'
-  | 'Privacy policy button'
   | 'TabBarItemTitle'
   | 'URL';
 
@@ -370,6 +368,8 @@ export type Id =
   | 'Privacy Policy'
   | 'com.android.chrome:id/signin_fre_dismiss_button'
   | 'com.android.chrome:id/negative_button'
-  | 'Recovery phrase input';
+  | 'Recovery phrase input'
+  | 'network.loki.messenger:id/back_button'
+  | 'Quit';
 
 export type TestRisk = 'high' | 'medium' | 'low' | undefined;

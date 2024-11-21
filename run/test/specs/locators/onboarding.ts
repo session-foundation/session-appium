@@ -1,3 +1,4 @@
+import { StrategyExtractionObj } from '../../../types/testing';
 import { LocatorsInterface } from './index';
 
 // SHARED LOCATORS
@@ -16,6 +17,32 @@ export class ErrorMessage extends LocatorsInterface {
     return {
       strategy: 'accessibility id',
       selector: 'Error message',
+    } as const;
+  }
+}
+
+export class BackButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/back_button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Back',
+        } as const;
+    }
+  }
+}
+
+export class WarningModalQuitButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    return {
+      strategy: 'id',
+      selector: 'Quit',
     } as const;
   }
 }

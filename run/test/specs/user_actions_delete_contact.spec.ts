@@ -39,7 +39,8 @@ async function deleteContact(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Delete' });
   await device1.checkModalStrings(
     englishStripped('conversationsDelete').toString(),
-    englishStripped('conversationsDeleteDescription').withArgs({ name: USERNAME.BOB }).toString()
+    englishStripped('conversationsDeleteDescription').withArgs({ name: USERNAME.BOB }).toString(),
+    true
   );
   await device1.clickOnElementAll(new DeleteContactModalConfirm(device1));
   await Promise.all([

@@ -34,7 +34,7 @@ async function deleteMessage(platform: SupportedPlatformsType) {
     .onAndroid()
     .checkModalStrings(
       englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
-      englishStripped('deleteMessageConfirm').toString()
+      englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()
     );
 
   // Select 'Delete on this device only'

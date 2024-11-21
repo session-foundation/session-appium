@@ -80,7 +80,8 @@ async function sendLinkAndroid(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Enable',
   });
-  // No preview on first send
+  //wait for preview to generate
+  await sleepFor(5000);
   await device1.clickOnByAccessibilityID('Send message button');
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
