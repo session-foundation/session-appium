@@ -38,6 +38,18 @@ async function sendImageGroupiOS(platform: SupportedPlatformsType) {
     selector: 'Message body',
     text: testMessage,
   });
+  const replyMessage = await device2.replyToMessage(userA, testMessage);
+  await device1.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Message body',
+    text: replyMessage,
+    maxWait: 5000,
+  });
+  await device3.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Message body',
+    text: replyMessage,
+  });
   // Close server and devices
   await closeApp(device1, device2, device3);
 }

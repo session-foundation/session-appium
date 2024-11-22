@@ -13,7 +13,7 @@ async function joinCommunityTest(platform: SupportedPlatformsType) {
   // Create user A and user B
   await linkedDevice(device1, device2, USERNAME.ALICE, platform);
   await joinCommunity(device1, testCommunityLink, testCommunityName);
-  await device1.onIOS().scrollToBottom(platform);
+  await device1.onIOS().scrollToBottom();
   await device1.sendMessage(testMessage);
   // Has community synced to device 2?
   await device2.waitForTextElementToBePresent({

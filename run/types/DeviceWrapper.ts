@@ -339,7 +339,6 @@ export class DeviceWrapper {
           text: textToLookFor,
           maxWait: 1000,
         });
-
         if (!el) {
           throw new Error(
             `longPress on message: ${textToLookFor} unsuccessful, couldn't find message`
@@ -1143,7 +1142,7 @@ export class DeviceWrapper {
       await sleepFor(100);
       await this.clickOnTextElementById('android:id/title', 'test_image.jpg');
       if (community) {
-        await this.scrollToBottom(platform);
+        await this.scrollToBottom();
       }
       await this.waitForTextElementToBePresent({
         strategy: 'accessibility id',
@@ -1594,8 +1593,8 @@ export class DeviceWrapper {
     await this.scroll({ x: 760, y: 1500 }, { x: 760, y: 710 }, 100);
   }
 
-  public async scrollToBottom(platform: SupportedPlatformsType) {
-    if (platform === 'android') {
+  public async scrollToBottom() {
+    if (this.isAndroid()) {
       const scrollButton = await this.doesElementExist({
         strategy: 'id',
         selector: 'network.loki.messenger:id/scrollToBottomButton',

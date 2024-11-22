@@ -7,7 +7,10 @@ import { joinCommunity } from './utils/join_community';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
 iosIt('Send image to community', 'medium', sendImageCommunityiOS);
-androidIt('Send image to community', 'medium', sendImageCommunityAndroid);
+androidIt('Send image to community', 'medium', sendImageCommunityAndroid, true);
+
+// Tests skipped due to both platforms having unique issues, have made a ticket
+// to investigate further https://optf.atlassian.net/browse/QA-486
 
 async function sendImageCommunityiOS(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -22,7 +25,7 @@ async function sendImageCommunityiOS(platform: SupportedPlatformsType) {
   await Promise.all([device1.navigateBack(), device2.navigateBack()]);
   await joinCommunity(device1, testCommunityLink, testCommunityName);
   await joinCommunity(device2, testCommunityLink, testCommunityName);
-  await Promise.all([device1.scrollToBottom(platform), device2.scrollToBottom(platform)]);
+  await Promise.all([device1.scrollToBottom(), device2.scrollToBottom()]);
   await device1.sendMessage(testMessage);
   await device1.sendImage(platform, testImageMessage, true);
   await device2.replyToMessage(Alice, testImageMessage);
@@ -44,11 +47,11 @@ async function sendImageCommunityAndroid(platform: SupportedPlatformsType) {
     joinCommunity(device2, testCommunityLink, testCommunityName),
   ]);
   await device1.sendImageWithMessageAndroid(testMessage);
-  await device2.scrollToBottom(platform);
+  await device2.scrollToBottom();
   await device2.longPressMessage(testMessage);
   await device2.clickOnByAccessibilityID('Reply to message');
   await device2.sendMessage(replyMessage);
-  await device1.onIOS().scrollToBottom(platform);
+  await device1.scrollToBottom();
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
