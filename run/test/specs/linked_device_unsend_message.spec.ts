@@ -18,7 +18,6 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   const sentMessage = await device1.sendMessage('Howdy');
   // Check message came through on linked device(3)
   // Enter conversation with user B on device 3
-  // Need to wait for notifications to disappear
   await device3.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Conversation list item',
@@ -38,7 +37,7 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
     .onAndroid()
     .checkModalStrings(
       englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
-      englishStripped('deleteMessageConfirm').toString()
+      englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()
     );
   // Select delete for everyone
   await device1.clickOnElementAll(new DeleteMessageForEveryone(device1));

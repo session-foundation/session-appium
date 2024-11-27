@@ -87,7 +87,7 @@ async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsTyp
   await device1.clickOnByAccessibilityID('Enable');
   // No preview on first send
   // Wait for preview to load
-  await sleepFor(1000);
+  await sleepFor(2000);
   await device1.clickOnByAccessibilityID('Send message button');
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',

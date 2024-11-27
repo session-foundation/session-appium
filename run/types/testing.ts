@@ -324,7 +324,9 @@ export type AccessibilityId =
   | 'Terms of Service'
   | 'Privacy Policy'
   | 'TabBarItemTitle'
-  | 'URL';
+  | 'URL'
+  | 'Session | Send Messages, Not Metadata. | Private Messenger'
+  | `${USERNAME}`;
 
 export type Id =
   | 'Modal heading'

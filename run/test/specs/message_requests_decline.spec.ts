@@ -1,6 +1,6 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { AccessibilityId, USERNAME } from '../../types/testing';
+import { USERNAME } from '../../types/testing';
 import { DeclineMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -32,7 +32,10 @@ async function declineRequest(platform: SupportedPlatformsType) {
   await device2.clickOnElementAll(new DeclineMessageRequestButton(device2));
   // Are you sure you want to delete message request only for ios
   await sleepFor(3000);
-  // TODO add check modal
+  await device2.checkModalStrings(
+    englishStripped('delete').toString(),
+    englishStripped('messageRequestsDelete').toString()
+  );
   await device2.clickOnElementAll(new DeleteMesssageRequestConfirmation(device2));
   // Navigate back to home page
   await sleepFor(100);
@@ -44,10 +47,16 @@ async function declineRequest(platform: SupportedPlatformsType) {
   });
   // "messageRequestsNonePending": "No pending message requests",
   const messageRequestsNonePending = englishStripped('messageRequestsNonePending').toString();
-  await device3.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: messageRequestsNonePending as AccessibilityId,
-  });
+  await Promise.all([
+    device2.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: messageRequestsNonePending,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: messageRequestsNonePending,
+    }),
+  ]);
   // Close app
   await closeApp(device1, device2, device3);
 }

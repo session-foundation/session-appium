@@ -1,3 +1,4 @@
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { BlockedContactsSettings, BlockUserConfirmationModal } from './locators';
@@ -16,26 +17,31 @@ async function blockedRequest(platform: SupportedPlatformsType) {
   const userB = await linkedDevice(device2, device3, USERNAME.BOB, platform);
   // Send message from Alice to Bob
   await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
-  // Wait for banner to appear
+  // Wait for banner to appear on device 2 and 3
+  await Promise.all([
+    device2.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message requests banner',
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message requests banner',
+    }),
+  ]);
   // Bob clicks on message request banner
   await device2.clickOnByAccessibilityID('Message requests banner');
   // Bob clicks on request conversation item
   await device2.clickOnByAccessibilityID('Message request');
-  // Check on linked device for message request
-  await device3.clickOnByAccessibilityID('Message requests banner');
-  await device3.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message request',
-  });
   // Bob clicks on block option
   await device2.clickOnByAccessibilityID('Block message request');
   // Confirm block on android
   await sleepFor(1000);
   // TODO add check modal
-  // await device2.waitForTextElementToBePresent({
-  //   strategy: 'accessibility id',
-  //   selector: 'Block message request',
-  // });
+  await device2.checkModalStrings(
+    englishStripped('block').toString(),
+    englishStripped('blockDescription').withArgs({ name: userA.userName }).toString(),
+    true
+  );
   await device2.clickOnElementAll(new BlockUserConfirmationModal(device1));
   const blockedMessage = `"${userA.userName} to ${userB.userName} - shouldn't get through"`;
   await device1.sendMessage(blockedMessage);
@@ -52,9 +58,14 @@ async function blockedRequest(platform: SupportedPlatformsType) {
     await device2.clickOnElementAll(new UserSettings(device2));
     await device2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
     await device2.clickOnElementAll(new BlockedContactsSettings(device2));
-    await device2.waitForTextElementToBePresent({
-      strategy: 'xpath',
-      selector: `//XCUIElementTypeCell[@name="${userA.userName}"]`,
+    await device2.onIOS().waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: userA.userName,
+    });
+    await device2.onAndroid().waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Contact',
+      text: userA.userName,
     });
   }
   // Close app
