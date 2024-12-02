@@ -326,7 +326,11 @@ export type AccessibilityId =
   | 'TabBarItemTitle'
   | 'URL'
   | 'Session | Send Messages, Not Metadata. | Private Messenger'
-  | `${USERNAME}`;
+  | `${USERNAME}`
+  | 'Invite button'
+  | 'Confirm invite button'
+  | 'Edit'
+  | 'Edit group name'
 
 export type Id =
   | 'Modal heading'
@@ -372,6 +376,11 @@ export type Id =
   | 'com.android.chrome:id/negative_button'
   | 'Recovery phrase input'
   | 'network.loki.messenger:id/back_button'
-  | 'Quit';
-
+  | 'Quit'
+  | 'Group name input'
+  | 'Contact'
+  | 'Create group'
+  | 'Empty list'
+  | 'Invite button'
+  | 'Confirm invite button';
 export type TestRisk = 'high' | 'medium' | 'low' | undefined;

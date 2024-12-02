@@ -29,7 +29,7 @@ async function unsendMessage(platform: SupportedPlatformsType) {
   await device1.longPressMessage(sentMessage);
   // Select Delete icon
   await device1.clickOnByAccessibilityID('Delete message');
-  // Check modal is correct (modal only exists on Android?)
+  // Check modal is correct 
   await device1.checkModalStrings(
     englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
     englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()

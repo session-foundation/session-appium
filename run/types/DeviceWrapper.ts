@@ -1593,6 +1593,10 @@ export class DeviceWrapper {
     await this.scroll({ x: 760, y: 1500 }, { x: 760, y: 710 }, 100);
   }
 
+  public async scrollUp() {
+    await this.scroll({ x: 760, y: 710 }, { x: 760, y: 1500 }, 100);
+  }
+
   public async scrollToBottom() {
     if (this.isAndroid()) {
       const scrollButton = await this.doesElementExist({

@@ -10,6 +10,7 @@ import {
 import { SupportedPlatformsType } from './utils/open_app';
 import { openAppOnPlatformSingleDevice, closeApp } from './utils/open_app';
 import { USERNAME } from '../../types/testing';
+import { englishStripped } from '../../localizer/i18n/localizedString';
 
 bothPlatformsIt('Warning modal new account', 'medium', warningModalNewAccount);
 
@@ -26,7 +27,10 @@ async function warningModalNewAccount(platform: SupportedPlatformsType) {
   await device.doesElementExist(new DisplayNameInput(device));
   // Pressing Back on the Display Name screen to trigger the Warning modal
   await device.clickOnElementAll(new BackButton(device));
-  await device.checkModalStrings('warning', 'onboardingBackAccountCreation');
+  await device.checkModalStrings(
+    englishStripped('warning').toString(),
+    englishStripped('onboardingBackAccountCreation').toString()
+  );
   await device.clickOnElementAll(new WarningModalQuitButton(device));
   await closeApp(device);
 }

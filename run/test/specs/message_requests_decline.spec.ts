@@ -34,17 +34,10 @@ async function declineRequest(platform: SupportedPlatformsType) {
   await sleepFor(3000);
   await device2.checkModalStrings(
     englishStripped('delete').toString(),
-    englishStripped('messageRequestsDelete').toString()
+    englishStripped('messageRequestsDelete').toString(),
+    true
   );
   await device2.clickOnElementAll(new DeleteMesssageRequestConfirmation(device2));
-  // Navigate back to home page
-  await sleepFor(100);
-  await device2.navigateBack();
-  // Look for new conversation button to make sure it all worked
-  await device2.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'New conversation button',
-  });
   // "messageRequestsNonePending": "No pending message requests",
   const messageRequestsNonePending = englishStripped('messageRequestsNonePending').toString();
   await Promise.all([
@@ -57,6 +50,14 @@ async function declineRequest(platform: SupportedPlatformsType) {
       selector: messageRequestsNonePending,
     }),
   ]);
+  // Navigate back to home page
+  await sleepFor(100);
+  await device2.navigateBack();
+  // Look for new conversation button to make sure it all worked
+  await device2.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'New conversation button',
+  });
   // Close app
   await closeApp(device1, device2, device3);
 }

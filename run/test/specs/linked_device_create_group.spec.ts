@@ -71,5 +71,5 @@ async function linkedGroup(platform: SupportedPlatformsType) {
 
 // TODO
 // Remove user
-//  Add user
+//  Add user 
 //  Disappearing messages

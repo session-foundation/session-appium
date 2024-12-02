@@ -35,11 +35,6 @@ export const setDisappearingMessage = async (
   } else if (enforcedType === 'Group' && timerType === 'Disappear after send option') {
     await device.onIOS().disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.OFF_IOS);
     await device.onAndroid().disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.OFF_ANDROID);
-    // if (platform === 'ios') {
-    //   await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.OFF_IOS);
-    // } else {
-    //   await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.OFF_ANDROID);
-    // }
   } else {
     await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.ONE_DAY);
   }

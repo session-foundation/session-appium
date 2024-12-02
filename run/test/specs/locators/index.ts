@@ -296,13 +296,13 @@ export class InviteContactsButton extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
-          selector: 'Invite Contacts',
+          strategy: 'id',
+          selector: 'Invite button',
         };
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Invite Contacts',
+          selector: 'Invite button',
         };
     }
   }
