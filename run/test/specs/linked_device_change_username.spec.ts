@@ -1,7 +1,8 @@
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { TickButton, UsernameInput, UsernameSettings } from './locators';
-import { UserSettings } from './locators/settings';
+import { SaveNameChangeButton, UserSettings } from './locators/settings';
 import { sleepFor } from './utils';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
@@ -21,11 +22,15 @@ async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
   ]);
   // select username
   await device1.clickOnElementAll(new UsernameSettings(device1));
+  await device1.checkModalStrings(
+    englishStripped('displayNameSet').toString(),
+    englishStripped('displayNameVisible').toString()
+  );
   // type in new username
   await sleepFor(100);
   await device1.deleteText(new UsernameInput(device1));
   await device1.inputText(newUsername, new UsernameInput(device1));
-  await device1.clickOnElementAll(new TickButton(device1));
+  await device1.clickOnElementAll(new SaveNameChangeButton(device1));
 
   const username = await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
@@ -34,7 +39,6 @@ async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
   });
 
   const changedUsername = await device1.getTextFromElement(username);
-  console.log('Changed username', changedUsername);
   if (changedUsername === newUsername) {
     console.log('Username change successful');
   }

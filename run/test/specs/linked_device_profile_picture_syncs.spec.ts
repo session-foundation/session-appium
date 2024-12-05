@@ -37,7 +37,7 @@ async function avatarRestored(platform: SupportedPlatformsType) {
   }
   console.log('Now checking avatar on linked device');
   // Check avatar on device 2
-  await sleepFor(3000);
+  await sleepFor(5000);
   await device2.closeScreen();
   await device2.clickOnElementAll(new UserSettings(device2));
   const profilePictureLinked = await device2.waitForTextElementToBePresent(

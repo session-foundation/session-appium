@@ -39,7 +39,11 @@ async function disappearingCommunityInviteMessageIos(platform: SupportedPlatform
     selector: 'Contact',
     text: userB.userName,
   });
-  await device1.clickOnByAccessibilityID('Done');
+  // Same ID as the button
+  await device1.clickOnElementAll({
+    strategy: 'accessibility id',
+    selector: 'Invite contacts button',
+  });
   // Check device 2 for invitation from user A
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',

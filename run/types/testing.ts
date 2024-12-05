@@ -330,7 +330,8 @@ export type AccessibilityId =
   | 'Invite button'
   | 'Confirm invite button'
   | 'Edit'
-  | 'Edit group name';
+  | 'Edit group name'
+  | 'Invite contacts button';
 
 export type Id =
   | 'Modal heading'

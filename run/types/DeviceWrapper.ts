@@ -13,8 +13,10 @@ import {
   ReadReceiptsButton,
 } from '../../run/test/specs/locators';
 import { IOS_XPATHS } from '../constants';
+import { englishStripped } from '../localizer/i18n/localizedString';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
+import { EnterAccountID } from '../test/specs/locators/start_conversation';
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
 import { getAdbFullPath } from '../test/specs/utils/binaries';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
@@ -30,8 +32,6 @@ import {
   User,
   XPath,
 } from './testing';
-import { EnterAccountID } from '../test/specs/locators/start_conversation';
-import { englishStripped } from '../localizer/i18n/localizedString';
 
 export type Coordinates = {
   x: number;
@@ -684,24 +684,21 @@ export class DeviceWrapper {
     return element;
   }
 
-  public async hasElementBeenDeleted({
-    text,
-    maxWait = 15000,
-    ...args
-  }: {
-    text?: string;
-    maxWait?: number;
-  } & StrategyExtractionObj) {
+  public async hasElementBeenDeleted(
+    args: {
+      text?: string;
+      maxWait?: number;
+    } & (StrategyExtractionObj | LocatorsInterface)
+  ) {
     const start = Date.now();
     let element: AppiumNextElementType | undefined = undefined;
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const maxWait = args.maxWait ?? 5000;
+    const { text } = args;
     do {
       if (!text) {
         try {
-          element = await this.waitForTextElementToBePresent({
-            text: text,
-            maxWait: 100,
-            ...args,
-          });
+          element = await this.waitForTextElementToBePresent({ ...locator });
           await sleepFor(100);
           console.log(`Element has been found, waiting for deletion`);
         } catch (e: any) {
@@ -710,10 +707,7 @@ export class DeviceWrapper {
         }
       } else {
         try {
-          element = await this.waitForTextElementToBePresent({
-            maxWait: 100,
-            ...args,
-          });
+          element = await this.waitForTextElementToBePresent({ ...locator });
           await sleepFor(100);
           console.log(`Text element has been found, waiting for deletion`);
         } catch (e) {

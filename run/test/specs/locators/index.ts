@@ -220,7 +220,7 @@ export class ChangeProfilePictureButton extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Image picker',
+          selector: 'Upload',
         };
     }
   }

@@ -1,5 +1,6 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { LinkPreview } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -41,7 +42,8 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
-  await sleepFor(500);
+  // Wait for link preview to load
+  await device1.waitForTextElementToBePresent(new LinkPreview(device1));
   await device1.clickOnByAccessibilityID('Send message button');
   // Make sure image preview is available in device 2
   await device2.waitForTextElementToBePresent({

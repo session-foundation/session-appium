@@ -46,6 +46,7 @@ export const linkedDevice = async (
   await device2.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Continue',
+    maxWait: 1000,
   });
   // Check that button was clicked
   await device2.waitForTextElementToBePresent({

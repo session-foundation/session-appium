@@ -44,41 +44,25 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   await device1.onAndroid().clickOnElementAll(new DeleteMessageConfirmationModal(device1));
 
   if (platform === 'android') {
-    await Promise.all([
-      device1.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Deleted message',
-        maxWait: 8000,
-      }),
-      device2.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Deleted message',
-        maxWait: 8000,
-      }),
-      device3.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Deleted message',
-        maxWait: 8000,
-      }),
-    ]);
+    await Promise.all(
+      [device1, device2, device3].map(device =>
+        device.waitForTextElementToBePresent({
+          strategy: 'accessibility id',
+          selector: 'Deleted message',
+          maxWait: 8000,
+        })
+      )
+    );
   } else {
-    await Promise.all([
-      device1.hasElementBeenDeleted({
-        strategy: 'accessibility id',
-        selector: 'Message body',
-        text: sentMessage,
-      }),
-      device2.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Deleted message',
-        maxWait: 8000,
-      }),
-      device3.hasElementBeenDeleted({
-        strategy: 'accessibility id',
-        selector: 'Message body',
-        text: sentMessage,
-      }),
-    ]);
+    await Promise.all(
+      [device1, device2, device3].map(device =>
+        device.hasElementBeenDeleted({
+          strategy: 'accessibility id',
+          selector: 'Message body',
+          text: sentMessage,
+        })
+      )
+    );
   }
   // Close app
   await closeApp(device1, device2, device3);

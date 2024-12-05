@@ -1,3 +1,4 @@
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { InviteContactsButton, InviteContactsMenuItem } from './locators';
@@ -28,16 +29,37 @@ async function sendCommunityInvitationIos(platform: SupportedPlatformsType) {
   await joinCommunity(device1, communityLink, communityName);
   await device1.clickOnByAccessibilityID('More options');
   await sleepFor(500);
-  await device1.clickOnElementAll(new InviteContactsButton(device1));
+  await device1.clickOnElementAll(new InviteContactsMenuItem(device1));
   await device1.clickOnElementByText({
     strategy: 'accessibility id',
     selector: 'Contact',
     text: userB.userName,
   });
-  await device1.clickOnByAccessibilityID('Done');
+  await device1.clickOnElementAll({
+    strategy: 'accessibility id',
+    selector: 'Invite contacts button',
+  });
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Community invitation',
+    text: communityName,
+  });
+  await device2.clickOnElementAll({
+    strategy: 'accessibility id',
+    selector: 'Community invitation',
+    text: communityName,
+  });
+  await device2.checkModalStrings(
+    englishStripped('communityJoin').toString(),
+    englishStripped('communityJoinDescription')
+      .withArgs({ community_name: communityName })
+      .toString()
+  );
+  await device2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Join' });
+  await device2.navigateBack();
+  await device2.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Conversation list item',
     text: communityName,
   });
   await closeApp(device1, device2);
@@ -72,5 +94,26 @@ async function sendCommunityInviteMessageAndroid(platform: SupportedPlatformsTyp
     selector: 'network.loki.messenger:id/openGroupTitleTextView',
     text: communityName,
   });
+  // Make sure invitation works
+  await device2.clickOnElementAll({
+    strategy: 'id',
+    selector: 'network.loki.messenger:id/openGroupTitleTextView',
+    text: communityName,
+  });
+  await device2.checkModalStrings(
+    englishStripped('communityJoin').toString(),
+    englishStripped('communityJoinDescription')
+      .withArgs({ community_name: communityName })
+      .toString(),
+    true
+  );
+  await device2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Join' });
+  await device2.navigateBack();
+  await device2.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Conversation list item',
+    text: communityName,
+  });
+
   await closeApp(device1, device2);
 }
