@@ -5,7 +5,7 @@ import { DeleteMessageRequestButton, DeleteMesssageRequestConfirmation } from '.
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-bothPlatformsIt('Delete message request', 'high', deleteRequest);
+bothPlatformsIt('Delete message request in list', 'high', deleteRequest);
 
 async function deleteRequest(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -24,7 +24,7 @@ async function deleteRequest(platform: SupportedPlatformsType) {
   await device2.clickOnElementAll(new DeleteMessageRequestButton(device2));
   await device2.checkModalStrings(
     englishStripped('delete').toString(),
-    englishStripped('messageRequestsDelete').toString()
+    englishStripped('messageRequestsDelete').toString(), true
   );
   await device2.clickOnElementAll(new DeleteMesssageRequestConfirmation(device2));
   // "messageRequestsNonePending": "No pending message requests",

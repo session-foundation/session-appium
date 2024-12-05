@@ -1,3 +1,4 @@
+import { englishStripped } from '../../../localizer/i18n/localizedString';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { Group, GROUPNAME, User } from '../../../types/testing';
 import { Contact } from '../locators/global';
@@ -55,50 +56,25 @@ export const createGroup = async (
       text: group.userName,
     }),
   ]);
-  if (platform === 'ios') {
-    await device1.waitForLoadingOnboarding();
-    await Promise.all([
-      device1.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Empty list',
-        maxWait: 5000,
-      }),
-      device2.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Empty list',
-        maxWait: 5000,
-      }),
-      device3.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Empty list',
-        maxWait: 5000,
-      }),
-    ]);
-  }
-  //   // TODO ADD BACK IN once android has fixed behaviour
-  // if (platform === 'android') {
-  //   // await device1.waitForTextElementToBePresent({
-  //   //   strategy: 'accessibility id',
-  //   //   selector: 'Empty list',
-  //   // });
-  //   await Promise.all([
-  //     device1.waitForControlMessageToBePresent(
-  //       englishStripped(`groupMemberNewTwo`)
-  //         .withArgs({ name: userTwo.userName, other_name: userThree.userName })
-  //         .toString()
-  //     ),
-  //     device2.waitForControlMessageToBePresent(
-  //       englishStripped('groupInviteYouAndOtherNew')
-  //         .withArgs({ other_name: userThree.userName })
-  //         .toString()
-  //     ),
-  //     device3.waitForControlMessageToBePresent(
-  //       englishStripped('groupInviteYouAndOtherNew')
-  //         .withArgs({ other_name: userTwo.userName })
-  //         .toString()
-  //     ),
-  //   ]);
-  // }
+
+  await Promise.all([
+    // device1.waitForControlMessageToBePresent(
+    //   englishStripped(`groupMemberNewTwo`)
+    //     .withArgs({ name: userTwo.userName, other_name: userThree.userName })
+    //     .toString()
+    // ),
+    device2.waitForControlMessageToBePresent(
+      englishStripped('groupInviteYouAndOtherNew')
+        .withArgs({ other_name: userThree.userName })
+        .toString()
+    ),
+    device3.waitForControlMessageToBePresent(
+      englishStripped('groupInviteYouAndOtherNew')
+        .withArgs({ other_name: userTwo.userName })
+        .toString()
+    ),
+  ]);
+
   // Send message from User A to group to verify all working
   await device1.sendMessage(userAMessage);
   // Did the other devices receive UserA's message?

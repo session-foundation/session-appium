@@ -1,6 +1,6 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ExitUserProfile, TickButton, UsernameInput, UsernameSettings } from './locators';
+import { TickButton, UsernameInput, UsernameSettings } from './locators';
 import { UserSettings } from './locators/settings';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -38,7 +38,7 @@ async function changeUsernameiOS(platform: SupportedPlatformsType) {
   if (changedUsername === userA.userName) {
     throw new Error('Username change unsuccessful');
   }
-  await device.clickOnElementAll(new ExitUserProfile(device));
+  await device.closeScreen();
   await device.clickOnElementAll(new UserSettings(device));
   await device.waitForTextElementToBePresent({
     strategy: 'accessibility id',
@@ -75,7 +75,7 @@ async function changeUsernameAndroid(platform: SupportedPlatformsType) {
   if (changedUsername === userA.userName) {
     throw new Error('Username change unsuccessful');
   }
-  await device.clickOnElementAll(new ExitUserProfile(device));
+  await device.closeScreen();
   await device.clickOnElementAll(new UserSettings(device));
 
   await device.waitForTextElementToBePresent({

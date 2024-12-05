@@ -1,6 +1,6 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ExitUserProfile, TickButton, UsernameInput, UsernameSettings } from './locators';
+import { TickButton, UsernameInput, UsernameSettings } from './locators';
 import { UserSettings } from './locators/settings';
 import { sleepFor } from './utils';
 import { linkedDevice } from './utils/link_device';
@@ -41,7 +41,7 @@ async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
   if (changedUsername === userA.userName) {
     throw new Error('Username change unsuccessful');
   }
-  await device1.clickOnElementAll(new ExitUserProfile(device1));
+  await device1.closeScreen();
   await device1.clickOnElementAll(new UserSettings(device1));
   await Promise.all([
     device1.waitForTextElementToBePresent({
@@ -88,10 +88,10 @@ async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType) {
   if (changedUsername === userA.userName) {
     throw new Error('Username change unsuccessful');
   }
-  await device1.clickOnElementAll(new ExitUserProfile(device1));
+  await device1.closeScreen();
   await device1.clickOnElementAll(new UserSettings(device1));
 
-  await device2.clickOnElementAll(new ExitUserProfile(device2));
+  await device2.closeScreen();
   await device2.clickOnElementAll(new UserSettings(device2));
 
   await Promise.all([

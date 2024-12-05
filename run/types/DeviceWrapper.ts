@@ -5,7 +5,7 @@ import { isArray, isEmpty } from 'lodash';
 import * as sinon from 'sinon';
 import {
   ChangeProfilePictureButton,
-  ExitUserProfile,
+  DownloadMediaButton,
   FirstGif,
   ImagePermissionsModalAllow,
   LocatorsInterface,
@@ -31,6 +31,7 @@ import {
   XPath,
 } from './testing';
 import { EnterAccountID } from '../test/specs/locators/start_conversation';
+import { englishStripped } from '../localizer/i18n/localizedString';
 
 export type Coordinates = {
   x: number;
@@ -1282,16 +1283,6 @@ export class DeviceWrapper {
         selector: 'com.android.permissioncontroller:id/permission_allow_button',
         text: 'Allow',
       });
-      await this.waitForTextElementToBePresent({
-        strategy: 'class name',
-        selector: 'android.widget.Button',
-        text: 'Documents',
-      });
-      await this.clickOnElementAll({
-        strategy: 'class name',
-        selector: 'android.widget.Button',
-        text: 'Documents',
-      });
       const testDocument = await this.doesElementExist({
         strategy: 'id',
         selector: 'android:id/title',
@@ -1363,6 +1354,11 @@ export class DeviceWrapper {
         await clickOnCoordinates(this, InteractionPoints.GifButtonKeyboardClosed);
       }
     }
+    await this.checkModalStrings(
+      englishStripped('giphyWarning').toString(),
+      englishStripped('giphyWarningDescription').toString(),
+      true
+    );
     await this.clickOnByAccessibilityID('Continue', 5000);
     await this.clickOnElementAll(new FirstGif(this));
     if (this.isIOS()) {
@@ -1548,6 +1544,22 @@ export class DeviceWrapper {
     });
   }
 
+  public async trustAttachments(conversationName: string) {
+    await this.clickOnElementAll({
+      strategy: 'accessibility id',
+      selector: 'Untrusted attachment message',
+    });
+    await this.checkModalStrings(
+      englishStripped(`attachmentsAutoDownloadModalTitle`).toString(),
+      englishStripped(`attachmentsAutoDownloadModalDescription`)
+        .withArgs({ conversation_name: conversationName })
+        .toString(),
+      true
+    );
+
+    await this.clickOnElementAll(new DownloadMediaButton(this));
+  }
+
   // ACTIONS
   public async swipeLeftAny(selector: AccessibilityId) {
     const el = await this.waitForTextElementToBePresent({
@@ -1619,11 +1631,27 @@ export class DeviceWrapper {
     }
   }
 
-  public async navigateBack() {
+  public async navigateBack(newAndroid?: boolean) {
     if (this.isIOS()) {
       await this.clickOnByAccessibilityID('Back');
     } else {
-      await this.clickOnByAccessibilityID('Navigate up');
+      if (newAndroid) {
+        await this.clickOnElementAll({ strategy: 'id', selector: 'Navigate back' });
+      } else {
+        await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Navigate up' });
+      }
+    }
+  }
+
+  public async closeScreen(newAndroid?: boolean) {
+    if (this.isAndroid()) {
+      if (newAndroid) {
+        await this.clickOnElementAll({ strategy: 'id', selector: 'Close button' });
+      } else {
+        await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Navigate up' });
+      }
+    } else {
+      await this.clickOnByAccessibilityID('Close button');
     }
   }
 
@@ -1639,7 +1667,7 @@ export class DeviceWrapper {
     await this.clickOnElementAll(new ReadReceiptsButton(this));
     await this.navigateBack();
     await sleepFor(100);
-    await this.clickOnElementAll(new ExitUserProfile(this));
+    await this.closeScreen();
   }
 
   public async checkPermissions(

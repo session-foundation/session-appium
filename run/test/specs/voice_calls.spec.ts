@@ -1,13 +1,12 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ExitUserProfile } from './locators';
 import { newUser } from './utils/create_account';
 import { sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
 androidIt('Voice calls', 'high', voiceCallAndroid, true);
-iosIt('Voice calls', 'high', voiceCallIos, true);
+iosIt('Voice calls', 'high', voiceCallIos);
 
 async function voiceCallIos(platform: SupportedPlatformsType) {
   // Open app
@@ -54,7 +53,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   });
   await device1.clickOnByAccessibilityID('Continue');
   // Navigate back to conversation
-  await device1.clickOnElementAll(new ExitUserProfile(device1));
+  await device1.closeScreen();
   await device1.clickOnByAccessibilityID('Call');
   // Need to allow microphone access
   await device1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
@@ -161,7 +160,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
     'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   );
 
-  await device1.clickOnByAccessibilityID('Navigate up');
+  await device1.navigateBack();
   // Enable voice calls on device 2 for User B
   await device2.clickOnByAccessibilityID('Call');
   // Enabled voice calls in privacy settings
@@ -191,7 +190,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   await device2.clickOnElementById(
     'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   );
-  await device2.clickOnByAccessibilityID('Navigate up');
+  await device2.navigateBack();
   // Make call on device 1 (userA)
   await device1.clickOnByAccessibilityID('Call');
   // Answer call on device 2

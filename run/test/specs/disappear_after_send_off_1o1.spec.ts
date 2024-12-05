@@ -21,7 +21,7 @@ import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-bothPlatformsIt('Disappear after send off 1o1', 'high', disappearAfterSendOff1o1);
+bothPlatformsIt('Disappear after send off 1:1', 'high', disappearAfterSendOff1o1);
 
 async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);

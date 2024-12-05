@@ -71,6 +71,10 @@ async function sendImageGroupAndroid(platform: SupportedPlatformsType) {
   // Wait for image to appear in conversation screen
   await sleepFor(500);
   await Promise.all([
+    device2.trustAttachments(testGroupName),
+    device3.trustAttachments(testGroupName),
+  ]);
+  await Promise.all([
     device2.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Media message',

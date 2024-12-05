@@ -330,7 +330,7 @@ export type AccessibilityId =
   | 'Invite button'
   | 'Confirm invite button'
   | 'Edit'
-  | 'Edit group name'
+  | 'Edit group name';
 
 export type Id =
   | 'Modal heading'
@@ -382,5 +382,8 @@ export type Id =
   | 'Create group'
   | 'Empty list'
   | 'Invite button'
-  | 'Confirm invite button';
+  | 'Confirm invite button'
+  | 'Navigate back'
+  | 'Close button'
+  | 'Group name';
 export type TestRisk = 'high' | 'medium' | 'low' | undefined;

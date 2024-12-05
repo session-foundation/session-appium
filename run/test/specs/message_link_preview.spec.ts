@@ -1,3 +1,4 @@
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { LinkPreview, LinkPreviewMessage } from './locators';
@@ -33,6 +34,10 @@ async function sendLinkIos(platform: SupportedPlatformsType) {
     maxWait: 20000,
   });
   // Accept dialog for link preview
+  await device1.checkModalStrings(
+    englishStripped('linkPreviewsEnable').toString(),
+    englishStripped('linkPreviewsFirstDescription').withArgs({ app_name: 'Session' }).toString()
+  );
   await device1.clickOnByAccessibilityID('Enable');
   await device1.clickOnByAccessibilityID('Send message button');
   await device1.inputText(testLink, {

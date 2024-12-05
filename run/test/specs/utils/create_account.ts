@@ -1,7 +1,7 @@
 import { sleepFor } from '.';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User, USERNAME } from '../../../types/testing';
-import { ExitUserProfile, RevealRecoveryPhraseButton } from '../locators';
+import { RevealRecoveryPhraseButton } from '../locators';
 import { DisplayNameInput } from '../locators/onboarding';
 import { UserSettings } from '../locators/settings';
 import { SupportedPlatformsType } from './open_app';
@@ -49,6 +49,6 @@ export const newUser = async (
   await device.navigateBack();
   await device.clickOnElementAll(new UserSettings(device));
   const accountID = await device.grabTextFromAccessibilityId('Account ID');
-  await device.clickOnElementAll(new ExitUserProfile(device));
+  await device.closeScreen();
   return { userName, accountID, recoveryPhrase };
 };

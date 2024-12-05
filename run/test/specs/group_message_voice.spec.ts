@@ -21,19 +21,20 @@ async function sendVoiceMessageGroupiOS(platform: SupportedPlatformsType) {
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   const replyMessage = `Replying to voice message from ${userA.userName} in ${testGroupName}`;
   await device1.sendVoiceMessage();
-
-  await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Voice message',
-  });
-  await device2.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Voice message',
-  });
-  await device3.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Voice message',
-  });
+  await Promise.all([
+    device1.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Voice message',
+    }),
+    device2.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Voice message',
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Voice message',
+    }),
+  ]);
 
   await device2.longPress('Voice message');
   await device2.clickOnByAccessibilityID('Reply to message');
@@ -67,6 +68,10 @@ async function sendVoiceMessageGroupAndroid(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to voice message from ${userA.userName} in ${testGroupName}`;
   // Select voice message button to activate recording state
   await device1.sendVoiceMessage();
+  await Promise.all([
+    device2.trustAttachments(testGroupName),
+    device3.trustAttachments(testGroupName),
+  ]);
   // Check device 2 and 3 for voice message from user A
   await Promise.all([
     device2.waitForTextElementToBePresent({

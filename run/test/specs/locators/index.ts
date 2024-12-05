@@ -80,11 +80,11 @@ export class EditGroupName extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Group name text field',
+          selector: 'Username',
         } as const;
       case 'android':
         return {
-          strategy: 'accessibility id',
+          strategy: 'id',
           selector: 'Group name',
         } as const;
     }
@@ -119,23 +119,6 @@ export class ReadReceiptsButton extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'Read Receipts - Switch',
-        } as const;
-    }
-  }
-}
-
-export class ExitUserProfile extends LocatorsInterface {
-  public build() {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Navigate up',
-        } as const;
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Close button',
         } as const;
     }
   }
@@ -445,7 +428,7 @@ export class DeclineMessageRequestButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'accessibility id',
-          selector: 'Decline message request',
+          selector: 'Delete message request',
         };
       case 'ios':
         return {
