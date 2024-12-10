@@ -8,7 +8,7 @@ import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsIt('Block message request in request', 'high', blockedRequest);
+bothPlatformsIt('Block message request in conversation', 'high', blockedRequest);
 
 async function blockedRequest(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);

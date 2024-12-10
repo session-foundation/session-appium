@@ -1,4 +1,4 @@
-import { bothPlatformsIt } from '../../types/sessionIt';
+import { androidIt, bothPlatformsIt } from '../../types/sessionIt';
 import {
   CreateAccountButton,
   BackButton,
@@ -11,8 +11,8 @@ import { SupportedPlatformsType } from './utils/open_app';
 import { openAppOnPlatformSingleDevice, closeApp } from './utils/open_app';
 import { USERNAME } from '../../types/testing';
 import { englishStripped } from '../../localizer/i18n/localizedString';
-
-bothPlatformsIt('Warning modal new account', 'medium', warningModalNewAccount);
+// These modals no longer exist in groups rebuild for iOS
+androidIt('Warning modal new account', 'medium', warningModalNewAccount);
 
 async function warningModalNewAccount(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);

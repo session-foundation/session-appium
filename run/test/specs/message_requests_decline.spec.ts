@@ -7,7 +7,7 @@ import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-bothPlatformsIt('Decline message request in conversation', 'high', declineRequest);
+bothPlatformsIt('Delete message request in conversation', 'high', declineRequest);
 
 async function declineRequest(platform: SupportedPlatformsType) {
   // Check 'decline' button

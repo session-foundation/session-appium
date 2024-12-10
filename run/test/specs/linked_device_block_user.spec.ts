@@ -8,7 +8,7 @@ import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsIt('Block user in conversation options', 'high', blockUserInConversationOptions);
+bothPlatformsIt('Block user linked device', 'high', blockUserInConversationOptions);
 
 async function blockUserInConversationOptions(platform: SupportedPlatformsType) {
   //Open three devices and creates two contacts (Alice and Bob)
@@ -65,8 +65,8 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   });
 
   await device1.onIOS().waitForTextElementToBePresent({
-    strategy: 'xpath',
-    selector: `//XCUIElementTypeCell[@name="${userB.userName}"]`,
+    strategy: 'accessibility id',
+    selector: `${USERNAME.BOB}`,
   });
   // Close app
   await closeApp(device1, device2, device3);
