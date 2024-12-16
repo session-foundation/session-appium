@@ -58,7 +58,7 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   await device1.clickOnElementAll(new UserSettings(device1));
   await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
   await device1.clickOnElementAll(new BlockedContactsSettings(device1));
-  await device1.onAndroid().waitForTextElementToBePresent({
+  await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Contact',
     text: userB.userName,

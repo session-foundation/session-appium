@@ -36,10 +36,10 @@ async function blockedRequest(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Block message request');
   // Confirm block on android
   await sleepFor(1000);
+  // TODO add check modal
   await device2.checkModalStrings(
     englishStripped('block').toString(),
-    englishStripped('blockDescription').withArgs({ name: userA.userName }).toString(),
-    true
+    englishStripped('blockDescription').withArgs({ name: userA.userName }).toString()
   );
   await device2.clickOnElementAll(new BlockUserConfirmationModal(device1));
   const blockedMessage = `"${userA.userName} to ${userB.userName} - shouldn't get through"`;
@@ -53,20 +53,15 @@ async function blockedRequest(platform: SupportedPlatformsType) {
   await sleepFor(5000);
   await device2.hasTextElementBeenDeleted('Message body', blockedMessage);
   // Check that user is on Blocked User list in Settings
-  if (platform === 'ios') {
-    await device2.clickOnElementAll(new UserSettings(device2));
-    await device2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
-    await device2.clickOnElementAll(new BlockedContactsSettings(device2));
-    await device2.onIOS().waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: userA.userName,
-    });
-    await device2.onAndroid().waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Contact',
-      text: userA.userName,
-    });
-  }
+
+  await device2.clickOnElementAll(new UserSettings(device2));
+  await device2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
+  await device2.clickOnElementAll(new BlockedContactsSettings(device2));
+  await device2.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Contact',
+    text: userA.userName,
+  });
   // Close app
   await closeApp(device1, device2, device3);
 }

@@ -176,12 +176,16 @@ async function startAndroidEmulator(emulatorName: string) {
   const startEmulatorCmd = `${getEmulatorFullPath()} @${emulatorName}`;
   console.info(`${startEmulatorCmd} & ; disown`);
   await runScriptAndLog(
-    startEmulatorCmd // -netdelay none -no-snapshot -wipe-data
+    startEmulatorCmd, // -netdelay none -no-snapshot -wipe-data
+    true
   );
 }
 
 async function isEmulatorRunning(emulatorName: string) {
-  const failedWith = await runScriptAndLog(`${getAdbFullPath()} -s ${emulatorName} get-state;`);
+  const failedWith = await runScriptAndLog(
+    `${getAdbFullPath()} -s ${emulatorName} get-state;`,
+    false
+  );
 
   return !failedWith || !(failedWith.includes('error') || failedWith.includes('offline'));
 }
@@ -193,7 +197,7 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
   do {
     found = await isEmulatorRunning(emulatorName);
     await sleepFor(500);
-  } while (Date.now() - start < 25000 && !found);
+  } while (Date.now() - start < 50000 && !found);
 
   if (!found) {
     console.warn('isEmulatorRunning failed for 25s');

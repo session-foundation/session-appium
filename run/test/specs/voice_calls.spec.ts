@@ -5,8 +5,8 @@ import { newUser } from './utils/create_account';
 import { sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-androidIt('Voice calls', 'high', voiceCallAndroid, true);
-iosIt('Voice calls', 'high', voiceCallIos);
+androidIt('Voice calls', 'high', voiceCallAndroid);
+iosIt('Voice calls', 'high', voiceCallIos, true);
 
 async function voiceCallIos(platform: SupportedPlatformsType) {
   // Open app

@@ -25,4 +25,3 @@ async function checkPerformance(platform: SupportedPlatformsType) {
   console.log(timesArray);
 }
 
-// yarn test-describe --grep "Message checks ios"
