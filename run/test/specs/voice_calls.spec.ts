@@ -6,7 +6,7 @@ import { newUser } from './utils/create_account';
 import { sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-androidIt('Voice calls', 'high', voiceCallAndroid, true);
+androidIt('Voice calls', 'high', voiceCallAndroid);
 iosIt('Voice calls', 'high', voiceCallIos, true);
 
 async function voiceCallIos(platform: SupportedPlatformsType) {
@@ -161,7 +161,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
     'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   );
 
-  await device1.clickOnByAccessibilityID('Navigate up');
+  await device1.navigateBack();
   // Enable voice calls on device 2 for User B
   await device2.clickOnByAccessibilityID('Call');
   // Enabled voice calls in privacy settings
@@ -191,7 +191,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   await device2.clickOnElementById(
     'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   );
-  await device2.clickOnByAccessibilityID('Navigate up');
+  await device2.navigateBack();
   // Make call on device 1 (userA)
   await device1.clickOnByAccessibilityID('Call');
   // Answer call on device 2
