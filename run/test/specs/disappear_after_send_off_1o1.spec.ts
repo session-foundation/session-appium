@@ -51,7 +51,7 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
     device3
   );
 
-  // Turned off disappearing messages on device 1
+  // Turn off disappearing messages on device 1
   await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'More options' });
   await device1.clickOnElementAll(new DisappearingMessagesMenuOption(device1));
   await device1.clickOnElementAll(new DisableDisappearingMessages(device1));

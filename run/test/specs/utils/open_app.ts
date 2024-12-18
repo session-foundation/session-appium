@@ -176,8 +176,7 @@ async function startAndroidEmulator(emulatorName: string) {
   const startEmulatorCmd = `${getEmulatorFullPath()} @${emulatorName}`;
   console.info(`${startEmulatorCmd} & ; disown`);
   await runScriptAndLog(
-    startEmulatorCmd, // -netdelay none -no-snapshot -wipe-data
-    true
+    startEmulatorCmd // -netdelay none -no-snapshot -wipe-data
   );
 }
 

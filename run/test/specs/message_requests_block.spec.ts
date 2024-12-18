@@ -39,9 +39,22 @@ async function blockedRequest(platform: SupportedPlatformsType) {
   // TODO add check modal
   await device2.checkModalStrings(
     englishStripped('block').toString(),
-    englishStripped('blockDescription').withArgs({ name: userA.userName }).toString()
+    englishStripped('blockDescription').withArgs({ name: userA.userName }).toString(),
+    true
   );
   await device2.clickOnElementAll(new BlockUserConfirmationModal(device1));
+  // "messageRequestsNonePending": "No pending message requests",
+  const messageRequestsNonePending = englishStripped('messageRequestsNonePending').toString();
+  await Promise.all([
+    device2.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: messageRequestsNonePending,
+    }),
+    device3.doesElementExist({
+      strategy: 'accessibility id',
+      selector: 'Message requests banner',
+    }),
+  ]);
   const blockedMessage = `"${userA.userName} to ${userB.userName} - shouldn't get through"`;
   await device1.sendMessage(blockedMessage);
   await device2.navigateBack();
@@ -54,14 +67,30 @@ async function blockedRequest(platform: SupportedPlatformsType) {
   await device2.hasTextElementBeenDeleted('Message body', blockedMessage);
   // Check that user is on Blocked User list in Settings
 
-  await device2.clickOnElementAll(new UserSettings(device2));
-  await device2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
-  await device2.clickOnElementAll(new BlockedContactsSettings(device2));
-  await device2.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Contact',
-    text: userA.userName,
-  });
+  await Promise.all([
+    device2.clickOnElementAll(new UserSettings(device2)),
+    device3.clickOnElementAll(new UserSettings(device3)),
+  ]);
+  await Promise.all([
+    device2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' }),
+    device3.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' }),
+  ]);
+  await Promise.all([
+    device2.clickOnElementAll(new BlockedContactsSettings(device2)),
+    device3.clickOnElementAll(new BlockedContactsSettings(device3)),
+  ]);
+  await Promise.all([
+    device2.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Contact',
+      text: userA.userName,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Contact',
+      text: userA.userName,
+    }),
+  ]);
   // Close app
   await closeApp(device1, device2, device3);
 }
