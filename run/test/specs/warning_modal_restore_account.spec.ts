@@ -1,3 +1,4 @@
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import {
   SeedPhraseInput,
@@ -23,7 +24,10 @@ async function warningModalRestoreAccount(platform: SupportedPlatformsType) {
   await device.doesElementExist(new SlowModeRadio(device).build());
   // Pressing Back on the Message Notifications screen to trigger the Warning modal
   await device.clickOnElementAll(new BackButton(device));
-  await device.checkModalStrings('warning', 'onboardingBackLoadAccount');
+  await device.checkModalStrings(
+    englishStripped('warning').toString(),
+    englishStripped('onboardingBackLoadAccount').toString()
+  );
   await device.clickOnElementAll(new WarningModalQuitButton(device));
   await closeApp(device);
 }

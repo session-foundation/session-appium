@@ -27,19 +27,17 @@ export const setDisappearingMessage = async (
     selector: DISAPPEARING_TIMES.ONE_DAY,
   });
   if (timerType === 'Disappear after read option') {
-    if (enforcedType === '1:1' || enforcedType === 'Note to Self') {
+    if (enforcedType === '1:1') {
       await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.TWELVE_HOURS);
     } else {
       await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.ONE_DAY);
     }
-  } else if (enforcedType === 'Group' && timerType === 'Disappear after send option') {
+  } else if (
+    enforcedType === 'Group' ||
+    (enforcedType === 'Note to Self' && timerType === 'Disappear after send option')
+  ) {
     await device.onIOS().disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.OFF_IOS);
     await device.onAndroid().disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.OFF_ANDROID);
-    // if (platform === 'ios') {
-    //   await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.OFF_IOS);
-    // } else {
-    //   await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.OFF_ANDROID);
-    // }
   } else {
     await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.ONE_DAY);
   }
