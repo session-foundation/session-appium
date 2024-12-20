@@ -13,8 +13,8 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and user B
   const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE, platform),
-    newUser(device2, USERNAME.BOB, platform),
+    newUser(device1, USERNAME.ALICE),
+    newUser(device2, USERNAME.BOB),
   ]);
   const testMessage = 'Checking disappear after read is working';
   const mode: DisappearModes = 'read';

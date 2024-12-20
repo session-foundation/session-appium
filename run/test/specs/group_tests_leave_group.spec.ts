@@ -14,9 +14,9 @@ async function leaveGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE, platform),
-    newUser(device2, USERNAME.BOB, platform),
-    newUser(device3, USERNAME.CHARLIE, platform),
+    newUser(device1, USERNAME.ALICE),
+    newUser(device2, USERNAME.BOB),
+    newUser(device3, USERNAME.CHARLIE),
   ]);
 
   // Create group with user A, user B and User C

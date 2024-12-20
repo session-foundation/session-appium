@@ -24,7 +24,8 @@ export type GROUPNAME =
   | 'Group to test adding contact'
   | 'Disappear after send test'
   | 'Testing voice'
-  | 'Disappear after sent test';
+  | 'Disappear after sent test'
+  | 'Restore group';
 
 export type Group = {
   userName: GROUPNAME;
@@ -324,7 +325,8 @@ export type AccessibilityId =
   | 'Terms of Service'
   | 'Privacy Policy'
   | 'TabBarItemTitle'
-  | 'URL';
+  | 'URL'
+  | 'Voice and Video Calls - Switch';
 
 export type Id =
   | 'Modal heading'

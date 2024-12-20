@@ -13,7 +13,7 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   const pixelHexColour = '04cbfe';
   // Create new user
-  await newUser(device, USERNAME.ALICE, platform);
+  await newUser(device, USERNAME.ALICE);
   // Click on settings/avatar
   await device.uploadProfilePicture();
   // Take screenshot
@@ -41,7 +41,7 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
     throw new Error('Platform not supported');
   }
   // Create new user
-  await newUser(device, USERNAME.ALICE, platform);
+  await newUser(device, USERNAME.ALICE);
   // Click on settings/avatar
   await device.uploadProfilePicture();
   const el = await device.waitForTextElementToBePresent(new UserSettings(device));

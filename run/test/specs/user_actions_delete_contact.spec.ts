@@ -12,8 +12,8 @@ bothPlatformsIt('Delete contact', 'high', deleteContact);
 async function deleteContact(platform: SupportedPlatformsType) {
   const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
   const [Alice, Bob] = await Promise.all([
-    linkedDevice(device1, device3, USERNAME.ALICE, platform),
-    newUser(device2, USERNAME.BOB, platform),
+    linkedDevice(device1, device3, USERNAME.ALICE),
+    newUser(device2, USERNAME.BOB),
   ]);
 
   await newContact(platform, device1, Alice, device2, Bob);

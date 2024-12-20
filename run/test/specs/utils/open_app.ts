@@ -40,8 +40,8 @@ export const createBasicTestEnvironment = async (
   closeApp(): Promise<void>;
 }> => {
   const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
-  const userA = await linkedDevice(device1, device3, USERNAME.ALICE, platform);
-  const userB = await newUser(device2, USERNAME.BOB, platform);
+  const userA = await linkedDevice(device1, device3, USERNAME.ALICE);
+  const userB = await newUser(device2, USERNAME.BOB);
   await newContact(platform, device1, userA, device2, userB);
   const closeApp = async (): Promise<void> => {
     await Promise.all([compact([device1, device2, device3]).map(d => d.deleteSession())]);
@@ -57,8 +57,8 @@ export const createBasicTestEnvironment = async (
 
 export const setUp1o1TestEnvironment = async (platform: SupportedPlatformsType) => {
   const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
-  const userA = await linkedDevice(device1, device3, USERNAME.ALICE, platform);
-  const userB = await newUser(device2, USERNAME.BOB, platform);
+  const userA = await linkedDevice(device1, device3, USERNAME.ALICE);
+  const userB = await newUser(device2, USERNAME.BOB);
   await newContact(platform, device1, userA, device2, userB);
 
   return { device1, device2, device3, userA, userB };
@@ -181,7 +181,10 @@ async function startAndroidEmulator(emulatorName: string) {
 }
 
 async function isEmulatorRunning(emulatorName: string) {
-  const failedWith = await runScriptAndLog(`${getAdbFullPath()} -s ${emulatorName} get-state;`);
+  const failedWith = await runScriptAndLog(
+    `${getAdbFullPath()} -s ${emulatorName} get-state;`,
+    false
+  );
 
   return !failedWith || !(failedWith.includes('error') || failedWith.includes('offline'));
 }
@@ -193,7 +196,7 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
   do {
     found = await isEmulatorRunning(emulatorName);
     await sleepFor(500);
-  } while (Date.now() - start < 25000 && !found);
+  } while (Date.now() - start < 50000 && !found);
 
   if (!found) {
     console.warn('isEmulatorRunning failed for 25s');

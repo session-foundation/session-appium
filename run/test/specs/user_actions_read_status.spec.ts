@@ -10,8 +10,8 @@ bothPlatformsIt('Read status', 'medium', readStatus);
 async function readStatus(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE, platform),
-    newUser(device2, USERNAME.BOB, platform),
+    newUser(device1, USERNAME.ALICE),
+    newUser(device2, USERNAME.BOB),
   ]);
   const testMessage = 'Testing read status';
   await newContact(platform, device1, userA, device2, userB);
