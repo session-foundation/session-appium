@@ -19,7 +19,7 @@ async function avatarRestored(platform: SupportedPlatformsType) {
   } else {
     throw new Error('Platform not supported');
   }
-  await linkedDevice(device1, device2, USERNAME.ALICE, platform);
+  await linkedDevice(device1, device2, USERNAME.ALICE);
   await device1.uploadProfilePicture();
   await sleepFor(5000);
   // Wait for change

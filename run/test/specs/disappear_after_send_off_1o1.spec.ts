@@ -25,9 +25,9 @@ bothPlatformsIt('Disappear after send off 1o1', 'high', disappearAfterSendOff1o1
 
 async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  const Alice = await linkedDevice(device1, device3, USERNAME.ALICE, platform);
+  const Alice = await linkedDevice(device1, device3, USERNAME.ALICE);
   const mode: DisappearModes = 'send';
-  const Bob = await newUser(device2, USERNAME.BOB, platform);
+  const Bob = await newUser(device2, USERNAME.BOB);
   const controlMode: DisappearActions = 'sent';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   // Create user A and user B

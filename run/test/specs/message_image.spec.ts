@@ -12,8 +12,8 @@ androidIt('Send image 1:1', 'high', sendImageAndroid);
 async function sendImageIos(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE, platform),
-    newUser(device2, USERNAME.BOB, platform),
+    newUser(device1, USERNAME.ALICE),
+    newUser(device2, USERNAME.BOB),
   ]);
   const testMessage = "Ron Swanson doesn't like birthdays";
 
@@ -42,8 +42,8 @@ async function sendImageIos(platform: SupportedPlatformsType) {
 async function sendImageAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE, platform),
-    newUser(device2, USERNAME.BOB, platform),
+    newUser(device1, USERNAME.ALICE),
+    newUser(device2, USERNAME.BOB),
   ]);
   const testMessage = 'Sending image from Alice to Bob';
   // Create contact

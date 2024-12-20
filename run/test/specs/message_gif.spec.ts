@@ -12,8 +12,8 @@ androidIt('Send GIF 1:1', 'medium', sendGifAndroid);
 async function sendGifIos(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE, platform),
-    newUser(device2, USERNAME.BOB, platform),
+    newUser(device1, USERNAME.ALICE),
+    newUser(device2, USERNAME.BOB),
   ]);
   const testMessage = 'Testing-GIF-1';
   await newContact(platform, device1, userA, device2, userB);
@@ -47,8 +47,8 @@ async function sendGifAndroid(platform: SupportedPlatformsType) {
   const testMessage = 'Test message with GIF';
   // create user a and user b
   const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE, platform),
-    newUser(device2, USERNAME.BOB, platform),
+    newUser(device1, USERNAME.ALICE),
+    newUser(device2, USERNAME.BOB),
   ]);
   const replyMessage = `Replying to GIF from ${userA.userName}`;
   // create contact

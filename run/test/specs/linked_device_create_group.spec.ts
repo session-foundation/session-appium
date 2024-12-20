@@ -13,11 +13,11 @@ bothPlatformsIt('Create group and change name syncs', 'high', linkedGroup);
 async function linkedGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
 
-  const userA = await linkedDevice(device1, device2, USERNAME.ALICE, platform);
+  const userA = await linkedDevice(device1, device2, USERNAME.ALICE);
 
   const [userB, userC] = await Promise.all([
-    newUser(device3, USERNAME.BOB, platform),
-    newUser(device4, USERNAME.CHARLIE, platform),
+    newUser(device3, USERNAME.BOB),
+    newUser(device4, USERNAME.CHARLIE),
   ]);
   const testGroupName = 'Linked device group';
   const newGroupName = 'New group name';

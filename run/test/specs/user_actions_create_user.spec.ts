@@ -7,7 +7,7 @@ bothPlatformsIt('Create user', 'high', createUser);
 
 async function createUser(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-  await newUser(device, USERNAME.ALICE, platform);
+  await newUser(device, USERNAME.ALICE);
   // Should verify session ID and recovery phrase are what was originally created
   await closeApp(device);
 }

@@ -10,9 +10,9 @@ bothPlatformsIt('Restore group', 'high', restoreGroup);
 async function restoreGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
   const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE, platform),
-    newUser(device2, USERNAME.BOB, platform),
-    newUser(device3, USERNAME.CHARLIE, platform),
+    newUser(device1, USERNAME.ALICE),
+    newUser(device2, USERNAME.BOB),
+    newUser(device3, USERNAME.CHARLIE),
   ]);
   const testGroupName = 'Restore group';
   const userAMessage = `${USERNAME.ALICE} to ${testGroupName}`;
