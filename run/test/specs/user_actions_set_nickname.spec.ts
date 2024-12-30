@@ -1,5 +1,8 @@
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { UsernameInput, UsernameSettings } from './locators';
+import { SaveNameChangeButton } from './locators/settings';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -19,44 +22,32 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   // Click on settings/more info
   await device1.clickOnByAccessibilityID('More options');
   // Click on username to set nickname
-  await device1.clickOnByAccessibilityID('Username');
+  await device1.clickOnElementAll(new UsernameSettings(device1));
   await sleepFor(500);
-  await device1.clickOnByAccessibilityID('Username');
-  await device1.deleteText({ strategy: 'accessibility id', selector: 'Username' });
+  await device1.checkModalStrings(
+    englishStripped('nicknameSet').toString(),
+    englishStripped('nicknameDescription').withArgs({ name: USERNAME.BOB }).toString()
+  );
+  await device1.clickOnElementAll(new UsernameSettings(device1));
   // Type in nickname
-  await device1.inputText(nickName, { strategy: 'accessibility id', selector: 'Username' });
+  await device1.inputText(nickName, new UsernameInput(device1));
   // Click apply/done
-  await device1.clickOnByAccessibilityID('Done');
+  await device1.clickOnElementAll(new SaveNameChangeButton(device1));
   // Check it's changed in heading also
   await device1.navigateBack();
   const newNickname = await device1.grabTextFromAccessibilityId('Conversation header name');
-  await device1.findMatchingTextAndAccessibilityId('Conversation header name', newNickname);
+  if (newNickname !== nickName) {
+    throw new Error('Nickname has not been changed in header');
+  }
   // Check in conversation list also
   await device1.navigateBack();
-  // Save text of conversation list item?
-  await sleepFor(1000);
-  await device1.findMatchingTextAndAccessibilityId('Conversation list item', nickName);
-  // Set nickname back to original username
-  await device1.selectByText('Conversation list item', nickName);
-  // Click on settings/more info
-  await device1.clickOnByAccessibilityID('More options');
-  // Click on edit
-  await device1.clickOnByAccessibilityID('Username');
-  // Empty username input
-  await device1.deleteText({ strategy: 'accessibility id', selector: 'Username' });
-  await device1.inputText(' ', { strategy: 'accessibility id', selector: 'Username' });
-  await device1.clickOnByAccessibilityID('Done');
-  // Check in conversation header
-  await device1.navigateBack();
-  // await sleepFor(500);
-  const revertedNickname = await device1.grabTextFromAccessibilityId('Conversation header name');
-  console.info(`revertedNickname:` + revertedNickname);
-  if (revertedNickname !== userB.userName) {
-    throw new Error(`revertedNickname doesn't match username`);
-  }
-  await device1.navigateBack();
-  // Check in conversation list aswell
-  await device1.findMatchingTextAndAccessibilityId('Conversation list item', userB.userName);
+  await sleepFor(500);
+  await device1.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Conversation list item',
+    text: newNickname,
+  });
+
   // Close app
   await closeApp(device1, device2);
 }

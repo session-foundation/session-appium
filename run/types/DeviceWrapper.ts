@@ -461,7 +461,8 @@ export class DeviceWrapper {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
 
     el = await this.waitForTextElementToBePresent({ ...locator });
-
+    await this.click(el.ELEMENT);
+    await sleepFor(100);
     const maxRetries = 3;
     let retries = 0;
     let success = false;

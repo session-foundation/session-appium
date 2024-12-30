@@ -26,6 +26,9 @@ async function changeUsernameiOS(platform: SupportedPlatformsType) {
   );
   // type in new username
   await sleepFor(100);
+  await device.waitForTextElementToBePresent(new UsernameInput(device));
+  await device.clickOnElementAll(new UsernameInput(device));
+  await sleepFor(500);
   await device.deleteText(new UsernameInput(device));
   await device.inputText(newUsername, new UsernameInput(device));
   await device.clickOnElementAll(new SaveNameChangeButton(device));

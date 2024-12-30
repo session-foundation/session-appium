@@ -35,6 +35,10 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
     englishStripped(`groupInformationSet`).toString(),
     englishStripped(`groupNameVisible`).toString()
   );
+  await device1.deleteText({
+    strategy: 'accessibility id',
+    selector: 'Group name text field',
+  });
   await device1.inputText('   ', {
     strategy: 'accessibility id',
     selector: 'Group name text field',
@@ -50,14 +54,18 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   // Delete empty space
   await device1.clickOnByAccessibilityID('Cancel');
   // Enter new group name
-  await device1.clickOnByAccessibilityID('Group name');
-
+  await device1.clickOnElementAll(new EditGroupName(device1));
+  await device1.deleteText({
+    strategy: 'accessibility id',
+    selector: 'Group name text field',
+  });
   await device1.inputText(newGroupName, {
     strategy: 'accessibility id',
     selector: 'Group name text field',
   });
   // Click done/apply
   await device1.clickOnByAccessibilityID('Save');
+  await device1.navigateBack();
   await device1.waitForControlMessageToBePresent(
     englishStripped('groupNameNew').withArgs({ group_name: newGroupName }).toString()
   );
