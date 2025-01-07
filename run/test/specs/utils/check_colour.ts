@@ -26,11 +26,7 @@ export async function parseDataImage(base64: string) {
 }
 
 // Function to compare two colors within a specified CIEDE2000 tolerance
-export function compareColors(
-  hex1: string,
-  hex2: string,
-  tolerance: number = 2.3 // looks-same default value which is "enough for most cases"
-): boolean {
+export function compareColors(hex1: string, hex2: string) {
   // looks-same expects colors as RGB objects but parseDataImage outputs hex
   function hexToRgbObject(hex: string): { R: number; G: number; B: number } {
     const bigint = parseInt(hex.replace('#', ''), 16);
@@ -45,7 +41,7 @@ export function compareColors(
   const rgb2 = hexToRgbObject(hex2);
 
   // Compare whether colors are within tolerance
-  const isSameColor: boolean = colors(rgb1, rgb2, { tolerance });
+  const isSameColor: boolean = colors(rgb1, rgb2);
 
   return isSameColor;
 }
