@@ -13,8 +13,8 @@ bothPlatformsIt('Avatar color', 'medium', avatarColor);
 async function avatarColor(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE, platform),
-    newUser(device2, USERNAME.BOB, platform),
+    newUser(device1, USERNAME.ALICE),
+    newUser(device2, USERNAME.BOB),
   ]);
   await newContact(platform, device1, userA, device2, userB);
   await device1.navigateBack();
