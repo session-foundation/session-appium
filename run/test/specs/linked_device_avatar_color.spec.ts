@@ -19,14 +19,10 @@ async function avatarColorLinkedDevice(platform: SupportedPlatformsType) {
   const device2Base64 = await device2.getElementScreenshot(device2Avatar.ELEMENT);
   const device2PixelColor = await parseDataImage(device2Base64);
   // Color comparison of devices 1 and 2
-  const colorCompare = compareColors(device1PixelColor, device2PixelColor);
-  if (!colorCompare) {
+  const colorMatch = compareColors(device1PixelColor, device2PixelColor);
+  if (!colorMatch) {
     throw new Error(
       `The avatar color of ${userA.userName} does not match across devices. The colors are ${device1PixelColor} and ${device2PixelColor}`
-    );
-  } else {
-    console.log(
-      `The default avatar color of ${userA.userName} is within tolerance across devices.`
     );
   }
   await closeApp(device1, device2);
