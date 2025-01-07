@@ -13,10 +13,10 @@ import {
   ReadReceiptsButton,
 } from '../../run/test/specs/locators';
 import { IOS_XPATHS } from '../constants';
-import { englishStripped, TokenString } from '../localizer/i18n/localizedString';
-import { LocalizerDictionary } from '../localizer/Localizer';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
+import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
+import { getAdbFullPath } from '../test/specs/utils/binaries';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/specs/utils/utilities';
 import {
@@ -30,8 +30,6 @@ import {
   User,
   XPath,
 } from './testing';
-import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
-import { getAdbFullPath } from '../test/specs/utils/binaries';
 
 export type Coordinates = {
   x: number;
@@ -1319,7 +1317,7 @@ export class DeviceWrapper {
     }
     if (this.isIOS()) {
       const testMessage = 'Testing-document-1';
-      const spongebobsBirthday = '199905010700.00';
+      const spongeBobsBirthday = '199905010700.00';
       await this.clickOnByAccessibilityID('Attachments button');
       await sleepFor(100);
       await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardOpen);
@@ -1333,7 +1331,7 @@ export class DeviceWrapper {
 
       if (!testDocument) {
         await runScriptAndLog(
-          `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/test_file.pdf'`
+          `touch -a -m -t ${spongeBobsBirthday} 'run/test/specs/media/test_file.pdf'`
         );
 
         await runScriptAndLog(
@@ -1428,7 +1426,7 @@ export class DeviceWrapper {
   }
 
   public async uploadProfilePicture() {
-    const spongebobsBirthday = '199805010700.00';
+    const spongeBobsBirthday = '199805010700.00';
     await this.clickOnElementAll(new UserSettings(this));
     // Click on Profile picture
     await this.clickOnElementAll(new UserSettings(this));
@@ -1443,7 +1441,7 @@ export class DeviceWrapper {
       });
       if (!profilePicture) {
         await runScriptAndLog(
-          `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/profile_picture.jpg'`
+          `touch -a -m -t ${spongeBobsBirthday} 'run/test/specs/media/profile_picture.jpg'`
         );
 
         await runScriptAndLog(
@@ -1477,7 +1475,7 @@ export class DeviceWrapper {
       // If no image, push file to this
       if (!profilePicture) {
         await runScriptAndLog(
-          `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/profile_picture.jpg'`
+          `touch -a -m -t ${spongeBobsBirthday} 'run/test/specs/media/profile_picture.jpg'`
         );
 
         await runScriptAndLog(
@@ -1520,9 +1518,8 @@ export class DeviceWrapper {
         maxWait: 500,
       });
       return Boolean(spaceBar);
-    } else {
-      console.log(`Not an iOS device: shouldn't use this function`);
     }
+    console.log(`Not an iOS device: shouldn't use this function`);
   }
 
   public async mentionContact(platform: SupportedPlatformsType, contact: User) {
@@ -1741,16 +1738,15 @@ export class DeviceWrapper {
   }
 
   public async checkModalStrings(
-    expectedStringHeading: TokenString<LocalizerDictionary>,
-    expectedStringDescription: TokenString<LocalizerDictionary>,
+    expectedHeading: string,
+    expectedDescription: string,
     oldModalAndroid?: boolean
   ) {
     // Check modal heading is correct
     function removeNewLines(input: string): string {
-      // return input.replace(/<br\s*\/?>/gi, '\nCR LF');
       return input.replace(/\n/gi, '');
     }
-    const expectedHeading = englishStripped(expectedStringHeading).toString();
+
     let elHeading;
     // Some modals in Android haven't been updated to compose yet therefore need different locators
     if (!oldModalAndroid) {
@@ -1762,7 +1758,7 @@ export class DeviceWrapper {
       });
     }
     const actualHeading = await this.getTextFromElement(elHeading);
-    if (expectedStringHeading === actualHeading) {
+    if (expectedHeading === actualHeading) {
       console.log('Modal heading is correct');
     } else {
       throw new Error(
@@ -1770,14 +1766,6 @@ export class DeviceWrapper {
       );
     }
     // Now check modal description
-    // let expectedDescription;
-    const expectedDescription = englishStripped(expectedStringDescription).toString();
-    // if (!args) {
-    // } else {
-    //   expectedDescription = englishStripped(expectedStringDescription)
-    //     .withArgs(args as any)
-    //     .toString();
-    // }
     let elDescription;
     if (!oldModalAndroid) {
       elDescription = await this.waitForTextElementToBePresent(new ModalDescription(this));
@@ -1792,7 +1780,7 @@ export class DeviceWrapper {
     const formattedDescription = removeNewLines(actualDescription);
     if (expectedDescription !== formattedDescription) {
       throw new Error(
-        `Modal description is incorrect. Expected description: ${expectedStringDescription}, Actual description: ${formattedDescription}`
+        `Modal description is incorrect. Expected description: ${expectedDescription}, Actual description: ${formattedDescription}`
       );
     } else {
       console.log('Modal description is correct');

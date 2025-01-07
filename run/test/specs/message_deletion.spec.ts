@@ -13,8 +13,8 @@ async function deleteMessage(platform: SupportedPlatformsType) {
 
   // Create two users
   const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE, platform),
-    newUser(device2, USERNAME.BOB, platform),
+    newUser(device1, USERNAME.ALICE),
+    newUser(device2, USERNAME.BOB),
   ]);
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
@@ -29,11 +29,12 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   await device1.longPressMessage(sentMessage);
   // Select Delete icon
   await device1.clickOnByAccessibilityID('Delete message');
+  // There is no modal on iOS yet (to come)
   await device1
     .onAndroid()
     .checkModalStrings(
       englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
-      englishStripped('deleteMessageConfirm').toString()
+      englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()
     );
 
   // Select 'Delete on this device only'

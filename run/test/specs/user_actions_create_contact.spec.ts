@@ -9,8 +9,8 @@ bothPlatformsIt('Create contact', 'high', createContact);
 
 async function createContact(platform: SupportedPlatformsType) {
   const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
-  const userA = await linkedDevice(device1, device3, USERNAME.ALICE, platform);
-  const userB = await newUser(device2, USERNAME.BOB, platform);
+  const userA = await linkedDevice(device1, device3, USERNAME.ALICE);
+  const userB = await newUser(device2, USERNAME.BOB);
 
   await newContact(platform, device1, userA, device2, userB);
   await device1.navigateBack();

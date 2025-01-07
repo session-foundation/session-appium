@@ -23,7 +23,8 @@ export default tseslint.config(
   },
   {
     rules: {
-      'no-unused-vars': 'off',
+      'no-unused-vars': 'off', // we have @typescript-eslint/no-unused-vars enabled below
+      'no-else-return': 'error',
       '@typescript-eslint/no-floating-promises': 'error',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-explicit-any': 'off',

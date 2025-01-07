@@ -7,12 +7,12 @@ import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-bothPlatformsIt('Deleted message linked device', 'high', deletedMessageLinkedDevice);
+bothPlatformsIt('Delete message linked device', 'high', deletedMessageLinkedDevice);
 
 async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  const userA = await linkedDevice(device1, device3, USERNAME.ALICE, platform);
-  const userB = await newUser(device2, USERNAME.BOB, platform);
+  const userA = await linkedDevice(device1, device3, USERNAME.ALICE);
+  const userB = await newUser(device2, USERNAME.BOB);
   const testMessage = 'Howdy';
   await newContact(platform, device1, userA, device2, userB);
   // Send message from user a to user b
@@ -34,7 +34,7 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
     .onAndroid()
     .checkModalStrings(
       englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
-      englishStripped('deleteMessageConfirm').toString()
+      englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()
     );
 
   // Select delete for everyone

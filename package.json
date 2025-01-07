@@ -2,7 +2,7 @@
   "name": "session-appium",
   "version": "1.0.0",
   "scripts": {
-    "lint": "yarn prettier . --write && yarn eslint .",
+    "lint": "yarn prettier . --write --cache && yarn eslint . --cache ",
     "lint-check": "yarn prettier . --check && yarn eslint .",
     "tsc": "tsc",
     "tsc-watch": "tsc -w",

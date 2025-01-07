@@ -12,7 +12,7 @@ async function inviteAFriend(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   let messageElement;
   // This is a const so that the user.accountID can be used later on
-  const user = await newUser(device, USERNAME.ALICE, platform);
+  const user = await newUser(device, USERNAME.ALICE);
   // Hit the plus button
   await device.clickOnElementAll(new PlusButton(device));
   // Select Invite a Friend

@@ -12,7 +12,7 @@ androidIt('Change username', 'medium', changeUsernameAndroid);
 async function changeUsernameiOS(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
 
-  const userA = await newUser(device, USERNAME.ALICE, platform);
+  const userA = await newUser(device, USERNAME.ALICE);
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
   await device.clickOnElementAll(new UserSettings(device));
@@ -51,7 +51,7 @@ async function changeUsernameiOS(platform: SupportedPlatformsType) {
 async function changeUsernameAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
 
-  const userA = await newUser(device, USERNAME.ALICE, platform);
+  const userA = await newUser(device, USERNAME.ALICE);
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
   await device.clickOnElementAll(new UserSettings(device));
