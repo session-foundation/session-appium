@@ -32,6 +32,6 @@ export function isSameColor(hex1: string, hex2: string) {
   const rgb1 = hexToRgbObject(hex1);
   const rgb2 = hexToRgbObject(hex2);
   // Perform the color comparison using the looks-same library
-  const isSameColor: boolean = colors(rgb1, rgb2);
+  const isSameColor = colors(rgb1, rgb2);
   return isSameColor;
 }
