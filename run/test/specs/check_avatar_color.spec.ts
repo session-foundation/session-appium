@@ -3,7 +3,7 @@ import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
-import { compareColors, parseDataImage } from './utils/check_colour';
+import { isSameColor, parseDataImage } from './utils/check_colour';
 import { UserSettings } from './locators/settings';
 import { ConversationItem } from './locators/home';
 import { ConversationAvatar, ConversationSettings } from './locators/conversation';
@@ -33,8 +33,8 @@ async function avatarColor(platform: SupportedPlatformsType) {
   }
   const device2Base64 = await device2.getElementScreenshot(device2Avatar.ELEMENT);
   const device2PixelColor = await parseDataImage(device2Base64);
-  // Color comparison of devices 1 and 2
-  const colorMatch = compareColors(device1PixelColor, device2PixelColor);
+  // Color matching devices 1 and 2
+  const colorMatch = isSameColor(device1PixelColor, device2PixelColor);
   if (!colorMatch) {
     throw new Error(
       `The avatar color of ${userA.userName} does not match across devices. The colors are ${device1PixelColor} and ${device2PixelColor}`
