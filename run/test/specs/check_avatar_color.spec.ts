@@ -28,6 +28,9 @@ async function avatarColor(platform: SupportedPlatformsType) {
   // Get Alice's avatar color on device 2 and turn it into a hex value
   await device2.clickOnElementAll(new ConversationItem(device2));
   let device2Avatar;
+  // The conversation screen looks slightly different per platform:
+  // On iOS the avatar doubles as the Conversation Settings button
+  // On Android, the avatar is a separate, non-interactable element (and the settings has the 3-dot icon)
   if (platform === 'ios') {
     device2Avatar = await device2.waitForTextElementToBePresent(new ConversationSettings(device2));
   } else {
