@@ -17,10 +17,7 @@ async function avatarColor(platform: SupportedPlatformsType) {
     newUser(device2, USERNAME.BOB),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await Promise.all([
-    device1.navigateBack(),
-    device2.navigateBack()
-  ]);   
+  await Promise.all([device1.navigateBack(), device2.navigateBack()]);
   // Get Alice's avatar color on device 1 (Home Screen avatar) and turn it into a hex value
   const device1Avatar = await device1.waitForTextElementToBePresent(new UserSettings(device1));
   const device1Base64 = await device1.getElementScreenshot(device1Avatar.ELEMENT);
