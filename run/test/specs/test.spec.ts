@@ -11,7 +11,7 @@ androidIt('Tiny test', undefined, tinyTest, true);
 async function tinyTest(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
 
-  const userA = await newUser(device, USERNAME.ALICE, platform);
+  const userA = await newUser(device, USERNAME.ALICE);
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
   await device.clickOnByAccessibilityID('User settings');

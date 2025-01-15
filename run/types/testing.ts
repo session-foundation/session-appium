@@ -24,7 +24,8 @@ export type GROUPNAME =
   | 'Group to test adding contact'
   | 'Disappear after send test'
   | 'Testing voice'
-  | 'Disappear after sent test';
+  | 'Disappear after sent test'
+  | 'Restore group';
 
 export type Group = {
   userName: GROUPNAME;
@@ -331,7 +332,8 @@ export type AccessibilityId =
   | 'Confirm invite button'
   | 'Edit'
   | 'Edit group name'
-  | 'Invite contacts button';
+  | 'Invite contacts button'
+  | 'Voice and Video Calls - Switch';
 
 export type Id =
   | 'Modal heading'

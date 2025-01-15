@@ -1,20 +1,21 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { ExitUserProfile } from './locators';
 import { newUser } from './utils/create_account';
 import { sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
 androidIt('Voice calls', 'high', voiceCallAndroid);
-iosIt('Voice calls', 'high', voiceCallIos, true);
+iosIt('Voice calls', 'high', voiceCallIos);
 
 async function voiceCallIos(platform: SupportedPlatformsType) {
   // Open app
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and User B
   const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE, platform),
-    newUser(device2, USERNAME.BOB, platform),
+    newUser(device1, USERNAME.ALICE),
+    newUser(device2, USERNAME.BOB),
   ]);
   await device1.sendNewMessage(userB, 'Testing calls');
   // Look for phone icon (shouldnt be there)
@@ -51,6 +52,14 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Allow voice and video calls',
   });
+  await device1.clickOnElementAll({
+    strategy: 'accessibility id',
+    selector: 'Voice and Video Calls - Switch',
+  });
+  await device1.checkModalStrings(
+    englishStripped('callsVoiceAndVideoBeta').toString(),
+    englishStripped('callsVoiceAndVideoModalDescription').toString()
+  );
   await device1.clickOnByAccessibilityID('Continue');
   // Navigate back to conversation
   await device1.closeScreen();
@@ -58,11 +67,16 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   // Need to allow microphone access
   await device1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
   // Call hasn't connected until microphone access is granted
-  // await device1.clickOnByAccessibilityID("Call");
-  // Missed call dialog should pop telling User B to enable calls
-  await device2.clickOnByAccessibilityID('OK');
+  await device1.clickOnByAccessibilityID('Call');
   // Enable voice calls on device 2 for User B
   // Need to navigate out of conversation for user to have full contact actions (calls icon, etc)
+  // await device2.checkModalStrings(
+  //   englishStripped('callsMissedCallFrom').withArgs({ name: userA.userName }).toString(),
+  //   englishStripped('callsYouMissedCallPermissions').withArgs({ name: userA.userName }).toString()
+  // );
+  await device2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Okay' });
+  // Hang up on device 1
+  await device1.clickOnByAccessibilityID('End call button');
   await device2.navigateBack();
   await device2.clickOnElementAll({
     strategy: 'accessibility id',
@@ -76,8 +90,16 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Allow voice and video calls',
   });
-  await device2.clickOnByAccessibilityID('Enable');
-  await device2.clickOnByAccessibilityID('Close button');
+  await device2.clickOnElementAll({
+    strategy: 'accessibility id',
+    selector: 'Voice and Video Calls - Switch',
+  });
+  await device2.checkModalStrings(
+    englishStripped('callsVoiceAndVideoBeta').toString(),
+    englishStripped('callsVoiceAndVideoModalDescription').toString()
+  );
+  await device2.clickOnByAccessibilityID('Continue');
+  await device2.clickOnElementAll(new ExitUserProfile(device2));
   // Make call on device 1 (userA)
   await device1.clickOnByAccessibilityID('Call');
   // await device1.clickOnByAccessibilityID("OK");
@@ -113,8 +135,8 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and User B
   const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE, platform),
-    newUser(device2, USERNAME.BOB, platform),
+    newUser(device1, USERNAME.ALICE),
+    newUser(device2, USERNAME.BOB),
   ]);
   await device1.sendNewMessage(userB, 'Testing calls');
   // Look for phone icon (shouldnt be there)

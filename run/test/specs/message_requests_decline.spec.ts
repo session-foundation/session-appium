@@ -13,8 +13,8 @@ async function declineRequest(platform: SupportedPlatformsType) {
   // Check 'decline' button
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create two users
-  const userA = await newUser(device1, USERNAME.ALICE, platform);
-  const userB = await linkedDevice(device2, device3, USERNAME.BOB, platform);
+  const userA = await newUser(device1, USERNAME.ALICE);
+  const userB = await linkedDevice(device2, device3, USERNAME.BOB);
   // Send message from Alice to Bob
   await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
   // Wait for banner to appear

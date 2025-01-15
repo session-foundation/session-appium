@@ -13,7 +13,7 @@ androidIt('Change username linked device', 'medium', changeUsernameLinkedAndroid
 async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
 
-  const userA = await linkedDevice(device1, device2, USERNAME.ALICE, platform);
+  const userA = await linkedDevice(device1, device2, USERNAME.ALICE);
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
   await Promise.all([
@@ -65,7 +65,7 @@ async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
 async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
 
-  const userA = await linkedDevice(device1, device2, USERNAME.ALICE, platform);
+  const userA = await linkedDevice(device1, device2, USERNAME.ALICE);
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
   await Promise.all([

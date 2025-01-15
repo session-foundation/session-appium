@@ -15,7 +15,7 @@ bothPlatformsIt('Hide recovery password', 'medium', hideRecoveryPassword);
 
 async function hideRecoveryPassword(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  await linkedDevice(device1, device2, USERNAME.ALICE, platform);
+  await linkedDevice(device1, device2, USERNAME.ALICE);
   await device1.clickOnElementAll(new UserSettings(device1));
   await device1.scrollDown();
   await device1.clickOnElementAll({

@@ -124,6 +124,23 @@ export class ReadReceiptsButton extends LocatorsInterface {
   }
 }
 
+export class ExitUserProfile extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Navigate up',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Close button',
+        } as const;
+    }
+  }
+}
+
 export class UsernameSettings extends LocatorsInterface {
   public build() {
     switch (this.platform) {

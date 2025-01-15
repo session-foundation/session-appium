@@ -16,9 +16,9 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE, platform),
-    newUser(device2, USERNAME.BOB, platform),
-    newUser(device3, USERNAME.CHARLIE, platform),
+    newUser(device1, USERNAME.ALICE),
+    newUser(device2, USERNAME.BOB),
+    newUser(device3, USERNAME.CHARLIE),
   ]);
   const testGroupName = 'Group to test adding contact';
   const group = await createGroup(
@@ -31,7 +31,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  const userD = await newUser(device4, USERNAME.DRACULA, platform);
+  const userD = await newUser(device4, USERNAME.DRACULA);
   await device1.navigateBack();
   await newContact(platform, device1, userA, device4, userD);
   // Exit to conversation list

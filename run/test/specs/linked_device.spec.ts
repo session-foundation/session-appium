@@ -10,7 +10,7 @@ async function linkDevice(platform: SupportedPlatformsType) {
   // Open server and two devices
   const { device1, device2 } = await openAppTwoDevices(platform);
   // link device
-  const userA = await linkedDevice(device1, device2, USERNAME.ALICE, platform);
+  const userA = await linkedDevice(device1, device2, USERNAME.ALICE);
   // Check that 'Youre almost finished' reminder doesn't pop up on device2
   await device2.hasElementBeenDeleted({
     strategy: 'accessibility id',

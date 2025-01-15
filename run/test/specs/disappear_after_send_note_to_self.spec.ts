@@ -11,7 +11,7 @@ bothPlatformsIt('Disappear after send note to self', 'medium', disappearAfterSen
 async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   const testMessage = `Testing disappearing messages in Note to Self`;
-  const userA = await newUser(device, USERNAME.ALICE, platform);
+  const userA = await newUser(device, USERNAME.ALICE);
   const controlMode: DisappearActions = 'sent';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   // Send message to self to bring up Note to Self conversation

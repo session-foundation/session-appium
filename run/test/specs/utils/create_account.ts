@@ -4,13 +4,8 @@ import { User, USERNAME } from '../../../types/testing';
 import { RevealRecoveryPhraseButton } from '../locators';
 import { DisplayNameInput } from '../locators/onboarding';
 import { UserSettings } from '../locators/settings';
-import { SupportedPlatformsType } from './open_app';
 
-export const newUser = async (
-  device: DeviceWrapper,
-  userName: USERNAME,
-  _platform: SupportedPlatformsType
-): Promise<User> => {
+export const newUser = async (device: DeviceWrapper, userName: USERNAME): Promise<User> => {
   // Click create session ID
 
   await device.clickOnElementAll({

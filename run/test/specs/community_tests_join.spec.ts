@@ -11,7 +11,7 @@ async function joinCommunityTest(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const testMessage = `Test message + ${new Date().getTime()}`;
   // Create user A and user B
-  await linkedDevice(device1, device2, USERNAME.ALICE, platform);
+  await linkedDevice(device1, device2, USERNAME.ALICE);
   await joinCommunity(device1, testCommunityLink, testCommunityName);
   await device1.onIOS().scrollToBottom();
   await device1.sendMessage(testMessage);
