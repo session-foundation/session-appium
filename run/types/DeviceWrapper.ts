@@ -30,6 +30,7 @@ import {
   User,
   XPath,
 } from './testing';
+import { parseDataImage } from '../test/specs/utils/check_colour';
 
 export type Coordinates = {
   x: number;
@@ -1785,6 +1786,20 @@ export class DeviceWrapper {
     } else {
       console.log('Modal description is correct');
     }
+  }
+
+  public async getElementPixelColor(
+    args: {
+      text?: string;
+      maxWait?: number;
+    } & (StrategyExtractionObj | LocatorsInterface)
+  ): Promise<string> {
+    // Wait for the element to be present
+    const element = await this.waitForTextElementToBePresent(args);
+    // Take a screenshot and return a hex color value
+    const base64image = await this.getElementScreenshot(element.ELEMENT);
+    const pixelColor = await parseDataImage(base64image);
+    return pixelColor;
   }
 
   /* === all the utilities function ===  */
