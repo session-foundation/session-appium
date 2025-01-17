@@ -368,6 +368,7 @@ export type Id =
   | 'com.android.chrome:id/signin_fre_dismiss_button'
   | 'com.android.chrome:id/negative_button'
   | 'network.loki.messenger:id/back_button'
-  | 'Quit';
+  | 'Quit'
+  | 'network.loki.messenger:id/singleModeImageView';
 
 export type TestRisk = 'high' | 'medium' | 'low' | undefined;
