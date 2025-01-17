@@ -1,3 +1,4 @@
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { BlockedContactsSettings, BlockUser, BlockUserConfirmationModal } from './locators';
@@ -8,7 +9,7 @@ import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsIt('Block user in conversation options', 'high', blockUserInConversationOptions);
+bothPlatformsIt('Block user linked device', 'high', blockUserInConversationOptions);
 
 async function blockUserInConversationOptions(platform: SupportedPlatformsType) {
   //Open three devices and creates two contacts (Alice and Bob)
@@ -25,7 +26,11 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   // Select Block option
   await sleepFor(500);
   await device1.clickOnElementAll(new BlockUser(device1));
-  // Wait for menu to be clickable (Android)
+  await device1.checkModalStrings(
+    englishStripped('block').toString(),
+    englishStripped('blockDescription').withArgs({ name: userB.userName }).toString(),
+    true
+  );
   // Confirm block option
   await device1.clickOnElementAll(new BlockUserConfirmationModal(device1));
   // On ios there is an alert that confirms that the user has been blocked
@@ -54,16 +59,31 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
     console.info('Blocked banner not found');
   }
   // Check settings for blocked user
-  await device1.navigateBack();
-  await device1.clickOnElementAll(new UserSettings(device1));
-  await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
-  await device1.clickOnElementAll(new BlockedContactsSettings(device1));
-  await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Contact',
-    text: userB.userName,
-  });
-
+  await Promise.all([device1.navigateBack(), device3.navigateBack()]);
+  await Promise.all([
+    device1.clickOnElementAll(new UserSettings(device1)),
+    device3.clickOnElementAll(new UserSettings(device3)),
+  ]);
+  await Promise.all([
+    device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' }),
+    device3.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' }),
+  ]);
+  await Promise.all([
+    device1.clickOnElementAll(new BlockedContactsSettings(device1)),
+    device3.clickOnElementAll(new BlockedContactsSettings(device3)),
+  ]);
+  await Promise.all([
+    device1.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Contact',
+      text: userB.userName,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Contact',
+      text: userB.userName,
+    }),
+  ]);
   // Close app
   await closeApp(device1, device2, device3);
 }

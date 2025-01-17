@@ -6,7 +6,7 @@ export class ConversationItem extends LocatorsInterface {
     return {
       strategy: 'accessibility id',
       selector: 'Conversation list item',
-      text: text
+      text: text,
     } as const;
   }
 }

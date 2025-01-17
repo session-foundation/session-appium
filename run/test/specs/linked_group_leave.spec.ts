@@ -13,11 +13,11 @@ bothPlatformsIt('Leave group linked device', 'high', leaveGroupLinkedDevice);
 async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   const testGroupName = 'Leave group linked device';
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
-  const userC = await linkedDevice(device3, device4, USERNAME.CHARLIE, platform);
+  const userC = await linkedDevice(device3, device4, USERNAME.CHARLIE);
   // Create users A, B and C
   const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE, platform),
-    newUser(device2, USERNAME.BOB, platform),
+    newUser(device1, USERNAME.ALICE),
+    newUser(device2, USERNAME.BOB),
   ]);
 
   // Create group with user A, user B and User C

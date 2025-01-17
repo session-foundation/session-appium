@@ -1,3 +1,4 @@
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteContactModalConfirm } from './locators/global';
@@ -11,8 +12,8 @@ bothPlatformsIt('Delete contact', 'high', deleteContact);
 async function deleteContact(platform: SupportedPlatformsType) {
   const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
   const [Alice, Bob] = await Promise.all([
-    linkedDevice(device1, device3, USERNAME.ALICE, platform),
-    newUser(device2, USERNAME.BOB, platform),
+    linkedDevice(device1, device3, USERNAME.ALICE),
+    newUser(device2, USERNAME.BOB),
   ]);
 
   await newContact(platform, device1, Alice, device2, Bob);
@@ -36,8 +37,11 @@ async function deleteContact(platform: SupportedPlatformsType) {
   await device1.onIOS().swipeLeft('Conversation list item', Bob.userName);
   await device1.onAndroid().longPressConversation(Bob.userName);
   await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Delete' });
-  // TODO Fix once args checks are merged
-  // await device1.checkModalStrings('conversationsDelete', 'conversationsDeleteDescription');
+  await device1.checkModalStrings(
+    englishStripped('conversationsDelete').toString(),
+    englishStripped('conversationsDeleteDescription').withArgs({ name: USERNAME.BOB }).toString(),
+    true
+  );
   await device1.clickOnElementAll(new DeleteContactModalConfirm(device1));
   await Promise.all([
     device1.doesElementExist({

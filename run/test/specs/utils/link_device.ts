@@ -1,6 +1,5 @@
 import { sleepFor } from '.';
 import { newUser } from './create_account';
-import { SupportedPlatformsType } from './open_app';
 
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { USERNAME } from '../../../types/testing';
@@ -8,10 +7,9 @@ import { USERNAME } from '../../../types/testing';
 export const linkedDevice = async (
   device1: DeviceWrapper,
   device2: DeviceWrapper,
-  userName: USERNAME,
-  platform: SupportedPlatformsType
+  userName: USERNAME
 ) => {
-  const user = await newUser(device1, userName, platform);
+  const user = await newUser(device1, userName);
   // Log in with recovery seed on device 2
 
   await device2.clickOnByAccessibilityID('Restore your session button');

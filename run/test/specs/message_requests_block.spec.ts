@@ -1,3 +1,4 @@
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { BlockedContactsSettings, BlockUserConfirmationModal } from './locators';
@@ -12,8 +13,8 @@ bothPlatformsIt('Block message request', 'high', blockedRequest);
 async function blockedRequest(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
 
-  const userA = await newUser(device1, USERNAME.ALICE, platform);
-  const userB = await linkedDevice(device2, device3, USERNAME.BOB, platform);
+  const userA = await newUser(device1, USERNAME.ALICE);
+  const userB = await linkedDevice(device2, device3, USERNAME.BOB);
   // Send message from Alice to Bob
   await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
   // Wait for banner to appear
@@ -32,10 +33,10 @@ async function blockedRequest(platform: SupportedPlatformsType) {
   // Confirm block on android
   await sleepFor(1000);
   // TODO add check modal
-  // await device2.waitForTextElementToBePresent({
-  //   strategy: 'accessibility id',
-  //   selector: 'Block message request',
-  // });
+  await device2.checkModalStrings(
+    englishStripped('block').toString(),
+    englishStripped('blockDescription').withArgs({ name: userA.userName }).toString()
+  );
   await device2.clickOnElementAll(new BlockUserConfirmationModal(device1));
   const blockedMessage = `"${userA.userName} to ${userB.userName} - shouldn't get through"`;
   await device1.sendMessage(blockedMessage);
@@ -48,15 +49,15 @@ async function blockedRequest(platform: SupportedPlatformsType) {
   await sleepFor(5000);
   await device2.hasTextElementBeenDeleted('Message body', blockedMessage);
   // Check that user is on Blocked User list in Settings
-  if (platform === 'ios') {
-    await device2.clickOnElementAll(new UserSettings(device2));
-    await device2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
-    await device2.clickOnElementAll(new BlockedContactsSettings(device2));
-    await device2.waitForTextElementToBePresent({
-      strategy: 'xpath',
-      selector: `//XCUIElementTypeCell[@name="${userA.userName}"]`,
-    });
-  }
+
+  await device2.clickOnElementAll(new UserSettings(device2));
+  await device2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
+  await device2.clickOnElementAll(new BlockedContactsSettings(device2));
+  await device2.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Contact',
+    text: userA.userName,
+  });
   // Close app
   await closeApp(device1, device2, device3);
 }
