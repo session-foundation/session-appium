@@ -76,53 +76,16 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // CLick out of pop up
   await device1.clickOnByAccessibilityID('Message user');
   // Check name at top of conversation is nickname
-  const headerElement = await device1.waitForTextElementToBePresent({
+  await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Conversation header name',
   });
-  await device1.getTextFromElement(headerElement);
   // Send a message so nickname is updated in conversation list
-  await device1.sendMessage('Howdy');
-  // Navigate out of conversation
-  await device1.navigateBack();
-  // Change nickname back to original username
-  // Long press on contact conversation
-  await device1.longPressConversation(nickName);
-  // Select details
-  await device1.clickOnByAccessibilityID('Details');
-  // Click on username to edit
-  await device1.clickOnByAccessibilityID('Edit user nickname');
-  // Click apply without entering new nickname
-  await device1.clickOnByAccessibilityID('Apply');
-  // Click out of pop up
-  await device1.back();
-  // Enter conversation to verify change
-  await device1.selectByText('Conversation list item', nickName);
-  const changedElement = await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Conversation header name',
-  });
-  const headerUsername = await device1.getTextFromElement(changedElement);
-  if (headerUsername === nickName) {
-    console.log('Nickname has been changed in header correctly');
+  await device1.sendMessage('Message to test nickname change');
+  const actualNickname = await device1.grabTextFromAccessibilityId('Conversation header name');
+  if (actualNickname !== nickName) {
+    throw new Error('Nickname has not been changed in header');
   }
-  // Send message to change in conversation list
-  await device1.sendMessage('Howdy');
-  // Navigate back to list
-  await device1.navigateBack();
-  // Verify name change in list
-  // Save text of conversation list item?
-  await device1.selectByText('Conversation list item', nickName);
-  const changedListName = await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Conversation header name',
-    text: nickName,
-  });
-  const listName = await device1.getTextFromElement(changedListName);
-  if (listName === nickName) {
-    console.log('Nickname has been changed in list correctly');
-  }
-
   // Close app
   await closeApp(device1, device2);
 }

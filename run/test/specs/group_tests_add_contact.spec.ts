@@ -58,7 +58,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Click done/apply
   await device1.clickOnElementAll(new InviteContactConfirm(device1));
   // Click done/apply again
-  await device1.navigateBack();
+  await device1.navigateBack(true);
   // iOS doesn't automatically go back to conversation settings
   await device1.onIOS().navigateBack();
   await device1.onIOS().navigateBack();
@@ -74,7 +74,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
       englishStripped('groupMemberNew').withArgs({ name: USERNAME.DRACULA }).toString()
     ),
   ]);
-  await device4.navigateBack(true);
+  await device4.navigateBack();
   await device4.selectByText('Conversation list item', group.userName);
   // Check for control message on device 4
   await device4.waitForControlMessageToBePresent(englishStripped('groupInviteYou').toString());

@@ -15,7 +15,7 @@ androidIt('Send image to community', 'medium', sendImageCommunityAndroid, true);
 async function sendImageCommunityiOS(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const testMessage = 'Testing sending images to communities';
-  const testImageMessage = `Image message + ${new Date().getTime()}`;
+  const testImageMessage = `Image message + ${new Date().getTime()} - ${platform}`;
   // Create user A and user B
   const [Alice, Bob] = await Promise.all([
     newUser(device1, USERNAME.ALICE),
@@ -35,7 +35,7 @@ async function sendImageCommunityiOS(platform: SupportedPlatformsType) {
 async function sendImageCommunityAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const time = await device1.getTimeFromDevice(platform);
-  const testMessage = `Testing sending images to communities + ${time}`;
+  const testMessage = `Testing sending images to communities + ${time} - ${platform}`;
   // Create user A and user B
   const [Alice] = await Promise.all([
     newUser(device1, USERNAME.ALICE),

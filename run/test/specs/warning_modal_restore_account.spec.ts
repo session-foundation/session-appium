@@ -1,17 +1,16 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
-import { bothPlatformsIt } from '../../types/sessionIt';
+import { androidIt } from '../../types/sessionIt';
 import {
-  SeedPhraseInput,
-  BackButton,
-  SlowModeRadio,
-  ContinueButton,
   AccountRestoreButton,
+  BackButton,
+  ContinueButton,
+  SeedPhraseInput,
+  SlowModeRadio,
   WarningModalQuitButton,
 } from './locators/onboarding';
-import { SupportedPlatformsType } from './utils/open_app';
-import { openAppOnPlatformSingleDevice, closeApp } from './utils/open_app';
-
-bothPlatformsIt('Warning modal restore account', 'medium', warningModalRestoreAccount);
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+// These modals no longer exist in groups rebuild for iOS
+androidIt('Warning modal restore account', 'medium', warningModalRestoreAccount);
 
 async function warningModalRestoreAccount(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);

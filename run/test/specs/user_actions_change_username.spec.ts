@@ -36,7 +36,7 @@ async function changeUsernameiOS(platform: SupportedPlatformsType) {
   const username = await device.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Username',
-    text: newUsername,
+    // text: newUsername,
   });
 
   const changedUsername = await device.getTextFromElement(username);

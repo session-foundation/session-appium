@@ -24,10 +24,10 @@ async function avatarRestored(platform: SupportedPlatformsType) {
   // Wait for change
   // Verify change
   // Take screenshot
-  const profilePicture = await device1.waitForTextElementToBePresent(new UserSettings(device1));
   await device2.clickOnElementAll(new UserSettings(device2));
   await device1.onIOS().waitForLoadingOnboarding();
   await runOnlyOnAndroid(platform, () => sleepFor(10000)); // we can't avoid this runOnlyOnAndroid
+  const profilePicture = await device1.waitForTextElementToBePresent(new UserSettings(device1));
   const base64 = await device1.getElementScreenshot(profilePicture.ELEMENT);
   const actualPixelColor = await parseDataImage(base64);
   if (actualPixelColor === expectedPixelHexColour) {

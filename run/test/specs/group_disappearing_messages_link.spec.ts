@@ -59,9 +59,9 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
     selector: 'Message input box',
   });
   if (platform === 'ios') {
-    await sleepFor(1000);
-  } else {
     await device1.waitForTextElementToBePresent(new LinkPreview(device1));
+  } else {
+    await sleepFor(1000);
   }
   await device1.clickOnByAccessibilityID('Send message button');
   // Make sure image preview is available in device 2
@@ -94,7 +94,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   if (platform === 'android') {
     await Promise.all(
       [device1, device2, device3].map(device =>
-        device.hasElementBeenDeleted(new LinkPreviewMessage(device))
+        device.hasElementBeenDeleted({ ...new LinkPreviewMessage(device).build(), maxWait: 1000 })
       )
     );
   }

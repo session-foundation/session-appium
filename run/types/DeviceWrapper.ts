@@ -346,7 +346,7 @@ export class DeviceWrapper {
           );
         }
 
-        await this.longClick(el, 3000);
+        await this.longClick(el, 4000);
         const longPressSuccess = await this.waitForTextElementToBePresent({
           strategy: 'accessibility id',
           selector: 'Reply to message',
@@ -1551,7 +1551,6 @@ export class DeviceWrapper {
         .toString(),
       true
     );
-
     await this.clickOnElementAll(new DownloadMediaButton(this));
   }
 
