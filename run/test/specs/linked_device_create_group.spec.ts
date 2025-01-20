@@ -130,7 +130,7 @@ async function linkedGroupAndroid(platform: SupportedPlatformsType) {
     device4.waitForControlMessageToBePresent(groupNameNew),
   ]);
 
-  await closeApp(device1, device2, device3);
+  await closeApp(device1, device2, device3, device4);
 }
 // TODO
 // Remove user

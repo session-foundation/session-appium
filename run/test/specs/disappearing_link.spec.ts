@@ -1,3 +1,4 @@
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { LinkPreview } from './locators';
@@ -34,6 +35,10 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
     maxWait: 20000,
   });
   // Accept dialog for link preview
+  await device1.checkModalStrings(
+    englishStripped('linkPreviewsEnable').toString(),
+    englishStripped('linkPreviewsFirstDescription').withArgs({ app_name: 'Session' }).toString()
+  );
   await device1.clickOnByAccessibilityID('Enable');
   // No preview on first send
   await device1.clickOnByAccessibilityID('Send message button');
@@ -86,6 +91,11 @@ async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsTyp
     selector: 'Message input box',
   });
   // Accept dialog for link preview
+  await device1.checkModalStrings(
+    englishStripped('linkPreviewsEnable').toString(),
+    englishStripped('linkPreviewsFirstDescription').withArgs({ app_name: 'Session' }).toString(),
+    true
+  );
   await device1.clickOnByAccessibilityID('Enable');
   // No preview on first send
   // Wait for preview to load

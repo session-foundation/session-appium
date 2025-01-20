@@ -81,6 +81,11 @@ async function sendLinkAndroid(platform: SupportedPlatformsType) {
     selector: 'Message input box',
   });
   // Accept dialog for link preview
+  await device1.checkModalStrings(
+    englishStripped('linkPreviewsEnable').toString(),
+    englishStripped('linkPreviewsFirstDescription').withArgs({ app_name: 'Session' }).toString(),
+    true
+  );
   await device1.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Enable',
