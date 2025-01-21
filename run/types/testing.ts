@@ -388,5 +388,7 @@ export type Id =
   | 'Confirm invite button'
   | 'Navigate back'
   | 'Close button'
-  | 'Group name';
+  | 'Group name'
+  | 'network.loki.messenger:id/singleModeImageView';
+
 export type TestRisk = 'high' | 'medium' | 'low' | undefined;
