@@ -27,29 +27,33 @@ async function sendImageGroupiOS(platform: SupportedPlatformsType) {
     maxWait: 50000,
   });
 
-  await device2.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: testMessage,
-    maxWait: 5000,
-  });
-  await device3.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: testMessage,
-  });
+  await Promise.all([
+    device2.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: testMessage,
+      maxWait: 5000,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: testMessage,
+    }),
+  ]);
   const replyMessage = await device2.replyToMessage(userA, testMessage);
-  await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: replyMessage,
-    maxWait: 5000,
-  });
-  await device3.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: replyMessage,
-  });
+  await Promise.all([
+    device1.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: replyMessage,
+      maxWait: 5000,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: replyMessage,
+    }),
+  ]);
   // Close server and devices
   await closeApp(device1, device2, device3);
 }

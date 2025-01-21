@@ -30,6 +30,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
+  // Enable link preview modal appears as soon as link is typed on android but on iOS it appears after 
   if (platform === 'android') {
     await device1.checkModalStrings(
       englishStripped('linkPreviewsEnable').toString(),

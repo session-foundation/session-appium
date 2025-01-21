@@ -21,34 +21,26 @@ async function sendVoiceMessageGroupiOS(platform: SupportedPlatformsType) {
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   const replyMessage = `Replying to voice message from ${userA.userName} in ${testGroupName}`;
   await device1.sendVoiceMessage();
-  await Promise.all([
-    device1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Voice message',
-    }),
-    device2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Voice message',
-    }),
-    device3.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Voice message',
-    }),
-  ]);
-
+  await Promise.all(
+    [device1, device2, device3].map(device =>
+      device.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Voice message',
+      })
+    )
+  );
   await device2.longPress('Voice message');
   await device2.clickOnByAccessibilityID('Reply to message');
   await device2.sendMessage(replyMessage);
-  await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: replyMessage,
-  });
-  await device3.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: replyMessage,
-  });
+  await Promise.all(
+    [device1, device3].map(device =>
+      device.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Message body',
+        text: replyMessage,
+      })
+    )
+  );
   // Close server and devices
   await closeApp(device1, device2, device3);
 }
@@ -73,32 +65,27 @@ async function sendVoiceMessageGroupAndroid(platform: SupportedPlatformsType) {
     device3.trustAttachments(testGroupName),
   ]);
   // Check device 2 and 3 for voice message from user A
-  await Promise.all([
-    device2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Voice message',
-    }),
-    device3.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Voice message',
-    }),
-  ]);
+  await Promise.all(
+    [device1, device2, device3].map(device =>
+      device.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Voice message',
+      })
+    )
+  );
   // Reply to voice message
   await device2.longPress('Voice message');
   await device2.clickOnByAccessibilityID('Reply to message');
   await device2.sendMessage(replyMessage);
-  // Check device 1 and 3 for reply to apepar
-  await Promise.all([
-    device1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: replyMessage,
-    }),
-    device3.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: replyMessage,
-    }),
-  ]);
+  // Check device 1 and 3 for reply to appear
+  await Promise.all(
+    [device1, device3].map(device =>
+      device.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Message body',
+        text: replyMessage,
+      })
+    )
+  );
   await closeApp(device1, device2, device3);
 }

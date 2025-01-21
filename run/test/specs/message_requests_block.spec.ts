@@ -36,7 +36,6 @@ async function blockedRequest(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Block message request');
   // Confirm block on android
   await sleepFor(1000);
-  // TODO add check modal
   await device2.checkModalStrings(
     englishStripped('block').toString(),
     englishStripped('blockDescription').withArgs({ name: userA.userName }).toString(),
@@ -66,7 +65,6 @@ async function blockedRequest(platform: SupportedPlatformsType) {
   await sleepFor(5000);
   await device2.hasTextElementBeenDeleted('Message body', blockedMessage);
   // Check that user is on Blocked User list in Settings
-
   await Promise.all([
     device2.clickOnElementAll(new UserSettings(device2)),
     device3.clickOnElementAll(new UserSettings(device3)),

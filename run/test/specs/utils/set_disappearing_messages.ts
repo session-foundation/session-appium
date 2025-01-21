@@ -22,10 +22,6 @@ export const setDisappearingMessage = async (
   if (enforcedType === '1:1') {
     await device.clickOnByAccessibilityID(timerType);
   }
-  // await device.waitForTextElementToBePresent({
-  //   strategy: 'accessibility id',
-  //   selector: DISAPPEARING_TIMES.ONE_DAY,
-  // });
   if (timerType === 'Disappear after read option') {
     if (enforcedType === '1:1') {
       await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.TWELVE_HOURS);

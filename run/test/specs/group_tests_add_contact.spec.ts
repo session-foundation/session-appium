@@ -63,17 +63,13 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   await device1.onIOS().navigateBack();
   await device1.onIOS().navigateBack();
   // Check control messages
-  await Promise.all([
-    device1.waitForControlMessageToBePresent(
-      englishStripped('groupMemberNew').withArgs({ name: USERNAME.DRACULA }).toString()
-    ),
-    device2.waitForControlMessageToBePresent(
-      englishStripped('groupMemberNew').withArgs({ name: USERNAME.DRACULA }).toString()
-    ),
-    device3.waitForControlMessageToBePresent(
-      englishStripped('groupMemberNew').withArgs({ name: USERNAME.DRACULA }).toString()
-    ),
-  ]);
+  await Promise.all(
+    [device1, device2, device3].map(device =>
+      device.waitForControlMessageToBePresent(
+        englishStripped('groupMemberNew').withArgs({ name: USERNAME.DRACULA }).toString()
+      )
+    )
+  );
   await device4.navigateBack();
   await device4.selectByText('Conversation list item', group.userName);
   // Check for control message on device 4

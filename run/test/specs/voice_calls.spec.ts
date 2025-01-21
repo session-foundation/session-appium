@@ -68,7 +68,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
   // Call hasn't connected until microphone access is granted
   await device1.clickOnByAccessibilityID('Call');
-
+  // No test tags on modal as of yet
   // await device2.checkModalStrings(
   //   englishStripped('callsMissedCallFrom').withArgs({ name: userA.userName }).toString(),
   //   englishStripped('callsYouMissedCallPermissions').withArgs({ name: userA.userName }).toString()

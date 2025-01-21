@@ -52,7 +52,7 @@ async function linkedGroupiOS(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Save',
   });
-  await device1.onIOS().navigateBack();
+  await device1.navigateBack();
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
   const groupNameNew = englishStripped('groupNameNew')

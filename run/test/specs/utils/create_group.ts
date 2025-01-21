@@ -58,6 +58,7 @@ export const createGroup = async (
   ]);
 
   await Promise.all([
+    // Need to add in function that sorts by pubkey
     // device1.waitForControlMessageToBePresent(
     //   englishStripped(`groupMemberNewTwo`)
     //     .withArgs({ name: userTwo.userName, other_name: userThree.userName })
