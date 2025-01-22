@@ -29,53 +29,30 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
     device2.onAndroid().trustAttachments(testGroupName),
     device3.onAndroid().trustAttachments(testGroupName),
   ]);
-  if (platform === 'ios') {
-    await Promise.all(
-      [device2, device3].map(device =>
-        device.waitForTextElementToBePresent({
-          strategy: 'accessibility id',
-          selector: 'Message body',
-          text: testMessage,
-          maxWait: 4000,
-        })
-      )
-    );
-  }
-  if (platform === 'android') {
-    await Promise.all(
-      [device2, device3].map(device =>
-        device.waitForTextElementToBePresent({
-          strategy: 'accessibility id',
-          selector: 'Media message',
-          maxWait: 1000,
-        })
-      )
-    );
-  }
+  const selector = platform === 'android' ? 'Media message' : 'Message body';
+  const text = platform === 'android' ? undefined : testMessage;
+
+  await Promise.all(
+    [device2, device3].map(device =>
+      device.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: selector,
+        maxWait: 1000,
+        text: text,
+      })
+    )
+  );
   // Wait for 30 seconds
   await sleepFor(30000);
-  if (platform === 'ios') {
-    await Promise.all(
-      [device1, device2, device3].map(device =>
-        device.hasElementBeenDeleted({
-          strategy: 'accessibility id',
-          selector: 'Message body',
-          maxWait: 1000,
-          text: testMessage,
-        })
-      )
-    );
-  }
-  if (platform === 'android') {
-    await Promise.all(
-      [device1, device2, device3].map(device =>
-        device.hasElementBeenDeleted({
-          strategy: 'accessibility id',
-          selector: 'Media message',
-          maxWait: 1000,
-        })
-      )
-    );
-  }
+  await Promise.all(
+    [device1, device2, device3].map(device =>
+      device.hasElementBeenDeleted({
+        strategy: 'accessibility id',
+        selector: selector,
+        maxWait: 1000,
+        text: text,
+      })
+    )
+  );
   await closeApp(device1, device2, device3);
 }

@@ -7,7 +7,7 @@ export class GroupNameInput extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: `Group name input`,
+          selector: 'Group name input',
         };
       case 'ios':
         return {
@@ -24,7 +24,7 @@ export class CreateGroupButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: `Create group`,
+          selector: 'Create group',
         };
       case 'ios':
         return {
@@ -41,7 +41,7 @@ export class InviteContactConfirm extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: `Confirm invite button`,
+          selector: 'Confirm invite button',
         };
       case 'ios':
         return {
@@ -53,18 +53,18 @@ export class InviteContactConfirm extends LocatorsInterface {
 }
 
 export class EditGroupName extends LocatorsInterface {
-    public build(): StrategyExtractionObj {
-      switch (this.platform) {
-        case 'android':
-          return {
-            strategy: 'accessibility id',
-            selector: `Edit`,
-          };
-        case 'ios':
-          return {
-            strategy: 'accessibility id',
-            selector: 'Edit group name',
-          };
-      }
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Edit',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Edit group name',
+        };
     }
   }
+}
