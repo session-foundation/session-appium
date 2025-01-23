@@ -121,7 +121,7 @@ jobs:
 
       - name: Download ipa
         run: |
-          curl -O session-ios.sim.tar.xz ${{ github.event.inputs.APK_URL }}
+          curl -o session-ios.sim.tar.xz ${{ github.event.inputs.APK_URL }}
           ls
           pwd
       - name: Extract ipa
