@@ -21,6 +21,11 @@ function create_simulator() {
 function start_simulator() {
     for i in {1..12}
     do
+        echo "Checking if simulator is already running..."
+        if xcrun simctl list devices | grep "$SIMULATOR_NAME" | grep -q "Booted"; then
+            echo "Simulator $SIMULATOR_NAME is already running."
+            continue
+        fi
         echo "Starting simulator...$SIMULATOR_NAME"
         xcrun simctl boot "$SIMULATOR_NAME"
         open -a Simulator
