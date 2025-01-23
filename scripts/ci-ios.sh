@@ -2,7 +2,7 @@
 
 SIMULATOR_NAME="iPhone 15 Pro Max $i"
 SIMULATOR_DEVICE="iPhone 15 Pro Max"
-SIMULATOR_OS="17.2"
+SIMULATOR_OS="18.2"
 
 
 # This script is used to run the CI on iOS
