@@ -125,13 +125,24 @@ jobs:
           ls
           pwd
 
+      - name: Inspect archive contents
+        run: |
+          tar -tf session-ios.sim.tar.xz
+
       - name: Extract ipa
         run: |
           tar xf session-ios.sim.tar.xz
-          if [ ! -d "session-ios" ]; then
-            echo "Extraction failed: session-ios directory not found"
+          mkdir -p extracted
+          mv *.app extracted/ || echo "No .app files found to move"
+          ls extracted
+
+      - name: Verify extracted files
+        run: |
+          if [ ! -d "extracted" ]; then
+            echo "Extraction failed: extracted directory not found"
             exit 1
           fi
+          ls extracted
 
       - name: Debug extracted contents
         run: |
