@@ -84,7 +84,9 @@ on:
           - '0'
           - '1'
         default: '0'
-
+  push:
+    branches:
+      - ci-ios-test # Add other branch names here
 # concurrency:
 #   group: ${{ github.workflow }}
 #   cancel-in-progress: true
