@@ -84,16 +84,14 @@ on:
           - '0'
           - '1'
         default: '0'
-  push:
-    branches:
-      - ci-ios-test # Add other branch names here
+
 # concurrency:
 #   group: ${{ github.workflow }}
 #   cancel-in-progress: true
 
 jobs:
   ios-regression:
-    runs-on: [self-hosted, macos-latest, X64, qa-ios]
+    runs-on: [self-hosted, macos-latest, qa-ios]
     env:
       IOS_APP_PATH_PREFIX: '../extracted/Session.app'
       PLAYWRIGHT_WORKERS_COUNT: 3
