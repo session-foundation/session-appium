@@ -124,18 +124,24 @@ jobs:
           curl -o session-ios.sim.tar.xz ${{ github.event.inputs.APK_URL }}
           ls
           pwd
+
       - name: Extract ipa
         run: |
           tar xf session-ios.sim.tar.xz
-          ls
-          pwd
+          if [ ! -d "session-ios" ]; then
+            echo "Extraction failed: session-ios directory not found"
+            exit 1
+          fi
+
+      - name: Debug extracted contents
+        run: |
+          ls -lah
+
       - name: Rename extracted folder
         run: |
-          mv session-ios extracted
+          mkdir -p extracted
+          mv session-ios extracted || echo "No session-ios directory to move"
           ls extracted
-          mv extracted/*.app extracted/session-ios.app
-          ls extracted
-          pwd
       - uses: actions/checkout@v4
         with:
           repository: ${{ github.event.inputs.APPIUM_REPO }}
