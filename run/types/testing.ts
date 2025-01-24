@@ -369,6 +369,9 @@ export type Id =
   | 'com.android.chrome:id/negative_button'
   | 'network.loki.messenger:id/back_button'
   | 'Quit'
-  | 'network.loki.messenger:id/singleModeImageView';
+  | 'network.loki.messenger:id/singleModeImageView'
+  | 'network.loki.messenger:id/emptyStateContainer';
 
 export type TestRisk = 'high' | 'medium' | 'low' | undefined;
+
+export type ScreenshotFileNames = 'landingpage_new_account' | 'landingpage_restore_account';
