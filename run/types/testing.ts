@@ -373,3 +373,5 @@ export type Id =
   | 'network.loki.messenger:id/emptyStateContainer';
 
 export type TestRisk = 'high' | 'medium' | 'low' | undefined;
+
+export type ScreenshotFileNames = 'landingpage_new_account' | 'landingpage_restore_account';
