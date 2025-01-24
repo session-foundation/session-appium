@@ -35,6 +35,7 @@ function start_simulator() {
 
 function start_appium_server() {
         echo "Starting Appium server..."
+        cd forked-session-appium
         ./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --allow-cors
 }
 

@@ -176,6 +176,11 @@ jobs:
           git status
           touch yarn.lock
           yarn install --immutable
+      - name: Start Appium server
+        shell: bash
+        run: |
+          source ./scripts/ci.sh
+          start_appium_server
       - name: Build the iOS tests
         run: |
           cd forked-session-appium
@@ -186,11 +191,6 @@ jobs:
           source ./scripts/ci-ios.sh
           create_simulator
           start_simulator
-      - name: Start Appium server
-        shell: bash
-        run: |
-          source ./scripts/ci.sh
-          start_appium_server
       - name: List all tests
         run: |
           cd forked-session-appium
