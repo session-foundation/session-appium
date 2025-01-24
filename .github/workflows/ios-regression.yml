@@ -180,7 +180,8 @@ jobs:
         shell: bash
         run: |
           source ./scripts/ci.sh
-          start_appium_server
+          cd forked-session-appium
+          yarn start-server
       - name: Build the iOS tests
         run: |
           cd forked-session-appium
