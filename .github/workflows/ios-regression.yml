@@ -179,7 +179,9 @@ jobs:
       - name: Start Appium server
         run: |
           cd forked-session-appium
-          yarn start-server
+          pwd
+          ls -lah
+          yarn start-server --verbose
       - name: Build the iOS tests
         run: |
           cd forked-session-appium
