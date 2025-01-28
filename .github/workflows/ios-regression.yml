@@ -179,9 +179,7 @@ jobs:
       - name: Start Appium server
         run: |
           cd forked-session-appium
-          pwd
-          ls -lah
-          yarn start-server --verbose
+          yarn "./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --allow-cors"
       - name: Build the iOS tests
         run: |
           cd forked-session-appium
