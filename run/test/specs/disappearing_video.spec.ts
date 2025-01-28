@@ -1,6 +1,5 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
-import { DownloadMediaButton } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -24,8 +23,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   await device1.onIOS().sendVideoiOS(testMessage);
   await device1.onAndroid().sendVideoAndroid();
-  await device2.clickOnByAccessibilityID('Untrusted attachment message', 5000);
-  await device2.clickOnElementAll(new DownloadMediaButton(device2));
+  await device2.trustAttachments(USERNAME.ALICE);
   await device2.onIOS().waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',

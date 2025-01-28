@@ -61,6 +61,10 @@ async function sendDocumentGroupAndroid(platform: SupportedPlatformsType) {
   await device1.sendDocument();
   // Reply to message
   await sleepFor(1000);
+  await Promise.all([
+    device2.onAndroid().trustAttachments(testGroupName),
+    device3.onAndroid().trustAttachments(testGroupName),
+  ]);
   // Check document appears in both device 2 and 3's screen
   await Promise.all([
     device2.waitForTextElementToBePresent({

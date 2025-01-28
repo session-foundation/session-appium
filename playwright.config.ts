@@ -15,7 +15,7 @@ require('source-map-support').install = () => {};
 
 export default defineConfig({
   timeout: 480000,
-  globalTimeout: 10800000,
+  globalTimeout: 12800000, // extends timeout to run full suite with 3 retries
   reporter: [useSessionReporter ? ['./sessionReporter.ts'] : ['list']],
   testDir: './run/test/specs',
   testIgnore: '*.js',

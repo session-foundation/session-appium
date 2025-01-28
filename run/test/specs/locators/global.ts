@@ -76,3 +76,20 @@ export class EnableLinkPreviewsModalButton extends LocatorsInterface {
     } as const;
   }
 }
+
+export class Contact extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Contact',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Contact',
+        } as const;
+    }
+  }
+}
