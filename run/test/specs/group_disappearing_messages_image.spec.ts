@@ -36,9 +36,9 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
     [device2, device3].map(device =>
       device.waitForTextElementToBePresent({
         strategy: 'accessibility id',
-        selector: selector,
+        selector,
         maxWait: 1000,
-        text: text,
+        text,
       })
     )
   );
@@ -48,9 +48,9 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
     [device1, device2, device3].map(device =>
       device.hasElementBeenDeleted({
         strategy: 'accessibility id',
-        selector: selector,
+        selector,
         maxWait: 1000,
-        text: text,
+        text,
       })
     )
   );
