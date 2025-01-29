@@ -1,7 +1,7 @@
 import { StrategyExtractionObj } from '../../../types/testing';
 import { LocatorsInterface } from './index';
 
-export class EmpytLandingPage extends LocatorsInterface {
+export class EmptyLandingPage extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
