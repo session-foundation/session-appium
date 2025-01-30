@@ -6,32 +6,46 @@ SIMULATOR_OS="18.2"
 
 
 # This script is used to run the CI on iOS
-function create_simulator() {
-    for i in {1..12}
-    do    
-        if ! xcrun simctl list devices | grep "$SIMULATOR_NAME"; then
-            echo "Creating simulator..."
-            xcrun simctl create "$SIMULATOR_NAME" "$SIMULATOR_DEVICE" "com.apple.CoreSimulator.SimRuntime.iOS-${SIMULATOR_OS//./-}"
+function create_simulators() {
+    echo "Creating iOS simulators from environment variables..."
+
+    for i in {1..12}; do
+        env_var="IOS_${i}_SIMULATOR"
+        simulator_udid=${!env_var}  # Fetch the value of the env var
+
+        if [[ -n "$simulator_udid" ]]; then
+            # Check if the simulator already exists
+            if xcrun simctl list devices | grep -q "$simulator_udid"; then
+                echo "Simulator $simulator_udid already exists. Skipping creation."
+            else
+                echo "Creating simulator: $simulator_udid"
+                xcrun simctl create "iPhone-Sim-$i" "iPhone 15 Pro Max" "com.apple.CoreSimulator.SimRuntime.iOS-17-2"
+            fi
         else
-            echo "Simulator $SIMULATOR_NAME already exists."
+            echo "Skipping IOS_${i}_SIMULATOR (not set)"
         fi
     done
 }
 
-function start_simulator() {
-    for i in {1..12}
-    do
-        echo "Checking if simulator is already running..."
-        if xcrun simctl list devices | grep "$SIMULATOR_NAME" | grep -q "Booted"; then
-            echo "Simulator $SIMULATOR_NAME is already running."
-            continue
+function start_simulators_from_env() {
+    echo "Starting iOS simulators from environment variables..."
+
+    for i in {1..12}; do
+        env_var="IOS_${i}_SIMULATOR"
+        simulator_udid=${!env_var}  # Fetch the value of the env var
+
+        if [[ -n "$simulator_udid" ]]; then
+            echo "Booting simulator: $simulator_udid"
+            xcrun simctl boot "$simulator_udid"
+        else
+            echo "Skipping IOS_${i}_SIMULATOR (not set)"
         fi
-        echo "Starting simulator...$SIMULATOR_NAME"
-        xcrun simctl boot "$SIMULATOR_NAME"
-        open -a Simulator
-        sleep 20
     done
+
+    echo "Opening iOS Simulator app..."
+    open -a Simulator
 }
+
 
 function start_appium_server() {
         echo "Starting Appium server..."
