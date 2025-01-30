@@ -70,12 +70,12 @@ export class EnterAccountID extends LocatorsInterface {
         return {
           strategy: 'id',
           selector: 'Session id input box',
-        };
+        } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Session id input box',
-        };
+        } as const;
     }
   }
 }
