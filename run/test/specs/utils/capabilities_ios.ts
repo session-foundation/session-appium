@@ -33,7 +33,7 @@ export type CapabilitiesIndexType = IntRange<0, typeof MAX_CAPABILITIES_INDEX>;
 export function capabilityIsValid(
   capabilitiesIndex: number
 ): capabilitiesIndex is CapabilitiesIndexType {
-  if (capabilitiesIndex < 0 || capabilitiesIndex > MAX_CAPABILITIES_INDEX) {
+  if (capabilitiesIndex < 0 || capabilitiesIndex >= MAX_CAPABILITIES_INDEX) {
     return false;
   }
   return true;
