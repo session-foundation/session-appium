@@ -10,21 +10,23 @@ NUMBER_WORDS=("FIRST" "SECOND" "THIRD" "FOURTH" "FIFTH" "SIXTH" "SEVENTH" "EIGHT
 function create_simulators() {
     echo "Checking if environment variables are available..."
     printenv | grep IOS_
-    
+
     echo "Creating iOS simulators from environment variables..."
 
     for i in {1..12}; do
-        env_var="IOS_${i}_SIMULATOR"
-        simulator_udid=${!env_var}  # Fetch the value of the env var
-        simulator_label=${NUMBER_WORDS[$((i - 1))]}  # Convert number to word
+        simulator_label=${NUMBER_WORDS[$((i - 1))]}  # Convert index to word
+        env_var="IOS_${simulator_label}_SIMULATOR"   # Correct variable name
+        simulator_udid=$(printenv "$env_var")  # Fetch the value of the env var
 
         if [[ -n "$simulator_udid" ]]; then
             # Check if the simulator already exists
             if xcrun simctl list devices | grep -q "$simulator_udid"; then
                 echo "$simulator_label simulator ($simulator_udid) already exists. Skipping creation."
             else
-                echo "Creating $simulator_label simulator: $simulator_udid"
-                xcrun simctl create "iPhone-$simulator_label" "$SIMULATOR_DEVICE" "com.apple.CoreSimulator.SimRuntime.iOS-$SIMULATOR_OS"
+                echo "Creating $simulator_label simulator..."
+                new_udid=$(xcrun simctl create "iPhone-$simulator_label" "$SIMULATOR_DEVICE" "com.apple.CoreSimulator.SimRuntime.iOS-$SIMULATOR_OS")
+                export IOS_${simulator_label}_SIMULATOR="$new_udid"  # Store the new UDID
+                echo "Created $simulator_label simulator with UDID: $new_udid"
             fi
         else
             echo "Skipping $simulator_label simulator (not set)"
@@ -37,9 +39,9 @@ function start_simulators_from_env() {
     echo "Starting iOS simulators from environment variables..."
 
     for i in {1..12}; do
-        env_var="IOS_${i}_SIMULATOR"
-        simulator_udid=${!env_var}  # Fetch the value of the env var
-        simulator_label=${NUMBER_WORDS[$((i - 1))]}  # Convert number to word
+        simulator_label=${NUMBER_WORDS[$((i - 1))]}
+        env_var="IOS_${simulator_label}_SIMULATOR"
+        simulator_udid=$(printenv "$env_var")
 
         if [[ -n "$simulator_udid" ]]; then
             echo "Booting $simulator_label simulator: $simulator_udid"
@@ -65,9 +67,9 @@ function stop_simulators_from_env() {
     echo "Stopping iOS simulators from environment variables..."
 
     for i in {1..12}; do
-        env_var="IOS_${i}_SIMULATOR"
-        simulator_udid=${!env_var}  # Fetch the value of the env var
-        simulator_label=${NUMBER_WORDS[$((i - 1))]}  # Convert number to word
+        simulator_label=${NUMBER_WORDS[$((i - 1))]}
+        env_var="IOS_${simulator_label}_SIMULATOR"
+        simulator_udid=$(printenv "$env_var")
 
         if [[ -n "$simulator_udid" ]]; then
             # Check if the simulator is running
