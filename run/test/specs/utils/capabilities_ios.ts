@@ -27,7 +27,7 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   // "appium:isHeadless": true,
 } as AppiumXCUITestCapabilities;
 
-const MAX_CAPABILITIES_INDEX = 12;
+const MAX_CAPABILITIES_INDEX = 11;
 export type CapabilitiesIndexType = IntRange<0, typeof MAX_CAPABILITIES_INDEX>;
 
 export function capabilityIsValid(
@@ -81,23 +81,29 @@ const capabilities = emulatorUUIDs.map((udid, index) => ({
 }));
 
 export function getIosCapabilities(capabilitiesIndex: CapabilitiesIndexType): W3CCapabilities {
-  console.log(`Total number of simulators found: ${emulatorUUIDs.length}`);
-  console.log(`MAX_CAPABILITIES_INDEX: ${MAX_CAPABILITIES_INDEX}`);
-  console.log(`Capabilities array length: ${capabilities.length}`);
+  console.log(`getIosCapabilities called with index: ${capabilitiesIndex}`);
+  console.log(`Total capabilities available: ${capabilities.length}`);
+
   if (capabilitiesIndex >= capabilities.length) {
+    console.error(`ERROR: Capabilities index ${capabilitiesIndex} is out of range!`);
     throw new Error(`Asked invalid ios cap index: ${capabilitiesIndex}`);
   }
 
-  const caps = capabilities[capabilitiesIndex];
-
   return {
     firstMatch: [{}],
-    alwaysMatch: { ...caps },
+    alwaysMatch: { ...capabilities[capabilitiesIndex] },
   };
 }
 
 export function getCapabilitiesForWorker(workerId: number): CustomW3CCapabilities {
-  const emulator = capabilities[workerId % capabilities.length];
+  console.log(`getCapabilitiesForWorker called with workerId: ${workerId}`);
+  console.log(`Using modulo calculation: ${workerId % capabilities.length}`);
+
+  const index = workerId % capabilities.length; // Ensure index is valid
+  console.log(`Final computed capabilities index: ${index}`);
+
+  const emulator = capabilities[index];
+
   return {
     ...sharediOSCapabilities,
     'appium:udid': emulator['appium:udid'],
