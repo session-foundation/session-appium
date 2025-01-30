@@ -48,5 +48,3 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   // Great success
   await closeApp(device);
 }
-
-// TO DO - ADD TEST TO TURN OFF DISAPPEARING MESSAGES
