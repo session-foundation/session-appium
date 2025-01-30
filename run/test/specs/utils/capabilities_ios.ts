@@ -27,7 +27,7 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   // "appium:isHeadless": true,
 } as AppiumXCUITestCapabilities;
 
-const MAX_CAPABILITIES_INDEX = 11;
+const MAX_CAPABILITIES_INDEX = 12;
 export type CapabilitiesIndexType = IntRange<0, typeof MAX_CAPABILITIES_INDEX>;
 
 export function capabilityIsValid(
