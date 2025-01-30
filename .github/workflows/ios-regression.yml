@@ -223,4 +223,4 @@ jobs:
         shell: bash
         run: |
           source ./scripts/ci-ios.sh
-          stop_simulator
+          stop_simulators_from_env
