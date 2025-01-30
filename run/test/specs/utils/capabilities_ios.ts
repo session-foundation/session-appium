@@ -34,10 +34,6 @@ export function capabilityIsValid(
   capabilitiesIndex: number
 ): capabilitiesIndex is CapabilitiesIndexType {
   if (capabilitiesIndex < 0 || capabilitiesIndex >= capabilities.length) {
-    console.log(`Total number of simulators found: ${emulatorUUIDs.length}`);
-    console.log(`MAX_CAPABILITIES_INDEX: ${MAX_CAPABILITIES_INDEX}`);
-    console.log(`Capabilities array length: ${capabilities.length}`);
-
     return false;
   }
   return true;
@@ -85,6 +81,9 @@ const capabilities = emulatorUUIDs.map((udid, index) => ({
 }));
 
 export function getIosCapabilities(capabilitiesIndex: CapabilitiesIndexType): W3CCapabilities {
+  console.log(`Total number of simulators found: ${emulatorUUIDs.length}`);
+  console.log(`MAX_CAPABILITIES_INDEX: ${MAX_CAPABILITIES_INDEX}`);
+  console.log(`Capabilities array length: ${capabilities.length}`);
   if (capabilitiesIndex >= capabilities.length) {
     throw new Error(`Asked invalid ios cap index: ${capabilitiesIndex}`);
   }
