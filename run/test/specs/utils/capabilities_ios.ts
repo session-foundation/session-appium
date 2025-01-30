@@ -34,6 +34,10 @@ export function capabilityIsValid(
   capabilitiesIndex: number
 ): capabilitiesIndex is CapabilitiesIndexType {
   if (capabilitiesIndex < 0 || capabilitiesIndex >= capabilities.length) {
+    console.log(`Total number of simulators found: ${emulatorUUIDs.length}`);
+    console.log(`MAX_CAPABILITIES_INDEX: ${MAX_CAPABILITIES_INDEX}`);
+    console.log(`Capabilities array length: ${capabilities.length}`);
+
     return false;
   }
   return true;
