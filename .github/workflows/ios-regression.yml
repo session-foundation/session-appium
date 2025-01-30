@@ -233,8 +233,8 @@ jobs:
         shell: bash
         run: |
           source ./scripts/ci-ios.sh
-          create_simulator
-          start_simulator
+          create_simulators
+          start_simulators_from_env
       - name: List all tests
         run: |
           cd forked-session-appium
