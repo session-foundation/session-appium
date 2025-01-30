@@ -8,6 +8,9 @@ NUMBER_WORDS=("FIRST" "SECOND" "THIRD" "FOURTH" "FIFTH" "SIXTH" "SEVENTH" "EIGHT
 
 # Function to create simulators only if they don't exist
 function create_simulators() {
+    echo "Checking if environment variables are available..."
+    printenv | grep IOS_
+    
     echo "Creating iOS simulators from environment variables..."
 
     for i in {1..12}; do
