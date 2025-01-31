@@ -374,4 +374,4 @@ export type Id =
 
 export type TestRisk = 'high' | 'medium' | 'low' | undefined;
 
-export type ScreenshotFileNames = 'landingpage_new_account' | 'landingpage_restore_account';
+export type ElementStates = 'new_account' | 'restore_account';

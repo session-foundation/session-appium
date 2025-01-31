@@ -1,7 +1,8 @@
 import { StrategyExtractionObj } from '../../../types/testing';
-import { LocatorsInterface } from './index';
+import { LocatorsInterface, LocatorsInterfaceScreenshot } from './index';
+import * as path from 'path';
 
-export class EmptyLandingPage extends LocatorsInterface {
+export class EmptyLandingPage extends LocatorsInterfaceScreenshot {
   public build() {
     switch (this.platform) {
       case 'android':
@@ -15,6 +16,10 @@ export class EmptyLandingPage extends LocatorsInterface {
           selector: 'Empty list',
         } as const;
     }
+  }
+  // The landing page has two different states depending on the onboarding flow taken
+  public screenshotFileName(state: 'new_account' | 'restore_account') {
+    return path.join('run', 'screenshots', `${this.platform}`, `landingpage_${state}.png`);
   }
 }
 export class ConversationItem extends LocatorsInterface {
