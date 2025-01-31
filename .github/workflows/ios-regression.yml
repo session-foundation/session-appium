@@ -95,9 +95,9 @@ jobs:
     env:
       IOS_APP_PATH_PREFIX: '/Users/thedebuggernaut/Desktop/ios/16-01-25/Session.app'
       ANDROID_APK: '/Users/thedebuggernaut/Desktop/android/session-android-20250108T233657Z-d001f8fb8-universal/session-1.20.8-universal.apk'
-      PRINT_FAILED_TEST_LOGS: 1
-      PRINT_ONGOING_TEST_LOGS: 0
-      PLAYWRIGHT_RETRIES_COUNT: 0
+      PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
+      PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
+      PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
       PLAYWRIGHT_REPEAT_COUNT: 1
       PLAYWRIGHT_WORKERS_COUNT: 3
       SDK_MANAGER_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/cmdline-tools/latest/bin/sdkmanager'
