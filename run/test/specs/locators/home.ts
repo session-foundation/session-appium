@@ -19,7 +19,7 @@ export class EmptyLandingPage extends LocatorsInterfaceScreenshot {
   }
   // The landing page has two different states depending on the onboarding flow taken
   public screenshotFileName(state: 'new_account' | 'restore_account') {
-    return path.join('run', 'screenshots', `${this.platform}`, `landingpage_${state}.png`);
+    return path.join('run', 'screenshots', this.platform, `landingpage_${state}.png`);
   }
 }
 export class ConversationItem extends LocatorsInterface {
