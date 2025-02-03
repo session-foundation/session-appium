@@ -34,7 +34,6 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
     ['1:1', `Disappear after ${mode} option`, time],
     device2
   );
-  // Get control message based on key from json file
   await checkDisappearingControlMessage(
     platform,
     userA,

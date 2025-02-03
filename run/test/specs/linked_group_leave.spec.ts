@@ -39,8 +39,8 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
     .toString();
 
   await Promise.all([
-    device2.waitForControlMessageToBePresent(groupMemberLeft),
     device1.waitForControlMessageToBePresent(groupMemberLeft),
+    device2.waitForControlMessageToBePresent(groupMemberLeft),
   ]);
 
   await closeApp(device1, device2, device3, device4);

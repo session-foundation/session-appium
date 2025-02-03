@@ -1,6 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
-import { DownloadMediaButton } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -27,8 +26,7 @@ async function disappearingVoiceMessage1o1Ios(platform: SupportedPlatformsType) 
     strategy: 'accessibility id',
     selector: 'Voice message',
   });
-  await device2.clickOnByAccessibilityID('Untrusted attachment message', 5000);
-  await device2.clickOnElementAll(new DownloadMediaButton(device2));
+  await device2.trustAttachments(USERNAME.ALICE);
   await sleepFor(30000);
   await Promise.all([
     device1.hasElementBeenDeleted({
@@ -55,20 +53,19 @@ async function disappearingVoiceMessage1o1Android(platform: SupportedPlatformsTy
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   await device1.sendVoiceMessage();
-  await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Voice message',
-  });
-  await device2.clickOnByAccessibilityID('Untrusted attachment message');
-  await device2.clickOnElementAll(new DownloadMediaButton(device2));
+  await device2.trustAttachments(USERNAME.ALICE);
   await sleepFor(30000);
-  await device1.hasElementBeenDeleted({
-    strategy: 'accessibility id',
-    selector: 'Voice message',
-  });
-  await device2.hasElementBeenDeleted({
-    strategy: 'accessibility id',
-    selector: 'Voice message',
-  });
+  await Promise.all([
+    device1.hasElementBeenDeleted({
+      strategy: 'accessibility id',
+      selector: 'Voice message',
+      maxWait: 1000,
+    }),
+    device2.hasElementBeenDeleted({
+      strategy: 'accessibility id',
+      selector: 'Voice message',
+      maxWait: 1000,
+    }),
+  ]);
   await closeApp(device1, device2);
 }
