@@ -326,13 +326,6 @@ export type AccessibilityId =
   | 'Privacy Policy'
   | 'TabBarItemTitle'
   | 'URL'
-  | 'Session | Send Messages, Not Metadata. | Private Messenger'
-  | `${USERNAME}`
-  | 'Invite button'
-  | 'Confirm invite button'
-  | 'Edit'
-  | 'Edit group name'
-  | 'Invite contacts button'
   | 'Voice and Video Calls - Switch';
 
 export type Id =
@@ -369,24 +362,13 @@ export type Id =
   | 'Delete'
   | 'android:id/content_preview_text'
   | 'network.loki.messenger:id/search_result_title'
-  | 'Error message'
-  | 'Enter display name'
-  | 'Session id input box'
   | 'com.android.chrome:id/url_bar'
   | 'Terms of Service'
   | 'Privacy Policy'
   | 'com.android.chrome:id/signin_fre_dismiss_button'
   | 'com.android.chrome:id/negative_button'
-  | 'Recovery phrase input'
   | 'network.loki.messenger:id/back_button'
   | 'Quit'
-  | 'Group name input'
-  | 'Contact'
-  | 'Create group'
-  | 'Empty list'
-  | 'Invite button'
-  | 'Confirm invite button'
-  | 'Navigate back'
-  | 'Close button'
-  | 'Group name';
+  | 'network.loki.messenger:id/singleModeImageView';
+
 export type TestRisk = 'high' | 'medium' | 'low' | undefined;

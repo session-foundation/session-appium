@@ -9,17 +9,17 @@ import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/ope
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 import { testCommunityLink, testCommunityName } from './../../constants/community';
 
-iosIt('Disappearing community invite message 1:1', 'low', disappearingCommunityInviteMessageIos);
+iosIt('Disappearing community invite message 1o1', 'low', disappearingCommunityInviteMessage1o1Ios);
 androidIt(
-  'Disappearing community invite message 1:1',
+  'Disappearing community invite message 1o1',
   'low',
-  disappearingCommunityInviteMessageAndroid
+  disappearingCommunityInviteMessage1o1Android
 );
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 
-async function disappearingCommunityInviteMessageIos(platform: SupportedPlatformsType) {
+async function disappearingCommunityInviteMessage1o1Ios(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and user B
   const [userA, userB] = await Promise.all([
@@ -39,11 +39,7 @@ async function disappearingCommunityInviteMessageIos(platform: SupportedPlatform
     selector: 'Contact',
     text: userB.userName,
   });
-  // Same ID as the button
-  await device1.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Invite contacts button',
-  });
+  await device1.clickOnByAccessibilityID('Done');
   // Check device 2 for invitation from user A
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
@@ -69,7 +65,7 @@ async function disappearingCommunityInviteMessageIos(platform: SupportedPlatform
   await closeApp(device1, device2);
 }
 
-async function disappearingCommunityInviteMessageAndroid(platform: SupportedPlatformsType) {
+async function disappearingCommunityInviteMessage1o1Android(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and user B
   const [userA, userB] = await Promise.all([

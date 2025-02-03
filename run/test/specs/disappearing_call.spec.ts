@@ -120,7 +120,7 @@ async function disappearingCallMessage1o1Android(platform: SupportedPlatformsTyp
     'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   );
 
-  await device1.navigateBack();
+  await device1.clickOnByAccessibilityID('Navigate up');
   // Enable voice calls on device 2 for User B
   await device2.clickOnByAccessibilityID('Call');
   // Enabled voice calls in privacy settings
@@ -155,7 +155,7 @@ async function disappearingCallMessage1o1Android(platform: SupportedPlatformsTyp
   await device2.clickOnElementById(
     'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   );
-  await device2.navigateBack();
+  await device2.clickOnByAccessibilityID('Navigate up');
   // Make call on device 1 (userA)
   await device1.clickOnByAccessibilityID('Call');
   // Answer call on device 2

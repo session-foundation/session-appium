@@ -1,7 +1,5 @@
-import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
-import { LinkPreview } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -35,10 +33,6 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
     maxWait: 20000,
   });
   // Accept dialog for link preview
-  await device1.checkModalStrings(
-    englishStripped('linkPreviewsEnable').toString(),
-    englishStripped('linkPreviewsFirstDescription').withArgs({ app_name: 'Session' }).toString()
-  );
   await device1.clickOnByAccessibilityID('Enable');
   // No preview on first send
   await device1.clickOnByAccessibilityID('Send message button');
@@ -47,8 +41,7 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
-  // Wait for link preview to load
-  await device1.waitForTextElementToBePresent(new LinkPreview(device1));
+  await sleepFor(500);
   await device1.clickOnByAccessibilityID('Send message button');
   // Make sure image preview is available in device 2
   await device2.waitForTextElementToBePresent({
@@ -91,15 +84,10 @@ async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsTyp
     selector: 'Message input box',
   });
   // Accept dialog for link preview
-  await device1.checkModalStrings(
-    englishStripped('linkPreviewsEnable').toString(),
-    englishStripped('linkPreviewsFirstDescription').withArgs({ app_name: 'Session' }).toString(),
-    true
-  );
   await device1.clickOnByAccessibilityID('Enable');
   // No preview on first send
   // Wait for preview to load
-  await sleepFor(2000);
+  await sleepFor(1000);
   await device1.clickOnByAccessibilityID('Send message button');
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',

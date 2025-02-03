@@ -1,8 +1,6 @@
 import { englishStripped } from '../../../localizer/i18n/localizedString';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { Group, GROUPNAME, User } from '../../../types/testing';
-import { Contact } from '../locators/global';
-import { CreateGroupButton, GroupNameInput } from '../locators/groups';
 import { newContact } from './create_contact';
 import { SupportedPlatformsType } from './open_app';
 
@@ -36,12 +34,12 @@ export const createGroup = async (
   // Select Closed Group option
   await device1.clickOnByAccessibilityID('Create group');
   // Type in group name
-  await device1.inputText(userName, new GroupNameInput(device1));
+  await device1.inputText(userName, { strategy: 'accessibility id', selector: 'Group name input' });
   // Select User B and User C
-  await device1.clickOnElementAll({ ...new Contact(device1).build(), text: userTwo.userName });
-  await device1.clickOnElementAll({ ...new Contact(device1).build(), text: userThree.userName });
+  await device1.selectByText('Contact', userTwo.userName);
+  await device1.selectByText('Contact', userThree.userName);
   // Select tick
-  await device1.clickOnElementAll(new CreateGroupButton(device1));
+  await device1.clickOnByAccessibilityID('Create group');
   // Check for empty state on ios
   // Enter group chat on device 2 and 3
   await Promise.all([
@@ -56,26 +54,39 @@ export const createGroup = async (
       text: group.userName,
     }),
   ]);
-
-  await Promise.all([
-    // Need to add in function that sorts by pubkey
-    // device1.waitForControlMessageToBePresent(
-    //   englishStripped(`groupMemberNewTwo`)
-    //     .withArgs({ name: userTwo.userName, other_name: userThree.userName })
-    //     .toString()
-    // ),
-    device2.waitForControlMessageToBePresent(
-      englishStripped('groupInviteYouAndOtherNew')
-        .withArgs({ other_name: userThree.userName })
-        .toString()
-    ),
-    device3.waitForControlMessageToBePresent(
-      englishStripped('groupInviteYouAndOtherNew')
-        .withArgs({ other_name: userTwo.userName })
-        .toString()
-    ),
-  ]);
-
+  if (platform === 'ios') {
+    await device1.waitForLoadingOnboarding();
+    await Promise.all([
+      device1.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Empty list',
+        maxWait: 5000,
+      }),
+      device2.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Empty list',
+        maxWait: 5000,
+      }),
+      device3.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Empty list',
+        maxWait: 5000,
+      }),
+    ]);
+  }
+  // TODO: need to change once Android have updated their control messages
+  const groupNoMessages = englishStripped('groupNoMessages')
+    .withArgs({ group_name: group.userName })
+    .toString();
+  if (platform === 'android') {
+    await device1.waitForControlMessageToBePresent(groupNoMessages);
+    const legacyGroupMemberYouNew = englishStripped('legacyGroupMemberYouNew').toString();
+    // Check control message 'You joined the group'
+    await Promise.all([
+      device2.waitForControlMessageToBePresent(legacyGroupMemberYouNew),
+      device3.waitForControlMessageToBePresent(legacyGroupMemberYouNew),
+    ]);
+  }
   // Send message from User A to group to verify all working
   await device1.sendMessage(userAMessage);
   // Did the other devices receive UserA's message?

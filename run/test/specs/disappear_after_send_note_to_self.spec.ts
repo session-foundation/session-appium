@@ -1,6 +1,5 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
-import { EnterAccountID } from './locators/start_conversation';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
@@ -17,7 +16,10 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   // Send message to self to bring up Note to Self conversation
   await device.clickOnByAccessibilityID('New conversation button');
   await device.clickOnByAccessibilityID('New direct message');
-  await device.inputText(userA.accountID, new EnterAccountID(device));
+  await device.inputText(userA.accountID, {
+    strategy: 'accessibility id',
+    selector: 'Session id input box',
+  });
   await device.scrollDown();
   await device.clickOnByAccessibilityID('Next');
   await device.inputText('Creating note to self', {
@@ -48,3 +50,5 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   // Great success
   await closeApp(device);
 }
+
+// TO DO - ADD TEST TO TURN OFF DISAPPEARING MESSAGES

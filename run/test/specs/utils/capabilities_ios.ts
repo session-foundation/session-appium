@@ -27,13 +27,13 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   // "appium:isHeadless": true,
 } as AppiumXCUITestCapabilities;
 
-const MAX_CAPABILITIES_INDEX = 11;
+const MAX_CAPABILITIES_INDEX = 8;
 export type CapabilitiesIndexType = IntRange<0, typeof MAX_CAPABILITIES_INDEX>;
 
 export function capabilityIsValid(
   capabilitiesIndex: number
 ): capabilitiesIndex is CapabilitiesIndexType {
-  if (capabilitiesIndex < 0 || capabilitiesIndex >= capabilities.length) {
+  if (capabilitiesIndex < 0 || capabilitiesIndex > MAX_CAPABILITIES_INDEX) {
     return false;
   }
   return true;
@@ -54,10 +54,6 @@ function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
     'IOS_SIXTH_SIMULATOR',
     'IOS_SEVENTH_SIMULATOR',
     'IOS_EIGHTH_SIMULATOR',
-    'IOS_NINTH_SIMULATOR',
-    'IOS_TENTH_SIMULATOR',
-    'IOS_ELEVENTH_SIMULATOR',
-    'IOS_TWELFTH_SIMULATOR',
   ];
 
   const envVar = envVars[index];
@@ -70,7 +66,7 @@ function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
   return uuid;
 }
 
-const emulatorUUIDs = Array.from({ length: 12 }, (_, index) =>
+const emulatorUUIDs = Array.from({ length: 8 }, (_, index) =>
   getIOSSimulatorUUIDFromEnv(index as CapabilitiesIndexType)
 );
 
@@ -81,29 +77,20 @@ const capabilities = emulatorUUIDs.map((udid, index) => ({
 }));
 
 export function getIosCapabilities(capabilitiesIndex: CapabilitiesIndexType): W3CCapabilities {
-  console.log(`getIosCapabilities called with index: ${capabilitiesIndex}`);
-  console.log(`Total capabilities available: ${capabilities.length}`);
-
   if (capabilitiesIndex >= capabilities.length) {
-    console.error(`ERROR: Capabilities index ${capabilitiesIndex} is out of range!`);
     throw new Error(`Asked invalid ios cap index: ${capabilitiesIndex}`);
   }
 
+  const caps = capabilities[capabilitiesIndex];
+
   return {
     firstMatch: [{}],
-    alwaysMatch: { ...capabilities[capabilitiesIndex] },
+    alwaysMatch: { ...caps },
   };
 }
 
 export function getCapabilitiesForWorker(workerId: number): CustomW3CCapabilities {
-  console.log(`getCapabilitiesForWorker called with workerId: ${workerId}`);
-  console.log(`Using modulo calculation: ${workerId % capabilities.length}`);
-
-  const index = workerId % capabilities.length; // Ensure index is valid
-  console.log(`Final computed capabilities index: ${index}`);
-
-  const emulator = capabilities[index];
-
+  const emulator = capabilities[workerId % capabilities.length];
   return {
     ...sharediOSCapabilities,
     'appium:udid': emulator['appium:udid'],
