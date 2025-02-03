@@ -144,12 +144,7 @@ jobs:
           repository: ${{ github.event.inputs.APPIUM_REPO }}
           ref: ${{ github.event.inputs.BRANCH_TO_CHECKOUT }}
           path: 'forked-session-appium'
-
-      - name: Install LFS and pull files
-        run: |
-          cd forked-session-appium
-          git lfs install
-          git lfs pull
+          lfs: true
 
       - uses: actions/setup-node@v4
         with:
