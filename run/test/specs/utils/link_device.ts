@@ -3,7 +3,6 @@ import { newUser } from './create_account';
 
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { USERNAME } from '../../../types/testing';
-import { DisplayNameInput, SeedPhraseInput } from '../locators/onboarding';
 
 export const linkedDevice = async (
   device1: DeviceWrapper,
@@ -15,7 +14,10 @@ export const linkedDevice = async (
 
   await device2.clickOnByAccessibilityID('Restore your session button');
   // Enter recovery phrase into input box
-  await device2.inputText(user.recoveryPhrase, new SeedPhraseInput(device2));
+  await device2.inputText(user.recoveryPhrase, {
+    strategy: 'accessibility id',
+    selector: device2.isAndroid() ? 'Recovery phrase input' : 'Recovery password input',
+  });
 
   // Wait for continue button to become active
   await sleepFor(500);
@@ -28,11 +30,15 @@ export const linkedDevice = async (
   // Wait for loading animation to look for display name
   await device2.waitForLoadingOnboarding();
   const displayName = await device2.doesElementExist({
-    ...new DisplayNameInput(device2).build(),
-    maxWait: 500,
+    strategy: 'accessibility id',
+    selector: 'Enter display name',
+    maxWait: 1000,
   });
   if (displayName) {
-    await device2.inputText(userName, new DisplayNameInput(device2));
+    await device2.inputText(userName, {
+      strategy: 'accessibility id',
+      selector: 'Enter display name',
+    });
     await device2.clickOnByAccessibilityID('Continue');
   } else {
     console.info('Display name found: Loading account');
@@ -44,7 +50,6 @@ export const linkedDevice = async (
   await device2.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Continue',
-    maxWait: 1000,
   });
   // Check that button was clicked
   await device2.waitForTextElementToBePresent({

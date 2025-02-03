@@ -1,7 +1,6 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { EnterAccountID } from './locators/start_conversation';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
@@ -21,7 +20,10 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   // Select direct message option
   await device1.clickOnByAccessibilityID('New direct message');
   // Enter User B's session ID into input box
-  await device1.inputText(userB.accountID, new EnterAccountID(device1));
+  await device1.inputText(userB.accountID, {
+    strategy: 'accessibility id',
+    selector: 'Session id input box',
+  });
   // Click next
   await device1.scrollDown();
   await device1.clickOnByAccessibilityID('Next');

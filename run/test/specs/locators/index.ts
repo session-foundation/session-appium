@@ -80,11 +80,11 @@ export class EditGroupName extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Username',
+          selector: 'Group name text field',
         } as const;
       case 'android':
         return {
-          strategy: 'id',
+          strategy: 'accessibility id',
           selector: 'Group name',
         } as const;
     }
@@ -237,7 +237,7 @@ export class ChangeProfilePictureButton extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Upload',
+          selector: 'Image picker',
         };
     }
   }
@@ -296,13 +296,13 @@ export class InviteContactsButton extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'Invite button',
+          strategy: 'accessibility id',
+          selector: 'Invite Contacts',
         };
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Invite button',
+          selector: 'Invite Contacts',
         };
     }
   }
@@ -355,7 +355,7 @@ export class DeleteMessageLocally extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Delete on this device only',
+          selector: 'Delete for me',
         };
     }
   }
@@ -445,7 +445,7 @@ export class DeclineMessageRequestButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'accessibility id',
-          selector: 'Delete message request',
+          selector: 'Decline message request',
         };
       case 'ios':
         return {
@@ -525,35 +525,6 @@ export class SetDisappearMessagesButton extends LocatorsInterface {
     }
   }
 }
-
-export class LinkPreview extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        throw new Error(`No such element on Android`);
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Session | Send Messages, Not Metadata. | Private Messenger',
-        } as const;
-    }
-  }
-}
-
-export class LinkPreviewMessage extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: 'network.loki.messenger:id/linkPreviewView',
-        };
-      case 'ios':
-        throw new Error(`No such element on iOS`);
-    }
-  }
-}
-
 // TODO update StrategyExtractionObj to include Locator class
 // export class PendingMessageRequestControlMessage extends LocatorsInterface {
 //   public build(): StrategyExtractionObj {

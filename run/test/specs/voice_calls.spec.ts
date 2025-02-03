@@ -22,7 +22,6 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device1.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Call',
-    maxWait: 1000,
   });
   // Create contact
   await device2.clickOnByAccessibilityID('Message requests banner');
@@ -37,6 +36,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   // "messageRequestsAccepted": "Your message request has been accepted.",
   const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
   await device1.waitForControlMessageToBePresent(messageRequestsAccepted);
+  await device1.waitForControlMessageToBePresent('Your message request has been accepted.');
   // Phone icon should appear now that conversation has been approved
   await device1.clickOnByAccessibilityID('Call');
   // Enabled voice calls in privacy settings
@@ -62,13 +62,14 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   );
   await device1.clickOnByAccessibilityID('Continue');
   // Navigate back to conversation
-  await device1.closeScreen();
+  await device1.clickOnElementAll(new ExitUserProfile(device1));
   await device1.clickOnByAccessibilityID('Call');
   // Need to allow microphone access
   await device1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
   // Call hasn't connected until microphone access is granted
   await device1.clickOnByAccessibilityID('Call');
-  // No test tags on modal as of yet
+  // Enable voice calls on device 2 for User B
+  // Need to navigate out of conversation for user to have full contact actions (calls icon, etc)
   // await device2.checkModalStrings(
   //   englishStripped('callsMissedCallFrom').withArgs({ name: userA.userName }).toString(),
   //   englishStripped('callsYouMissedCallPermissions').withArgs({ name: userA.userName }).toString()
@@ -99,27 +100,30 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   );
   await device2.clickOnByAccessibilityID('Continue');
   await device2.clickOnElementAll(new ExitUserProfile(device2));
-  // Wait for change to take effect
-  await sleepFor(1000);
   // Make call on device 1 (userA)
-  await device2.clickOnByAccessibilityID('Call');
-  await device2.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
+  await device1.clickOnByAccessibilityID('Call');
+  // await device1.clickOnByAccessibilityID("OK");
+  await device1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
   await device1.clickOnByAccessibilityID('Call');
   // Wait for call to come through
-  await sleepFor(1000);
+  // await sleepFor(1000);
   // Answer call on device 2
   await device2.clickOnByAccessibilityID('Answer call');
+  // Have to press answer twice, once in drop down and once in full screen
+  await sleepFor(500);
+  await device2.clickOnByAccessibilityID('Answer call');
   // Wait 10 seconds
-  await sleepFor(10000);
   // Hang up
   await device1.clickOnByAccessibilityID('End call button');
   // Check for control messages on both devices
+  // "callsYouCalled": "You called {name}",
   const callsYouCalled = englishStripped('callsYouCalled')
     .withArgs({ name: userB.userName })
     .toString();
   await device1.waitForControlMessageToBePresent(callsYouCalled);
+  // "callsYouCalled": "You called {name}",
   const callsCalledYou = englishStripped('callsCalledYou')
-    .withArgs({ name: userA.userName })
+    .withArgs({ name: userB.userName })
     .toString();
   await device2.waitForControlMessageToBePresent(callsCalledYou);
   // Excellent

@@ -23,7 +23,6 @@ async function sendGifGroupiOS(platform: SupportedPlatformsType) {
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   await device1.sendGIF(testMessage);
   await sleepFor(500);
-
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
@@ -66,10 +65,6 @@ async function sendGifGroupAndroid(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to GIF from ${userA.userName}`;
   // Click on attachments button
   await device1.sendGIF(testMessage);
-  await Promise.all([
-    device2.trustAttachments(testGroupName),
-    device3.trustAttachments(testGroupName),
-  ]);
   // Reply to message
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',

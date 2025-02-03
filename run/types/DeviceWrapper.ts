@@ -5,7 +5,7 @@ import { isArray, isEmpty } from 'lodash';
 import * as sinon from 'sinon';
 import {
   ChangeProfilePictureButton,
-  DownloadMediaButton,
+  ExitUserProfile,
   FirstGif,
   ImagePermissionsModalAllow,
   LocatorsInterface,
@@ -13,10 +13,8 @@ import {
   ReadReceiptsButton,
 } from '../../run/test/specs/locators';
 import { IOS_XPATHS } from '../constants';
-import { englishStripped } from '../localizer/i18n/localizedString';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
-import { EnterAccountID } from '../test/specs/locators/start_conversation';
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
 import { getAdbFullPath } from '../test/specs/utils/binaries';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
@@ -32,6 +30,7 @@ import {
   User,
   XPath,
 } from './testing';
+import { parseDataImage } from '../test/specs/utils/check_colour';
 
 export type Coordinates = {
   x: number;
@@ -340,13 +339,14 @@ export class DeviceWrapper {
           text: textToLookFor,
           maxWait: 1000,
         });
+
         if (!el) {
           throw new Error(
             `longPress on message: ${textToLookFor} unsuccessful, couldn't find message`
           );
         }
 
-        await this.longClick(el, 4000);
+        await this.longClick(el, 3000);
         const longPressSuccess = await this.waitForTextElementToBePresent({
           strategy: 'accessibility id',
           selector: 'Reply to message',
@@ -461,8 +461,7 @@ export class DeviceWrapper {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
 
     el = await this.waitForTextElementToBePresent({ ...locator });
-    await this.click(el.ELEMENT);
-    await sleepFor(100);
+
     const maxRetries = 3;
     let retries = 0;
     let success = false;
@@ -685,21 +684,24 @@ export class DeviceWrapper {
     return element;
   }
 
-  public async hasElementBeenDeleted(
-    args: {
-      text?: string;
-      maxWait?: number;
-    } & (StrategyExtractionObj | LocatorsInterface)
-  ) {
+  public async hasElementBeenDeleted({
+    text,
+    maxWait = 15000,
+    ...args
+  }: {
+    text?: string;
+    maxWait?: number;
+  } & StrategyExtractionObj) {
     const start = Date.now();
     let element: AppiumNextElementType | undefined = undefined;
-    const locator = args instanceof LocatorsInterface ? args.build() : args;
-    const maxWait = args.maxWait ?? 5000;
-    const { text } = args;
     do {
       if (!text) {
         try {
-          element = await this.waitForTextElementToBePresent({ ...locator });
+          element = await this.waitForTextElementToBePresent({
+            text: text,
+            maxWait: 100,
+            ...args,
+          });
           await sleepFor(100);
           console.log(`Element has been found, waiting for deletion`);
         } catch (e: any) {
@@ -708,7 +710,10 @@ export class DeviceWrapper {
         }
       } else {
         try {
-          element = await this.waitForTextElementToBePresent({ ...locator });
+          element = await this.waitForTextElementToBePresent({
+            maxWait: 100,
+            ...args,
+          });
           await sleepFor(100);
           console.log(`Text element has been found, waiting for deletion`);
         } catch (e) {
@@ -940,7 +945,10 @@ export class DeviceWrapper {
     // Select direct message option
     await this.clickOnByAccessibilityID('New direct message');
     // Enter User B's session ID into input box
-    await this.inputText(user.accountID, new EnterAccountID(this));
+    await this.inputText(user.accountID, {
+      strategy: 'accessibility id',
+      selector: 'Session id input box',
+    });
     // Click next
     await this.scrollDown();
     await this.clickOnByAccessibilityID('Next');
@@ -1138,7 +1146,7 @@ export class DeviceWrapper {
       await sleepFor(100);
       await this.clickOnTextElementById('android:id/title', 'test_image.jpg');
       if (community) {
-        await this.scrollToBottom();
+        await this.scrollToBottom(platform);
       }
       await this.waitForTextElementToBePresent({
         strategy: 'accessibility id',
@@ -1278,6 +1286,16 @@ export class DeviceWrapper {
         selector: 'com.android.permissioncontroller:id/permission_allow_button',
         text: 'Allow',
       });
+      await this.waitForTextElementToBePresent({
+        strategy: 'class name',
+        selector: 'android.widget.Button',
+        text: 'Documents',
+      });
+      await this.clickOnElementAll({
+        strategy: 'class name',
+        selector: 'android.widget.Button',
+        text: 'Documents',
+      });
       const testDocument = await this.doesElementExist({
         strategy: 'id',
         selector: 'android:id/title',
@@ -1349,11 +1367,6 @@ export class DeviceWrapper {
         await clickOnCoordinates(this, InteractionPoints.GifButtonKeyboardClosed);
       }
     }
-    await this.checkModalStrings(
-      englishStripped('giphyWarning').toString(),
-      englishStripped('giphyWarningDescription').toString(),
-      true
-    );
     await this.clickOnByAccessibilityID('Continue', 5000);
     await this.clickOnElementAll(new FirstGif(this));
     if (this.isIOS()) {
@@ -1539,21 +1552,6 @@ export class DeviceWrapper {
     });
   }
 
-  public async trustAttachments(conversationName: string) {
-    await this.clickOnElementAll({
-      strategy: 'accessibility id',
-      selector: 'Untrusted attachment message',
-    });
-    await this.checkModalStrings(
-      englishStripped(`attachmentsAutoDownloadModalTitle`).toString(),
-      englishStripped(`attachmentsAutoDownloadModalDescription`)
-        .withArgs({ conversation_name: conversationName })
-        .toString(),
-      true
-    );
-    await this.clickOnElementAll(new DownloadMediaButton(this));
-  }
-
   // ACTIONS
   public async swipeLeftAny(selector: AccessibilityId) {
     const el = await this.waitForTextElementToBePresent({
@@ -1599,12 +1597,8 @@ export class DeviceWrapper {
     await this.scroll({ x: 760, y: 1500 }, { x: 760, y: 710 }, 100);
   }
 
-  public async scrollUp() {
-    await this.scroll({ x: 760, y: 710 }, { x: 760, y: 1500 }, 100);
-  }
-
-  public async scrollToBottom() {
-    if (this.isAndroid()) {
+  public async scrollToBottom(platform: SupportedPlatformsType) {
+    if (platform === 'android') {
       const scrollButton = await this.doesElementExist({
         strategy: 'id',
         selector: 'network.loki.messenger:id/scrollToBottomButton',
@@ -1625,27 +1619,11 @@ export class DeviceWrapper {
     }
   }
 
-  public async navigateBack(newAndroid?: boolean) {
+  public async navigateBack() {
     if (this.isIOS()) {
       await this.clickOnByAccessibilityID('Back');
     } else {
-      if (newAndroid) {
-        await this.clickOnElementAll({ strategy: 'id', selector: 'Navigate back' });
-      } else {
-        await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Navigate up' });
-      }
-    }
-  }
-
-  public async closeScreen(newAndroid?: boolean) {
-    if (this.isAndroid()) {
-      if (newAndroid) {
-        await this.clickOnElementAll({ strategy: 'id', selector: 'Close button' });
-      } else {
-        await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Navigate up' });
-      }
-    } else {
-      await this.clickOnByAccessibilityID('Close button');
+      await this.clickOnByAccessibilityID('Navigate up');
     }
   }
 
@@ -1661,7 +1639,7 @@ export class DeviceWrapper {
     await this.clickOnElementAll(new ReadReceiptsButton(this));
     await this.navigateBack();
     await sleepFor(100);
-    await this.closeScreen();
+    await this.clickOnElementAll(new ExitUserProfile(this));
   }
 
   public async checkPermissions(
@@ -1808,6 +1786,20 @@ export class DeviceWrapper {
     } else {
       console.log('Modal description is correct');
     }
+  }
+
+  public async getElementPixelColor(
+    args: {
+      text?: string;
+      maxWait?: number;
+    } & (StrategyExtractionObj | LocatorsInterface)
+  ): Promise<string> {
+    // Wait for the element to be present
+    const element = await this.waitForTextElementToBePresent(args);
+    // Take a screenshot and return a hex color value
+    const base64image = await this.getElementScreenshot(element.ELEMENT);
+    const pixelColor = await parseDataImage(base64image);
+    return pixelColor;
   }
 
   /* === all the utilities function ===  */

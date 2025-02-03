@@ -22,6 +22,10 @@ export const setDisappearingMessage = async (
   if (enforcedType === '1:1') {
     await device.clickOnByAccessibilityID(timerType);
   }
+  await device.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: DISAPPEARING_TIMES.ONE_DAY,
+  });
   if (timerType === 'Disappear after read option') {
     if (enforcedType === '1:1') {
       await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.TWELVE_HOURS);
@@ -44,8 +48,7 @@ export const setDisappearingMessage = async (
   });
   await device.clickOnElementAll(new SetDisappearMessagesButton(device));
   await device.onIOS().navigateBack();
-  // Extended the wait for the Follow settings button to settle in the UI, it was moving and confusing appium
-  await sleepFor(2000);
+  await sleepFor(1000);
   if (device2) {
     await device2.clickOnElementAll(new FollowSettingsButton(device2));
     await sleepFor(500);

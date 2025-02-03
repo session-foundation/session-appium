@@ -15,7 +15,6 @@ async function linkDevice(platform: SupportedPlatformsType) {
   await device2.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Recovery phrase reminder',
-    maxWait: 1000,
   });
   // Verify username and session ID match
   await device2.clickOnElementAll(new UserSettings(device2));
