@@ -8,7 +8,7 @@ import { ElementStates } from '../../../types/testing';
 
 // The function takes a screenshot of an element and verifies it against a baseline screenshot
 // If no baseline is available, the element screenshot is retained so that it could be used as a new baseline
-// The baseline images were taken on a Pixel 6 and an iPhone 15 Pro Max
+// The baseline images were taken on a Pixel 6 (1080x2061) and an iPhone 15 Pro Max (1290x2462)
 export async function verifyElementScreenshot(
   device: DeviceWrapper,
   element: LocatorsInterfaceScreenshot,
