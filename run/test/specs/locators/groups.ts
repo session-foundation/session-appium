@@ -1,5 +1,5 @@
-import { LocatorsInterface } from '.';
-import { StrategyExtractionObj } from '../../../types/testing';
+// import { LocatorsInterface } from '.';
+// import { StrategyExtractionObj } from '../../../types/testing';
 
 // export class GroupNameInput extends LocatorsInterface {
 //   public build(): StrategyExtractionObj {
