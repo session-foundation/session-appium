@@ -3,7 +3,7 @@ import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/ope
 import { linkedDevice } from './utils/link_device';
 import { USERNAME } from '../../types/testing';
 import { verifyElementScreenshot } from './utils/verify_screenshots';
-import { EmptyLandingPage } from './locators/home';
+import { EmptyLandingPageScreenshot } from './utils/screenshot_paths';
 
 bothPlatformsIt('Landing page restore account', 'low', landingPageRestoreAccount);
 
@@ -12,6 +12,10 @@ async function landingPageRestoreAccount(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   await linkedDevice(device1, device2, USERNAME.ALICE);
   // Verify that the Session logo is shown on the landing page
-  await verifyElementScreenshot(device2, new EmptyLandingPage(device2), 'restore_account');
+  await verifyElementScreenshot(
+    device2,
+    new EmptyLandingPageScreenshot(device2),
+    'restore_account'
+  );
   await closeApp(device1, device2);
 }
