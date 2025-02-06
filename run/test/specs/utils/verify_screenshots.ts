@@ -6,7 +6,7 @@ import { LocatorsInterfaceScreenshot } from '../locators';
 import { v4 as uuidv4 } from 'uuid';
 
 // The function takes a screenshot of an element and verifies it against a baseline screenshot
-// // Supports locators with optional multiple states, enforcing correct state usage where applicable
+// Supports locators with optional multiple states, enforcing correct state usage where applicable
 // If no baseline is available, the element screenshot is retained for potential future use as a new baseline
 // The baseline images were taken on a Pixel 6 (1080x2061) and an iPhone 15 Pro Max (1290x2462)
 //
