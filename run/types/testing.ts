@@ -326,7 +326,8 @@ export type AccessibilityId =
   | 'Privacy Policy'
   | 'TabBarItemTitle'
   | 'URL'
-  | 'Voice and Video Calls - Switch';
+  | 'Voice and Video Calls - Switch'
+  | 'Hide';
 
 export type Id =
   | 'Modal heading'
@@ -370,7 +371,8 @@ export type Id =
   | 'network.loki.messenger:id/back_button'
   | 'Quit'
   | 'network.loki.messenger:id/singleModeImageView'
-  | 'network.loki.messenger:id/emptyStateContainer';
+  | 'network.loki.messenger:id/emptyStateContainer'
+  | 'Hide';
 
 export type TestRisk = 'high' | 'medium' | 'low' | undefined;
 
