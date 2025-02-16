@@ -372,7 +372,8 @@ export type Id =
   | 'Quit'
   | 'network.loki.messenger:id/singleModeImageView'
   | 'network.loki.messenger:id/emptyStateContainer'
-  | 'Hide';
+  | 'Hide'
+  | 'Contact';
 
 export type TestRisk = 'high' | 'medium' | 'low' | undefined;
 
