@@ -133,7 +133,8 @@ export type XPath =
   | `//XCUIElementTypeCell[@name="${string}"]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/androidx.appcompat.widget.LinearLayoutCompat/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView[2]`
   | `//XCUIElementTypeStaticText[@name="Paste"]`
-  | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`;
+  | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`
+  | `//XCUIElementTypeCell[@name="Session"]`;
 
 export type AccessibilityId =
   | 'Create account button'
@@ -253,7 +254,6 @@ export type AccessibilityId =
   | 'profile_picture.jpg, 27.75 kB, May 1, 1998'
   | 'Photo taken on May 2, 1999 7:00:00 AM'
   | 'Photo, 01 May 1998, 7:00 am'
-  | '1967-05-05 21:00:00 +0000'
   | '1988-09-08 21:00:00 +0000'
   | 'Attachments button'
   | 'Documents folder'
@@ -327,7 +327,17 @@ export type AccessibilityId =
   | 'TabBarItemTitle'
   | 'URL'
   | 'Voice and Video Calls - Switch'
-  | 'Hide';
+  | 'Hide'
+  | 'Session'
+  | 'Share'
+  | 'Photo taken on Jun 12, 2103 2:28:16 PM'
+  | 'Photo, 19 March 2024, 5:13 pm'
+  // Temporary ID until iOS implement 'Contact' accessibility ID
+  | USERNAME
+  // Possible time string outputs from convertTime function
+  | '1967-05-06 07:00:00 +0000'
+  | '1967-05-05 21:00:00 +0000'
+  | '1967-05-05 20:00:00 +0000';
 
 export type Id =
   | 'Modal heading'
@@ -373,7 +383,8 @@ export type Id =
   | 'network.loki.messenger:id/singleModeImageView'
   | 'network.loki.messenger:id/emptyStateContainer'
   | 'Hide'
-  | 'Contact';
+  | 'Contact'
+  | 'com.google.android.apps.photos:id/text';
 
 export type TestRisk = 'high' | 'medium' | 'low' | undefined;
 

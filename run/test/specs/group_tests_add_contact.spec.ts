@@ -2,6 +2,7 @@ import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ApplyChanges, EditGroup, InviteContactsButton, InviteContactsMenuItem } from './locators';
+import { ConversationSettings } from './locators/conversation';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -41,7 +42,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     text: group.userName,
   });
   // Click more options
-  await device1.clickOnByAccessibilityID('More options');
+  await device1.clickOnElementAll(new ConversationSettings(device1));
   // Select edit group
   await device1.clickOnElementAll(new EditGroup(device1));
   await sleepFor(1000);

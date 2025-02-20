@@ -1,3 +1,4 @@
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import {
@@ -6,6 +7,7 @@ import {
   BlockUserConfirmationModal,
   ExitUserProfile,
 } from './locators';
+import { ConversationSettings } from './locators/conversation';
 import { UserSettings } from './locators/settings';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -22,10 +24,15 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
     newUser(device2, USERNAME.BOB),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await device1.clickOnByAccessibilityID('More options');
+  await device1.clickOnElementAll(new ConversationSettings(device1));
   // Select Block option
   await sleepFor(500);
   await device1.clickOnElementAll(new BlockUser(device1));
+  // Check modal strings
+  await device1.checkModalStrings(
+    englishStripped('block').toString(),
+    englishStripped('blockDescription').withArgs({ name: userB.userName }).toString()
+  );
   // Confirm block option
   await device1.clickOnElementAll(new BlockUserConfirmationModal(device1));
   await sleepFor(1000);
@@ -72,6 +79,7 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
     strategy: 'accessibility id',
     selector: 'Message body',
     text: blockedMessage,
+    maxWait: 5000,
   });
   // Close app
   await closeApp(device1, device2);
