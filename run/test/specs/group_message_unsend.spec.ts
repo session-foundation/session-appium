@@ -1,12 +1,13 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-iosIt('Unsend message in group', 'high', unsendMessageGroup);
+// Functionality not available on iOS yet
+// iosIt('Delete message in group', deleteMessageGroup);
 androidIt('Unsend message in group', 'high', unsendMessageGroup);
 
 async function unsendMessageGroup(platform: SupportedPlatformsType) {

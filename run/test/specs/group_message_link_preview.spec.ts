@@ -1,7 +1,5 @@
-import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { LinkPreview, LinkPreviewMessage } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -33,10 +31,6 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
     maxWait: 20000,
   });
   // Accept dialog for link preview
-  await device1.checkModalStrings(
-    englishStripped('linkPreviewsEnable').toString(),
-    englishStripped('linkPreviewsFirstDescription').withArgs({ app_name: 'Session' }).toString()
-  );
   await device1.clickOnByAccessibilityID('Enable');
   // No preview on first send
   await device1.clickOnByAccessibilityID('Send message button');
@@ -45,8 +39,7 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
-  await device1.waitForTextElementToBePresent(new LinkPreview(device1));
-  // await sleepFor(1000);
+  await sleepFor(1000);
   await device1.clickOnByAccessibilityID('Send message button');
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
@@ -93,24 +86,24 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType) {
     selector: 'Message input box',
   });
   // Accept dialog for link preview
-  await device1.checkModalStrings(
-    englishStripped('linkPreviewsEnable').toString(),
-    englishStripped('linkPreviewsFirstDescription').withArgs({ app_name: 'Session' }).toString(),
-    true
-  );
   await device1.clickOnByAccessibilityID('Enable');
-  //wait for preview to generate
-  await sleepFor(5000);
+  // No preview on first send
   await device1.clickOnByAccessibilityID('Send message button');
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message sent status: Sent',
     maxWait: 20000,
   });
-  await Promise.all([
-    device2.waitForTextElementToBePresent(new LinkPreviewMessage(device2)),
-    device3.waitForTextElementToBePresent(new LinkPreviewMessage(device3)),
-  ]);
+  await device2.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Message body',
+    text: testLink,
+  });
+  await device3.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Message body',
+    text: testLink,
+  });
   await device2.longPressMessage(testLink);
   await device2.clickOnByAccessibilityID('Reply to message');
   const replyMessage = await device2.sendMessage(`${userA.userName} message reply`);

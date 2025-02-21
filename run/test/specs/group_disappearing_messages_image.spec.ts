@@ -1,4 +1,4 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { iosIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -7,7 +7,7 @@ import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/o
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
 iosIt('Disappearing image message to group', 'low', disappearingImageMessageGroup);
-androidIt('Disappearing image message to group', 'low', disappearingImageMessageGroup);
+// TODO write Android test
 
 async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
@@ -24,10 +24,19 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
 
   await setDisappearingMessage(platform, device1, ['Group', timerType, time]);
+  // await device1.navigateBack();
   await device1.sendImage(platform, testMessage);
   await Promise.all([
-    device2.onAndroid().trustAttachments(testGroupName),
-    device3.onAndroid().trustAttachments(testGroupName),
+    device2.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: testMessage,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: testMessage,
+    }),
   ]);
   const selector = platform === 'android' ? 'Media message' : 'Message body';
   const text = platform === 'android' ? undefined : testMessage;

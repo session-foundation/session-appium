@@ -1,5 +1,7 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { DownloadMediaButton } from './locators';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
@@ -17,8 +19,12 @@ async function sendDocument(platform: SupportedPlatformsType) {
   await newContact(platform, device1, userA, device2, userB);
 
   await device1.sendDocument();
-  await device2.trustAttachments(userA.userName);
+  await device2.clickOnByAccessibilityID('Untrusted attachment message');
+  await sleepFor(500);
+  // User B - Click on 'download'
+  await device2.clickOnElementAll(new DownloadMediaButton(device2));
   // Reply to message
+
   await device2.onIOS().waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',

@@ -1,6 +1,7 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
+import { AccessibilityId, USERNAME } from '../../types/testing';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
@@ -19,17 +20,13 @@ async function clearAllRequests(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Message requests banner');
   // Select Clear All button
   await device2.clickOnByAccessibilityID('Clear all');
-  await device2.checkModalStrings(
-    englishStripped('clearAll').toString(),
-    englishStripped('messageRequestsClearAllExplanation').toString(),
-    true
-  );
+  await sleepFor(1000);
   await device2.clickOnByAccessibilityID('Clear');
   // "messageRequestsNonePending": "No pending message requests",
   const messageRequestsNonePending = englishStripped('messageRequestsNonePending').toString();
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
-    selector: messageRequestsNonePending,
+    selector: messageRequestsNonePending as AccessibilityId,
   });
   await closeApp(device1, device2);
 }

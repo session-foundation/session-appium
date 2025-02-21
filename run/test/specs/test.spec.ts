@@ -1,6 +1,6 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { TickButton, UsernameInput, UsernameSettings } from './locators';
+import { ExitUserProfile, TickButton, UsernameInput, UsernameSettings } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppOnPlatformSingleDevice } from './utils/open_app';
@@ -37,7 +37,7 @@ async function tinyTest(platform: SupportedPlatformsType) {
   if (changedUsername === userA.userName) {
     throw new Error('Username change unsuccessful');
   }
-  await device.closeScreen();
+  await device.clickOnElementAll(new ExitUserProfile(device));
   await device.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'User settings',

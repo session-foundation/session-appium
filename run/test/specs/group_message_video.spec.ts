@@ -71,10 +71,6 @@ async function sendVideoGroupAndroid(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to video from ${userA.userName} in ${testGroupName}`;
   // Click on attachments button
   await device1.sendVideoAndroid();
-  await Promise.all([
-    device2.trustAttachments(testGroupName),
-    device3.trustAttachments(testGroupName),
-  ]);
   // Check video appears in device 2 and device 3
   // (wait for loading animation to disappear and play icon to appear)
   // Device 2
