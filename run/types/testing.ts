@@ -380,7 +380,16 @@ export type Id =
   | 'Recovery phrase input'
   | 'network.loki.messenger:id/back_button'
   | 'Quit'
-  | 'network.loki.messenger:id/emptyStateContainer';
+  | 'network.loki.messenger:id/emptyStateContainer'
+  | 'Group name input'
+  | 'Contact'
+  | 'Create group'
+  | 'Empty list'
+  | 'Invite button'
+  | 'Confirm invite button'
+  | 'Navigate back'
+  | 'Close button'
+  | 'Group name';
 
 export type TestRisk = 'high' | 'medium' | 'low' | undefined;
 
