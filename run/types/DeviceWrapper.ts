@@ -172,7 +172,7 @@ export class DeviceWrapper {
 
   public async pushFile(path: string, data: string): Promise<void> {
     console.log('Did file get pushed', path);
-    return this.toShared().pushFile(path, data);
+    await this.toShared().pushFile(path, data);
   }
 
   public async getElementScreenshot(elementId: string): Promise<string> {
