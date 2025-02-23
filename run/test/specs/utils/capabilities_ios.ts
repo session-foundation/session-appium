@@ -58,12 +58,6 @@ function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
     'IOS_TENTH_SIMULATOR',
     'IOS_ELEVENTH_SIMULATOR',
     'IOS_TWELFTH_SIMULATOR',
-    'IOS_THIRTEENTH_SIMULATOR',
-    'IOS_FOURTEENTH_SIMULATOR',
-    'IOS_FIFTEENTH_SIMULATOR',
-    'IOS_SIXTEENTH_SIMULATOR',
-    'IOS_SEVENTEENTH_SIMULATOR',
-    'IOS_EIGHTEENTH_SIMULATOR',
   ];
 
   const envVar = envVars[index];
@@ -76,7 +70,7 @@ function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
   return uuid;
 }
 
-const emulatorUUIDs = Array.from({ length: 18 }, (_, index) =>
+const emulatorUUIDs = Array.from({ length: 12 }, (_, index) =>
   getIOSSimulatorUUIDFromEnv(index as CapabilitiesIndexType)
 );
 
