@@ -26,7 +26,8 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   await device1.longPressConversation(userB.userName);
   await device1.checkModalStrings(
     englishStripped('block').toString(),
-    englishStripped('blockDescription').withArgs({ name: userB.userName }).toString()
+    englishStripped('blockDescription').withArgs({ name: USERNAME.BOB }).toString(),
+    true
   );
   await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Block' });
   await device1.clickOnElementAll(new BlockUserConfirmationModal(device1));

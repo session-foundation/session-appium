@@ -57,7 +57,7 @@ export const linkedDevice = async (
     selector: 'New conversation button',
   });
 
-  console.info('Device 3 linked');
+  console.info('Device 2 linked');
 
   return user;
 };

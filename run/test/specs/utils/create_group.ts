@@ -2,6 +2,7 @@ import { englishStripped } from '../../../localizer/i18n/localizedString';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { Group, GROUPNAME, User } from '../../../types/testing';
 import { newContact } from './create_contact';
+import { sortByPubkey } from './get_account_id';
 import { SupportedPlatformsType } from './open_app';
 
 export const createGroup = async (
@@ -54,39 +55,26 @@ export const createGroup = async (
       text: group.userName,
     }),
   ]);
-  if (platform === 'ios') {
-    await device1.waitForLoadingOnboarding();
-    await Promise.all([
-      device1.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Empty list',
-        maxWait: 5000,
-      }),
-      device2.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Empty list',
-        maxWait: 5000,
-      }),
-      device3.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Empty list',
-        maxWait: 5000,
-      }),
-    ]);
-  }
-  // TODO: need to change once Android have updated their control messages
-  const groupNoMessages = englishStripped('groupNoMessages')
-    .withArgs({ group_name: group.userName })
-    .toString();
-  if (platform === 'android') {
-    await device1.waitForControlMessageToBePresent(groupNoMessages);
-    const legacyGroupMemberYouNew = englishStripped('legacyGroupMemberYouNew').toString();
-    // Check control message 'You joined the group'
-    await Promise.all([
-      device2.waitForControlMessageToBePresent(legacyGroupMemberYouNew),
-      device3.waitForControlMessageToBePresent(legacyGroupMemberYouNew),
-    ]);
-  }
+  // Sort by account ID
+  const [firstUser, secondUser] = sortByPubkey(userTwo, userThree);
+  await Promise.all([
+    device1.waitForControlMessageToBePresent(
+      englishStripped(`groupMemberNewTwo`)
+        .withArgs({ name: firstUser, other_name: secondUser })
+        .toString()
+    ),
+    device2.waitForControlMessageToBePresent(
+      englishStripped('groupInviteYouAndOtherNew')
+        .withArgs({ other_name: userThree.userName })
+        .toString()
+    ),
+    device3.waitForControlMessageToBePresent(
+      englishStripped('groupInviteYouAndOtherNew')
+        .withArgs({ other_name: userTwo.userName })
+        .toString()
+    ),
+  ]);
+
   // Send message from User A to group to verify all working
   await device1.sendMessage(userAMessage);
   // Did the other devices receive UserA's message?

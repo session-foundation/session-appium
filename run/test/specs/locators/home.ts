@@ -1,6 +1,22 @@
 import { StrategyExtractionObj } from '../../../types/testing';
 import { LocatorsInterface } from './index';
 
+export class EmptyLandingPage extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/emptyStateContainer',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Empty list',
+        } as const;
+    }
+  }
+}
 export class ConversationItem extends LocatorsInterface {
   public build(text?: string) {
     return {

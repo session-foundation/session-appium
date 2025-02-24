@@ -38,27 +38,30 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
       text: testMessage,
     }),
   ]);
+  const selector = platform === 'android' ? 'Media message' : 'Message body';
+  const text = platform === 'android' ? undefined : testMessage;
+
+  await Promise.all(
+    [device2, device3].map(device =>
+      device.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector,
+        maxWait: 1000,
+        text,
+      })
+    )
+  );
   // Wait for 30 seconds
   await sleepFor(30000);
-  await Promise.all([
-    device1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      maxWait: 1000,
-      text: testMessage,
-    }),
-    device2.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      maxWait: 1000,
-      text: testMessage,
-    }),
-    device3.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      maxWait: 1000,
-      text: testMessage,
-    }),
-  ]);
+  await Promise.all(
+    [device1, device2, device3].map(device =>
+      device.hasElementBeenDeleted({
+        strategy: 'accessibility id',
+        selector,
+        maxWait: 1000,
+        text,
+      })
+    )
+  );
   await closeApp(device1, device2, device3);
 }

@@ -326,7 +326,10 @@ export type AccessibilityId =
   | 'Privacy Policy'
   | 'TabBarItemTitle'
   | 'URL'
-  | 'Voice and Video Calls - Switch';
+  | 'Voice and Video Calls - Switch'
+  | 'Edit group name'
+  | 'Edit'
+  | 'Confirm invite button';
 
 export type Id =
   | 'Modal heading'
@@ -369,6 +372,18 @@ export type Id =
   | 'com.android.chrome:id/negative_button'
   | 'network.loki.messenger:id/back_button'
   | 'Quit'
+  | 'network.loki.messenger:id/emptyStateContainer'
+  | 'Group name input'
+  | 'Contact'
+  | 'Create group'
+  | 'Empty list'
+  | 'Invite button'
+  | 'Confirm invite button'
+  | 'Navigate back'
+  | 'Close button'
+  | 'Group name'
   | 'network.loki.messenger:id/singleModeImageView';
 
 export type TestRisk = 'high' | 'medium' | 'low' | undefined;
+
+export type ElementStates = 'new_account' | 'restore_account';
