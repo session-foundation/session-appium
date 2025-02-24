@@ -1109,7 +1109,7 @@ export class DeviceWrapper {
   // TODO FIX UP THIS FUNCTION
   public async sendImage(platform: SupportedPlatformsType, message?: string, community?: boolean) {
     const ronSwansonBirthday = '196705060700.00';
-    const formattedDate = `1967-05-05 21:00:00 +0000`;
+    const formattedDate = '1967-05-05 21:00:00 +0000';
     const fileName = 'test_image.jpg';
     if (platform === 'ios') {
       await this.clickOnByAccessibilityID('Attachments button');
