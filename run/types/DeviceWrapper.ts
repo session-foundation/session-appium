@@ -19,7 +19,12 @@ import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/s
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
 import { getAdbFullPath } from '../test/specs/utils/binaries';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
-import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/specs/utils/utilities';
+import {
+  convertTime,
+  isDeviceAndroid,
+  isDeviceIOS,
+  runScriptAndLog,
+} from '../test/specs/utils/utilities';
 import {
   AccessibilityId,
   DISAPPEARING_TIMES,
@@ -1108,9 +1113,12 @@ export class DeviceWrapper {
 
   // TODO FIX UP THIS FUNCTION
   public async sendImage(platform: SupportedPlatformsType, message?: string, community?: boolean) {
-    const ronSwansonBirthday = '196705060700.00';
-    const formattedDate = '1967-05-05 21:00:00 +0000';
+    //     const ronSwansonBirthday = '196705060700.00';
+
+    const now = new Date();
+    const nowHappyIos = `${now.getFullYear()}${now.getMonth()}${now.getDate()}${now.getHours()}${now.getMinutes()}${now.getSeconds()}.00`;
     const fileName = 'test_image.jpg';
+    const formattedStr = convertTime(nowHappyIos, 'Sydney/Australia');
     if (platform === 'ios') {
       await this.clickOnByAccessibilityID('Attachments button');
       await sleepFor(5000);
@@ -1123,14 +1131,14 @@ export class DeviceWrapper {
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
       const testImage = await this.doesElementExist({
         strategy: 'accessibility id',
-        selector: formattedDate,
+        selector: formattedStr,
         maxWait: 1000,
       });
       if (!testImage) {
-        await this.pushMediaToDevice(platform, fileName, ronSwansonBirthday);
+        await this.pushMediaToDevice(platform, fileName, nowHappyIos);
       }
       await sleepFor(100);
-      await this.clickOnByAccessibilityID(formattedDate, 1000);
+      await this.clickOnByAccessibilityID(formattedStr, 1000);
       if (message) {
         await this.clickOnByAccessibilityID('Text input box');
         await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
