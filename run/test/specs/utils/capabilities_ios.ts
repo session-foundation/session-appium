@@ -27,7 +27,7 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   // "appium:isHeadless": true,
 } as AppiumXCUITestCapabilities;
 
-const MAX_CAPABILITIES_INDEX = 12;
+const MAX_CAPABILITIES_INDEX = 8;
 export type CapabilitiesIndexType = IntRange<0, typeof MAX_CAPABILITIES_INDEX>;
 
 export function capabilityIsValid(
@@ -54,10 +54,6 @@ function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
     'IOS_SIXTH_SIMULATOR',
     'IOS_SEVENTH_SIMULATOR',
     'IOS_EIGHTH_SIMULATOR',
-    'IOS_NINTH_SIMULATOR',
-    'IOS_TENTH_SIMULATOR',
-    'IOS_ELEVENTH_SIMULATOR',
-    'IOS_TWELFTH_SIMULATOR',
   ];
 
   const envVar = envVars[index];
@@ -70,7 +66,7 @@ function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
   return uuid;
 }
 
-const emulatorUUIDs = Array.from({ length: 12 }, (_, index) =>
+const emulatorUUIDs = Array.from({ length: 8 }, (_, index) =>
   getIOSSimulatorUUIDFromEnv(index as CapabilitiesIndexType)
 );
 
