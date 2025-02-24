@@ -6,8 +6,8 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
+// Block option not available on iOS in conversation list
 androidIt('Block user in conversation list', 'high', blockUserInConversationList);
-// bothPlatformsIt("Block user in conversation list", blockUserInConversationList);
 
 async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Open App
@@ -24,11 +24,13 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   await device1.navigateBack();
   // on ios swipe left on conversation
   await device1.longPressConversation(userB.userName);
+  // This selector is from the old Android implementation, it is yet to be updated
+  await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Block' });
   await device1.checkModalStrings(
     englishStripped('block').toString(),
-    englishStripped('blockDescription').withArgs({ name: userB.userName }).toString()
+    englishStripped('blockDescription').withArgs({ name: userB.userName }).toString(),
+    true
   );
-  await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Block' });
   await device1.clickOnElementAll(new BlockUserConfirmationModal(device1));
   await device1.clickOnElementAll({
     strategy: 'accessibility id',

@@ -2,6 +2,7 @@ import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { BlockedContactsSettings, BlockUser, BlockUserConfirmationModal } from './locators';
+import { ConversationSettings } from './locators/conversation';
 import { UserSettings } from './locators/settings';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -22,7 +23,7 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   await newContact(platform, device1, userA, device2, userB);
   // Block contact
   // Click on three dots (settings)
-  await device1.clickOnByAccessibilityID('More options');
+  await device1.clickOnElementAll(new ConversationSettings(device1));
   // Select Block option
   await sleepFor(500);
   await device1.clickOnElementAll(new BlockUser(device1));

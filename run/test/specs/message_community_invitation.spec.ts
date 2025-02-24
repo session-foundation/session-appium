@@ -1,6 +1,7 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { InviteContactsButton } from './locators';
+import { ConversationSettings } from './locators/conversation';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -26,7 +27,7 @@ async function sendCommunityInvitationIos(platform: SupportedPlatformsType) {
   // Click on plus button
   await device1.navigateBack();
   await joinCommunity(device1, communityLink, communityName);
-  await device1.clickOnByAccessibilityID('More options');
+  await device1.clickOnElementAll(new ConversationSettings(device1));
   await sleepFor(500);
   await device1.clickOnElementAll(new InviteContactsButton(device1));
   await device1.clickOnElementByText({

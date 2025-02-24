@@ -1,6 +1,7 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ApplyChanges, EditGroup, EditGroupName } from './locators';
+import { ConversationSettings } from './locators/conversation';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -25,7 +26,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   // Now change the group name
 
   // Click on settings or three dots
-  await device1.clickOnByAccessibilityID('More options');
+  await device1.clickOnElementAll(new ConversationSettings(device1));
   // Click on Edit group option
   await sleepFor(1000);
 
@@ -79,7 +80,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   // Now change the group name
 
   // Click on settings or three dots
-  await device1.clickOnByAccessibilityID('More options');
+  await device1.clickOnElementAll(new ConversationSettings(device1));
   // Click on Edit group option
   await sleepFor(1000);
   await device1.clickOnElementAll(new EditGroup(device1));
