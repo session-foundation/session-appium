@@ -147,6 +147,7 @@ jobs:
           repository: ${{ github.event.inputs.APPIUM_REPO }}
           ref: ${{ github.event.inputs.BRANCH_TO_CHECKOUT }}
           path: 'forked-session-appium'
+          lfs: true
 
       - uses: actions/setup-node@v4
         with:

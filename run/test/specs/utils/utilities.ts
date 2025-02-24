@@ -45,3 +45,16 @@ export const isDeviceAndroid = (device: unknown) => !isDeviceIOS(device);
 export const isCI = () => {
   return process.env.NODE_CONFIG_ENV === 'ci';
 };
+
+// Converts a hexadecimal color string to an RGB object
+export function hexToRgbObject(hex: string): { R: number; G: number; B: number } {
+  // Parse the hexadecimal string into a decimal number
+  // Removes the # prefix if present and converts the remaining string to base-10
+  const decimalValue = parseInt(hex.replace('#', ''), 16);
+  // Extract the red, green, and blue components using bitwise operations
+  return {
+    R: (decimalValue >> 16) & 255,
+    G: (decimalValue >> 8) & 255,
+    B: decimalValue & 255,
+  };
+}
