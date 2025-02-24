@@ -1,6 +1,6 @@
 import { ANDROID_XPATHS, IOS_XPATHS } from '../../../constants';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { StrategyExtractionObj } from '../../../types/testing';
+import { ElementStates, StrategyExtractionObj } from '../../../types/testing';
 import { SupportedPlatformsType } from '../utils/open_app';
 
 export abstract class LocatorsInterface {
@@ -27,6 +27,12 @@ export abstract class LocatorsInterface {
     return this.platform === 'android';
   }
 }
+
+// Returns the expected screenshot path for a locator, optionally varying by state
+export abstract class LocatorsInterfaceScreenshot extends LocatorsInterface {
+  abstract screenshotFileName(state?: ElementStates): string;
+}
+
 // When applying a nickname or username change
 export class TickButton extends LocatorsInterface {
   public build() {
