@@ -9,17 +9,17 @@ import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/ope
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 import { testCommunityLink, testCommunityName } from './../../constants/community';
 
-iosIt('Disappearing community invite message 1o1', 'low', disappearingCommunityInviteMessage1o1Ios);
+iosIt('Disappearing community invite message 1:1', 'low', disappearingCommunityInviteMessageIos);
 androidIt(
-  'Disappearing community invite message 1o1',
+  'Disappearing community invite message 1:1',
   'low',
-  disappearingCommunityInviteMessage1o1Android
+  disappearingCommunityInviteMessageAndroid
 );
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 
-async function disappearingCommunityInviteMessage1o1Ios(platform: SupportedPlatformsType) {
+async function disappearingCommunityInviteMessageIos(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and user B
   const [userA, userB] = await Promise.all([
@@ -39,7 +39,10 @@ async function disappearingCommunityInviteMessage1o1Ios(platform: SupportedPlatf
     selector: 'Contact',
     text: userB.userName,
   });
-  await device1.clickOnByAccessibilityID('Done');
+  await device1.clickOnElementAll({
+    strategy: 'accessibility id',
+    selector: 'Invite contacts button',
+  });
   // Check device 2 for invitation from user A
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
@@ -65,7 +68,7 @@ async function disappearingCommunityInviteMessage1o1Ios(platform: SupportedPlatf
   await closeApp(device1, device2);
 }
 
-async function disappearingCommunityInviteMessage1o1Android(platform: SupportedPlatformsType) {
+async function disappearingCommunityInviteMessageAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and user B
   const [userA, userB] = await Promise.all([

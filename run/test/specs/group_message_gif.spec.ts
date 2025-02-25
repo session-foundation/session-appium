@@ -65,6 +65,10 @@ async function sendGifGroupAndroid(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to GIF from ${userA.userName}`;
   // Click on attachments button
   await device1.sendGIF(testMessage);
+  await Promise.all([
+    device2.trustAttachments(testGroupName),
+    device3.trustAttachments(testGroupName),
+  ]);
   // Reply to message
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',

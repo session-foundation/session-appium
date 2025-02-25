@@ -1,5 +1,7 @@
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { LinkPreview, LinkPreviewMessage } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -28,7 +30,13 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
+  // Enable link preview modal appears as soon as link is typed on android but on iOS it appears after
   if (platform === 'android') {
+    await device1.checkModalStrings(
+      englishStripped('linkPreviewsEnable').toString(),
+      englishStripped('linkPreviewsFirstDescription').withArgs({ app_name: 'Session' }).toString(),
+      true
+    );
     await device1.clickOnByAccessibilityID('Enable');
   }
   await device1.waitForTextElementToBePresent({
@@ -37,6 +45,10 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
     maxWait: 20000,
   });
   if (platform === 'ios') {
+    await device1.checkModalStrings(
+      englishStripped('linkPreviewsEnable').toString(),
+      englishStripped('linkPreviewsFirstDescription').withArgs({ app_name: 'Session' }).toString()
+    );
     await device1.clickOnByAccessibilityID('Enable');
   }
   // Accept dialog for link preview
@@ -47,7 +59,11 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
-  await sleepFor(100);
+  if (platform === 'ios') {
+    await device1.waitForTextElementToBePresent(new LinkPreview(device1));
+  } else {
+    await sleepFor(1000);
+  }
   await device1.clickOnByAccessibilityID('Send message button');
   // Make sure image preview is available in device 2
   await Promise.all([
@@ -64,25 +80,24 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   ]);
   // Wait for 30 seconds to disappear
   await sleepFor(30000);
-  await Promise.all([
-    device1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      maxWait: 1000,
-      text: testLink,
-    }),
-    device2.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      maxWait: 1000,
-      text: testLink,
-    }),
-    device3.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      maxWait: 1000,
-      text: testLink,
-    }),
-  ]);
+  if (platform === 'ios') {
+    await Promise.all(
+      [device1, device2, device3].map(device =>
+        device.hasElementBeenDeleted({
+          strategy: 'accessibility id',
+          selector: 'Message body',
+          maxWait: 1000,
+          text: testLink,
+        })
+      )
+    );
+  }
+  if (platform === 'android') {
+    await Promise.all(
+      [device1, device2, device3].map(device =>
+        device.hasElementBeenDeleted({ ...new LinkPreviewMessage(device).build(), maxWait: 1000 })
+      )
+    );
+  }
   await closeApp(device1, device2, device3);
 }

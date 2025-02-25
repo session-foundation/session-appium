@@ -1,6 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { DownloadMediaButton } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -23,7 +22,7 @@ async function sendGifIos(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Untrusted attachment message', 15000);
   await sleepFor(100);
   // Click on 'download'
-  await device2.clickOnElementAll(new DownloadMediaButton(device2));
+  await device2.trustAttachments(userA.userName);
   // Reply to message
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
@@ -57,10 +56,7 @@ async function sendGifAndroid(platform: SupportedPlatformsType) {
   await device1.sendGIF(testMessage);
   // Check if the 'Tap to download media' config appears
   // Click on config
-  await device2.clickOnByAccessibilityID('Untrusted attachment message', 9000);
-  await sleepFor(500);
-  // Click on 'download'
-  await device2.clickOnElementAll(new DownloadMediaButton(device2));
+  await device2.trustAttachments(userA.userName);
   // Reply to message
   await sleepFor(5000);
   await device2.longPress('Media message');

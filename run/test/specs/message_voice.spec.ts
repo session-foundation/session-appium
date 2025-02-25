@@ -1,6 +1,5 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { DownloadMediaButton } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -25,9 +24,7 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
     selector: 'Voice message',
   });
 
-  await device2.clickOnByAccessibilityID('Untrusted attachment message');
-  await sleepFor(200);
-  await device2.clickOnElementAll(new DownloadMediaButton(device2));
+  await device2.trustAttachments(userA.userName);
   await sleepFor(500);
   await device2.longPress('Voice message');
   await device2.clickOnByAccessibilityID('Reply to message');

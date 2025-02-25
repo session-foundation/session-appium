@@ -1,6 +1,5 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ExitUserProfile } from './locators';
 import { UserSettings } from './locators/settings';
 import { runOnlyOnAndroid, sleepFor } from './utils';
 import { parseDataImage } from './utils/check_colour';
@@ -25,10 +24,10 @@ async function avatarRestored(platform: SupportedPlatformsType) {
   // Wait for change
   // Verify change
   // Take screenshot
-  const profilePicture = await device1.waitForTextElementToBePresent(new UserSettings(device1));
   await device2.clickOnElementAll(new UserSettings(device2));
   await device1.onIOS().waitForLoadingOnboarding();
   await runOnlyOnAndroid(platform, () => sleepFor(10000)); // we can't avoid this runOnlyOnAndroid
+  const profilePicture = await device1.waitForTextElementToBePresent(new UserSettings(device1));
   const base64 = await device1.getElementScreenshot(profilePicture.ELEMENT);
   const actualPixelColor = await parseDataImage(base64);
   if (actualPixelColor === expectedPixelHexColour) {
@@ -38,8 +37,8 @@ async function avatarRestored(platform: SupportedPlatformsType) {
   }
   console.log('Now checking avatar on linked device');
   // Check avatar on device 2
-  await sleepFor(3000);
-  await device2.clickOnElementAll(new ExitUserProfile(device2));
+  await sleepFor(5000);
+  await device2.closeScreen();
   await device2.clickOnElementAll(new UserSettings(device2));
   const profilePictureLinked = await device2.waitForTextElementToBePresent(
     new UserSettings(device2)

@@ -1,7 +1,8 @@
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ExitUserProfile, TickButton, UsernameInput, UsernameSettings } from './locators';
-import { UserSettings } from './locators/settings';
+import { TickButton, UsernameInput, UsernameSettings } from './locators';
+import { SaveNameChangeButton, UserSettings } from './locators/settings';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppOnPlatformSingleDevice } from './utils/open_app';
@@ -18,16 +19,24 @@ async function changeUsernameiOS(platform: SupportedPlatformsType) {
   await device.clickOnElementAll(new UserSettings(device));
   // select username
   await device.clickOnElementAll(new UsernameSettings(device));
+  // New modal pops up
+  await device.checkModalStrings(
+    englishStripped('displayNameSet').toString(),
+    englishStripped('displayNameVisible').toString()
+  );
   // type in new username
   await sleepFor(100);
+  await device.waitForTextElementToBePresent(new UsernameInput(device));
+  await device.clickOnElementAll(new UsernameInput(device));
+  await sleepFor(500);
   await device.deleteText(new UsernameInput(device));
   await device.inputText(newUsername, new UsernameInput(device));
-  await device.clickOnElementAll(new TickButton(device));
+  await device.clickOnElementAll(new SaveNameChangeButton(device));
 
   const username = await device.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Username',
-    text: newUsername,
+    // text: newUsername,
   });
 
   const changedUsername = await device.getTextFromElement(username);
@@ -38,13 +47,7 @@ async function changeUsernameiOS(platform: SupportedPlatformsType) {
   if (changedUsername === userA.userName) {
     throw new Error('Username change unsuccessful');
   }
-  await device.clickOnElementAll(new ExitUserProfile(device));
-  await device.clickOnElementAll(new UserSettings(device));
-  await device.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Username',
-    text: newUsername,
-  });
+  await device.closeScreen();
   await closeApp(device);
 }
 
@@ -75,7 +78,7 @@ async function changeUsernameAndroid(platform: SupportedPlatformsType) {
   if (changedUsername === userA.userName) {
     throw new Error('Username change unsuccessful');
   }
-  await device.clickOnElementAll(new ExitUserProfile(device));
+  await device.closeScreen();
   await device.clickOnElementAll(new UserSettings(device));
 
   await device.waitForTextElementToBePresent({

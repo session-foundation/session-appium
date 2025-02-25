@@ -1,22 +1,15 @@
+import { englishStripped } from '../../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import {
-  CreateAccountButton,
-  DisplayNameInput,
-  ContinueButton,
-  ErrorMessage,
-} from '../locators/onboarding';
+import { ContinueButton, DisplayNameInput, ErrorMessage } from '../locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
-import { localize } from '../../../localizer/i18n/localizedString';
 
 bothPlatformsIt('Onboarding no name', 'low', onboardingNoName);
 
-const emptyName = '';
-// the expected error is 'Please enter a display name' which is represented by the following localized string
-const expectedError = localize('displayNameErrorDescription').strip().toString();
-
 async function onboardingNoName(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-  await device.clickOnElementAll(new CreateAccountButton(device));
+  // the expected error is 'Please enter a display name' which is represented by the following localized string
+  const expectedError = englishStripped('displayNameErrorDescription').toString();
+  const emptyName = '';
   // this check is to avoid false positives
   if (emptyName.length > 0) {
     throw new Error('The emptyName string is not empty but it must be.');

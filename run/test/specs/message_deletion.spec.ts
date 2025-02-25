@@ -29,26 +29,16 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   await device1.longPressMessage(sentMessage);
   // Select Delete icon
   await device1.clickOnByAccessibilityID('Delete message');
-  // There is no modal on iOS yet (to come)
-  await device1
-    .onAndroid()
-    .checkModalStrings(
-      englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
-      englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()
-    );
-
+  await device1.checkModalStrings(
+    englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
+    englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()
+  );
   // Select 'Delete on this device only'
   await device1.clickOnElementAll(new DeleteMessageLocally(device1));
-  // Confirm deletion Android only
-  await device1.onAndroid().clickOnElementAll(new DeleteMessageConfirmationModal(device1));
+  await device1.clickOnElementAll(new DeleteMessageConfirmationModal(device1));
 
   // Device 1 should show 'Deleted message' message
-  await device1.onIOS().hasElementBeenDeleted({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: sentMessage,
-  });
-  await device1.onAndroid().waitForTextElementToBePresent({
+  await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Deleted message',
   });
