@@ -46,7 +46,7 @@ export class InviteContactConfirm extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Invite',
+          selector: 'Confirm invite button',
         };
     }
   }
