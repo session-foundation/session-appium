@@ -11,7 +11,7 @@ import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppFourDevices } from './utils/open_app';
 
 bothPlatformsIt('Add contact to group', 'high', addContactToGroup);
-
+// TODO NEED TO UPDATE FOR IOS
 async function addContactToGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
   // Create users A, B and C

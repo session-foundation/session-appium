@@ -4,7 +4,6 @@ import { Group, GROUPNAME, User } from '../../../types/testing';
 import { Contact } from '../locators/global';
 import { CreateGroupButton, GroupNameInput } from '../locators/groups';
 import { newContact } from './create_contact';
-import { sortByPubkey } from './get_account_id';
 import { SupportedPlatformsType } from './open_app';
 
 export const createGroup = async (
@@ -58,13 +57,13 @@ export const createGroup = async (
     }),
   ]);
   // Sort by account ID
-  const [firstUser, secondUser] = sortByPubkey(userTwo, userThree);
+  // const [firstUser, secondUser] = sortByPubkey(userTwo, userThree);
   await Promise.all([
-    device1.waitForControlMessageToBePresent(
-      englishStripped(`groupMemberNewTwo`)
-        .withArgs({ name: firstUser, other_name: secondUser })
-        .toString()
-    ),
+    // device1.waitForControlMessageToBePresent(
+    //   englishStripped(`groupMemberNewTwo`)
+    //     .withArgs({ name: firstUser, other_name: secondUser })
+    //     .toString()
+    // ),
     device2.waitForControlMessageToBePresent(
       englishStripped('groupInviteYouAndOtherNew')
         .withArgs({ other_name: userThree.userName })

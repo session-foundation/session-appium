@@ -361,7 +361,7 @@ export class DeleteMessageLocally extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Delete on this device only',
+          selector: 'Delete for me',
         };
     }
   }
