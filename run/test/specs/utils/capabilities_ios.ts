@@ -70,7 +70,7 @@ function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
   return uuid;
 }
 
-const emulatorUUIDs = Array.from({ length: 12 }, (_, index) =>
+const emulatorUUIDs = Array.from({ length: MAX_CAPABILITIES_INDEX }, (_, index) =>
   getIOSSimulatorUUIDFromEnv(index as CapabilitiesIndexType)
 );
 
