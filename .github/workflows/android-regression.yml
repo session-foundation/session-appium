@@ -99,9 +99,9 @@ on:
 
 jobs:
   regression:
-    strategy: 
+    strategy:
       matrix:
-        platform: [${{ github.event.inputs.PLATFORM }}]
+        platform: ${{ github.event.inputs.PLATFORM }}
     runs-on: [self-hosted, linux, X64, qa-android]
     env:
       ANDROID_APK: '../extracted/session-android.apk'
@@ -207,7 +207,7 @@ jobs:
           git status
           touch yarn.lock
           yarn install --immutable
-          
+
       - name: Start Appium server
         run: |
           cd forked-session-appium
