@@ -101,7 +101,7 @@ jobs:
   regression:
     strategy:
       matrix:
-        platform: ${{ github.event.inputs.PLATFORM }}
+        platform: ['${{ github.event.inputs.PLATFORM }}']
     runs-on: [self-hosted, linux, X64, qa-android]
     env:
       ANDROID_APK: '../extracted/session-android.apk'
