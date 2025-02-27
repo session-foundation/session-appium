@@ -233,7 +233,7 @@ jobs:
           if [ "${{ github.event.inputs.PLATFORM }}" == "android" ]; then
             start_with_snapshots
           else 
-            start_simulators_from_env
+            start_simulators_from_env-iOS
           fi
       - name: List all tests
         run: |
@@ -256,5 +256,5 @@ jobs:
           if [ "${{ github.event.inputs.PLATFORM }}" == "android" ]; then
             killall_emulators
           else
-            stop_simulators_from_env
+            stop_simulators_from_env_iOS
           fi

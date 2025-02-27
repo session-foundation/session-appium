@@ -129,7 +129,7 @@ function start_simulators_from_env_iOS() {
 }
 
 # Function to start the Appium server
-function start_appium_server_iOS() {
+function start_appium_server() {
     echo "Starting Appium server..."
     cd forked-session-appium || exit 1
     start-server
