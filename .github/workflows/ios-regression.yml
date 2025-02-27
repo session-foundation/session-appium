@@ -1,215 +1,214 @@
-name: iOS regression tests
-run-name: '${{ inputs.RISK }} regressions on: ${{ inputs.BRANCH_TO_CHECKOUT }} (${{ inputs.APPIUM_REPO }})'
+# name: iOS regression tests
+# run-name: '${{ inputs.RISK }} regressions on: ${{ inputs.BRANCH_TO_CHECKOUT }} (${{ inputs.APPIUM_REPO }})'
 
-on:
-  workflow_dispatch:
-    inputs:
-      APK_URL:
-        description: 'ipa url to test'
-        required: true
-        type: string
-        default: https://oxen.rocks/session-foundation/session-ios/master/session-ios-20250122T233019Z-55779b062-sim.tar.xz
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       APK_URL:
+#         description: 'ipa url to test'
+#         required: true
+#         type: string
+#         default: https://oxen.rocks/session-foundation/session-ios/master/session-ios-20250122T233019Z-55779b062-sim.tar.xz
 
-      RISK:
-        description: 'risks to target'
-        required: false
-        type: choice
-        options:
-          - 'high-risk'
-          - 'medium-risk'
-          - 'low-risk'
-          - ''
+#       RISK:
+#         description: 'risks to target'
+#         required: false
+#         type: choice
+#         options:
+#           - 'high-risk'
+#           - 'medium-risk'
+#           - 'low-risk'
+#           - ''
 
-      APPIUM_REPO:
-        description: 'appium repo to checkout'
-        required: true
-        type: choice
-        options:
-          - session-foundation/session-appium
-          - burtonemily/session-appium
-          - bilb/session-appium
-        default: session-foundation/session-appium
+#       APPIUM_REPO:
+#         description: 'appium repo to checkout'
+#         required: true
+#         type: choice
+#         options:
+#           - session-foundation/session-appium
+#           - burtonemily/session-appium
+#           - bilb/session-appium
+#         default: session-foundation/session-appium
 
-      BRANCH_TO_CHECKOUT:
-        description: 'branch to checkout'
-        required: true
-        type: string
-        default: ci-ios
+#       BRANCH_TO_CHECKOUT:
+#         description: 'branch to checkout'
+#         required: true
+#         type: string
+#         default: ci-ios
 
-      # SHARD_NUMBER:
-      #   description: 'shard number'
-      #   required: true
-      #   type: choice
-      #   options:
-      #     - '1'
-      #     - '2'
-      #     - '3'
-      #     - '4'
-      #   default: '1'
+#       # SHARD_NUMBER:
+#       #   description: 'shard number'
+#       #   required: true
+#       #   type: choice
+#       #   options:
+#       #     - '1'
+#       #     - '2'
+#       #     - '3'
+#       #     - '4'
+#       #   default: '1'
 
-      # SHARD_COUNT:
-      #   description: 'shard count'
-      #   required: true
-      #   type: choice
-      #   options:
-      #     - '1'
-      #     - '2'
-      #     - '3'
-      #     - '4'
-      #   default: '1'
+#       # SHARD_COUNT:
+#       #   description: 'shard count'
+#       #   required: true
+#       #   type: choice
+#       #   options:
+#       #     - '1'
+#       #     - '2'
+#       #     - '3'
+#       #     - '4'
+#       #   default: '1'
 
-      PLAYWRIGHT_RETRIES_COUNT:
-        description: 'retries of failing tests to do at most'
-        required: true
-        type: choice
-        options:
-          - '0'
-          - '1'
-          - '2'
-        default: '0'
+#       PLAYWRIGHT_RETRIES_COUNT:
+#         description: 'retries of failing tests to do at most'
+#         required: true
+#         type: choice
+#         options:
+#           - '0'
+#           - '1'
+#           - '2'
+#         default: '0'
 
-      PRINT_FAILED_TEST_LOGS:
-        description: 'print failed test logs (1 to enable)'
-        required: true
-        type: choice
-        options:
-          - '0'
-          - '1'
-        default: '0'
-      PRINT_ONGOING_TEST_LOGS:
-        description: 'print ongoing test logs (1 to enable)'
-        required: true
-        type: choice
-        options:
-          - '0'
-          - '1'
-        default: '0'
+#       PRINT_FAILED_TEST_LOGS:
+#         description: 'print failed test logs (1 to enable)'
+#         required: true
+#         type: choice
+#         options:
+#           - '0'
+#           - '1'
+#         default: '0'
+#       PRINT_ONGOING_TEST_LOGS:
+#         description: 'print ongoing test logs (1 to enable)'
+#         required: true
+#         type: choice
+#         options:
+#           - '0'
+#           - '1'
+#         default: '0'
 
-# concurrency:
-#   group: ${{ github.workflow }}
-#   cancel-in-progress: true
+# # concurrency:
+# #   group: ${{ github.workflow }}
+# #   cancel-in-progress: true
 
-jobs:
-  ios-regression:
-    runs-on: [self-hosted]
-    env:
-      IOS_APP_PATH_PREFIX: '/Users/thedebuggernaut/Desktop/ios/16-01-25/Session.app'
-      ANDROID_APK: '/Users/thedebuggernaut/Desktop/android/session-android-20250108T233657Z-d001f8fb8-universal/session-1.20.8-universal.apk'
-      PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
-      PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
-      PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
-      PLAYWRIGHT_REPEAT_COUNT: 1
-      PLAYWRIGHT_WORKERS_COUNT: 3
-      SDK_MANAGER_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/cmdline-tools/latest/bin/sdkmanager'
-      AVD_MANAGER_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/cmdline-tools/latest/bin/avdmanager'
-      ANDROID_SYSTEM_IMAGE: 'system-images;android-35;google_atd;x86_64'
-      EMULATOR_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/emulator/emulator'
-      IOS_FIRST_SIMULATOR: '49651A15-3E14-4BAF-8B8E-0C630C35B8DD'
-      IOS_SECOND_SIMULATOR: '7CA21E47-56AC-4B76-82A4-1D5199515F38'
-      IOS_THIRD_SIMULATOR: 'FE1DEDC7-D530-41E7-9B38-86ED2DDB97CD'
-      IOS_FOURTH_SIMULATOR: '561C621C-2CEF-4FCC-87B7-E6221718D15C'
-      IOS_FIFTH_SIMULATOR: '5AA87E03-5831-4209-87A0-21E5ECDC490F'
-      IOS_SIXTH_SIMULATOR: '6FB10AF3-3970-46BA-B414-1206AA4E726D'
-      IOS_SEVENTH_SIMULATOR: '0BDA36C0-83F4-46DF-ADC9-FF30E969D4BD'
-      IOS_EIGHTH_SIMULATOR: '1C61A0B6-3085-46B6-9B2E-6E9A1B594944'
-      IOS_NINTH_SIMULATOR: '7C69D129-BD40-4BC0-9A0D-6A7E990F23E8'
-      IOS_TENTH_SIMULATOR: '275E0C5B-2458-4490-831D-4CE86C8EC704'
-      IOS_ELEVENTH_SIMULATOR: 'EA5C5BCB-1E3E-4FFC-88BB-8D1DE354BC3B'
-      IOS_TWELFTH_SIMULATOR: '41514F87-DC49-4C81-B60C-03D1F8653A42'
-      # echo "SHARD_NUMBER ${{ github.event.inputs.SHARD_NUMBER }}"
-      # echo "SHARD_COUNT ${{ github.event.inputs.SHARD_COUNT }}"
+# jobs:
+#   ios-regression:
+#     runs-on: [self-hosted]
+#     env:
+#       IOS_APP_PATH_PREFIX: '/Users/thedebuggernaut/Desktop/ios/16-01-25/Session.app'
+#       ANDROID_APK: '/Users/thedebuggernaut/Desktop/android/session-android-20250108T233657Z-d001f8fb8-universal/session-1.20.8-universal.apk'
+#       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
+#       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
+#       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
+#       PLAYWRIGHT_REPEAT_COUNT: 1
+#       PLAYWRIGHT_WORKERS_COUNT: 3
+#       SDK_MANAGER_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/cmdline-tools/latest/bin/sdkmanager'
+#       AVD_MANAGER_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/cmdline-tools/latest/bin/avdmanager'
+#       ANDROID_SYSTEM_IMAGE: 'system-images;android-35;google_atd;x86_64'
+#       EMULATOR_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/emulator/emulator'
+#       IOS_FIRST_SIMULATOR: '49651A15-3E14-4BAF-8B8E-0C630C35B8DD'
+#       IOS_SECOND_SIMULATOR: '7CA21E47-56AC-4B76-82A4-1D5199515F38'
+#       IOS_THIRD_SIMULATOR: 'FE1DEDC7-D530-41E7-9B38-86ED2DDB97CD'
+#       IOS_FOURTH_SIMULATOR: '561C621C-2CEF-4FCC-87B7-E6221718D15C'
+#       IOS_FIFTH_SIMULATOR: '5AA87E03-5831-4209-87A0-21E5ECDC490F'
+#       IOS_SIXTH_SIMULATOR: '6FB10AF3-3970-46BA-B414-1206AA4E726D'
+#       IOS_SEVENTH_SIMULATOR: '0BDA36C0-83F4-46DF-ADC9-FF30E969D4BD'
+#       IOS_EIGHTH_SIMULATOR: '1C61A0B6-3085-46B6-9B2E-6E9A1B594944'
+#       IOS_NINTH_SIMULATOR: '7C69D129-BD40-4BC0-9A0D-6A7E990F23E8'
+#       IOS_TENTH_SIMULATOR: '275E0C5B-2458-4490-831D-4CE86C8EC704'
+#       IOS_ELEVENTH_SIMULATOR: 'EA5C5BCB-1E3E-4FFC-88BB-8D1DE354BC3B'
+#       IOS_TWELFTH_SIMULATOR: '41514F87-DC49-4C81-B60C-03D1F8653A42'
+#       # echo "SHARD_NUMBER ${{ github.event.inputs.SHARD_NUMBER }}"
+#       # echo "SHARD_COUNT ${{ github.event.inputs.SHARD_COUNT }}"
 
-    steps:
-      - uses: actions/checkout@v4
-      - name: Runner Details
-        run: |
-          echo "BRANCH_TO_CHECKOUT ${{ github.event.inputs.BRANCH_TO_CHECKOUT }}"
-          echo "APPIUM_REPO ${{ github.event.inputs.APPIUM_REPO }}"
-          echo "APK_URL ${{ github.event.inputs.APK_URL }}"
-          echo "RISK ${{ github.event.inputs.RISK }}"
+#     steps:
+#       - uses: actions/checkout@v4
+#       - name: Runner Details
+#         run: |
+#           echo "BRANCH_TO_CHECKOUT ${{ github.event.inputs.BRANCH_TO_CHECKOUT }}"
+#           echo "APPIUM_REPO ${{ github.event.inputs.APPIUM_REPO }}"
+#           echo "APK_URL ${{ github.event.inputs.APK_URL }}"
+#           echo "RISK ${{ github.event.inputs.RISK }}"
 
-      - name: Download ipa
-        run: |
-          curl -o session-ios.sim.tar.xz ${{ github.event.inputs.APK_URL }}
-          ls
-          pwd
+#       - name: Download ipa
+#         run: |
+#           curl -o session-ios.sim.tar.xz ${{ github.event.inputs.APK_URL }}
+#           ls
+#           pwd
 
-      - name: Inspect archive contents
-        run: |
-          tar -tf session-ios.sim.tar.xz
+#       - name: Inspect archive contents
+#         run: |
+#           tar -tf session-ios.sim.tar.xz
 
-      - name: Extract app
-        run: |
-          tar xf session-ios.sim.tar.xz
-          mkdir -p extracted
-          mv *.app extracted/ || echo "No .app files found to move"
-          ls extracted
+#       - name: Extract app
+#         run: |
+#           tar xf session-ios.sim.tar.xz
+#           mkdir -p extracted
+#           mv *.app extracted/ || echo "No .app files found to move"
+#           ls extracted
 
-      - name: Verify extracted files
-        run: |
-          if [ ! -d "extracted" ]; then
-            echo "Extraction failed: extracted directory not found"
-            exit 1
-          fi
-          ls extracted
+#       - name: Verify extracted files
+#         run: |
+#           if [ ! -d "extracted" ]; then
+#             echo "Extraction failed: extracted directory not found"
+#             exit 1
+#           fi
+#           ls extracted
 
-      - name: Rename extracted folder
-        run: |
-          mkdir -p extracted
-          mv session-ios extracted || echo "No session-ios directory to move"
-          ls extracted
-      - uses: actions/checkout@v4
-        with:
-          repository: ${{ github.event.inputs.APPIUM_REPO }}
-          ref: ${{ github.event.inputs.BRANCH_TO_CHECKOUT }}
-          path: 'forked-session-appium'
+#       - name: Rename extracted folder
+#         run: |
+#           mkdir -p extracted
+#           mv session-ios extracted || echo "No session-ios directory to move"
+#           ls extracted
+#       - uses: actions/checkout@v4
+#         with:
+#           repository: ${{ github.event.inputs.APPIUM_REPO }}
+#           ref: ${{ github.event.inputs.BRANCH_TO_CHECKOUT }}
+#           path: 'forked-session-appium'
 
-      - uses: actions/setup-node@v4
-        with:
-          # node-version-file: 'forked-session-appium/.nvmrc'
-          node-version: 18.15.0
+#       - uses: actions/setup-node@v4
+#         with:
+#           # node-version-file: 'forked-session-appium/.nvmrc'
+#           node-version: 18.15.0
 
-      - name: Install yarn
-        run: |
-          npm install -g yarn
-          corepack enable
-          yarn set version 4.1.1
-      - name: Install test dependencies
-        run: |
-          cd forked-session-appium
-          ls
-          git status
-          touch yarn.lock
-          yarn install --immutable
-      - name: Start Appium server
-        run: |
-          cd forked-session-appium
-          yarn "./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --allow-cors"
-      - name: Build the iOS tests
-        run: |
-          cd forked-session-appium
-          yarn tsc
-      - name: Create and start simulators
-        shell: bash
-        run: |
-          source ./scripts/ci-ios.sh
-          create_simulators
-          start_simulators_from_env
-      - name: List all tests
-        run: |
-          cd forked-session-appium
-          pwd
-          npx playwright test --list
-      - name: Run the iOS tests # ${{ github.event.inputs.SHARD_NUMBER }}​​/${{ github.event.inputs.SHARD_COUNT }}​​
-        run: |
-          cd forked-session-appium
-          pwd
-          yarn test 'ios @${{ github.event.inputs.RISK }}'
+#       - name: Install yarn
+#         run: |
+#           npm install -g yarn
+#           corepack enable
+#           yarn set version 4.1.1
+#       - name: Install test dependencies
+#         run: |
+#           cd forked-session-appium
+#           ls
+#           git status
+#           touch yarn.lock
+#           yarn install --immutable
+#       - name: Start Appium server
+#         run: |
+#           cd forked-session-appium
+#           yarn "./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --allow-cors"
+#       - name: Build the iOS tests
+#         run: |
+#           cd forked-session-appium
+#           yarn tsc
+#       - name: Start simulators
+#         shell: bash
+#         run: |
+#           source ./scripts/ci-ios.sh
+#           start_simulators_from_env
+#       - name: List all tests
+#         run: |
+#           cd forked-session-appium
+#           pwd
+#           npx playwright test --list
+#       - name: Run the iOS tests # ${{ github.event.inputs.SHARD_NUMBER }}​​/${{ github.event.inputs.SHARD_COUNT }}​​
+#         run: |
+#           cd forked-session-appium
+#           pwd
+#           yarn test 'ios @${{ github.event.inputs.RISK }}'
 
-      - name: Stop emulators
-        if: always()
-        continue-on-error: true # just so we don't fail
-        shell: bash
-        run: |
-          source ./scripts/ci-ios.sh
-          stop_simulators_from_env
+#       - name: Stop emulators
+#         if: always()
+#         continue-on-error: true # just so we don't fail
+#         shell: bash
+#         run: |
+#           source ./scripts/ci-ios.sh
+#           stop_simulators_from_env

@@ -1,11 +1,19 @@
 name: Android regression tests
-run-name: '${{ inputs.RISK }} regressions on: ${{ inputs.BRANCH_TO_CHECKOUT }} (${{ inputs.APPIUM_REPO }})'
+run-name: '${{ inputs.RISK }} regressions on: ${{ inputs.BRANCH_TO_CHECKOUT }} (${{ inputs.APPIUM_REPO }}) on ${{ inputs.PLATFORM }}'
 
 on:
   workflow_dispatch:
     inputs:
+      PLATFORM:
+        description: 'platform to test'
+        required: true
+        type: choice
+        options:
+          - 'android'
+          - 'ios'
+        default: 'android'
       APK_URL:
-        description: 'APK.tar.gz url to test'
+        description: 'url to test'
         required: true
         type: string
         default: https://oxen.rocks/session-foundation/session-android/release/1.20.3/session-android-20241101T052421Z-be16d3bf9-universal.tar.xz
@@ -90,10 +98,14 @@ on:
 #   cancel-in-progress: true
 
 jobs:
-  android-regression:
+  regression:
+    strategy: 
+      matrix:
+        platform: [${{ github.event.inputs.PLATFORM }}]
     runs-on: [self-hosted, linux, X64, qa-android]
     env:
       ANDROID_APK: '../extracted/session-android.apk'
+      IOS_APP_PATH_PREFIX: '/Users/thedebuggernaut/Desktop/ios/16-01-25/Session.app'
       APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
       ANDROID_SDK_ROOT: '/opt/android'
       PLAYWRIGHT_WORKERS_COUNT: 1
@@ -125,23 +137,51 @@ jobs:
           echo "APK_URL ${{ github.event.inputs.APK_URL }}"
           echo "RISK ${{ github.event.inputs.RISK }}"
 
-      - name: Download APK
+      - name: Download APK/IPA
         run: |
-          wget -q -O session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
+          if [ ${{ github.event.inputs.PLATFORM }} == 'android' ]; then
+            wget -q -O session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
+          else
+            curl -o session-ios.sim.tar.xz ${{ github.event.inputs.APK_URL }}
+          fi
           ls
           pwd
-      - name: Extract APK
+
+      - name: Extract APK/APP
         run: |
-          tar xf session-android.apk.tar.xz
-          ls
+          if [ ${{ github.event.inputs.PLATFORM }} == 'android' ]; then
+            tar xf session-android.apk.tar.xz
+            ls
+          else 
+            tar xf session-ios.sim.tar.xz
+            mkdir -p extracted
+            mv *.app extracted/ || echo "No .app files found to move"
+            ls extracted
+          fi
           pwd
+
+      - name: Verify extracted files (iOS only)
+        if: ${{ github.event.inputs.PLATFORM == 'ios' }}
+        run: |
+          if [ ! -d "extracted" ]; then
+            echo "Extraction failed: extracted directory not found"
+            exit 1
+          fi
+          ls extracted
+
       - name: Rename extracted folder
         run: |
-          mv session-android-*universal extracted
-          ls extracted
-          mv extracted/*.apk extracted/session-android.apk
-          ls extracted
-          pwd
+          if[ ${{ github.event.inputs.PLATFORM }} == 'android' ]; then
+            mv session-android-*universal extracted
+            ls extracted
+            mv extracted/*.apk extracted/session-android.apk
+            ls extracted
+            pwd
+          else
+            mkdir -p extracted
+            mv session-ios extracted || echo "No session-ios directory to move"
+            ls extracted
+          fi
       - uses: actions/checkout@v4
         with:
           repository: ${{ github.event.inputs.APPIUM_REPO }}
@@ -159,6 +199,7 @@ jobs:
           npm install -g yarn
           corepack enable
           yarn set version 4.1.1
+
       - name: Install test dependencies
         run: |
           cd forked-session-appium
@@ -166,38 +207,54 @@ jobs:
           git status
           touch yarn.lock
           yarn install --immutable
-      - name: Build the Android tests
+          
+      - name: Start Appium server
+        run: |
+          cd forked-session-appium
+          yarn "./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --allow-cors"
+
+      - name: Build the tests
         run: |
           cd forked-session-appium
           yarn tsc
+
       - name: Restart adb server
         shell: bash
-        continue-on-error: true # just so we don't fail if adb wasn't alreadu running
+        continue-on-error: true # just so we don't fail if adb wasn't already running
         run: |
           source ./scripts/ci.sh
           adb kill-server;
           adb start-server;
-      - name: Start 4 android emulators with snapshots
+
+      - name: Start emulators
         shell: bash
         run: |
           source ./scripts/ci.sh
-          start_with_snapshots
+          if [ "${{ github.event.inputs.PLATFORM }}" == "android" ]; then
+            start_with_snapshots
+          else 
+            start_simulators_from_env
+          fi
       - name: List all tests
         run: |
           cd forked-session-appium
           pwd
           npx playwright test --list
 
-      - name: Run the Android tests # ${{ github.event.inputs.SHARD_NUMBER }}​​/${{ github.event.inputs.SHARD_COUNT }}​​
+      - name: Run the tests # ${{ github.event.inputs.SHARD_NUMBER }}​​/${{ github.event.inputs.SHARD_COUNT }}​​
         run: |
           cd forked-session-appium
           pwd
-          yarn test 'android @${{ github.event.inputs.RISK }}'
+          yarn test '"${{ github.event.inputs.PLATFORM }}" "@${{ github.event.inputs.RISK }}"'
 
-      - name: Killall running emulators
+      - name: Kill all running emulators
         if: always()
         continue-on-error: true # just so we don't fail
         shell: bash
         run: |
           source ./scripts/ci.sh
-          killall_emulators
+          if [ "${{ github.event.inputs.PLATFORM }}" == "android" ]; then
+            killall_emulators
+          else
+            stop_simulators_from_env
+          fi
