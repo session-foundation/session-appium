@@ -61,7 +61,6 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   await device1.navigateBack(true);
   // iOS doesn't automatically go back to conversation settings
   await device1.onIOS().navigateBack();
-  await device1.onIOS().navigateBack();
   // Check control messages
   await Promise.all(
     [device1, device2, device3].map(device =>

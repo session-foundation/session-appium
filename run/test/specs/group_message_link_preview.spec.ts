@@ -95,11 +95,12 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType) {
   // Accept dialog for link preview
   await device1.checkModalStrings(
     englishStripped('linkPreviewsEnable').toString(),
-    englishStripped('linkPreviewsFirstDescription').withArgs({ app_name: 'Session' }).toString()
+    englishStripped('linkPreviewsFirstDescription').withArgs({ app_name: 'Session' }).toString(),
+    true
   );
   await device1.clickOnByAccessibilityID('Enable');
-    //wait for preview to generate
-    await sleepFor(5000);
+  //wait for preview to generate
+  await sleepFor(5000);
   // No preview on first send
   await device1.clickOnByAccessibilityID('Send message button');
   await device1.waitForTextElementToBePresent({

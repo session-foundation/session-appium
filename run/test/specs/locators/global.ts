@@ -57,7 +57,7 @@ export class DeleteContactModalConfirm extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'accessibility id',
-          selector: 'Yes',
+          selector: 'Delete',
         } as const;
       case 'ios':
         return {

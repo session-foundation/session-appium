@@ -302,7 +302,7 @@ export class InviteContactsButton extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
+          strategy: 'id',
           selector: 'Invite button',
         };
       case 'ios':

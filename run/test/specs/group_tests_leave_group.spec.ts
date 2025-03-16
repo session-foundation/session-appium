@@ -26,7 +26,7 @@ async function leaveGroup(platform: SupportedPlatformsType) {
   await device3.clickOnElementAll(new LeaveGroupButton(device3));
   // Modal with Leave/Cancel
   await device3.clickOnByAccessibilityID('Leave');
-  await device3.navigateBack();
+  // await device3.onAndroid().navigateBack();
   // Check for control message
   const groupMemberLeft = englishStripped('groupMemberLeft')
     .withArgs({ name: userC.userName })
