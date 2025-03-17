@@ -81,6 +81,8 @@ const capabilities = emulatorUUIDs.map((udid, index) => ({
 }));
 
 export function getIosCapabilities(capabilitiesIndex: CapabilitiesIndexType): W3CCapabilities {
+  console.log('Number of iOS capabilities: ', capabilities.length);
+  console.log('Capabilities:', capabilities);
   if (capabilitiesIndex >= capabilities.length) {
     throw new Error(`Asked invalid ios cap index: ${capabilitiesIndex}`);
   }

@@ -109,6 +109,7 @@ NUMBER_WORDS=("FIRST" "SECOND" "THIRD" "FOURTH" "FIFTH" "SIXTH" "SEVENTH" "EIGHT
 # Function to boot simulators from environment variables
 function start_simulators_from_env_iOS() {
     echo "Starting iOS simulators from environment variables..."
+    echo $IOS_NINTH_SIMULATOR
 
     for i in {1..12}; do
         simulator_label=${NUMBER_WORDS[$((i - 1))]}
