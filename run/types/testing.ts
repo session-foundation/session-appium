@@ -332,12 +332,11 @@ export type AccessibilityId =
   | 'Share'
   | 'Photo taken on Jun 12, 2103 2:28:16 PM'
   | 'Photo, 19 March 2024, 5:13 pm'
-  // Temporary ID until iOS implement 'Contact' accessibility ID
-  | USERNAME
   // Possible time string outputs from convertTime function
   | '1967-05-06 07:00:00 +0000'
   | '1967-05-05 20:00:00 +0000'
-  | '1967-05-05 21:00:00 +0000';
+  | '1967-05-05 21:00:00 +0000'
+  | 'Username input';
 
 export type Id =
   | 'Modal heading'

@@ -17,7 +17,7 @@ bothPlatformsIt('Share to session', 'low', shareToSession);
 
 async function shareToSession(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const testMessage = 'Testing sharing an image through photo gallery to Session}';
+  const testMessage = 'Testing sharing an image through photo gallery to Session';
   const fileName = 'test_image.jpg';
   const [userA, userB] = await Promise.all([
     newUser(device1, USERNAME.ALICE),
@@ -37,11 +37,11 @@ async function shareToSession(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new ImageName(device1));
   await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Share' });
   await device1.clickOnElementAll(new ShareExtensionIcon(device1));
-  //TODO Change this - This is a temporary ID until iOS implement 'Contact' accessibility ID
-  await device1.onIOS().clickOnElementAll({ strategy: 'accessibility id', selector: USERNAME.BOB });
-  await device1
-    .onAndroid()
-    .clickOnElementAll({ strategy: 'accessibility id', selector: 'Contact', text: USERNAME.BOB });
+  await device1.clickOnElementAll({
+    strategy: 'accessibility id',
+    selector: 'Contact',
+    text: USERNAME.BOB,
+  });
   await device1.inputText(testMessage, new MediaMessageInput(device1));
   await device1.clickOnElementAll(new SendMediaButton(device1));
   // Loading screen...
