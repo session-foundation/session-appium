@@ -337,7 +337,7 @@ export type AccessibilityId =
   // Possible time string outputs from convertTime function
   | '1967-05-06 07:00:00 +0000'
   | '1967-05-05 20:00:00 +0000'
-  | '1967-05-05 21:00:00 +0000'
+  | '1967-05-05 21:00:00 +0000';
 
 export type Id =
   | 'Modal heading'

@@ -1,9 +1,7 @@
 import { pick } from 'lodash';
 import * as util from 'util';
-import moment from 'moment-timezone';
 
 import { exec as execNotPromised } from 'child_process';
-import { AccessibilityId } from '../../../types/testing';
 const exec = util.promisify(execNotPromised);
 
 export async function runScriptAndLog(toRun: string, verbose = false): Promise<string> {
