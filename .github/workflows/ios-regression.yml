@@ -158,6 +158,7 @@ jobs:
           mkdir -p extracted
           mv session-ios extracted || echo "No session-ios directory to move"
           ls extracted
+
       - uses: actions/checkout@v4
         with:
           repository: ${{ github.event.inputs.APPIUM_REPO }}
