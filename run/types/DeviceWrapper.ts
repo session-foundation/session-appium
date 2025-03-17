@@ -1138,6 +1138,7 @@ export class DeviceWrapper {
         await this.pushMediaToDevice(platform, fileName, nowHappyIos);
       }
       await sleepFor(100);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await this.clickOnByAccessibilityID(formattedStr, 1000);
       if (message) {
         await this.clickOnByAccessibilityID('Text input box');
