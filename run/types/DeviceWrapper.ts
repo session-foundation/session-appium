@@ -18,13 +18,9 @@ import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
 import { getAdbFullPath } from '../test/specs/utils/binaries';
+import { parseDataImage } from '../test/specs/utils/check_colour';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
-import {
-  convertTime,
-  isDeviceAndroid,
-  isDeviceIOS,
-  runScriptAndLog,
-} from '../test/specs/utils/utilities';
+import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/specs/utils/utilities';
 import {
   AccessibilityId,
   DISAPPEARING_TIMES,
@@ -36,7 +32,6 @@ import {
   User,
   XPath,
 } from './testing';
-import { parseDataImage } from '../test/specs/utils/check_colour';
 
 export type Coordinates = {
   x: number;
