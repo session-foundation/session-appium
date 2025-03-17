@@ -60,16 +60,3 @@ export function hexToRgbObject(hex: string): { R: number; G: number; B: number }
     B: decimalValue & 255,
   };
 }
-
-export function convertTime(dateString: string, timeZone: string) {
-  const year = dateString.substring(0, 4);
-  const month = dateString.substring(4, 6);
-  const day = dateString.substring(6, 8);
-  const hour = dateString.substring(8, 10);
-  const minute = dateString.substring(10, 12);
-  const second = dateString.substring(13, 15);
-
-  const formattedString = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-  const localTime = moment.tz(formattedString, 'YYYY-MM-DD HH:mm:ss', timeZone);
-  return localTime.utc().format('YYYY-MM-DD HH:mm:ss Z') as AccessibilityId;
-}

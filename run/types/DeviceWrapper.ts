@@ -1113,12 +1113,8 @@ export class DeviceWrapper {
 
   // TODO FIX UP THIS FUNCTION
   public async sendImage(platform: SupportedPlatformsType, message?: string, community?: boolean) {
-    //     const ronSwansonBirthday = '196705060700.00';
-
-    const now = new Date();
-    const nowHappyIos = `${now.getFullYear()}${now.getMonth()}${now.getDate()}${now.getHours()}${now.getMinutes()}${now.getSeconds()}.00`;
+    const ronSwansonBirthday = '196705060700.00';
     const fileName = 'test_image.jpg';
-    const formattedStr = convertTime(nowHappyIos, 'Sydney/Australia');
     if (platform === 'ios') {
       await this.clickOnByAccessibilityID('Attachments button');
       await sleepFor(5000);
@@ -1131,15 +1127,14 @@ export class DeviceWrapper {
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
       const testImage = await this.doesElementExist({
         strategy: 'accessibility id',
-        selector: formattedStr,
+        selector: `1967-05-05 21:00:00 +0000`,
         maxWait: 1000,
       });
       if (!testImage) {
-        await this.pushMediaToDevice(platform, fileName, nowHappyIos);
+        await this.pushMediaToDevice(platform, fileName, ronSwansonBirthday);
       }
       await sleepFor(100);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      await this.clickOnByAccessibilityID(formattedStr, 1000);
+      await this.clickOnByAccessibilityID(`1967-05-05 21:00:00 +0000`, 1000);
       if (message) {
         await this.clickOnByAccessibilityID('Text input box');
         await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
