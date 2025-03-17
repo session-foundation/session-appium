@@ -1,17 +1,9 @@
-name: Regression tests
-run-name: '${{ inputs.RISK }} regressions on: ${{ inputs.BRANCH_TO_CHECKOUT }} (${{ inputs.APPIUM_REPO }}) on ${{ inputs.PLATFORM }}'
+name: Android regression tests
+run-name: '${{ inputs.RISK }} regressions on: ${{ inputs.BRANCH_TO_CHECKOUT }} (${{ inputs.APPIUM_REPO }})'
 
 on:
   workflow_dispatch:
     inputs:
-      PLATFORM:
-        description: 'platform to test'
-        required: true
-        type: choice
-        options:
-          - 'android'
-          - 'ios'
-        default: 'android'
       APK_URL:
         description: 'url to test'
         required: true
@@ -99,19 +91,16 @@ on:
 
 jobs:
   regression:
-    strategy:
-      matrix:
-        platform: ['${{ github.event.inputs.PLATFORM }}']
     runs-on: [self-hosted, linux, X64, qa-android]
     env:
-      ANDROID_APK: '../extracted/session-android.apk'
       IOS_APP_PATH_PREFIX: '/Users/thedebuggernaut/Desktop/ios/16-01-25/Session.app'
+      ANDROID_APK: '../extracted/session-android.apk'
       APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
       ANDROID_SDK_ROOT: '/opt/android'
-      PLAYWRIGHT_WORKERS_COUNT: 1
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
+      PLAYWRIGHT_WORKERS_COUNT: 1
       IOS_FIRST_SIMULATOR: '49651A15-3E14-4BAF-8B8E-0C630C35B8DD'
       IOS_SECOND_SIMULATOR: '7CA21E47-56AC-4B76-82A4-1D5199515F38'
       IOS_THIRD_SIMULATOR: 'FE1DEDC7-D530-41E7-9B38-86ED2DDB97CD'
@@ -137,51 +126,25 @@ jobs:
           echo "APK_URL ${{ github.event.inputs.APK_URL }}"
           echo "RISK ${{ github.event.inputs.RISK }}"
 
-      - name: Download APK/IPA
+      - name: Download APK
         run: |
-          if [ ${{ github.event.inputs.PLATFORM }} == 'android' ]; then
-            wget -q -O session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
-          else
-            curl -o session-ios.sim.tar.xz ${{ github.event.inputs.APK_URL }}
-          fi
+          wget -q -O session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
           ls
           pwd
 
-      - name: Extract APK/APP
+      - name: Extract APK
         run: |
-          if [ ${{ github.event.inputs.PLATFORM }} == 'android' ]; then
-            tar xf session-android.apk.tar.xz
-            ls
-          else 
-            tar xf session-ios.sim.tar.xz
-            mkdir -p extracted
-            mv *.app extracted/ || echo "No .app files found to move"
-            ls extracted
-          fi
+          tar xf session-android.apk.tar.xz
           pwd
-
-      - name: Verify extracted files (iOS only)
-        if: ${{ github.event.inputs.PLATFORM == 'ios' }}
-        run: |
-          if [ ! -d "extracted" ]; then
-            echo "Extraction failed: extracted directory not found"
-            exit 1
-          fi
-          ls extracted
 
       - name: Rename extracted folder
         run: |
-          if[ ${{ github.event.inputs.PLATFORM }} == 'android' ]; then
-            mv session-android-*universal extracted
-            ls extracted
-            mv extracted/*.apk extracted/session-android.apk
-            ls extracted
-            pwd
-          else
-            mkdir -p extracted
-            mv session-ios extracted || echo "No session-ios directory to move"
-            ls extracted
-          fi
+          mv session-android-*universal extracted
+          ls extracted
+          mv extracted/*.apk extracted/session-android.apk
+          ls extracted
+          pwd
+
       - uses: actions/checkout@v4
         with:
           repository: ${{ github.event.inputs.APPIUM_REPO }}
@@ -213,7 +176,7 @@ jobs:
           cd forked-session-appium
           yarn "./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --allow-cors"
 
-      - name: Build the tests
+      - name: Build the Android tests
         run: |
           cd forked-session-appium
           yarn tsc
@@ -230,11 +193,8 @@ jobs:
         shell: bash
         run: |
           source ./scripts/ci.sh
-          if [ "${{ github.event.inputs.PLATFORM }}" == "android" ]; then
-            start_with_snapshots
-          else 
-            start_simulators_from_env-iOS
-          fi
+          start_with_snapshots
+
       - name: List all tests
         run: |
           cd forked-session-appium
@@ -245,7 +205,7 @@ jobs:
         run: |
           cd forked-session-appium
           pwd
-          yarn test '"${{ github.event.inputs.PLATFORM }}" "@${{ github.event.inputs.RISK }}"'
+          yarn test 'android "@${{ github.event.inputs.RISK }}"'
 
       - name: Kill all running emulators
         if: always()
@@ -253,8 +213,4 @@ jobs:
         shell: bash
         run: |
           source ./scripts/ci.sh
-          if [ "${{ github.event.inputs.PLATFORM }}" == "android" ]; then
-            killall_emulators
-          else
-            stop_simulators_from_env_iOS
-          fi
+          killall_emulators
