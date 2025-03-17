@@ -193,7 +193,7 @@ jobs:
         shell: bash
         run: |
           source ./scripts/ci.sh
-          start_simulators_from_env
+          start_simulators_from_env_iOS
       - name: List all tests
         run: |
           cd forked-session-appium
@@ -211,4 +211,4 @@ jobs:
         shell: bash
         run: |
           source ./scripts/ci.sh
-          stop_simulators_from_env
+          stop_simulators_from_env_iOS
