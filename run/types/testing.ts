@@ -336,7 +336,8 @@ export type AccessibilityId =
   | '1967-05-06 07:00:00 +0000'
   | '1967-05-05 20:00:00 +0000'
   | '1967-05-05 21:00:00 +0000'
-  | 'Username input';
+  | 'Username input'
+  | 'Pin';
 
 export type Id =
   | 'Modal heading'
@@ -383,7 +384,8 @@ export type Id =
   | 'network.loki.messenger:id/emptyStateContainer'
   | 'Hide'
   | 'Contact'
-  | 'com.google.android.apps.photos:id/text';
+  | 'com.google.android.apps.photos:id/text'
+  | 'network.loki.messenger:id/search_cancel';
 
 export type TestRisk = 'high' | 'medium' | 'low' | undefined;
 

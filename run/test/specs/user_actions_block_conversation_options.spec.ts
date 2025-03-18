@@ -45,34 +45,24 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
     selector: 'Blocked banner',
   });
   if (blockedStatus) {
-    console.info(`${userB.userName}` + ' has been blocked');
+    console.info(`${userB.userName} has been blocked`);
   } else {
     console.info('Blocked banner not found');
   }
   // Check settings for blocked user
-  if (platform === 'android') {
-    await device1.navigateBack();
-    await device1.clickOnElementAll(new UserSettings(device1));
-    await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
-    await device1.clickOnElementAll(new BlockedContactsSettings(device1));
-    // Accessibility ID for Blocked Contact not present on iOS
-    await device1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Contact',
-      text: userB.userName,
-    });
-    await device1.navigateBack();
-    await device1.navigateBack();
-    await device1.clickOnElementAll(new ExitUserProfile(device1));
-    await device1.clickOnElementAll({
-      strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: userB.userName,
-    });
-  } else {
-    console.log('iOS needs a test tag for Blocked Contacts to be detected');
-  }
-
+  await device1.navigateBack();
+  await device1.clickOnElementAll(new UserSettings(device1));
+  await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
+  await device1.clickOnElementAll(new BlockedContactsSettings(device1));
+  // Accessibility ID for Blocked Contact not present on iOS
+  await device1.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Contact',
+    text: userB.userName,
+  });
+  await device1.navigateBack();
+  await device1.navigateBack();
+  await device1.clickOnElementAll(new ExitUserProfile(device1));
   // Send message from Blocked User
   await device2.sendMessage(blockedMessage);
   await device1.doesElementExist({

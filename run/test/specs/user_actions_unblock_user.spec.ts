@@ -31,7 +31,7 @@ async function unblockUser(platform: SupportedPlatformsType) {
   });
 
   if (blockedStatus) {
-    console.info(`${userB.userName}` + ' has been blocked');
+    console.info(`${userB.userName} has been blocked`);
   } else {
     console.info('Blocked banner not found');
   }

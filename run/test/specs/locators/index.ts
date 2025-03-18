@@ -508,10 +508,18 @@ export class RevealRecoveryPhraseButton extends LocatorsInterface {
 
 export class DownloadMediaButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Download',
-    };
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Download media',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Download',
+        };
+    }
   }
 }
 
