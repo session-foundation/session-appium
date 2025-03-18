@@ -175,7 +175,7 @@ export class UsernameInput extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Username',
+          selector: 'Username input',
         } as const;
     }
   }

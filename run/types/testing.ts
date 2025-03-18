@@ -333,7 +333,8 @@ export type AccessibilityId =
   | 'Edit'
   | 'Edit group name'
   | 'Invite contacts button'
-  | 'Voice and Video Calls - Switch';
+  | 'Voice and Video Calls - Switch'
+  | 'Username input';
 
 export type Id =
   | 'Modal heading'

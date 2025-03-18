@@ -24,6 +24,11 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   'appium:showXcodeLog': false,
   'appium:autoDismissAlerts': false,
   'appium:reduceMotion': true,
+  'appium:processArguments': {
+    env: {
+      debugDisappearingMessageDurations: 'true',
+    },
+  },
   // "appium:isHeadless": true,
 } as AppiumXCUITestCapabilities;
 
