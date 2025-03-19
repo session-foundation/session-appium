@@ -2,6 +2,7 @@ import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { UsernameInput, UsernameSettings } from './locators';
+import { ConversationSettings } from './locators/conversation';
 import { SaveNameChangeButton } from './locators/settings';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -20,7 +21,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   ]);
   await newContact(platform, device1, userA, device2, userB);
   // Click on settings/more info
-  await device1.clickOnByAccessibilityID('More options');
+  await device1.clickOnElementAll(new ConversationSettings(device1));
   // Click on username to set nickname
   await device1.clickOnElementAll(new UsernameSettings(device1));
   await sleepFor(500);

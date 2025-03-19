@@ -1,5 +1,6 @@
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { ConversationType, DISAPPEARING_TIMES, MergedOptions } from '../../../types/testing';
+import { ConversationSettings } from '../locators/conversation';
 import {
   DisappearingMessagesMenuOption,
   FollowSettingsButton,
@@ -15,7 +16,7 @@ export const setDisappearingMessage = async (
   device2?: DeviceWrapper
 ) => {
   const enforcedType: ConversationType = conversationType;
-  await device.clickOnByAccessibilityID('More options');
+  await device.clickOnElementAll(new ConversationSettings(device));
   // Wait for UI to load conversation options menu
   await sleepFor(500);
   await device.clickOnElementAll(new DisappearingMessagesMenuOption(device));

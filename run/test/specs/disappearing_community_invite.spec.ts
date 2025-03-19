@@ -8,6 +8,7 @@ import { joinCommunity } from './utils/join_community';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 import { testCommunityLink, testCommunityName } from './../../constants/community';
+import { ConversationSettings } from './locators/conversation';
 
 iosIt('Disappearing community invite message 1:1', 'low', disappearingCommunityInviteMessageIos);
 androidIt(
@@ -31,7 +32,7 @@ async function disappearingCommunityInviteMessageIos(platform: SupportedPlatform
   // await device1.navigateBack();
   await device1.navigateBack();
   await joinCommunity(device1, testCommunityLink, testCommunityName);
-  await device1.clickOnByAccessibilityID('More options');
+  await device1.clickOnElementAll(new ConversationSettings(device1));
   await sleepFor(1000);
   await device1.clickOnElementAll(new InviteContactsMenuItem(device1));
   await device1.clickOnElementAll({
@@ -81,7 +82,7 @@ async function disappearingCommunityInviteMessageAndroid(platform: SupportedPlat
 
   await device1.navigateBack();
   await joinCommunity(device1, testCommunityLink, testCommunityName);
-  await device1.clickOnByAccessibilityID('More options');
+  await device1.clickOnElementAll(new ConversationSettings(device1));
   await sleepFor(1000);
   await device1.clickOnElementAll(new InviteContactsMenuItem(device1));
   await device1.clickOnElementByText({

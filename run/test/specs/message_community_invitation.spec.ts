@@ -8,6 +8,7 @@ import { joinCommunity } from './utils/join_community';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 import { testCommunityLink, testCommunityName } from './../../constants/community';
 import { englishStripped } from '../../localizer/i18n/localizedString';
+import { ConversationSettings } from './locators/conversation';
 
 iosIt('Send community invitation', 'medium', sendCommunityInvitationIos);
 androidIt('Send community invitation', 'medium', sendCommunityInviteMessageAndroid);
@@ -25,7 +26,7 @@ async function sendCommunityInvitationIos(platform: SupportedPlatformsType) {
   // Click on plus button
   await device1.navigateBack();
   await joinCommunity(device1, testCommunityLink, testCommunityName);
-  await device1.clickOnByAccessibilityID('More options');
+  await device1.clickOnElementAll(new ConversationSettings(device1));
   await sleepFor(500);
   await device1.clickOnElementAll(new InviteContactsMenuItem(device1));
   await device1.clickOnElementByText({
@@ -78,7 +79,7 @@ async function sendCommunityInviteMessageAndroid(platform: SupportedPlatformsTyp
   await joinCommunity(device1, testCommunityLink, testCommunityName);
   // Wait for community to load
   // Add user B to community
-  await device1.clickOnByAccessibilityID('More options', 5000);
+  await device1.clickOnElementAll(new ConversationSettings(device1));
   await device1.clickOnElementAll(new InviteContactsMenuItem(device1));
   await device1.clickOnElementByText({
     strategy: 'accessibility id',

@@ -2,6 +2,7 @@ import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { LeaveGroup } from './locators';
+import { ConversationSettings } from './locators/conversation';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -23,7 +24,7 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   // Create group with user A, user B and User C
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   await sleepFor(1000);
-  await device3.clickOnByAccessibilityID('More options');
+  await device3.clickOnElementAll(new ConversationSettings(device3));
   await sleepFor(1000);
   await device3.clickOnElementAll(new LeaveGroup(device3));
   await device3.clickOnByAccessibilityID('Leave');

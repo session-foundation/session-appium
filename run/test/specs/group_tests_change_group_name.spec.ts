@@ -2,10 +2,12 @@ import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { EditGroup, EditGroupName } from './locators';
+import { EditGroupNameInput } from './locators/groups';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { ConversationSettings } from './locators/conversation';
 
 iosIt('Change group name', 'medium', changeGroupNameIos);
 androidIt('Change group name', 'medium', changeGroupNameAndroid);
@@ -26,7 +28,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   // Now change the group name
 
   // Click on settings or three dots
-  await device1.clickOnByAccessibilityID('More options');
+  await device1.clickOnElementAll(new ConversationSettings(device1));
   // Click on Edit group option
   await sleepFor(1000);
   // Click on current group name
@@ -35,14 +37,8 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
     englishStripped(`groupInformationSet`).toString(),
     englishStripped(`groupNameVisible`).toString()
   );
-  await device1.deleteText({
-    strategy: 'accessibility id',
-    selector: 'Group name text field',
-  });
-  await device1.inputText('   ', {
-    strategy: 'accessibility id',
-    selector: 'Group name text field',
-  });
+  await device1.deleteText(new EditGroupNameInput(device1));
+  await device1.inputText('   ', new EditGroupNameInput(device1));
   const saveButton = await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Save',
@@ -56,15 +52,8 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
 
   // Enter new group name
   await device1.clickOnElementAll(new EditGroupName(device1));
-  await device1.deleteText({
-    strategy: 'accessibility id',
-    selector: 'Group name text field',
-  });
-
-  await device1.inputText(newGroupName, {
-    strategy: 'accessibility id',
-    selector: 'Group name text field',
-  });
+  await device1.deleteText(new EditGroupNameInput(device1));
+  await device1.inputText(newGroupName, new EditGroupNameInput(device1));
   // Click done/apply
   await device1.clickOnByAccessibilityID('Save');
   await device1.navigateBack();
@@ -87,7 +76,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   // Create group
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   // Click on settings or three dots
-  await device1.clickOnByAccessibilityID('More options');
+  await device1.clickOnElementAll(new ConversationSettings(device1));
   // Click on Edit group option
   await sleepFor(1000);
   await device1.clickOnElementAll(new EditGroup(device1));

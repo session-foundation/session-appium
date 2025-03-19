@@ -6,7 +6,7 @@ import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-iosIt('Delete message in group', 'high', unsendMessageGroup);
+iosIt('Unsend message in group', 'high', unsendMessageGroup);
 androidIt('Unsend message in group', 'high', unsendMessageGroup);
 
 async function unsendMessageGroup(platform: SupportedPlatformsType) {
@@ -38,17 +38,13 @@ async function unsendMessageGroup(platform: SupportedPlatformsType) {
   // Select Delete icon
   await device1.clickOnByAccessibilityID('Delete message');
   // Check modal is correct
-
   await device1.checkModalStrings(
     englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
     englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()
   );
-
   // Select 'Delete for me'
   await device1.clickOnElementAll(new DeleteMessageForEveryone(device1));
-
   await device1.clickOnElementAll(new DeleteMessageConfirmationModal(device1));
-
   await Promise.all([
     device1.waitForTextElementToBePresent({
       strategy: 'accessibility id',

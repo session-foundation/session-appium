@@ -85,3 +85,21 @@ export class EditGroupNameInput extends LocatorsInterface {
     }
   }
 }
+
+export class LeaveGroupButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: `network.loki.messenger:id/title`,
+          text: 'Leave group',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Leave group',
+        };
+    }
+  }
+}

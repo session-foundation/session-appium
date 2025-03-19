@@ -2,6 +2,7 @@ import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { EditGroup, InviteContactsButton, InviteContactsMenuItem } from './locators';
+import { ConversationSettings } from './locators/conversation';
 import { Contact } from './locators/global';
 import { InviteContactConfirm } from './locators/groups';
 import { sleepFor } from './utils';
@@ -11,7 +12,7 @@ import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppFourDevices } from './utils/open_app';
 
 bothPlatformsIt('Add contact to group', 'high', addContactToGroup);
-// TODO NEED TO UPDATE FOR IOS
+
 async function addContactToGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
   // Create users A, B and C
@@ -43,7 +44,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     text: group.userName,
   });
   // Click more options
-  await device1.clickOnByAccessibilityID('More options');
+  await device1.clickOnElementAll(new ConversationSettings(device1));
   // Select edit group
   await device1.clickOnElementAll(new EditGroup(device1));
   await sleepFor(1000);
