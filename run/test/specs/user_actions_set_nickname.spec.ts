@@ -1,5 +1,6 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { ConversationSettings } from './locators/conversation';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -17,7 +18,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   ]);
   await newContact(platform, device1, userA, device2, userB);
   // Click on settings/more info
-  await device1.clickOnByAccessibilityID('More options');
+  await device1.clickOnElementAll(new ConversationSettings(device1));
   // Click on username to set nickname
   await device1.clickOnByAccessibilityID('Username');
   await sleepFor(500);
@@ -39,7 +40,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   // Set nickname back to original username
   await device1.selectByText('Conversation list item', nickName);
   // Click on settings/more info
-  await device1.clickOnByAccessibilityID('More options');
+  await device1.clickOnElementAll(new ConversationSettings(device1));
   // Click on edit
   await device1.clickOnByAccessibilityID('Username');
   // Empty username input

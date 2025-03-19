@@ -25,7 +25,7 @@ async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
   await sleepFor(100);
   await device1.deleteText(new UsernameInput(device1));
   await device1.inputText(newUsername, new UsernameInput(device1));
-  await device1.clickOnElementAll(new TickButton(device1));
+  await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Save' });
 
   const username = await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',

@@ -69,3 +69,22 @@ export class SaveProfilePictureButton extends LocatorsInterface {
     }
   }
 }
+
+export class BlockedContacts extends LocatorsInterface {
+  public build(text?: string) {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Contact',
+          text,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Blocked contacts',
+          text,
+        } as const;
+    }
+  }
+}

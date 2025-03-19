@@ -22,7 +22,7 @@ async function changeUsernameiOS(platform: SupportedPlatformsType) {
   await sleepFor(100);
   await device.deleteText(new UsernameInput(device));
   await device.inputText(newUsername, new UsernameInput(device));
-  await device.clickOnElementAll(new TickButton(device));
+  await device.clickOnElementAll({ strategy: 'accessibility id', selector: 'Save' });
 
   const username = await device.waitForTextElementToBePresent({
     strategy: 'accessibility id',

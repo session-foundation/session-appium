@@ -2,6 +2,7 @@ import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ApplyChanges, EditGroup, EditGroupName } from './locators';
+import { ConversationSettings } from './locators/conversation';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -31,7 +32,7 @@ async function linkedGroup(platform: SupportedPlatformsType) {
   // Test group name change syncs
   // Change group name in device 1
   // Click on settings/more info
-  await device1.clickOnByAccessibilityID('More options');
+  await device1.clickOnElementAll(new ConversationSettings(device1));
   // Edit group
   await sleepFor(100);
   await device1.clickOnElementAll(new EditGroup(device1));
