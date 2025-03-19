@@ -1,14 +1,14 @@
-name: Android regression tests
+name: iOS regression tests
 run-name: '${{ inputs.RISK }} regressions on: ${{ inputs.BRANCH_TO_CHECKOUT }} (${{ inputs.APPIUM_REPO }})'
 
 on:
   workflow_dispatch:
     inputs:
       APK_URL:
-        description: 'url to test'
+        description: 'ipa url to test'
         required: true
         type: string
-        default: https://oxen.rocks/session-foundation/session-android/release/1.20.3/session-android-20241101T052421Z-be16d3bf9-universal.tar.xz
+        default: https://oxen.rocks/session-foundation/session-ios/master/session-ios-20250122T233019Z-55779b062-sim.tar.xz
 
       RISK:
         description: 'risks to target'
@@ -34,7 +34,7 @@ on:
         description: 'branch to checkout'
         required: true
         type: string
-        default: test-ci-regression
+        default: ci-ios
 
       # SHARD_NUMBER:
       #   description: 'shard number'
@@ -85,31 +85,34 @@ on:
           - '1'
         default: '0'
       PLAYWRIGHT_WORKERS_COUNT:
-        description: 'number of workers to use - ONLY 1 WORKER IS SUPPORTED FOR ANDROID'
+        description: 'number of workers to use'
         required: true
         type: choice
         options:
           - '1'
           - '2'
           - '3'
-        default: '1'
+        default: '3'
 
 # concurrency:
 #   group: ${{ github.workflow }}
 #   cancel-in-progress: true
 
 jobs:
-  android-regression:
-    runs-on: [self-hosted, linux, X64, qa-android]
+  ios-regression:
+    runs-on: [self-hosted]
     env:
       IOS_APP_PATH_PREFIX: '../extracted/Session.app'
       ANDROID_APK: '../extracted/session-android.apk'
-      APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
-      ANDROID_SDK_ROOT: '/opt/android'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
-      PLAYWRIGHT_WORKERS_COUNT: 1
+      PLAYWRIGHT_WORKERS_COUNT: 3
+      PLAYWRIGHT_REPEAT_COUNT: 1
+      SDK_MANAGER_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/cmdline-tools/latest/bin/sdkmanager'
+      AVD_MANAGER_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/cmdline-tools/latest/bin/avdmanager'
+      ANDROID_SYSTEM_IMAGE: 'system-images;android-35;google_atd;x86_64'
+      EMULATOR_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/emulator/emulator'
       IOS_FIRST_SIMULATOR: '49651A15-3E14-4BAF-8B8E-0C630C35B8DD'
       IOS_SECOND_SIMULATOR: '7CA21E47-56AC-4B76-82A4-1D5199515F38'
       IOS_THIRD_SIMULATOR: 'FE1DEDC7-D530-41E7-9B38-86ED2DDB97CD'
@@ -122,7 +125,6 @@ jobs:
       IOS_TENTH_SIMULATOR: '275E0C5B-2458-4490-831D-4CE86C8EC704'
       IOS_ELEVENTH_SIMULATOR: 'EA5C5BCB-1E3E-4FFC-88BB-8D1DE354BC3B'
       IOS_TWELFTH_SIMULATOR: '41514F87-DC49-4C81-B60C-03D1F8653A42'
-
       # echo "SHARD_NUMBER ${{ github.event.inputs.SHARD_NUMBER }}"
       # echo "SHARD_COUNT ${{ github.event.inputs.SHARD_COUNT }}"
 
@@ -135,31 +137,42 @@ jobs:
           echo "APK_URL ${{ github.event.inputs.APK_URL }}"
           echo "RISK ${{ github.event.inputs.RISK }}"
 
-      - name: Download APK
+      - name: Download ipa
         run: |
-          wget -q -O session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
+          curl -o session-ios.sim.tar.xz ${{ github.event.inputs.APK_URL }}
           ls
           pwd
 
-      - name: Extract APK
+      - name: Inspect archive contents
         run: |
-          tar xf session-android.apk.tar.xz
-          pwd
+          tar -tf session-ios.sim.tar.xz
+
+      - name: Extract app
+        run: |
+          tar xf session-ios.sim.tar.xz
+          mkdir -p extracted
+          mv *.app extracted/ || echo "No .app files found to move"
+          ls extracted
+
+      - name: Verify extracted files
+        run: |
+          if [ ! -d "extracted" ]; then
+            echo "Extraction failed: extracted directory not found"
+            exit 1
+          fi
+          ls extracted
 
       - name: Rename extracted folder
         run: |
-          mv session-android-*universal extracted
+          mkdir -p extracted
+          mv session-ios extracted || echo "No session-ios directory to move"
           ls extracted
-          mv extracted/*.apk extracted/session-android.apk
-          ls extracted
-          pwd
 
       - uses: actions/checkout@v4
         with:
           repository: ${{ github.event.inputs.APPIUM_REPO }}
           ref: ${{ github.event.inputs.BRANCH_TO_CHECKOUT }}
           path: 'forked-session-appium'
-          lfs: true
 
       - uses: actions/setup-node@v4
         with:
@@ -171,7 +184,6 @@ jobs:
           npm install -g yarn
           corepack enable
           yarn set version 4.1.1
-
       - name: Install test dependencies
         run: |
           cd forked-session-appium
@@ -179,47 +191,34 @@ jobs:
           git status
           touch yarn.lock
           yarn install --immutable
-
       - name: Start Appium server
         run: |
           cd forked-session-appium
           yarn "./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --allow-cors"
-
-      - name: Build the Android tests
+      - name: Build the iOS tests
         run: |
           cd forked-session-appium
           yarn tsc
-
-      - name: Restart adb server
-        shell: bash
-        continue-on-error: true # just so we don't fail if adb wasn't already running
-        run: |
-          source ./scripts/ci.sh
-          adb kill-server;
-          adb start-server;
-
-      - name: Start emulators
+      - name: Start simulators
         shell: bash
         run: |
           source ./scripts/ci.sh
-          start_with_snapshots
-
+          start_simulators_from_env_iOS
       - name: List all tests
         run: |
           cd forked-session-appium
           pwd
           npx playwright test --list --grep "@${{ github.event.inputs.RISK }}"
-
-      - name: Run the tests # ${{ github.event.inputs.SHARD_NUMBER }}​​/${{ github.event.inputs.SHARD_COUNT }}​​
+      - name: Run the iOS tests # ${{ github.event.inputs.SHARD_NUMBER }}​​/${{ github.event.inputs.SHARD_COUNT }}​​
         run: |
           cd forked-session-appium
           pwd
-          yarn test 'android "@${{ github.event.inputs.RISK }}"'
+          yarn test 'ios @${{ github.event.inputs.RISK }}'
 
-      - name: Kill all running emulators
+      - name: Stop emulators
         if: always()
         continue-on-error: true # just so we don't fail
         shell: bash
         run: |
           source ./scripts/ci.sh
-          killall_emulators
+          stop_simulators_from_env_iOS
