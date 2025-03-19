@@ -4,6 +4,7 @@ import { USERNAME } from '../../types/testing';
 import { EditGroup, EditGroupName } from './locators';
 import { ConversationSettings } from './locators/conversation';
 import { EditGroupNameInput } from './locators/groups';
+import { SaveNameChangeButton } from './locators/settings';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -47,10 +48,7 @@ async function linkedGroupiOS(platform: SupportedPlatformsType) {
   await device1.deleteText(new EditGroupNameInput(device1));
   await device1.inputText(newGroupName, new EditGroupNameInput(device1));
   // Save changes
-  await device1.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Save',
-  });
+  await device1.clickOnElementAll(new SaveNameChangeButton(device1));
   await device1.navigateBack();
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)

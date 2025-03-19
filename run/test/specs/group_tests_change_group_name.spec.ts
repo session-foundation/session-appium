@@ -8,6 +8,7 @@ import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 import { ConversationSettings } from './locators/conversation';
+import { SaveNameChangeButton } from './locators/settings';
 
 iosIt('Change group name', 'medium', changeGroupNameIos);
 androidIt('Change group name', 'medium', changeGroupNameAndroid);
@@ -55,7 +56,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   await device1.deleteText(new EditGroupNameInput(device1));
   await device1.inputText(newGroupName, new EditGroupNameInput(device1));
   // Click done/apply
-  await device1.clickOnByAccessibilityID('Save');
+  await device1.clickOnElementAll(new SaveNameChangeButton(device1));
   await device1.navigateBack();
   await device1.waitForControlMessageToBePresent(
     englishStripped('groupNameNew').withArgs({ group_name: newGroupName }).toString()

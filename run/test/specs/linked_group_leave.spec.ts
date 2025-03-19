@@ -20,7 +20,6 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
     newUser(device1, USERNAME.ALICE),
     newUser(device2, USERNAME.BOB),
   ]);
-
   // Create group with user A, user B and User C
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   await sleepFor(1000);
@@ -28,21 +27,16 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   await sleepFor(1000);
   await device3.clickOnElementAll(new LeaveGroup(device3));
   await device3.clickOnByAccessibilityID('Leave');
-
-  // await device3.onAndroid().navigateBack();
   // Check for control message
   await sleepFor(5000);
   await device4.onIOS().hasTextElementBeenDeleted('Conversation list item', testGroupName);
-
   // Create control message for user leaving group
   const groupMemberLeft = englishStripped('groupMemberLeft')
     .withArgs({ name: userC.userName })
     .toString();
-
   await Promise.all([
     device1.waitForControlMessageToBePresent(groupMemberLeft),
     device2.waitForControlMessageToBePresent(groupMemberLeft),
   ]);
-
   await closeApp(device1, device2, device3, device4);
 }
