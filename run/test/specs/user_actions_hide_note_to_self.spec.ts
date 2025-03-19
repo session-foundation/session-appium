@@ -9,7 +9,7 @@ import { openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/o
 
 iosIt('Hide note to self', 'low', hideNoteToSelf);
 // Android currently shows 'Clear' instead of 'Hide' for note to self
-androidIt('Hide note to self', 'low', hideNoteToSelf);
+androidIt('Hide note to self', 'low', hideNoteToSelf, true);
 
 async function hideNoteToSelf(platform: SupportedPlatformsType) {
   const noteToSelf = englishStripped('noteToSelf').toString();
