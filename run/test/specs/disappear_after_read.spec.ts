@@ -40,11 +40,13 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
       strategy: 'accessibility id',
       selector: 'Message body',
       text: testMessage,
+      maxWait: 5000,
     }),
     device2.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: testMessage,
+      maxWait: 5000,
     }),
   ]);
   // Great success

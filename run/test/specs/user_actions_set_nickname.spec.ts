@@ -28,8 +28,8 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
     englishStripped('nicknameSet').toString(),
     englishStripped('nicknameDescription').withArgs({ name: USERNAME.BOB }).toString()
   );
-  await device1.clickOnElementAll(new UsernameSettings(device1));
   // Type in nickname
+  await device1.deleteText(new UsernameInput(device1));
   await device1.inputText(nickName, new UsernameInput(device1));
   // Click apply/done
   await device1.clickOnElementAll(new SaveNameChangeButton(device1));

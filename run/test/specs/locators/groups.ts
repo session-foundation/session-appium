@@ -68,3 +68,20 @@ export class EditGroupName extends LocatorsInterface {
     }
   }
 }
+
+export class EditGroupNameInput extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Group name',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Group name text field',
+        };
+    }
+  }
+}
