@@ -59,12 +59,15 @@ export const createGroup = async (
   ]);
   // Sort by account ID
   const [firstUser, secondUser] = sortByPubkey(userTwo, userThree);
+  // TODO remove onIOS once Android have implemented pubkey sorting
   await Promise.all([
-    device1.waitForControlMessageToBePresent(
-      englishStripped(`groupMemberNewTwo`)
-        .withArgs({ name: firstUser, other_name: secondUser })
-        .toString()
-    ),
+    device1
+      .onIOS()
+      .waitForControlMessageToBePresent(
+        englishStripped(`groupMemberNewTwo`)
+          .withArgs({ name: firstUser, other_name: secondUser })
+          .toString()
+      ),
     device2.waitForControlMessageToBePresent(
       englishStripped('groupInviteYouAndOtherNew')
         .withArgs({ other_name: userThree.userName })
