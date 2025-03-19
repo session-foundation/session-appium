@@ -85,7 +85,7 @@ on:
           - '1'
         default: '0'
       PLAYWRIGHT_WORKERS_COUNT:
-        description: 'number of workers to use - ONLY 1 WORKER IS SUPPORTED'
+        description: 'number of workers to use - ONLY 1 WORKER IS SUPPORTED FOR ANDROID'
         required: true
         type: choice
         options:
@@ -208,7 +208,7 @@ jobs:
         run: |
           cd forked-session-appium
           pwd
-          npx playwright test --list
+          npx playwright test --list --grep "@${{ github.event.inputs.RISK }}"
 
       - name: Run the tests # ${{ github.event.inputs.SHARD_NUMBER }}​​/${{ github.event.inputs.SHARD_COUNT }}​​
         run: |

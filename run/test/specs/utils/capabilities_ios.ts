@@ -27,7 +27,33 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   // "appium:isHeadless": true,
 } as AppiumXCUITestCapabilities;
 
-const MAX_CAPABILITIES_INDEX = 12;
+const envVars = [
+  'IOS_FIRST_SIMULATOR',
+  'IOS_SECOND_SIMULATOR',
+  'IOS_THIRD_SIMULATOR',
+  'IOS_FOURTH_SIMULATOR',
+  'IOS_FIFTH_SIMULATOR',
+  'IOS_SIXTH_SIMULATOR',
+  'IOS_SEVENTH_SIMULATOR',
+  'IOS_EIGHTH_SIMULATOR',
+  'IOS_NINTH_SIMULATOR',
+  'IOS_TENTH_SIMULATOR',
+  'IOS_ELEVENTH_SIMULATOR',
+  'IOS_TWELFTH_SIMULATOR',
+] as const;
+
+function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
+  const envVar = envVars[index];
+  const uuid = process.env[envVar];
+
+  if (!uuid) {
+    throw new Error(`Environment variable ${envVar} is not set`);
+  }
+
+  return uuid;
+}
+const MAX_CAPABILITIES_INDEX = envVars.length;
+
 export type CapabilitiesIndexType = IntRange<0, typeof MAX_CAPABILITIES_INDEX>;
 
 export function capabilityIsValid(
@@ -44,32 +70,6 @@ interface CustomW3CCapabilities extends W3CCapabilities {
   'appium:udid': string;
 }
 
-function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
-  const envVars = [
-    'IOS_FIRST_SIMULATOR',
-    'IOS_SECOND_SIMULATOR',
-    'IOS_THIRD_SIMULATOR',
-    'IOS_FOURTH_SIMULATOR',
-    'IOS_FIFTH_SIMULATOR',
-    'IOS_SIXTH_SIMULATOR',
-    'IOS_SEVENTH_SIMULATOR',
-    'IOS_EIGHTH_SIMULATOR',
-    'IOS_NINTH_SIMULATOR',
-    'IOS_TENTH_SIMULATOR',
-    'IOS_ELEVENTH_SIMULATOR',
-    'IOS_TWELFTH_SIMULATOR',
-  ];
-
-  const envVar = envVars[index];
-  const uuid = process.env[envVar];
-
-  if (!uuid) {
-    throw new Error(`Environment variable ${envVar} is not set`);
-  }
-
-  return uuid;
-}
-
 const emulatorUUIDs = Array.from({ length: MAX_CAPABILITIES_INDEX }, (_, index) =>
   getIOSSimulatorUUIDFromEnv(index as CapabilitiesIndexType)
 );
@@ -81,10 +81,10 @@ const capabilities = emulatorUUIDs.map((udid, index) => ({
 }));
 
 export function getIosCapabilities(capabilitiesIndex: CapabilitiesIndexType): W3CCapabilities {
-  console.log('Number of iOS capabilities: ', capabilities.length);
-  console.log('Capabilities:', capabilities);
   if (capabilitiesIndex >= capabilities.length) {
-    throw new Error(`Asked invalid ios cap index: ${capabilitiesIndex}`);
+    throw new Error(
+      `Asked invalid ios cap index: ${capabilitiesIndex}. Number of iOS capabilities: ${capabilities.length}.`
+    );
   }
 
   const caps = capabilities[capabilitiesIndex];
