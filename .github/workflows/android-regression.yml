@@ -84,16 +84,25 @@ on:
           - '0'
           - '1'
         default: '0'
+      PLAYWRIGHT_WORKERS_COUNT:
+        description: 'number of workers to use - ONLY 1 WORKER IS SUPPORTED'
+        required: true
+        type: choice
+        options:
+          - '1'
+          - '2'
+          - '3'
+        default: '1'
 
 # concurrency:
 #   group: ${{ github.workflow }}
 #   cancel-in-progress: true
 
 jobs:
-  regression:
+  android-regression:
     runs-on: [self-hosted, linux, X64, qa-android]
     env:
-      IOS_APP_PATH_PREFIX: '/Users/thedebuggernaut/Desktop/ios/16-01-25/Session.app'
+      IOS_APP_PATH_PREFIX: '../extracted/Session.app'
       ANDROID_APK: '../extracted/session-android.apk'
       APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
       ANDROID_SDK_ROOT: '/opt/android'
