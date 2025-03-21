@@ -1,7 +1,10 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ApplyChanges, EditGroup, InviteContactsButton, InviteContactsMenuItem } from './locators';
+import { EditGroup, InviteContactsButton, InviteContactsMenuItem } from './locators';
+import { ConversationSettings } from './locators/conversation';
+import { Contact } from './locators/global';
+import { InviteContactConfirm } from './locators/groups';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -41,7 +44,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     text: group.userName,
   });
   // Click more options
-  await device1.clickOnByAccessibilityID('More options');
+  await device1.clickOnElementAll(new ConversationSettings(device1));
   // Select edit group
   await device1.clickOnElementAll(new EditGroup(device1));
   await sleepFor(1000);
@@ -49,42 +52,27 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   await device1.onIOS().clickOnElementAll(new InviteContactsMenuItem(device1));
   await device1.onAndroid().clickOnElementAll(new InviteContactsButton(device1));
   // Select new user
-  const addedContact = await device1.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Contact',
-    text: userD.userName,
+  await device1.clickOnElementAll({
+    ...new Contact(device1).build(),
+    text: USERNAME.DRACULA,
   });
-  if (!addedContact && platform === 'android') {
-    await device1.navigateBack();
-    await device1.clickOnElementAll(new InviteContactsButton(device1));
-    await device1.selectByText('Contact', userD.userName);
-  }
   // Click done/apply
-  await device1.clickOnByAccessibilityID('Done');
+  await device1.clickOnElementAll(new InviteContactConfirm(device1));
   // Click done/apply again
-  await sleepFor(1000);
-  await device1.clickOnElementAll(new ApplyChanges(device1));
-  // Check control message
-  // "legacyGroupMemberNew": "<b>{name}</b> joined the group.",
-  const legacyGroupMemberNew = englishStripped('legacyGroupMemberNew')
-    .withArgs({ name: userD.userName })
-    .toString();
-
-  await device1.waitForControlMessageToBePresent(legacyGroupMemberNew);
-  // await Promise.all([
-  //   device1.waitForControlMessageToBePresent(`${userD.userName} joined the group.`),
-  // device2.waitForControlMessageToBePresent(`${userD.accountID} joined the group.`),
-  // device3.waitForControlMessageToBePresent(`${userD.accountID} joined the group.`),
-  // ]);
+  await device1.navigateBack(true);
+  // iOS doesn't automatically go back to conversation settings
+  await device1.onIOS().navigateBack();
+  // Check control messages
+  await Promise.all(
+    [device1, device2, device3].map(device =>
+      device.waitForControlMessageToBePresent(
+        englishStripped('groupMemberNew').withArgs({ name: USERNAME.DRACULA }).toString()
+      )
+    )
+  );
   await device4.navigateBack();
   await device4.selectByText('Conversation list item', group.userName);
-  // Check control message on device 2 and 3
-  // Check for control message on device 4 (iOS doesn't support You)
-  await device4.onIOS().waitForControlMessageToBePresent(legacyGroupMemberNew);
-  // Android supports You
-  // "legacyGroupMemberYouNew": "<b>You</b> joined the group.",
-  const legacyGroupMemberYouNew = englishStripped('legacyGroupMemberYouNew').toString();
-  await device4.onAndroid().waitForControlMessageToBePresent(legacyGroupMemberYouNew);
-
+  // Check for control message on device 4
+  await device4.waitForControlMessageToBePresent(englishStripped('groupInviteYou').toString());
   await closeApp(device1, device2, device3, device4);
 }

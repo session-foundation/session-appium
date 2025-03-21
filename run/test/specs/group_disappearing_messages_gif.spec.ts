@@ -25,6 +25,13 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   await setDisappearingMessage(platform, device1, ['Group', timerType, time]);
   // Click on attachments button
   await device1.sendGIF(testMessage);
+   // Cannot use isAndroid() here
+   if (platform === 'android') {
+    await Promise.all([
+      device2.trustAttachments(testGroupName),
+      device3.trustAttachments(testGroupName),
+    ]);
+  }
   if (platform === 'ios') {
     await Promise.all([
       device2.waitForTextElementToBePresent({

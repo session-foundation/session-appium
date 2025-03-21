@@ -61,6 +61,23 @@ export class CloseButton extends LocatorsInterface {
     }
   }
 }
+// NEW MESSAGE SECTION
+export class EnterAccountID extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Session id input box',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Session id input box',
+        } as const;
+    }
+  }
+}
 
 // INVITE A FRIEND SECTION
 export class AccountIDField extends LocatorsInterface {

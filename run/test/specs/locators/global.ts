@@ -57,7 +57,7 @@ export class DeleteContactModalConfirm extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'accessibility id',
-          selector: 'Yes',
+          selector: 'Delete',
         } as const;
       case 'ios':
         return {
@@ -74,5 +74,22 @@ export class EnableLinkPreviewsModalButton extends LocatorsInterface {
       strategy: 'accessibility id',
       selector: 'Enable',
     } as const;
+  }
+}
+
+export class Contact extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Contact',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Contact',
+        } as const;
+    }
   }
 }

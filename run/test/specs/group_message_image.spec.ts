@@ -26,18 +26,35 @@ async function sendImageGroupiOS(platform: SupportedPlatformsType) {
     selector: `Message sent status: Sent`,
     maxWait: 50000,
   });
-
-  await device2.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: testMessage,
-    maxWait: 5000,
-  });
-  await device3.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: testMessage,
-  });
+  await Promise.all([
+    device2.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: testMessage,
+      maxWait: 5000,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: testMessage,
+      maxWait: 5000,
+    }),
+  ]);
+  const replyMessage = await device2.replyToMessage(userA, testMessage);
+  await Promise.all([
+    device1.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: replyMessage,
+      maxWait: 5000,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: replyMessage,
+      maxWait: 5000,
+    }),
+  ]);
   // Close server and devices
   await closeApp(device1, device2, device3);
 }
@@ -58,6 +75,10 @@ async function sendImageGroupAndroid(platform: SupportedPlatformsType) {
   await device1.sendImage(platform, testMessage);
   // Wait for image to appear in conversation screen
   await sleepFor(500);
+  await Promise.all([
+    device2.trustAttachments(testGroupName),
+    device3.trustAttachments(testGroupName),
+  ]);
   await Promise.all([
     device2.waitForTextElementToBePresent({
       strategy: 'accessibility id',

@@ -1,6 +1,8 @@
 import { englishStripped } from '../../../localizer/i18n/localizedString';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { Group, GROUPNAME, User } from '../../../types/testing';
+import { Contact } from '../locators/global';
+import { CreateGroupButton, GroupNameInput } from '../locators/groups';
 import { newContact } from './create_contact';
 import { sortByPubkey } from './get_account_id';
 import { SupportedPlatformsType } from './open_app';
@@ -35,12 +37,12 @@ export const createGroup = async (
   // Select Closed Group option
   await device1.clickOnByAccessibilityID('Create group');
   // Type in group name
-  await device1.inputText(userName, { strategy: 'accessibility id', selector: 'Group name input' });
+  await device1.inputText(userName, new GroupNameInput(device1));
   // Select User B and User C
-  await device1.selectByText('Contact', userTwo.userName);
-  await device1.selectByText('Contact', userThree.userName);
+  await device1.clickOnElementAll({ ...new Contact(device1).build(), text: userTwo.userName });
+  await device1.clickOnElementAll({ ...new Contact(device1).build(), text: userThree.userName });
   // Select tick
-  await device1.clickOnByAccessibilityID('Create group');
+  await device1.clickOnElementAll(new CreateGroupButton(device1));
   // Check for empty state on ios
   // Enter group chat on device 2 and 3
   await Promise.all([
@@ -57,12 +59,15 @@ export const createGroup = async (
   ]);
   // Sort by account ID
   const [firstUser, secondUser] = sortByPubkey(userTwo, userThree);
+  // TODO remove onIOS once Android have implemented pubkey sorting
   await Promise.all([
-    device1.waitForControlMessageToBePresent(
-      englishStripped(`groupMemberNewTwo`)
-        .withArgs({ name: firstUser, other_name: secondUser })
-        .toString()
-    ),
+    device1
+      .onIOS()
+      .waitForControlMessageToBePresent(
+        englishStripped(`groupMemberNewTwo`)
+          .withArgs({ name: firstUser, other_name: secondUser })
+          .toString()
+      ),
     device2.waitForControlMessageToBePresent(
       englishStripped('groupInviteYouAndOtherNew')
         .withArgs({ other_name: userThree.userName })

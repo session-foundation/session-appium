@@ -6,6 +6,7 @@ import {
   DisappearModes,
   USERNAME,
 } from '../../types/testing';
+import { ConversationSettings } from './locators/conversation';
 import {
   DisableDisappearingMessages,
   DisappearingMessagesMenuOption,
@@ -21,7 +22,7 @@ import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-bothPlatformsIt('Disappear after send off 1o1', 'high', disappearAfterSendOff1o1);
+bothPlatformsIt('Disappear after send off 1:1', 'high', disappearAfterSendOff1o1);
 
 async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
@@ -51,8 +52,8 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
     device3
   );
 
-  // Turned off disappearing messages on device 1
-  await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'More options' });
+  // Turn off disappearing messages on device 1
+  await device1.clickOnElementAll(new ConversationSettings(device1));
   await device1.clickOnElementAll(new DisappearingMessagesMenuOption(device1));
   await device1.clickOnElementAll(new DisableDisappearingMessages(device1));
   await device1.clickOnElementAll(new SetDisappearMessagesButton(device1));
@@ -69,7 +70,7 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
   await Promise.all([
     device1.disappearingControlMessage(disappearingMessagesTurnedOffYou),
     device2.disappearingControlMessage(disappearingMessagesTurnedOff),
-    // device3.disappearingControlMessage(disappearingMessagesTurnedOffYou),
+    device3.disappearingControlMessage(disappearingMessagesTurnedOffYou),
   ]);
   // Follow setting on device 2
   await device2.clickOnElementAll(new FollowSettingsButton(device2));
