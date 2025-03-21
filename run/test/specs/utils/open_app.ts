@@ -306,7 +306,7 @@ const openiOSApp = async (
   const { device: wrappedDevice } = await cleanPermissions(opts, udid, capabilities);
   return { device: wrappedDevice };
 };
-
+// TODO UPDATE THIS TO TAKE A VARIABLE COUNT OF ARGUMENTS THAT IS NOT AN ARRAY
 export const closeApp = async (
   device1?: DeviceWrapper,
   device2?: DeviceWrapper,
