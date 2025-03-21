@@ -44,6 +44,8 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   const attr = await device1.getAttribute('value', saveButton.ELEMENT);
   if (attr !== 'enabled') {
     console.log('Save button disabled - no text input');
+  } else {
+    throw new Error('Save button should be disabled');
   }
   await device1.clickOnByAccessibilityID('Cancel');
   // Enter new group name

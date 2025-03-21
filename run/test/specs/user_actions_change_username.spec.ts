@@ -12,7 +12,6 @@ androidIt('Change username', 'medium', changeUsernameAndroid);
 
 async function changeUsernameiOS(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-
   const userA = await newUser(device, USERNAME.ALICE);
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
@@ -26,18 +25,13 @@ async function changeUsernameiOS(platform: SupportedPlatformsType) {
   );
   // type in new username
   await sleepFor(100);
-  // await device.waitForTextElementToBePresent(new UsernameInput(device));
-  // await device.clickOnElementAll(new UsernameInput(device));
   await device.deleteText(new UsernameInput(device));
   await device.inputText(newUsername, new UsernameInput(device));
   await device.clickOnElementAll(new SaveNameChangeButton(device));
-
   const username = await device.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Username',
-    // text: newUsername,
   });
-
   const changedUsername = await device.getTextFromElement(username);
   console.log('Changed username', changedUsername);
   if (changedUsername === newUsername) {
@@ -52,7 +46,6 @@ async function changeUsernameiOS(platform: SupportedPlatformsType) {
 
 async function changeUsernameAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-
   const userA = await newUser(device, USERNAME.ALICE);
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
@@ -79,12 +72,10 @@ async function changeUsernameAndroid(platform: SupportedPlatformsType) {
   }
   await device.closeScreen();
   await device.clickOnElementAll(new UserSettings(device));
-
   await device.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Display name',
     text: newUsername,
   });
-
   await closeApp(device);
 }

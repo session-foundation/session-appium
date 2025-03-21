@@ -37,6 +37,7 @@ async function sendImageGroupiOS(platform: SupportedPlatformsType) {
       strategy: 'accessibility id',
       selector: 'Message body',
       text: testMessage,
+      maxWait: 5000,
     }),
   ]);
   const replyMessage = await device2.replyToMessage(userA, testMessage);
@@ -51,6 +52,7 @@ async function sendImageGroupiOS(platform: SupportedPlatformsType) {
       strategy: 'accessibility id',
       selector: 'Message body',
       text: replyMessage,
+      maxWait: 5000,
     }),
   ]);
   // Close server and devices
