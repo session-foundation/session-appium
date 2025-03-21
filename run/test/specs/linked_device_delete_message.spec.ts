@@ -2,6 +2,7 @@ import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteMessageConfirmationModal } from './locators';
+import { DeletedMessage } from './locators/conversation';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
@@ -36,13 +37,7 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   );
   await device1.clickOnElementAll(new DeleteMessageConfirmationModal(device1));
   // Check linked device for deleted message
-  await device1.onIOS().hasTextElementBeenDeleted('Message body', sentMessage);
-
-  await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Deleted message',
-  });
-
+  await device1.waitForTextElementToBePresent(new DeletedMessage(device1));
   // Check device 2 and 3 for no change
   await Promise.all([
     device2.waitForTextElementToBePresent({

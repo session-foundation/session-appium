@@ -12,7 +12,6 @@ androidIt('Change username linked device', 'medium', changeUsernameLinkedAndroid
 
 async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-
   const userA = await linkedDevice(device1, device2, USERNAME.ALICE);
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
@@ -31,18 +30,12 @@ async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
   await device1.deleteText(new UsernameInput(device1));
   await device1.inputText(newUsername, new UsernameInput(device1));
   await device1.clickOnElementAll(new SaveNameChangeButton(device1));
-
   const username = await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Username',
     text: newUsername,
   });
-
   const changedUsername = await device1.getTextFromElement(username);
-  console.log('Changed username', changedUsername);
-  if (changedUsername === newUsername) {
-    console.log('Username change successful');
-  }
   if (changedUsername === userA.userName) {
     throw new Error('Username change unsuccessful');
   }
@@ -65,7 +58,6 @@ async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
 
 async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-
   const userA = await linkedDevice(device1, device2, USERNAME.ALICE);
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
@@ -86,10 +78,6 @@ async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType) {
     text: newUsername,
   });
   const changedUsername = await device1.getTextFromElement(username);
-  console.log('Changed username', changedUsername);
-  if (changedUsername === newUsername) {
-    console.log('Username change successful');
-  }
   if (changedUsername === userA.userName) {
     throw new Error('Username change unsuccessful');
   }
@@ -97,7 +85,6 @@ async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new UserSettings(device1));
   await device2.closeScreen();
   await device2.clickOnElementAll(new UserSettings(device2));
-
   await Promise.all([
     device1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
@@ -110,6 +97,5 @@ async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType) {
       text: newUsername,
     }),
   ]);
-
   await closeApp(device1, device2);
 }

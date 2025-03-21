@@ -2,6 +2,7 @@ import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
+import { DeletedMessage } from './locators/conversation';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
@@ -47,8 +48,7 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
     await Promise.all(
       [device1, device2, device3].map(device =>
         device.waitForTextElementToBePresent({
-          strategy: 'accessibility id',
-          selector: 'Deleted message',
+          ...new DeletedMessage(device).build(),
           maxWait: 8000,
         })
       )

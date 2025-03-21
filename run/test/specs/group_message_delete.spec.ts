@@ -2,6 +2,7 @@ import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteMessageConfirmationModal, DeleteMessageLocally } from './locators';
+import { DeletedMessage } from './locators/conversation';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
@@ -38,27 +39,14 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
   // Select Delete icon
   await device1.clickOnByAccessibilityID('Delete message');
   // Check modal is correct
-  await device1
-    .onAndroid()
-    .checkModalStrings(
-      englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
-      englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()
-    );
+  await device1.checkModalStrings(
+    englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
+    englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()
+  );
   // Select 'Delete for me'
   await device1.clickOnElementAll(new DeleteMessageLocally(device1));
-  await device1.onAndroid().clickOnElementAll(new DeleteMessageConfirmationModal(device1));
-
-  await device1.onIOS().hasElementBeenDeleted({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: sentMessage,
-    maxWait: 5000,
-  });
-  await device1.onAndroid().waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Deleted message',
-  });
-
+  await device1.clickOnElementAll(new DeleteMessageConfirmationModal(device1));
+  await device1.waitForTextElementToBePresent(new DeletedMessage(device1));
   // Excellent
   // Check device 2 and 3 that message is still visible
   await Promise.all([

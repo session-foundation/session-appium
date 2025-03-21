@@ -30,13 +30,11 @@ async function linkedGroupiOS(platform: SupportedPlatformsType) {
     selector: 'Conversation list item',
     text: testGroupName,
   });
-  // Test group name change syncs
   // Change group name in device 1
   // Click on settings/more info
   await device1.clickOnElementAll(new ConversationSettings(device1));
   // Edit group
   await sleepFor(100);
-  // await device1.clickOnElementAll(new EditGroup(device1));
   // click on group name to change it
   await device1.clickOnElementAll(new EditGroupName(device1));
   //  Check new dialog
@@ -44,18 +42,19 @@ async function linkedGroupiOS(platform: SupportedPlatformsType) {
     englishStripped(`groupInformationSet`).toString(),
     englishStripped(`groupNameVisible`).toString()
   );
-  // Type in new name
+  // Delete old name first
   await device1.deleteText(new EditGroupNameInput(device1));
+  // Type in new group name
   await device1.inputText(newGroupName, new EditGroupNameInput(device1));
   // Save changes
   await device1.clickOnElementAll(new SaveNameChangeButton(device1));
+  // Go back to conversation
   await device1.navigateBack();
-  // If ios click back to match android (which goes back to conversation screen)
-  // Check config message for changed name (different on ios and android)
+  // Check control message for changed name
   const groupNameNew = englishStripped('groupNameNew')
     .withArgs({ group_name: newGroupName })
     .toString();
-  // Config message is "Group now is now {group_name}"
+  // Control message should be "Group name is now {group_name}."
   await device1.waitForControlMessageToBePresent(groupNameNew);
   // Wait 5 seconds for name to update
   await sleepFor(5000);
@@ -98,7 +97,7 @@ async function linkedGroupAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new EditGroup(device1));
   // Click on current group name
   await device1.clickOnElementAll(new EditGroupNameInput(device1));
-  // Enter new group name (still same test tag for both)
+  // Enter new group name (same test tag for both)
   await device1.clickOnElementAll(new EditGroupNameInput(device1));
   await device1.inputText(newGroupName, new EditGroupNameInput(device1));
   // Click done/apply
@@ -108,7 +107,7 @@ async function linkedGroupAndroid(platform: SupportedPlatformsType) {
   const groupNameNew = englishStripped('groupNameNew')
     .withArgs({ group_name: newGroupName })
     .toString();
-  // Config message is "Group now is now {group_name}"
+  // Config message is "Group name is now {group_name}"
   await device1.waitForControlMessageToBePresent(groupNameNew);
   // Check linked device for name change (conversation header name)
   await device2.waitForTextElementToBePresent({

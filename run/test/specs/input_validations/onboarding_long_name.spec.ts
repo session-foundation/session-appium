@@ -1,12 +1,12 @@
+import { englishStripped } from '../../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import {
+  ContinueButton,
   CreateAccountButton,
   DisplayNameInput,
-  ContinueButton,
   ErrorMessage,
 } from '../locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
-import { localize } from '../../../localizer/i18n/localizedString';
 
 bothPlatformsIt('Onboarding long name', 'low', onboardingLongName);
 
@@ -16,7 +16,7 @@ async function onboardingLongName(platform: SupportedPlatformsType) {
   const tooLongName =
     'One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed int';
   // the expected error is 'Please enter a shorter display name' which is represented by the following localized string
-  const expectedError = localize('displayNameErrorDescriptionShorter').strip().toString();
+  const expectedError = englishStripped('displayNameErrorDescriptionShorter').toString();
   await device.clickOnElementAll(new CreateAccountButton(device));
   // this check is to avoid false positives
   if (tooLongName.length <= 100) {
@@ -30,7 +30,7 @@ async function onboardingLongName(platform: SupportedPlatformsType) {
   // Trigger the validation by pressing Continue
   await device.clickOnElementAll(new ContinueButton(device));
   // Wait for, and fetch the error message
-  const error = await device.waitForTextElementToBePresent(new ErrorMessage(device).build());
+  const error = await device.waitForTextElementToBePresent(new ErrorMessage(device));
   const errorMessage = await device.getTextFromElement(error);
   // Compare the fetched string with the expected string
   if (errorMessage !== expectedError) {

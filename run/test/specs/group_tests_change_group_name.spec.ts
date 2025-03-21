@@ -24,10 +24,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
     newUser(device3, USERNAME.CHARLIE),
   ]);
   // Create group
-
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
-  // Now change the group name
-
   // Click on settings or three dots
   await device1.clickOnElementAll(new ConversationSettings(device1));
   // Click on Edit group option
@@ -48,9 +45,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   if (attr !== 'enabled') {
     console.log('Save button disabled - no text input');
   }
-  // Delete empty space
   await device1.clickOnByAccessibilityID('Cancel');
-
   // Enter new group name
   await device1.clickOnElementAll(new EditGroupName(device1));
   await device1.deleteText(new EditGroupNameInput(device1));
@@ -83,17 +78,15 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new EditGroup(device1));
   // Click on current group name
   await device1.clickOnElementAll(new EditGroupName(device1));
-  // Enter new group name (still same test tag for both)
+  // Enter new group name (same test tag for both name and input)
   await device1.clickOnElementAll(new EditGroupName(device1));
-
   await device1.inputText(newGroupName, new EditGroupName(device1));
   // Click done/apply
   await device1.clickOnByAccessibilityID('Confirm');
   await device1.navigateBack(true);
-  // Check control message for changed name (different on ios and android)
+  // Check control message for changed name
   await device1.waitForControlMessageToBePresent(
     englishStripped('groupNameNew').withArgs({ group_name: newGroupName }).toString()
   );
-
   await closeApp(device1, device2, device3);
 }

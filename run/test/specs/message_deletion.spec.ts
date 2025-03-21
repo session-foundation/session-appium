@@ -2,6 +2,7 @@ import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteMessageConfirmationModal, DeleteMessageLocally } from './locators';
+import { DeletedMessage } from './locators/conversation';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
@@ -38,10 +39,7 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new DeleteMessageConfirmationModal(device1));
 
   // Device 1 should show 'Deleted message' message
-  await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Deleted message',
-  });
+  await device1.waitForTextElementToBePresent(new DeletedMessage(device1));
 
   // Device 2 should show no change
   await device2.waitForTextElementToBePresent({

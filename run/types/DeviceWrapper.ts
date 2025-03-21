@@ -16,6 +16,7 @@ import { IOS_XPATHS } from '../constants';
 import { englishStripped } from '../localizer/i18n/localizedString';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
+import { EnterAccountID } from '../test/specs/locators/start_conversation';
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
 import { getAdbFullPath } from '../test/specs/utils/binaries';
 import { parseDataImage } from '../test/specs/utils/check_colour';
@@ -32,7 +33,6 @@ import {
   User,
   XPath,
 } from './testing';
-import { EnterAccountID } from '../test/specs/locators/start_conversation';
 
 export type Coordinates = {
   x: number;

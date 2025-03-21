@@ -16,7 +16,6 @@ async function sendVoiceMessageGroupiOS(platform: SupportedPlatformsType) {
     newUser(device2, USERNAME.BOB),
     newUser(device3, USERNAME.CHARLIE),
   ]);
-
   // Create contact between User A and User B
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   const replyMessage = `Replying to voice message from ${userA.userName} in ${testGroupName}`;
@@ -77,7 +76,6 @@ async function sendVoiceMessageGroupAndroid(platform: SupportedPlatformsType) {
   await device2.longPress('Voice message');
   await device2.clickOnByAccessibilityID('Reply to message');
   await device2.sendMessage(replyMessage);
-  // Check device 1 and 3 for reply to apepar
   // Check device 1 and 3 for reply to appear
   await Promise.all(
     [device1, device3].map(device =>

@@ -8,7 +8,7 @@ import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
 androidIt('Block user in conversation list', 'high', blockUserInConversationList);
-// bothPlatformsIt("Block user in conversation list", blockUserInConversationList);
+// No longer available on iOS
 
 async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Open App
@@ -27,8 +27,8 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   await device1.longPressConversation(userB.userName);
   await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Block' });
   await device1.checkModalStrings(
-    englishStripped(`block`).toString(),
-    englishStripped(`blockDescription`).withArgs({ name: USERNAME.BOB }).toString(),
+    englishStripped('block').toString(),
+    englishStripped('blockDescription').withArgs({ name: USERNAME.BOB }).toString(),
     true
   );
   await device1.clickOnElementAll(new BlockUserConfirmationModal(device1));

@@ -32,3 +32,12 @@ export class ConversationAvatar extends LocatorsInterface {
     }
   }
 }
+
+export class DeletedMessage extends LocatorsInterface {
+  public build() {
+    return {
+      strategy: 'accessibility id',
+      selector: 'Deleted message',
+    } as const;
+  }
+}

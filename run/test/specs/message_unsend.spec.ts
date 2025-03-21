@@ -2,6 +2,7 @@ import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
+import { DeletedMessage } from './locators/conversation';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
@@ -30,8 +31,8 @@ async function unsendMessage(platform: SupportedPlatformsType) {
   // Select Delete icon
   await device1.clickOnByAccessibilityID('Delete message');
   // Check modal is correct
-   // Check modal is correct 
-   await device1.checkModalStrings(
+  // Check modal is correct
+  await device1.checkModalStrings(
     englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
     englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()
   );
@@ -42,13 +43,11 @@ async function unsendMessage(platform: SupportedPlatformsType) {
   // Check for 'deleted message' message
   await Promise.all([
     device1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Deleted message',
+      ...new DeletedMessage(device1).build(),
       maxWait: 8000,
     }),
     device2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Deleted message',
+      ...new DeletedMessage(device2).build(),
       maxWait: 8000,
     }),
   ]);

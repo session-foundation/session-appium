@@ -24,14 +24,10 @@ async function onboardingNoName(platform: SupportedPlatformsType) {
   // Trigger the validation by pressing Continue
   await device.clickOnElementAll(new ContinueButton(device));
   // Wait for, and fetch the error text
-  const error = await device.waitForTextElementToBePresent(new ErrorMessage(device).build());
+  const error = await device.waitForTextElementToBePresent(new ErrorMessage(device));
   const errorMessage = await device.getTextFromElement(error);
-  console.log(`The error message is "${errorMessage}"`);
-  console.log(`The expected error is "${expectedError}"`);
   // Compare the fetched text with the expected 'Please enter a display name' string
-  if (errorMessage === expectedError) {
-    console.log('The observed error message matches the expected');
-  } else {
+  if (errorMessage !== expectedError) {
     throw new Error('The observed error message does not match the expected');
   }
   await closeApp(device);

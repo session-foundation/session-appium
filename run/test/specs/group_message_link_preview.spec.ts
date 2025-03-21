@@ -46,7 +46,6 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
     selector: 'Message input box',
   });
   await device1.waitForTextElementToBePresent(new LinkPreview(device1));
-  // await sleepFor(1000);
   await device1.clickOnByAccessibilityID('Send message button');
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',

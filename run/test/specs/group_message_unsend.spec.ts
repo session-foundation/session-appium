@@ -2,6 +2,7 @@ import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
+import { DeletedMessage } from './locators/conversation';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
@@ -46,18 +47,9 @@ async function unsendMessageGroup(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new DeleteMessageForEveryone(device1));
   await device1.clickOnElementAll(new DeleteMessageConfirmationModal(device1));
   await Promise.all([
-    device1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Deleted message',
-    }),
-    device2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Deleted message',
-    }),
-    device2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Deleted message',
-    }),
+    device1.waitForTextElementToBePresent(new DeletedMessage(device1)),
+    device2.waitForTextElementToBePresent(new DeletedMessage(device2)),
+    device3.waitForTextElementToBePresent(new DeletedMessage(device3)),
   ]);
   // Excellent
   await closeApp(device1, device2, device3);
