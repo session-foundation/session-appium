@@ -94,6 +94,7 @@ jobs:
   android-regression:
     runs-on: [self-hosted, linux, X64, qa-android]
     env:
+      IOS_APP_PATH_PREFIX: '../extracted/Session.app'
       ANDROID_APK: '../extracted/session-android.apk'
       APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
       ANDROID_SDK_ROOT: '/opt/android'
