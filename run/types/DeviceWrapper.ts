@@ -658,12 +658,16 @@ export class DeviceWrapper {
   public async doesElementExist(
     args: { text?: string; maxWait?: number } & (StrategyExtractionObj | LocatorsInterface)
   ) {
-    const { text, maxWait } = args;
     const beforeStart = Date.now();
-    const maxWaitMSec = maxWait || 30000;
+    const maxWaitMSec = args.maxWait || 30000;
     const waitPerLoop = 100;
     let element: AppiumNextElementType | null = null;
+
+    // Build the locator if necessary, and extract the expected text.
+    // Use the text from the locator if available; otherwise fallback to args.text.
+    // This ensures that the correct text value is used for matching, preventing false positives in tests.
     const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const text: string | undefined = ('text' in locator ? locator.text : undefined) || args.text;
 
     while (element === null) {
       try {
@@ -674,26 +678,32 @@ export class DeviceWrapper {
           element = await this.findMatchingTextInElementArray(els, text);
           if (element) {
             console.log(
-              `${locator.strategy}: ${locator.selector} with matching text ${text} found`
+              `${locator.strategy}: ${locator.selector} with matching text "${text}" found`
             );
           } else {
             console.log(
-              `Couldn't find ${text} with matching ${locator.strategy}: ${locator.selector}`
+              `Couldn't find "${text}" with matching ${locator.strategy}: ${locator.selector}`
             );
           }
         }
       } catch (e: any) {
-        console.info(`doesElementExist failed with`, `${locator.strategy} ${locator.selector}`);
+        console.info(`doesElementExist failed with ${locator.strategy} ${locator.selector}`);
       }
-      if (!element) {
-        await sleepFor(waitPerLoop);
+      // Break immediately if we found the element
+      if (element) {
+        break;
       }
-      if (beforeStart + maxWaitMSec <= Date.now()) {
-        console.log(locator.selector, " doesn't exist, time expired");
+
+      // Check for timeout before sleeping
+      if (Date.now() >= beforeStart + maxWaitMSec) {
+        console.log(locator.selector, "doesn't exist, time expired");
         break;
       } else {
         console.log(locator.selector, "Doesn't exist but retrying");
       }
+
+      // Sleep before trying again
+      await sleepFor(waitPerLoop);
     }
 
     return element;
