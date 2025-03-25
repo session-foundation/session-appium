@@ -99,8 +99,8 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   );
   await device2.clickOnByAccessibilityID('Continue');
   await device2.clickOnElementAll(new ExitUserProfile(device2));
-    // Wait for change to take effect
-    await sleepFor(1000);
+  // Wait for change to take effect
+  await sleepFor(1000);
   // Make call on device 1 (userA)
   await device2.clickOnByAccessibilityID('Call');
   await device2.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });

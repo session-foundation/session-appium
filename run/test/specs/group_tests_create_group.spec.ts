@@ -20,4 +20,3 @@ async function groupCreation(platform: SupportedPlatformsType) {
   // Close server and devices
   await closeApp(device1, device2, device3);
 }
- 
