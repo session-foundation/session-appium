@@ -5,7 +5,7 @@ import { isArray, isEmpty } from 'lodash';
 import * as sinon from 'sinon';
 import {
   ChangeProfilePictureButton,
-  ExitUserProfile,
+  DownloadMediaButton,
   FirstGif,
   ImagePermissionsModalAllow,
   LocatorsInterface,
@@ -14,8 +14,10 @@ import {
   SendMediaButton,
 } from '../../run/test/specs/locators';
 import { IOS_XPATHS } from '../constants';
+import { englishStripped } from '../localizer/i18n/localizedString';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
+import { EnterAccountID } from '../test/specs/locators/start_conversation';
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
 import { getAdbFullPath } from '../test/specs/utils/binaries';
 import { parseDataImage } from '../test/specs/utils/check_colour';
@@ -351,14 +353,13 @@ export class DeviceWrapper {
           text: textToLookFor,
           maxWait: 1000,
         });
-
         if (!el) {
           throw new Error(
             `longPress on message: ${textToLookFor} unsuccessful, couldn't find message`
           );
         }
 
-        await this.longClick(el, 3000);
+        await this.longClick(el, 4000);
         const longPressSuccess = await this.waitForTextElementToBePresent({
           strategy: 'accessibility id',
           selector: 'Reply to message',
@@ -474,7 +475,8 @@ export class DeviceWrapper {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
 
     el = await this.waitForTextElementToBePresent({ ...locator });
-
+    await this.click(el.ELEMENT);
+    await sleepFor(100);
     const maxRetries = 3;
     let retries = 0;
     let success = false;
@@ -697,24 +699,21 @@ export class DeviceWrapper {
     return element;
   }
 
-  public async hasElementBeenDeleted({
-    text,
-    maxWait = 15000,
-    ...args
-  }: {
-    text?: string;
-    maxWait?: number;
-  } & StrategyExtractionObj) {
+  public async hasElementBeenDeleted(
+    args: {
+      text?: string;
+      maxWait?: number;
+    } & (StrategyExtractionObj | LocatorsInterface)
+  ) {
     const start = Date.now();
     let element: AppiumNextElementType | undefined = undefined;
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const maxWait = args.maxWait ?? 5000;
+    const { text } = args;
     do {
       if (!text) {
         try {
-          element = await this.waitForTextElementToBePresent({
-            text: text,
-            maxWait: 100,
-            ...args,
-          });
+          element = await this.waitForTextElementToBePresent({ ...locator });
           await sleepFor(100);
           console.log(`Element has been found, waiting for deletion`);
         } catch (e: any) {
@@ -723,10 +722,7 @@ export class DeviceWrapper {
         }
       } else {
         try {
-          element = await this.waitForTextElementToBePresent({
-            maxWait: 100,
-            ...args,
-          });
+          element = await this.waitForTextElementToBePresent({ ...locator });
           await sleepFor(100);
           console.log(`Text element has been found, waiting for deletion`);
         } catch (e) {
@@ -957,10 +953,7 @@ export class DeviceWrapper {
     // Select direct message option
     await this.clickOnByAccessibilityID('New direct message');
     // Enter User B's session ID into input box
-    await this.inputText(user.accountID, {
-      strategy: 'accessibility id',
-      selector: 'Session id input box',
-    });
+    await this.inputText(user.accountID, new EnterAccountID(this));
     // Click next
     await this.scrollDown();
     await this.clickOnByAccessibilityID('Next');
@@ -1088,12 +1081,8 @@ export class DeviceWrapper {
     }
   }
 
-  public async pushMediaToDevice(
-    platform: SupportedPlatformsType,
-    mediaFileName: string,
-    forcedDate?: string
-  ) {
-    if (platform === 'ios') {
+  public async pushMediaToDevice(mediaFileName: string, forcedDate?: string) {
+    if (this.isIOS()) {
       await runScriptAndLog(`touch -a -m -t ${forcedDate} 'run/test/specs/media/${mediaFileName}'`);
       await runScriptAndLog(`xcrun simctl addmedia 'run/test/specs/media/${mediaFileName}'`);
     } else {
@@ -1127,7 +1116,7 @@ export class DeviceWrapper {
         maxWait: 1000,
       });
       if (!testImage) {
-        await this.pushMediaToDevice(platform, fileName, ronSwansonBirthday);
+        await this.pushMediaToDevice(fileName, ronSwansonBirthday);
       }
       await sleepFor(100);
       await this.clickOnByAccessibilityID(`1967-05-05 21:00:00 +0000`, 1000);
@@ -1167,7 +1156,7 @@ export class DeviceWrapper {
       await sleepFor(100);
       await this.clickOnTextElementById('android:id/title', fileName);
       if (community) {
-        await this.scrollToBottom(platform);
+        await this.scrollToBottom();
       }
       await this.waitForTextElementToBePresent({
         strategy: 'accessibility id',
@@ -1235,7 +1224,7 @@ export class DeviceWrapper {
       await this.clickOnByAccessibilityID(formattedDate);
     } else {
       console.log('Videos folder NOT found');
-      await this.pushMediaToDevice('ios', fileName, bestDayOfYear);
+      await this.pushMediaToDevice(fileName, bestDayOfYear);
       await this.clickOnByAccessibilityID(formattedDate, 5000);
     }
     // Send with message
@@ -1299,16 +1288,6 @@ export class DeviceWrapper {
         selector: 'com.android.permissioncontroller:id/permission_allow_button',
         text: 'Allow',
       });
-      await this.waitForTextElementToBePresent({
-        strategy: 'class name',
-        selector: 'android.widget.Button',
-        text: 'Documents',
-      });
-      await this.clickOnElementAll({
-        strategy: 'class name',
-        selector: 'android.widget.Button',
-        text: 'Documents',
-      });
       const testDocument = await this.doesElementExist({
         strategy: 'id',
         selector: 'android:id/title',
@@ -1342,7 +1321,7 @@ export class DeviceWrapper {
       });
 
       if (!testDocument) {
-        await this.pushMediaToDevice('ios', fileName, spongeBobsBirthday);
+        await this.pushMediaToDevice(fileName, spongeBobsBirthday);
       }
       await sleepFor(100);
       await this.clickOnByAccessibilityID(formattedFileName);
@@ -1369,6 +1348,11 @@ export class DeviceWrapper {
         await clickOnCoordinates(this, InteractionPoints.GifButtonKeyboardClosed);
       }
     }
+    await this.checkModalStrings(
+      englishStripped('giphyWarning').toString(),
+      englishStripped('giphyWarningDescription').toString(),
+      true
+    );
     await this.clickOnByAccessibilityID('Continue', 5000);
     await this.clickOnElementAll(new FirstGif(this));
     if (this.isIOS()) {
@@ -1445,7 +1429,7 @@ export class DeviceWrapper {
         maxWait: 2000,
       });
       if (!profilePicture) {
-        await this.pushMediaToDevice('ios', fileName, spongeBobsBirthday);
+        await this.pushMediaToDevice(fileName, spongeBobsBirthday);
       }
       await sleepFor(100);
       await this.clickOnElementAll({
@@ -1540,6 +1524,21 @@ export class DeviceWrapper {
     });
   }
 
+  public async trustAttachments(conversationName: string) {
+    await this.clickOnElementAll({
+      strategy: 'accessibility id',
+      selector: 'Untrusted attachment message',
+    });
+    await this.checkModalStrings(
+      englishStripped(`attachmentsAutoDownloadModalTitle`).toString(),
+      englishStripped(`attachmentsAutoDownloadModalDescription`)
+        .withArgs({ conversation_name: conversationName })
+        .toString(),
+      true
+    );
+    await this.clickOnElementAll(new DownloadMediaButton(this));
+  }
+
   // ACTIONS
   public async swipeLeftAny(selector: AccessibilityId) {
     const el = await this.waitForTextElementToBePresent({
@@ -1604,8 +1603,12 @@ export class DeviceWrapper {
     await this.scroll({ x: 760, y: 1500 }, { x: 760, y: 710 }, 100);
   }
 
-  public async scrollToBottom(platform: SupportedPlatformsType) {
-    if (platform === 'android') {
+  public async scrollUp() {
+    await this.scroll({ x: 760, y: 710 }, { x: 760, y: 1500 }, 100);
+  }
+
+  public async scrollToBottom() {
+    if (this.isAndroid()) {
       const scrollButton = await this.doesElementExist({
         strategy: 'id',
         selector: 'network.loki.messenger:id/scrollToBottomButton',
@@ -1626,11 +1629,27 @@ export class DeviceWrapper {
     }
   }
 
-  public async navigateBack() {
+  public async navigateBack(newAndroid?: boolean) {
     if (this.isIOS()) {
       await this.clickOnByAccessibilityID('Back');
     } else {
-      await this.clickOnByAccessibilityID('Navigate up');
+      if (newAndroid) {
+        await this.clickOnElementAll({ strategy: 'id', selector: 'Navigate back' });
+      } else {
+        await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Navigate up' });
+      }
+    }
+  }
+
+  public async closeScreen(newAndroid?: boolean) {
+    if (this.isAndroid()) {
+      if (newAndroid) {
+        await this.clickOnElementAll({ strategy: 'id', selector: 'Close button' });
+      } else {
+        await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Navigate up' });
+      }
+    } else {
+      await this.clickOnByAccessibilityID('Close button');
     }
   }
 
@@ -1646,7 +1665,7 @@ export class DeviceWrapper {
     await this.clickOnElementAll(new ReadReceiptsButton(this));
     await this.navigateBack();
     await sleepFor(100);
-    await this.clickOnElementAll(new ExitUserProfile(this));
+    await this.closeScreen();
   }
 
   public async checkPermissions(

@@ -306,7 +306,7 @@ const openiOSApp = async (
   const { device: wrappedDevice } = await cleanPermissions(opts, udid, capabilities);
   return { device: wrappedDevice };
 };
-
+// TODO UPDATE THIS TO TAKE A VARIABLE COUNT OF ARGUMENTS THAT IS NOT AN ARRAY
 export const closeApp = async (
   device1?: DeviceWrapper,
   device2?: DeviceWrapper,
@@ -315,12 +315,27 @@ export const closeApp = async (
   device5?: DeviceWrapper,
   device6?: DeviceWrapper,
   device7?: DeviceWrapper,
-  device8?: DeviceWrapper
+  device8?: DeviceWrapper,
+  device9?: DeviceWrapper,
+  device10?: DeviceWrapper,
+  device11?: DeviceWrapper,
+  device12?: DeviceWrapper
 ) => {
   await Promise.all(
-    compact([device1, device2, device3, device4, device5, device6, device7, device8]).map(d =>
-      d.deleteSession()
-    )
+    compact([
+      device1,
+      device2,
+      device3,
+      device4,
+      device5,
+      device6,
+      device7,
+      device8,
+      device9,
+      device10,
+      device11,
+      device12,
+    ]).map(d => d.deleteSession())
   );
 
   console.info('sessions closed');

@@ -1,4 +1,5 @@
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
+import { User } from '../../../types/testing';
 
 export const saveSessionIdIos = async (device: DeviceWrapper) => {
   const selector = await device.grabTextFromAccessibilityId('Session ID generated');
@@ -10,3 +11,9 @@ export const getAccountId = async (device: DeviceWrapper) => {
 
   return AccountId;
 };
+
+export function sortByPubkey(...users: Array<User>) {
+  return [...users]
+    .sort((a, b) => a.accountID.localeCompare(b.accountID))
+    .map(user => user.userName);
+}

@@ -1,7 +1,8 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { LeaveGroupButton } from './locators';
+import { ConversationSettings } from './locators/conversation';
+import { LeaveGroupButton } from './locators/groups';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { sleepFor } from './utils/index';
@@ -21,20 +22,17 @@ async function leaveGroup(platform: SupportedPlatformsType) {
 
   // Create group with user A, user B and User C
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
-  await device3.clickOnByAccessibilityID('More options');
+  await device3.clickOnElementAll(new ConversationSettings(device3));
   await sleepFor(1000);
   await device3.clickOnElementAll(new LeaveGroupButton(device3));
   // Modal with Leave/Cancel
   await device3.clickOnByAccessibilityID('Leave');
-  await device3.navigateBack();
   // Check for control message
   const groupMemberLeft = englishStripped('groupMemberLeft')
     .withArgs({ name: userC.userName })
     .toString();
-
   await device1.waitForControlMessageToBePresent(groupMemberLeft);
   await device2.waitForControlMessageToBePresent(groupMemberLeft);
-
   // Check device 3 that group has disappeared
   await device3.hasElementBeenDeleted({
     strategy: 'accessibility id',

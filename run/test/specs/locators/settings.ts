@@ -69,6 +69,22 @@ export class SaveProfilePictureButton extends LocatorsInterface {
     }
   }
 }
+export class SaveNameChangeButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Save',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Save',
+        } as const;
+    }
+  }
+}
 
 export class BlockedContacts extends LocatorsInterface {
   public build(text?: string) {

@@ -33,6 +33,14 @@ export class ConversationAvatar extends LocatorsInterface {
   }
 }
 
+export class DeletedMessage extends LocatorsInterface {
+  public build() {
+    return {
+      strategy: 'accessibility id',
+      selector: 'Deleted message',
+    } as const;
+  }
+}
 // Empty conversation state
 export class EmptyConversation extends LocatorsInterface {
   public build(text?: string) {

@@ -2,6 +2,7 @@ import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
+import { DeletedMessage } from './locators/conversation';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
@@ -18,7 +19,6 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   const sentMessage = await device1.sendMessage('Howdy');
   // Check message came through on linked device(3)
   // Enter conversation with user B on device 3
-  // Need to wait for notifications to disappear
   await device3.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Conversation list item',
@@ -38,48 +38,31 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
     .onAndroid()
     .checkModalStrings(
       englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
-      englishStripped('deleteMessageConfirm').toString()
+      englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()
     );
   // Select delete for everyone
   await device1.clickOnElementAll(new DeleteMessageForEveryone(device1));
   await device1.onAndroid().clickOnElementAll(new DeleteMessageConfirmationModal(device1));
 
   if (platform === 'android') {
-    await Promise.all([
-      device1.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Deleted message',
-        maxWait: 8000,
-      }),
-      device2.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Deleted message',
-        maxWait: 8000,
-      }),
-      device3.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Deleted message',
-        maxWait: 8000,
-      }),
-    ]);
+    await Promise.all(
+      [device1, device2, device3].map(device =>
+        device.waitForTextElementToBePresent({
+          ...new DeletedMessage(device).build(),
+          maxWait: 8000,
+        })
+      )
+    );
   } else {
-    await Promise.all([
-      device1.hasElementBeenDeleted({
-        strategy: 'accessibility id',
-        selector: 'Message body',
-        text: sentMessage,
-      }),
-      device2.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Deleted message',
-        maxWait: 8000,
-      }),
-      device3.hasElementBeenDeleted({
-        strategy: 'accessibility id',
-        selector: 'Message body',
-        text: sentMessage,
-      }),
-    ]);
+    await Promise.all(
+      [device1, device2, device3].map(device =>
+        device.hasElementBeenDeleted({
+          strategy: 'accessibility id',
+          selector: 'Message body',
+          text: sentMessage,
+        })
+      )
+    );
   }
   // Close app
   await closeApp(device1, device2, device3);

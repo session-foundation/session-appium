@@ -1,13 +1,13 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
-import { androidIt } from '../../types/sessionIt';
+import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
+import { DeletedMessage } from './locators/conversation';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-// Functionality not available on iOS yet
-// iosIt('Delete message in group', deleteMessageGroup);
+iosIt('Unsend message in group', 'high', unsendMessageGroup);
 androidIt('Unsend message in group', 'high', unsendMessageGroup);
 
 async function unsendMessageGroup(platform: SupportedPlatformsType) {
@@ -39,30 +39,17 @@ async function unsendMessageGroup(platform: SupportedPlatformsType) {
   // Select Delete icon
   await device1.clickOnByAccessibilityID('Delete message');
   // Check modal is correct
-
   await device1.checkModalStrings(
     englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
     englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()
   );
-
   // Select 'Delete for me'
   await device1.clickOnElementAll(new DeleteMessageForEveryone(device1));
-
   await device1.clickOnElementAll(new DeleteMessageConfirmationModal(device1));
-
   await Promise.all([
-    device1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Deleted message',
-    }),
-    device2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Deleted message',
-    }),
-    device2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Deleted message',
-    }),
+    device1.waitForTextElementToBePresent(new DeletedMessage(device1)),
+    device2.waitForTextElementToBePresent(new DeletedMessage(device2)),
+    device3.waitForTextElementToBePresent(new DeletedMessage(device3)),
   ]);
   // Excellent
   await closeApp(device1, device2, device3);
