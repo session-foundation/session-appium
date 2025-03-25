@@ -332,8 +332,6 @@ export class InviteContactsMenuItem extends LocatorsInterface {
   }
 }
 
-
-
 export class DeleteMessageLocally extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -492,10 +490,18 @@ export class RevealRecoveryPhraseButton extends LocatorsInterface {
 
 export class DownloadMediaButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Download',
-    };
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Download media',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Download',
+        };
+    }
   }
 }
 
@@ -515,7 +521,23 @@ export class SetDisappearMessagesButton extends LocatorsInterface {
     }
   }
 }
-
+export class ShareExtensionIcon extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'com.google.android.apps.photos:id/text',
+          text: 'Session',
+        };
+      case 'ios':
+        return {
+          strategy: 'xpath',
+          selector: `//XCUIElementTypeCell[@name="Session"]`,
+        };
+    }
+  }
+}
 export class LinkPreview extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -543,7 +565,56 @@ export class LinkPreviewMessage extends LocatorsInterface {
     }
   }
 }
+export class MediaMessageInput extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'New direct message',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Text input box',
+        };
+    }
+  }
+}
 
+export class SendMediaButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Send',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Send button',
+        };
+    }
+  }
+}
+
+export class ImageName extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Photo taken on Jun 12, 2103 2:28:16 PM',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Photo, 19 March 2024, 5:13 pm',
+        };
+    }
+  }
+}
 // TODO update StrategyExtractionObj to include Locator class
 // export class PendingMessageRequestControlMessage extends LocatorsInterface {
 //   public build(): StrategyExtractionObj {

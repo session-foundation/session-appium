@@ -11,6 +11,7 @@ import {
   LocatorsInterface,
   PrivacyButton,
   ReadReceiptsButton,
+  SendMediaButton,
 } from '../../run/test/specs/locators';
 import { IOS_XPATHS } from '../constants';
 import { englishStripped } from '../localizer/i18n/localizedString';
@@ -162,6 +163,17 @@ export class DeviceWrapper {
     }
     if (this.isAndroid()) {
       await this.toAndroid().mobileClickGesture({ x: xCoOrdinates, y: yCoOrdinates });
+      return;
+    }
+  }
+
+  public async pressHome(): Promise<void> {
+    if (this.isIOS()) {
+      await this.toIOS().mobilePressButton('home');
+      return;
+    }
+    if (this.isAndroid()) {
+      await runScriptAndLog(`${getAdbFullPath()} -s emulator-5554 shell input keyevent 3`, true);
       return;
     }
   }
@@ -394,9 +406,10 @@ export class DeviceWrapper {
 
         await this.longClick(el, 3000);
         await sleepFor(1000);
+        // Pin is the only consistent option in context menu
         const longPressSuccess = await this.waitForTextElementToBePresent({
           strategy: 'accessibility id',
-          selector: 'Details',
+          selector: 'Pin',
           maxWait: 1000,
         });
 
@@ -844,7 +857,6 @@ export class DeviceWrapper {
     return el;
   }
 
-  // TODO
   public async waitForLoadingMedia() {
     let loadingAnimation: AppiumNextElementType | null = null;
 
@@ -1069,10 +1081,30 @@ export class DeviceWrapper {
     }
   }
 
+  public async pushMediaToDevice(
+    platform: SupportedPlatformsType,
+    mediaFileName: string,
+    forcedDate?: string
+  ) {
+    if (platform === 'ios') {
+      await runScriptAndLog(`touch -a -m -t ${forcedDate} 'run/test/specs/media/${mediaFileName}'`);
+      await runScriptAndLog(`xcrun simctl addmedia 'run/test/specs/media/${mediaFileName}'`);
+    } else {
+      await runScriptAndLog(
+        `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/${mediaFileName}' /storage/emulated/0/Download`
+      );
+      // Refreshes the photos UI to force the image appear
+      await runScriptAndLog(
+        `${getAdbFullPath()} -s emulator-5554 shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage/emulated/0/Download/${mediaFileName}`
+      );
+    }
+  }
+
   // TODO FIX UP THIS FUNCTION
   public async sendImage(platform: SupportedPlatformsType, message?: string, community?: boolean) {
+    const ronSwansonBirthday = '196705060700.00';
+    const fileName = 'test_image.jpg';
     if (platform === 'ios') {
-      const ronSwansonBirthday = '196705060700.00';
       await this.clickOnByAccessibilityID('Attachments button');
       await sleepFor(5000);
       const keyboard = await this.isKeyboardVisible();
@@ -1088,15 +1120,7 @@ export class DeviceWrapper {
         maxWait: 1000,
       });
       if (!testImage) {
-        await runScriptAndLog(
-          `touch -a -m -t ${ronSwansonBirthday} 'run/test/specs/media/test_image.jpg'`
-        );
-
-        await runScriptAndLog(
-          `xcrun simctl addmedia ${
-            (this as { udid?: string }).udid || ''
-          } 'run/test/specs/media/test_image.jpg'`
-        );
+        await this.pushMediaToDevice(platform, fileName, ronSwansonBirthday);
       }
       await sleepFor(100);
       await this.clickOnByAccessibilityID(`1967-05-05 21:00:00 +0000`, 1000);
@@ -1104,7 +1128,7 @@ export class DeviceWrapper {
         await this.clickOnByAccessibilityID('Text input box');
         await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
       }
-      await this.clickOnByAccessibilityID('Send button');
+      await this.clickOnElementAll(new SendMediaButton(this));
       await this.waitForTextElementToBePresent({
         strategy: 'accessibility id',
         selector: 'Message sent status: Sent',
@@ -1128,16 +1152,13 @@ export class DeviceWrapper {
         strategy: 'id',
         selector: 'android:id/title',
         maxWait: 2000,
-        text: 'test_image.jpg',
+        text: fileName,
       });
       if (!testImage) {
-        await runScriptAndLog(
-          `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/test_image.jpg' /storage/emulated/0/Download`,
-          true
-        );
+        await this.pushMediaToDevice(platform, fileName);
       }
       await sleepFor(100);
-      await this.clickOnTextElementById('android:id/title', 'test_image.jpg');
+      await this.clickOnTextElementById('android:id/title', fileName);
       if (community) {
         await this.scrollToBottom();
       }
@@ -1172,11 +1193,13 @@ export class DeviceWrapper {
       strategy: 'accessibility id',
       selector: 'New direct message',
     });
-    await this.clickOnByAccessibilityID('Send');
+    await this.clickOnElementAll(new SendMediaButton(this));
   }
 
   public async sendVideoiOS(message: string) {
     const bestDayOfYear = `198809090700.00`;
+    const formattedDate = `1988-09-08 21:00:00 +0000`;
+    const fileName = 'test_video.mp4';
     await this.clickOnByAccessibilityID('Attachments button');
     // Select images button/tab
     await sleepFor(5000);
@@ -1187,7 +1210,6 @@ export class DeviceWrapper {
       await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardClosed);
     }
     await sleepFor(100);
-    // Check if android or ios (android = documents folder/ ios = images folder)
     await this.modalPopup({
       strategy: 'accessibility id',
       selector: 'Allow Full Access',
@@ -1203,18 +1225,11 @@ export class DeviceWrapper {
     if (videoFolder) {
       console.log('Videos folder found');
       await this.clickOnByAccessibilityID('Videos');
-      await this.clickOnByAccessibilityID(`1988-09-08 21:00:00 +0000`);
+      await this.clickOnByAccessibilityID(formattedDate);
     } else {
       console.log('Videos folder NOT found');
-      await runScriptAndLog(
-        `touch -a -m -t ${bestDayOfYear} 'run/test/specs/media/test_video.mp4'`,
-        true
-      );
-      await runScriptAndLog(
-        `xcrun simctl addmedia ${this.udid || ''} 'run/test/specs/media/test_video.mp4'`,
-        true
-      );
-      await this.clickOnByAccessibilityID(`1988-09-08 21:00:00 +0000`, 5000);
+      await this.pushMediaToDevice('ios', fileName, bestDayOfYear);
+      await this.clickOnByAccessibilityID(formattedDate, 5000);
     }
     // Send with message
     await this.clickOnByAccessibilityID('Text input box');
@@ -1228,6 +1243,7 @@ export class DeviceWrapper {
   }
 
   public async sendVideoAndroid() {
+    const fileName = 'test_video.mp4';
     // Click on attachments button
     await this.clickOnByAccessibilityID('Attachments button');
     await sleepFor(100);
@@ -1251,17 +1267,13 @@ export class DeviceWrapper {
       strategy: 'id',
       selector: 'android:id/title',
       maxWait: 1000,
-      text: 'test_video.mp4',
+      text: fileName,
     });
     if (!testVideo) {
-      // Adds video to downloads folder if it isn't already there
-      await runScriptAndLog(
-        `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/test_video.mp4' /storage/emulated/0/Download`,
-        true
-      );
+      await this.pushMediaToDevice('android', fileName);
     }
     await sleepFor(100);
-    await this.clickOnTextElementById('android:id/title', 'test_video.mp4');
+    await this.clickOnTextElementById('android:id/title', fileName);
     await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: `Message sent status: Sent`,
@@ -1270,6 +1282,7 @@ export class DeviceWrapper {
   }
 
   public async sendDocument() {
+    const fileName = 'test_file.pdf';
     if (this.isAndroid()) {
       await this.clickOnByAccessibilityID('Attachments button');
       await this.clickOnByAccessibilityID('Documents folder');
@@ -1283,16 +1296,13 @@ export class DeviceWrapper {
         strategy: 'id',
         selector: 'android:id/title',
         maxWait: 1000,
-        text: 'test_file.pdf',
+        text: fileName,
       });
       if (!testDocument) {
-        await runScriptAndLog(
-          `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/test_file.pdf' /storage/emulated/0/Download`,
-          true
-        );
+        await this.pushMediaToDevice('android', fileName);
       }
       await sleepFor(1000);
-      await this.clickOnTextElementById('android:id/title', 'test_file.pdf');
+      await this.clickOnTextElementById('android:id/title', fileName);
       await this.waitForTextElementToBePresent({
         strategy: 'accessibility id',
         selector: `Message sent status: Sent`,
@@ -1300,6 +1310,7 @@ export class DeviceWrapper {
       });
     }
     if (this.isIOS()) {
+      const formattedFileName = 'test_file, pdf';
       const testMessage = 'Testing-document-1';
       const spongeBobsBirthday = '199905010700.00';
       await this.clickOnByAccessibilityID('Attachments button');
@@ -1308,25 +1319,16 @@ export class DeviceWrapper {
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
       const testDocument = await this.doesElementExist({
         strategy: 'accessibility id',
-        selector: 'test_file, pdf',
+        selector: formattedFileName,
         text: undefined,
         maxWait: 1000,
       });
 
       if (!testDocument) {
-        await runScriptAndLog(
-          `touch -a -m -t ${spongeBobsBirthday} 'run/test/specs/media/test_file.pdf'`
-        );
-
-        await runScriptAndLog(
-          `xcrun simctl addmedia
-            ${this.udid || ''}
-          } 'run/test/specs/media/test_file.pdf'`,
-          true
-        );
+        await this.pushMediaToDevice('ios', fileName, spongeBobsBirthday);
       }
       await sleepFor(100);
-      await this.clickOnByAccessibilityID('test_file, pdf');
+      await this.clickOnByAccessibilityID(formattedFileName);
       await sleepFor(500);
       await this.clickOnByAccessibilityID('Text input box');
       await this.inputText(testMessage, {
@@ -1416,6 +1418,9 @@ export class DeviceWrapper {
 
   public async uploadProfilePicture() {
     const spongeBobsBirthday = '199805010700.00';
+    const formattedDateiOS = 'Photo, 01 May 1998, 7:00 am';
+    const formattedDateAndroid = 'profile_picture.jpg, 27.75 kB, May 1, 1998';
+    const fileName = 'profile_picture.jpg';
     await this.clickOnElementAll(new UserSettings(this));
     // Click on Profile picture
     await this.clickOnElementAll(new UserSettings(this));
@@ -1424,26 +1429,16 @@ export class DeviceWrapper {
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
       const profilePicture = await this.doesElementExist({
         strategy: 'accessibility id',
-        // eslint-disable-next-line no-irregular-whitespace
-        selector: `Photo, 01 May 1998, 7:00 am`,
+        selector: formattedDateiOS,
         maxWait: 2000,
       });
       if (!profilePicture) {
-        await runScriptAndLog(
-          `touch -a -m -t ${spongeBobsBirthday} 'run/test/specs/media/profile_picture.jpg'`
-        );
-
-        await runScriptAndLog(
-          `xcrun simctl addmedia ${
-            (this as { udid?: string }).udid || ''
-          } 'run/test/specs/media/profile_picture.jpg'`,
-          true
-        );
+        await this.pushMediaToDevice('ios', fileName, spongeBobsBirthday);
       }
       await sleepFor(100);
       await this.clickOnElementAll({
         strategy: 'accessibility id',
-        selector: 'Photo, 01 May 1998, 7:00 am',
+        selector: formattedDateiOS,
       });
       await this.clickOnByAccessibilityID('Done');
     } else if (this.isAndroid()) {
@@ -1458,19 +1453,12 @@ export class DeviceWrapper {
       // Select file
       const profilePicture = await this.doesElementExist({
         strategy: 'accessibility id',
-        selector: `profile_picture.jpg, 27.75 kB, May 1, 1998`,
+        selector: formattedDateAndroid,
         maxWait: 5000,
       });
       // If no image, push file to this
       if (!profilePicture) {
-        await runScriptAndLog(
-          `touch -a -m -t ${spongeBobsBirthday} 'run/test/specs/media/profile_picture.jpg'`
-        );
-
-        await runScriptAndLog(
-          `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /sdcard/Download/`,
-          true
-        );
+        await this.pushMediaToDevice('android', fileName);
         await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Show roots' });
         await this.clickOnElementAll({
           strategy: 'id',
@@ -1480,7 +1468,7 @@ export class DeviceWrapper {
       }
       await this.clickOnElementAll({
         strategy: 'accessibility id',
-        selector: 'profile_picture.jpg, 27.75 kB, May 1, 1998',
+        selector: formattedDateAndroid,
       });
       await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
     }
@@ -1576,7 +1564,26 @@ export class DeviceWrapper {
 
     console.info('Swiped left on ', selector);
   }
+  public async swipeRightAny(selector: AccessibilityId) {
+    const el = await this.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector,
+    });
 
+    const loc = await this.getElementRect(el.ELEMENT);
+    console.log(loc);
+
+    if (!loc) {
+      throw new Error('did not find element rectangle');
+    }
+    await this.scroll(
+      { x: loc.x + loc.width * 2, y: loc.y + loc.height / 2 },
+      { x: loc.x + loc.width * 8, y: loc.y + loc.height / 2 },
+      500
+    );
+
+    console.info('Swiped right on ', selector);
+  }
   public async swipeLeft(accessibilityId: AccessibilityId, text: string) {
     const el = await this.findMatchingTextAndAccessibilityId(accessibilityId, text);
 

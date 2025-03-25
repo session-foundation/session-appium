@@ -84,6 +84,15 @@ on:
           - '0'
           - '1'
         default: '0'
+      PLAYWRIGHT_WORKERS_COUNT:
+        description: 'number of workers to use'
+        required: true
+        type: choice
+        options:
+          - '1'
+          - '2'
+          - '3'
+        default: '3'
 
 # concurrency:
 #   group: ${{ github.workflow }}
@@ -93,13 +102,13 @@ jobs:
   ios-regression:
     runs-on: [self-hosted]
     env:
-      IOS_APP_PATH_PREFIX: '/Users/thedebuggernaut/Desktop/ios/16-01-25/Session.app'
-      ANDROID_APK: '/Users/thedebuggernaut/Desktop/android/session-android-20250108T233657Z-d001f8fb8-universal/session-1.20.8-universal.apk'
+      IOS_APP_PATH_PREFIX: '../extracted/Session.app'
+      ANDROID_APK: '../extracted/session-android.apk'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
-      PLAYWRIGHT_REPEAT_COUNT: 1
       PLAYWRIGHT_WORKERS_COUNT: 3
+      PLAYWRIGHT_REPEAT_COUNT: 1
       SDK_MANAGER_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/cmdline-tools/latest/bin/sdkmanager'
       AVD_MANAGER_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/cmdline-tools/latest/bin/avdmanager'
       ANDROID_SYSTEM_IMAGE: 'system-images;android-35;google_atd;x86_64'
@@ -158,6 +167,7 @@ jobs:
           mkdir -p extracted
           mv session-ios extracted || echo "No session-ios directory to move"
           ls extracted
+
       - uses: actions/checkout@v4
         with:
           repository: ${{ github.event.inputs.APPIUM_REPO }}
@@ -189,17 +199,16 @@ jobs:
         run: |
           cd forked-session-appium
           yarn tsc
-      - name: Create and start simulators
+      - name: Start simulators
         shell: bash
         run: |
-          source ./scripts/ci-ios.sh
-          create_simulators
-          start_simulators_from_env
+          source ./scripts/ci.sh
+          start_simulators_from_env_iOS
       - name: List all tests
         run: |
           cd forked-session-appium
           pwd
-          npx playwright test --list
+          npx playwright test --list --grep "@${{ github.event.inputs.RISK }}"
       - name: Run the iOS tests # ${{ github.event.inputs.SHARD_NUMBER }}​​/${{ github.event.inputs.SHARD_COUNT }}​​
         run: |
           cd forked-session-appium
@@ -211,5 +220,5 @@ jobs:
         continue-on-error: true # just so we don't fail
         shell: bash
         run: |
-          source ./scripts/ci-ios.sh
-          stop_simulators_from_env
+          source ./scripts/ci.sh
+          stop_simulators_from_env_iOS

@@ -7,6 +7,7 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
+// Block option not available on iOS in conversation list
 androidIt('Block user in conversation list', 'high', blockUserInConversationList);
 // No longer available on iOS
 

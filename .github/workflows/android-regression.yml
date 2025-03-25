@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       APK_URL:
-        description: 'APK.tar.gz url to test'
+        description: 'url to test'
         required: true
         type: string
         default: https://oxen.rocks/session-foundation/session-android/release/1.20.3/session-android-20241101T052421Z-be16d3bf9-universal.tar.xz
@@ -85,6 +85,15 @@ on:
           - '0'
           - '1'
         default: '0'
+      PLAYWRIGHT_WORKERS_COUNT:
+        description: 'number of workers to use - ONLY 1 WORKER IS SUPPORTED FOR ANDROID'
+        required: true
+        type: choice
+        options:
+          - '1'
+          - '2'
+          - '3'
+        default: '1'
 
 # concurrency:
 #   group: ${{ github.workflow }}
@@ -98,10 +107,13 @@ jobs:
       ANDROID_APK: '../extracted/session-android.apk'
       APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
       ANDROID_SDK_ROOT: '/opt/android'
-      PLAYWRIGHT_WORKERS_COUNT: 1
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
+<<<<<<< HEAD
+=======
+      PLAYWRIGHT_WORKERS_COUNT: 1
+>>>>>>> main
       IOS_FIRST_SIMULATOR: '49651A15-3E14-4BAF-8B8E-0C630C35B8DD'
       IOS_SECOND_SIMULATOR: '7CA21E47-56AC-4B76-82A4-1D5199515F38'
       IOS_THIRD_SIMULATOR: 'FE1DEDC7-D530-41E7-9B38-86ED2DDB97CD'
@@ -132,11 +144,12 @@ jobs:
           wget -q -O session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
           ls
           pwd
+
       - name: Extract APK
         run: |
           tar xf session-android.apk.tar.xz
-          ls
           pwd
+
       - name: Rename extracted folder
         run: |
           mv session-android-*universal extracted
@@ -144,6 +157,7 @@ jobs:
           mv extracted/*.apk extracted/session-android.apk
           ls extracted
           pwd
+
       - uses: actions/checkout@v4
         with:
           repository: ${{ github.event.inputs.APPIUM_REPO }}
@@ -161,6 +175,7 @@ jobs:
           npm install -g yarn
           corepack enable
           yarn set version 4.1.1
+
       - name: Install test dependencies
         run: |
           cd forked-session-appium
@@ -168,35 +183,44 @@ jobs:
           git status
           touch yarn.lock
           yarn install --immutable
+
+      - name: Start Appium server
+        run: |
+          cd forked-session-appium
+          yarn "./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --allow-cors"
+
       - name: Build the Android tests
         run: |
           cd forked-session-appium
           yarn tsc
+
       - name: Restart adb server
         shell: bash
-        continue-on-error: true # just so we don't fail if adb wasn't alreadu running
+        continue-on-error: true # just so we don't fail if adb wasn't already running
         run: |
           source ./scripts/ci.sh
           adb kill-server;
           adb start-server;
-      - name: Start 4 android emulators with snapshots
+
+      - name: Start emulators
         shell: bash
         run: |
           source ./scripts/ci.sh
           start_with_snapshots
+
       - name: List all tests
         run: |
           cd forked-session-appium
           pwd
-          npx playwright test --list
+          npx playwright test --list --grep "@${{ github.event.inputs.RISK }}"
 
-      - name: Run the Android tests # ${{ github.event.inputs.SHARD_NUMBER }}​​/${{ github.event.inputs.SHARD_COUNT }}​​
+      - name: Run the tests # ${{ github.event.inputs.SHARD_NUMBER }}​​/${{ github.event.inputs.SHARD_COUNT }}​​
         run: |
           cd forked-session-appium
           pwd
-          yarn test 'android @${{ github.event.inputs.RISK }}'
+          yarn test 'android "@${{ github.event.inputs.RISK }}"'
 
-      - name: Killall running emulators
+      - name: Kill all running emulators
         if: always()
         continue-on-error: true # just so we don't fail
         shell: bash

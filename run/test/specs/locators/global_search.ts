@@ -18,3 +18,21 @@ export class NoteToSelfOption extends LocatorsInterface {
     }
   }
 }
+
+export class CancelSearchButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/search_cancel',
+          text: 'Cancel',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Cancel',
+        };
+    }
+  }
+}
