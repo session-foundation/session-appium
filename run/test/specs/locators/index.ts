@@ -494,7 +494,7 @@ export class DownloadMediaButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'accessibility id',
-          selector: 'Download media',
+          selector: 'Download',
         };
       case 'ios':
         return {

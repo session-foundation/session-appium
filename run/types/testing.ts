@@ -404,7 +404,8 @@ export type Id =
   | 'network.loki.messenger:id/singleModeImageView'
   | 'Hide'
   | 'com.google.android.apps.photos:id/text'
-  | 'network.loki.messenger:id/search_cancel';
+  | 'network.loki.messenger:id/search_cancel'
+  | 'Download media';
 
 export type TestRisk = 'high' | 'medium' | 'low' | undefined;
 

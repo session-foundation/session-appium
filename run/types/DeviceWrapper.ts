@@ -1081,12 +1081,8 @@ export class DeviceWrapper {
     }
   }
 
-  public async pushMediaToDevice(
-    platform: SupportedPlatformsType,
-    mediaFileName: string,
-    forcedDate?: string
-  ) {
-    if (platform === 'ios') {
+  public async pushMediaToDevice(mediaFileName: string, forcedDate?: string) {
+    if (this.isIOS()) {
       await runScriptAndLog(`touch -a -m -t ${forcedDate} 'run/test/specs/media/${mediaFileName}'`);
       await runScriptAndLog(`xcrun simctl addmedia 'run/test/specs/media/${mediaFileName}'`);
     } else {
@@ -1120,7 +1116,7 @@ export class DeviceWrapper {
         maxWait: 1000,
       });
       if (!testImage) {
-        await this.pushMediaToDevice(platform, fileName, ronSwansonBirthday);
+        await this.pushMediaToDevice(fileName, ronSwansonBirthday);
       }
       await sleepFor(100);
       await this.clickOnByAccessibilityID(`1967-05-05 21:00:00 +0000`, 1000);
@@ -1228,7 +1224,7 @@ export class DeviceWrapper {
       await this.clickOnByAccessibilityID(formattedDate);
     } else {
       console.log('Videos folder NOT found');
-      await this.pushMediaToDevice('ios', fileName, bestDayOfYear);
+      await this.pushMediaToDevice(fileName, bestDayOfYear);
       await this.clickOnByAccessibilityID(formattedDate, 5000);
     }
     // Send with message
@@ -1325,7 +1321,7 @@ export class DeviceWrapper {
       });
 
       if (!testDocument) {
-        await this.pushMediaToDevice('ios', fileName, spongeBobsBirthday);
+        await this.pushMediaToDevice(fileName, spongeBobsBirthday);
       }
       await sleepFor(100);
       await this.clickOnByAccessibilityID(formattedFileName);
@@ -1433,7 +1429,7 @@ export class DeviceWrapper {
         maxWait: 2000,
       });
       if (!profilePicture) {
-        await this.pushMediaToDevice('ios', fileName, spongeBobsBirthday);
+        await this.pushMediaToDevice(fileName, spongeBobsBirthday);
       }
       await sleepFor(100);
       await this.clickOnElementAll({
