@@ -344,7 +344,8 @@ export type AccessibilityId =
   | '1967-05-06 07:00:00 +0000'
   | '1967-05-05 20:00:00 +0000'
   | '1967-05-05 21:00:00 +0000'
-  | 'Pin';
+  | 'Pin'
+  | 'Version warning banner';
 
 export type Id =
   | 'Modal heading'
@@ -405,7 +406,8 @@ export type Id =
   | 'Hide'
   | 'com.google.android.apps.photos:id/text'
   | 'network.loki.messenger:id/search_cancel'
-  | 'Download media';
+  | 'Download media'
+  | 'Version warning banner';
 
 export type TestRisk = 'high' | 'medium' | 'low' | undefined;
 
