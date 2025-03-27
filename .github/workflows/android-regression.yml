@@ -214,7 +214,7 @@ jobs:
         run: |
           cd forked-session-appium
           pwd
-          yarn test android "@${{ github.event.inputs.RISK }}"
+          yarn test android @${{ github.event.inputs.RISK }}
 
       - name: Kill all running emulators
         if: always()
