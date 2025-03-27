@@ -50,14 +50,10 @@ export class DisableDisappearingMessages extends LocatorsInterface {
 }
 export class SetDisappearMessagesButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Set button',
-        } as const;
-    }
+    return {
+      strategy: 'accessibility id',
+      selector: 'Set button',
+    } as const;
   }
 }
 
