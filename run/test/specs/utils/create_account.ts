@@ -1,7 +1,8 @@
 import { sleepFor } from '.';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User, USERNAME } from '../../../types/testing';
-import { ExitUserProfile, RevealRecoveryPhraseButton } from '../locators';
+import { RevealRecoveryPhraseButton } from '../locators';
+import { DisplayNameInput } from '../locators/onboarding';
 import { UserSettings } from '../locators/settings';
 
 export const newUser = async (device: DeviceWrapper, userName: USERNAME): Promise<User> => {
@@ -12,10 +13,7 @@ export const newUser = async (device: DeviceWrapper, userName: USERNAME): Promis
     selector: 'Create account button',
   });
   // Input username
-  await device.inputText(userName, {
-    strategy: 'accessibility id',
-    selector: 'Enter display name',
-  });
+  await device.inputText(userName, new DisplayNameInput(device));
   // Click continue
   await device.clickOnByAccessibilityID('Continue');
   // Choose message notification options
@@ -46,6 +44,6 @@ export const newUser = async (device: DeviceWrapper, userName: USERNAME): Promis
   await device.navigateBack();
   await device.clickOnElementAll(new UserSettings(device));
   const accountID = await device.grabTextFromAccessibilityId('Account ID');
-  await device.clickOnElementAll(new ExitUserProfile(device));
+  await device.closeScreen();
   return { userName, accountID, recoveryPhrase };
 };

@@ -32,6 +32,7 @@ export default tseslint.config(
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-redundant-type-constituents': 'off',
       '@typescript-eslint/no-unsafe-enum-comparison': 'off',
+      quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: true }],
       '@typescript-eslint/no-unused-vars': [
         'error',
         {

@@ -1,16 +1,14 @@
 import { sleepFor } from '.';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
+import { SeedPhraseInput } from '../locators/onboarding';
 
 export const restoreAccount = async (device: DeviceWrapper, user: User) => {
   await device.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Restore your session button',
   });
-  await device.inputText(user.recoveryPhrase, {
-    strategy: 'accessibility id',
-    selector: device.isAndroid() ? 'Recovery phrase input' : 'Recovery password input',
-  });
+  await device.inputText(user.recoveryPhrase, new SeedPhraseInput(device));
   // Wait for continue button to become active
   await sleepFor(500);
   // Continue with recovery phrase
@@ -42,6 +40,7 @@ export const restoreAccount = async (device: DeviceWrapper, user: User) => {
   await device.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Continue',
+    maxWait: 1000,
   });
   // Check that button was clicked
   await device.waitForTextElementToBePresent({

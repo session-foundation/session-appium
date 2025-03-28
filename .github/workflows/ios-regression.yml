@@ -108,7 +108,7 @@ jobs:
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
       PLAYWRIGHT_WORKERS_COUNT: 3
-      PLAYWRIGHT_REPEAT_COUNT: 1
+      PLAYWRIGHT_REPEAT_COUNT: 0
       SDK_MANAGER_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/cmdline-tools/latest/bin/sdkmanager'
       AVD_MANAGER_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/cmdline-tools/latest/bin/avdmanager'
       ANDROID_SYSTEM_IMAGE: 'system-images;android-35;google_atd;x86_64'
