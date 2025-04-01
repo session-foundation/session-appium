@@ -84,18 +84,20 @@ async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType) {
   let currentWait = 0;
   const waitPerLoop = 500;
   const maxWait = 50000;
-  
+
   do {
     await sleepFor(waitPerLoop);
     // Close the screen and navigate back to the User Settings
     await device2.closeScreen();
     await device2.clickOnElementAll(new UserSettings(device2));
     currentWait += waitPerLoop;
-    const linkedUsernameEl = await device2.waitForTextElementToBePresent(new UsernameSettings(device2));
+    const linkedUsernameEl = await device2.waitForTextElementToBePresent(
+      new UsernameSettings(device2)
+    );
     currentLinkedUsername = await device2.getTextFromElement(linkedUsernameEl);
-    
-  } while(currentLinkedUsername === userA.userName && currentWait < maxWait) {
-    console.log('Username not changed yet')
+  } while (currentLinkedUsername === userA.userName && currentWait < maxWait);
+  {
+    console.log('Username not changed yet');
   }
   await closeApp(device1, device2);
 }
