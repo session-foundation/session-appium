@@ -5,6 +5,7 @@ import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { createGroup } from './utils/create_group';
 import { ConversationSettings } from './locators/conversation';
 import {
+  DisappearingMessageRadial,
   DisappearingMessagesMenuOption,
   SetDisappearMessagesButton,
 } from './locators/disappearing_messages';
@@ -28,10 +29,7 @@ async function membersCantSetDisappearingMessages(platform: SupportedPlatformsTy
   // On iOS, the Set button becomes visible after an admin clicks on a timer option
   // This is a 'fake' click on a disabled radial to rule out the false positive of the Set button becoming visible
   // On Android, this is not necessary because the button is always visible for admins
-  await device2.onIOS().clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: `${DISAPPEARING_TIMES.ONE_DAY} - Radio`, // I tried making this a locator class but I couldn't get it to work
-  });
+  await device2.onIOS().clickOnElementAll(new DisappearingMessageRadial(device2, DISAPPEARING_TIMES.ONE_DAY));
   const setButton = await device2.doesElementExist({
     ...new SetDisappearMessagesButton(device2).build(),
     maxWait: 500,
