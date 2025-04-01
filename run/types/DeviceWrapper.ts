@@ -1141,7 +1141,7 @@ export class DeviceWrapper {
         text: 'Allow',
       });
       await this.clickOnByAccessibilityID('Show roots');
-      await sleepFor(100);
+      await sleepFor(500);
       await this.clickOnTextElementById(`android:id/title`, 'Downloads');
       await sleepFor(100);
       const testImage = await this.doesElementExist({
@@ -1254,6 +1254,7 @@ export class DeviceWrapper {
     await sleepFor(200);
     // Select video
     const mediaButtons = await this.findElementsByClass('android.widget.Button');
+    await sleepFor(500);
     const videosButton = await this.findMatchingTextInElementArray(mediaButtons, 'Videos');
     if (!videosButton) {
       throw new Error('videosButton was not found');

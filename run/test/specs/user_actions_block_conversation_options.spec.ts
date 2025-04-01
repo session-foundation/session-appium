@@ -31,7 +31,8 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   // Check modal strings
   await device1.checkModalStrings(
     englishStripped('block').toString(),
-    englishStripped('blockDescription').withArgs({ name: userB.userName }).toString()
+    englishStripped('blockDescription').withArgs({ name: userB.userName }).toString(),
+    true
   );
   // Confirm block option
   await device1.clickOnElementAll(new BlockUserConfirmationModal(device1));
