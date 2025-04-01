@@ -87,8 +87,8 @@ export class FollowSettingsButton extends LocatorsInterface {
 export class DisappearingMessageRadial extends LocatorsInterface {
   private timer: DISAPPEARING_TIMES;
 
-// Receives a timer argument so that one locator can handle all DM durations
-constructor(device: DeviceWrapper, timer: DISAPPEARING_TIMES) {
+  // Receives a timer argument so that one locator can handle all DM durations
+  constructor(device: DeviceWrapper, timer: DISAPPEARING_TIMES) {
     super(device);
     this.timer = timer;
   }

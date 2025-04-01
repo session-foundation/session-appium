@@ -29,7 +29,9 @@ async function membersCantSetDisappearingMessages(platform: SupportedPlatformsTy
   // On iOS, the Set button becomes visible after an admin clicks on a timer option
   // This is a 'fake' click on a disabled radial to rule out the false positive of the Set button becoming visible
   // On Android, this is not necessary because the button is always visible for admins
-  await device2.onIOS().clickOnElementAll(new DisappearingMessageRadial(device2, DISAPPEARING_TIMES.ONE_DAY));
+  await device2
+    .onIOS()
+    .clickOnElementAll(new DisappearingMessageRadial(device2, DISAPPEARING_TIMES.ONE_DAY));
   const setButton = await device2.doesElementExist({
     ...new SetDisappearMessagesButton(device2).build(),
     maxWait: 500,
