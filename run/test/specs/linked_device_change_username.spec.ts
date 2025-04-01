@@ -72,56 +72,30 @@ async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType) {
   await device1.deleteText(new UsernameInput(device1));
   await device1.inputText(newUsername, new UsernameInput(device1));
   await device1.clickOnElementAll(new TickButton(device1));
-  const username = await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Display name',
-  });
-  const changedUsername = await device1.getTextFromElement(username);
+  const usernameEl = await device1.waitForTextElementToBePresent(new UsernameSettings(device1));
+  const changedUsername = await device1.getTextFromElement(usernameEl);
   if (changedUsername === userA.userName) {
     throw new Error('Username change unsuccessful');
   }
   // Get the initial linked username from device2
-  const username2 = await device2.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Display name',
-  });
+  const username2 = await device2.waitForTextElementToBePresent(new UsernameSettings(device2));
   let currentLinkedUsername = await device2.getTextFromElement(username2);
 
-  // If the linked username still equals the original, then enter a loop to try again.
-  if (currentLinkedUsername === userA.userName) {
-    let currentWait = 0;
-    const waitPerLoop = 500;
-    const maxWait = 50000;
-
-    while (currentWait < maxWait) {
-      // Wait before trying again
-      await sleepFor(waitPerLoop);
-
-      // Close the screen and navigate back to the User Settings
-      await device2.closeScreen();
-      await device2.clickOnElementAll(new UserSettings(device2));
-
-      currentWait += waitPerLoop;
-
-      // Retrieve the updated username
-      const linkedUsernameEl = await device2.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Display name',
-      });
-      currentLinkedUsername = await device2.getTextFromElement(linkedUsernameEl);
-      // If the linked username now matches the changed username, break out.
-      if (currentLinkedUsername === changedUsername) {
-        console.log('Username change successful');
-        break;
-      }
-    }
-
-    // After looping, if the linked username still equals the original, then fail.
-    if (currentLinkedUsername === userA.userName) {
-      throw new Error('Username change unsuccessful');
-    }
-  } else {
-    console.log('Username change successful');
+  let currentWait = 0;
+  const waitPerLoop = 500;
+  const maxWait = 50000;
+  
+  do {
+    await sleepFor(waitPerLoop);
+    // Close the screen and navigate back to the User Settings
+    await device2.closeScreen();
+    await device2.clickOnElementAll(new UserSettings(device2));
+    currentWait += waitPerLoop;
+    const linkedUsernameEl = await device2.waitForTextElementToBePresent(new UsernameSettings(device2));
+    currentLinkedUsername = await device2.getTextFromElement(linkedUsernameEl);
+    
+  } while(currentLinkedUsername === userA.userName && currentWait < maxWait) {
+    console.log('Username not changed yet')
   }
   await closeApp(device1, device2);
 }

@@ -7,9 +7,9 @@ import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
 import { openAppMultipleDevices, SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsIt('Delete contact', 'high', deleteContact);
+bothPlatformsIt('Delete conversation', 'high', deleteConversation);
 
-async function deleteContact(platform: SupportedPlatformsType) {
+async function deleteConversation(platform: SupportedPlatformsType) {
   const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
   const [Alice, Bob] = await Promise.all([
     linkedDevice(device1, device3, USERNAME.ALICE),
@@ -33,7 +33,7 @@ async function deleteContact(platform: SupportedPlatformsType) {
       text: Bob.userName,
     }),
   ]);
-  // Delete contact
+  // Delete conversation
   await device1.onIOS().swipeLeft('Conversation list item', Bob.userName);
   await device1.onAndroid().longPressConversation(Bob.userName);
   await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Delete' });
