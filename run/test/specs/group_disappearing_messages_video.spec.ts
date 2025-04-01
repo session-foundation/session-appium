@@ -13,7 +13,7 @@ const timerType = 'Disappear after send option';
 
 async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   const testMessage = 'Testing disappearing messages for videos';
-  const testGroupName = 'Test group';
+  const testGroupName = 'Testing disappearing messages';
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
