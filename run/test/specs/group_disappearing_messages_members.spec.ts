@@ -13,7 +13,7 @@ bothPlatformsIt('Group member disappearing messages', 'medium', membersCantSetDi
 
 async function membersCantSetDisappearingMessages(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  const testGroupName = 'Test group';
+  const testGroupName = 'Testing disappearing messages';
   // Create user A, B and C
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, USERNAME.ALICE),
@@ -32,7 +32,10 @@ async function membersCantSetDisappearingMessages(platform: SupportedPlatformsTy
     strategy: 'accessibility id',
     selector: `${DISAPPEARING_TIMES.ONE_DAY} - Radio`, // I tried making this a locator class but I couldn't get it to work
   });
-  const setButton = await device2.doesElementExist(new SetDisappearMessagesButton(device2));
+  const setButton = await device2.doesElementExist({
+    ...new SetDisappearMessagesButton(device2).build(),
+    maxWait: 500,
+  });
   if (setButton) throw new Error('Disappearing Messages Set button should not be visible');
   await closeApp(device1, device2, device3);
 }
