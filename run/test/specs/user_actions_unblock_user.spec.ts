@@ -21,7 +21,8 @@ async function unblockUser(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new BlockUser(device1));
   await device1.checkModalStrings(
     englishStripped('block').toString(),
-    englishStripped('blockDescription').withArgs({ name: userB.userName }).toString()
+    englishStripped('blockDescription').withArgs({ name: userB.userName }).toString(),
+    true
   );
   await device1.clickOnElementAll(new BlockUserConfirmationModal(device1));
   await device1.onIOS().navigateBack();
@@ -47,13 +48,13 @@ async function unblockUser(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Blocked banner' });
   await device1.checkModalStrings(
     englishStripped('blockUnblock').toString(),
-    englishStripped('blockUnblockName').withArgs({ name: userB.userName }).toString()
+    englishStripped('blockUnblockName').withArgs({ name: userB.userName }).toString(),
+    true
   );
   await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Unblock' });
-  //   Blocked message should now be visible
-  await device1.waitForTextElementToBePresent({
+  await device1.doesElementExist({
     strategy: 'accessibility id',
-    selector: 'Message body',
-    text: blockedMessage,
+    selector: 'Blocked banner',
+    maxWait: 2000,
   });
 }

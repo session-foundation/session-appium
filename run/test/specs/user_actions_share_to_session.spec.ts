@@ -30,7 +30,10 @@ async function shareToSession(platform: SupportedPlatformsType) {
   await device1.onIOS().swipeRightAny('Session');
   await device1.clickOnElementAll(new PhotoLibrary(device1));
   await sleepFor(2000);
-  const testImage = await device1.doesElementExist(new ImageName(device1));
+  const testImage = await device1.doesElementExist({
+    ...new ImageName(device1).build(),
+    maxWait: 5000,
+  });
   if (!testImage) {
     await device1.pushMediaToDevice(platform, fileName);
   }
