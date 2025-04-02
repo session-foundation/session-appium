@@ -12,7 +12,7 @@ androidIt('Disappearing image message to group', 'low', disappearingImageMessage
 async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   const testMessage = 'Testing disappearing messages for images';
-  const testGroupName = 'Test group';
+  const testGroupName = 'Testing disappearing messages';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   const timerType = 'Disappear after send option';
   // Create user A and user B
