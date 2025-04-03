@@ -558,6 +558,8 @@ export const en = {
   learnMore: 'Learn More',
   leave: 'Leave',
   leaving: 'Leaving...',
+  legacyGroupChatHistory:
+    'Chat history will not be transferred to the new group. You can still view all chat history in your old group.',
   legacyGroupMemberNew: '<b>{name}</b> joined the group.',
   legacyGroupMemberNewMultiple: '<b>{name}</b> and <b>{count} others</b> joined the group.',
   legacyGroupMemberNewYouMultiple: '<b>You</b> and <b>{count} others</b> joined the group.',
@@ -847,6 +849,7 @@ export const en = {
   recoveryPasswordView: 'View Password',
   recoveryPasswordWarningSendDescription:
     "This is your recovery password. If you send it to someone they'll have full access to your account.",
+  recreateGroup: 'Recreate Group',
   redo: 'Redo',
   remove: 'Remove',
   removePasswordFail: 'Failed to remove password',

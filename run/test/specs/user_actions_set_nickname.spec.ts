@@ -1,7 +1,7 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { UsernameInput, UsernameSettings } from './locators';
+import { UsernameInput } from './locators';
 import { ConversationSettings } from './locators/conversation';
 import { SaveNameChangeButton } from './locators/settings';
 import { sleepFor } from './utils';
@@ -23,7 +23,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   // Click on settings/more info
   await device1.clickOnElementAll(new ConversationSettings(device1));
   // Click on username to set nickname
-  await device1.clickOnElementAll(new UsernameSettings(device1));
+  await device1.clickOnElementAll(new UsernameInput(device1));
   await sleepFor(500);
   await device1.checkModalStrings(
     englishStripped('nicknameSet').toString(),

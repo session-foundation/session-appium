@@ -1,5 +1,5 @@
 import { LocatorsInterface } from '.';
-import { StrategyExtractionObj } from '../../../types/testing';
+import { StrategyExtractionObj, USERNAME } from '../../../types/testing';
 import { englishStripped } from '../../../localizer/i18n/localizedString';
 
 export class GroupNameInput extends LocatorsInterface {
@@ -9,12 +9,12 @@ export class GroupNameInput extends LocatorsInterface {
         return {
           strategy: 'id',
           selector: 'Group name input',
-        };
+        } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Group name input',
-        };
+        } as const;
     }
   }
 }
@@ -26,12 +26,12 @@ export class CreateGroupButton extends LocatorsInterface {
         return {
           strategy: 'id',
           selector: 'Create group',
-        };
+        } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Create group',
-        };
+        } as const;
     }
   }
 }
@@ -43,12 +43,12 @@ export class InviteContactConfirm extends LocatorsInterface {
         return {
           strategy: 'id',
           selector: 'Confirm invite button',
-        };
+        } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Confirm invite button',
-        };
+        } as const;
     }
   }
 }
@@ -60,12 +60,12 @@ export class EditGroupName extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'Edit',
-        };
+        } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Edit group name',
-        };
+        } as const;
     }
   }
 }
@@ -77,12 +77,12 @@ export class EditGroupNameInput extends LocatorsInterface {
         return {
           strategy: 'id',
           selector: 'Group name',
-        };
+        } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Group name text field',
-        };
+        } as const;
     }
   }
 }
@@ -95,13 +95,22 @@ export class LeaveGroupButton extends LocatorsInterface {
           strategy: 'id',
           selector: `network.loki.messenger:id/title`,
           text: 'Leave group',
-        };
+        } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Leave group',
-        };
+        } as const;
     }
+  }
+}
+
+export class LeaveGroupConfirm extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    return {
+      strategy: 'accessibility id',
+      selector: 'Leave',
+    } as const;
   }
 }
 export class LatestReleaseBanner extends LocatorsInterface {
@@ -120,6 +129,113 @@ export class LatestReleaseBanner extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'Version warning banner',
+        } as const;
+    }
+  }
+}
+
+export class LegacyGroupBanner extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Legacy group banner',
+          text: englishStripped('groupLegacyBanner').toString(),
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Legacy group banner',
+        } as const;
+    }
+  }
+}
+
+export class RecreateGroupButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Legacy Groups Recreate Button',
+        } as const;
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Accept message request',
+        } as const;
+    }
+  }
+}
+
+export class GroupMember extends LocatorsInterface {
+  public build(username?: USERNAME): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Contact',
+          text: `${username}`,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Contact',
+          text: `${username}`,
+        } as const;
+    }
+  }
+}
+
+export class RemoveMemberButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Remove contact button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Remove contact button',
+        } as const;
+    }
+  }
+}
+
+export class ConfirmRemovalButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Remove',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Remove',
+        } as const;
+    }
+  }
+}
+
+export class MemberStatus extends LocatorsInterface {
+  public build(text?: string): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Contact status',
+          text,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Contact status',
+          text,
         } as const;
     }
   }

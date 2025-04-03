@@ -32,7 +32,6 @@ export abstract class LocatorsInterface {
 export abstract class LocatorsInterfaceScreenshot extends LocatorsInterface {
   abstract screenshotFileName(state?: ElementStates): string;
 }
-
 // When applying a nickname or username change
 export class TickButton extends LocatorsInterface {
   public build() {
@@ -220,7 +219,7 @@ export class BlockUser extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Block This User - Switch',
+          selector: 'Block - Switch',
         };
       case 'android':
         return {

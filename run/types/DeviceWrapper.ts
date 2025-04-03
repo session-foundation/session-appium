@@ -741,6 +741,10 @@ export class DeviceWrapper {
         }
       }
     } while (Date.now() - start <= maxWait && element);
+
+    if (element) {
+      throw new Error(`Element was still present after maximum wait time`);
+    }
   }
 
   public async hasTextElementBeenDeleted(accessibilityId: AccessibilityId, text: string) {

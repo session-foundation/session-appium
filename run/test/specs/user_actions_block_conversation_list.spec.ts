@@ -1,7 +1,7 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { BlockedContactsSettings, BlockUserConfirmationModal } from './locators';
+import { BlockedContactsSettings, BlockUser, BlockUserConfirmationModal } from './locators';
 import { UserSettings } from './locators/settings';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -26,7 +26,7 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   await device1.navigateBack();
   // on ios swipe left on conversation
   await device1.longPressConversation(userB.userName);
-  await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Block' });
+  await device1.clickOnElementAll(new BlockUser(device1));
   await device1.checkModalStrings(
     englishStripped('block').toString(),
     englishStripped('blockDescription').withArgs({ name: USERNAME.BOB }).toString(),

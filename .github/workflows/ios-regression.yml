@@ -100,7 +100,7 @@ on:
 
 jobs:
   ios-regression:
-    runs-on: [self-hosted]
+    runs-on: [self-hosted, macOS]
     env:
       IOS_APP_PATH_PREFIX: '../extracted/Session.app'
       ANDROID_APK: '../extracted/session-android.apk'

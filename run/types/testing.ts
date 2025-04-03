@@ -25,7 +25,8 @@ export type GROUPNAME =
   | 'Disappear after send test'
   | 'Testing voice'
   | 'Disappear after sent test'
-  | 'Restore group';
+  | 'Restore group'
+  | 'Kick member';
 
 export type Group = {
   userName: GROUPNAME;
@@ -228,7 +229,7 @@ export type AccessibilityId =
   | 'Confirm delete'
   | 'Delete'
   | 'Block'
-  | 'Block This User - Switch'
+  | 'Block - Switch'
   | 'Unblock'
   | 'Confirm block'
   | 'Blocked contacts'
@@ -345,7 +346,13 @@ export type AccessibilityId =
   | '1967-05-05 20:00:00 +0000'
   | '1967-05-05 21:00:00 +0000'
   | 'Pin'
-  | 'Version warning banner';
+  | 'Version warning banner'
+  | 'Remove contact button'
+  | 'Remove'
+  | 'Contact status'
+  | 'Legacy group banner'
+  | 'Legacy Groups Recreate Button'
+  | 'Confirm leave';
 
 export type Id =
   | 'Modal heading'
@@ -407,7 +414,10 @@ export type Id =
   | 'com.google.android.apps.photos:id/text'
   | 'network.loki.messenger:id/search_cancel'
   | 'Download media'
-  | 'Version warning banner';
+  | 'Version warning banner'
+  | 'Remove contact button'
+  | 'Remove'
+  | 'Contact status';
 
 export type TestRisk = 'high' | 'medium' | 'low' | undefined;
 
