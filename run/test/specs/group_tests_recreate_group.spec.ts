@@ -14,7 +14,7 @@ import { sortByPubkey } from './utils/get_account_id';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 import { restoreAccount } from './utils/restore_account';
 
-bothPlatformsIt('Recreate group', 'high', recreateGroup);
+bothPlatformsIt('Recreate group', 'high', recreateGroup, true);
 
 const userA: User = {
   userName: USERNAME.ALICE,
