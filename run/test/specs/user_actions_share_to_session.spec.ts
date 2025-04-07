@@ -18,6 +18,7 @@ bothPlatformsIt('Share to session', 'low', shareToSession);
 async function shareToSession(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const testMessage = 'Testing sharing an image through photo gallery to Session';
+  const ronSwansonBirthday = '196705060700.00';
   const fileName = 'test_image.jpg';
   const [userA, userB] = await Promise.all([
     newUser(device1, USERNAME.ALICE),
@@ -30,14 +31,23 @@ async function shareToSession(platform: SupportedPlatformsType) {
   await device1.onIOS().swipeRightAny('Session');
   await device1.clickOnElementAll(new PhotoLibrary(device1));
   await sleepFor(2000);
-  const testImage = await device1.doesElementExist({
-    ...new ImageName(device1).build(),
-    maxWait: 5000,
-  });
-  if (!testImage) {
-    await device1.pushMediaToDevice(platform, fileName);
+  let testImage;
+  if (platform === 'android') {
+    testImage = await device1.doesElementExist({
+      ...new ImageName(device1).build(),
+      maxWait: 5000,
+    });
+  } else {
+    testImage = await device1.doesElementExist({
+      strategy: 'accessibility id',
+      selector: 'Photo, 25 March, 11:09 am',
+    });
   }
-  await device1.clickOnElementAll(new ImageName(device1));
+  if (!testImage) {
+    await device1.pushMediaToDevice(fileName, ronSwansonBirthday);
+  }
+  await device1.onIOS().clickOnByAccessibilityID('Photo, 25 March, 11:09 am', 1000);
+  await device1.onAndroid().clickOnElementAll(new ImageName(device1));
   await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Share' });
   await device1.clickOnElementAll(new ShareExtensionIcon(device1));
   await device1.clickOnElementAll({

@@ -23,6 +23,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   // Click on settings/more info
   await device1.clickOnElementAll(new ConversationSettings(device1));
   // Click on username to set nickname
+  await device1.clickOnByAccessibilityID('Username');
   await device1.clickOnElementAll(new UsernameInput(device1));
   await sleepFor(500);
   await device1.checkModalStrings(
@@ -30,7 +31,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
     englishStripped('nicknameDescription').withArgs({ name: USERNAME.BOB }).toString()
   );
   // Type in nickname
-  await device1.deleteText(new UsernameInput(device1));
+  // await device1.deleteText(new UsernameInput(device1));
   await device1.inputText(nickName, new UsernameInput(device1));
   // Click apply/done
   await device1.clickOnElementAll(new SaveNameChangeButton(device1));

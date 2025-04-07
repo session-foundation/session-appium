@@ -1098,7 +1098,10 @@ export class DeviceWrapper {
   public async pushMediaToDevice(mediaFileName: string, forcedDate?: string) {
     if (this.isIOS()) {
       await runScriptAndLog(`touch -a -m -t ${forcedDate} 'run/test/specs/media/${mediaFileName}'`);
-      await runScriptAndLog(`xcrun simctl addmedia 'run/test/specs/media/${mediaFileName}'`);
+      await runScriptAndLog(
+        `xcrun simctl addmedia ${this.udid} 'run/test/specs/media/${mediaFileName}'`,
+        true
+      );
     } else {
       await runScriptAndLog(
         `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/${mediaFileName}' /storage/emulated/0/Download`

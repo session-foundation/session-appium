@@ -34,36 +34,21 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   await device1.longPressMessage(sentMessage);
   // Select delete
   await device1.clickOnByAccessibilityID('Delete message');
-  await device1
-    .onAndroid()
-    .checkModalStrings(
-      englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
-      englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()
-    );
+  await device1.checkModalStrings(
+    englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
+    englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()
+  );
   // Select delete for everyone
   await device1.clickOnElementAll(new DeleteMessageForEveryone(device1));
-  await device1.onAndroid().clickOnElementAll(new DeleteMessageConfirmationModal(device1));
-
-  if (platform === 'android') {
-    await Promise.all(
-      [device1, device2, device3].map(device =>
-        device.waitForTextElementToBePresent({
-          ...new DeletedMessage(device).build(),
-          maxWait: 8000,
-        })
-      )
-    );
-  } else {
-    await Promise.all(
-      [device1, device2, device3].map(device =>
-        device.hasElementBeenDeleted({
-          strategy: 'accessibility id',
-          selector: 'Message body',
-          text: sentMessage,
-        })
-      )
-    );
-  }
+  await device1.clickOnElementAll(new DeleteMessageConfirmationModal(device1));
+  await Promise.all(
+    [device1, device2, device3].map(device =>
+      device.waitForTextElementToBePresent({
+        ...new DeletedMessage(device).build(),
+        maxWait: 5000,
+      })
+    )
+  );
   // Close app
   await closeApp(device1, device2, device3);
 }

@@ -352,7 +352,8 @@ export type AccessibilityId =
   | 'Contact status'
   | 'Legacy group banner'
   | 'Legacy Groups Recreate Button'
-  | 'Confirm leave';
+  | 'Confirm leave'
+  | 'Photo, 25 March, 11:09 am';
 
 export type Id =
   | 'Modal heading'

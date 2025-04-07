@@ -108,25 +108,32 @@ NUMBER_WORDS=("FIRST" "SECOND" "THIRD" "FOURTH" "FIFTH" "SIXTH" "SEVENTH" "EIGHT
 
 # Function to boot simulators from environment variables
 function start_simulators_from_env_iOS() {
-    echo "Starting iOS simulators from environment variables..."
+  echo "Starting iOS simulators from environment variables..."
 
-    for i in {1..12}; do
-        simulator_label=${NUMBER_WORDS[$((i - 1))]}
-        env_var="IOS_${simulator_label}_SIMULATOR"
-        simulator_udid=$(printenv "$env_var")
+  for i in {1..12}; do
+    simulator_label=${NUMBER_WORDS[$((i - 1))]}
+    env_var="IOS_${simulator_label}_SIMULATOR"
+    simulator_udid=$(printenv "$env_var")
 
-        if [[ -n "$simulator_udid" ]]; then
-            echo "Booting $simulator_label simulator: $simulator_udid"
-            xcrun simctl boot "$simulator_udid"
-        else
-            echo "Skipping $simulator_label simulator (not set)"
-            exit 1
-        fi
-    done
+    if [[ -n "$simulator_udid" ]]; then
+      # Check if the simulator is already booted
+      booted=$(xcrun simctl list | grep "$simulator_udid" | grep Booted)
+      if [[ -z "$booted" ]]; then
+        echo "Booting $simulator_label simulator: $simulator_udid"
+        xcrun simctl boot "$simulator_udid"
+      else
+        echo "$simulator_label simulator ($simulator_udid) is already booted."
+      fi
+    else
+      echo "Skipping $simulator_label simulator (not set)"
+      exit 1
+    fi
+  done
 
-    echo "Opening iOS Simulator app..."
-    open -a Simulator
+  echo "Opening iOS Simulator app..."
+  open -a Simulator
 }
+
 
 # Function to start the Appium server
 function start_appium_server() {
