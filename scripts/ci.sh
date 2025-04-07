@@ -118,14 +118,16 @@ function start_simulators_from_env_iOS() {
     if [[ -n "$simulator_udid" ]]; then
       # Check if the simulator is already booted
       booted=$(xcrun simctl list | grep "$simulator_udid" | grep Booted)
-      if [[ -z "$booted" ]]; then
-        echo "Booting $simulator_label simulator: $simulator_udid"
-        xcrun simctl boot "$simulator_udid"
-      else
-        echo "$simulator_label simulator ($simulator_udid) is already booted."
+      if [[ -n "$booted" ]]; then
+        echo "$simulator_label simulator ($simulator_udid) is already booted. Shutting it down first."
+        xcrun simctl shutdown "$simulator_udid"
+        sleep 5  # Wait a few seconds to ensure shutdown is complete
       fi
+
+      echo "Booting $simulator_label simulator: $simulator_udid"
+      xcrun simctl boot "$simulator_udid"
     else
-      echo "Skipping $simulator_label simulator (not set)"
+      echo "Error: $simulator_label simulator (env var $env_var) is not set"
       exit 1
     fi
   done
@@ -133,6 +135,7 @@ function start_simulators_from_env_iOS() {
   echo "Opening iOS Simulator app..."
   open -a Simulator
 }
+
 
 
 # Function to start the Appium server
