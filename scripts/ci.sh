@@ -108,27 +108,46 @@ NUMBER_WORDS=("FIRST" "SECOND" "THIRD" "FOURTH" "FIFTH" "SIXTH" "SEVENTH" "EIGHT
 
 # Function to boot simulators from environment variables
 function start_simulators_from_env_iOS() {
-  echo "Starting iOS simulators from environment variables..."
-
+  echo "Starting iOS simulators from environment variables... is this changed?"
+  
   for i in {1..12}; do
     simulator_label=${NUMBER_WORDS[$((i - 1))]}
     env_var="IOS_${simulator_label}_SIMULATOR"
     simulator_udid=$(printenv "$env_var")
-
+    
+    echo "Iteration $i: Label: $simulator_label, Env var: $env_var, UDID: $simulator_udid"
+    
     if [[ -n "$simulator_udid" ]]; then
       # Check if the simulator is already booted
       booted=$(xcrun simctl list devices booted | grep "$simulator_udid")
+      echo "Current booted status for $simulator_udid: $booted"
+      
       if [[ -n "$booted" ]]; then
-        echo "$simulator_label simulator ($simulator_udid) is already booted. Shutting it down first."
-        xcrun simctl shutdown "$simulator_udid" || echo "Shutdown command failed for $simulator_udid, continuing..."
+        echo "$simulator_label simulator ($simulator_udid) is already booted. Attempting shutdown..."
+        shutdown_output=$(xcrun simctl shutdown "$simulator_udid" 2>&1)
+        shutdown_status=$?
+        echo "Shutdown command output: $shutdown_output"
+        echo "Shutdown command exit code: $shutdown_status"
+        if [[ $shutdown_status -ne 0 ]]; then
+          echo "Error: Shutdown command failed for $simulator_udid"
+          exit 1
+        fi
         sleep 5
       fi
-
+      
       echo "Booting $simulator_label simulator: $simulator_udid"
-      xcrun simctl boot "$simulator_udid" || { echo "Boot command failed for $simulator_udid"; exit 1; }
+      boot_output=$(xcrun simctl boot "$simulator_udid" 2>&1)
+      boot_status=$?
+      echo "Boot command output: $boot_output"
+      echo "Boot command exit code: $boot_status"
+      if [[ $boot_status -ne 0 ]]; then
+        echo "Error: Boot command failed for $simulator_udid"
+        exit 1
+      fi
       sleep 5
-      # Check if boot succeeded
+      
       booted=$(xcrun simctl list devices booted | grep "$simulator_udid")
+      echo "Post-boot status for $simulator_udid: $booted"
       if [[ -z "$booted" ]]; then
         echo "Error: Simulator $simulator_udid did not boot successfully."
         exit 1
@@ -138,10 +157,11 @@ function start_simulators_from_env_iOS() {
       exit 1
     fi
   done
-
+  
   echo "Opening iOS Simulator app..."
   open -a Simulator
 }
+
 
 
 
