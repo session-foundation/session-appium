@@ -132,7 +132,7 @@ function start_simulators_from_env_iOS() {
         echo "Shutdown command exit code: $shutdown_status"
         if [[ $shutdown_status -ne 0 ]]; then
           echo "Error: Shutdown command failed for $simulator_udid"
-          exit 1
+          exit 100
         fi
         sleep 5
       fi
@@ -144,7 +144,7 @@ function start_simulators_from_env_iOS() {
       echo "Boot command exit code: $boot_status"
       if [[ $boot_status -ne 0 ]]; then
         echo "Error: Boot command failed for $simulator_udid"
-        exit 1
+        exit 101
       fi
       sleep 5
       
@@ -152,11 +152,11 @@ function start_simulators_from_env_iOS() {
       echo "Post-boot status for $simulator_udid: $booted"
       if [[ -z "$booted" ]]; then
         echo "Error: Simulator $simulator_udid did not boot successfully."
-        exit 1
+        exit 102
       fi
     else
       echo "Error: $simulator_label simulator (env var $env_var) is not set"
-      exit 1
+      exit 104
     fi
   done
   
@@ -173,7 +173,7 @@ function start_simulators_from_env_iOS() {
 # Function to start the Appium server
 function start_appium_server() {
     echo "Starting Appium server..."
-    cd forked-session-appium || exit 1
+    cd forked-session-appium || exit 110
     start-server
 }
 
@@ -193,7 +193,7 @@ function stop_simulators_from_env_iOS() {
                 xcrun simctl shutdown "$simulator_udid"
             else
                 echo "$simulator_label simulator is not running or does not exist."
-                exit 1
+                exit 120
             fi
         else
             echo "Skipping $simulator_label simulator (not set)"
