@@ -21,8 +21,8 @@ cd ~/Library/Android/sdk
 ./emulator/emulator -avd Pixel_4_API_30_2
 
 IOS
-open -a simulator --args -IOS_FIRST_SIMULATOR -no-boot-anim
-open -a simulator --args -IOS_SECOND_SIMULATOR -no-boot-anim
+open -a simulator --args -IOS_1_SIMULATOR -no-boot-anim
+open -a simulator --args -IOS_2_SIMULATOR -no-boot-anim
 
 run branch on emulator one
 run branch on emulator two
