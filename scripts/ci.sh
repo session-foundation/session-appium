@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -x
 # Android functions
 
 ARCH="x86_64"
@@ -103,40 +103,20 @@ function start_with_snapshots() {
 SIMULATOR_DEVICE="iPhone 15 Pro Max"
 SIMULATOR_OS="18.2"
 
-# Define an array of uppercase words for simulator names
-NUMBER_WORDS=("FIRST" "SECOND" "THIRD" "FOURTH" "FIFTH" "SIXTH" "SEVENTH" "EIGHTH" "NINTH" "TENTH" "ELEVENTH" "TWELFTH")
-
 # Function to boot simulators from environment variables
 function start_simulators_from_env_iOS() {
   echo "Starting iOS simulators from environment variables"
   
-  set -x
 
   for i in {1..12}; do
-    simulator_label=${NUMBER_WORDS[$((i - 1))]}
+    simulator_label=$i
     env_var="IOS_${simulator_label}_SIMULATOR"
     simulator_udid=$(printenv "$env_var")
     
     echo "Iteration $i: Label: $simulator_label, Env var: $env_var, UDID: $simulator_udid"
     
     if [[ -n "$simulator_udid" ]]; then
-      # Check if the simulator is already booted
-      booted=$(xcrun simctl list devices booted | grep "$simulator_udid")
-      echo "Current booted status for $simulator_udid: $booted"
-      
-      if [[ -n "$booted" ]]; then
-        echo "$simulator_label simulator ($simulator_udid) is already booted. Attempting shutdown..."
-        shutdown_output=$(xcrun simctl shutdown "$simulator_udid" 2>&1)
-        shutdown_status=$?
-        echo "Shutdown command output: $shutdown_output"
-        echo "Shutdown command exit code: $shutdown_status"
-        if [[ $shutdown_status -ne 0 ]]; then
-          echo "Error: Shutdown command failed for $simulator_udid"
-          exit 100
-        fi
-        sleep 5
-      fi
-      
+
       echo "Booting $simulator_label simulator: $simulator_udid"
       boot_output=$(xcrun simctl boot "$simulator_udid" 2>&1)
       boot_status=$?
@@ -144,7 +124,7 @@ function start_simulators_from_env_iOS() {
       echo "Boot command exit code: $boot_status"
       if [[ $boot_status -ne 0 ]]; then
         echo "Error: Boot command failed for $simulator_udid"
-        exit 101
+        return 101
       fi
       sleep 5
       
@@ -152,18 +132,17 @@ function start_simulators_from_env_iOS() {
       echo "Post-boot status for $simulator_udid: $booted"
       if [[ -z "$booted" ]]; then
         echo "Error: Simulator $simulator_udid did not boot successfully."
-        exit 102
+        return 102
       fi
     else
       echo "Error: $simulator_label simulator (env var $env_var) is not set"
-      exit 104
+      return 104
     fi
   done
   
   echo "Opening iOS Simulator app..."
   open -a Simulator
 
-  set +x
 }
 
 
@@ -173,7 +152,7 @@ function start_simulators_from_env_iOS() {
 # Function to start the Appium server
 function start_appium_server() {
     echo "Starting Appium server..."
-    cd forked-session-appium || exit 110
+    cd forked-session-appium || return 110
     start-server
 }
 
@@ -182,7 +161,7 @@ function stop_simulators_from_env_iOS() {
     echo "Stopping iOS simulators from environment variables..."
 
     for i in {1..12}; do
-        simulator_label=${NUMBER_WORDS[$((i - 1))]}
+        simulator_label=$i
         env_var="IOS_${simulator_label}_SIMULATOR"
         simulator_udid=$(printenv "$env_var")
 
@@ -192,11 +171,11 @@ function stop_simulators_from_env_iOS() {
                 echo "Stopping $simulator_label simulator: $simulator_udid"
                 xcrun simctl shutdown "$simulator_udid"
             else
-                echo "$simulator_label simulator is not running or does not exist."
-                exit 120
+                echo "$simulator_label simulator is not running or does not exist... skipping"
             fi
         else
             echo "Skipping $simulator_label simulator (not set)"
+            return 120
         fi
     done
 }
