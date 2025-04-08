@@ -98,68 +98,7 @@ function start_with_snapshots() {
     done
 }
 
-# iOS functions
-
-SIMULATOR_DEVICE="iPhone 15 Pro Max"
-SIMULATOR_OS="18.2"
-
-# Function to boot simulators from environment variables
-function start_simulators_from_env_iOS() {
-  echo "Starting iOS simulators from environment variables"
-  
-
-  for i in {1..12}; do
-    simulator_label=$i
-    env_var="IOS_${simulator_label}_SIMULATOR"
-    simulator_udid=$(printenv "$env_var")
-    
-    echo "Iteration $i: Label: $simulator_label, Env var: $env_var, UDID: $simulator_udid"
-    
-    if [[ -n "$simulator_udid" ]]; then
-
-      echo "Booting $simulator_label simulator: $simulator_udid"
-      boot_output=$(xcrun simctl boot "$simulator_udid" 2>&1)
-      boot_status=$?
-      echo "Boot command output: $boot_output"
-      echo "Boot command exit code: $boot_status"
-      if [[ $boot_status -ne 0 ]]; then
-        echo "Error: Boot command failed for $simulator_udid"
-        return 101
-      fi
-      sleep 5
-      
-      booted=$(xcrun simctl list devices booted | grep "$simulator_udid")
-      echo "Post-boot status for $simulator_udid: $booted"
-      if [[ -z "$booted" ]]; then
-        echo "Error: Simulator $simulator_udid did not boot successfully."
-        return 102
-      fi
-    else
-      echo "Error: $simulator_label simulator (env var $env_var) is not set"
-      return 104
-    fi
-  done
-  
-  echo "Opening iOS Simulator app..."
-  open -a Simulator
-
-}
 
 
-
-
-
-# Function to start the Appium server
-function start_appium_server() {
-    echo "Starting Appium server..."
-    cd forked-session-appium || return 110
-    start-server
-}
-
-# Function to stop running simulators
-function stop_simulators_from_env_iOS() {
-    echo "Stopping iOS simulators from environment variables..."
-	xcrun simctl shutdown "all"
-}
 
 set +x

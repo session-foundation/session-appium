@@ -202,9 +202,8 @@ jobs:
       - name: Start simulators
         shell: bash
         run: |
-          source ./scripts/ci.sh
-          stop_simulators_from_env_iOS
-          start_simulators_from_env_iOS
+          yarn tsc scripts/stop_ios.ts && node scripts/stop_ios.js
+          yarn tsc scripts/start_ios.ts && node scripts/start_ios.js
       - name: List all tests
         run: |
           cd forked-session-appium
@@ -221,5 +220,4 @@ jobs:
         continue-on-error: true # just so we don't fail
         shell: bash
         run: |
-          source ./scripts/ci.sh
-          stop_simulators_from_env_iOS
+          yarn tsc scripts/stop_ios.ts && node scripts/stop_ios.js
