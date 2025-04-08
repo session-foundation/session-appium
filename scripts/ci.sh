@@ -159,23 +159,7 @@ function start_appium_server() {
 # Function to stop running simulators
 function stop_simulators_from_env_iOS() {
     echo "Stopping iOS simulators from environment variables..."
-
-    for i in {1..12}; do
-        simulator_label=$i
-        env_var="IOS_${simulator_label}_SIMULATOR"
-        simulator_udid=$(printenv "$env_var")
-
-        if [[ -n "$simulator_udid" ]]; then
-            # Check if the simulator is running
-            if xcrun simctl list devices booted | grep -q "$simulator_udid"; then
-                echo "Stopping $simulator_label simulator: $simulator_udid"
-                xcrun simctl shutdown "$simulator_udid"
-            else
-                echo "$simulator_label simulator is not running or does not exist... skipping"
-            fi
-        else
-            echo "Skipping $simulator_label simulator (not set)"
-            return 120
-        fi
-    done
+	xcrun simctl shutdown "all"
 }
+
+set +x
