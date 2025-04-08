@@ -34,6 +34,7 @@ import {
   User,
   XPath,
 } from './testing';
+import * as path from 'path'
 
 export type Coordinates = {
   x: number;
@@ -1092,17 +1093,31 @@ export class DeviceWrapper {
   }
 
   public async pushMediaToDevice(mediaFileName: string, forcedDate?: string) {
+    const filePath = path.join('run', 'test', 'specs', 'media', mediaFileName);
     if (this.isIOS()) {
-      await runScriptAndLog(`touch -a -m -t ${forcedDate} 'run/test/specs/media/${mediaFileName}'`);
-      await runScriptAndLog(`xcrun simctl addmedia 'run/test/specs/media/${mediaFileName}'`);
-    } else {
-      await runScriptAndLog(
-        `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/${mediaFileName}' /storage/emulated/0/Download`
-      );
-      // Refreshes the photos UI to force the image appear
-      await runScriptAndLog(
-        `${getAdbFullPath()} -s emulator-5554 shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage/emulated/0/Download/${mediaFileName}`
-      );
+      // iOS Simulators are cleared on start of a test run because you can't erase booted simulators
+      // Modify timestamp of local file because iOS uses that as an identifier
+      await runScriptAndLog(`touch -a -m -t ${forcedDate} ${filePath}`);
+      // Push local file to current device
+      await runScriptAndLog(`xcrun simctl addmedia ${this.udid} ${filePath}`, true);
+      if (this.isAndroid()) {
+        const ANDROID_DOWNLOAD_DIR = '/storage/emulated/0/Download';
+        // Android allows clearing the downloads folder at runtime
+        await runScriptAndLog(
+          `${getAdbFullPath()} -s emulator-5554 shell rm -rf ${ANDROID_DOWNLOAD_DIR}/*`,
+          true
+        );
+        // Push file
+        await runScriptAndLog(
+          `${getAdbFullPath()} -s emulator-5554 push ${filePath} ${ANDROID_DOWNLOAD_DIR}`,
+          true
+        );
+        // Refresh the Downloads UI to ensure attachment is visible
+        await runScriptAndLog(
+          `${getAdbFullPath()} -s emulator-5554 shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file://${ANDROID_DOWNLOAD_DIR}/${mediaFileName}`,
+          true
+        );
+      }
     }
   }
 
