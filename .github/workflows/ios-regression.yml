@@ -1,5 +1,5 @@
 name: iOS regression tests
-run-name: '${{ inputs.RISK }} regressions on: ${{ inputs.BRANCH_TO_CHECKOUT }} (${{ inputs.APPIUM_REPO }})'
+run-name: 'iOS regression with risk: "${{ inputs.RISK }}"'
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
         description: 'ipa url to test'
         required: true
         type: string
-        default: https://oxen.rocks/session-foundation/session-ios/dev/session-ios-20250403T021527Z-c1d2ffbc4-sim.tar.xz
+        default: https://oxen.rocks/session-foundation/session-ios/dev/session-ios-20250408T201952Z-233314350-sim.tar.xz
 
       RISK:
         description: 'risks to target'
@@ -19,44 +19,6 @@ on:
           - 'medium-risk'
           - 'low-risk'
           - ''
-
-      APPIUM_REPO:
-        description: 'appium repo to checkout'
-        required: true
-        type: choice
-        options:
-          - session-foundation/session-appium
-          - burtonemily/session-appium
-          - bilb/session-appium
-        default: session-foundation/session-appium
-
-      BRANCH_TO_CHECKOUT:
-        description: 'branch to checkout'
-        required: true
-        type: string
-        default: kick-member-test
-
-      # SHARD_NUMBER:
-      #   description: 'shard number'
-      #   required: true
-      #   type: choice
-      #   options:
-      #     - '1'
-      #     - '2'
-      #     - '3'
-      #     - '4'
-      #   default: '1'
-
-      # SHARD_COUNT:
-      #   description: 'shard count'
-      #   required: true
-      #   type: choice
-      #   options:
-      #     - '1'
-      #     - '2'
-      #     - '3'
-      #     - '4'
-      #   default: '1'
 
       PLAYWRIGHT_RETRIES_COUNT:
         description: 'retries of failing tests to do at most'
@@ -69,7 +31,7 @@ on:
         default: '0'
 
       PRINT_FAILED_TEST_LOGS:
-        description: 'print failed test logs (1 to enable)'
+        description: 'print failed test logs (1 to enable) - DONT DO FOR FULL REGRESSION (it crashes github)'
         required: true
         type: choice
         options:
@@ -77,7 +39,7 @@ on:
           - '1'
         default: '0'
       PRINT_ONGOING_TEST_LOGS:
-        description: 'print ongoing test logs (1 to enable)'
+        description: 'print ongoing test logs (1 to enable) - DONT DO FOR FULL REGRESSION (it crashes github)'
         required: true
         type: choice
         options:
@@ -94,25 +56,17 @@ on:
           - '3'
         default: '3'
 
-# concurrency:
-#   group: ${{ github.workflow }}
-#   cancel-in-progress: true
-
 jobs:
   ios-regression:
     runs-on: [self-hosted, macOS]
     env:
-      IOS_APP_PATH_PREFIX: '../extracted/Session.app'
-      ANDROID_APK: '../extracted/session-android.apk'
+      IOS_APP_PATH_PREFIX: './extracted/Session.app'
+      ANDROID_APK: '<just_not_empty>'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
-      PLAYWRIGHT_WORKERS_COUNT: 3
+      PLAYWRIGHT_WORKERS_COUNT: ${{ github.event.inputs.PLAYWRIGHT_WORKERS_COUNT }}
       PLAYWRIGHT_REPEAT_COUNT: 0
-      SDK_MANAGER_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/cmdline-tools/latest/bin/sdkmanager'
-      AVD_MANAGER_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/cmdline-tools/latest/bin/avdmanager'
-      ANDROID_SYSTEM_IMAGE: 'system-images;android-35;google_atd;x86_64'
-      EMULATOR_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/emulator/emulator'
       IOS_1_SIMULATOR: '4A75A0E1-9EDE-4169-93C3-DCE0F0C7664F'
       IOS_2_SIMULATOR: 'ACB6A587-8556-4EA0-87CF-4326A9A22051'
       IOS_3_SIMULATOR: 'D90B2AE2-FF30-49BE-9370-B789BAEED3BB'
@@ -125,15 +79,14 @@ jobs:
       IOS_10_SIMULATOR: 'C0EE6A21-044D-4B6E-B9A5-7AB977ADF305'
       IOS_11_SIMULATOR: 'B8E78B21-1432-41F3-A398-DE4FF8CF9DED'
       IOS_12_SIMULATOR: '8214A3A2-D4E1-4AA8-BB0F-394E3A49BCFA'
-      # echo "SHARD_NUMBER ${{ github.event.inputs.SHARD_NUMBER }}"
-      # echo "SHARD_COUNT ${{ github.event.inputs.SHARD_COUNT }}"
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
+
       - name: Runner Details
         run: |
-          echo "BRANCH_TO_CHECKOUT ${{ github.event.inputs.BRANCH_TO_CHECKOUT }}"
-          echo "APPIUM_REPO ${{ github.event.inputs.APPIUM_REPO }}"
           echo "APK_URL ${{ github.event.inputs.APK_URL }}"
           echo "RISK ${{ github.event.inputs.RISK }}"
 
@@ -143,81 +96,74 @@ jobs:
           ls
           pwd
 
-      - name: Inspect archive contents
-        run: |
-          tar -tf session-ios.sim.tar.xz
-
       - name: Extract app
         run: |
           tar xf session-ios.sim.tar.xz
           mkdir -p extracted
-          mv *.app extracted/ || echo "No .app files found to move"
+          mv session-ios-*-sim/*.app extracted/
           ls extracted
 
       - name: Verify extracted files
         run: |
-          if [ ! -d "extracted" ]; then
-            echo "Extraction failed: extracted directory not found"
-            exit 1
-          fi
           ls extracted
-
-      - name: Rename extracted folder
-        run: |
-          mkdir -p extracted
-          mv session-ios extracted || echo "No session-ios directory to move"
-          ls extracted
-
-      - uses: actions/checkout@v4
-        with:
-          repository: ${{ github.event.inputs.APPIUM_REPO }}
-          ref: ${{ github.event.inputs.BRANCH_TO_CHECKOUT }}
-          path: 'forked-session-appium'
 
       - uses: actions/setup-node@v4
         with:
-          # node-version-file: 'forked-session-appium/.nvmrc'
-          node-version: 18.15.0
+          node-version-file: '.nvmrc'
 
       - name: Install yarn
         run: |
           npm install -g yarn
           corepack enable
           yarn set version 4.1.1
+
       - name: Install test dependencies
         run: |
-          cd forked-session-appium
           ls
           git status
-          touch yarn.lock
           yarn install --immutable
+
       - name: Start Appium server
         run: |
-          cd forked-session-appium
-          yarn "./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --allow-cors"
+          yarn start-appium-server
+
       - name: Build the iOS tests
         run: |
-          cd forked-session-appium
           yarn tsc
-      - name: Start simulators
+
+      - name: Stop simulators
         shell: bash
         run: |
-          yarn tsc scripts/stop_ios.ts && node scripts/stop_ios.js
-          yarn tsc scripts/start_ios.ts && node scripts/start_ios.js
+          npx --yes ts-node scripts/stop_ios.ts
+
+      - name: Start simulators
+        shell: bash
+        if: false # appium is starting the simulators (seems to be somewhat more reliable)
+        run: |
+          npx --yes ts-node scripts/start_ios.ts # don't auto start the simulators, let appium do it (seems somewhat more reliable)
+
+      - name: Clean old prebuilt wda
+        shell: bash
+        run: |
+          rm -rf /tmp/wda
+
+      - name: Build WDA for all simulators
+        shell: bash
+        run: |
+          npx --yes ts-node scripts/build_wda_ios.ts # rebuild wda for all simulators (separately, until we have a better way)
+
       - name: List all tests
         run: |
-          cd forked-session-appium
           pwd
-          npx playwright test --list --grep "@${{ github.event.inputs.RISK }}"
-      - name: Run the iOS tests # ${{ github.event.inputs.SHARD_NUMBER }}​​/${{ github.event.inputs.SHARD_COUNT }}​​
+          yarn test "ios @${{ github.event.inputs.RISK }}" --list
+      - name: Run the iOS tests
         run: |
-          cd forked-session-appium
           pwd
-          yarn test 'ios @${{ github.event.inputs.RISK }}'
+          yarn test "ios @${{ github.event.inputs.RISK }}"
 
       - name: Stop emulators
         if: always()
         continue-on-error: true # just so we don't fail
         shell: bash
         run: |
-          yarn tsc scripts/stop_ios.ts && node scripts/stop_ios.js
+          npx --yes ts-node scripts/stop_ios.ts

@@ -15,12 +15,13 @@ console.log(`iOS app full path: ${iosAppFullPath}`);
 const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   'appium:app': iosAppFullPath,
   'appium:platformName': 'iOS',
-  'appium:platformVersion': '17.2',
+  // if nothing is given for platformVersion, appium will check what is on the simulator
+  // 'appium:platformVersion': '18.3',
   'appium:deviceName': 'iPhone 15 Pro Max',
   'appium:automationName': 'XCUITest',
   'appium:bundleId': 'com.loki-project.loki-messenger',
   'appium:newCommandTimeout': 300000,
-  'appium:useNewWDA': false,
+  'appium:useNewWDA': true,
   'appium:showXcodeLog': false,
   'appium:autoDismissAlerts': false,
   'appium:reduceMotion': true,
@@ -83,6 +84,9 @@ const capabilities = emulatorUUIDs.map((udid, index) => ({
   ...sharediOSCapabilities,
   'appium:udid': udid,
   'appium:wdaLocalPort': 1253 + index,
+  'appium:derivedDataPath': `/tmp/wda/${udid}`,
+  'appium:useXctestrunFile': true,
+  'appium:bootstrapPath': `/tmp/wda/${udid}/Build/Products/`,
 }));
 
 export function getIosCapabilities(capabilitiesIndex: CapabilitiesIndexType): W3CCapabilities {
