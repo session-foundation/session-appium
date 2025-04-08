@@ -204,6 +204,7 @@ jobs:
         run: |
           yarn tsc scripts/stop_ios.ts && node scripts/stop_ios.js
           yarn tsc scripts/start_ios.ts && node scripts/start_ios.js
+        
       - name: List all tests
         run: |
           cd forked-session-appium

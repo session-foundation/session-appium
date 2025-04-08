@@ -99,6 +99,4 @@ function start_with_snapshots() {
 }
 
 
-
-
 set +x

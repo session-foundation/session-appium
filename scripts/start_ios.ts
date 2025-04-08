@@ -5,6 +5,9 @@ import { sleep } from './shared';
 const START_CHUNK = 6;
 const MAX_SIMULATORS = 12;
 
+const SIMULATOR_DEVICE="iPhone 15 Pro Max"
+const SIMULATOR_OS="18.2"
+
 function bootSimulator(udid: string, label: number) {
   try {
     console.log(`Booting simulator ${label}: ${udid}`);
