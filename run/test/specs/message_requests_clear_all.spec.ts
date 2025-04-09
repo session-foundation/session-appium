@@ -1,6 +1,6 @@
-import { englishStripped } from '../../localizer/i18n/localizedString';
+import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
+import { USERNAME, type AccessibilityId } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
@@ -29,7 +29,7 @@ async function clearAllRequests(platform: SupportedPlatformsType) {
   const messageRequestsNonePending = englishStripped('messageRequestsNonePending').toString();
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
-    selector: messageRequestsNonePending,
+    selector: messageRequestsNonePending as AccessibilityId,
   });
   await closeApp(device1, device2);
 }

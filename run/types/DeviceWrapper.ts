@@ -14,7 +14,7 @@ import {
   SendMediaButton,
 } from '../../run/test/specs/locators';
 import { IOS_XPATHS } from '../constants';
-import { englishStripped } from '../localizer/i18n/localizedString';
+import { englishStripped } from '../localizer/Localizer';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
 import { EnterAccountID } from '../test/specs/locators/start_conversation';

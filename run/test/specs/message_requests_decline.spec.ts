@@ -1,6 +1,6 @@
-import { englishStripped } from '../../localizer/i18n/localizedString';
+import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
+import { USERNAME, type AccessibilityId } from '../../types/testing';
 import { DeclineMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -43,11 +43,11 @@ async function declineRequest(platform: SupportedPlatformsType) {
   await Promise.all([
     device2.waitForTextElementToBePresent({
       strategy: 'accessibility id',
-      selector: messageRequestsNonePending,
+      selector: messageRequestsNonePending as AccessibilityId,
     }),
     device3.waitForTextElementToBePresent({
       strategy: 'accessibility id',
-      selector: messageRequestsNonePending,
+      selector: messageRequestsNonePending as AccessibilityId,
     }),
   ]);
   // Navigate back to home page

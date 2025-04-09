@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/i18n/localizedString';
+import { englishStripped } from '../../localizer/Localizer';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { LinkPreview, LinkPreviewMessage } from './locators';
@@ -35,7 +35,7 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
   // Accept dialog for link preview
   await device1.checkModalStrings(
     englishStripped('linkPreviewsEnable').toString(),
-    englishStripped('linkPreviewsFirstDescription').withArgs({ app_name: 'Session' }).toString()
+    englishStripped('linkPreviewsFirstDescription').toString()
   );
   await device1.clickOnByAccessibilityID('Enable');
   // No preview on first send
@@ -94,7 +94,7 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType) {
   // Accept dialog for link preview
   await device1.checkModalStrings(
     englishStripped('linkPreviewsEnable').toString(),
-    englishStripped('linkPreviewsFirstDescription').withArgs({ app_name: 'Session' }).toString(),
+    englishStripped('linkPreviewsFirstDescription').toString(),
     true
   );
   await device1.clickOnByAccessibilityID('Enable');

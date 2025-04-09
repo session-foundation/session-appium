@@ -1,4 +1,4 @@
-import { englishStripped } from '../../../localizer/i18n/localizedString';
+import { englishStripped } from '../../../localizer/Localizer';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { Group, GROUPNAME, User } from '../../../types/testing';
 import { Contact } from '../locators/global';
