@@ -9,7 +9,7 @@ import {
   RecreateGroupButton,
 } from './locators/groups';
 import { sleepFor } from './utils';
-import { cleanGroup, cleanGroups } from './utils/clean_groups';
+import { cleanGroup } from './utils/clean_groups';
 import { sortByPubkey } from './utils/get_account_id';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 import { restoreAccount } from './utils/restore_account';
