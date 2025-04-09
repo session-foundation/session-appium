@@ -35,8 +35,7 @@ function isRunningInMocha(): boolean {
 
 export function setLogger(cb: Logger) {
   if (logger && !isRunningInMocha()) {
-    // eslint-disable-next-line no-console
-    console.debug('logger already initialized. overwriding it');
+    console.debug('logger already initialized. overriding it');
   }
   logger = cb;
 }
@@ -47,7 +46,6 @@ export function setLocaleInUse(crowdinLocale: CrowdinLocale) {
 
 function log(message: Parameters<Logger>[0]) {
   if (!logger) {
-    // eslint-disable-next-line no-console
     console.log('logger is not set');
     return;
   }
@@ -116,24 +114,6 @@ export type GetMessageArgs<T extends MergedLocalizerTokens> = T extends MergedLo
 type MappedToTsTypes<T extends Record<string, DynamicArgStr>> = {
   [K in keyof T]: ArgsTypeStrToTypes<T[K]>;
 };
-
-/**
- * Retrieves a localized message string, substituting variables where necessary.
- *
- * @param token - The token identifying the message to retrieve.
- * @param args - An optional record of substitution variables and their replacement values. This is required if the string has dynamic variables.
- *
- * @returns The localized message string with substitutions applied.
- */
-function getMessageDefault<T extends MergedLocalizerTokens>(...props: GetMessageArgs<T>): string {
-  const token = props[0];
-  try {
-    return localizeFromOld(props[0], props[1] as ArgsFromToken<T>).toString();
-  } catch (error: any) {
-    log(error.message);
-    return token;
-  }
-}
 
 /**
  * Sanitizes the args to be used in the i18n function
