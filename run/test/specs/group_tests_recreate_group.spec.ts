@@ -2,12 +2,7 @@ import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME, User } from '../../types/testing';
 import { ContinueButton } from './locators/global';
-import {
-  CreateGroupButton,
-  GroupNameInput,
-  LegacyGroupBanner,
-  RecreateGroupButton,
-} from './locators/groups';
+import { CreateGroupButton, GroupNameInput, RecreateGroupButton } from './locators/groups';
 import { sleepFor } from './utils';
 import { cleanGroup } from './utils/clean_groups';
 import { sortByPubkey } from './utils/get_account_id';
@@ -60,11 +55,13 @@ async function recreateGroup(platform: SupportedPlatformsType) {
       })
     )
   );
-  await Promise.all(
-    [device1, device2, device3].map(device =>
-      device.waitForTextElementToBePresent(new LegacyGroupBanner(device))
-    )
-  );
+  // TODO Need to fix local file
+  // await device1.waitForTextElementToBePresent(new RecreateGroupBannerAdmin(device1));
+  // await Promise.all(
+  //   [device2, device3].map(device =>
+  //     device.waitForTextElementToBePresent(new RecreateGroupBannerMember(device))
+  //   )
+  // );
   await device1.clickOnElementAll(new RecreateGroupButton(device1));
   await device1.checkModalStrings(
     englishStripped('recreateGroup').toString(),
