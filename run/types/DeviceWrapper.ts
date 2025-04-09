@@ -1354,6 +1354,7 @@ export class DeviceWrapper {
   }
 
   public async sendGIF(message: string) {
+    await sleepFor(1000);
     await this.clickOnByAccessibilityID('Attachments button');
     if (this.isAndroid()) {
       await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'GIF button' });

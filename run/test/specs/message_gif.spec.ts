@@ -17,12 +17,6 @@ async function sendGifIos(platform: SupportedPlatformsType) {
   const testMessage = 'Testing-GIF-1';
   await newContact(platform, device1, userA, device2, userB);
   await device1.sendGIF(testMessage);
-  // Check if the 'Tap to download media' config appears
-  // Click on config
-  await device2.clickOnByAccessibilityID('Untrusted attachment message', 15000);
-  await sleepFor(100);
-  // Click on 'download'
-  await device2.trustAttachments(userA.userName);
   // Reply to message
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',

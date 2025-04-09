@@ -9,12 +9,12 @@ import {
   RecreateGroupButton,
 } from './locators/groups';
 import { sleepFor } from './utils';
-import { cleanGroups } from './utils/clean_groups';
+import { cleanGroup, cleanGroups } from './utils/clean_groups';
 import { sortByPubkey } from './utils/get_account_id';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 import { restoreAccount } from './utils/restore_account';
 
-bothPlatformsIt('Recreate group', 'high', recreateGroup, true);
+bothPlatformsIt('Recreate group', 'high', recreateGroup);
 
 const userA: User = {
   userName: USERNAME.ALICE,
@@ -37,7 +37,7 @@ const userC: User = {
 
 async function recreateGroup(platform: SupportedPlatformsType) {
   const testGroupName = 'Legacy group';
-  const newGroupName = 'Restored group';
+  const newGroupName = 'Recreated group';
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   await Promise.all([
     restoreAccount(device1, userA),
@@ -45,7 +45,12 @@ async function recreateGroup(platform: SupportedPlatformsType) {
     restoreAccount(device3, userC),
   ]);
   // Need to check if the group is already recreated and delete it
-  await cleanGroups(device1, device2, device3, newGroupName, platform);
+  // Admin needs to leave group first for the other users to have 'Delete' option
+  await cleanGroup(device1, newGroupName, platform, true);
+  await Promise.all([
+    cleanGroup(device2, newGroupName, platform),
+    cleanGroup(device3, newGroupName, platform),
+  ]);
   await Promise.all(
     [device1, device2, device3].map(device =>
       device.clickOnElementAll({
