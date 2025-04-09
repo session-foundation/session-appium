@@ -1,6 +1,6 @@
 import { LocatorsInterface } from '.';
 import { StrategyExtractionObj, USERNAME } from '../../../types/testing';
-import { englishStripped } from '../../../localizer/i18n/localizedString';
+import { englishStripped } from '../../../localizer/Localizer';
 
 export class GroupNameInput extends LocatorsInterface {
   public build(): StrategyExtractionObj {
@@ -141,7 +141,6 @@ export class LegacyGroupBanner extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'Legacy group banner',
-          text: englishStripped('groupLegacyBanner').toString(),
         } as const;
       case 'ios':
         return {

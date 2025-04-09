@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/i18n/localizedString';
+import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { EnterAccountID } from './locators/start_conversation';
@@ -77,7 +77,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   await device2.sendMessage(`${userB.userName} to ${userA.userName}`);
   // Check control message for message request acceptance
   // "messageRequestsAccepted": "Your message request has been accepted.",
-  const messageRequestsAccepted = englishStripped('messageRequestsAccepted').strip().toString();
+  const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
   const messageRequestYouHaveAccepted = englishStripped('messageRequestYouHaveAccepted')
     .withArgs({ name: userA.userName })
     .toString();
