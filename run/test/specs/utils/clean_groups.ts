@@ -1,4 +1,4 @@
-import { englishStripped } from '../../../localizer/i18n/localizedString';
+import { englishStripped } from '../../../localizer/Localizer';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { ConversationSettings } from '../locators/conversation';
 import { LeaveGroupButton, LeaveGroupConfirm } from '../locators/groups';

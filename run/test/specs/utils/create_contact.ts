@@ -1,5 +1,5 @@
 import { runOnlyOnIOS, sleepFor } from '.';
-import { englishStripped } from '../../../localizer/i18n/localizedString';
+import { englishStripped } from '../../../localizer/Localizer';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
 import { SupportedPlatformsType } from './open_app';

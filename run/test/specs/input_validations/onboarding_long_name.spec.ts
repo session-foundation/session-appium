@@ -1,4 +1,4 @@
-import { englishStripped } from '../../../localizer/i18n/localizedString';
+import { englishStripped } from '../../../localizer/Localizer';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import {
   ContinueButton,
@@ -21,7 +21,7 @@ async function onboardingLongName(platform: SupportedPlatformsType) {
   // this check is to avoid false positives
   if (tooLongName.length <= 100) {
     throw new Error(
-      `The string to test the display name length check is too short. It is only: 
+      `The string to test the display name length check is too short. It is only:
         ${tooLongName.length},
         characters long but needs to be >100. `
     );

@@ -7,7 +7,7 @@ import { newContact } from './utils/create_contact';
 import { joinCommunity } from './utils/join_community';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 import { testCommunityLink, testCommunityName } from './../../constants/community';
-import { englishStripped } from '../../localizer/i18n/localizedString';
+import { englishStripped } from '../../localizer/Localizer';
 import { ConversationSettings } from './locators/conversation';
 
 iosIt('Send community invitation', 'medium', sendCommunityInvitationIos);

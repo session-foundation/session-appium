@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/i18n/localizedString';
+import { englishStripped } from '../../localizer/Localizer';
 import { androidIt } from '../../types/sessionIt';
 import {
   AccountRestoreButton,

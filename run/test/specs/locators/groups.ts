@@ -1,6 +1,6 @@
 import { LocatorsInterface } from '.';
 import { StrategyExtractionObj, USERNAME } from '../../../types/testing';
-import { englishStripped } from '../../../localizer/i18n/localizedString';
+import { englishStripped } from '../../../localizer/Localizer';
 
 export class GroupNameInput extends LocatorsInterface {
   public build(): StrategyExtractionObj {
