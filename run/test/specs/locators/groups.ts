@@ -133,44 +133,25 @@ export class LatestReleaseBanner extends LocatorsInterface {
     }
   }
 }
-
-export class LegacyGroupBanner extends LocatorsInterface {
+export class RecreateGroupBannerAdmin extends LocatorsInterface {
   public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Legacy group banner',
-          text: englishStripped('groupLegacyBanner').toString(),
-        } as const;
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Legacy group banner',
-        } as const;
-    }
+    return {
+      strategy: 'accessibility id',
+      selector: 'Legacy group banner',
+      text: englishStripped('legacyGroupAfterDeprecationAdmin').toString(),
+    } as const;
   }
 }
-// TODO Need to fix local file from crowdin
-// export class RecreateGroupBannerAdmin extends LocatorsInterface {
-//   public build(): StrategyExtractionObj {
-//     return {
-//       strategy: 'accessibility id',
-//       selector: 'Legacy group banner',
-//       text: englishStripped('legacyGroupAfterDeprecationAdmin').toString(),
-//     } as const;
-//   }
-// }
 
-// export class RecreateGroupBannerMember extends LocatorsInterface {
-//   public build(): StrategyExtractionObj {
-//     return {
-//       strategy: 'accessibility id',
-//       selector: 'Legacy group banner',
-//       text: englishStripped('legacyGroupAfterDeprecationMember').toString(),
-//     } as const;
-//   }
-// }
+export class RecreateGroupBannerMember extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    return {
+      strategy: 'accessibility id',
+      selector: 'Legacy group banner',
+      text: englishStripped('legacyGroupAfterDeprecationMember').toString(),
+    } as const;
+  }
+}
 
 export class RecreateGroupButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {

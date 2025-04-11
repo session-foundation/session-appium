@@ -269,7 +269,7 @@ class LocalizedStringBuilder<T extends MergedLocalizerTokens> extends String {
   }
 
   private resolvePluralString(): string {
-    const pluralKey = 'count' as const;
+    const pluralKey = 'count';
 
     let num: number | string | undefined = this.args?.[pluralKey as keyof ArgsFromToken<T>];
 

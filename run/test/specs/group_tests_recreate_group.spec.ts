@@ -2,9 +2,9 @@ import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME, User } from '../../types/testing';
 import { ContinueButton } from './locators/global';
-import { CreateGroupButton, GroupNameInput, RecreateGroupButton } from './locators/groups';
+import { CreateGroupButton, GroupNameInput, RecreateGroupBannerAdmin, RecreateGroupBannerMember, RecreateGroupButton } from './locators/groups';
 import { sleepFor } from './utils';
-import { cleanGroup } from './utils/clean_groups';
+import { cleanGroup } from './utils/clean_group';
 import { sortByPubkey } from './utils/get_account_id';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 import { restoreAccount } from './utils/restore_account';
@@ -56,12 +56,12 @@ async function recreateGroup(platform: SupportedPlatformsType) {
     )
   );
   // TODO Need to fix local file
-  // await device1.waitForTextElementToBePresent(new RecreateGroupBannerAdmin(device1));
-  // await Promise.all(
-  //   [device2, device3].map(device =>
-  //     device.waitForTextElementToBePresent(new RecreateGroupBannerMember(device))
-  //   )
-  // );
+  await device1.waitForTextElementToBePresent(new RecreateGroupBannerAdmin(device1));
+  await Promise.all(
+    [device2, device3].map(device =>
+      device.waitForTextElementToBePresent(new RecreateGroupBannerMember(device))
+    )
+  );
   await device1.clickOnElementAll(new RecreateGroupButton(device1));
   await device1.checkModalStrings(
     englishStripped('recreateGroup').toString(),

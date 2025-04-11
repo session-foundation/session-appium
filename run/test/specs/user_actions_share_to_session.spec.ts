@@ -25,6 +25,8 @@ async function shareToSession(platform: SupportedPlatformsType) {
     newUser(device2, USERNAME.BOB),
   ]);
   await newContact(platform, device1, userA, device2, userB);
+  // Need to make sure contact is confirm before moving away from Session
+  await sleepFor(1000);
   await device1.pressHome();
   await sleepFor(2000);
   //  Photo app is on different page than Session
