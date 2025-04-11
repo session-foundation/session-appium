@@ -35,6 +35,8 @@ import {
   XPath,
 } from './testing';
 import * as path from 'path'
+import { testImage } from '../constants/testfiles';
+import { AttachmentsButton, OutgoingMessageStatusSent } from '../test/specs/locators/conversation';
 
 export type Coordinates = {
   x: number;
@@ -1121,12 +1123,15 @@ export class DeviceWrapper {
     }
   }
 
-  // TODO FIX UP THIS FUNCTION
-  public async sendImage(platform: SupportedPlatformsType, message?: string, community?: boolean) {
-    const ronSwansonBirthday = '196705060700.00';
-    const fileName = 'test_image.jpg';
-    if (platform === 'ios') {
-      await this.clickOnByAccessibilityID('Attachments button');
+  // TODO add locator classes
+  public async sendImage(message: string) {
+    if (this.isIOS()) {
+      // Force accessibility ID by forcing custom file date
+      const forcedDate = '196705060700.00'; // Ron Swanson's birthday
+      const forcedAccessibilityID = '1967-05-05 21:00:00 +0000'; // forcedDate in UTC (-10hrs)
+      // Push file first
+      await this.pushMediaToDevice(testImage, forcedDate);
+      await this.clickOnElementAll(new AttachmentsButton(this));
       await sleepFor(5000);
       const keyboard = await this.isKeyboardVisible();
       if (keyboard) {
@@ -1134,87 +1139,46 @@ export class DeviceWrapper {
       } else {
         await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardClosed);
       }
+      await sleepFor(1000);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      const testImage = await this.doesElementExist({
-        strategy: 'accessibility id',
-        selector: `1967-05-05 21:00:00 +0000`,
-        maxWait: 1000,
-      });
-      if (!testImage) {
-        await this.pushMediaToDevice(fileName, ronSwansonBirthday);
-      }
-      await sleepFor(100);
-      await this.clickOnByAccessibilityID(`1967-05-05 21:00:00 +0000`, 1000);
-      if (message) {
-        await this.clickOnByAccessibilityID('Text input box');
-        await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
-      }
+      await this.clickOnByAccessibilityID(forcedAccessibilityID, 1000);
+      await this.clickOnByAccessibilityID('Text input box');
+      await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
       await this.clickOnElementAll(new SendMediaButton(this));
-      await this.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Message sent status: Sent',
-        maxWait: 50000,
-      });
-    } else {
-      await this.clickOnByAccessibilityID('Attachments button');
+    }
+    if (this.isAndroid()) {
+      // Push file first
+      await this.pushMediaToDevice(testImage);
+      await this.clickOnElementAll(new AttachmentsButton(this));
       await sleepFor(100);
-      await this.clickOnByAccessibilityID('Documents folder');
-      await this.clickOnByAccessibilityID('Continue');
+      await this.clickOnByAccessibilityID('Images folder');
       await this.clickOnElementAll({
         strategy: 'id',
-        selector: 'com.android.permissioncontroller:id/permission_allow_button',
-        text: 'Allow',
+        selector: 'com.android.permissioncontroller:id/permission_allow_all_button',
+        text: 'Allow all',
       });
-      await this.clickOnByAccessibilityID('Show roots');
       await sleepFor(500);
-      await this.clickOnTextElementById(`android:id/title`, 'Downloads');
-      await sleepFor(100);
-      const testImage = await this.doesElementExist({
+      await this.clickOnElementAll({
         strategy: 'id',
-        selector: 'android:id/title',
-        maxWait: 2000,
-        text: fileName,
+        selector: 'network.loki.messenger:id/mediapicker_folder_item_thumbnail',
       });
-      if (!testImage) {
-        await this.pushMediaToDevice(platform, fileName);
-      }
       await sleepFor(100);
-      await this.clickOnTextElementById('android:id/title', fileName);
-      if (community) {
-        await this.scrollToBottom();
-      }
-      await this.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: `Message sent status: Sent`,
-        maxWait: 60000,
+      await this.clickOnElementAll({
+        strategy: 'id',
+        selector: 'network.loki.messenger:id/mediapicker_image_item_thumbnail',
       });
+      await this.inputText(message, {
+          strategy: 'accessibility id',
+          selector: 'New direct message',
+        });
+      await this.clickOnElementAll(new SendMediaButton(this));
+      await this.scrollToBottom();
     }
-  }
-
-  public async sendImageWithMessageAndroid(message: string) {
-    await this.clickOnByAccessibilityID('Attachments button');
-    await sleepFor(100);
-    await this.clickOnByAccessibilityID('Images folder');
-    await this.clickOnElementAll({
-      strategy: 'id',
-      selector: 'com.android.permissioncontroller:id/permission_allow_all_button',
-      text: 'Allow all',
+    // Checking Sent status on both platforms
+    await this.waitForTextElementToBePresent({
+      ...new OutgoingMessageStatusSent(this).build(),
+      maxWait: 50000,
     });
-    await sleepFor(500);
-    await this.clickOnElementAll({
-      strategy: 'id',
-      selector: 'network.loki.messenger:id/mediapicker_folder_item_thumbnail',
-    });
-    await sleepFor(100);
-    await this.clickOnElementAll({
-      strategy: 'id',
-      selector: 'network.loki.messenger:id/mediapicker_image_item_thumbnail',
-    });
-    await this.inputText(message, {
-      strategy: 'accessibility id',
-      selector: 'New direct message',
-    });
-    await this.clickOnElementAll(new SendMediaButton(this));
   }
 
   public async sendVideoiOS(message: string) {

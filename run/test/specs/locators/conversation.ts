@@ -76,3 +76,20 @@ export class Hide extends LocatorsInterface {
     }
   }
 }
+export class AttachmentsButton extends LocatorsInterface {
+  public build() {
+    return {
+      strategy: 'accessibility id',
+      selector: 'Attachments button',
+    } as const;
+  }
+}
+
+export class OutgoingMessageStatusSent extends LocatorsInterface {
+  public build() {
+    return {
+      strategy: 'accessibility id',
+      selector: `Message sent status: Sent`,
+    } as const;
+  }
+}
