@@ -13,7 +13,6 @@ import {
   ReadReceiptsButton,
   SendMediaButton,
 } from '../../run/test/specs/locators';
-import { IOS_XPATHS } from '../constants';
 import { englishStripped } from '../localizer/i18n/localizedString';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
@@ -35,7 +34,7 @@ import {
   XPath,
 } from './testing';
 import * as path from 'path'
-import { testImage } from '../constants/testfiles';
+import { testImage, testVideo } from '../constants/testfiles';
 import { AttachmentsButton, OutgoingMessageStatusSent } from '../test/specs/locators/conversation';
 
 export type Coordinates = {
@@ -1181,91 +1180,60 @@ export class DeviceWrapper {
     });
   }
 
-  public async sendVideoiOS(message: string) {
-    const bestDayOfYear = `198809090700.00`;
-    const formattedDate = `1988-09-08 21:00:00 +0000`;
-    const fileName = 'test_video.mp4';
-    await this.clickOnByAccessibilityID('Attachments button');
-    // Select images button/tab
-    await sleepFor(5000);
-    const keyboard = await this.isKeyboardVisible();
-    if (keyboard) {
-      await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardOpen);
-    } else {
-      await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardClosed);
-    }
-    await sleepFor(100);
-    await this.modalPopup({
-      strategy: 'accessibility id',
-      selector: 'Allow Full Access',
-      maxWait: 500,
-    });
-    await this.clickOnByAccessibilityID('Recents');
-    // Select video
-    const videoFolder = await this.doesElementExist({
-      strategy: 'xpath',
-      selector: IOS_XPATHS.VIDEO_TOGGLE,
-      maxWait: 5000,
-    });
-    if (videoFolder) {
-      console.log('Videos folder found');
+  // TODO add locator classes
+  public async sendVideoiOS(message: string) { 
+      // Force accessibility ID by forcing custom file date
+      const forcedDate = `198809090700.00`;
+      const forcedAccessibilityID = `1988-09-08 21:00:00 +0000`; // forcedDate in UTC (-10hrs)
+      // Push first
+      await this.pushMediaToDevice(testVideo, forcedDate);
+      await this.clickOnElementAll(new AttachmentsButton(this));
+      // Select images button/tab
+      await sleepFor(5000);
+      const keyboard = await this.isKeyboardVisible();
+      if (keyboard) {
+        await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardOpen);
+      } else {
+        await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardClosed);
+      }
+      await sleepFor(100);
+      await this.modalPopup({
+        strategy: 'accessibility id',
+        selector: 'Allow Full Access',
+        maxWait: 500,
+      });
+      await this.clickOnByAccessibilityID('Recents');
       await this.clickOnByAccessibilityID('Videos');
-      await this.clickOnByAccessibilityID(formattedDate);
-    } else {
-      console.log('Videos folder NOT found');
-      await this.pushMediaToDevice(fileName, bestDayOfYear);
-      await this.clickOnByAccessibilityID(formattedDate, 5000);
+      await this.clickOnByAccessibilityID(forcedAccessibilityID);
+      await this.clickOnByAccessibilityID('Text input box');
+      await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
+      await this.clickOnByAccessibilityID('Send button');
+      await this.waitForTextElementToBePresent({
+        ...new OutgoingMessageStatusSent(this).build(),
+        maxWait: 50000,
+      });
     }
-    // Send with message
-    await this.clickOnByAccessibilityID('Text input box');
-    await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
-    await this.clickOnByAccessibilityID('Send button');
-    await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: `Message sent status: Sent`,
-      maxWait: 10000,
-    });
-  }
-
-  public async sendVideoAndroid() {
-    const fileName = 'test_video.mp4';
-    // Click on attachments button
-    await this.clickOnByAccessibilityID('Attachments button');
-    await sleepFor(100);
-    // Select images button/tab
-    await this.clickOnByAccessibilityID('Documents folder');
-    await this.clickOnByAccessibilityID('Continue');
-    await this.clickOnElementAll({
-      strategy: 'id',
-      selector: 'com.android.permissioncontroller:id/permission_allow_button',
-      text: 'Allow',
-    });
-    await sleepFor(200);
-    // Select video
-    const mediaButtons = await this.findElementsByClass('android.widget.Button');
-    await sleepFor(500);
-    const videosButton = await this.findMatchingTextInElementArray(mediaButtons, 'Videos');
-    if (!videosButton) {
-      throw new Error('videosButton was not found');
-    }
-    await this.click(videosButton.ELEMENT);
-    const testVideo = await this.doesElementExist({
-      strategy: 'id',
-      selector: 'android:id/title',
-      maxWait: 1000,
-      text: fileName,
-    });
-    if (!testVideo) {
-      await this.pushMediaToDevice('android', fileName);
-    }
-    await sleepFor(100);
-    await this.clickOnTextElementById('android:id/title', fileName);
-    await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: `Message sent status: Sent`,
-      maxWait: 50000,
-    });
-  }
+    public async sendVideoAndroid() { 
+      // Push first
+      await this.pushMediaToDevice(testVideo);
+      // Click on attachments button
+      await this.clickOnElementAll(new AttachmentsButton(this));
+      await sleepFor(100);
+      // Select images button/tab
+      await this.clickOnByAccessibilityID('Documents folder');
+      await this.clickOnByAccessibilityID('Continue');
+      await this.clickOnElementAll({
+        strategy: 'id',
+        selector: 'com.android.permissioncontroller:id/permission_allow_button',
+        text: 'Allow',
+      });
+      await sleepFor(200);
+      await this.clickOnTextElementById('android:id/title', testVideo);
+      await this.waitForTextElementToBePresent({
+        ...new OutgoingMessageStatusSent(this).build(),
+        maxWait: 50000,
+      });
+      } 
 
   public async sendDocument() {
     const fileName = 'test_file.pdf';
