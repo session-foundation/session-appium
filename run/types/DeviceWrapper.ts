@@ -1107,17 +1107,17 @@ export class DeviceWrapper {
         const ANDROID_DOWNLOAD_DIR = '/storage/emulated/0/Download';
         // Android allows clearing the downloads folder at runtime
         await runScriptAndLog(
-          `${getAdbFullPath()} -s emulator-5554 shell rm -rf ${ANDROID_DOWNLOAD_DIR}/*`,
+          `${getAdbFullPath()} -s ${this.udid} shell rm -rf ${ANDROID_DOWNLOAD_DIR}/*`,
           true
         );
         // Push file
         await runScriptAndLog(
-          `${getAdbFullPath()} -s emulator-5554 push ${filePath} ${ANDROID_DOWNLOAD_DIR}`,
+          `${getAdbFullPath()} -s ${this.udid} push ${filePath} ${ANDROID_DOWNLOAD_DIR}`,
           true
         );
         // Refresh the Downloads UI to ensure attachment is visible
         await runScriptAndLog(
-          `${getAdbFullPath()} -s emulator-5554 shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file://${ANDROID_DOWNLOAD_DIR}/${mediaFileName}`,
+          `${getAdbFullPath()} -s ${this.udid} shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file://${ANDROID_DOWNLOAD_DIR}/${mediaFileName}`,
           true
         );
       }
