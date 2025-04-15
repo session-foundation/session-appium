@@ -34,8 +34,10 @@ import {
   XPath,
 } from './testing';
 import * as path from 'path'
-import { testImage, testVideo } from '../constants/testfiles';
+import { testFile, testImage, testVideo, pdfURL } from '../constants/testfiles';
 import { AttachmentsButton, OutgoingMessageStatusSent } from '../test/specs/locators/conversation';
+import { SafariShareButton } from '../test/specs/locators/browsers';
+import { IOSSaveButton, IOSReplaceButton, IOSSaveToFiles } from '../test/specs/locators/external';
 
 export type Coordinates = {
   x: number;
@@ -1235,64 +1237,57 @@ export class DeviceWrapper {
       });
       } 
 
-  public async sendDocument() {
-    const fileName = 'test_file.pdf';
-    if (this.isAndroid()) {
-      await this.clickOnByAccessibilityID('Attachments button');
-      await this.clickOnByAccessibilityID('Documents folder');
-      await this.clickOnByAccessibilityID('Continue');
-      await this.clickOnElementAll({
-        strategy: 'id',
-        selector: 'com.android.permissioncontroller:id/permission_allow_button',
-        text: 'Allow',
-      });
-      const testDocument = await this.doesElementExist({
-        strategy: 'id',
-        selector: 'android:id/title',
-        maxWait: 1000,
-        text: fileName,
-      });
-      if (!testDocument) {
-        await this.pushMediaToDevice('android', fileName);
-      }
-      await sleepFor(1000);
-      await this.clickOnTextElementById('android:id/title', fileName);
-      await this.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: `Message sent status: Sent`,
-        maxWait: 50000,
-      });
-    }
-    if (this.isIOS()) {
-      const formattedFileName = 'test_file, pdf';
-      const testMessage = 'Testing-document-1';
-      const spongeBobsBirthday = '199905010700.00';
-      await this.clickOnByAccessibilityID('Attachments button');
-      await sleepFor(100);
-      await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardOpen);
-      await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      const testDocument = await this.doesElementExist({
-        strategy: 'accessibility id',
-        selector: formattedFileName,
-        text: undefined,
-        maxWait: 1000,
-      });
-
-      if (!testDocument) {
-        await this.pushMediaToDevice(fileName, spongeBobsBirthday);
-      }
-      await sleepFor(100);
-      await this.clickOnByAccessibilityID(formattedFileName);
-      await sleepFor(500);
-      await this.clickOnByAccessibilityID('Text input box');
-      await this.inputText(testMessage, {
-        strategy: 'accessibility id',
-        selector: 'Text input box',
-      });
-      await this.clickOnByAccessibilityID('Send button');
-    }
+ // TODO add locator classes
+ public async sendDocument() {
+  if (this.isIOS()) {
+    const formattedFileName = 'dummy, pdf';
+    const testMessage = 'Testing-document-1';
+    // Xcode doesn't let you push any non-media file so it's necessary to download one from the Internet
+    // The quickest way to get one is the openurl command
+    await runScriptAndLog(`xcrun simctl openurl ${this.udid} ${pdfURL}`, true);
+    // Safari is open but now the file must be downloaded
+    await this.clickOnElementAll(new SafariShareButton(this));
+    await this.clickOnElementAll(new IOSSaveToFiles(this));
+    await this.clickOnElementAll(new IOSSaveButton(this));
+    // If file is already present (e.g. test retry) then iOS complains about duplicate files
+    const replaceButton = await this.doesElementExist(new IOSReplaceButton(this));
+    if (replaceButton) await this.clickOnElementAll(new IOSReplaceButton(this));
+    // Close Safari to go back to Session
+    await this.clickOnCoordinates(42, 42); // I hate this but nothing else works
+    // Finally, we send the file
+    await this.clickOnElementAll(new AttachmentsButton(this));
+    await sleepFor(100);
+    await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardOpen);
+    await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
+    await sleepFor(100);
+    await this.clickOnByAccessibilityID(formattedFileName);
+    await sleepFor(500);
+    await this.clickOnByAccessibilityID('Text input box');
+    await this.inputText(testMessage, {
+      strategy: 'accessibility id',
+      selector: 'Text input box',
+    });
+    await this.clickOnByAccessibilityID('Send button');
   }
-
+  if (this.isAndroid()) {
+    await this.pushMediaToDevice(testFile);
+    await this.clickOnElementAll(new AttachmentsButton(this));
+    await this.clickOnByAccessibilityID('Documents folder');
+    await this.clickOnByAccessibilityID('Continue');
+    await this.clickOnElementAll({
+      strategy: 'id',
+      selector: 'com.android.permissioncontroller:id/permission_allow_button',
+      text: 'Allow',
+    });
+    await sleepFor(1000);
+    await this.clickOnTextElementById('android:id/title', testFile);
+  }
+  // Checking Sent status on both platforms
+  await this.waitForTextElementToBePresent({
+    ...new OutgoingMessageStatusSent(this).build(),
+    maxWait: 50000,
+  });
+}
   public async sendGIF(message: string) {
     await this.clickOnByAccessibilityID('Attachments button');
     if (this.isAndroid()) {

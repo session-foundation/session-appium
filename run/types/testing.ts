@@ -288,7 +288,7 @@ export type AccessibilityId =
   | 'Add'
   | 'Community invitation'
   | 'Link preview'
-  | 'test_file, pdf'
+  | 'dummy, pdf'
   | 'Show roots'
   | 'Conversation header name'
   | 'Invite'
@@ -345,7 +345,10 @@ export type AccessibilityId =
   | '1967-05-05 20:00:00 +0000'
   | '1967-05-05 21:00:00 +0000'
   | 'Pin'
-  | 'Version warning banner';
+  | 'Version warning banner'
+  | 'ShareButton'
+  | 'Save to Files'
+  | 'Replace';
 
 export type Id =
   | 'Modal heading'
