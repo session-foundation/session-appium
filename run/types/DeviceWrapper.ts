@@ -33,7 +33,7 @@ import {
   User,
   XPath,
 } from './testing';
-import * as path from 'path'
+import * as path from 'path';
 import { testFile, testImage, testVideo, pdfURL, profilePicture } from '../constants/testfiles';
 import { AttachmentsButton, OutgoingMessageStatusSent } from '../test/specs/locators/conversation';
 import { SafariShareButton } from '../test/specs/locators/browsers';
@@ -1169,9 +1169,9 @@ export class DeviceWrapper {
         selector: 'network.loki.messenger:id/mediapicker_image_item_thumbnail',
       });
       await this.inputText(message, {
-          strategy: 'accessibility id',
-          selector: 'New direct message',
-        });
+        strategy: 'accessibility id',
+        selector: 'New direct message',
+      });
       await this.clickOnElementAll(new SendMediaButton(this));
       await this.scrollToBottom();
     }
@@ -1183,95 +1183,45 @@ export class DeviceWrapper {
   }
 
   // TODO add locator classes
-  public async sendVideoiOS(message: string) { 
-      // Force accessibility ID by forcing custom file date
-      const forcedDate = `198809090700.00`;
-      const forcedAccessibilityID = `1988-09-08 21:00:00 +0000`; // forcedDate in UTC (-10hrs)
-      // Push first
-      await this.pushMediaToDevice(testVideo, forcedDate);
-      await this.clickOnElementAll(new AttachmentsButton(this));
-      // Select images button/tab
-      await sleepFor(5000);
-      const keyboard = await this.isKeyboardVisible();
-      if (keyboard) {
-        await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardOpen);
-      } else {
-        await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardClosed);
-      }
-      await sleepFor(100);
-      await this.modalPopup({
-        strategy: 'accessibility id',
-        selector: 'Allow Full Access',
-        maxWait: 500,
-      });
-      await this.clickOnByAccessibilityID('Recents');
-      await this.clickOnByAccessibilityID('Videos');
-      await this.clickOnByAccessibilityID(forcedAccessibilityID);
-      await this.clickOnByAccessibilityID('Text input box');
-      await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
-      await this.clickOnByAccessibilityID('Send button');
-      await this.waitForTextElementToBePresent({
-        ...new OutgoingMessageStatusSent(this).build(),
-        maxWait: 50000,
-      });
+  public async sendVideoiOS(message: string) {
+    // Force accessibility ID by forcing custom file date
+    const forcedDate = `198809090700.00`;
+    const forcedAccessibilityID = `1988-09-08 21:00:00 +0000`; // forcedDate in UTC (-10hrs)
+    // Push first
+    await this.pushMediaToDevice(testVideo, forcedDate);
+    await this.clickOnElementAll(new AttachmentsButton(this));
+    // Select images button/tab
+    await sleepFor(5000);
+    const keyboard = await this.isKeyboardVisible();
+    if (keyboard) {
+      await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardOpen);
+    } else {
+      await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardClosed);
     }
-    public async sendVideoAndroid() { 
-      // Push first
-      await this.pushMediaToDevice(testVideo);
-      // Click on attachments button
-      await this.clickOnElementAll(new AttachmentsButton(this));
-      await sleepFor(100);
-      // Select images button/tab
-      await this.clickOnByAccessibilityID('Documents folder');
-      await this.clickOnByAccessibilityID('Continue');
-      await this.clickOnElementAll({
-        strategy: 'id',
-        selector: 'com.android.permissioncontroller:id/permission_allow_button',
-        text: 'Allow',
-      });
-      await sleepFor(200);
-      await this.clickOnTextElementById('android:id/title', testVideo);
-      await this.waitForTextElementToBePresent({
-        ...new OutgoingMessageStatusSent(this).build(),
-        maxWait: 50000,
-      });
-      } 
-
- // TODO add locator classes
- public async sendDocument() {
-  if (this.isIOS()) {
-    const formattedFileName = 'dummy, pdf';
-    const testMessage = 'Testing-document-1';
-    // Xcode doesn't let you push any non-media file so it's necessary to download one from the Internet
-    // The quickest way to get one is the openurl command
-    await runScriptAndLog(`xcrun simctl openurl ${this.udid} ${pdfURL}`, true);
-    // Safari is open but now the file must be downloaded
-    await this.clickOnElementAll(new SafariShareButton(this));
-    await this.clickOnElementAll(new IOSSaveToFiles(this));
-    await this.clickOnElementAll(new IOSSaveButton(this));
-    // If file is already present (e.g. test retry) then iOS complains about duplicate files
-    const replaceButton = await this.doesElementExist(new IOSReplaceButton(this));
-    if (replaceButton) await this.clickOnElementAll(new IOSReplaceButton(this));
-    // Close Safari to go back to Session
-    await this.clickOnCoordinates(42, 42); // I hate this but nothing else works
-    // Finally, we send the file
-    await this.clickOnElementAll(new AttachmentsButton(this));
     await sleepFor(100);
-    await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardOpen);
-    await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-    await sleepFor(100);
-    await this.clickOnByAccessibilityID(formattedFileName);
-    await sleepFor(500);
-    await this.clickOnByAccessibilityID('Text input box');
-    await this.inputText(testMessage, {
+    await this.modalPopup({
       strategy: 'accessibility id',
-      selector: 'Text input box',
+      selector: 'Allow Full Access',
+      maxWait: 500,
     });
+    await this.clickOnByAccessibilityID('Recents');
+    await this.clickOnByAccessibilityID('Videos');
+    await this.clickOnByAccessibilityID(forcedAccessibilityID);
+    await this.clickOnByAccessibilityID('Text input box');
+    await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
     await this.clickOnByAccessibilityID('Send button');
+    await this.waitForTextElementToBePresent({
+      ...new OutgoingMessageStatusSent(this).build(),
+      maxWait: 50000,
+    });
   }
-  if (this.isAndroid()) {
-    await this.pushMediaToDevice(testFile);
+  public async sendVideoAndroid() {
+    // Push first
+    await this.pushMediaToDevice(testVideo);
+    // Click on attachments button
     await this.clickOnElementAll(new AttachmentsButton(this));
+    await sleepFor(100);
+    // Select images button/tab
     await this.clickOnByAccessibilityID('Documents folder');
     await this.clickOnByAccessibilityID('Continue');
     await this.clickOnElementAll({
@@ -1279,15 +1229,65 @@ export class DeviceWrapper {
       selector: 'com.android.permissioncontroller:id/permission_allow_button',
       text: 'Allow',
     });
-    await sleepFor(1000);
-    await this.clickOnTextElementById('android:id/title', testFile);
+    await sleepFor(200);
+    await this.clickOnTextElementById('android:id/title', testVideo);
+    await this.waitForTextElementToBePresent({
+      ...new OutgoingMessageStatusSent(this).build(),
+      maxWait: 50000,
+    });
   }
-  // Checking Sent status on both platforms
-  await this.waitForTextElementToBePresent({
-    ...new OutgoingMessageStatusSent(this).build(),
-    maxWait: 50000,
-  });
-}
+
+  // TODO add locator classes
+  public async sendDocument() {
+    if (this.isIOS()) {
+      const formattedFileName = 'dummy, pdf';
+      const testMessage = 'Testing-document-1';
+      // Xcode doesn't let you push any non-media file so it's necessary to download one from the Internet
+      // The quickest way to get one is the openurl command
+      await runScriptAndLog(`xcrun simctl openurl ${this.udid} ${pdfURL}`, true);
+      // Safari is open but now the file must be downloaded
+      await this.clickOnElementAll(new SafariShareButton(this));
+      await this.clickOnElementAll(new IOSSaveToFiles(this));
+      await this.clickOnElementAll(new IOSSaveButton(this));
+      // If file is already present (e.g. test retry) then iOS complains about duplicate files
+      const replaceButton = await this.doesElementExist(new IOSReplaceButton(this));
+      if (replaceButton) await this.clickOnElementAll(new IOSReplaceButton(this));
+      // Close Safari to go back to Session
+      await this.clickOnCoordinates(42, 42); // I hate this but nothing else works
+      // Finally, we send the file
+      await this.clickOnElementAll(new AttachmentsButton(this));
+      await sleepFor(100);
+      await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardOpen);
+      await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
+      await sleepFor(100);
+      await this.clickOnByAccessibilityID(formattedFileName);
+      await sleepFor(500);
+      await this.clickOnByAccessibilityID('Text input box');
+      await this.inputText(testMessage, {
+        strategy: 'accessibility id',
+        selector: 'Text input box',
+      });
+      await this.clickOnByAccessibilityID('Send button');
+    }
+    if (this.isAndroid()) {
+      await this.pushMediaToDevice(testFile);
+      await this.clickOnElementAll(new AttachmentsButton(this));
+      await this.clickOnByAccessibilityID('Documents folder');
+      await this.clickOnByAccessibilityID('Continue');
+      await this.clickOnElementAll({
+        strategy: 'id',
+        selector: 'com.android.permissioncontroller:id/permission_allow_button',
+        text: 'Allow',
+      });
+      await sleepFor(1000);
+      await this.clickOnTextElementById('android:id/title', testFile);
+    }
+    // Checking Sent status on both platforms
+    await this.waitForTextElementToBePresent({
+      ...new OutgoingMessageStatusSent(this).build(),
+      maxWait: 50000,
+    });
+  }
   public async sendGIF(message: string) {
     await this.clickOnByAccessibilityID('Attachments button');
     if (this.isAndroid()) {
