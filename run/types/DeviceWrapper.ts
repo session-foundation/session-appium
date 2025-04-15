@@ -34,7 +34,7 @@ import {
   XPath,
 } from './testing';
 import * as path from 'path'
-import { testFile, testImage, testVideo, pdfURL } from '../constants/testfiles';
+import { testFile, testImage, testVideo, pdfURL, profilePicture } from '../constants/testfiles';
 import { AttachmentsButton, OutgoingMessageStatusSent } from '../test/specs/locators/conversation';
 import { SafariShareButton } from '../test/specs/locators/browsers';
 import { IOSSaveButton, IOSReplaceButton, IOSSaveToFiles } from '../test/specs/locators/external';
@@ -1365,32 +1365,27 @@ export class DeviceWrapper {
     }
   }
 
+  // TODO add locator classes
   public async uploadProfilePicture() {
-    const spongeBobsBirthday = '199805010700.00';
-    const formattedDateiOS = 'Photo, 01 May 1998, 7:00 am';
-    const formattedDateAndroid = 'profile_picture.jpg, 27.75 kB, May 1, 1998';
-    const fileName = 'profile_picture.jpg';
+    const forcedDate = '199805010700.00'; // Spongebob's Birthday
+    const forcedAccessibilityIDiOS = 'Photo, 01 May 1998, 7:00 AM';
+    const forcedAccessibilityIDAndroid = `${profilePicture}, 27.75 kB, May 1, 1998`;
     await this.clickOnElementAll(new UserSettings(this));
     // Click on Profile picture
     await this.clickOnElementAll(new UserSettings(this));
     await this.clickOnElementAll(new ChangeProfilePictureButton(this));
     if (this.isIOS()) {
+      // Push file first
+      await this.pushMediaToDevice(profilePicture, forcedDate);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      const profilePicture = await this.doesElementExist({
-        strategy: 'accessibility id',
-        selector: formattedDateiOS,
-        maxWait: 2000,
-      });
-      if (!profilePicture) {
-        await this.pushMediaToDevice(fileName, spongeBobsBirthday);
-      }
-      await sleepFor(100);
       await this.clickOnElementAll({
         strategy: 'accessibility id',
-        selector: formattedDateiOS,
+        selector: forcedAccessibilityIDiOS,
       });
       await this.clickOnByAccessibilityID('Done');
     } else if (this.isAndroid()) {
+      // Push file first
+      await this.pushMediaToDevice(profilePicture);
       await this.clickOnElementAll(new ImagePermissionsModalAllow(this));
       await sleepFor(1000);
       await this.clickOnElementAll({
@@ -1399,25 +1394,15 @@ export class DeviceWrapper {
         text: 'Files',
       });
       await sleepFor(500);
-      // Select file
-      const profilePicture = await this.doesElementExist({
-        strategy: 'accessibility id',
-        selector: formattedDateAndroid,
-        maxWait: 5000,
+      await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Show roots' });
+      await this.clickOnElementAll({
+        strategy: 'id',
+        selector: 'android:id/title',
+        text: 'Downloads',
       });
-      // If no image, push file to this
-      if (!profilePicture) {
-        await this.pushMediaToDevice('android', fileName);
-        await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Show roots' });
-        await this.clickOnElementAll({
-          strategy: 'id',
-          selector: 'android:id/title',
-          text: 'Downloads',
-        });
-      }
       await this.clickOnElementAll({
         strategy: 'accessibility id',
-        selector: formattedDateAndroid,
+        selector: forcedAccessibilityIDAndroid,
       });
       await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
     }
