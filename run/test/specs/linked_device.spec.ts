@@ -22,7 +22,8 @@ async function linkDevice(platform: SupportedPlatformsType) {
   await device2.clickOnElementAll(new UserSettings(device2));
   // Check username
   await device2.waitForTextElementToBePresent({
-    ...new UsernameSettings(device2).build(USERNAME.ALICE),
+    ...new UsernameSettings(device2).build(),
+    text: USERNAME.ALICE,
   });
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',

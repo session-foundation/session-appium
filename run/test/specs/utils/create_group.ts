@@ -1,8 +1,10 @@
+import { englishStripped } from '../../../localizer/Localizer';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { Group, GROUPNAME, User } from '../../../types/testing';
 import { Contact } from '../locators/global';
 import { CreateGroupButton, GroupNameInput } from '../locators/groups';
 import { newContact } from './create_contact';
+import { sortByPubkey } from './get_account_id';
 import { SupportedPlatformsType } from './open_app';
 
 export const createGroup = async (
@@ -13,7 +15,8 @@ export const createGroup = async (
   userTwo: User,
   device3: DeviceWrapper,
   userThree: User,
-  userName: GROUPNAME
+  userName: GROUPNAME,
+  checkControlMessage?: boolean
 ): Promise<Group> => {
   const group: Group = { userName, userOne, userTwo, userThree };
 
@@ -54,7 +57,30 @@ export const createGroup = async (
       text: group.userName,
     }),
   ]);
-
+  if (checkControlMessage) {
+    // Sort by account ID
+    const [firstUser, secondUser] = sortByPubkey(userTwo, userThree);
+    // TODO remove onIOS once Android have implemented pubkey sorting
+    await Promise.all([
+      device1
+        .onIOS()
+        .waitForControlMessageToBePresent(
+          englishStripped(`groupMemberNewTwo`)
+            .withArgs({ name: firstUser, other_name: secondUser })
+            .toString()
+        ),
+      device2.waitForControlMessageToBePresent(
+        englishStripped('groupInviteYouAndOtherNew')
+          .withArgs({ other_name: userThree.userName })
+          .toString()
+      ),
+      device3.waitForControlMessageToBePresent(
+        englishStripped('groupInviteYouAndOtherNew')
+          .withArgs({ other_name: userTwo.userName })
+          .toString()
+      ),
+    ]);
+  }
   // Send message from User A to group to verify all working
   await device1.sendMessage(userAMessage);
   // Did the other devices receive UserA's message?

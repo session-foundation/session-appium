@@ -147,19 +147,17 @@ export class ExitUserProfile extends LocatorsInterface {
 }
 
 export class UsernameSettings extends LocatorsInterface {
-  public build(text?: USERNAME) {
+  public build() {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'accessibility id',
           selector: 'Display name',
-          text,
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Username',
-          text,
         } as const;
     }
   }
