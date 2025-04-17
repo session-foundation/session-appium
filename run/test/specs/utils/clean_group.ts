@@ -43,7 +43,9 @@ export async function cleanGroup(
       if (platform === 'ios') {
         await device.checkModalStrings(
           englishStripped('groupDelete').toString(),
-          englishStripped('groupDeleteDescription').withArgs({ group_name: groupName }).toString()
+          englishStripped('groupDeleteDescriptionMember')
+            .withArgs({ group_name: groupName })
+            .toString()
         );
 
         await device.clickOnElementAll({ strategy: 'accessibility id', selector: 'Delete' });

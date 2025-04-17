@@ -2,7 +2,13 @@ import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME, User } from '../../types/testing';
 import { ContinueButton } from './locators/global';
-import { CreateGroupButton, GroupNameInput, RecreateGroupBannerAdmin, RecreateGroupBannerMember, RecreateGroupButton } from './locators/groups';
+import {
+  CreateGroupButton,
+  GroupNameInput,
+  RecreateGroupBannerAdmin,
+  RecreateGroupBannerMember,
+  RecreateGroupButton,
+} from './locators/groups';
 import { sleepFor } from './utils';
 import { cleanGroup } from './utils/clean_group';
 import { sortByPubkey } from './utils/get_account_id';
@@ -13,9 +19,9 @@ bothPlatformsIt('Recreate group', 'high', recreateGroup);
 
 const userA: User = {
   userName: USERNAME.ALICE,
-  accountID: '0547866fc33d9486a09758e671d451ddb8b380c7c854f63210bd2d8f22fa741947',
+  accountID: '05c234231a606e8a0b0dfa1bc1deaedc08599d2f88205c11decf373b8a4ecb7d48',
   recoveryPhrase:
-    'sighting lava pockets nerves wounded nanny getting gulp goldfish insult nagged pairing insult',
+    'pixels tuesday logic hubcaps abrasive evolved cottage never towel lurk taboo cement never',
 };
 const userB: User = {
   userName: USERNAME.BOB,
