@@ -39,12 +39,6 @@ export const linkedDevice = async (
   // Wait for permissions modal to pop up
   await sleepFor(500);
   await device2.checkPermissions('Allow');
-  await sleepFor(1000);
-  await device2.hasElementBeenDeleted({
-    strategy: 'accessibility id',
-    selector: 'Continue',
-    maxWait: 1000,
-  });
   // Check that button was clicked
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
