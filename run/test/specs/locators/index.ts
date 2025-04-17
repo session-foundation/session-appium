@@ -1,6 +1,6 @@
 import { ANDROID_XPATHS, IOS_XPATHS } from '../../../constants';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { ElementStates, StrategyExtractionObj } from '../../../types/testing';
+import { ElementStates, StrategyExtractionObj, USERNAME } from '../../../types/testing';
 import { SupportedPlatformsType } from '../utils/open_app';
 
 export abstract class LocatorsInterface {
@@ -147,17 +147,19 @@ export class ExitUserProfile extends LocatorsInterface {
 }
 
 export class UsernameSettings extends LocatorsInterface {
-  public build() {
+  public build(text?: USERNAME) {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'accessibility id',
           selector: 'Display name',
+          text,
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Username',
+          text,
         } as const;
     }
   }
