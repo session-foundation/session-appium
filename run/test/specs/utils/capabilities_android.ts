@@ -15,8 +15,6 @@ const androidAppFullPath = getAndroidApk();
 
 console.log(`Android app full path: ${androidAppFullPath}`);
 
-// const androidAppFullPath = `/Users/emilyburton/Downloads/session-android-20240531T000357Z-b544961d2-universal/session-1.18.4-universal.apk`;
-
 const sharedCapabilities: AppiumAndroidCapabilities & AppiumCapabilities = {
   'appium:app': androidAppFullPath,
   'appium:platformName': 'Android',

@@ -1,6 +1,6 @@
-import { englishStripped } from '../../localizer/i18n/localizedString';
+import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
+import { USERNAME, type AccessibilityId } from '../../types/testing';
 import { BlockedContactsSettings, BlockUserConfirmationModal } from './locators';
 import { UserSettings } from './locators/settings';
 import { sleepFor } from './utils';
@@ -48,7 +48,7 @@ async function blockedRequest(platform: SupportedPlatformsType) {
   await Promise.all([
     device2.waitForTextElementToBePresent({
       strategy: 'accessibility id',
-      selector: messageRequestsNonePending,
+      selector: messageRequestsNonePending as AccessibilityId,
     }),
     device3.doesElementExist({
       strategy: 'accessibility id',

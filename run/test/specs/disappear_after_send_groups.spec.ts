@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/i18n/localizedString';
+import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { sleepFor } from './utils';

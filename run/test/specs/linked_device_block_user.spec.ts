@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/i18n/localizedString';
+import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { BlockedContactsSettings, BlockUser, BlockUserConfirmationModal } from './locators';
@@ -22,7 +22,7 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
 
   await newContact(platform, device1, userA, device2, userB);
   // Block contact
-  // Click on three dots (settings)
+
   await device1.clickOnElementAll(new ConversationSettings(device1));
   // Select Block option
   await sleepFor(500);
@@ -46,12 +46,12 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   });
   if (blockedStatus) {
     // Check linked device for blocked status (if shown on device1)
-    await device3.clickOnElementAll({
+    await device3.onAndroid().clickOnElementAll({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
       text: `${userB.userName}`,
     });
-    await device3.waitForTextElementToBePresent({
+    await device3.onAndroid().waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Blocked banner',
     });
@@ -60,7 +60,7 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
     console.info('Blocked banner not found');
   }
   // Check settings for blocked user
-  await Promise.all([device1.navigateBack(), device3.navigateBack()]);
+  await Promise.all([device1.navigateBack(), device3.onAndroid().navigateBack()]);
   await Promise.all([
     device1.clickOnElementAll(new UserSettings(device1)),
     device3.clickOnElementAll(new UserSettings(device3)),

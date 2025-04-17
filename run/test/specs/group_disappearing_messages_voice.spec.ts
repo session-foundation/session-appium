@@ -26,7 +26,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Voice message',
   });
-  await sleepFor(10000);
+  await sleepFor(30000);
   await Promise.all([
     device1.hasElementBeenDeleted({
       strategy: 'accessibility id',

@@ -14,7 +14,7 @@ import {
   SendMediaButton,
 } from '../../run/test/specs/locators';
 import { IOS_XPATHS } from '../constants';
-import { englishStripped } from '../localizer/i18n/localizedString';
+import { englishStripped } from '../localizer/Localizer';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
 import { EnterAccountID } from '../test/specs/locators/start_conversation';
@@ -741,6 +741,10 @@ export class DeviceWrapper {
         }
       }
     } while (Date.now() - start <= maxWait && element);
+
+    if (element) {
+      throw new Error(`Element was still present after maximum wait time`);
+    }
   }
 
   public async hasTextElementBeenDeleted(accessibilityId: AccessibilityId, text: string) {
@@ -1094,7 +1098,10 @@ export class DeviceWrapper {
   public async pushMediaToDevice(mediaFileName: string, forcedDate?: string) {
     if (this.isIOS()) {
       await runScriptAndLog(`touch -a -m -t ${forcedDate} 'run/test/specs/media/${mediaFileName}'`);
-      await runScriptAndLog(`xcrun simctl addmedia 'run/test/specs/media/${mediaFileName}'`);
+      await runScriptAndLog(
+        `xcrun simctl addmedia ${this.udid} 'run/test/specs/media/${mediaFileName}'`,
+        true
+      );
     } else {
       await runScriptAndLog(
         `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/${mediaFileName}' /storage/emulated/0/Download`
@@ -1347,6 +1354,7 @@ export class DeviceWrapper {
   }
 
   public async sendGIF(message: string) {
+    await sleepFor(1000);
     await this.clickOnByAccessibilityID('Attachments button');
     if (this.isAndroid()) {
       await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'GIF button' });

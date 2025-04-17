@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/i18n/localizedString';
+import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { LinkPreview, LinkPreviewMessage } from './locators';
@@ -34,7 +34,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   if (platform === 'android') {
     await device1.checkModalStrings(
       englishStripped('linkPreviewsEnable').toString(),
-      englishStripped('linkPreviewsFirstDescription').withArgs({ app_name: 'Session' }).toString(),
+      englishStripped('linkPreviewsFirstDescription').toString(),
       true
     );
     await device1.clickOnByAccessibilityID('Enable');
@@ -47,7 +47,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   if (platform === 'ios') {
     await device1.checkModalStrings(
       englishStripped('linkPreviewsEnable').toString(),
-      englishStripped('linkPreviewsFirstDescription').withArgs({ app_name: 'Session' }).toString()
+      englishStripped('linkPreviewsFirstDescription').toString()
     );
     await device1.clickOnByAccessibilityID('Enable');
   }

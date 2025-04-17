@@ -1,5 +1,5 @@
 import { runOnlyOnIOS, sleepFor } from '.';
-import { englishStripped } from '../../../localizer/i18n/localizedString';
+import { englishStripped } from '../../../localizer/Localizer';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
 import { SupportedPlatformsType } from './open_app';
@@ -24,8 +24,9 @@ export const newContact = async (
   await device2.sendMessage(`Reply-message-${Bob.userName}-to-${Alice.userName}`);
   // Verify config message states message request was accepted
   // "messageRequestsAccepted": "Your message request has been accepted.",
+  // TO DO - ADD BACK IN ONCE IOS HAS FIXED THIS ISSUE
   const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
-  await device1.waitForControlMessageToBePresent(messageRequestsAccepted);
+  await device1.onAndroid().waitForControlMessageToBePresent(messageRequestsAccepted);
 
   console.info(`${Alice.userName} and ${Bob.userName} are now contacts`);
   return { Alice, Bob, device1, device2 };

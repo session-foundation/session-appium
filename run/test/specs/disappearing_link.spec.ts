@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/i18n/localizedString';
+import { englishStripped } from '../../localizer/Localizer';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { LinkPreview } from './locators';
@@ -37,7 +37,7 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
   // Accept dialog for link preview
   await device1.checkModalStrings(
     englishStripped('linkPreviewsEnable').toString(),
-    englishStripped('linkPreviewsFirstDescription').withArgs({ app_name: 'Session' }).toString()
+    englishStripped('linkPreviewsFirstDescription').toString()
   );
   await device1.clickOnByAccessibilityID('Enable');
   // No preview on first send
@@ -93,7 +93,7 @@ async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsTyp
   // Accept dialog for link preview
   await device1.checkModalStrings(
     englishStripped('linkPreviewsEnable').toString(),
-    englishStripped('linkPreviewsFirstDescription').withArgs({ app_name: 'Session' }).toString(),
+    englishStripped('linkPreviewsFirstDescription').toString(),
     true
   );
   await device1.clickOnByAccessibilityID('Enable');
