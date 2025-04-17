@@ -353,7 +353,10 @@ export type AccessibilityId =
   | 'Legacy group banner'
   | 'Legacy Groups Recreate Button'
   | 'Confirm leave'
-  | 'Photo, 25 March, 11:09 am';
+  | 'Photo, 25 March, 11:09 am'
+  | 'Albums'
+  // eslint-disable-next-line no-irregular-whitespace
+  | `Photo taken on May 1, 1998, 7:00:00 AM`;
 
 export type Id =
   | 'Modal heading'
@@ -418,7 +421,9 @@ export type Id =
   | 'Version warning banner'
   | 'Remove contact button'
   | 'Remove'
-  | 'Contact status';
+  | 'Contact status'
+  | 'Image button'
+  | 'android.widget.TextView';
 
 export type TestRisk = 'high' | 'medium' | 'low' | undefined;
 

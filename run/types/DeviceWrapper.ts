@@ -1104,7 +1104,8 @@ export class DeviceWrapper {
       );
     } else {
       await runScriptAndLog(
-        `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/${mediaFileName}' /storage/emulated/0/Download`
+        `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/${mediaFileName}' /storage/emulated/0/Download`,
+        true
       );
       // Refreshes the photos UI to force the image appear
       await runScriptAndLog(
@@ -1434,7 +1435,8 @@ export class DeviceWrapper {
   public async uploadProfilePicture() {
     const spongeBobsBirthday = '199805010700.00';
     const formattedDateiOS = 'Photo, 01 May 1998, 7:00 am';
-    const formattedDateAndroid = 'profile_picture.jpg, 27.75 kB, May 1, 1998';
+    // eslint-disable-next-line no-irregular-whitespace
+    const formattedDateAndroid = `Photo taken on May 1, 1998, 7:00:00 AM`;
     const fileName = 'profile_picture.jpg';
     await this.clickOnElementAll(new UserSettings(this));
     // Click on Profile picture
@@ -1461,8 +1463,7 @@ export class DeviceWrapper {
       await sleepFor(1000);
       await this.clickOnElementAll({
         strategy: 'id',
-        selector: 'android:id/text1',
-        text: 'Files',
+        selector: 'Image button',
       });
       await sleepFor(500);
       // Select file
@@ -1473,13 +1474,13 @@ export class DeviceWrapper {
       });
       // If no image, push file to this
       if (!profilePicture) {
-        await this.pushMediaToDevice('android', fileName);
-        await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Show roots' });
-        await this.clickOnElementAll({
-          strategy: 'id',
-          selector: 'android:id/title',
-          text: 'Downloads',
-        });
+        await this.pushMediaToDevice(fileName);
+        // await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Albums' });
+        // await this.clickOnElementAll({
+        //   strategy: 'id',
+        //   selector: 'android.widget.TextView',
+        //   text: 'Downloads',
+        // });
       }
       await this.clickOnElementAll({
         strategy: 'accessibility id',
