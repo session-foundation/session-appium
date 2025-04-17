@@ -505,22 +505,6 @@ export class DownloadMediaButton extends LocatorsInterface {
   }
 }
 
-export class SetDisappearMessagesButton extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Set',
-        } as const;
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Set button',
-        } as const;
-    }
-  }
-}
 export class ShareExtensionIcon extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {

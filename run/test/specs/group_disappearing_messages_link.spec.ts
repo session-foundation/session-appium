@@ -15,7 +15,7 @@ const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 
 async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  const testGroupName = 'Test group';
+  const testGroupName = 'Testing disappearing messages';
   const testLink = `https://getsession.org/`;
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
