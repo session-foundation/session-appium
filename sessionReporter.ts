@@ -8,7 +8,7 @@ import type {
   TestResult,
 } from '@playwright/test/reporter';
 import chalk from 'chalk';
-import { Dictionary, groupBy, isString, mean, sortBy } from 'lodash';
+import { Dictionary, groupBy, isString, mean, omit, sortBy } from 'lodash';
 
 type TestAndResult = { test: TestCase; result: TestResult };
 
@@ -210,7 +210,10 @@ class SessionReporter implements Reporter {
   }
 
   onError?(error: TestError) {
-    console.info('global error:', error);
+    console.info('global error:', omit(error, ['stack', 'snippet']));
+    error.stack?.split('\n').forEach(line => {
+      process.stderr.write(`${line}\n`);
+    });
   }
 }
 

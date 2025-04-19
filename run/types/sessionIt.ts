@@ -1,11 +1,11 @@
-import { test } from '@playwright/test';
+import { test, type TestInfo } from '@playwright/test';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 import { TestRisk } from './testing';
 
 export function androidIt(
   title: string,
   testRisk: TestRisk,
-  testToRun: (platform: SupportedPlatformsType) => Promise<void>,
+  testToRun: (platform: SupportedPlatformsType, testInfo: TestInfo) => Promise<void>,
   shouldSkip = false
 ) {
   const testName = `${title} android @${testRisk ?? 'default'}-risk`;
@@ -14,9 +14,10 @@ export function androidIt(
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);
     });
   } else {
-    test(testName, async () => {
+    // eslint-disable-next-line no-empty-pattern
+    test(testName, async ({}, testInfo) => {
       console.info(`\n\n==========> Running "${testName}"\n\n`);
-      await testToRun('android');
+      await testToRun('android', testInfo);
     });
   }
 }
@@ -24,7 +25,7 @@ export function androidIt(
 export function iosIt(
   title: string,
   testRisk: TestRisk,
-  testToRun: (platform: SupportedPlatformsType) => Promise<void>,
+  testToRun: (platform: SupportedPlatformsType, testInfo: TestInfo) => Promise<void>,
   shouldSkip = false
 ) {
   const testName = `${title} ios @${testRisk ?? 'default'}-risk`;
@@ -34,10 +35,11 @@ export function iosIt(
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);
     });
   } else {
-    test(testName, async () => {
+    // eslint-disable-next-line no-empty-pattern
+    test(testName, async ({}, testInfo) => {
       console.info(`\n\n==========> Running "${testName}"\n\n`);
       const startTime = Date.now();
-      await testToRun('ios');
+      await testToRun('ios', testInfo);
       const endTime = Date.now();
       console.info(`\n\n==========> Finished "${testName}" in ${endTime - startTime}ms\n\n`);
     });

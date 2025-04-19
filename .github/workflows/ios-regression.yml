@@ -208,7 +208,7 @@ jobs:
         run: |
           cd forked-session-appium
           pwd
-          npx playwright test --list --grep "@${{ github.event.inputs.RISK }}"
+          npx playwright test --list --reporter list --grep "@${{ github.event.inputs.RISK }}"
       - name: Run the iOS tests # ${{ github.event.inputs.SHARD_NUMBER }}​​/${{ github.event.inputs.SHARD_COUNT }}​​
         run: |
           cd forked-session-appium
