@@ -8,7 +8,7 @@ on:
         description: 'url to test'
         required: true
         type: string
-        default: https://oxen.rocks/session-foundation/session-android/release/1.20.3/session-android-20241101T052421Z-be16d3bf9-universal.tar.xz
+        default: https://oxen.rocks/session-foundation/session-android/release/1.22.1/session-android-20250406T231441Z-a9bfe783a-universal.tar.xz
 
       RISK:
         description: 'risks to target'
@@ -35,7 +35,7 @@ on:
         description: 'branch to checkout'
         required: true
         type: string
-        default: test-ci-regression
+        default: add-tooling
 
       # SHARD_NUMBER:
       #   description: 'shard number'
@@ -84,7 +84,7 @@ on:
         options:
           - '0'
           - '1'
-        default: '0'
+        default: '1'
       PLAYWRIGHT_WORKERS_COUNT:
         description: 'number of workers to use - ONLY 1 WORKER IS SUPPORTED FOR ANDROID'
         required: true
@@ -108,18 +108,18 @@ jobs:
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
-      IOS_FIRST_SIMULATOR: '49651A15-3E14-4BAF-8B8E-0C630C35B8DD'
-      IOS_SECOND_SIMULATOR: '7CA21E47-56AC-4B76-82A4-1D5199515F38'
-      IOS_THIRD_SIMULATOR: 'FE1DEDC7-D530-41E7-9B38-86ED2DDB97CD'
-      IOS_FOURTH_SIMULATOR: '561C621C-2CEF-4FCC-87B7-E6221718D15C'
-      IOS_FIFTH_SIMULATOR: '5AA87E03-5831-4209-87A0-21E5ECDC490F'
-      IOS_SIXTH_SIMULATOR: '6FB10AF3-3970-46BA-B414-1206AA4E726D'
-      IOS_SEVENTH_SIMULATOR: '0BDA36C0-83F4-46DF-ADC9-FF30E969D4BD'
-      IOS_EIGHTH_SIMULATOR: '1C61A0B6-3085-46B6-9B2E-6E9A1B594944'
-      IOS_NINTH_SIMULATOR: '7C69D129-BD40-4BC0-9A0D-6A7E990F23E8'
-      IOS_TENTH_SIMULATOR: '275E0C5B-2458-4490-831D-4CE86C8EC704'
-      IOS_ELEVENTH_SIMULATOR: 'EA5C5BCB-1E3E-4FFC-88BB-8D1DE354BC3B'
-      IOS_TWELFTH_SIMULATOR: '41514F87-DC49-4C81-B60C-03D1F8653A42'
+      IOS_1_SIMULATOR: '4A75A0E1-9EDE-4169-93C3-DCE0F0C7664F'
+      IOS_2_SIMULATOR: 'ACB6A587-8556-4EA0-87CF-4326A9A22051'
+      IOS_3_SIMULATOR: 'D90B2AE2-FF30-49BE-9370-B789BAEED3BB'
+      IOS_4_SIMULATOR: '59BD1CA4-7A8D-40FB-BAC7-CC99500644E0'
+      IOS_5_SIMULATOR: '064F4F80-B81C-4B72-9715-43CD18975139'
+      IOS_6_SIMULATOR: '56D8BA2F-BA0C-4D8F-8E5B-FD928E2C7C66'
+      IOS_7_SIMULATOR: '012D6656-D6DE-4932-A460-72F5629EB2E0'
+      IOS_8_SIMULATOR: 'D66CBD9C-7550-4055-8504-95F0AE700617'
+      IOS_9_SIMULATOR: '84884861-F8EF-4481-A001-B403F2649FCF'
+      IOS_10_SIMULATOR: 'C0EE6A21-044D-4B6E-B9A5-7AB977ADF305'
+      IOS_11_SIMULATOR: 'B8E78B21-1432-41F3-A398-DE4FF8CF9DED'
+      IOS_12_SIMULATOR: '8214A3A2-D4E1-4AA8-BB0F-394E3A49BCFA'
 
       # echo "SHARD_NUMBER ${{ github.event.inputs.SHARD_NUMBER }}"
       # echo "SHARD_COUNT ${{ github.event.inputs.SHARD_COUNT }}"
@@ -206,13 +206,13 @@ jobs:
         run: |
           cd forked-session-appium
           pwd
-          npx playwright test --list --grep "@${{ github.event.inputs.RISK }}"
+          npx playwright test --list --reporter list --grep "@${{ github.event.inputs.RISK }}"
 
       - name: Run the tests # ${{ github.event.inputs.SHARD_NUMBER }}​​/${{ github.event.inputs.SHARD_COUNT }}​​
         run: |
           cd forked-session-appium
           pwd
-          yarn test 'android "@${{ github.event.inputs.RISK }}"'
+          yarn test 'Avatar color android'
 
       - name: Kill all running emulators
         if: always()
