@@ -43,8 +43,8 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
   // Get control message based on key from json file
   await checkDisappearingControlMessage(
     platform,
-    Alice,
-    Bob,
+    Alice.userName,
+    Bob.userName,
     device1,
     device2,
     time,

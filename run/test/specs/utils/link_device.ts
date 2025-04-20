@@ -2,12 +2,12 @@ import { sleepFor } from '.';
 import { newUser } from './create_account';
 import { DisplayNameInput, SeedPhraseInput } from '../locators/onboarding';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { USERNAME } from '../../../types/testing';
+import type { UserNameType } from '@session-foundation/qa-seeder';
 
 export const linkedDevice = async (
   device1: DeviceWrapper,
   device2: DeviceWrapper,
-  userName: USERNAME
+  userName: UserNameType
 ) => {
   const user = await newUser(device1, userName);
   // Log in with recovery seed on device 2

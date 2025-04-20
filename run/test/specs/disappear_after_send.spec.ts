@@ -1,32 +1,27 @@
+import type { TestInfo } from '@playwright/test';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import {
-  DisappearActions,
-  DISAPPEARING_TIMES,
-  DisappearModes,
-  USERNAME,
-} from '../../types/testing';
+import { DisappearActions, DISAPPEARING_TIMES, DisappearModes } from '../../types/testing';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
 import { checkDisappearingControlMessage } from './utils/disappearing_control_messages';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
+import { open2AppsWithFriendsState } from './state_builder';
 
 bothPlatformsIt('Disappear after send', 'high', disappearAfterSend);
 
-async function disappearAfterSend(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create user A and user B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
+async function disappearAfterSend(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userA, userB },
+  } = await open2AppsWithFriendsState({
+    platform,
+    testTitle: testInfo.title,
+  });
+
   const mode: DisappearModes = 'send';
   const testMessage = `Checking disappear after ${mode} is working`;
   const controlMode: DisappearActions = 'sent';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
   // Select disappearing messages option
   await setDisappearingMessage(
     platform,
@@ -37,8 +32,8 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
   // Get control message based on key from json file
   await checkDisappearingControlMessage(
     platform,
-    userA,
-    userB,
+    userA.userName,
+    userB.userName,
     device1,
     device2,
     time,

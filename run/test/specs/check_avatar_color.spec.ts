@@ -2,24 +2,24 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { isSameColor } from './utils/check_colour';
 import { UserSettings } from './locators/settings';
-import { ConversationItem } from './locators/home';
 import { ConversationAvatar, ConversationSettings } from './locators/conversation';
 import type { TestInfo } from '@playwright/test';
-import { openAppsWithState } from './state_builder';
+import { open2AppsWithFriendsState } from './state_builder';
 
 bothPlatformsIt('Avatar color', 'medium', avatarColor);
 
 async function avatarColor(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const { devices, prebuilt } = await openAppsWithState(platform, 2, '2friends', testInfo.title);
-
-  const userA = prebuilt.users[0];
-  const device1 = devices[0];
-  const device2 = devices[1];
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userA },
+  } = await open2AppsWithFriendsState({
+    platform,
+    testTitle: testInfo.title,
+  });
 
   // Get Alice's avatar color on device 1 (Home Screen avatar) and turn it into a hex value
   const device1PixelColor = await device1.getElementPixelColor(new UserSettings(device1));
   // Get Alice's avatar color on device 2 and turn it into a hex value
-  await device2.clickOnElementAll(new ConversationItem(device2, userA.userName));
   let device2PixelColor;
   // The conversation screen looks slightly different per platform so we're grabbing the avatar from different locators
   // On iOS the avatar doubles as the Conversation Settings button on the right

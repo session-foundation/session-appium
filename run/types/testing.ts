@@ -1,17 +1,14 @@
 import { DeviceWrapper } from './DeviceWrapper';
 
+import { UserNameType, USERNAME as usernameFromSeeder } from '@session-foundation/qa-seeder';
+
 export type User = {
-  userName: USERNAME;
+  userName: UserNameType;
   accountID: string;
   recoveryPhrase: string;
 };
 
-export enum USERNAME {
-  ALICE = 'Alice',
-  BOB = 'Bob',
-  CHARLIE = 'Charlie',
-  DRACULA = 'Dracula',
-}
+export const USERNAME = usernameFromSeeder;
 
 export type GROUPNAME =
   | 'Test group'
@@ -328,7 +325,7 @@ export type AccessibilityId =
   | 'TabBarItemTitle'
   | 'URL'
   | 'Session | Send Messages, Not Metadata. | Private Messenger'
-  | `${USERNAME}`
+  | UserNameType
   | 'Invite button'
   | 'Confirm invite button'
   | 'Edit'

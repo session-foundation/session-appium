@@ -1,12 +1,13 @@
+import type { UserNameType } from '@session-foundation/qa-seeder';
 import { englishStripped } from '../../../localizer/Localizer';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { DisappearActions, DISAPPEARING_TIMES, User } from '../../../types/testing';
+import { DisappearActions, DISAPPEARING_TIMES } from '../../../types/testing';
 import { SupportedPlatformsType } from './open_app';
 
 export const checkDisappearingControlMessage = async (
   platform: SupportedPlatformsType,
-  userA: User,
-  userB: User,
+  userNameA: UserNameType,
+  userNameB: UserNameType,
   device1: DeviceWrapper,
   device2: DeviceWrapper,
   time: DISAPPEARING_TIMES,
@@ -16,10 +17,10 @@ export const checkDisappearingControlMessage = async (
   // Two control messages to check - You have set and other user has set
   // "disappearingMessagesSet": "<b>{name}</b> has set messages to disappear {time} after they have been {disappearing_messages_type}.",
   const disappearingMessagesSetUserA = englishStripped('disappearingMessagesSet')
-    .withArgs({ name: userA.userName, time, disappearing_messages_type: mode })
+    .withArgs({ name: userNameA, time, disappearing_messages_type: mode })
     .toString();
   const disappearingMessagesSetUserB = englishStripped('disappearingMessagesSet')
-    .withArgs({ name: userB.userName, time, disappearing_messages_type: mode })
+    .withArgs({ name: userNameB, time, disappearing_messages_type: mode })
     .toString();
   // "disappearingMessagesSetYou": "<b>You</b> set messages to disappear {time} after they have been {disappearing_messages_type}.",
   const disappearingMessagesSetYou = englishStripped('disappearingMessagesSetYou')
@@ -48,7 +49,7 @@ export const checkDisappearingControlMessage = async (
     await linkedDevice.clickOnElementAll({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
-      text: userB.userName,
+      text: userNameB,
     });
     await linkedDevice.disappearingControlMessage(disappearingMessagesSetYou);
     await linkedDevice.disappearingControlMessage(disappearingMessagesSetUserB);

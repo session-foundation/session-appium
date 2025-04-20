@@ -212,7 +212,7 @@ jobs:
         run: |
           cd forked-session-appium
           pwd
-          yarn test 'Avatar color android'
+          yarn test 'Disappear after read android'
 
       - name: Kill all running emulators
         if: always()
