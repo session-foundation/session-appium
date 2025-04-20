@@ -16,6 +16,7 @@ async function groupCreation(platform: SupportedPlatformsType) {
     newUser(device3, USERNAME.CHARLIE),
   ]);
   // Create contact between User A and User B and User C
+  // Note: we keep this one as we want it to **indeed** use the UI to create the group
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   // Close server and devices
   await closeApp(device1, device2, device3);

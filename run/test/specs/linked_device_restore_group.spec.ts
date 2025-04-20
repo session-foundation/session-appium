@@ -8,17 +8,18 @@ import { restoreAccount } from './utils/restore_account';
 bothPlatformsIt('Restore group', 'high', restoreGroup);
 
 async function restoreGroup(platform: SupportedPlatformsType) {
+  const testGroupName = 'Restore group';
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, USERNAME.ALICE),
     newUser(device2, USERNAME.BOB),
     newUser(device3, USERNAME.CHARLIE),
   ]);
-  const testGroupName = 'Restore group';
+  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
+
   const userAMessage = `${USERNAME.ALICE} to ${testGroupName}`;
   const userBMessage = `${USERNAME.BOB} to ${testGroupName}`;
   const userCMessage = `${USERNAME.CHARLIE} to ${testGroupName}`;
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   await restoreAccount(device4, userA);
   //   Check that group has loaded on linked device
   await device4.clickOnElementAll({

@@ -1,28 +1,25 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { openAppThreeDevices, SupportedPlatformsType, closeApp } from './utils/open_app';
-import { newUser } from './utils/create_account';
-import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
-import { createGroup } from './utils/create_group';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { DISAPPEARING_TIMES } from '../../types/testing';
 import { ConversationSettings } from './locators/conversation';
 import {
   DisappearingMessageRadial,
   DisappearingMessagesMenuOption,
   SetDisappearMessagesButton,
 } from './locators/disappearing_messages';
+import { open3AppsWithFriendsAnd1GroupState } from './state_builder';
 
 bothPlatformsIt('Group member disappearing messages', 'medium', membersCantSetDisappearingMessages);
 
 async function membersCantSetDisappearingMessages(platform: SupportedPlatformsType) {
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
   const testGroupName = 'Testing disappearing messages';
-  // Create user A, B and C
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-    newUser(device3, USERNAME.CHARLIE),
-  ]);
-  // A creates group with B and C
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
+  const {
+    devices: { device1, device2, device3 },
+  } = await open3AppsWithFriendsAnd1GroupState({
+    platform,
+    groupName: testGroupName,
+  });
+
   // Member B navigates to DM settings
   await device2.clickOnElementAll(new ConversationSettings(device2));
   await device2.clickOnElementAll(new DisappearingMessagesMenuOption(device2));

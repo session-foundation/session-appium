@@ -1012,7 +1012,7 @@ export class DeviceWrapper {
     return message;
   }
 
-  public async replyToMessage(user: User, body: string) {
+  public async replyToMessage(user: Pick<User, 'userName'>, body: string) {
     // Reply to media message from user B
     // Long press on imageSent element
     await this.longPressMessage(body);
@@ -1514,7 +1514,7 @@ export class DeviceWrapper {
     console.log(`Not an iOS device: shouldn't use this function`);
   }
 
-  public async mentionContact(platform: SupportedPlatformsType, contact: User) {
+  public async mentionContact(platform: SupportedPlatformsType, contact: Pick<User, 'userName'>) {
     await this.inputText(`@`, { strategy: 'accessibility id', selector: 'Message input box' });
     // Check that all users are showing in mentions box
     await this.waitForTextElementToBePresent({

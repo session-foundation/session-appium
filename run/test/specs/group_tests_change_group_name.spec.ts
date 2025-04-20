@@ -9,6 +9,7 @@ import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 import { ConversationSettings } from './locators/conversation';
 import { SaveNameChangeButton } from './locators/settings';
+import { open3AppsWithFriendsAnd1GroupState } from './state_builder';
 
 iosIt('Change group name', 'medium', changeGroupNameIos);
 androidIt('Change group name', 'medium', changeGroupNameAndroid);
@@ -16,15 +17,13 @@ androidIt('Change group name', 'medium', changeGroupNameAndroid);
 async function changeGroupNameIos(platform: SupportedPlatformsType) {
   const testGroupName = 'Test group';
   const newGroupName = 'Changed group name';
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // Create users A, B and C
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-    newUser(device3, USERNAME.CHARLIE),
-  ]);
-  // Create group
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
+
+  const {
+    devices: { device1, device2, device3 },
+  } = await open3AppsWithFriendsAnd1GroupState({
+    platform,
+    groupName: testGroupName,
+  });
   // Click on settings or three dots
   await device1.clickOnElementAll(new ConversationSettings(device1));
   // Click on Edit group option
@@ -64,15 +63,13 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
 async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   const testGroupName = 'Test group';
   const newGroupName = 'Changed group name';
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // Create users A, B and C
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-    newUser(device3, USERNAME.CHARLIE),
-  ]);
-  // Create group
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
+
+  const {
+    devices: { device1, device2, device3 },
+  } = await open3AppsWithFriendsAnd1GroupState({
+    platform,
+    groupName: testGroupName,
+  });
   // Click on settings or three dots
   await device1.clickOnElementAll(new ConversationSettings(device1));
   // Click on Edit group option

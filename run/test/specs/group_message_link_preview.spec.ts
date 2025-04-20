@@ -1,11 +1,9 @@
 import { englishStripped } from '../../localizer/Localizer';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
 import { LinkPreview, LinkPreviewMessage } from './locators';
+import { open3AppsWithFriendsAnd1GroupState } from './state_builder';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { createGroup } from './utils/create_group';
-import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 iosIt('Send link to group', 'high', sendLinkGroupiOS);
 androidIt('Send link to group', 'high', sendLinkGroupAndroid);
@@ -13,16 +11,16 @@ androidIt('Send link to group', 'high', sendLinkGroupAndroid);
 async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';
   const testLink = `https://getsession.org/`;
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // Create users A, B and C
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-    newUser(device3, USERNAME.CHARLIE),
-  ]);
+
+  const {
+    devices: { device1, device2, device3 },
+    prebuilt: { userA },
+  } = await open3AppsWithFriendsAnd1GroupState({
+    platform,
+    groupName: testGroupName,
+  });
   const replyMessage = `Replying to link from ${userA.userName} in group ${testGroupName}`;
   // Create contact between User A and User B
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   await device1.inputText(testLink, {
     strategy: 'accessibility id',
     selector: 'Message input box',
@@ -76,15 +74,14 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
 
 async function sendLinkGroupAndroid(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // Create users A, B and C
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-    newUser(device3, USERNAME.CHARLIE),
-  ]);
-  // Create contact between User A and User B
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
+
+  const {
+    devices: { device1, device2, device3 },
+    prebuilt: { userA },
+  } = await open3AppsWithFriendsAnd1GroupState({
+    platform,
+    groupName: testGroupName,
+  });
   const testLink = `https://getsession.org/`;
   // Send a link
   await device1.inputText(testLink, {

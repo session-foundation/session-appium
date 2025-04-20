@@ -1,24 +1,20 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
-import { newUser } from './utils/create_account';
-import { createGroup } from './utils/create_group';
-import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { open3AppsWithFriendsAnd1GroupState } from './state_builder';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 iosIt('Send video to group', 'medium', sendVideoGroupiOS);
 androidIt('Send video to group', 'medium', sendVideoGroupAndroid);
 
 async function sendVideoGroupiOS(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // Create users A, B and C
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-    newUser(device3, USERNAME.CHARLIE),
-  ]);
 
-  // Create contact between User A and User B
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
+  const {
+    devices: { device1, device2, device3 },
+    prebuilt: { userA },
+  } = await open3AppsWithFriendsAnd1GroupState({
+    platform,
+    groupName: testGroupName,
+  });
   const testMessage = 'Testing-video-1';
   const replyMessage = `Replying to video from ${userA.userName} in ${testGroupName}`;
   await device1.sendVideoiOS(testMessage);
@@ -59,15 +55,14 @@ async function sendVideoGroupAndroid(platform: SupportedPlatformsType) {
   // Test sending a video
   // open devices
   const testGroupName = 'Message checks for groups';
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // Create users A, B and C
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-    newUser(device3, USERNAME.CHARLIE),
-  ]);
-  // Create contact between User A and User B
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
+
+  const {
+    devices: { device1, device2, device3 },
+    prebuilt: { userA },
+  } = await open3AppsWithFriendsAnd1GroupState({
+    platform,
+    groupName: testGroupName,
+  });
   const replyMessage = `Replying to video from ${userA.userName} in ${testGroupName}`;
   // Click on attachments button
   await device1.sendVideoAndroid();

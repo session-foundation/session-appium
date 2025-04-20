@@ -9,24 +9,21 @@ import {
   MemberStatus,
   RemoveMemberButton,
 } from './locators/groups';
-import { newUser } from './utils/create_account';
-import { createGroup } from './utils/create_group';
-import { SupportedPlatformsType, openAppThreeDevices } from './utils/open_app';
+import { open3AppsWithFriendsAnd1GroupState } from './state_builder';
+import { SupportedPlatformsType } from './utils/open_app';
 
 iosIt('Kick member', 'medium', kickMember);
 androidIt('Kick member', 'medium', kickMember);
 
 async function kickMember(platform: SupportedPlatformsType) {
   const testGroupName = 'Kick member';
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // Create users A, B and C
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-    newUser(device3, USERNAME.CHARLIE),
-  ]);
-  // Create group
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
+
+  const {
+    devices: { device1, device2, device3 },
+  } = await open3AppsWithFriendsAnd1GroupState({
+    platform,
+    groupName: testGroupName,
+  });
   await device1.clickOnElementAll(new ConversationSettings(device1));
   await device1.clickOnElementAll(new EditGroup(device1));
   await device1.clickOnElementAll({ ...new GroupMember(device1).build(USERNAME.BOB) });

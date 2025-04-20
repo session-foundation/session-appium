@@ -1,22 +1,19 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
-import { newUser } from './utils/create_account';
-import { createGroup } from './utils/create_group';
-import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { open3AppsWithFriendsAnd1GroupState } from './state_builder';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 bothPlatformsIt('Mentions for groups', 'medium', mentionsForGroups);
 
 async function mentionsForGroups(platform: SupportedPlatformsType) {
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // Create users A, B and C
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-    newUser(device3, USERNAME.CHARLIE),
-  ]);
   const testGroupName = 'Mentions test group';
-  // Create contact between User A and User B
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
+  const {
+    devices: { device1, device2, device3 },
+    prebuilt: { userA, userB, userC },
+  } = await open3AppsWithFriendsAnd1GroupState({
+    platform,
+    groupName: testGroupName,
+  });
+
   await device1.mentionContact(platform, userB);
   // Check format on User B's device
   await device2.waitForTextElementToBePresent({
