@@ -1,3 +1,4 @@
+import type { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { StrategyExtractionObj } from '../../../types/testing';
 import { LocatorsInterface } from './index';
 
@@ -18,11 +19,16 @@ export class EmptyLandingPage extends LocatorsInterface {
   }
 }
 export class ConversationItem extends LocatorsInterface {
-  public build(text?: string) {
+  public text: string | undefined;
+  constructor(device: DeviceWrapper, text?: string) {
+    super(device);
+    this.text = text;
+  }
+  public build() {
     return {
       strategy: 'accessibility id',
       selector: 'Conversation list item',
-      text: text,
+      text: this.text,
     } as const;
   }
 }

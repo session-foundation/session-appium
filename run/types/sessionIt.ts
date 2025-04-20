@@ -1,3 +1,4 @@
+/* eslint-disable no-empty-pattern */
 import { test, type TestInfo } from '@playwright/test';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 import { TestRisk } from './testing';
@@ -14,7 +15,6 @@ export function androidIt(
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);
     });
   } else {
-    // eslint-disable-next-line no-empty-pattern
     test(testName, async ({}, testInfo) => {
       console.info(`\n\n==========> Running "${testName}"\n\n`);
       await testToRun('android', testInfo);
@@ -35,7 +35,6 @@ export function iosIt(
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);
     });
   } else {
-    // eslint-disable-next-line no-empty-pattern
     test(testName, async ({}, testInfo) => {
       console.info(`\n\n==========> Running "${testName}"\n\n`);
       const startTime = Date.now();
@@ -50,7 +49,7 @@ function mobileIt(
   platform: SupportedPlatformsType,
   title: string,
   testRisk: TestRisk,
-  testToRun: (platform: SupportedPlatformsType) => Promise<void>,
+  testToRun: (platform: SupportedPlatformsType, testInfo: TestInfo) => Promise<void>,
   shouldSkip = false
 ) {
   const testName = `${title} ${platform} @${testRisk ?? 'default'}-risk`;
@@ -59,9 +58,9 @@ function mobileIt(
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);
     });
   } else {
-    test(testName, async () => {
+    test(testName, async ({}, testInfo) => {
       console.info(`\n\n==========> Running "${testName}"\n\n`);
-      await testToRun(platform);
+      await testToRun(platform, testInfo);
     });
   }
 }
@@ -69,7 +68,7 @@ function mobileIt(
 export function bothPlatformsIt(
   title: string,
   testRisk: TestRisk,
-  testToRun: (platform: SupportedPlatformsType) => Promise<void>,
+  testToRun: (platform: SupportedPlatformsType, testInfo: TestInfo) => Promise<void>,
   shouldSkip = false
 ) {
   // Define test for Android
@@ -78,29 +77,3 @@ export function bothPlatformsIt(
   // Define test for iOS
   mobileIt('ios', title, testRisk, testToRun, shouldSkip);
 }
-
-// Define the function to accept the title, a setup data object, and a test function that uses this object.
-// export function iosItWithSetup(
-//   title: string,
-//   setupData: SetupData,
-//   testToRun: (setupData: {
-//     device1: DeviceWrapper;
-//     device2: DeviceWrapper;
-//     device3: DeviceWrapper;
-//     userA: User;
-//     userB: User;
-//   }) => Promise<void>
-// ) {
-//   const testName = `${title} ios`;
-
-//   return test(testName, async () => {
-//     console.info(`\n\n==========> Running "${testName}" with setup data\n\n`);
-//     await testToRun({
-//       device1: setupData.device1!,
-//       device2: setupData.device2!,
-//       device3: setupData.device3!,
-//       userA: setupData.userA!,
-//       userB: setupData.userB!,
-//     });
-//   });
-// }
