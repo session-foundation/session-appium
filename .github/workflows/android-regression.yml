@@ -206,13 +206,13 @@ jobs:
         run: |
           cd forked-session-appium
           pwd
-          npx playwright test --list --reporter list --grep "@${{ github.event.inputs.RISK }}"
+          npx playwright test --list --reporter list --grep "@android @${{ github.event.inputs.RISK }}"
 
       - name: Run the tests # ${{ github.event.inputs.SHARD_NUMBER }}​​/${{ github.event.inputs.SHARD_COUNT }}​​
         run: |
           cd forked-session-appium
           pwd
-          yarn test 'group android'
+          yarn test 'Send voice message to group @android'
 
       - name: Kill all running emulators
         if: always()

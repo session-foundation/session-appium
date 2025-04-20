@@ -1104,11 +1104,13 @@ export class DeviceWrapper {
       );
     } else {
       await runScriptAndLog(
-        `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/${mediaFileName}' /storage/emulated/0/Download`
+        `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/${mediaFileName}' /storage/emulated/0/Download`,
+        true
       );
       // Refreshes the photos UI to force the image appear
       await runScriptAndLog(
-        `${getAdbFullPath()} -s emulator-5554 shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage/emulated/0/Download/${mediaFileName}`
+        `${getAdbFullPath()} -s emulator-5554 shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage/emulated/0/Download/${mediaFileName}`,
+        true
       );
     }
   }

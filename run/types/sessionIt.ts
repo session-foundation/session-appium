@@ -9,17 +9,7 @@ export function androidIt(
   testToRun: (platform: SupportedPlatformsType, testInfo: TestInfo) => Promise<void>,
   shouldSkip = false
 ) {
-  const testName = `${title} android @${testRisk ?? 'default'}-risk`;
-  if (shouldSkip) {
-    test.skip(testName, () => {
-      console.info(`\n\n==========> Skipping "${testName}"\n\n`);
-    });
-  } else {
-    test(testName, async ({}, testInfo) => {
-      console.info(`\n\n==========> Running "${testName}"\n\n`);
-      await testToRun('android', testInfo);
-    });
-  }
+  mobileIt('android', title, testRisk, testToRun, shouldSkip);
 }
 
 export function iosIt(
@@ -28,21 +18,7 @@ export function iosIt(
   testToRun: (platform: SupportedPlatformsType, testInfo: TestInfo) => Promise<void>,
   shouldSkip = false
 ) {
-  const testName = `${title} ios @${testRisk ?? 'default'}-risk`;
-
-  if (shouldSkip) {
-    test.skip(testName, () => {
-      console.info(`\n\n==========> Skipping "${testName}"\n\n`);
-    });
-  } else {
-    test(testName, async ({}, testInfo) => {
-      console.info(`\n\n==========> Running "${testName}"\n\n`);
-      const startTime = Date.now();
-      await testToRun('ios', testInfo);
-      const endTime = Date.now();
-      console.info(`\n\n==========> Finished "${testName}" in ${endTime - startTime}ms\n\n`);
-    });
-  }
+  mobileIt('ios', title, testRisk, testToRun, shouldSkip);
 }
 
 function mobileIt(
@@ -52,7 +28,7 @@ function mobileIt(
   testToRun: (platform: SupportedPlatformsType, testInfo: TestInfo) => Promise<void>,
   shouldSkip = false
 ) {
-  const testName = `${title} ${platform} @${testRisk ?? 'default'}-risk`;
+  const testName = `${title} @${platform} @${testRisk ?? 'default'}-risk`;
   if (shouldSkip) {
     test.skip(testName, () => {
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);

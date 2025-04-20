@@ -1,12 +1,9 @@
 import { englishStripped } from '../../localizer/Localizer';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
 import { EditGroup, EditGroupName } from './locators';
 import { EditGroupNameInput } from './locators/groups';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { createGroup } from './utils/create_group';
-import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { ConversationSettings } from './locators/conversation';
 import { SaveNameChangeButton } from './locators/settings';
 import { open3AppsWithFriendsAnd1GroupState } from './state_builder';
