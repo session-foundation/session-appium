@@ -1,4 +1,3 @@
-import type { TestInfo } from '@playwright/test';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES, DisappearModes } from '../../types/testing';
 import { sleepFor } from './utils';
@@ -9,13 +8,12 @@ import { open2AppsWithFriendsState } from './state_builder';
 
 bothPlatformsIt('Disappear after send', 'high', disappearAfterSend);
 
-async function disappearAfterSend(platform: SupportedPlatformsType, testInfo: TestInfo) {
+async function disappearAfterSend(platform: SupportedPlatformsType) {
   const {
     devices: { device1, device2 },
     prebuilt: { userA, userB },
   } = await open2AppsWithFriendsState({
     platform,
-    testTitle: testInfo.title,
   });
 
   const mode: DisappearModes = 'send';

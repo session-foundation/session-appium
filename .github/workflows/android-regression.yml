@@ -212,7 +212,7 @@ jobs:
         run: |
           cd forked-session-appium
           pwd
-          yarn test 'Disappear after read android'
+          yarn test 'Disappear after send groups android'
 
       - name: Kill all running emulators
         if: always()

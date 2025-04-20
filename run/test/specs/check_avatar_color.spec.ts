@@ -3,18 +3,16 @@ import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { isSameColor } from './utils/check_colour';
 import { UserSettings } from './locators/settings';
 import { ConversationAvatar, ConversationSettings } from './locators/conversation';
-import type { TestInfo } from '@playwright/test';
 import { open2AppsWithFriendsState } from './state_builder';
 
 bothPlatformsIt('Avatar color', 'medium', avatarColor);
 
-async function avatarColor(platform: SupportedPlatformsType, testInfo: TestInfo) {
+async function avatarColor(platform: SupportedPlatformsType) {
   const {
     devices: { device1, device2 },
     prebuilt: { userA },
   } = await open2AppsWithFriendsState({
     platform,
-    testTitle: testInfo.title,
   });
 
   // Get Alice's avatar color on device 1 (Home Screen avatar) and turn it into a hex value

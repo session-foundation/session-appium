@@ -1,10 +1,9 @@
 import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { DisappearActions, DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { DisappearActions, DISAPPEARING_TIMES } from '../../types/testing';
+import { open3AppsWithFriendsAnd1GroupState } from './state_builder';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { createGroup } from './utils/create_group';
-import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
 bothPlatformsIt('Disappear after send groups', 'high', disappearAfterSendGroups);
@@ -14,16 +13,18 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   const testMessage = 'Testing disappear after sent in groups';
   const controlMode: DisappearActions = 'sent';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // Create users A, B and C
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-    newUser(device3, USERNAME.CHARLIE),
-  ]);
-  // Create contact between User A and User B
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
+  const {
+    devices: { device1, device2, device3 },
+    prebuilt: { userA, group },
+  } = await open3AppsWithFriendsAnd1GroupState({
+    platform,
+    groupName: testGroupName,
+  });
 
+  if (group.groupName !== testGroupName) {
+    throw new Error(`Group name is not correct: ${group.groupName}`);
+    // Create contact between User A and User B
+  }
   await setDisappearingMessage(platform, device1, ['Group', `Disappear after send option`, time]);
   // Get correct control message for You setting disappearing messages
   const disappearingMessagesSetYou = englishStripped('disappearingMessagesSetYou')

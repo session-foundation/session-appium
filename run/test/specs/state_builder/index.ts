@@ -7,7 +7,6 @@ import { openAppMultipleDevices, type SupportedPlatformsType } from '../utils/op
 import { restoreAccountNoFallback } from '../utils/restore_account';
 import { ConversationItem } from '../locators/home';
 import type { DeviceWrapper } from '../../../types/DeviceWrapper';
-import type { Tuple } from '../../../types/tuple';
 
 type WithDevice1 = { device1: DeviceWrapper };
 type WithDevice2 = { device2: DeviceWrapper };
@@ -16,36 +15,43 @@ type WithDevice4 = { device4: DeviceWrapper };
 
 type WithUserA = { userA: StateUser };
 type WithUserB = { userB: StateUser };
+type WithUserC = { userC: StateUser };
+type WithUserD = { userD: StateUser };
 
-type WithDevices<T extends Tuple<DeviceWrapper, 1 | 2 | 3 | 4>> = T extends [
-  infer _A,
-  infer _B,
-  infer _C,
-  infer _D,
-]
+type WithDevices<C extends number> = C extends 4
   ? WithDevice1 & WithDevice2 & WithDevice3 & WithDevice4
-  : T extends [infer _A, infer _B, infer _C]
+  : C extends 3
     ? WithDevice1 & WithDevice2 & WithDevice3
-    : T extends [infer _A, infer _B]
+    : C extends 2
       ? WithDevice1 & WithDevice2
-      : T extends [infer _A]
+      : C extends 1
         ? WithDevice1
+        : never;
+
+type WithUsers<C extends number> = C extends 4
+  ? WithUserA & WithUserB & WithUserC & WithUserD
+  : C extends 3
+    ? WithUserA & WithUserB & WithUserC
+    : C extends 2
+      ? WithUserA & WithUserB
+      : C extends 1
+        ? WithUserA
         : never;
 
 async function openAppsWithState<C extends 1 | 2 | 3 | 4, K extends PrebuiltStateKey>({
   countToOpen,
   platform,
-  testTitle,
+  groupName,
   stateToBuildKey,
 }: {
   platform: SupportedPlatformsType;
   countToOpen: C;
   stateToBuildKey: K;
-  testTitle: string;
+  groupName: K extends '3friendsInGroup' | '2friendsInGroup' ? string : undefined;
 }) {
   const [devices, prebuilt] = await Promise.all([
     openAppMultipleDevices(platform, countToOpen),
-    buildStateForTest(stateToBuildKey, testTitle, 'mainnet'),
+    buildStateForTest(stateToBuildKey, groupName, 'mainnet'),
   ]);
   await Promise.all(
     devices.map((d, index) => {
@@ -62,11 +68,9 @@ async function openAppsWithState<C extends 1 | 2 | 3 | 4, K extends PrebuiltStat
 
 export async function open2AppsWithFriendsState({
   platform,
-  testTitle,
   focusFriendsConvo = true,
 }: {
   platform: SupportedPlatformsType;
-  testTitle: string;
   focusFriendsConvo?: boolean;
 }) {
   const stateToBuildKey = '2friends';
@@ -75,13 +79,13 @@ export async function open2AppsWithFriendsState({
     platform,
     countToOpen,
     stateToBuildKey,
-    testTitle,
+    groupName: undefined,
   });
-  const formattedDevices: WithDevices<Tuple<DeviceWrapper, typeof countToOpen>> = {
+  const formattedDevices: WithDevices<typeof countToOpen> = {
     device1: result.devices[0],
     device2: result.devices[1],
   };
-  const formattedUsers: WithUserA & WithUserB = {
+  const formattedUsers: WithUsers<typeof countToOpen> = {
     userA: result.prebuilt.users[0],
     userB: result.prebuilt.users[1],
   };
@@ -98,6 +102,50 @@ export async function open2AppsWithFriendsState({
 
   return {
     devices: formattedDevices,
-    prebuilt: formattedUsers,
+    prebuilt: { ...formattedUsers },
+  };
+}
+
+export async function open3AppsWithFriendsAnd1GroupState({
+  platform,
+  groupName,
+  focusGroupConvo = true,
+}: {
+  platform: SupportedPlatformsType;
+  groupName: string;
+  focusGroupConvo?: boolean;
+}) {
+  const stateToBuildKey = '3friendsInGroup';
+  const countToOpen = 3;
+  const result = await openAppsWithState({
+    platform,
+    countToOpen,
+    stateToBuildKey,
+    groupName,
+  });
+  const formattedGroup = { group: result.prebuilt.group };
+  const formattedDevices: WithDevices<typeof countToOpen> = {
+    device1: result.devices[0],
+    device2: result.devices[1],
+    device3: result.devices[2],
+  };
+  const formattedUsers: WithUsers<typeof countToOpen> = {
+    userA: result.prebuilt.users[0],
+    userB: result.prebuilt.users[1],
+    userC: result.prebuilt.users[2],
+  };
+  if (focusGroupConvo) {
+    await Promise.all([
+      result.devices.map(async d =>
+        d.clickOnElementAll(
+          new ConversationItem(result.devices[1], result.prebuilt.group.groupName)
+        )
+      ),
+    ]);
+  }
+
+  return {
+    devices: formattedDevices,
+    prebuilt: { ...formattedUsers, ...formattedGroup },
   };
 }

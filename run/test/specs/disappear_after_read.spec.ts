@@ -1,4 +1,3 @@
-import type { TestInfo } from '@playwright/test';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, DisappearModes } from '../../types/testing';
 import { open2AppsWithFriendsState } from './state_builder';
@@ -9,13 +8,12 @@ import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
 bothPlatformsIt('Disappear after read', 'high', disappearAfterRead);
 
-async function disappearAfterRead(platform: SupportedPlatformsType, testInfo: TestInfo) {
+async function disappearAfterRead(platform: SupportedPlatformsType) {
   const {
     devices: { device1, device2 },
     prebuilt: { userA, userB },
   } = await open2AppsWithFriendsState({
     platform,
-    testTitle: testInfo.title,
   });
 
   const testMessage = 'Checking disappear after read is working';
