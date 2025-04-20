@@ -3,12 +3,12 @@ import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
-import { SupportedPlatformsType, closeApp, openAppMultipleDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
 bothPlatformsIt('Create contact', 'high', createContact);
 
 async function createContact(platform: SupportedPlatformsType) {
-  const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
   const userA = await linkedDevice(device1, device3, USERNAME.ALICE);
   const userB = await newUser(device2, USERNAME.BOB);
 

@@ -3,25 +3,20 @@ import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { BlockedContactsSettings, BlockUser, BlockUserConfirmationModal } from './locators';
 import { UserSettings } from './locators/settings';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { open2AppsWithFriendsState } from './state_builder';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 // Block option not available on iOS in conversation list
 androidIt('Block user in conversation list', 'high', blockUserInConversationList);
 // No longer available on iOS
 
 async function blockUserInConversationList(platform: SupportedPlatformsType) {
-  // Open App
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create Alice
-  // Create Bob
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userB },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   // Navigate back to conversation list
   await device1.navigateBack();
   // on ios swipe left on conversation

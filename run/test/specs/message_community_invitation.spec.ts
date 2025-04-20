@@ -1,27 +1,23 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
 import { InviteContactsMenuItem } from './locators';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
 import { joinCommunity } from './utils/join_community';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { testCommunityLink, testCommunityName } from './../../constants/community';
 import { englishStripped } from '../../localizer/Localizer';
 import { ConversationSettings } from './locators/conversation';
+import { open2AppsWithFriendsState } from './state_builder';
 
 iosIt('Send community invitation', 'medium', sendCommunityInvitationIos);
 androidIt('Send community invitation', 'medium', sendCommunityInviteMessageAndroid);
 
 async function sendCommunityInvitationIos(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create two users
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userB },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   // Join community on device 1
   // Click on plus button
   await device1.navigateBack();
@@ -65,14 +61,12 @@ async function sendCommunityInvitationIos(platform: SupportedPlatformsType) {
 }
 
 async function sendCommunityInviteMessageAndroid(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create two users
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userB },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   // Join community
   await sleepFor(100);
   await device1.navigateBack();

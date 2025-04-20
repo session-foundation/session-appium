@@ -8,11 +8,7 @@ import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
 import { DriverOpts } from 'appium/build/lib/appium';
 import { compact } from 'lodash';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { User, USERNAME } from '../../../types/testing';
 import { cleanPermissions } from './permissions';
-import { newUser } from './create_account';
-import { newContact } from './create_contact';
-import { linkedDevice } from './link_device';
 import { sleepFor } from './sleep_for';
 import {
   getAdbFullPath,
@@ -28,41 +24,6 @@ export type SupportedPlatformsType = 'android' | 'ios';
 /* ******************Command to run Appium Server: *************************************
 ./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --use-plugins=execute-driver --allow-cors
 */
-
-// Basic test environment is 3 devices (device1, device2, device3) and 2 users (userA, userB)
-// Device 1 and 3 are linked devices by userA
-export const createBasicTestEnvironment = async (
-  platform: SupportedPlatformsType
-): Promise<{
-  devices: DeviceWrapper[];
-  Alice: User;
-  Bob: User;
-  closeApp(): Promise<void>;
-}> => {
-  const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
-  const userA = await linkedDevice(device1, device3, USERNAME.ALICE);
-  const userB = await newUser(device2, USERNAME.BOB);
-  await newContact(platform, device1, userA, device2, userB);
-  const closeApp = async (): Promise<void> => {
-    await Promise.all([compact([device1, device2, device3]).map(d => d.deleteSession())]);
-    console.info('sessions closed');
-  };
-  return {
-    devices: [device1, device2, device3],
-    Alice: userA,
-    Bob: userB,
-    closeApp,
-  };
-};
-
-export const setUp1o1TestEnvironment = async (platform: SupportedPlatformsType) => {
-  const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
-  const userA = await linkedDevice(device1, device3, USERNAME.ALICE);
-  const userB = await newUser(device2, USERNAME.BOB);
-  await newContact(platform, device1, userA, device2, userB);
-
-  return { device1, device2, device3, userA, userB };
-};
 
 export const openAppMultipleDevices = async (
   platform: SupportedPlatformsType,

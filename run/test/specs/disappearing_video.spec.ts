@@ -1,9 +1,8 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { open2AppsWithFriendsState } from './state_builder';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
 bothPlatformsIt('Disappearing video message 1:1', 'low', disappearingVideoMessage1o1);
@@ -13,13 +12,11 @@ const timerType = 'Disappear after send option';
 const testMessage = 'Testing disappearing messages for videos';
 
 async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create user A and user B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  await newContact(platform, device1, userA, device2, userB);
+  const {
+    devices: { device1, device2 },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   await device1.onIOS().sendVideoiOS(testMessage);
   await device1.onAndroid().sendVideoAndroid();

@@ -1,20 +1,18 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
+import { open2AppsWithFriendsState } from './state_builder';
 import { sleepFor } from './utils/index';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 bothPlatformsIt('Read status', 'medium', readStatus);
 
 async function readStatus(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userA, userB },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   const testMessage = 'Testing read status';
-  await newContact(platform, device1, userA, device2, userB);
   // Go to settings to turn on read status
   // Device 1
   await Promise.all([device1.turnOnReadReceipts(), device2.turnOnReadReceipts()]);

@@ -1,21 +1,19 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
+import { open2AppsWithFriendsState } from './state_builder';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 iosIt('Send GIF 1:1', 'medium', sendGifIos);
 androidIt('Send GIF 1:1', 'medium', sendGifAndroid);
 
 async function sendGifIos(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userA },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   const testMessage = 'Testing-GIF-1';
-  await newContact(platform, device1, userA, device2, userB);
   await device1.sendGIF(testMessage);
   // Reply to message
   await device2.waitForTextElementToBePresent({
@@ -36,16 +34,15 @@ async function sendGifIos(platform: SupportedPlatformsType) {
 async function sendGifAndroid(platform: SupportedPlatformsType) {
   // Test sending a video
   // open devices and server
-  const { device1, device2 } = await openAppTwoDevices(platform);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userA },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   const testMessage = 'Test message with GIF';
-  // create user a and user b
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
+
   const replyMessage = `Replying to GIF from ${userA.userName}`;
-  // create contact
-  await newContact(platform, device1, userA, device2, userB);
   // Click on attachments button
   await device1.sendGIF(testMessage);
   // Check if the 'Tap to download media' config appears

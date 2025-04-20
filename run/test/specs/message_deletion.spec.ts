@@ -1,24 +1,18 @@
 import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
 import { DeleteMessageConfirmationModal, DeleteMessageLocally } from './locators';
 import { DeletedMessage } from './locators/conversation';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { open2AppsWithFriendsState } from './state_builder';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 bothPlatformsIt('Delete message locally', 'high', deleteMessage);
 
 async function deleteMessage(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-
-  // Create two users
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
+  const {
+    devices: { device1, device2 },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   // send message from User A to User B
   const sentMessage = await device1.sendMessage('Checking local deletetion functionality');
   await device2.waitForTextElementToBePresent({

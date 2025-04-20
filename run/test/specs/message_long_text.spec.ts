@@ -1,8 +1,6 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
+import { open2AppsWithFriendsState } from './state_builder';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 iosIt('Send long message 1:1', 'low', sendLongMessageIos);
 androidIt('Send long message 1:1', 'low', sendLongMessageAndroid);
@@ -13,14 +11,12 @@ const longText =
 async function sendLongMessageIos(platform: SupportedPlatformsType) {
   // Sending a long text message
   // Open device and server
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create user A and User B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userA },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   // Send a long message from User A to User B
   await device1.sendMessage(longText);
   // Reply to message (User B to User A)
@@ -34,14 +30,12 @@ async function sendLongMessageIos(platform: SupportedPlatformsType) {
 async function sendLongMessageAndroid(platform: SupportedPlatformsType) {
   // Sending a long text message
   // Open device and server
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create user A and User B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userA },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   // Send a long message from User A to User B
   await device1.sendMessage(longText);
   // Reply to message (User B to User A)

@@ -84,7 +84,7 @@ on:
         options:
           - '0'
           - '1'
-        default: '1'
+        default: '0'
       PLAYWRIGHT_WORKERS_COUNT:
         description: 'number of workers to use - ONLY 1 WORKER IS SUPPORTED FOR ANDROID'
         required: true
@@ -212,7 +212,7 @@ jobs:
         run: |
           cd forked-session-appium
           pwd
-          yarn test 'Send voice message to group @android'
+          yarn test ' @android @high-risk'
 
       - name: Kill all running emulators
         if: always()

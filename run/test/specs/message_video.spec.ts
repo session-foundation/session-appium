@@ -1,9 +1,7 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
+import { open2AppsWithFriendsState } from './state_builder';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 iosIt('Send video 1:1', 'medium', sendVideoIos);
 androidIt('Send video 1:1', 'medium', sendVideoAndroid);
@@ -11,15 +9,14 @@ androidIt('Send video 1:1', 'medium', sendVideoAndroid);
 async function sendVideoIos(platform: SupportedPlatformsType) {
   // Test sending a video
   // open devices
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // create user a and user b
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userA },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   const testMessage = 'Testing-video-1';
-  // create contact
-  await newContact(platform, device1, userA, device2, userB);
+
   // Push image to device for selection
   // Click on attachments button
   await device1.sendVideoiOS(testMessage);
@@ -45,15 +42,13 @@ async function sendVideoIos(platform: SupportedPlatformsType) {
 async function sendVideoAndroid(platform: SupportedPlatformsType) {
   // Test sending a video
   // open devices
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // create user a and user b
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userA },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   const replyMessage = `Replying to video from ${userA.userName}`;
-  // create contact
-  await newContact(platform, device1, userA, device2, userB);
   // Send video
   await device1.sendVideoAndroid();
   // User B - Click on untrusted attachment message

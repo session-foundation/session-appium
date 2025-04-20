@@ -1,9 +1,8 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { open2AppsWithFriendsState } from './state_builder';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
 iosIt('Disappearing GIF message 1:1', 'low', disappearingGifMessage1o1Ios);
@@ -14,14 +13,12 @@ const timerType = 'Disappear after send option';
 const testMessage = "Testing disappearing messages for GIF's";
 
 async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
   const testMessage = "Testing disappearing messages for GIF's";
-  // Create user A and user B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  await newContact(platform, device1, userA, device2, userB);
+  const {
+    devices: { device1, device2 },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   // Click on attachments button
   await device1.sendGIF(testMessage);
@@ -47,13 +44,11 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
 }
 
 async function disappearingGifMessage1o1Android(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create user A and user B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  await newContact(platform, device1, userA, device2, userB);
+  const {
+    devices: { device1, device2 },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   // Wait for control messages to disappear before sending image
   // (to check if the control messages are interfering with finding the untrusted attachment message)

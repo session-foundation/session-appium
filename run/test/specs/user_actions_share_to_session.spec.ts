@@ -8,23 +8,22 @@ import {
   ShareExtensionIcon,
 } from './locators';
 import { PhotoLibrary } from './locators/external';
+import { open2AppsWithFriendsState } from './state_builder';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
+import { SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt('Share to session', 'low', shareToSession);
 
 async function shareToSession(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
+  const {
+    devices: { device1, device2 },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   const testMessage = 'Testing sharing an image through photo gallery to Session';
   const ronSwansonBirthday = '196705060700.00';
   const fileName = 'test_image.jpg';
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  await newContact(platform, device1, userA, device2, userB);
+
   // Need to make sure contact is confirm before moving away from Session
   await sleepFor(1000);
   await device1.pressHome();

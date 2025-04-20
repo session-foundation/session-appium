@@ -1,9 +1,8 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { open2AppsWithFriendsState } from './state_builder';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
 bothPlatformsIt('Disappearing image message 1:1', 'low', disappearingImageMessage1o1);
@@ -13,13 +12,11 @@ const timerType = 'Disappear after send option';
 const testMessage = 'Testing disappearing messages for images';
 
 async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create user A and user B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  await newContact(platform, device1, userA, device2, userB);
+  const {
+    devices: { device1, device2 },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   await sleepFor(500);
   await device1.sendImage(platform, testMessage);

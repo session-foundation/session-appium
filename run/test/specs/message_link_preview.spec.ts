@@ -1,26 +1,23 @@
 import { englishStripped } from '../../localizer/Localizer';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
 import { LinkPreview, LinkPreviewMessage } from './locators';
+import { open2AppsWithFriendsState } from './state_builder';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 iosIt('Send link 1:1', 'high', sendLinkIos);
 androidIt('Send link 1:1', 'high', sendLinkAndroid);
 
 async function sendLinkIos(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userA },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   const testLink = `https://getsession.org/`;
-  // Create two users
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
+
   const replyMessage = `Replying to link from ${userA.userName}`;
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
   // Send a link
 
   await device1.inputText(testLink, {
@@ -66,15 +63,13 @@ async function sendLinkIos(platform: SupportedPlatformsType) {
 }
 
 async function sendLinkAndroid(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
+  const {
+    devices: { device1, device2 },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   const testLink = `https://getsession.org/`;
-  // Create two users
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
+
   // Send a link
   await device1.inputText(testLink, {
     strategy: 'accessibility id',

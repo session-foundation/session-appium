@@ -1,8 +1,8 @@
 import { testCommunityLink, testCommunityName } from '../../constants/community';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { open2AppsWithFriendsState } from './state_builder';
 import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
 import { joinCommunity } from './utils/join_community';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
@@ -13,22 +13,22 @@ androidIt('Send image to community', 'medium', sendImageCommunityAndroid, true);
 // to investigate further https://optf.atlassian.net/browse/QA-486
 
 async function sendImageCommunityiOS(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userA },
+  } = await open2AppsWithFriendsState({
+    platform,
+    focusFriendsConvo: false,
+  });
   const testMessage = 'Testing sending images to communities';
   const testImageMessage = `Image message + ${new Date().getTime()} - ${platform}`;
-  // Create user A and user B
-  const [Alice, Bob] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  await newContact(platform, device1, Alice, device2, Bob);
-  await Promise.all([device1.navigateBack(), device2.navigateBack()]);
+
   await joinCommunity(device1, testCommunityLink, testCommunityName);
   await joinCommunity(device2, testCommunityLink, testCommunityName);
   await Promise.all([device1.scrollToBottom(), device2.scrollToBottom()]);
   await device1.sendMessage(testMessage);
   await device1.sendImage(platform, testImageMessage, true);
-  await device2.replyToMessage(Alice, testImageMessage);
+  await device2.replyToMessage(userA, testImageMessage);
   await closeApp(device1, device2);
 }
 

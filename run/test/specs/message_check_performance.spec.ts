@@ -1,20 +1,15 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, openAppTwoDevices } from './utils/open_app';
+import { open2AppsWithFriendsState } from './state_builder';
+import { SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt('Check performance', undefined, checkPerformance);
 
 async function checkPerformance(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create two users
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
+  const {
+    devices: { device1 },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   const timesArray: Array<number> = [];
 
   let i;

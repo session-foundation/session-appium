@@ -4,22 +4,20 @@ import { USERNAME } from '../../types/testing';
 import { UsernameInput } from './locators';
 import { ConversationSettings } from './locators/conversation';
 import { SaveNameChangeButton } from './locators/settings';
+import { open2AppsWithFriendsState } from './state_builder';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 iosIt('Set nickname', 'high', setNicknameIos);
 androidIt('Set nickname', 'high', setNicknameAndroid);
 
 async function setNicknameIos(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
   const nickName = 'New nickname';
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  await newContact(platform, device1, userA, device2, userB);
+  const {
+    devices: { device1, device2 },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   // Click on settings/more info
   await device1.clickOnElementAll(new ConversationSettings(device1));
   // Click on username to set nickname
@@ -54,14 +52,13 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
 }
 
 async function setNicknameAndroid(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userB },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   const nickName = 'New nickname';
-  await newContact(platform, device1, userA, device2, userB);
   // Go back to conversation list
   await device1.navigateBack();
   // Select conversation in list with Bob

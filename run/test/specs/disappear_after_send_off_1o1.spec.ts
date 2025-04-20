@@ -26,13 +26,13 @@ bothPlatformsIt('Disappear after send off 1:1', 'high', disappearAfterSendOff1o1
 
 async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  const Alice = await linkedDevice(device1, device3, USERNAME.ALICE);
+  const userA = await linkedDevice(device1, device3, USERNAME.ALICE);
   const mode: DisappearModes = 'send';
-  const Bob = await newUser(device2, USERNAME.BOB);
+  const userB = await newUser(device2, USERNAME.BOB);
   const controlMode: DisappearActions = 'sent';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   // Create user A and user B
-  await newContact(platform, device1, Alice, device2, Bob);
+  await newContact(platform, device1, userA, device2, userB);
   // Select disappearing messages option
   await setDisappearingMessage(
     platform,
@@ -43,8 +43,8 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
   // Get control message based on key from json file
   await checkDisappearingControlMessage(
     platform,
-    Alice.userName,
-    Bob.userName,
+    userA.userName,
+    userB.userName,
     device1,
     device2,
     time,
@@ -65,7 +65,7 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
   ).toString();
   // Check USER B'S CONTROL MESSAGE
   const disappearingMessagesTurnedOff = englishStripped('disappearingMessagesTurnedOff')
-    .withArgs({ name: Alice.userName })
+    .withArgs({ name: userA.userName })
     .toString();
   await Promise.all([
     device1.disappearingControlMessage(disappearingMessagesTurnedOffYou),

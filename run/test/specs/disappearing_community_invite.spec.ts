@@ -1,14 +1,13 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { DISAPPEARING_TIMES } from '../../types/testing';
 import { InviteContactsMenuItem } from './locators';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
 import { joinCommunity } from './utils/join_community';
-import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 import { testCommunityLink, testCommunityName } from './../../constants/community';
 import { ConversationSettings } from './locators/conversation';
+import { open2AppsWithFriendsState } from './state_builder';
 
 iosIt('Disappearing community invite message 1:1', 'low', disappearingCommunityInviteMessageIos);
 androidIt(
@@ -21,13 +20,12 @@ const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 
 async function disappearingCommunityInviteMessageIos(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create user A and user B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  await newContact(platform, device1, userA, device2, userB);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userB },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   // await device1.navigateBack();
   await device1.navigateBack();
@@ -70,13 +68,12 @@ async function disappearingCommunityInviteMessageIos(platform: SupportedPlatform
 }
 
 async function disappearingCommunityInviteMessageAndroid(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create user A and user B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  await newContact(platform, device1, userA, device2, userB);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userB },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
 
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
 

@@ -1,20 +1,18 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { open2AppsWithFriendsState } from './state_builder';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 bothPlatformsIt('Send document 1:1', 'high', sendDocument);
 
 async function sendDocument(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userA },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   const testMessage = 'Testing-document-1';
   const replyMessage = `Replying to document from ${userA.userName}`;
-  await newContact(platform, device1, userA, device2, userB);
 
   await device1.sendDocument();
   await device2.trustAttachments(userA.userName);

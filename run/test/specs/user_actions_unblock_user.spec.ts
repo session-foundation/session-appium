@@ -1,22 +1,20 @@
 import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
 import { BlockUser, BlockUserConfirmationModal } from './locators';
 import { ConversationSettings } from './locators/conversation';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
+import { open2AppsWithFriendsState } from './state_builder';
+import { SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt('Unblock user', 'low', unblockUser);
 
 async function unblockUser(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userA, userB },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   const blockedMessage = `Blocked message from ${userB.userName} to ${userA.userName}`;
-  await newContact(platform, device1, userA, device2, userB);
   await device1.clickOnElementAll(new ConversationSettings(device1));
   await device1.clickOnElementAll(new BlockUser(device1));
   await device1.checkModalStrings(

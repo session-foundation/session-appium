@@ -1,6 +1,5 @@
 import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
 import {
   BlockedContactsSettings,
   BlockUser,
@@ -9,21 +8,21 @@ import {
 } from './locators';
 import { ConversationSettings } from './locators/conversation';
 import { UserSettings } from './locators/settings';
+import { open2AppsWithFriendsState } from './state_builder';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt('Block user in conversation options', 'high', blockUserInConversationOptions);
 
 async function blockUserInConversationOptions(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userB },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   const blockedMessage = 'Blocked message';
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  await newContact(platform, device1, userA, device2, userB);
+
   await device1.clickOnElementAll(new ConversationSettings(device1));
   // Select Block option
   await sleepFor(500);

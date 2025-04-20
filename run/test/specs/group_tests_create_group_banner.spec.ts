@@ -1,22 +1,18 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
 import { PlusButton } from './locators/home';
 import { CreateGroupOption } from './locators/start_conversation';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
-import { newContact } from './utils/create_contact';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { LatestReleaseBanner } from './locators/groups';
+import { open2AppsWithFriendsState } from './state_builder';
 
 bothPlatformsIt('Create group banner', 'high', createGroupBanner);
 
 async function createGroupBanner(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create users A and B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  await newContact(platform, device1, userA, device2, userB);
+  const {
+    devices: { device1, device2 },
+  } = await open2AppsWithFriendsState({
+    platform,
+  });
   await device1.navigateBack();
   // Open the Create Group screen from home
   await device1.clickOnElementAll(new PlusButton(device1));
