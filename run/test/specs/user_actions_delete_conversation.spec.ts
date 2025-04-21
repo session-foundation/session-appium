@@ -7,7 +7,12 @@ import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
 import { openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsIt('Delete conversation', 'high', deleteConversation);
+bothPlatformsIt({
+  title: 'Delete conversation',
+  risk: 'high',
+  testCb: deleteConversation,
+  countOfDevicesNeeded: 3,
+});
 
 async function deleteConversation(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);

@@ -2,6 +2,7 @@
 import { test, type TestInfo } from '@playwright/test';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 import { TestRisk } from './testing';
+import type { AppCountPerTest } from '../test/specs/state_builder';
 
 export function androidIt(
   title: string,
@@ -41,15 +42,22 @@ function mobileIt(
   }
 }
 
-export function bothPlatformsIt(
-  title: string,
-  testRisk: TestRisk,
-  testToRun: (platform: SupportedPlatformsType, testInfo: TestInfo) => Promise<void>,
-  shouldSkip = false
-) {
+export function bothPlatformsIt({
+  countOfDevicesNeeded,
+  risk,
+  testCb,
+  title,
+  shouldSkip = false,
+}: {
+  title: string;
+  risk: TestRisk;
+  testCb: (platform: SupportedPlatformsType, testInfo: TestInfo) => Promise<void>;
+  countOfDevicesNeeded: AppCountPerTest;
+  shouldSkip?: boolean;
+}) {
   // Define test for Android
-  mobileIt('android', title, testRisk, testToRun, shouldSkip);
+  mobileIt('android', title, risk, testCb, shouldSkip);
 
   // Define test for iOS
-  mobileIt('ios', title, testRisk, testToRun, shouldSkip);
+  mobileIt('ios', title, risk, testCb, shouldSkip);
 }

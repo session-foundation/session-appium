@@ -1,6 +1,6 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
-import { open3AppsWithFriendsAnd1GroupState } from './state_builder';
+import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
@@ -15,7 +15,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   const timerType = 'Disappear after send option';
   const {
     devices: { device1, device2, device3 },
-  } = await open3AppsWithFriendsAnd1GroupState({
+  } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
   });

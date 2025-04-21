@@ -5,7 +5,12 @@ import { runOnlyOnAndroid, runOnlyOnIOS } from './utils';
 import { isChromeFirstTimeOpen } from './utils/chrome_first_time_open';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsIt('Onboarding privacy policy', 'high', onboardingPP);
+bothPlatformsIt({
+  title: 'Onboarding privacy policy',
+  risk: 'high',
+  testCb: onboardingPP,
+  countOfDevicesNeeded: 1,
+});
 
 async function onboardingPP(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);

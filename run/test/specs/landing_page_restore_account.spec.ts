@@ -5,7 +5,12 @@ import { USERNAME } from '../../types/testing';
 import { verifyElementScreenshot } from './utils/verify_screenshots';
 import { EmptyLandingPageScreenshot } from './utils/screenshot_paths';
 
-bothPlatformsIt('Landing page restore account', 'low', landingPageRestoreAccount);
+bothPlatformsIt({
+  title: 'Landing page restore account',
+  risk: 'low',
+  testCb: landingPageRestoreAccount,
+  countOfDevicesNeeded: 2,
+});
 
 async function landingPageRestoreAccount(platform: SupportedPlatformsType) {
   // Creating a linked device is used as a shortcut to restore an account

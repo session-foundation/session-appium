@@ -4,7 +4,12 @@ import { UserSettings } from './locators/settings';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-bothPlatformsIt('Link device', 'high', linkDevice);
+bothPlatformsIt({
+  title: 'Link device',
+  risk: 'high',
+  testCb: linkDevice,
+  countOfDevicesNeeded: 2,
+});
 
 async function linkDevice(platform: SupportedPlatformsType) {
   // Open server and two devices

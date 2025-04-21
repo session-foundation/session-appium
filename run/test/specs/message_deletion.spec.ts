@@ -5,8 +5,12 @@ import { DeletedMessage } from './locators/conversation';
 import { open2AppsWithFriendsState } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-bothPlatformsIt('Delete message locally', 'high', deleteMessage);
-
+bothPlatformsIt({
+  title: 'Delete message locally',
+  risk: 'high',
+  testCb: deleteMessage,
+  countOfDevicesNeeded: 2,
+});
 async function deleteMessage(platform: SupportedPlatformsType) {
   const {
     devices: { device1, device2 },

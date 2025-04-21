@@ -2,7 +2,12 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { open2AppsWithFriendsState } from './state_builder';
 import { SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsIt('Check performance', undefined, checkPerformance);
+bothPlatformsIt({
+  title: 'Check performance',
+  risk: undefined, // does it really make sense to allow risk to be undefined?
+  testCb: checkPerformance,
+  countOfDevicesNeeded: 2,
+});
 
 async function checkPerformance(platform: SupportedPlatformsType) {
   const {

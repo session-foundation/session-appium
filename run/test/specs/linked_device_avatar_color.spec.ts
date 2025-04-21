@@ -5,8 +5,12 @@ import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/ope
 import { isSameColor } from './utils/check_colour';
 import { UserSettings } from './locators/settings';
 
-bothPlatformsIt('Avatar color linked device', 'medium', avatarColorLinkedDevice);
-
+bothPlatformsIt({
+  title: 'Avatar color linked device',
+  risk: 'medium',
+  testCb: avatarColorLinkedDevice,
+  countOfDevicesNeeded: 2,
+});
 async function avatarColorLinkedDevice(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const userA = await linkedDevice(device1, device2, USERNAME.ALICE);

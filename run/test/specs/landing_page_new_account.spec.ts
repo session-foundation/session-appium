@@ -5,7 +5,12 @@ import { USERNAME } from '../../types/testing';
 import { verifyElementScreenshot } from './utils/verify_screenshots';
 import { EmptyLandingPageScreenshot } from './utils/screenshot_paths';
 
-bothPlatformsIt('Landing page new account', 'low', landingPageNewAccount);
+bothPlatformsIt({
+  title: 'Landing page new account',
+  risk: 'low',
+  testCb: landingPageNewAccount,
+  countOfDevicesNeeded: 1,
+});
 
 async function landingPageNewAccount(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);

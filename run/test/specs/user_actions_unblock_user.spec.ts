@@ -5,7 +5,12 @@ import { ConversationSettings } from './locators/conversation';
 import { open2AppsWithFriendsState } from './state_builder';
 import { SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsIt('Unblock user', 'low', unblockUser);
+bothPlatformsIt({
+  title: 'Unblock user',
+  risk: 'low',
+  testCb: unblockUser,
+  countOfDevicesNeeded: 2,
+});
 
 async function unblockUser(platform: SupportedPlatformsType) {
   const {

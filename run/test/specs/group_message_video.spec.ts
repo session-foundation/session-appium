@@ -1,5 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { open3AppsWithFriendsAnd1GroupState } from './state_builder';
+import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 iosIt('Send video to group', 'medium', sendVideoGroupiOS);
@@ -11,7 +11,7 @@ async function sendVideoGroupiOS(platform: SupportedPlatformsType) {
   const {
     devices: { device1, device2, device3 },
     prebuilt: { userA },
-  } = await open3AppsWithFriendsAnd1GroupState({
+  } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
   });
@@ -59,7 +59,7 @@ async function sendVideoGroupAndroid(platform: SupportedPlatformsType) {
   const {
     devices: { device1, device2, device3 },
     prebuilt: { userA },
-  } = await open3AppsWithFriendsAnd1GroupState({
+  } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
   });

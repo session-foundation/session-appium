@@ -3,7 +3,12 @@ import { open2AppsWithFriendsState } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-bothPlatformsIt('Send voice message 1:1', 'high', sendVoiceMessage);
+bothPlatformsIt({
+  title: 'Send voice message 1:1',
+  risk: 'high',
+  testCb: sendVoiceMessage,
+  countOfDevicesNeeded: 2,
+});
 
 async function sendVoiceMessage(platform: SupportedPlatformsType) {
   const {

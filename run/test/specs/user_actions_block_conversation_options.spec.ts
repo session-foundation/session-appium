@@ -12,7 +12,12 @@ import { open2AppsWithFriendsState } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsIt('Block user in conversation options', 'high', blockUserInConversationOptions);
+bothPlatformsIt({
+  title: 'Block user in conversation options',
+  risk: 'high',
+  testCb: blockUserInConversationOptions,
+  countOfDevicesNeeded: 2,
+});
 
 async function blockUserInConversationOptions(platform: SupportedPlatformsType) {
   const {

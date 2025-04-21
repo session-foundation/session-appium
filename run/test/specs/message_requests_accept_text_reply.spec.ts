@@ -5,7 +5,12 @@ import { EnterAccountID } from './locators/start_conversation';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-bothPlatformsIt('Accept message request with text', 'high', acceptRequestWithText);
+bothPlatformsIt({
+  title: 'Accept message request with text',
+  risk: 'high',
+  testCb: acceptRequestWithText,
+  countOfDevicesNeeded: 2,
+});
 
 async function acceptRequestWithText(platform: SupportedPlatformsType) {
   // Check accept request by sending text message

@@ -2,13 +2,17 @@ import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { LinkPreview, LinkPreviewMessage } from './locators';
-import { open3AppsWithFriendsAnd1GroupState } from './state_builder';
+import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-bothPlatformsIt('Disappearing link to group', 'low', disappearingLinkMessageGroup);
-
+bothPlatformsIt({
+  title: 'Disappearing link to group',
+  risk: 'low',
+  testCb: disappearingLinkMessageGroup,
+  countOfDevicesNeeded: 3,
+});
 const timerType = 'Disappear after send option';
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 
@@ -17,7 +21,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   const testLink = `https://getsession.org/`;
   const {
     devices: { device1, device2, device3 },
-  } = await open3AppsWithFriendsAnd1GroupState({
+  } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
   });

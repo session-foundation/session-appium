@@ -3,16 +3,21 @@ import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { ConversationSettings } from './locators/conversation';
 import { EditGroup } from './locators';
 import { LatestReleaseBanner } from './locators/groups';
-import { open3AppsWithFriendsAnd1GroupState } from './state_builder';
+import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 
-bothPlatformsIt('Edit group banner', 'medium', editGroupBanner);
+bothPlatformsIt({
+  title: 'Edit group banner',
+  risk: 'medium',
+  testCb: editGroupBanner,
+  countOfDevicesNeeded: 3,
+});
 
 async function editGroupBanner(platform: SupportedPlatformsType) {
   const testGroupName = 'Test group';
 
   const {
     devices: { device1, device2, device3 },
-  } = await open3AppsWithFriendsAnd1GroupState({
+  } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
   });

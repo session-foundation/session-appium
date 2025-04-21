@@ -1,11 +1,17 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
-import { open3AppsWithFriendsAnd1GroupState } from './state_builder';
+import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-bothPlatformsIt('Disappearing GIF to group', 'low', disappearingGifMessageGroup);
+
+bothPlatformsIt({
+  title: 'Disappearing GIF to group',
+  risk: 'low',
+  testCb: disappearingGifMessageGroup,
+  countOfDevicesNeeded: 3,
+});
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
@@ -15,7 +21,7 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   const testMessage = "Testing disappearing messages for GIF's";
   const {
     devices: { device1, device2, device3 },
-  } = await open3AppsWithFriendsAnd1GroupState({
+  } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
   });

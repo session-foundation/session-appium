@@ -5,7 +5,12 @@ import { UserSettings } from './locators/settings';
 import { ConversationAvatar, ConversationSettings } from './locators/conversation';
 import { open2AppsWithFriendsState } from './state_builder';
 
-bothPlatformsIt('Avatar color', 'medium', avatarColor);
+bothPlatformsIt({
+  title: 'Avatar color',
+  risk: 'medium',
+  testCb: avatarColor,
+  countOfDevicesNeeded: 2,
+});
 
 async function avatarColor(platform: SupportedPlatformsType) {
   const {

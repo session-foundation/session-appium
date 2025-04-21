@@ -5,7 +5,14 @@ import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-bothPlatformsIt('Disappearing image message 1:1', 'low', disappearingImageMessage1o1);
+
+
+bothPlatformsIt({
+  title: 'Disappearing image message 1:1',
+  risk: 'low',
+  testCb: disappearingImageMessage1o1,
+  countOfDevicesNeeded: 2,
+});
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';

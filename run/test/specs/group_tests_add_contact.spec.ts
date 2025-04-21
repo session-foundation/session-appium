@@ -5,33 +5,27 @@ import { EditGroup, InviteContactsButton, InviteContactsMenuItem } from './locat
 import { ConversationSettings } from './locators/conversation';
 import { Contact } from './locators/global';
 import { InviteContactConfirm } from './locators/groups';
+import { open4AppsWith3Friends1GroupState } from './state_builder';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
-import { createGroup } from './utils/create_group';
-import { SupportedPlatformsType, closeApp, openAppFourDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-bothPlatformsIt('Add contact to group', 'high', addContactToGroup);
-
+bothPlatformsIt({
+  title: 'Add contact to group',
+  risk: 'high',
+  testCb: addContactToGroup,
+  countOfDevicesNeeded: 4,
+});
 async function addContactToGroup(platform: SupportedPlatformsType) {
-  const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
-  // Create users A, B and C
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-    newUser(device3, USERNAME.CHARLIE),
-  ]);
   const testGroupName = 'Group to test adding contact';
-  const group = await createGroup(
+  const {
+    devices: { device1, device2, device3, device4 },
+    prebuilt: { userA, group },
+  } = await open4AppsWith3Friends1GroupState({
     platform,
-    device1,
-    userA,
-    device2,
-    userB,
-    device3,
-    userC,
-    testGroupName
-  );
+    groupName: testGroupName,
+  });
   const userD = await newUser(device4, USERNAME.DRACULA);
   await device1.navigateBack();
   await newContact(platform, device1, userA, device4, userD);
@@ -41,7 +35,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Conversation list item',
-    text: group.userName,
+    text: group.groupName,
   });
   // Click more options
   await device1.clickOnElementAll(new ConversationSettings(device1));
@@ -71,7 +65,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     )
   );
   await device4.navigateBack();
-  await device4.selectByText('Conversation list item', group.userName);
+  await device4.selectByText('Conversation list item', group.groupName);
   // Check for control message on device 4
   await device4.waitForControlMessageToBePresent(englishStripped('groupInviteYou').toString());
   await closeApp(device1, device2, device3, device4);

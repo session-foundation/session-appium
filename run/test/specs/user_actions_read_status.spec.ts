@@ -3,7 +3,12 @@ import { open2AppsWithFriendsState } from './state_builder';
 import { sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-bothPlatformsIt('Read status', 'medium', readStatus);
+bothPlatformsIt({
+  title: 'Read status',
+  risk: 'medium',
+  testCb: readStatus,
+  countOfDevicesNeeded: 2,
+});
 
 async function readStatus(platform: SupportedPlatformsType) {
   const {

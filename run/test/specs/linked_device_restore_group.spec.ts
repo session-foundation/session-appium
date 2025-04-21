@@ -5,8 +5,12 @@ import { createGroup } from './utils/create_group';
 import { closeApp, openAppFourDevices, SupportedPlatformsType } from './utils/open_app';
 import { restoreAccount } from './utils/restore_account';
 
-bothPlatformsIt('Restore group', 'high', restoreGroup);
-
+bothPlatformsIt({
+  title: 'Restore group',
+  risk: 'high',
+  testCb: restoreGroup,
+  countOfDevicesNeeded: 4,
+});
 async function restoreGroup(platform: SupportedPlatformsType) {
   const testGroupName = 'Restore group';
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);

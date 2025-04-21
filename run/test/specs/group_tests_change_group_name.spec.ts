@@ -6,7 +6,7 @@ import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { ConversationSettings } from './locators/conversation';
 import { SaveNameChangeButton } from './locators/settings';
-import { open3AppsWithFriendsAnd1GroupState } from './state_builder';
+import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 
 iosIt('Change group name', 'medium', changeGroupNameIos);
 androidIt('Change group name', 'medium', changeGroupNameAndroid);
@@ -17,7 +17,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
 
   const {
     devices: { device1, device2, device3 },
-  } = await open3AppsWithFriendsAnd1GroupState({
+  } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
   });
@@ -63,7 +63,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
 
   const {
     devices: { device1, device2, device3 },
-  } = await open3AppsWithFriendsAnd1GroupState({
+  } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
   });

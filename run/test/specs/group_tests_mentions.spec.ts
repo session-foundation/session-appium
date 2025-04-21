@@ -1,15 +1,20 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { open3AppsWithFriendsAnd1GroupState } from './state_builder';
+import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-bothPlatformsIt('Mentions for groups', 'medium', mentionsForGroups);
+bothPlatformsIt({
+  title: 'Mentions for groups',
+  risk: 'medium',
+  testCb: mentionsForGroups,
+  countOfDevicesNeeded: 3,
+});
 
 async function mentionsForGroups(platform: SupportedPlatformsType) {
   const testGroupName = 'Mentions test group';
   const {
     devices: { device1, device2, device3 },
     prebuilt: { userA, userB, userC },
-  } = await open3AppsWithFriendsAnd1GroupState({
+  } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
   });

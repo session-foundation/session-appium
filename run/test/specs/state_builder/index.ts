@@ -18,7 +18,9 @@ type WithUserB = { userB: StateUser };
 type WithUserC = { userC: StateUser };
 type WithUserD = { userD: StateUser };
 
-type WithDevices<C extends number> = C extends 4
+export type AppCountPerTest = 1 | 2 | 3 | 4;
+
+type WithDevices<C extends AppCountPerTest> = C extends 4
   ? WithDevice1 & WithDevice2 & WithDevice3 & WithDevice4
   : C extends 3
     ? WithDevice1 & WithDevice2 & WithDevice3
@@ -28,7 +30,7 @@ type WithDevices<C extends number> = C extends 4
         ? WithDevice1
         : never;
 
-type WithUsers<C extends number> = C extends 4
+type WithUsers<C extends AppCountPerTest> = C extends 4
   ? WithUserA & WithUserB & WithUserC & WithUserD
   : C extends 3
     ? WithUserA & WithUserB & WithUserC
@@ -38,19 +40,23 @@ type WithUsers<C extends number> = C extends 4
         ? WithUserA
         : never;
 
-async function openAppsWithState<C extends 1 | 2 | 3 | 4, K extends PrebuiltStateKey>({
-  countToOpen,
+/**
+ * A is the count of apps to open (between 1 and 4)
+ * K is the state to build (for instance '2friends', '3friendsInGroup', ...)
+ */
+async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStateKey>({
+  appsToOpen,
   platform,
   groupName,
   stateToBuildKey,
 }: {
   platform: SupportedPlatformsType;
-  countToOpen: C;
+  appsToOpen: A;
   stateToBuildKey: K;
   groupName: K extends '3friendsInGroup' | '2friendsInGroup' ? string : undefined;
 }) {
   const [devices, prebuilt] = await Promise.all([
-    openAppMultipleDevices(platform, countToOpen),
+    openAppMultipleDevices(platform, appsToOpen),
     buildStateForTest(stateToBuildKey, groupName, 'mainnet'),
   ]);
   await Promise.all(
@@ -74,18 +80,18 @@ export async function open2AppsWithFriendsState({
   focusFriendsConvo?: boolean;
 }) {
   const stateToBuildKey = '2friends';
-  const countToOpen = 2;
+  const appsToOpen = 2;
   const result = await openAppsWithState({
     platform,
-    countToOpen,
+    appsToOpen,
     stateToBuildKey,
     groupName: undefined,
   });
-  const formattedDevices: WithDevices<typeof countToOpen> = {
+  const formattedDevices: WithDevices<typeof appsToOpen> = {
     device1: result.devices[0],
     device2: result.devices[1],
   };
-  const formattedUsers: WithUsers<typeof countToOpen> = {
+  const formattedUsers: WithUsers<typeof appsToOpen> = {
     userA: result.prebuilt.users[0],
     userB: result.prebuilt.users[1],
   };
@@ -106,7 +112,7 @@ export async function open2AppsWithFriendsState({
   };
 }
 
-export async function open3AppsWithFriendsAnd1GroupState({
+export async function open3AppsWith3FriendsAnd1GroupState({
   platform,
   groupName,
   focusGroupConvo = true,
@@ -116,20 +122,20 @@ export async function open3AppsWithFriendsAnd1GroupState({
   focusGroupConvo?: boolean;
 }) {
   const stateToBuildKey = '3friendsInGroup';
-  const countToOpen = 3;
+  const appsToOpen = 3;
   const result = await openAppsWithState({
     platform,
-    countToOpen,
+    appsToOpen,
     stateToBuildKey,
     groupName,
   });
   const formattedGroup = { group: result.prebuilt.group };
-  const formattedDevices: WithDevices<typeof countToOpen> = {
+  const formattedDevices: WithDevices<typeof appsToOpen> = {
     device1: result.devices[0],
     device2: result.devices[1],
     device3: result.devices[2],
   };
-  const formattedUsers: WithUsers<typeof countToOpen> = {
+  const formattedUsers: WithUsers<typeof appsToOpen> = {
     userA: result.prebuilt.users[0],
     userB: result.prebuilt.users[1],
     userC: result.prebuilt.users[2],
@@ -141,6 +147,53 @@ export async function open3AppsWithFriendsAnd1GroupState({
           new ConversationItem(result.devices[1], result.prebuilt.group.groupName)
         )
       ),
+    ]);
+  }
+
+  return {
+    devices: formattedDevices,
+    prebuilt: { ...formattedUsers, ...formattedGroup },
+  };
+}
+
+export async function open4AppsWith3Friends1GroupState({
+  platform,
+  groupName,
+  focusGroupConvo = true,
+}: {
+  platform: SupportedPlatformsType;
+  groupName: string;
+  focusGroupConvo?: boolean;
+}) {
+  const stateToBuildKey = '3friendsInGroup';
+  const appsToOpen = 4;
+  const result = await openAppsWithState({
+    platform,
+    appsToOpen,
+    stateToBuildKey,
+    groupName,
+  });
+  const formattedGroup = { group: result.prebuilt.group };
+  const formattedDevices: WithDevices<typeof appsToOpen> = {
+    device1: result.devices[0],
+    device2: result.devices[1],
+    device3: result.devices[2],
+    device4: result.devices[3],
+  };
+  const formattedUsers: WithUsers<3> = {
+    userA: result.prebuilt.users[0],
+    userB: result.prebuilt.users[1],
+    userC: result.prebuilt.users[2],
+  };
+  if (focusGroupConvo) {
+    await Promise.all([
+      result.devices
+        .slice(0, -1) // slice off the last device as it will be used later (i.e. we don't want to link yet)
+        .map(async d =>
+          d.clickOnElementAll(
+            new ConversationItem(result.devices[1], result.prebuilt.group.groupName)
+          )
+        ),
     ]);
   }
 

@@ -2,8 +2,12 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { open2AppsWithFriendsState } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-bothPlatformsIt('Send document 1:1', 'high', sendDocument);
-
+bothPlatformsIt({
+  title: 'Send document 1:1',
+  risk: 'high',
+  testCb: sendDocument,
+  countOfDevicesNeeded: 2,
+});
 async function sendDocument(platform: SupportedPlatformsType) {
   const {
     devices: { device1, device2 },

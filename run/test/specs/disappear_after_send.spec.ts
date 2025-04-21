@@ -6,7 +6,12 @@ import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 import { open2AppsWithFriendsState } from './state_builder';
 
-bothPlatformsIt('Disappear after send', 'high', disappearAfterSend);
+bothPlatformsIt({
+  title: 'Disappear after send',
+  risk: 'high',
+  testCb: disappearAfterSend,
+  countOfDevicesNeeded: 2,
+});
 
 async function disappearAfterSend(platform: SupportedPlatformsType) {
   const {

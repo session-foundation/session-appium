@@ -9,7 +9,7 @@ import {
   MemberStatus,
   RemoveMemberButton,
 } from './locators/groups';
-import { open3AppsWithFriendsAnd1GroupState } from './state_builder';
+import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 import { SupportedPlatformsType } from './utils/open_app';
 
 iosIt('Kick member', 'medium', kickMember);
@@ -20,7 +20,7 @@ async function kickMember(platform: SupportedPlatformsType) {
 
   const {
     devices: { device1, device2, device3 },
-  } = await open3AppsWithFriendsAnd1GroupState({
+  } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
   });

@@ -10,7 +10,12 @@ import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsIt('Block user linked device', 'high', blockUserInConversationOptions);
+bothPlatformsIt({
+  title: 'Block user linked device',
+  risk: 'high',
+  testCb: blockUserInConversationOptions,
+  countOfDevicesNeeded: 3,
+});
 
 async function blockUserInConversationOptions(platform: SupportedPlatformsType) {
   //Open three devices and creates two contacts (Alice and Bob)

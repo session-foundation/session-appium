@@ -6,7 +6,12 @@ import { parseDataImage } from './utils/check_colour';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-bothPlatformsIt('Avatar restored', 'medium', avatarRestored);
+bothPlatformsIt({
+  title: 'Avatar restored',
+  risk: 'medium',
+  testCb: avatarRestored,
+  countOfDevicesNeeded: 2,
+});
 
 async function avatarRestored(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

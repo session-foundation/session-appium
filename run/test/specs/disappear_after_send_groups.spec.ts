@@ -1,12 +1,17 @@
 import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES } from '../../types/testing';
-import { open3AppsWithFriendsAnd1GroupState } from './state_builder';
+import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-bothPlatformsIt('Disappear after send groups', 'high', disappearAfterSendGroups);
+bothPlatformsIt({
+  title: 'Disappear after send groups',
+  risk: 'high',
+  testCb: disappearAfterSendGroups,
+  countOfDevicesNeeded: 3,
+});
 
 async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   const testGroupName = 'Disappear after send test';
@@ -16,7 +21,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   const {
     devices: { device1, device2, device3 },
     prebuilt: { userA, group },
-  } = await open3AppsWithFriendsAnd1GroupState({
+  } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
   });

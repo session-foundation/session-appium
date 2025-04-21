@@ -1,11 +1,16 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, GROUPNAME } from '../../types/testing';
-import { open3AppsWithFriendsAnd1GroupState } from './state_builder';
+import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-bothPlatformsIt('Disappearing voice message to group', 'low', disappearingVoiceMessageGroup);
+bothPlatformsIt({
+  title: 'Disappearing voice message to group',
+  risk: 'low',
+  testCb: disappearingVoiceMessageGroup,
+  countOfDevicesNeeded: 3,
+});
 
 async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
   const testGroupName: GROUPNAME = 'Testing voice';
@@ -13,7 +18,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
   const timerType = 'Disappear after send option';
   const {
     devices: { device1, device2, device3 },
-  } = await open3AppsWithFriendsAnd1GroupState({
+  } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
   });

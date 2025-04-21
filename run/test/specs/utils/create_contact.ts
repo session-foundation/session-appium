@@ -7,11 +7,11 @@ import { SupportedPlatformsType } from './open_app';
 export const newContact = async (
   platform: SupportedPlatformsType,
   device1: DeviceWrapper,
-  Alice: User,
+  sender: Pick<User, 'userName'>,
   device2: DeviceWrapper,
-  Bob: User
+  receiver: Pick<User, 'userName' | 'accountID'>
 ) => {
-  await device1.sendNewMessage(Bob, `${Alice.userName} to ${Bob.userName}`);
+  await device1.sendNewMessage(receiver, `${sender.userName} to ${receiver.userName}`);
   // Click on message request folder
   await sleepFor(100);
   await runOnlyOnIOS(platform, () => retryMsgSentForBanner(platform, device1, device2, 30000)); // this runOnlyOnIOS is needed
@@ -21,15 +21,14 @@ export const newContact = async (
   await device2.onAndroid().clickOnByAccessibilityID('Accept message request');
 
   // Type into message input box
-  await device2.sendMessage(`Reply-message-${Bob.userName}-to-${Alice.userName}`);
+  await device2.sendMessage(`Reply-message-${receiver.userName}-to-${sender.userName}`);
   // Verify config message states message request was accepted
   // "messageRequestsAccepted": "Your message request has been accepted.",
   // TO DO - ADD BACK IN ONCE IOS HAS FIXED THIS ISSUE
   const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
   await device1.onAndroid().waitForControlMessageToBePresent(messageRequestsAccepted);
 
-  console.info(`${Alice.userName} and ${Bob.userName} are now contacts`);
-  return { Alice, Bob, device1, device2 };
+  console.info(`${sender.userName} and ${receiver.userName} are now contacts`);
 };
 
 const retryMsgSentForBanner = async (

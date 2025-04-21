@@ -8,8 +8,12 @@ import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-bothPlatformsIt('Delete message linked device', 'high', deletedMessageLinkedDevice);
-
+bothPlatformsIt({
+  title: 'Delete message linked device',
+  risk: 'high',
+  testCb: deletedMessageLinkedDevice,
+  countOfDevicesNeeded: 3,
+});
 async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   const userA = await linkedDevice(device1, device3, USERNAME.ALICE);

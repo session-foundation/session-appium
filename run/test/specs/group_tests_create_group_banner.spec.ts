@@ -5,8 +5,12 @@ import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { LatestReleaseBanner } from './locators/groups';
 import { open2AppsWithFriendsState } from './state_builder';
 
-bothPlatformsIt('Create group banner', 'high', createGroupBanner);
-
+bothPlatformsIt({
+  title: 'Create group banner',
+  risk: 'high',
+  testCb: createGroupBanner,
+  countOfDevicesNeeded: 2,
+});
 async function createGroupBanner(platform: SupportedPlatformsType) {
   const {
     devices: { device1, device2 },

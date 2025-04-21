@@ -5,7 +5,12 @@ import { DeletedMessage } from './locators/conversation';
 import { open2AppsWithFriendsState } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-bothPlatformsIt('Unsend message', 'high', unsendMessage);
+bothPlatformsIt({
+  title: 'Unsend message',
+  risk: 'high',
+  testCb: unsendMessage,
+  countOfDevicesNeeded: 2,
+});
 
 async function unsendMessage(platform: SupportedPlatformsType) {
   const {

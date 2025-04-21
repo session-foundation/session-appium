@@ -5,7 +5,12 @@ import { DeleteMessageRequestButton, DeleteMesssageRequestConfirmation } from '.
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-bothPlatformsIt('Delete message request in list', 'high', deleteRequest);
+bothPlatformsIt({
+  title: 'Delete message request in list',
+  risk: 'high',
+  testCb: deleteRequest,
+  countOfDevicesNeeded: 2
+});
 
 async function deleteRequest(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

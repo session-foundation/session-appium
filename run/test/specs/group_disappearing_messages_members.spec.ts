@@ -7,15 +7,20 @@ import {
   DisappearingMessagesMenuOption,
   SetDisappearMessagesButton,
 } from './locators/disappearing_messages';
-import { open3AppsWithFriendsAnd1GroupState } from './state_builder';
+import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 
-bothPlatformsIt('Group member disappearing messages', 'medium', membersCantSetDisappearingMessages);
+bothPlatformsIt({
+  title: 'Group member disappearing messages',
+  risk: 'medium',
+  testCb: membersCantSetDisappearingMessages,
+  countOfDevicesNeeded: 3,
+});
 
 async function membersCantSetDisappearingMessages(platform: SupportedPlatformsType) {
   const testGroupName = 'Testing disappearing messages';
   const {
     devices: { device1, device2, device3 },
-  } = await open3AppsWithFriendsAnd1GroupState({
+  } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
   });

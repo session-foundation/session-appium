@@ -5,7 +5,12 @@ import { joinCommunity } from './utils/join_community';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-bothPlatformsIt('Join community test', 'high', joinCommunityTest);
+bothPlatformsIt({
+  title: 'Join community test',
+  risk: 'high',
+  testCb: joinCommunityTest,
+  countOfDevicesNeeded: 2,
+});
 
 async function joinCommunityTest(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

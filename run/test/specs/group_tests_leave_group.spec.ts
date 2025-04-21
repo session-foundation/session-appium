@@ -2,11 +2,16 @@ import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { ConversationSettings } from './locators/conversation';
 import { LeaveGroupButton } from './locators/groups';
-import { open3AppsWithFriendsAnd1GroupState } from './state_builder';
+import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 import { sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-bothPlatformsIt('Leave group', 'high', leaveGroup);
+bothPlatformsIt({
+  title: 'Leave group',
+  risk: 'high',
+  testCb: leaveGroup,
+  countOfDevicesNeeded: 3,
+});
 
 async function leaveGroup(platform: SupportedPlatformsType) {
   const testGroupName = 'Leave group';
@@ -14,7 +19,7 @@ async function leaveGroup(platform: SupportedPlatformsType) {
   const {
     devices: { device1, device2, device3 },
     prebuilt: { userC },
-  } = await open3AppsWithFriendsAnd1GroupState({
+  } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
   });

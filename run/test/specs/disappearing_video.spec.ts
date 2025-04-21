@@ -5,7 +5,12 @@ import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-bothPlatformsIt('Disappearing video message 1:1', 'low', disappearingVideoMessage1o1);
+bothPlatformsIt({
+  title: 'Disappearing video message 1:1',
+  risk: 'low',
+  testCb: disappearingVideoMessage1o1,
+  countOfDevicesNeeded: 2,
+});
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';

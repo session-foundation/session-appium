@@ -6,7 +6,13 @@ import { checkDisappearingControlMessage } from './utils/disappearing_control_me
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-bothPlatformsIt('Disappear after read', 'high', disappearAfterRead);
+bothPlatformsIt({
+  title: 'Disappear after read',
+  risk: 'high',
+  testCb: disappearAfterRead,
+  countOfDevicesNeeded: 2,
+});
+
 
 async function disappearAfterRead(platform: SupportedPlatformsType) {
   const {

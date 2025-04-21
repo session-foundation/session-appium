@@ -5,7 +5,12 @@ import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-bothPlatformsIt('Create contact', 'high', createContact);
+bothPlatformsIt({
+  title: 'Create contact',
+  risk: 'high',
+  testCb: createContact,
+  countOfDevicesNeeded: 3,
+});
 
 async function createContact(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);

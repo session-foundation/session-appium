@@ -8,7 +8,12 @@ import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-bothPlatformsIt('Unsent message syncs', 'medium', unSendMessageLinkedDevice);
+bothPlatformsIt({
+  title: 'Unsent message syncs',
+  risk: 'medium',
+  testCb: unSendMessageLinkedDevice,
+  countOfDevicesNeeded: 3,
+});
 
 async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);

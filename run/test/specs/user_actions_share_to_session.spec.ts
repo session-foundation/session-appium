@@ -12,7 +12,12 @@ import { open2AppsWithFriendsState } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsIt('Share to session', 'low', shareToSession);
+bothPlatformsIt({
+  title: 'Share to session',
+  risk: 'low',
+  testCb: shareToSession,
+  countOfDevicesNeeded: 2,
+});
 
 async function shareToSession(platform: SupportedPlatformsType) {
   const {

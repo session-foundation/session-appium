@@ -6,7 +6,12 @@ import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-bothPlatformsIt('Disappear after send note to self', 'medium', disappearAfterSendNoteToSelf);
+bothPlatformsIt({
+  title: 'Disappear after send note to self',
+  risk: 'medium',
+  testCb: disappearAfterSendNoteToSelf,
+  countOfDevicesNeeded: 1,
+});
 
 async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);

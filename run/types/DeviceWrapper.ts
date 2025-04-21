@@ -960,7 +960,7 @@ export class DeviceWrapper {
     }
   }
 
-  public async sendNewMessage(user: User, message: string) {
+  public async sendNewMessage(user: Pick<User, 'accountID'>, message: string) {
     // Sender workflow
     // Click on plus button
     await this.clickOnByAccessibilityID('New conversation button');
