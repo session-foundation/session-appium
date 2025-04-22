@@ -101,25 +101,25 @@ jobs:
   android-regression:
     runs-on: [self-hosted, linux, X64, qa-android]
     env:
-      IOS_APP_PATH_PREFIX: '../extracted/Session.app'
+      IOS_APP_PATH_PREFIX: '<just_not_empty>'
       ANDROID_APK: '../extracted/session-android.apk'
       APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
       ANDROID_SDK_ROOT: '/opt/android'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
-      IOS_FIRST_SIMULATOR: '49651A15-3E14-4BAF-8B8E-0C630C35B8DD'
-      IOS_SECOND_SIMULATOR: '7CA21E47-56AC-4B76-82A4-1D5199515F38'
-      IOS_THIRD_SIMULATOR: 'FE1DEDC7-D530-41E7-9B38-86ED2DDB97CD'
-      IOS_FOURTH_SIMULATOR: '561C621C-2CEF-4FCC-87B7-E6221718D15C'
-      IOS_FIFTH_SIMULATOR: '5AA87E03-5831-4209-87A0-21E5ECDC490F'
-      IOS_SIXTH_SIMULATOR: '6FB10AF3-3970-46BA-B414-1206AA4E726D'
-      IOS_SEVENTH_SIMULATOR: '0BDA36C0-83F4-46DF-ADC9-FF30E969D4BD'
-      IOS_EIGHTH_SIMULATOR: '1C61A0B6-3085-46B6-9B2E-6E9A1B594944'
-      IOS_NINTH_SIMULATOR: '7C69D129-BD40-4BC0-9A0D-6A7E990F23E8'
-      IOS_TENTH_SIMULATOR: '275E0C5B-2458-4490-831D-4CE86C8EC704'
-      IOS_ELEVENTH_SIMULATOR: 'EA5C5BCB-1E3E-4FFC-88BB-8D1DE354BC3B'
-      IOS_TWELFTH_SIMULATOR: '41514F87-DC49-4C81-B60C-03D1F8653A42'
+      IOS_1_SIMULATOR: '<just_not_empty>'
+      IOS_2_SIMULATOR: '<just_not_empty>'
+      IOS_3_SIMULATOR: '<just_not_empty>'
+      IOS_4_SIMULATOR: '<just_not_empty>'
+      IOS_5_SIMULATOR: '<just_not_empty>'
+      IOS_6_SIMULATOR: '<just_not_empty>'
+      IOS_7_SIMULATOR: '<just_not_empty>'
+      IOS_8_SIMULATOR: '<just_not_empty>'
+      IOS_9_SIMULATOR: '<just_not_empty>'
+      IOS_10_SIMULATOR: '<just_not_empty>'
+      IOS_11_SIMULATOR: '<just_not_empty>'
+      IOS_12_SIMULATOR: '<just_not_empty>'
 
       # echo "SHARD_NUMBER ${{ github.event.inputs.SHARD_NUMBER }}"
       # echo "SHARD_COUNT ${{ github.event.inputs.SHARD_COUNT }}"
@@ -212,7 +212,7 @@ jobs:
         run: |
           cd forked-session-appium
           pwd
-          yarn test 'android "@${{ github.event.inputs.RISK }}"'
+          yarn test "android @${{ github.event.inputs.RISK }}"
 
       - name: Kill all running emulators
         if: always()
