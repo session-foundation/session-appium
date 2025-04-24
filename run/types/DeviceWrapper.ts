@@ -34,8 +34,8 @@ import {
   User,
   XPath,
 } from './testing';
-import * as path from 'path'
-import { testFile } from '../constants/testfiles';
+import * as path from 'path';
+import { testFile, testImage } from '../constants/testfiles';
 import { AttachmentsButton, OutgoingMessageStatusSent } from '../test/specs/locators/conversation';
 
 export type Coordinates = {
@@ -1105,35 +1105,34 @@ export class DeviceWrapper {
       await runScriptAndLog(
         `xcrun simctl addmedia ${this.udid} 'run/test/specs/media/${mediaFileName}'`,
         true
-      )};
-      if (this.isAndroid()) {
-        const ANDROID_DOWNLOAD_DIR = '/storage/emulated/0/Download';
-        // Android allows clearing the downloads folder at runtime
-        await runScriptAndLog(
-          `${getAdbFullPath()} -s ${this.udid} shell rm -rf ${ANDROID_DOWNLOAD_DIR}/*`,
-          true
-        );
-        // Push file
-        await runScriptAndLog(
-          `${getAdbFullPath()} -s ${this.udid} push ${filePath} ${ANDROID_DOWNLOAD_DIR}`,
-          true
-        );
-
-        // Scan the file for media indexing (refresh Files UI)
-        await runScriptAndLog(
-          `${getAdbFullPath()} -s ${this.udid} shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file://${ANDROID_DOWNLOAD_DIR}/${mediaFileName}`,
-          true
-        );
-      }
+      );
     }
-  
-    
+    if (this.isAndroid()) {
+      const ANDROID_DOWNLOAD_DIR = '/storage/emulated/0/Download';
+      // Clear downloads folder at runtime before pushing
+      await runScriptAndLog(
+        `${getAdbFullPath()} -s ${this.udid} shell rm -rf ${ANDROID_DOWNLOAD_DIR}/*`,
+        true
+      );
+      // Push file
+      await runScriptAndLog(
+        `${getAdbFullPath()} -s ${this.udid} push ${filePath} ${ANDROID_DOWNLOAD_DIR}`,
+        true
+      );
+
+      // Scan the file for media indexing (refresh Files UI)
+      await runScriptAndLog(
+        `${getAdbFullPath()} -s ${this.udid} shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file://${ANDROID_DOWNLOAD_DIR}/${mediaFileName}`,
+        true
+      );
+    }
+  }
 
   // TODO FIX UP THIS FUNCTION
-  public async sendImage(platform: SupportedPlatformsType, message?: string, community?: boolean) {
+  public async sendImage(message: string) {
     const ronSwansonBirthday = '196705060700.00';
     const fileName = 'test_image.jpg';
-    if (platform === 'ios') {
+    if (this.isIOS()) {
       await this.clickOnByAccessibilityID('Attachments button');
       await sleepFor(5000);
       const keyboard = await this.isKeyboardVisible();
@@ -1157,72 +1156,39 @@ export class DeviceWrapper {
         await this.clickOnByAccessibilityID('Text input box');
         await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
       }
-      await this.clickOnElementAll(new SendMediaButton(this));
-      await this.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Message sent status: Sent',
-        maxWait: 50000,
-      });
-    } else {
-      await this.clickOnByAccessibilityID('Attachments button');
+    }
+    if (this.isAndroid()) {
+      // Push file first
+      await this.pushMediaToDevice(testImage);
+      await this.clickOnElementAll(new AttachmentsButton(this));
       await sleepFor(100);
-      await this.clickOnByAccessibilityID('Documents folder');
-      await this.clickOnByAccessibilityID('Continue');
+      await this.clickOnByAccessibilityID('Images folder');
       await this.clickOnElementAll({
         strategy: 'id',
-        selector: 'com.android.permissioncontroller:id/permission_allow_button',
-        text: 'Allow',
+        selector: 'com.android.permissioncontroller:id/permission_allow_all_button',
+        text: 'Allow all',
       });
-      await this.clickOnByAccessibilityID('Show roots');
       await sleepFor(500);
-      await this.clickOnTextElementById(`android:id/title`, 'Downloads');
-      await sleepFor(100);
-      const testImage = await this.doesElementExist({
+      await this.clickOnElementAll({
         strategy: 'id',
-        selector: 'android:id/title',
-        maxWait: 2000,
-        text: fileName,
+        selector: 'network.loki.messenger:id/mediapicker_folder_item_thumbnail',
       });
-      if (!testImage) {
-        await this.pushMediaToDevice(platform, fileName);
-      }
       await sleepFor(100);
-      await this.clickOnTextElementById('android:id/title', fileName);
-      if (community) {
-        await this.scrollToBottom();
-      }
-      await this.waitForTextElementToBePresent({
+      await this.clickOnElementAll({
+        strategy: 'id',
+        selector: 'network.loki.messenger:id/mediapicker_image_item_thumbnail',
+      });
+      await this.inputText(message, {
         strategy: 'accessibility id',
-        selector: `Message sent status: Sent`,
-        maxWait: 60000,
+        selector: 'New direct message',
       });
     }
-  }
-
-  public async sendImageWithMessageAndroid(message: string) {
-    await this.clickOnByAccessibilityID('Attachments button');
-    await sleepFor(100);
-    await this.clickOnByAccessibilityID('Images folder');
-    await this.clickOnElementAll({
-      strategy: 'id',
-      selector: 'com.android.permissioncontroller:id/permission_allow_all_button',
-      text: 'Allow all',
-    });
-    await sleepFor(500);
-    await this.clickOnElementAll({
-      strategy: 'id',
-      selector: 'network.loki.messenger:id/mediapicker_folder_item_thumbnail',
-    });
-    await sleepFor(100);
-    await this.clickOnElementAll({
-      strategy: 'id',
-      selector: 'network.loki.messenger:id/mediapicker_image_item_thumbnail',
-    });
-    await this.inputText(message, {
-      strategy: 'accessibility id',
-      selector: 'New direct message',
-    });
     await this.clickOnElementAll(new SendMediaButton(this));
+    await this.scrollToBottom();
+    await this.waitForTextElementToBePresent({
+      ...new OutgoingMessageStatusSent(this).build(),
+      maxWait: 50000,
+    });
   }
 
   public async sendVideoiOS(message: string) {
@@ -1313,7 +1279,7 @@ export class DeviceWrapper {
 
   public async sendDocument() {
     if (this.isAndroid()) {
-      // Clear emulator and push file first 
+      // Clear emulator and push file first
       await this.pushMediaToDevice(testFile);
       await this.clickOnElementAll(new AttachmentsButton(this));
       await this.clickOnByAccessibilityID('Documents folder');
@@ -1323,16 +1289,20 @@ export class DeviceWrapper {
         selector: 'com.android.permissioncontroller:id/permission_allow_button',
         text: 'Allow',
       });
-      // On modern android, no matter what, a file does not reliably show up under Recents
-      // So it's necessary to navigate to the Downloads folder 
+      // Depending on previous emulator use the Files app either opens the 'Recent' or 'Downloads' folder
+      // If it is 'Recent' then the pushed file does not reliably show up
+      // So it's necessary to navigate to 'Downloads'
       await this.clickOnByAccessibilityID('Show roots');
       await sleepFor(100);
-      await this.clickOnElementXPath(`//android.widget.TextView[@resource-id="android:id/title" and @text="Downloads"]`)
+      await this.clickOnElementXPath(
+        `//android.widget.TextView[@resource-id="android:id/title" and @text="Downloads"]`
+      );
       await this.clickOnTextElementById('android:id/title', testFile);
       await this.waitForTextElementToBePresent({
         ...new OutgoingMessageStatusSent(this).build(),
         maxWait: 50000,
-    })}
+      });
+    }
     if (this.isIOS()) {
       const formattedFileName = 'test_file, pdf';
       const testMessage = 'Testing-document-1';
@@ -1362,7 +1332,6 @@ export class DeviceWrapper {
       await this.clickOnByAccessibilityID('Send button');
     }
   }
-
 
   public async sendGIF(message: string) {
     await sleepFor(1000);

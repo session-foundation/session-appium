@@ -22,7 +22,7 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   await sleepFor(500);
-  await device1.sendImage(platform, testMessage);
+  await device1.sendImage(testMessage);
   await device2.trustAttachments(USERNAME.ALICE);
   // Wait for 30 seconds
   await sleepFor(30000);

@@ -27,7 +27,7 @@ async function sendImageCommunityiOS(platform: SupportedPlatformsType) {
   await joinCommunity(device2, testCommunityLink, testCommunityName);
   await Promise.all([device1.scrollToBottom(), device2.scrollToBottom()]);
   await device1.sendMessage(testMessage);
-  await device1.sendImage(platform, testImageMessage, true);
+  await device1.sendImage(testImageMessage);
   await device2.replyToMessage(Alice, testImageMessage);
   await closeApp(device1, device2);
 }
@@ -46,7 +46,7 @@ async function sendImageCommunityAndroid(platform: SupportedPlatformsType) {
     joinCommunity(device1, testCommunityLink, testCommunityName),
     joinCommunity(device2, testCommunityLink, testCommunityName),
   ]);
-  await device1.sendImageWithMessageAndroid(testMessage);
+  await device1.sendImage(testMessage);
   await device2.scrollToBottom();
   await device2.longPressMessage(testMessage);
   await device2.clickOnByAccessibilityID('Reply to message');
