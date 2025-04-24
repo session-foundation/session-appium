@@ -1,12 +1,16 @@
 import { englishStripped } from '../../localizer/Localizer';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { DeleteMessageConfirmationModal, DeleteMessageLocally } from './locators';
 import { DeletedMessage } from './locators/conversation';
 import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-iosIt('Delete message in group', 'high', deleteMessageGroup);
-androidIt('Delete message in group', 'high', deleteMessageGroup);
+bothPlatformsIt({
+  title: 'Delete message in group',
+  risk: 'high',
+  countOfDevicesNeeded: 3,
+  testCb: deleteMessageGroup,
+});
 
 async function deleteMessageGroup(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';

@@ -1,4 +1,4 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { InviteContactsMenuItem } from './locators';
 import { sleepFor } from './utils';
@@ -9,12 +9,19 @@ import { testCommunityLink, testCommunityName } from './../../constants/communit
 import { ConversationSettings } from './locators/conversation';
 import { open2AppsWithFriendsState } from './state_builder';
 
-iosIt('Disappearing community invite message 1:1', 'low', disappearingCommunityInviteMessageIos);
-androidIt(
-  'Disappearing community invite message 1:1',
-  'low',
-  disappearingCommunityInviteMessageAndroid
-);
+bothPlatformsItSeparate({
+  title: 'Disappearing community invite message 1:1',
+  risk: 'low',
+  countOfDevicesNeeded: 2,
+  ios: {
+    testCb: disappearingCommunityInviteMessageIos,
+    shouldSkip: false,
+  },
+  android: {
+    testCb: disappearingCommunityInviteMessageAndroid,
+    shouldSkip: false,
+  },
+});
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';

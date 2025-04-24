@@ -1,12 +1,19 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { longText } from '../../constants';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { open2AppsWithFriendsState } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-iosIt('Send long message 1:1', 'low', sendLongMessageIos);
-androidIt('Send long message 1:1', 'low', sendLongMessageAndroid);
-
-const longText =
-  'Mauris sapien dui, sagittis et fringilla eget, tincidunt vel mauris. Mauris bibendum quis ipsum ac pulvinar. Integer semper elit vitae placerat efficitur. Quisque blandit scelerisque orci, a fringilla dui. In a sollicitudin tortor. Vivamus consequat sollicitudin felis, nec pretium dolor bibendum sit amet. Integer non congue risus, id imperdiet diam. Proin elementum enim at felis commodo semper. Pellentesque magna magna, laoreet nec hendrerit in, suscipit sit amet risus. Nulla et imperdiet massa. Donec commodo felis quis arcu dignissim lobortis. Praesent nec fringilla felis, ut pharetra sapien. Donec ac dignissim nisi, non lobortis justo. Nulla congue velit nec sodales bibendum. Nullam feugiat, mauris ac consequat posuere, eros sem dignissim nulla, ac convallis dolor sem rhoncus dolor. Cras ut luctus risus, quis viverra mauris.';
+bothPlatformsItSeparate({
+  title: 'Send long message 1:1',
+  risk: 'low',
+  countOfDevicesNeeded: 2,
+  ios: {
+    testCb: sendLongMessageIos,
+  },
+  android: {
+    testCb: sendLongMessageAndroid,
+  },
+});
 
 async function sendLongMessageIos(platform: SupportedPlatformsType) {
   // Sending a long text message

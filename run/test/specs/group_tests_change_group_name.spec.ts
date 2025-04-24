@@ -1,5 +1,5 @@
 import { englishStripped } from '../../localizer/Localizer';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { EditGroup, EditGroupName } from './locators';
 import { EditGroupNameInput } from './locators/groups';
 import { sleepFor } from './utils';
@@ -8,8 +8,17 @@ import { ConversationSettings } from './locators/conversation';
 import { SaveNameChangeButton } from './locators/settings';
 import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 
-iosIt('Change group name', 'medium', changeGroupNameIos);
-androidIt('Change group name', 'medium', changeGroupNameAndroid);
+bothPlatformsItSeparate({
+  title: 'Change group name',
+  risk: 'medium',
+  countOfDevicesNeeded: 3,
+  ios: {
+    testCb: changeGroupNameIos,
+  },
+  android: {
+    testCb: changeGroupNameAndroid,
+  },
+});
 
 async function changeGroupNameIos(platform: SupportedPlatformsType) {
   const testGroupName = 'Test group';

@@ -5,7 +5,6 @@ import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-
 bothPlatformsIt({
   title: 'Disappearing GIF to group',
   risk: 'low',

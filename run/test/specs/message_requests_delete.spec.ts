@@ -9,7 +9,7 @@ bothPlatformsIt({
   title: 'Delete message request in list',
   risk: 'high',
   testCb: deleteRequest,
-  countOfDevicesNeeded: 2
+  countOfDevicesNeeded: 2,
 });
 
 async function deleteRequest(platform: SupportedPlatformsType) {

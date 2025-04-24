@@ -1,4 +1,4 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { InviteContactsMenuItem } from './locators';
 import { sleepFor } from './utils';
 import { joinCommunity } from './utils/join_community';
@@ -8,8 +8,17 @@ import { englishStripped } from '../../localizer/Localizer';
 import { ConversationSettings } from './locators/conversation';
 import { open2AppsWithFriendsState } from './state_builder';
 
-iosIt('Send community invitation', 'medium', sendCommunityInvitationIos);
-androidIt('Send community invitation', 'medium', sendCommunityInviteMessageAndroid);
+bothPlatformsItSeparate({
+  title: 'Send community invitation',
+  risk: 'medium',
+  countOfDevicesNeeded: 2,
+  ios: {
+    testCb: sendCommunityInvitationIos,
+  },
+  android: {
+    testCb: sendCommunityInviteMessageAndroid,
+  },
+});
 
 async function sendCommunityInvitationIos(platform: SupportedPlatformsType) {
   const {

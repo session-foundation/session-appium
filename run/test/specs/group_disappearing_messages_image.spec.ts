@@ -1,12 +1,16 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Disappearing image message to group', 'low', disappearingImageMessageGroup);
-androidIt('Disappearing image message to group', 'low', disappearingImageMessageGroup);
+bothPlatformsIt({
+  title: 'Disappearing image message to group',
+  risk: 'low',
+  countOfDevicesNeeded: 3,
+  testCb: disappearingImageMessageGroup,
+});
 
 async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   const testMessage = 'Testing disappearing messages for images';

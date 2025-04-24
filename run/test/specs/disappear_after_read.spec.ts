@@ -13,7 +13,6 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-
 async function disappearAfterRead(platform: SupportedPlatformsType) {
   const {
     devices: { device1, device2 },

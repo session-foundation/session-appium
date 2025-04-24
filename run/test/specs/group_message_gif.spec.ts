@@ -1,10 +1,19 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-iosIt('Send GIF to group', 'medium', sendGifGroupiOS);
-androidIt('Send GIF to group', 'medium', sendGifGroupAndroid);
+bothPlatformsItSeparate({
+  title: 'Send GIF to group',
+  risk: 'medium',
+  countOfDevicesNeeded: 3,
+  ios: {
+    testCb: sendGifGroupiOS,
+  },
+  android: {
+    testCb: sendGifGroupAndroid,
+  },
+});
 
 async function sendGifGroupiOS(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';

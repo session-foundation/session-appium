@@ -1,5 +1,5 @@
 import { englishStripped } from '../../localizer/Localizer';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { EditGroup, EditGroupName } from './locators';
 import { ConversationSettings } from './locators/conversation';
@@ -11,8 +11,17 @@ import { createGroup } from './utils/create_group';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppFourDevices } from './utils/open_app';
 
-iosIt('Create group and change name syncs', 'high', linkedGroupiOS);
-androidIt('Create group and change name syncs', 'high', linkedGroupAndroid);
+bothPlatformsItSeparate({
+  title: 'Create group and change name syncs',
+  risk: 'high',
+  countOfDevicesNeeded: 4,
+  ios: {
+    testCb: linkedGroupiOS,
+  },
+  android: {
+    testCb: linkedGroupAndroid,
+  },
+});
 
 async function linkedGroupiOS(platform: SupportedPlatformsType) {
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);

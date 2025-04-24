@@ -10,7 +10,12 @@ import {
 } from './locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 // These modals no longer exist in groups rebuild for iOS
-androidIt('Warning modal restore account', 'medium', warningModalRestoreAccount);
+androidIt({
+  title: 'Warning modal on restore account',
+  risk: 'medium',
+  testCb: warningModalRestoreAccount,
+  countOfDevicesNeeded: 1,
+});
 
 async function warningModalRestoreAccount(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);

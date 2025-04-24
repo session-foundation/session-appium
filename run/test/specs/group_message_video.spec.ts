@@ -1,9 +1,18 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-iosIt('Send video to group', 'medium', sendVideoGroupiOS);
-androidIt('Send video to group', 'medium', sendVideoGroupAndroid);
+bothPlatformsItSeparate({
+  title: 'Send video to group',
+  risk: 'medium',
+  countOfDevicesNeeded: 3,
+  ios: {
+    testCb: sendVideoGroupiOS,
+  },
+  android: {
+    testCb: sendVideoGroupAndroid,
+  },
+});
 
 async function sendVideoGroupiOS(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';

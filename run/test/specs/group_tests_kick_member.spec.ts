@@ -1,5 +1,5 @@
 import { englishStripped } from '../../localizer/Localizer';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { EditGroup } from './locators';
 import { ConversationSettings, MessageInput } from './locators/conversation';
@@ -12,8 +12,12 @@ import {
 import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 import { SupportedPlatformsType } from './utils/open_app';
 
-iosIt('Kick member', 'medium', kickMember);
-androidIt('Kick member', 'medium', kickMember);
+bothPlatformsIt({
+  title: 'Kick member',
+  risk: 'medium',
+  testCb: kickMember,
+  countOfDevicesNeeded: 3,
+});
 
 async function kickMember(platform: SupportedPlatformsType) {
   const testGroupName = 'Kick member';

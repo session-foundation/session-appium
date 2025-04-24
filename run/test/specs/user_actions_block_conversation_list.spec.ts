@@ -7,7 +7,12 @@ import { open2AppsWithFriendsState } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 // Block option not available on iOS in conversation list
-androidIt('Block user in conversation list', 'high', blockUserInConversationList);
+androidIt({
+  title: 'Block user in conversation list',
+  risk: 'high',
+  testCb: blockUserInConversationList,
+  countOfDevicesNeeded: 2,
+});
 // No longer available on iOS
 
 async function blockUserInConversationList(platform: SupportedPlatformsType) {

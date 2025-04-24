@@ -1,10 +1,19 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-iosIt('Send image to group', 'high', sendImageGroupiOS);
-androidIt('Send image to group', 'high', sendImageGroupAndroid);
+bothPlatformsItSeparate({
+  title: 'Send image to group',
+  risk: 'high',
+  countOfDevicesNeeded: 3,
+  ios: {
+    testCb: sendImageGroupiOS,
+  },
+  android: {
+    testCb: sendImageGroupAndroid,
+  },
+});
 
 async function sendImageGroupiOS(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';

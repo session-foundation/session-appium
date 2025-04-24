@@ -1,13 +1,23 @@
 import { englishStripped } from '../../localizer/Localizer';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ExitUserProfile } from './locators';
 import { newUser } from './utils/create_account';
 import { sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-androidIt('Voice calls', 'high', voiceCallAndroid);
-iosIt('Voice calls', 'high', voiceCallIos, true);
+bothPlatformsItSeparate({
+  title: 'Voice calls',
+  risk: 'high',
+  countOfDevicesNeeded: 2,
+  ios: {
+    testCb: voiceCallIos,
+    shouldSkip: true,
+  },
+  android: {
+    testCb: voiceCallAndroid,
+  },
+});
 
 async function voiceCallIos(platform: SupportedPlatformsType) {
   // Open app

@@ -1,5 +1,5 @@
 import { englishStripped } from '../../localizer/Localizer';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { TickButton, UsernameInput, UsernameSettings } from './locators';
 import { SaveNameChangeButton, UserSettings } from './locators/settings';
@@ -7,8 +7,17 @@ import { sleepFor } from './utils';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Change username linked device', 'medium', changeUsernameLinkediOS);
-androidIt('Change username linked device', 'medium', changeUsernameLinkedAndroid);
+bothPlatformsItSeparate({
+  title: 'Change username linked device',
+  risk: 'medium',
+  countOfDevicesNeeded: 2,
+  ios: {
+    testCb: changeUsernameLinkediOS,
+  },
+  android: {
+    testCb: changeUsernameLinkedAndroid,
+  },
+});
 
 async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

@@ -1,10 +1,19 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { open2AppsWithFriendsState } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-iosIt('Send GIF 1:1', 'medium', sendGifIos);
-androidIt('Send GIF 1:1', 'medium', sendGifAndroid);
+bothPlatformsItSeparate({
+  title: 'Send GIF 1:1',
+  risk: 'medium',
+  countOfDevicesNeeded: 2,
+  ios: {
+    testCb: sendGifIos,
+  },
+  android: {
+    testCb: sendGifAndroid,
+  },
+});
 
 async function sendGifIos(platform: SupportedPlatformsType) {
   const {

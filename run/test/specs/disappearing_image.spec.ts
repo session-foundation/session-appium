@@ -5,8 +5,6 @@ import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-
-
 bothPlatformsIt({
   title: 'Disappearing image message 1:1',
   risk: 'low',

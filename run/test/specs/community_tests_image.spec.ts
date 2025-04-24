@@ -1,13 +1,24 @@
 import { testCommunityLink, testCommunityName } from '../../constants/community';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { open2AppsWithFriendsState } from './state_builder';
 import { newUser } from './utils/create_account';
 import { joinCommunity } from './utils/join_community';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Send image to community', 'medium', sendImageCommunityiOS, true);
-androidIt('Send image to community', 'medium', sendImageCommunityAndroid, true);
+bothPlatformsItSeparate({
+  title: 'Send image to community',
+  risk: 'medium',
+  countOfDevicesNeeded: 2,
+  ios: {
+    testCb: sendImageCommunityiOS,
+    shouldSkip: true,
+  },
+  android: {
+    testCb: sendImageCommunityAndroid,
+    shouldSkip: true,
+  },
+});
 
 // Tests skipped due to both platforms having unique issues, have made a ticket
 // to investigate further https://optf.atlassian.net/browse/QA-486

@@ -1,9 +1,18 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-iosIt('Send voice message to group', 'high', sendVoiceMessageGroupiOS);
-androidIt('Send voice message to group', 'high', sendVoiceMessageGroupAndroid);
+bothPlatformsItSeparate({
+  title: 'Send voice message to group',
+  risk: 'high',
+  countOfDevicesNeeded: 3,
+  ios: {
+    testCb: sendVoiceMessageGroupiOS,
+  },
+  android: {
+    testCb: sendVoiceMessageGroupAndroid,
+  },
+});
 
 async function sendVoiceMessageGroupiOS(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';

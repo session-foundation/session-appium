@@ -1,12 +1,21 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { open2AppsWithFriendsState } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Disappearing GIF message 1:1', 'low', disappearingGifMessage1o1Ios);
-androidIt('Disappearing GIF message 1:1', 'low', disappearingGifMessage1o1Android);
+bothPlatformsItSeparate({
+  title: 'Disappearing GIF message 1:1',
+  risk: 'low',
+  countOfDevicesNeeded: 2,
+  ios: {
+    testCb: disappearingGifMessage1o1Ios,
+  },
+  android: {
+    testCb: disappearingGifMessage1o1Android,
+  },
+});
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';

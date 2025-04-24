@@ -1,10 +1,19 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { open2AppsWithFriendsState } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-iosIt('Send video 1:1', 'medium', sendVideoIos);
-androidIt('Send video 1:1', 'medium', sendVideoAndroid);
+bothPlatformsItSeparate({
+  title: 'Send video 1:1',
+  risk: 'medium',
+  countOfDevicesNeeded: 2,
+  ios: {
+    testCb: sendVideoIos,
+  },
+  android: {
+    testCb: sendVideoAndroid,
+  },
+});
 
 async function sendVideoIos(platform: SupportedPlatformsType) {
   // Test sending a video

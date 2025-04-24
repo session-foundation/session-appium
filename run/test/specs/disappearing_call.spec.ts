@@ -1,12 +1,23 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { open2AppsWithFriendsState } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Disappearing call message 1o1', 'low', disappearingCallMessage1o1Ios, true);
-androidIt('Disappearing call message 1o1', 'low', disappearingCallMessage1o1Android, true);
+bothPlatformsItSeparate({
+  title: 'Disappearing call message 1o1',
+  risk: 'low',
+  countOfDevicesNeeded: 2,
+  ios: {
+    testCb: disappearingCallMessage1o1Ios,
+    shouldSkip: true,
+  },
+  android: {
+    testCb: disappearingCallMessage1o1Android,
+    shouldSkip: true,
+  },
+});
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';

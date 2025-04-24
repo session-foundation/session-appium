@@ -1,12 +1,21 @@
 import { englishStripped } from '../../localizer/Localizer';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { LinkPreview, LinkPreviewMessage } from './locators';
 import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-iosIt('Send link to group', 'high', sendLinkGroupiOS);
-androidIt('Send link to group', 'high', sendLinkGroupAndroid);
+bothPlatformsItSeparate({
+  title: 'Send link to group',
+  risk: 'high',
+  countOfDevicesNeeded: 3,
+  ios: {
+    testCb: sendLinkGroupiOS,
+  },
+  android: {
+    testCb: sendLinkGroupAndroid,
+  },
+});
 
 async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';

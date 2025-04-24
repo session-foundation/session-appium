@@ -1,5 +1,5 @@
 import { englishStripped } from '../../localizer/Localizer';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { UsernameInput } from './locators';
 import { ConversationSettings } from './locators/conversation';
@@ -8,8 +8,17 @@ import { open2AppsWithFriendsState } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-iosIt('Set nickname', 'high', setNicknameIos);
-androidIt('Set nickname', 'high', setNicknameAndroid);
+bothPlatformsItSeparate({
+  title: 'Set nickname',
+  risk: 'high',
+  countOfDevicesNeeded: 2,
+  ios: {
+    testCb: setNicknameIos,
+  },
+  android: {
+    testCb: setNicknameAndroid,
+  },
+});
 
 async function setNicknameIos(platform: SupportedPlatformsType) {
   const nickName = 'New nickname';

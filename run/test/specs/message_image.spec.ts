@@ -1,9 +1,18 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { open2AppsWithFriendsState } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-iosIt('Send image 1:1', 'high', sendImageIos);
-androidIt('Send image 1:1', 'high', sendImageAndroid);
+bothPlatformsItSeparate({
+  title: 'Send image 1:1',
+  risk: 'high',
+  countOfDevicesNeeded: 2,
+  ios: {
+    testCb: sendImageIos,
+  },
+  android: {
+    testCb: sendImageAndroid,
+  },
+});
 
 async function sendImageIos(platform: SupportedPlatformsType) {
   const {

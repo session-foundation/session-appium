@@ -1,12 +1,16 @@
 import { englishStripped } from '../../localizer/Localizer';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
 import { DeletedMessage } from './locators/conversation';
 import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-iosIt('Unsend message in group', 'high', unsendMessageGroup);
-androidIt('Unsend message in group', 'high', unsendMessageGroup);
+bothPlatformsIt({
+  title: 'Unsend message in group',
+  risk: 'high',
+  countOfDevicesNeeded: 3,
+  testCb: unsendMessageGroup,
+});
 
 async function unsendMessageGroup(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';

@@ -1,10 +1,19 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-iosIt('Send document to group', 'high', sendDocumentGroupiOS);
-androidIt('Send document to group', 'high', sendDocumentGroupAndroid);
+bothPlatformsItSeparate({
+  title: 'Send document to group',
+  risk: 'high',
+  countOfDevicesNeeded: 3,
+  ios: {
+    testCb: sendDocumentGroupiOS,
+  },
+  android: {
+    testCb: sendDocumentGroupAndroid,
+  },
+});
 
 async function sendDocumentGroupiOS(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';

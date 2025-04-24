@@ -1,12 +1,21 @@
 import { englishStripped } from '../../localizer/Localizer';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { LinkPreview, LinkPreviewMessage } from './locators';
 import { open2AppsWithFriendsState } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-iosIt('Send link 1:1', 'high', sendLinkIos);
-androidIt('Send link 1:1', 'high', sendLinkAndroid);
+bothPlatformsItSeparate({
+  title: 'Send link 1:1',
+  risk: 'high',
+  countOfDevicesNeeded: 2,
+  ios: {
+    testCb: sendLinkIos,
+  },
+  android: {
+    testCb: sendLinkAndroid,
+  },
+});
 
 async function sendLinkIos(platform: SupportedPlatformsType) {
   const {
