@@ -137,7 +137,7 @@ export type XPath =
   | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`
   | `//XCUIElementTypeCell[@name="Session"]`
   | `//android.widget.TextView[@resource-id="android:id/title" and @text="Downloads"]`
-  | `//*[starts-with(@content-desc, "Photo taken on")]`
+  | `//*[starts-with(@content-desc, "Photo taken on")]`;
 
 export type AccessibilityId =
   | 'Create account button'
@@ -355,7 +355,6 @@ export type AccessibilityId =
   | 'Confirm leave'
   | 'Photo, 25 March, 11:09 am'
   | 'Albums';
-
 
 export type Id =
   | 'Modal heading'
