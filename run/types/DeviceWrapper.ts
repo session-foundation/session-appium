@@ -1129,7 +1129,7 @@ export class DeviceWrapper {
   }
 
   // TODO FIX UP THIS FUNCTION
-  public async sendImage(message: string) {
+  public async sendImage(message: string, community?: boolean) {
     const ronSwansonBirthday = '196705060700.00';
     const fileName = 'test_image.jpg';
     if (this.isIOS()) {
@@ -1184,10 +1184,10 @@ export class DeviceWrapper {
       });
     }
     await this.clickOnElementAll(new SendMediaButton(this));
-    await this.scrollToBottom();
+    if (community) await this.scrollToBottom();
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
-      maxWait: 50000,
+      maxWait: 20000,
     });
   }
 
