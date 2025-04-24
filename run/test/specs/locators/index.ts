@@ -588,7 +588,7 @@ export class ImageName extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'xpath',
-          selector: `//android.view.ViewGroup[starts-with(@content-desc, "Photo taken on")]`,
+          selector: `//*[starts-with(@content-desc, "Photo taken on")]`,
         };
       case 'ios':
         return {

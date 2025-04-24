@@ -7,6 +7,7 @@ import {
   ChangeProfilePictureButton,
   DownloadMediaButton,
   FirstGif,
+  ImageName,
   ImagePermissionsModalAllow,
   LocatorsInterface,
   PrivacyButton,
@@ -1446,7 +1447,7 @@ export class DeviceWrapper {
       });
       await sleepFor(500);
       // Dates can wildly differ between emulators but it will begin with "Photo taken on" on Android
-      await this.clickOnElementXPath(`//android.widget.FrameLayout[starts-with(@content-desc, "Photo taken on")]`)
+      await this.clickOnElementAll(new ImageName(this));
       await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
     }
     await this.clickOnElementAll(new SaveProfilePictureButton(this));
