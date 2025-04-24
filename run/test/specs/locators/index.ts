@@ -584,10 +584,11 @@ export class SendMediaButton extends LocatorsInterface {
 export class ImageName extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
+      // Dates can wildly differ between emulators but it will begin with "Photo taken on" on Android
       case 'android':
         return {
-          strategy: 'accessibility id',
-          selector: 'Photo taken on Jun 12, 2103 2:28:16 PM',
+          strategy: 'xpath',
+          selector: `//android.view.ViewGroup[starts-with(@content-desc, "Photo taken on")]`,
         };
       case 'ios':
         return {

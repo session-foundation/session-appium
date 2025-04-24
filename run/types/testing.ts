@@ -137,7 +137,8 @@ export type XPath =
   | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`
   | `//XCUIElementTypeCell[@name="Session"]`
   | `//android.widget.TextView[@resource-id="android:id/title" and @text="Downloads"]`
-  | `//android.widget.FrameLayout[starts-with(@content-desc, "Photo taken on")]`;
+  | `//android.widget.FrameLayout[starts-with(@content-desc, "Photo taken on")]`
+  | `//android.view.ViewGroup[starts-with(@content-desc, "Photo taken on")]`;
 
 export type AccessibilityId =
   | 'Create account button'
@@ -255,7 +256,6 @@ export type AccessibilityId =
   | 'profile_picture.jpg, 27.75 kB, May 2, 1999'
   | 'profile_picture.jpg, 27.75 kB, May 1, 1999'
   | 'profile_picture.jpg, 27.75 kB, May 1, 1998'
-  | 'Photo taken on May 2, 1999 7:00:00 AM'
   | 'Photo, 01 May 1998, 7:00 am'
   | '1988-09-08 21:00:00 +0000'
   | 'Attachments button'
@@ -341,7 +341,6 @@ export type AccessibilityId =
   | 'Hide'
   | 'Session'
   | 'Share'
-  | 'Photo taken on Jun 12, 2103 2:28:16 PM'
   | 'Photo, 19 March 2024, 5:13 pm'
   // Possible time string outputs from convertTime function
   | '1967-05-06 07:00:00 +0000'
@@ -356,9 +355,8 @@ export type AccessibilityId =
   | 'Legacy Groups Recreate Button'
   | 'Confirm leave'
   | 'Photo, 25 March, 11:09 am'
-  | 'Albums'
-  // eslint-disable-next-line no-irregular-whitespace
-  | `Photo taken on May 1, 1998, 7:00:00 AM`;
+  | 'Albums';
+
 
 export type Id =
   | 'Modal heading'

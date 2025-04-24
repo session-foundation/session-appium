@@ -1445,11 +1445,8 @@ export class DeviceWrapper {
         selector: 'Image button',
       });
       await sleepFor(500);
-      // The date of the file varies wildly between emulators but it will always begin with "Photo taken on"
-      await this.clickOnElementAll({
-        strategy: 'xpath',
-        selector: `//android.widget.FrameLayout[starts-with(@content-desc, "Photo taken on")]`,
-      });
+      // Dates can wildly differ between emulators but it will begin with "Photo taken on" on Android
+      await this.clickOnElementXPath(`//android.widget.FrameLayout[starts-with(@content-desc, "Photo taken on")]`)
       await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
     }
     await this.clickOnElementAll(new SaveProfilePictureButton(this));
