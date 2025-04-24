@@ -135,7 +135,8 @@ export type XPath =
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/androidx.appcompat.widget.LinearLayoutCompat/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView[2]`
   | `//XCUIElementTypeStaticText[@name="Paste"]`
   | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`
-  | `//XCUIElementTypeCell[@name="Session"]`;
+  | `//XCUIElementTypeCell[@name="Session"]`
+  | `//android.widget.TextView[@resource-id="android:id/title" and @text="Downloads"]`;
 
 export type AccessibilityId =
   | 'Create account button'

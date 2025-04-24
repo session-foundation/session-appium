@@ -34,6 +34,9 @@ import {
   User,
   XPath,
 } from './testing';
+import * as path from 'path'
+import { testFile } from '../constants/testfiles';
+import { AttachmentsButton, OutgoingMessageStatusSent } from '../test/specs/locators/conversation';
 
 export type Coordinates = {
   x: number;
@@ -1096,23 +1099,35 @@ export class DeviceWrapper {
   }
 
   public async pushMediaToDevice(mediaFileName: string, forcedDate?: string) {
+    const filePath = path.join('run', 'test', 'specs', 'media', mediaFileName);
     if (this.isIOS()) {
       await runScriptAndLog(`touch -a -m -t ${forcedDate} 'run/test/specs/media/${mediaFileName}'`);
       await runScriptAndLog(
         `xcrun simctl addmedia ${this.udid} 'run/test/specs/media/${mediaFileName}'`,
         true
-      );
-    } else {
-      await runScriptAndLog(
-        `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/${mediaFileName}' /storage/emulated/0/Download`,
-        true
-      );
-      // Refreshes the photos UI to force the image appear
-      await runScriptAndLog(
-        `${getAdbFullPath()} -s emulator-5554 shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage/emulated/0/Download/${mediaFileName}`
-      );
+      )};
+      if (this.isAndroid()) {
+        const ANDROID_DOWNLOAD_DIR = '/storage/emulated/0/Download';
+        // Android allows clearing the downloads folder at runtime
+        await runScriptAndLog(
+          `${getAdbFullPath()} -s ${this.udid} shell rm -rf ${ANDROID_DOWNLOAD_DIR}/*`,
+          true
+        );
+        // Push file
+        await runScriptAndLog(
+          `${getAdbFullPath()} -s ${this.udid} push ${filePath} ${ANDROID_DOWNLOAD_DIR}`,
+          true
+        );
+
+        // Scan the file for media indexing (refresh Files UI)
+        await runScriptAndLog(
+          `${getAdbFullPath()} -s ${this.udid} shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file://${ANDROID_DOWNLOAD_DIR}/${mediaFileName}`,
+          true
+        );
+      }
     }
-  }
+  
+    
 
   // TODO FIX UP THIS FUNCTION
   public async sendImage(platform: SupportedPlatformsType, message?: string, community?: boolean) {
@@ -1297,9 +1312,10 @@ export class DeviceWrapper {
   }
 
   public async sendDocument() {
-    const fileName = 'test_file.pdf';
     if (this.isAndroid()) {
-      await this.clickOnByAccessibilityID('Attachments button');
+      // Clear emulator and push file first 
+      await this.pushMediaToDevice(testFile);
+      await this.clickOnElementAll(new AttachmentsButton(this));
       await this.clickOnByAccessibilityID('Documents folder');
       await this.clickOnByAccessibilityID('Continue');
       await this.clickOnElementAll({
@@ -1307,23 +1323,16 @@ export class DeviceWrapper {
         selector: 'com.android.permissioncontroller:id/permission_allow_button',
         text: 'Allow',
       });
-      const testDocument = await this.doesElementExist({
-        strategy: 'id',
-        selector: 'android:id/title',
-        maxWait: 1000,
-        text: fileName,
-      });
-      if (!testDocument) {
-        await this.pushMediaToDevice('android', fileName);
-      }
-      await sleepFor(1000);
-      await this.clickOnTextElementById('android:id/title', fileName);
+      // On modern android, no matter what, a file does not reliably show up under Recents
+      // So it's necessary to navigate to the Downloads folder 
+      await this.clickOnByAccessibilityID('Show roots');
+      await sleepFor(100);
+      await this.clickOnElementXPath(`//android.widget.TextView[@resource-id="android:id/title" and @text="Downloads"]`)
+      await this.clickOnTextElementById('android:id/title', testFile);
       await this.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: `Message sent status: Sent`,
+        ...new OutgoingMessageStatusSent(this).build(),
         maxWait: 50000,
-      });
-    }
+    })}
     if (this.isIOS()) {
       const formattedFileName = 'test_file, pdf';
       const testMessage = 'Testing-document-1';
@@ -1340,7 +1349,7 @@ export class DeviceWrapper {
       });
 
       if (!testDocument) {
-        await this.pushMediaToDevice(fileName, spongeBobsBirthday);
+        await this.pushMediaToDevice(testFile, spongeBobsBirthday);
       }
       await sleepFor(100);
       await this.clickOnByAccessibilityID(formattedFileName);
@@ -1353,6 +1362,7 @@ export class DeviceWrapper {
       await this.clickOnByAccessibilityID('Send button');
     }
   }
+
 
   public async sendGIF(message: string) {
     await sleepFor(1000);
