@@ -35,7 +35,7 @@ import {
   XPath,
 } from './testing';
 import * as path from 'path';
-import { testFile, testImage } from '../constants/testfiles';
+import { testFile, testImage, profilePicture } from '../constants/testfiles';
 import { AttachmentsButton, OutgoingMessageStatusSent } from '../test/specs/locators/conversation';
 
 export type Coordinates = {
@@ -1414,8 +1414,6 @@ export class DeviceWrapper {
   public async uploadProfilePicture() {
     const spongeBobsBirthday = '199805010700.00';
     const formattedDateiOS = 'Photo, 01 May 1998, 7:00 am';
-    // eslint-disable-next-line no-irregular-whitespace
-    const formattedDateAndroid = `Photo taken on May 1, 1998, 7:00:00 AM`;
     const fileName = 'profile_picture.jpg';
     await this.clickOnElementAll(new UserSettings(this));
     // Click on Profile picture
@@ -1438,6 +1436,8 @@ export class DeviceWrapper {
       });
       await this.clickOnByAccessibilityID('Done');
     } else if (this.isAndroid()) {
+      // Push file first
+      await this.pushMediaToDevice(profilePicture);
       await this.clickOnElementAll(new ImagePermissionsModalAllow(this));
       await sleepFor(1000);
       await this.clickOnElementAll({
@@ -1445,25 +1445,10 @@ export class DeviceWrapper {
         selector: 'Image button',
       });
       await sleepFor(500);
-      // Select file
-      const profilePicture = await this.doesElementExist({
-        strategy: 'accessibility id',
-        selector: formattedDateAndroid,
-        maxWait: 5000,
-      });
-      // If no image, push file to this
-      if (!profilePicture) {
-        await this.pushMediaToDevice(fileName);
-        // await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Albums' });
-        // await this.clickOnElementAll({
-        //   strategy: 'id',
-        //   selector: 'android.widget.TextView',
-        //   text: 'Downloads',
-        // });
-      }
+      // The date of the file varies wildly between emulators but it will always begin with "Photo taken on"
       await this.clickOnElementAll({
-        strategy: 'accessibility id',
-        selector: formattedDateAndroid,
+        strategy: 'xpath',
+        selector: `//android.widget.FrameLayout[starts-with(@content-desc, "Photo taken on")]`,
       });
       await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
     }
