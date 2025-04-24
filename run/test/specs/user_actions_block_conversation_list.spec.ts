@@ -7,9 +7,8 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-// Block option not available on iOS in conversation list
+// Block option no longer available on iOS in conversation list
 androidIt('Block user in conversation list', 'high', blockUserInConversationList);
-// No longer available on iOS
 
 async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Open App
@@ -24,7 +23,6 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   await newContact(platform, device1, userA, device2, userB);
   // Navigate back to conversation list
   await device1.navigateBack();
-  // on ios swipe left on conversation
   await device1.longPressConversation(userB.userName);
   await device1.clickOnElementAll(new BlockUser(device1));
   await device1.checkModalStrings(
