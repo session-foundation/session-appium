@@ -124,20 +124,25 @@ export async function open2AppsWithFriendsState({
   const seedPhrases = result.prebuilt.users.map(m => m.seedPhrase);
   await linkDevices(result.devices, seedPhrases);
 
+  const alice = result.prebuilt.users[0];
+  const bob = result.prebuilt.users[1];
+  const alice1 = result.devices[0];
+  const bob1 = result.devices[1];
+
   const formattedDevices: WithDevices<typeof appsToOpen> = {
-    device1: result.devices[0],
-    device2: result.devices[1],
+    device1: alice1,
+    device2: bob1,
   };
   const formattedUsers: WithUsers<typeof appsToOpen> = {
-    userA: result.prebuilt.users[0],
-    userB: result.prebuilt.users[1],
+    userA: alice,
+    userB: bob,
   };
   if (focusFriendsConvo) {
     await focusConvoOnDevices([
-      // device[1] opens convo with user[0]
-      { device: result.devices[1], convoName: result.prebuilt.users[0].userName },
-      // device[0] opens convo with user[1]
-      { device: result.devices[0], convoName: result.prebuilt.users[1].userName },
+      // bob1 opens convo with alice
+      { device: bob1, convoName: alice.userName },
+      // alice1 opens convo with bob
+      { device: alice1, convoName: bob.userName },
     ]);
   }
 
@@ -166,16 +171,24 @@ export async function open3AppsWith3FriendsAnd1GroupState({
   const seedPhrases = result.prebuilt.users.map(m => m.seedPhrase);
   await linkDevices(result.devices, seedPhrases);
 
+  const alice = result.prebuilt.users[0];
+  const bob = result.prebuilt.users[1];
+  const charlie = result.prebuilt.users[2];
+
+  const alice1 = result.devices[0];
+  const bob1 = result.devices[1];
+  const charlie1 = result.devices[2];
+
   const formattedGroup = { group: result.prebuilt.group };
   const formattedDevices: WithDevices<typeof appsToOpen> = {
-    device1: result.devices[0],
-    device2: result.devices[1],
-    device3: result.devices[2],
+    device1: alice1,
+    device2: bob1,
+    device3: charlie1,
   };
   const formattedUsers: WithUsers<typeof appsToOpen> = {
-    userA: result.prebuilt.users[0],
-    userB: result.prebuilt.users[1],
-    userC: result.prebuilt.users[2],
+    userA: alice,
+    userB: bob,
+    userC: charlie,
   };
   if (focusGroupConvo) {
     await focusConvoOnDevices({
@@ -211,16 +224,24 @@ export async function open4AppsWith3Friends1GroupState({
   await linkDevices(result.devices, seedPhrases);
 
   const formattedGroup = { group: result.prebuilt.group };
+
+  const alice1 = result.devices[0];
+  const bob1 = result.devices[1];
+  const charlie1 = result.devices[2];
+
   const formattedDevices: WithDevices<typeof appsToOpen> = {
-    device1: result.devices[0],
-    device2: result.devices[1],
-    device3: result.devices[2],
-    device4: result.devices[3],
+    device1: alice1,
+    device2: bob1,
+    device3: charlie1,
+    device4: result.devices[3], // not assigned yet
   };
+  const alice = result.prebuilt.users[0];
+  const bob = result.prebuilt.users[1];
+  const charlie = result.prebuilt.users[2];
   const formattedUsers: WithUsers<3> = {
-    userA: result.prebuilt.users[0],
-    userB: result.prebuilt.users[1],
-    userC: result.prebuilt.users[2],
+    userA: alice,
+    userB: bob,
+    userC: charlie,
   };
   if (focusGroupConvo) {
     await focusConvoOnDevices({
@@ -246,18 +267,22 @@ export async function open2AppsLinkedUser({ platform }: WithPlatform) {
     groupName: undefined,
   });
   // we want the first user to have the first 2 devices linked
-  const seedPhrases = [result.prebuilt.users[0].seedPhrase, result.prebuilt.users[0].seedPhrase];
+  const alice = result.prebuilt.users[0];
+  const alice1 = result.devices[0];
+  const alice2 = result.devices[1];
+
+  const seedPhrases = [alice.seedPhrase, alice.seedPhrase];
   await linkDevices(result.devices, seedPhrases);
 
   const formattedUsers: WithUsers<1> = {
-    userA: result.prebuilt.users[0],
+    userA: alice,
   };
 
   return {
     devices: {
       // alice has two devices linked right away
-      device1: result.devices[0],
-      device2: result.devices[1],
+      device1: alice1,
+      device2: alice2,
     },
     prebuilt: { ...formattedUsers },
   };
@@ -275,34 +300,36 @@ export async function open3Apps2Friends2LinkedFirstUser({
     stateToBuildKey: prebuiltStateKey,
     groupName: undefined,
   });
+  const alice = result.prebuilt.users[0];
+  const bob = result.prebuilt.users[1];
   // we want the first user to have the first 2 devices linked
-  const seedPhrases = [
-    result.prebuilt.users[0].seedPhrase,
-    result.prebuilt.users[0].seedPhrase,
-    result.prebuilt.users[1].seedPhrase,
-  ];
+  const seedPhrases = [alice.seedPhrase, alice.seedPhrase, bob.seedPhrase];
   await linkDevices(result.devices, seedPhrases);
 
+  const alice1 = result.devices[0];
+  const alice2 = result.devices[1];
+  const bob1 = result.devices[2];
+
   const formattedUsers: WithUsers<2> = {
-    userA: result.prebuilt.users[0],
-    userB: result.prebuilt.users[1],
+    userA: alice,
+    userB: bob,
   };
 
   if (focusFriendsConvo) {
     await focusConvoOnDevices([
-      // device[1] opens convo with user[0]
-      { device: result.devices[1], convoName: result.prebuilt.users[0].userName },
-      // device[0] opens convo with user[1]
-      { device: result.devices[0], convoName: result.prebuilt.users[1].userName },
+      // bob1 opens convo with alice
+      { device: bob1, convoName: alice.userName },
+      // alice1 opens convo with bob
+      { device: alice1, convoName: bob.userName },
     ]);
   }
 
   return {
     devices: {
       // alice has two devices linked right away
-      device1: result.devices[0],
-      device2: result.devices[1],
-      device3: result.devices[2], // bob's single device
+      device1: alice1,
+      device2: alice2,
+      device3: bob1,
     },
     prebuilt: { ...formattedUsers },
   };

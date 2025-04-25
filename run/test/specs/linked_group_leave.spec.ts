@@ -15,6 +15,7 @@ bothPlatformsIt({
   testCb: leaveGroupLinkedDevice,
   countOfDevicesNeeded: 4,
 });
+
 async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   const testGroupName = 'Leave group linked device';
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);

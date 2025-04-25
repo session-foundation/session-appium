@@ -189,7 +189,7 @@ jobs:
         run: |
           cd forked-session-appium
           pwd
-          yarn test "Disappear after send off 1:1 @${PLATFORM}" #Note: this has to be double quotes
+          yarn test "Unsent message syncs @${PLATFORM}" #Note: this has to be double quotes
 
       # - name: Run the 1-devices tests ​​with 4 workers
       #   continue-on-error: true
@@ -221,10 +221,10 @@ jobs:
       #     pwd
       #     yarn test "@${PLATFORM} @${{ github.event.inputs.RISK }}" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
 
-      # - name: Kill all running emulators
-      #   if: always()
-      #   continue-on-error: true # just so we don't fail
-      #   shell: bash
-      #   run: |
-      #     source ./scripts/ci.sh
-      #     killall_emulators
+      - name: Kill all running emulators
+        if: always()
+        continue-on-error: true # just so we don't fail
+        shell: bash
+        run: |
+          source ./scripts/ci.sh
+          killall_emulators
