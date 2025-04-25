@@ -1,6 +1,10 @@
 name: Android regression tests
 run-name: '${{ inputs.RISK }} regressions on: ${{ inputs.BRANCH_TO_CHECKOUT }} (${{ inputs.APPIUM_REPO }})'
 
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
 on:
   workflow_dispatch:
     inputs:
@@ -37,28 +41,6 @@ on:
         type: string
         default: add-tooling
 
-      # SHARD_NUMBER:
-      #   description: 'shard number'
-      #   required: true
-      #   type: choice
-      #   options:
-      #     - '1'
-      #     - '2'
-      #     - '3'
-      #     - '4'
-      #   default: '1'
-
-      # SHARD_COUNT:
-      #   description: 'shard count'
-      #   required: true
-      #   type: choice
-      #   options:
-      #     - '1'
-      #     - '2'
-      #     - '3'
-      #     - '4'
-      #   default: '1'
-
       PLAYWRIGHT_RETRIES_COUNT:
         description: 'retries of failing tests to do at most'
         required: true
@@ -85,22 +67,12 @@ on:
           - '0'
           - '1'
         default: '0'
-      PLAYWRIGHT_WORKERS_COUNT:
-        description: 'number of workers to use - ONLY 1 WORKER IS SUPPORTED FOR ANDROID'
-        required: true
-        type: choice
-        options:
-          - '1'
-        default: '1'
-
-# concurrency:
-#   group: ${{ github.workflow }}
-#   cancel-in-progress: true
 
 jobs:
   android-regression:
     runs-on: [self-hosted, linux, X64, qa-android]
     env:
+      PLATFORM: 'android'
       IOS_APP_PATH_PREFIX: '../extracted/Session.app'
       ANDROID_APK: '../extracted/session-android.apk'
       APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
@@ -108,6 +80,10 @@ jobs:
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
+      SDK_MANAGER_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/cmdline-tools/latest/bin/sdkmanager'
+      AVD_MANAGER_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/cmdline-tools/latest/bin/avdmanager'
+      ANDROID_SYSTEM_IMAGE: 'system-images;android-35;google_atd;x86_64'
+      EMULATOR_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/emulator/emulator'
       IOS_1_SIMULATOR: '4A75A0E1-9EDE-4169-93C3-DCE0F0C7664F'
       IOS_2_SIMULATOR: 'ACB6A587-8556-4EA0-87CF-4326A9A22051'
       IOS_3_SIMULATOR: 'D90B2AE2-FF30-49BE-9370-B789BAEED3BB'
@@ -120,9 +96,6 @@ jobs:
       IOS_10_SIMULATOR: 'C0EE6A21-044D-4B6E-B9A5-7AB977ADF305'
       IOS_11_SIMULATOR: 'B8E78B21-1432-41F3-A398-DE4FF8CF9DED'
       IOS_12_SIMULATOR: '8214A3A2-D4E1-4AA8-BB0F-394E3A49BCFA'
-
-      # echo "SHARD_NUMBER ${{ github.event.inputs.SHARD_NUMBER }}"
-      # echo "SHARD_COUNT ${{ github.event.inputs.SHARD_COUNT }}"
 
     steps:
       - uses: actions/checkout@v4
@@ -206,13 +179,37 @@ jobs:
         run: |
           cd forked-session-appium
           pwd
-          npx playwright test --list --reporter list --grep "@android @${{ github.event.inputs.RISK }}"
+          npx playwright test --list --reporter list --grep "@${PLATFORM} @${{ github.event.inputs.RISK }}"
 
-      - name: Run the tests # ${{ github.event.inputs.SHARD_NUMBER }}​​/${{ github.event.inputs.SHARD_COUNT }}​​
+      - name: Run the 1-devices tests ​​with 4 workers
+        continue-on-error: true
+        env:
+          PLAYWRIGHT_WORKERS_COUNT: 4
+          DEVICES_PER_TEST_COUNT: 1
         run: |
           cd forked-session-appium
           pwd
-          yarn test ' @android @high-risk'
+          yarn test "@${PLATFORM} @${{ github.event.inputs.RISK }} @${DEVICES_PER_TEST_COUNT}-devices" #Note: this has to be double quotes
+
+      - name: Run the 2-devices tests ​​with 2 workers
+        continue-on-error: true
+        env:
+          PLAYWRIGHT_WORKERS_COUNT: 2
+          DEVICES_PER_TEST_COUNT: 2
+        run: |
+          cd forked-session-appium
+          pwd
+          yarn test "@${PLATFORM} @${{ github.event.inputs.RISK }} @${DEVICES_PER_TEST_COUNT}-devices" #Note: this has to be double quotes
+
+      - name: Run the tests ​​other tests with 1 worker
+        continue-on-error: true
+        env:
+          PLAYWRIGHT_WORKERS_COUNT: 1
+          DEVICES_PER_TEST_COUNT: 4
+        run: |
+          cd forked-session-appium
+          pwd
+          yarn test "@${PLATFORM} @${{ github.event.inputs.RISK }}" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
 
       - name: Kill all running emulators
         if: always()

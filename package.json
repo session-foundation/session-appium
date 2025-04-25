@@ -7,7 +7,6 @@
     "tsc": "tsc",
     "tsc-watch": "tsc -w",
     "test": "npx playwright test --timeout 300000 ./run/test/specs/*.spec.ts --grep ",
-    "test-android-shard": "npx playwright test --timeout 300000 ./run/test/specs/*.spec.ts --grep '@android' --shard ",
     "test-no-retry": "_TESTING=1 npx playwright test --timeout 300000  ./run/test/specs/*.spec.ts --grep ",
     "test-one": "_TESTING=1 _FORCE_LOGS=0 npx playwright test --timeout 300000  ./run/test/**/*.spec.ts --grep",
     "test-udid": "_TESTING=1 npx playwright test UDID=$udid --timeout 300000 ./run/test/**/*.spec.ts --grep",

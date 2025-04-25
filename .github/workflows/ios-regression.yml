@@ -36,28 +36,6 @@ on:
         type: string
         default: kick-member-test
 
-      # SHARD_NUMBER:
-      #   description: 'shard number'
-      #   required: true
-      #   type: choice
-      #   options:
-      #     - '1'
-      #     - '2'
-      #     - '3'
-      #     - '4'
-      #   default: '1'
-
-      # SHARD_COUNT:
-      #   description: 'shard count'
-      #   required: true
-      #   type: choice
-      #   options:
-      #     - '1'
-      #     - '2'
-      #     - '3'
-      #     - '4'
-      #   default: '1'
-
       PLAYWRIGHT_RETRIES_COUNT:
         description: 'retries of failing tests to do at most'
         required: true
@@ -94,9 +72,10 @@ on:
           - '3'
         default: '3'
 
-# concurrency:
-#   group: ${{ github.workflow }}
-#   cancel-in-progress: true
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
 
 jobs:
   ios-regression:
@@ -125,8 +104,6 @@ jobs:
       IOS_10_SIMULATOR: 'C0EE6A21-044D-4B6E-B9A5-7AB977ADF305'
       IOS_11_SIMULATOR: 'B8E78B21-1432-41F3-A398-DE4FF8CF9DED'
       IOS_12_SIMULATOR: '8214A3A2-D4E1-4AA8-BB0F-394E3A49BCFA'
-      # echo "SHARD_NUMBER ${{ github.event.inputs.SHARD_NUMBER }}"
-      # echo "SHARD_COUNT ${{ github.event.inputs.SHARD_COUNT }}"
 
     steps:
       - uses: actions/checkout@v4
@@ -209,7 +186,8 @@ jobs:
           cd forked-session-appium
           pwd
           npx playwright test --list --reporter list --grep "@ios @${{ github.event.inputs.RISK }}"
-      - name: Run the iOS tests # ${{ github.event.inputs.SHARD_NUMBER }}​​/${{ github.event.inputs.SHARD_COUNT }}​​
+
+      - name: Run the iOS tests​​
         run: |
           cd forked-session-appium
           pwd

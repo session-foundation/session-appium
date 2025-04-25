@@ -13,6 +13,7 @@ import { sleepFor } from './sleep_for';
 import {
   getAdbFullPath,
   getAndroidSystemImageToUse,
+  getDevicesPerTestCount,
   getEmulatorFullPath,
   getSdkManagerFullPath,
 } from './binaries';
@@ -184,10 +185,11 @@ const openAndroidApp = async (
 ): Promise<{
   device: DeviceWrapper;
 }> => {
-  const parrallelIndex = process.env.TEST_PARALLEL_INDEX || '1';
-  console.info('process.env.TEST_PARALLEL_INDEX:', process.env.TEST_PARALLEL_INDEX, parrallelIndex);
-  const parrallelIndexNumber = parseInt(parrallelIndex);
-  const actualCapabilitiesIndex = capabilitiesIndex + 4 * parrallelIndexNumber;
+  const parallelIndex = process.env.TEST_PARALLEL_INDEX || '1';
+  console.info('process.env.TEST_PARALLEL_INDEX:', process.env.TEST_PARALLEL_INDEX, parallelIndex);
+  const parallelIndexNumber = parseInt(parallelIndex);
+  const actualCapabilitiesIndex =
+    capabilitiesIndex + getDevicesPerTestCount() * parallelIndexNumber;
 
   if (!capabilityIsValid(actualCapabilitiesIndex)) {
     throw new Error(`Invalid actual capability given: ${actualCapabilitiesIndex}`);
@@ -255,7 +257,7 @@ const openiOSApp = async (
 
   // Calculate the actual capabilities index for the current worker
   const actualCapabilitiesIndex =
-    capabilitiesIndex + 4 * parseInt(process.env.TEST_PARALLEL_INDEX || '0');
+    capabilitiesIndex + getDevicesPerTestCount() * parseInt(process.env.TEST_PARALLEL_INDEX || '0');
 
   const opts: XCUITestDriverOpts = {
     address: `http://localhost:${APPIUM_PORT}`,
