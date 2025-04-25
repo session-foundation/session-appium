@@ -24,6 +24,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
 
   if (group.groupName !== testGroupName) {

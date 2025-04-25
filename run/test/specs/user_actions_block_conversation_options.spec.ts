@@ -25,6 +25,7 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
     prebuilt: { userB },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   const blockedMessage = 'Blocked message';
 

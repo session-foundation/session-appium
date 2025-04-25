@@ -17,6 +17,7 @@ async function unsendMessage(platform: SupportedPlatformsType) {
     devices: { device1, device2 },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   const testMessage = 'Checking unsend functionality';
 

@@ -25,6 +25,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   } = await open4AppsWith3Friends1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
   const userD = await newUser(device4, USERNAME.DRACULA);
   await device1.navigateBack();

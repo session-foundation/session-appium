@@ -20,6 +20,7 @@ async function unsendMessageGroup(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
   const sentMessage = await device1.sendMessage('Checking unsend functionality');
   await Promise.all([

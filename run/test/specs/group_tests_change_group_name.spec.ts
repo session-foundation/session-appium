@@ -29,6 +29,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
   // Click on settings or three dots
   await device1.clickOnElementAll(new ConversationSettings(device1));
@@ -75,6 +76,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
   // Click on settings or three dots
   await device1.clickOnElementAll(new ConversationSettings(device1));

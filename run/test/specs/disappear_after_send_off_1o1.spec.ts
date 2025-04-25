@@ -11,7 +11,6 @@ import {
 } from './locators/disappearing_messages';
 import { open3Apps2Friends2LinkedFirstUser } from './state_builder';
 import { sleepFor } from './utils';
-import { newContact } from './utils/create_contact';
 import { checkDisappearingControlMessage } from './utils/disappearing_control_messages';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
@@ -27,7 +26,7 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
   const {
     devices: { device1: alice1, device2: alice2, device3: bob1 },
     prebuilt: { userA, userB },
-  } = await open3Apps2Friends2LinkedFirstUser({ platform });
+  } = await open3Apps2Friends2LinkedFirstUser({ platform, focusFriendsConvo: true });
 
   const mode: DisappearModes = 'send';
   const controlMode: DisappearActions = 'sent';

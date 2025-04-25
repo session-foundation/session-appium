@@ -27,6 +27,7 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
     devices: { device1, device2 },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   // Click on attachments button
@@ -57,6 +58,7 @@ async function disappearingGifMessage1o1Android(platform: SupportedPlatformsType
     devices: { device1, device2 },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   // Wait for control messages to disappear before sending image

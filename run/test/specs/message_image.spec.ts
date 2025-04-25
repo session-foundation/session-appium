@@ -20,6 +20,7 @@ async function sendImageIos(platform: SupportedPlatformsType) {
     prebuilt: { userA },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   const testMessage = "Ron Swanson doesn't like birthdays";
 
@@ -47,6 +48,7 @@ async function sendImageAndroid(platform: SupportedPlatformsType) {
     prebuilt: { userA },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   const testMessage = 'Sending image from Alice to Bob';
 

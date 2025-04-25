@@ -23,6 +23,7 @@ async function sendVideoGroupiOS(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
   const testMessage = 'Testing-video-1';
   const replyMessage = `Replying to video from ${userA.userName} in ${testGroupName}`;
@@ -71,6 +72,7 @@ async function sendVideoGroupAndroid(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
   const replyMessage = `Replying to video from ${userA.userName} in ${testGroupName}`;
   // Click on attachments button

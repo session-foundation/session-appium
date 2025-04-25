@@ -21,6 +21,7 @@ async function sendGifIos(platform: SupportedPlatformsType) {
     prebuilt: { userA },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   const testMessage = 'Testing-GIF-1';
   await device1.sendGIF(testMessage);
@@ -48,6 +49,7 @@ async function sendGifAndroid(platform: SupportedPlatformsType) {
     prebuilt: { userA },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   const testMessage = 'Test message with GIF';
 

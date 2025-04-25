@@ -23,6 +23,7 @@ async function membersCantSetDisappearingMessages(platform: SupportedPlatformsTy
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
 
   // Member B navigates to DM settings

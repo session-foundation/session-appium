@@ -23,6 +23,7 @@ async function sendLinkIos(platform: SupportedPlatformsType) {
     prebuilt: { userA },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   const testLink = `https://getsession.org/`;
 
@@ -76,6 +77,7 @@ async function sendLinkAndroid(platform: SupportedPlatformsType) {
     devices: { device1, device2 },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   const testLink = `https://getsession.org/`;
 

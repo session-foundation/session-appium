@@ -25,6 +25,7 @@ async function sendImageGroupiOS(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
   await device1.sendImage(platform, testMessage);
   await device1.waitForTextElementToBePresent({
@@ -75,6 +76,7 @@ async function sendImageGroupAndroid(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
   const replyMessage = `Replying to image from ${userA.userName}`;
   await device1.sendImage(platform, testMessage);

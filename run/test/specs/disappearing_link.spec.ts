@@ -28,6 +28,7 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
     devices: { device1, device2 },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   // Send a link
@@ -86,6 +87,7 @@ async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsTyp
     devices: { device1, device2 },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   // await device1.navigateBack();

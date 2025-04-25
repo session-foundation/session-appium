@@ -21,6 +21,10 @@ type WithUserB = { userB: StateUser };
 type WithUserC = { userC: StateUser };
 type WithUserD = { userD: StateUser };
 
+type WithFocusFriendsConvo = { focusFriendsConvo: boolean };
+type WithFocusGroupConvo = { focusGroupConvo: boolean };
+type WithPlatform = { platform: SupportedPlatformsType };
+
 export type AppCountPerTest = 1 | 2 | 3 | 4;
 
 type WithDevices<C extends AppCountPerTest> = C extends 4
@@ -92,8 +96,7 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
   platform,
   groupName,
   stateToBuildKey,
-}: {
-  platform: SupportedPlatformsType;
+}: WithPlatform & {
   appsToOpen: A;
   stateToBuildKey: K;
   groupName: K extends WithGroupStateKey ? string : undefined;
@@ -108,11 +111,8 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
 
 export async function open2AppsWithFriendsState({
   platform,
-  focusFriendsConvo = true,
-}: {
-  platform: SupportedPlatformsType;
-  focusFriendsConvo?: boolean;
-}) {
+  focusFriendsConvo,
+}: WithPlatform & WithFocusFriendsConvo) {
   const stateToBuildKey = '2friends';
   const appsToOpen = 2;
   const result = await openAppsWithState({
@@ -150,12 +150,11 @@ export async function open2AppsWithFriendsState({
 export async function open3AppsWith3FriendsAnd1GroupState({
   platform,
   groupName,
-  focusGroupConvo = true,
-}: {
-  platform: SupportedPlatformsType;
-  groupName: string;
-  focusGroupConvo?: boolean;
-}) {
+  focusGroupConvo,
+}: WithPlatform &
+  WithFocusGroupConvo & {
+    groupName: string;
+  }) {
   const stateToBuildKey = '3friendsInGroup';
   const appsToOpen = 3;
   const result = await openAppsWithState({
@@ -195,11 +194,10 @@ export async function open4AppsWith3Friends1GroupState({
   platform,
   groupName,
   focusGroupConvo = true,
-}: {
-  platform: SupportedPlatformsType;
-  groupName: string;
-  focusGroupConvo?: boolean;
-}) {
+}: WithPlatform &
+  WithFocusGroupConvo & {
+    groupName: string;
+  }) {
   const stateToBuildKey = '3friendsInGroup';
   const appsToOpen = 4;
   const result = await openAppsWithState({
@@ -238,7 +236,7 @@ export async function open4AppsWith3Friends1GroupState({
   };
 }
 
-export async function open2AppsLinkedUser({ platform }: { platform: SupportedPlatformsType }) {
+export async function open2AppsLinkedUser({ platform }: WithPlatform) {
   const prebuiltStateKey = '1user';
   const appsToOpen = 2;
   const result = await openAppsWithState({
@@ -267,9 +265,8 @@ export async function open2AppsLinkedUser({ platform }: { platform: SupportedPla
 
 export async function open3Apps2Friends2LinkedFirstUser({
   platform,
-}: {
-  platform: SupportedPlatformsType;
-}) {
+  focusFriendsConvo,
+}: WithPlatform & WithFocusFriendsConvo) {
   const prebuiltStateKey = '2friends';
   const appsToOpen = 3;
   const result = await openAppsWithState({
@@ -290,6 +287,15 @@ export async function open3Apps2Friends2LinkedFirstUser({
     userA: result.prebuilt.users[0],
     userB: result.prebuilt.users[1],
   };
+
+  if (focusFriendsConvo) {
+    await focusConvoOnDevices([
+      // device[1] opens convo with user[0]
+      { device: result.devices[1], convoName: result.prebuilt.users[0].userName },
+      // device[0] opens convo with user[1]
+      { device: result.devices[0], convoName: result.prebuilt.users[1].userName },
+    ]);
+  }
 
   return {
     devices: {

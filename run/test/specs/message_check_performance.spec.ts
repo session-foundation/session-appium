@@ -14,6 +14,7 @@ async function checkPerformance(platform: SupportedPlatformsType) {
     devices: { device1 },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   const timesArray: Array<number> = [];
 

@@ -23,6 +23,7 @@ async function sendLongMessageIos(platform: SupportedPlatformsType) {
     prebuilt: { userA },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   // Send a long message from User A to User B
   await device1.sendMessage(longText);
@@ -42,6 +43,7 @@ async function sendLongMessageAndroid(platform: SupportedPlatformsType) {
     prebuilt: { userA },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   // Send a long message from User A to User B
   await device1.sendMessage(longText);

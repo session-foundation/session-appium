@@ -28,6 +28,7 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType) {
     prebuilt: { userA, userB },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   // await device1.navigateBack();
@@ -94,6 +95,7 @@ async function disappearingCallMessage1o1Android(platform: SupportedPlatformsTyp
     prebuilt: { userA, userB },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
 

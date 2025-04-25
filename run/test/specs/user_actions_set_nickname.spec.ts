@@ -26,6 +26,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
     devices: { device1, device2 },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   // Click on settings/more info
   await device1.clickOnElementAll(new ConversationSettings(device1));
@@ -66,6 +67,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
     prebuilt: { userB },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   const nickName = 'New nickname';
   // Go back to conversation list

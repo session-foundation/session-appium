@@ -23,6 +23,7 @@ async function sendVideoIos(platform: SupportedPlatformsType) {
     prebuilt: { userA },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   const testMessage = 'Testing-video-1';
 
@@ -56,6 +57,7 @@ async function sendVideoAndroid(platform: SupportedPlatformsType) {
     prebuilt: { userA },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   const replyMessage = `Replying to video from ${userA.userName}`;
   // Send video

@@ -24,6 +24,7 @@ async function sendGifGroupiOS(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
 
   const testMessage = 'Testing-GIF-1';
@@ -67,6 +68,7 @@ async function sendGifGroupAndroid(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
   const testMessage = 'Testing-GIF-1';
   const replyMessage = `Replying to GIF from ${userA.userName}`;

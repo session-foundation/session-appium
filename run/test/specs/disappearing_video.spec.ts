@@ -21,6 +21,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
     devices: { device1, device2 },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   await device1.onIOS().sendVideoiOS(testMessage);

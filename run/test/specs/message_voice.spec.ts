@@ -16,6 +16,7 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
     prebuilt: { userA },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   const replyMessage = `Replying to voice message from ${userA.userName}`;
   // Select voice message button to activate recording state

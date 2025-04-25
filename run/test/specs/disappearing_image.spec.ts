@@ -21,6 +21,7 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
     devices: { device1, device2 },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   await sleepFor(500);

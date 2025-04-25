@@ -14,6 +14,7 @@ async function sendDocument(platform: SupportedPlatformsType) {
     prebuilt: { userA },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   const testMessage = 'Testing-document-1';
   const replyMessage = `Replying to document from ${userA.userName}`;

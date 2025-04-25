@@ -21,6 +21,7 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
     prebuilt: { userB },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   // Navigate back to conversation list
   await device1.navigateBack();

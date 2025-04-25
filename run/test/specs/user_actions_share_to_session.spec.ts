@@ -24,6 +24,7 @@ async function shareToSession(platform: SupportedPlatformsType) {
     devices: { device1, device2 },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   const testMessage = 'Testing sharing an image through photo gallery to Session';
   const ronSwansonBirthday = '196705060700.00';

@@ -16,6 +16,7 @@ async function readStatus(platform: SupportedPlatformsType) {
     prebuilt: { userA, userB },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   const testMessage = 'Testing read status';
   // Go to settings to turn on read status

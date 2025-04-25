@@ -17,6 +17,7 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
 
   await device1.mentionContact(platform, userB);

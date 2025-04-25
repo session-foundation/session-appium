@@ -23,6 +23,7 @@ async function sendDocumentGroupiOS(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
   const testMessage = 'Testing-document-1';
   const replyMessage = `Replying to document from ${userA.userName}`;
@@ -59,6 +60,7 @@ async function sendDocumentGroupAndroid(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
 
   const replyMessage = `Replying to document from ${userA.userName} in ${testGroupName}`;

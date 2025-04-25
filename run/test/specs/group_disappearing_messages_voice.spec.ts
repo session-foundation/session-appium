@@ -21,6 +21,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
   await setDisappearingMessage(platform, device1, ['Group', timerType, time]);
   await device1.sendVoiceMessage();

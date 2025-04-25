@@ -15,8 +15,8 @@ bothPlatformsIt({
 async function deleteConversation(platform: SupportedPlatformsType) {
   const {
     devices: { device1: alice1, device2: alice2 },
-    prebuilt: {  userB },
-  } = await open3Apps2Friends2LinkedFirstUser({ platform });
+    prebuilt: { userB },
+  } = await open3Apps2Friends2LinkedFirstUser({ platform, focusFriendsConvo: false });
 
   // Check contact has loaded on linked device
   // await alice1.navigateBack();

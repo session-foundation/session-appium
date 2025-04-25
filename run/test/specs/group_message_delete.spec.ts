@@ -19,6 +19,7 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
   const sentMessage = await device1.sendMessage('Checking local delete functionality');
   await Promise.all([

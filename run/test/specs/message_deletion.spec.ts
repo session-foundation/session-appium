@@ -16,6 +16,7 @@ async function deleteMessage(platform: SupportedPlatformsType) {
     devices: { device1, device2 },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   // send message from User A to User B
   const sentMessage = await device1.sendMessage('Checking local deletetion functionality');

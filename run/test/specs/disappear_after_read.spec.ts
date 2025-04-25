@@ -19,6 +19,7 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
     prebuilt: { userA, userB },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
 
   const testMessage = 'Checking disappear after read is working';

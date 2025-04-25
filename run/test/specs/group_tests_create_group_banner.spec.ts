@@ -16,6 +16,7 @@ async function createGroupBanner(platform: SupportedPlatformsType) {
     devices: { device1, device2 },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   await device1.navigateBack();
   // Open the Create Group screen from home

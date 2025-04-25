@@ -26,6 +26,7 @@ async function sendCommunityInvitationIos(platform: SupportedPlatformsType) {
     prebuilt: { userB },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   // Join community on device 1
   // Click on plus button
@@ -75,6 +76,7 @@ async function sendCommunityInviteMessageAndroid(platform: SupportedPlatformsTyp
     prebuilt: { userB },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   // Join community
   await sleepFor(100);

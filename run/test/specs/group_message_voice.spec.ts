@@ -22,6 +22,7 @@ async function sendVoiceMessageGroupiOS(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
   const replyMessage = `Replying to voice message from ${userA.userName} in ${testGroupName}`;
   await device1.sendVoiceMessage();
@@ -58,6 +59,7 @@ async function sendVoiceMessageGroupAndroid(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
   const replyMessage = `Replying to voice message from ${userA.userName} in ${testGroupName}`;
   // Select voice message button to activate recording state

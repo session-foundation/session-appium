@@ -25,6 +25,7 @@ async function sendLongMessageGroupiOS(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
   await device1.sendMessage(longText);
   await device2.waitForTextElementToBePresent({
@@ -61,6 +62,7 @@ async function sendLongMessageGroupAndroid(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
 
   // Sending a long text message

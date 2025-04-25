@@ -27,6 +27,7 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
   const replyMessage = `Replying to link from ${userA.userName} in group ${testGroupName}`;
   // Create contact between User A and User B
@@ -90,6 +91,7 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
   const testLink = `https://getsession.org/`;
   // Send a link

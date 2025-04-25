@@ -22,6 +22,7 @@ async function leaveGroup(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
   await device3.clickOnElementAll(new ConversationSettings(device3));
   await sleepFor(1000);

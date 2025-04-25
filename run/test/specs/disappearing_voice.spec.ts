@@ -25,6 +25,7 @@ async function disappearingVoiceMessage1o1Ios(platform: SupportedPlatformsType) 
     devices: { device1, device2 },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   await device1.sendVoiceMessage();
@@ -54,6 +55,7 @@ async function disappearingVoiceMessage1o1Android(platform: SupportedPlatformsTy
     devices: { device1, device2 },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   await device1.sendVoiceMessage();

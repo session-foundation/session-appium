@@ -20,6 +20,7 @@ async function inviteContactGroupBanner(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
   // Navigate to Invite Contacts screen
   await device1.clickOnElementAll(new ConversationSettings(device1));

@@ -18,6 +18,7 @@ async function unblockUser(platform: SupportedPlatformsType) {
     prebuilt: { userA, userB },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
   const blockedMessage = `Blocked message from ${userB.userName} to ${userA.userName}`;
   await device1.clickOnElementAll(new ConversationSettings(device1));

@@ -27,6 +27,7 @@ async function kickMember(platform: SupportedPlatformsType) {
   } = await open3AppsWith3FriendsAnd1GroupState({
     platform,
     groupName: testGroupName,
+    focusGroupConvo: true,
   });
   await device1.clickOnElementAll(new ConversationSettings(device1));
   await device1.clickOnElementAll(new EditGroup(device1));

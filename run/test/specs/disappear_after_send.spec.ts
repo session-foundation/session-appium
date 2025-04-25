@@ -19,6 +19,7 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
     prebuilt: { userA, userB },
   } = await open2AppsWithFriendsState({
     platform,
+    focusFriendsConvo: true,
   });
 
   const mode: DisappearModes = 'send';
