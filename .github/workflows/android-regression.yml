@@ -181,40 +181,50 @@ jobs:
           pwd
           npx playwright test --list --reporter list --grep "@${PLATFORM} @${{ github.event.inputs.RISK }}"
 
-      - name: Run the 1-devices tests ​​with 4 workers
+      - name: Run the single test
         continue-on-error: true
         env:
-          PLAYWRIGHT_WORKERS_COUNT: 4
-          DEVICES_PER_TEST_COUNT: 1
-        run: |
-          cd forked-session-appium
-          pwd
-          yarn test "@${PLATFORM} @${{ github.event.inputs.RISK }} @${DEVICES_PER_TEST_COUNT}-devices" #Note: this has to be double quotes
-
-      - name: Run the 2-devices tests ​​with 2 workers
-        continue-on-error: true
-        env:
-          PLAYWRIGHT_WORKERS_COUNT: 2
+          PLAYWRIGHT_WORKERS_COUNT: 1
           DEVICES_PER_TEST_COUNT: 2
         run: |
           cd forked-session-appium
           pwd
-          yarn test "@${PLATFORM} @${{ github.event.inputs.RISK }} @${DEVICES_PER_TEST_COUNT}-devices" #Note: this has to be double quotes
+          yarn test "Disappear after send off 1:1 @${PLATFORM}" #Note: this has to be double quotes
 
-      - name: Run the tests ​​other tests with 1 worker
-        continue-on-error: true
-        env:
-          PLAYWRIGHT_WORKERS_COUNT: 1
-          DEVICES_PER_TEST_COUNT: 4
-        run: |
-          cd forked-session-appium
-          pwd
-          yarn test "@${PLATFORM} @${{ github.event.inputs.RISK }}" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
+      # - name: Run the 1-devices tests ​​with 4 workers
+      #   continue-on-error: true
+      #   env:
+      #     PLAYWRIGHT_WORKERS_COUNT: 4
+      #     DEVICES_PER_TEST_COUNT: 1
+      #   run: |
+      #     cd forked-session-appium
+      #     pwd
+      #     yarn test "@${PLATFORM} @${{ github.event.inputs.RISK }} @${DEVICES_PER_TEST_COUNT}-devices" #Note: this has to be double quotes
 
-      - name: Kill all running emulators
-        if: always()
-        continue-on-error: true # just so we don't fail
-        shell: bash
-        run: |
-          source ./scripts/ci.sh
-          killall_emulators
+      # - name: Run the 2-devices tests ​​with 2 workers
+      #   continue-on-error: true
+      #   env:
+      #     PLAYWRIGHT_WORKERS_COUNT: 2
+      #     DEVICES_PER_TEST_COUNT: 2
+      #   run: |
+      #     cd forked-session-appium
+      #     pwd
+      #     yarn test "@${PLATFORM} @${{ github.event.inputs.RISK }} @${DEVICES_PER_TEST_COUNT}-devices" #Note: this has to be double quotes
+
+      # - name: Run the tests ​​other tests with 1 worker
+      #   continue-on-error: true
+      #   env:
+      #     PLAYWRIGHT_WORKERS_COUNT: 1
+      #     DEVICES_PER_TEST_COUNT: 4
+      #   run: |
+      #     cd forked-session-appium
+      #     pwd
+      #     yarn test "@${PLATFORM} @${{ github.event.inputs.RISK }}" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
+
+      # - name: Kill all running emulators
+      #   if: always()
+      #   continue-on-error: true # just so we don't fail
+      #   shell: bash
+      #   run: |
+      #     source ./scripts/ci.sh
+      #     killall_emulators

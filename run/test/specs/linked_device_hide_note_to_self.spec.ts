@@ -1,11 +1,10 @@
 import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
 import { EmptyConversation, Hide } from './locators/conversation';
 import { CancelSearchButton, NoteToSelfOption } from './locators/global_search';
 import { SearchButton } from './locators/home';
-import { linkedDevice } from './utils/link_device';
-import { openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
+import { open2AppsLinkedUser } from './state_builder';
+import { SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Hide note to self linked device',
@@ -22,9 +21,11 @@ bothPlatformsItSeparate({
 });
 
 async function hideNoteToSelf(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
+  const {
+    devices: { device1, device2 },
+  } = await open2AppsLinkedUser({ platform });
+
   const noteToSelf = englishStripped('noteToSelf').toString();
-  await linkedDevice(device1, device2, USERNAME.ALICE);
   await device1.clickOnElementAll(new SearchButton(device1));
   await device1.clickOnElementAll(new NoteToSelfOption(device1));
   await device1.waitForTextElementToBePresent(

@@ -1,9 +1,8 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
-import { linkedDevice } from './utils/link_device';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { isSameColor } from './utils/check_colour';
 import { UserSettings } from './locators/settings';
+import { open2AppsLinkedUser } from './state_builder';
 
 bothPlatformsIt({
   title: 'Avatar color linked device',
@@ -12,8 +11,11 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 async function avatarColorLinkedDevice(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  const userA = await linkedDevice(device1, device2, USERNAME.ALICE);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userA },
+  } = await open2AppsLinkedUser({ platform });
+  
   // Get Alice's avatar color on device 1 (Home Screen avatar) and turn it into a hex value
   const device1PixelColor = await device1.getElementPixelColor(new UserSettings(device1));
   // Get Alice's avatar color on the linked device (Home Screen avatar) and turn it into a hex value

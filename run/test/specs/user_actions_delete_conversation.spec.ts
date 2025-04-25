@@ -2,10 +2,8 @@ import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteContactModalConfirm } from './locators/global';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { linkedDevice } from './utils/link_device';
-import { openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
+import { open3Apps2Friends2LinkedFirstUser } from './state_builder';
+import { SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Delete conversation',
@@ -15,47 +13,45 @@ bothPlatformsIt({
 });
 
 async function deleteConversation(platform: SupportedPlatformsType) {
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  const [userA, userB] = await Promise.all([
-    linkedDevice(device1, device3, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
+  const {
+    devices: { device1: alice1, device2: alice2 },
+    prebuilt: {  userB },
+  } = await open3Apps2Friends2LinkedFirstUser({ platform });
 
-  await newContact(platform, device1, userA, device2, userB);
   // Check contact has loaded on linked device
-  await device1.navigateBack();
-  await device2.navigateBack();
+  // await alice1.navigateBack();
+  // await bob1.navigateBack();
   // Check username has changed from session id on both device 1 and 3
   await Promise.all([
-    device1.waitForTextElementToBePresent({
+    alice1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
       text: userB.userName,
     }),
-    device3.waitForTextElementToBePresent({
+    alice2.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
       text: userB.userName,
     }),
   ]);
   // Delete conversation
-  await device1.onIOS().swipeLeft('Conversation list item', userB.userName);
-  await device1.onAndroid().longPressConversation(userB.userName);
-  await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Delete' });
-  await device1.checkModalStrings(
+  await alice1.onIOS().swipeLeft('Conversation list item', userB.userName);
+  await alice1.onAndroid().longPressConversation(userB.userName);
+  await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Delete' });
+  await alice1.checkModalStrings(
     englishStripped('conversationsDelete').toString(),
     englishStripped('conversationsDeleteDescription').withArgs({ name: USERNAME.BOB }).toString(),
     true
   );
-  await device1.clickOnElementAll(new DeleteContactModalConfirm(device1));
+  await alice1.clickOnElementAll(new DeleteContactModalConfirm(alice1));
   await Promise.all([
-    device1.doesElementExist({
+    alice1.doesElementExist({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
       text: userB.userName,
       maxWait: 500,
     }),
-    device3.doesElementExist({
+    alice2.doesElementExist({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
       text: userB.userName,

@@ -1,10 +1,9 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
 import { UserSettings } from './locators/settings';
+import { open2AppsLinkedUser } from './state_builder';
 import { runOnlyOnAndroid, sleepFor } from './utils';
 import { parseDataImage } from './utils/check_colour';
-import { linkedDevice } from './utils/link_device';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Avatar restored',
@@ -14,7 +13,10 @@ bothPlatformsIt({
 });
 
 async function avatarRestored(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
+  const {
+    devices: { device1, device2 },
+  } = await open2AppsLinkedUser({ platform });
+  
   let expectedPixelHexColour: string;
   if (platform === 'android') {
     expectedPixelHexColour = 'cbfeff';
@@ -23,7 +25,6 @@ async function avatarRestored(platform: SupportedPlatformsType) {
   } else {
     throw new Error('Platform not supported');
   }
-  await linkedDevice(device1, device2, USERNAME.ALICE);
   await device1.uploadProfilePicture();
   await sleepFor(5000);
   // Wait for change

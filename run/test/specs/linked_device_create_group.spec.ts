@@ -32,6 +32,7 @@ async function linkedGroupiOS(platform: SupportedPlatformsType) {
   ]);
   const testGroupName = 'Linked device group';
   const newGroupName = 'New group name';
+  // Note we keep this createGroup here as we want it to **indeed** use the UI to create the group
   await createGroup(platform, device1, userA, device3, userB, device4, userC, testGroupName);
   // Test that group has loaded on linked device
   await device2.clickOnElementAll({
@@ -92,6 +93,7 @@ async function linkedGroupAndroid(platform: SupportedPlatformsType) {
     newUser(device4, USERNAME.CHARLIE),
   ]);
   // Create group
+  // Note we keep this createGroup here as we want it to **indeed** use the UI to create the group
   await createGroup(platform, device1, userA, device3, userB, device4, userC, testGroupName);
   // Test that group has loaded on linked device
   await device2.clickOnElementAll({

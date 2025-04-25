@@ -1,8 +1,7 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
 import { UserSettings } from './locators/settings';
-import { linkedDevice } from './utils/link_device';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { open2AppsLinkedUser } from './state_builder';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Link device',
@@ -13,9 +12,10 @@ bothPlatformsIt({
 
 async function linkDevice(platform: SupportedPlatformsType) {
   // Open server and two devices
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // link device
-  const userA = await linkedDevice(device1, device2, USERNAME.ALICE);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userA },
+  } = await open2AppsLinkedUser({ platform });
   // Check that 'Youre almost finished' reminder doesn't pop up on device2
   await device2.hasElementBeenDeleted({
     strategy: 'accessibility id',
@@ -40,7 +40,7 @@ async function linkDevice(platform: SupportedPlatformsType) {
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Account ID',
-    text: userA.accountID,
+    text: userA.sessionId,
   });
 
   await closeApp(device1, device2);

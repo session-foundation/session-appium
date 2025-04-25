@@ -1,11 +1,10 @@
 import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
 import { TickButton, UsernameInput, UsernameSettings } from './locators';
 import { SaveNameChangeButton, UserSettings } from './locators/settings';
+import { open2AppsLinkedUser } from './state_builder';
 import { sleepFor } from './utils';
-import { linkedDevice } from './utils/link_device';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Change username linked device',
@@ -20,8 +19,11 @@ bothPlatformsItSeparate({
 });
 
 async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  const userA = await linkedDevice(device1, device2, USERNAME.ALICE);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userA },
+  } = await open2AppsLinkedUser({ platform });
+
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
   await Promise.all([
@@ -66,8 +68,11 @@ async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
 }
 
 async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  const userA = await linkedDevice(device1, device2, USERNAME.ALICE);
+  const {
+    devices: { device1, device2 },
+    prebuilt: { userA },
+  } = await open2AppsLinkedUser({ platform });
+  
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
   await Promise.all([

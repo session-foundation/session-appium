@@ -994,12 +994,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@session-foundation/basic-types@npm:0.0.2, @session-foundation/basic-types@npm:^0.0.2":
+"@session-foundation/basic-types@npm:0.0.2":
   version: 0.0.2
   resolution: "@session-foundation/basic-types@npm:0.0.2"
   dependencies:
     buffer-crc32: "npm:^1.0.0"
   checksum: 5681f6394ec8ca95f5826909dbf2ed761eb4f96259823e13e52e51996418cd72cfc41a744d80efb5ad2c449eca11000be649337eee5237189a4c44375e656351
+  languageName: node
+  linkType: hard
+
+"@session-foundation/basic-types@npm:^0.0.3":
+  version: 0.0.3
+  resolution: "@session-foundation/basic-types@npm:0.0.3"
+  dependencies:
+    buffer-crc32: "npm:^1.0.0"
+  checksum: 480f1d89a17549977f55562bb6237150aa6a9258da6cd7f064828a1ad1b22c73faa82fd2b4ffe326d8486e98dde461deccfec38d8ab39b1249343e0b184962cb
   languageName: node
   linkType: hard
 
@@ -1012,16 +1021,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@session-foundation/qa-seeder@npm:^0.0.32":
-  version: 0.0.32
-  resolution: "@session-foundation/qa-seeder@npm:0.0.32"
+"@session-foundation/qa-seeder@npm:^0.0.38":
+  version: 0.0.38
+  resolution: "@session-foundation/qa-seeder@npm:0.0.38"
   dependencies:
-    "@session-foundation/basic-types": "npm:^0.0.2"
+    "@session-foundation/basic-types": "npm:^0.0.3"
     "@session-foundation/mnemonic": "npm:^0.0.5"
     "@session-foundation/session-tooling": "npm:^0.0.10"
     "@session-foundation/sodium": "npm:^0.0.2"
     lodash: "npm:^4.17.21"
-  checksum: 47a3917a1acdf0e82fafb8c112e6b10ea01b7748cee743774395323e5655cb1263998ed0e94bb21a67ff70e9001c4b506382b997fbdebb1981f21a6250b5492c
+  checksum: e2aeb27a68b7f95f60ea028782708a5ea914a5ab8c6287b749dd093d149c77fd3c5b69606468274515e2fa78d55d48e7e6a32a452871b99b0f7a1da746a34f72
   languageName: node
   linkType: hard
 
@@ -6977,7 +6986,7 @@ __metadata:
     "@appium/images-plugin": "npm:^3.0.17"
     "@eslint/js": "npm:^9.14.0"
     "@playwright/test": "npm:^1.45.1"
-    "@session-foundation/qa-seeder": "npm:^0.0.32"
+    "@session-foundation/qa-seeder": "npm:^0.0.38"
     "@types/lodash": "npm:^4.14.191"
     "@types/node": "npm:^20.14.10"
     "@types/sinon": "npm:^17.0.3"
