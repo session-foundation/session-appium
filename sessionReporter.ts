@@ -31,7 +31,7 @@ function testResultToDurationStr(tests: Array<Pick<TestAndResult, 'result'>>) {
   return inSeconds.map(m => `${m}s`).join(',');
 }
 
-function formatGroupedByResults(testAndResults: Array<TestAndResult>) {
+function getGroupedByResultsDetails(testAndResults: Array<TestAndResult>) {
   const allPassed = testAndResults.every(m => m.result.status === 'passed');
   const allFailed = testAndResults.every(m => m.result.status === 'failed');
   const allSkipped = testAndResults.every(m => m.result.status === 'skipped');
@@ -44,6 +44,27 @@ function formatGroupedByResults(testAndResults: Array<TestAndResult>) {
       : testAndResults.length === 2
         ? 'twice'
         : `${testAndResults.length} times`;
+
+  return {
+    allFailed,
+    allPassed,
+    allSkipped,
+    firstItem,
+    statuses,
+    times,
+    runCount: testAndResults.length,
+  };
+}
+
+function formatGroupedByResultsCsv(testAndResults: Array<TestAndResult>) {
+  const { firstItem, statuses, runCount } = getGroupedByResultsDetails(testAndResults);
+  const durations = testResultToDurationStr(testAndResults);
+  console.log(`${firstItem.test.title},${runCount},${statuses},${durations}`);
+}
+
+function formatGroupedByResults(testAndResults: Array<TestAndResult>) {
+  const { allFailed, allPassed, allSkipped, firstItem, statuses, times } =
+    getGroupedByResultsDetails(testAndResults);
   console.log(
     `${getChalkColorForStatus(
       allPassed
@@ -191,6 +212,28 @@ class SessionReporter implements Reporter {
     sortByTitle(allPassedSoFar).forEach(m => formatGroupedByResults(m));
     sortByTitle(partiallyPassed).forEach(m => formatGroupedByResults(m));
     sortByTitle(allFailedSoFar).forEach(m => formatGroupedByResults(m));
+
+    this.toCsv(result);
+  }
+
+  toCsv(_result: FullResult) {
+    const { allFailedSoFar, allPassedSoFar, partiallyPassed } = this.groupResultsByTestName();
+
+    console.info('==================== CSV output ====================');
+    console.info('==================== CSV output ====================');
+    console.info('==================== CSV output ====================');
+    console.info('==================== CSV output ====================');
+    console.info('==================== CSV output ====================');
+    console.info('==================== CSV output ====================');
+    sortByTitle(allPassedSoFar).forEach(m => formatGroupedByResultsCsv(m));
+    sortByTitle(partiallyPassed).forEach(m => formatGroupedByResultsCsv(m));
+    sortByTitle(allFailedSoFar).forEach(m => formatGroupedByResultsCsv(m));
+    console.info('==================== CSV output ====================');
+    console.info('==================== CSV output ====================');
+    console.info('==================== CSV output ====================');
+    console.info('==================== CSV output ====================');
+    console.info('==================== CSV output ====================');
+    console.info('==================== CSV output ====================');
   }
 
   onStdOut?(chunk: string | Buffer, test: void | TestCase, _result: void | TestResult) {

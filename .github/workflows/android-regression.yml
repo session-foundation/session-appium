@@ -183,6 +183,7 @@ jobs:
 
       - name: Run the single test
         continue-on-error: true
+        id: single-test-run
         env:
           PLAYWRIGHT_WORKERS_COUNT: 1
           DEVICES_PER_TEST_COUNT: 2
@@ -191,35 +192,38 @@ jobs:
           pwd
           yarn test "Delete message linked device @${PLATFORM}" #Note: this has to be double quotes
 
-      # - name: Run the 1-devices tests ​​with 4 workers
-      #   continue-on-error: true
-      #   env:
-      #     PLAYWRIGHT_WORKERS_COUNT: 4
-      #     DEVICES_PER_TEST_COUNT: 1
-      #   run: |
-      #     cd forked-session-appium
-      #     pwd
-      #     yarn test "@${PLATFORM} @${{ github.event.inputs.RISK }} @${DEVICES_PER_TEST_COUNT}-devices" #Note: this has to be double quotes
+      - name: Run the 1-devices tests ​​with 4 workers
+        continue-on-error: true
+        id: devices-1-test-run
+        env:
+          PLAYWRIGHT_WORKERS_COUNT: 4
+          DEVICES_PER_TEST_COUNT: 1
+        run: |
+          cd forked-session-appium
+          pwd
+          # yarn test "@${PLATFORM} @${{ github.event.inputs.RISK }} @${DEVICES_PER_TEST_COUNT}-devices" #Note: this has to be double quotes
 
-      # - name: Run the 2-devices tests ​​with 2 workers
-      #   continue-on-error: true
-      #   env:
-      #     PLAYWRIGHT_WORKERS_COUNT: 2
-      #     DEVICES_PER_TEST_COUNT: 2
-      #   run: |
-      #     cd forked-session-appium
-      #     pwd
-      #     yarn test "@${PLATFORM} @${{ github.event.inputs.RISK }} @${DEVICES_PER_TEST_COUNT}-devices" #Note: this has to be double quotes
+      - name: Run the 2-devices tests ​​with 2 workers
+        continue-on-error: true
+        id: devices-2-test-run
+        env:
+          PLAYWRIGHT_WORKERS_COUNT: 2
+          DEVICES_PER_TEST_COUNT: 2
+        run: |
+          cd forked-session-appium
+          pwd
+          # yarn test "@${PLATFORM} @${{ github.event.inputs.RISK }} @${DEVICES_PER_TEST_COUNT}-devices" #Note: this has to be double quotes
 
-      # - name: Run the tests ​​other tests with 1 worker
-      #   continue-on-error: true
-      #   env:
-      #     PLAYWRIGHT_WORKERS_COUNT: 1
-      #     DEVICES_PER_TEST_COUNT: 4
-      #   run: |
-      #     cd forked-session-appium
-      #     pwd
-      #     yarn test "@${PLATFORM} @${{ github.event.inputs.RISK }}" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
+      - name: Run the tests ​​other tests with 1 worker
+        continue-on-error: true
+        id: other-devices-test-run
+        env:
+          PLAYWRIGHT_WORKERS_COUNT: 1
+          DEVICES_PER_TEST_COUNT: 4
+        run: |
+          cd forked-session-appium
+          pwd
+          # yarn test "@${PLATFORM} @${{ github.event.inputs.RISK }}" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
 
       - name: Kill all running emulators
         if: always()
@@ -228,3 +232,19 @@ jobs:
         run: |
           source ./scripts/ci.sh
           killall_emulators
+
+      - name: Check Single test result
+        if: steps.single-test-run.outcome != 'success'
+        run: echo 'single-test-run Failed'; exit 1
+
+      - name: Check devices-1-test-run
+        if: steps.devices-1-test-run.outcome != 'success'
+        run: echo '1-devices-test-run'; exit 1
+
+      - name: Check devices-2-test-run
+        if: steps.devices-2-test-run != 'success'
+        run: echo 'devices-2-test-run Failed'; exit 1
+
+      - name: Check other-devices-test-run
+        if: steps.other-devices-test-run.outcome != 'success'
+        run: echo 'other-devices-test-run Failed'; exit 1
