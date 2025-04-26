@@ -6,7 +6,7 @@ import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { testCommunityLink, testCommunityName } from './../../constants/community';
 import { englishStripped } from '../../localizer/Localizer';
 import { ConversationSettings } from './locators/conversation';
-import { open2AppsWithFriendsState } from './state_builder';
+import { open_Alice1_Bob1_friends } from './state_builder';
 
 bothPlatformsItSeparate({
   title: 'Send community invitation',
@@ -22,101 +22,101 @@ bothPlatformsItSeparate({
 
 async function sendCommunityInvitationIos(platform: SupportedPlatformsType) {
   const {
-    devices: { device1, device2 },
-    prebuilt: { userB },
-  } = await open2AppsWithFriendsState({
+    devices: { alice1, bob1 },
+    prebuilt: { bob },
+  } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
   });
   // Join community on device 1
   // Click on plus button
-  await device1.navigateBack();
-  await joinCommunity(device1, testCommunityLink, testCommunityName);
-  await device1.clickOnElementAll(new ConversationSettings(device1));
+  await alice1.navigateBack();
+  await joinCommunity(alice1, testCommunityLink, testCommunityName);
+  await alice1.clickOnElementAll(new ConversationSettings(alice1));
   await sleepFor(500);
-  await device1.clickOnElementAll(new InviteContactsMenuItem(device1));
-  await device1.clickOnElementByText({
+  await alice1.clickOnElementAll(new InviteContactsMenuItem(alice1));
+  await alice1.clickOnElementByText({
     strategy: 'accessibility id',
     selector: 'Contact',
-    text: userB.userName,
+    text: bob.userName,
   });
-  await device1.clickOnElementAll({
+  await alice1.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Invite contacts button',
   });
-  await device2.waitForTextElementToBePresent({
+  await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Community invitation',
     text: testCommunityName,
   });
-  await device2.clickOnElementAll({
+  await bob1.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Community invitation',
     text: testCommunityName,
   });
-  await device2.checkModalStrings(
+  await bob1.checkModalStrings(
     englishStripped('communityJoin').toString(),
     englishStripped('communityJoinDescription')
       .withArgs({ community_name: testCommunityName })
       .toString()
   );
-  await device2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Join' });
-  await device2.navigateBack();
-  await device2.waitForTextElementToBePresent({
+  await bob1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Join' });
+  await bob1.navigateBack();
+  await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Conversation list item',
     text: testCommunityName,
   });
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }
 
 async function sendCommunityInviteMessageAndroid(platform: SupportedPlatformsType) {
   const {
-    devices: { device1, device2 },
-    prebuilt: { userB },
-  } = await open2AppsWithFriendsState({
+    devices: { alice1, bob1 },
+    prebuilt: { bob },
+  } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
   });
   // Join community
   await sleepFor(100);
-  await device1.navigateBack();
-  await joinCommunity(device1, testCommunityLink, testCommunityName);
+  await alice1.navigateBack();
+  await joinCommunity(alice1, testCommunityLink, testCommunityName);
   // Wait for community to load
   // Add user B to community
-  await device1.clickOnElementAll(new ConversationSettings(device1));
-  await device1.clickOnElementAll(new InviteContactsMenuItem(device1));
-  await device1.clickOnElementByText({
+  await alice1.clickOnElementAll(new ConversationSettings(alice1));
+  await alice1.clickOnElementAll(new InviteContactsMenuItem(alice1));
+  await alice1.clickOnElementByText({
     strategy: 'accessibility id',
     selector: 'Contact',
-    text: userB.userName,
+    text: bob.userName,
   });
-  await device1.clickOnByAccessibilityID('Done');
+  await alice1.clickOnByAccessibilityID('Done');
   // Check device 2 for invitation from user A
-  await device2.waitForTextElementToBePresent({
+  await bob1.waitForTextElementToBePresent({
     strategy: 'id',
     selector: 'network.loki.messenger:id/openGroupTitleTextView',
     text: testCommunityName,
   });
   // Make sure invitation works
-  await device2.clickOnElementAll({
+  await bob1.clickOnElementAll({
     strategy: 'id',
     selector: 'network.loki.messenger:id/openGroupTitleTextView',
     text: testCommunityName,
   });
-  await device2.checkModalStrings(
+  await bob1.checkModalStrings(
     englishStripped('communityJoin').toString(),
     englishStripped('communityJoinDescription')
       .withArgs({ community_name: testCommunityName })
       .toString(),
     true
   );
-  await device2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Join' });
-  await device2.navigateBack();
-  await device2.waitForTextElementToBePresent({
+  await bob1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Join' });
+  await bob1.navigateBack();
+  await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Conversation list item',
     text: testCommunityName,
   });
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }

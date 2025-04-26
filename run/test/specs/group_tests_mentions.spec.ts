@@ -1,5 +1,5 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
+import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 bothPlatformsIt({
@@ -12,30 +12,30 @@ bothPlatformsIt({
 async function mentionsForGroups(platform: SupportedPlatformsType) {
   const testGroupName = 'Mentions test group';
   const {
-    devices: { device1, device2, device3 },
-    prebuilt: { userA, userB, userC },
-  } = await open3AppsWith3FriendsAnd1GroupState({
+    devices: { alice1, bob1, charlie1 },
+    prebuilt: { alice, bob, charlie },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
   });
 
-  await device1.mentionContact(platform, userB);
+  await alice1.mentionContact(platform, bob);
   // Check format on User B's device
-  await device2.waitForTextElementToBePresent({
+  await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: `@You`,
   });
   // await device2.findMessageWithBody(`@You`);
   // Bob to Select User C
-  await device2.mentionContact(platform, userC);
+  await bob1.mentionContact(platform, charlie);
   // Check Charlies device(3) for correct format
-  await device3.findMessageWithBody(`@You`);
+  await charlie1.findMessageWithBody(`@You`);
   //  Check User A format works
-  await device3.mentionContact(platform, userA);
+  await charlie1.mentionContact(platform, alice);
   // Check device 1 that correct format is shown (Alice's device)
-  await device1.findMessageWithBody(`@You`);
+  await alice1.findMessageWithBody(`@You`);
   // Close app
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }

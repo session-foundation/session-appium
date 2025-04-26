@@ -1,6 +1,6 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
-import { open2AppsWithFriendsState } from './state_builder';
+import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
@@ -18,21 +18,21 @@ const testMessage = 'Testing disappearing messages for videos';
 
 async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
   const {
-    devices: { device1, device2 },
-  } = await open2AppsWithFriendsState({
+    devices: { alice1, bob1 },
+  } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
   });
-  await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
-  await device1.onIOS().sendVideoiOS(testMessage);
-  await device1.onAndroid().sendVideoAndroid();
-  await device2.trustAttachments(USERNAME.ALICE);
-  await device2.onIOS().waitForTextElementToBePresent({
+  await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
+  await alice1.onIOS().sendVideoiOS(testMessage);
+  await alice1.onAndroid().sendVideoAndroid();
+  await bob1.trustAttachments(USERNAME.ALICE);
+  await bob1.onIOS().waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: testMessage,
   });
-  await device2.onAndroid().waitForTextElementToBePresent({
+  await bob1.onAndroid().waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Media message',
   });
@@ -41,13 +41,13 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
   await sleepFor(30000);
   if (platform === 'ios') {
     await Promise.all([
-      device1.hasElementBeenDeleted({
+      alice1.hasElementBeenDeleted({
         strategy: 'accessibility id',
         selector: 'Message body',
         maxWait: 1000,
         text: testMessage,
       }),
-      device2.hasElementBeenDeleted({
+      bob1.hasElementBeenDeleted({
         strategy: 'accessibility id',
         selector: 'Message body',
         maxWait: 1000,
@@ -57,15 +57,15 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
   }
   if (platform === 'android') {
     await Promise.all([
-      device1.hasElementBeenDeleted({
+      alice1.hasElementBeenDeleted({
         strategy: 'accessibility id',
         selector: 'Media message',
       }),
-      device2.hasElementBeenDeleted({
+      bob1.hasElementBeenDeleted({
         strategy: 'accessibility id',
         selector: 'Media message',
       }),
     ]);
   }
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }

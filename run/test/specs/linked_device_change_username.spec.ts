@@ -2,7 +2,7 @@ import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { TickButton, UsernameInput, UsernameSettings } from './locators';
 import { SaveNameChangeButton, UserSettings } from './locators/settings';
-import { open2AppsLinkedUser } from './state_builder';
+import { open_Alice2 } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
@@ -20,80 +20,80 @@ bothPlatformsItSeparate({
 
 async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
   const {
-    devices: { device1, device2 },
-    prebuilt: { userA },
-  } = await open2AppsLinkedUser({ platform });
+    devices: { alice1, alice2 },
+    prebuilt: { alice },
+  } = await open_Alice2({ platform });
 
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
   await Promise.all([
-    device1.clickOnElementAll(new UserSettings(device1)),
-    device2.clickOnElementAll(new UserSettings(device2)),
+    alice1.clickOnElementAll(new UserSettings(alice1)),
+    alice2.clickOnElementAll(new UserSettings(alice2)),
   ]);
   // select username
-  await device1.clickOnElementAll(new UsernameSettings(device1));
-  await device1.checkModalStrings(
+  await alice1.clickOnElementAll(new UsernameSettings(alice1));
+  await alice1.checkModalStrings(
     englishStripped('displayNameSet').toString(),
     englishStripped('displayNameVisible').toString()
   );
   // type in new username
   await sleepFor(100);
-  await device1.deleteText(new UsernameInput(device1));
-  await device1.inputText(newUsername, new UsernameInput(device1));
-  await device1.clickOnElementAll(new SaveNameChangeButton(device1));
-  const username = await device1.waitForTextElementToBePresent({
+  await alice1.deleteText(new UsernameInput(alice1));
+  await alice1.inputText(newUsername, new UsernameInput(alice1));
+  await alice1.clickOnElementAll(new SaveNameChangeButton(alice1));
+  const username = await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Username',
     text: newUsername,
   });
-  const changedUsername = await device1.getTextFromElement(username);
-  if (changedUsername === userA.userName) {
+  const changedUsername = await alice1.getTextFromElement(username);
+  if (changedUsername === alice.userName) {
     throw new Error('Username change unsuccessful');
   }
-  await device1.closeScreen();
-  await device1.clickOnElementAll(new UserSettings(device1));
+  await alice1.closeScreen();
+  await alice1.clickOnElementAll(new UserSettings(alice1));
   await Promise.all([
-    device1.waitForTextElementToBePresent({
+    alice1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Username',
       text: newUsername,
     }),
-    device2.waitForTextElementToBePresent({
+    alice2.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Username',
       text: newUsername,
     }),
   ]);
-  await closeApp(device1, device2);
+  await closeApp(alice1, alice2);
 }
 
 async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType) {
   const {
-    devices: { device1, device2 },
-    prebuilt: { userA },
-  } = await open2AppsLinkedUser({ platform });
-  
+    devices: { alice1, alice2 },
+    prebuilt: { alice },
+  } = await open_Alice2({ platform });
+
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
   await Promise.all([
-    device1.clickOnElementAll(new UserSettings(device1)),
-    device2.clickOnElementAll(new UserSettings(device2)),
+    alice1.clickOnElementAll(new UserSettings(alice1)),
+    alice2.clickOnElementAll(new UserSettings(alice2)),
   ]);
   // select username
-  await device1.clickOnElementAll(new UsernameSettings(device1));
+  await alice1.clickOnElementAll(new UsernameSettings(alice1));
   // type in new username
   await sleepFor(100);
-  await device1.deleteText(new UsernameInput(device1));
-  await device1.inputText(newUsername, new UsernameInput(device1));
-  await device1.clickOnElementAll(new TickButton(device1));
-  const usernameEl = await device1.waitForTextElementToBePresent(new UsernameSettings(device1));
-  const changedUsername = await device1.getTextFromElement(usernameEl);
-  if (changedUsername === userA.userName) {
+  await alice1.deleteText(new UsernameInput(alice1));
+  await alice1.inputText(newUsername, new UsernameInput(alice1));
+  await alice1.clickOnElementAll(new TickButton(alice1));
+  const usernameEl = await alice1.waitForTextElementToBePresent(new UsernameSettings(alice1));
+  const changedUsername = await alice1.getTextFromElement(usernameEl);
+  if (changedUsername === alice.userName) {
     throw new Error('Username change unsuccessful');
   }
-  // Get the initial linked username from device2
-  const username2 = await device2.waitForTextElementToBePresent(new UsernameSettings(device2));
-  let currentLinkedUsername = await device2.getTextFromElement(username2);
+  // Get the initial linked username from alice2
+  const username2 = await alice2.waitForTextElementToBePresent(new UsernameSettings(alice2));
+  let currentLinkedUsername = await alice2.getTextFromElement(username2);
 
   let currentWait = 0;
   const waitPerLoop = 500;
@@ -102,16 +102,16 @@ async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType) {
   do {
     await sleepFor(waitPerLoop);
     // Close the screen and navigate back to the User Settings
-    await device2.closeScreen();
-    await device2.clickOnElementAll(new UserSettings(device2));
+    await alice2.closeScreen();
+    await alice2.clickOnElementAll(new UserSettings(alice2));
     currentWait += waitPerLoop;
-    const linkedUsernameEl = await device2.waitForTextElementToBePresent(
-      new UsernameSettings(device2)
+    const linkedUsernameEl = await alice2.waitForTextElementToBePresent(
+      new UsernameSettings(alice2)
     );
-    currentLinkedUsername = await device2.getTextFromElement(linkedUsernameEl);
-  } while (currentLinkedUsername === userA.userName && currentWait < maxWait);
+    currentLinkedUsername = await alice2.getTextFromElement(linkedUsernameEl);
+  } while (currentLinkedUsername === alice.userName && currentWait < maxWait);
   {
     console.log('Username not changed yet');
   }
-  await closeApp(device1, device2);
+  await closeApp(alice1, alice2);
 }

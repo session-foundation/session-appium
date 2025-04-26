@@ -2,7 +2,7 @@ import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
 import { DeletedMessage } from './locators/conversation';
-import { open2AppsWithFriendsState } from './state_builder';
+import { open_Alice1_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 bothPlatformsIt({
@@ -14,45 +14,45 @@ bothPlatformsIt({
 
 async function unsendMessage(platform: SupportedPlatformsType) {
   const {
-    devices: { device1, device2 },
-  } = await open2AppsWithFriendsState({
+    devices: { alice1, bob1 },
+  } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
   });
   const testMessage = 'Checking unsend functionality';
 
   // send message from User A to User B
-  const sentMessage = await device1.sendMessage(testMessage);
+  const sentMessage = await alice1.sendMessage(testMessage);
   // await sleepFor(1000);
-  await device2.waitForTextElementToBePresent({
+  await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: sentMessage,
   });
-  await device1.longPressMessage(sentMessage);
+  await alice1.longPressMessage(sentMessage);
   // Select Delete icon
-  await device1.clickOnByAccessibilityID('Delete message');
+  await alice1.clickOnByAccessibilityID('Delete message');
   // Check modal is correct
   // Check modal is correct
-  await device1.checkModalStrings(
+  await alice1.checkModalStrings(
     englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
     englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()
   );
   // Select 'Delete for me and User B'
-  await device1.clickOnElementAll(new DeleteMessageForEveryone(device1));
+  await alice1.clickOnElementAll(new DeleteMessageForEveryone(alice1));
   // Select 'Delete' on Android
-  await device1.clickOnElementAll(new DeleteMessageConfirmationModal(device1));
+  await alice1.clickOnElementAll(new DeleteMessageConfirmationModal(alice1));
   // Check for 'deleted message' message
   await Promise.all([
-    device1.waitForTextElementToBePresent({
-      ...new DeletedMessage(device1).build(),
+    alice1.waitForTextElementToBePresent({
+      ...new DeletedMessage(alice1).build(),
       maxWait: 8000,
     }),
-    device2.waitForTextElementToBePresent({
-      ...new DeletedMessage(device2).build(),
+    bob1.waitForTextElementToBePresent({
+      ...new DeletedMessage(bob1).build(),
       maxWait: 8000,
     }),
   ]);
   // Excellent
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }

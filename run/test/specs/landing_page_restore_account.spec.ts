@@ -2,7 +2,7 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { verifyElementScreenshot } from './utils/verify_screenshots';
 import { EmptyLandingPageScreenshot } from './utils/screenshot_paths';
-import { open2AppsLinkedUser } from './state_builder';
+import { open_Alice2 } from './state_builder';
 
 bothPlatformsIt({
   title: 'Landing page restore account',
@@ -14,13 +14,13 @@ bothPlatformsIt({
 async function landingPageRestoreAccount(platform: SupportedPlatformsType) {
   // Creating a linked device is used as a shortcut to restore an account
   const {
-    devices: { device1, device2 },
-  } = await open2AppsLinkedUser({ platform });
+    devices: { alice1, alice2 },
+  } = await open_Alice2({ platform });
   // Verify that the Session logo is shown on the landing page
   await verifyElementScreenshot(
-    device2,
-    new EmptyLandingPageScreenshot(device2),
+    alice2,
+    new EmptyLandingPageScreenshot(alice2),
     'restore_account'
   );
-  await closeApp(device1, device2);
+  await closeApp(alice1, alice2);
 }

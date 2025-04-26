@@ -1,5 +1,5 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { open2AppsWithFriendsState } from './state_builder';
+import { open_Alice1_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
@@ -11,8 +11,8 @@ bothPlatformsIt({
 
 async function checkPerformance(platform: SupportedPlatformsType) {
   const {
-    devices: { device1 },
-  } = await open2AppsWithFriendsState({
+    devices: { alice1 },
+  } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
   });
@@ -20,7 +20,7 @@ async function checkPerformance(platform: SupportedPlatformsType) {
 
   let i;
   for (i = 1; i <= 10; i++) {
-    const timeMs = await device1.measureSendingTime(i);
+    const timeMs = await alice1.measureSendingTime(i);
     timesArray.push(timeMs);
   }
   console.log(timesArray);

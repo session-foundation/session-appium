@@ -1,6 +1,6 @@
 import { longText } from '../../constants';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
-import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
+import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 bothPlatformsItSeparate({
@@ -20,90 +20,90 @@ async function sendLongMessageGroupiOS(platform: SupportedPlatformsType) {
   // Sending a long text message
 
   const {
-    devices: { device1, device2, device3 },
-    prebuilt: { userA },
-  } = await open3AppsWith3FriendsAnd1GroupState({
+    devices: { alice1, bob1, charlie1 },
+    prebuilt: { alice },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
   });
-  await device1.sendMessage(longText);
-  await device2.waitForTextElementToBePresent({
+  await alice1.sendMessage(longText);
+  await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: longText,
   });
-  await device3.waitForTextElementToBePresent({
+  await charlie1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: longText,
   });
-  const replyMessage = await device2.replyToMessage(userA, longText);
-  await device1.waitForTextElementToBePresent({
+  const replyMessage = await bob1.replyToMessage(alice, longText);
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
-  await device3.waitForTextElementToBePresent({
+  await charlie1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
   // Close app
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }
 
 async function sendLongMessageGroupAndroid(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';
 
   const {
-    devices: { device1, device2, device3 },
-    prebuilt: { userA },
-  } = await open3AppsWith3FriendsAnd1GroupState({
+    devices: { alice1, bob1, charlie1 },
+    prebuilt: { alice },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
   });
 
   // Sending a long text message
-  await device1.inputText(longText, {
+  await alice1.inputText(longText, {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
   // Click send
-  await device1.clickOnByAccessibilityID('Send message button');
-  await device1.waitForTextElementToBePresent({
+  await alice1.clickOnByAccessibilityID('Send message button');
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: `Message sent status: Sent`,
     maxWait: 50000,
   });
 
   await Promise.all([
-    device2.waitForTextElementToBePresent({
+    bob1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: longText,
     }),
-    device3.waitForTextElementToBePresent({
+    charlie1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: longText,
     }),
   ]);
-  await device2.longPressMessage(longText);
-  await device2.clickOnByAccessibilityID('Reply to message');
-  const replyMessage = await device2.sendMessage(`${userA.userName} message reply`);
-  await device1.waitForTextElementToBePresent({
+  await bob1.longPressMessage(longText);
+  await bob1.clickOnByAccessibilityID('Reply to message');
+  const replyMessage = await bob1.sendMessage(`${alice.userName} message reply`);
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
   // TO FIX: REPLY NOT FOUND ANDROID
-  await device3.waitForTextElementToBePresent({
+  await charlie1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
   // Close app
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }

@@ -2,7 +2,7 @@ import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DeleteMessageConfirmationModal, DeleteMessageLocally } from './locators';
 import { DeletedMessage } from './locators/conversation';
-import { open2AppsWithFriendsState } from './state_builder';
+import { open_Alice1_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 bothPlatformsIt({
@@ -13,40 +13,40 @@ bothPlatformsIt({
 });
 async function deleteMessage(platform: SupportedPlatformsType) {
   const {
-    devices: { device1, device2 },
-  } = await open2AppsWithFriendsState({
+    devices: { alice1, bob1 },
+  } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
   });
   // send message from User A to User B
-  const sentMessage = await device1.sendMessage('Checking local deletetion functionality');
-  await device2.waitForTextElementToBePresent({
+  const sentMessage = await alice1.sendMessage('Checking local deletetion functionality');
+  await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: sentMessage,
   });
   // Select and long press on message to delete it
-  await device1.longPressMessage(sentMessage);
+  await alice1.longPressMessage(sentMessage);
   // Select Delete icon
-  await device1.clickOnByAccessibilityID('Delete message');
-  await device1.checkModalStrings(
+  await alice1.clickOnByAccessibilityID('Delete message');
+  await alice1.checkModalStrings(
     englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
     englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()
   );
   // Select 'Delete on this device only'
-  await device1.clickOnElementAll(new DeleteMessageLocally(device1));
-  await device1.clickOnElementAll(new DeleteMessageConfirmationModal(device1));
+  await alice1.clickOnElementAll(new DeleteMessageLocally(alice1));
+  await alice1.clickOnElementAll(new DeleteMessageConfirmationModal(alice1));
 
   // Device 1 should show 'Deleted message' message
-  await device1.waitForTextElementToBePresent(new DeletedMessage(device1));
+  await alice1.waitForTextElementToBePresent(new DeletedMessage(alice1));
 
   // Device 2 should show no change
-  await device2.waitForTextElementToBePresent({
+  await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: sentMessage,
   });
 
   // Excellent
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }

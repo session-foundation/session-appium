@@ -9,7 +9,7 @@ import {
   FollowSettingsButton,
   SetDisappearMessagesButton,
 } from './locators/disappearing_messages';
-import { open3Apps2Friends2LinkedFirstUser } from './state_builder';
+import { open_Alice2_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { checkDisappearingControlMessage } from './utils/disappearing_control_messages';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -24,9 +24,9 @@ bothPlatformsIt({
 
 async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
   const {
-    devices: { device1: alice1, device2: alice2, device3: bob1 },
-    prebuilt: { userA, userB },
-  } = await open3Apps2Friends2LinkedFirstUser({ platform, focusFriendsConvo: true });
+    devices: { alice1, alice2, bob1 },
+    prebuilt: { alice, bob },
+  } = await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: true });
 
   const mode: DisappearModes = 'send';
   const controlMode: DisappearActions = 'sent';
@@ -41,8 +41,8 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
   // Get control message based on key from json file
   await checkDisappearingControlMessage(
     platform,
-    userA.userName,
-    userB.userName,
+    alice.userName,
+    bob.userName,
     alice1,
     bob1,
     time,
@@ -63,7 +63,7 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
   ).toString();
   // Check USER B'S CONTROL MESSAGE
   const disappearingMessagesTurnedOff = englishStripped('disappearingMessagesTurnedOff')
-    .withArgs({ name: userA.userName })
+    .withArgs({ name: alice.userName })
     .toString();
   await Promise.all([
     alice1.disappearingControlMessage(disappearingMessagesTurnedOffYou),

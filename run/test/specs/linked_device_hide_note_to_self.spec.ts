@@ -3,7 +3,7 @@ import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { EmptyConversation, Hide } from './locators/conversation';
 import { CancelSearchButton, NoteToSelfOption } from './locators/global_search';
 import { SearchButton } from './locators/home';
-import { open2AppsLinkedUser } from './state_builder';
+import { open_Alice2 } from './state_builder';
 import { SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
@@ -22,34 +22,34 @@ bothPlatformsItSeparate({
 
 async function hideNoteToSelf(platform: SupportedPlatformsType) {
   const {
-    devices: { device1, device2 },
-  } = await open2AppsLinkedUser({ platform });
+    devices: { alice1, alice2 },
+  } = await open_Alice2({ platform });
 
   const noteToSelf = englishStripped('noteToSelf').toString();
-  await device1.clickOnElementAll(new SearchButton(device1));
-  await device1.clickOnElementAll(new NoteToSelfOption(device1));
-  await device1.waitForTextElementToBePresent(
-    new EmptyConversation(device1).build(englishStripped('noteToSelfEmpty').toString())
+  await alice1.clickOnElementAll(new SearchButton(alice1));
+  await alice1.clickOnElementAll(new NoteToSelfOption(alice1));
+  await alice1.waitForTextElementToBePresent(
+    new EmptyConversation(alice1).build(englishStripped('noteToSelfEmpty').toString())
   );
-  await device1.sendMessage('Creating note to self');
-  await device1.navigateBack();
+  await alice1.sendMessage('Creating note to self');
+  await alice1.navigateBack();
   // Does note to self appear on linked device
-  await device2.waitForTextElementToBePresent({
+  await alice2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Conversation list item',
     text: noteToSelf,
   });
-  await device1.clickOnElementAll(new CancelSearchButton(device1));
-  await device1.onIOS().swipeLeft('Conversation list item', noteToSelf);
-  await device1.onAndroid().longPressConversation(noteToSelf);
-  await device1.clickOnElementAll(new Hide(device1));
-  await device1.checkModalStrings(
+  await alice1.clickOnElementAll(new CancelSearchButton(alice1));
+  await alice1.onIOS().swipeLeft('Conversation list item', noteToSelf);
+  await alice1.onAndroid().longPressConversation(noteToSelf);
+  await alice1.clickOnElementAll(new Hide(alice1));
+  await alice1.checkModalStrings(
     englishStripped('noteToSelfHide').toString(),
     englishStripped('noteToSelfHideDescription').toString()
   );
-  await device1.clickOnElementAll(new Hide(device1));
+  await alice1.clickOnElementAll(new Hide(alice1));
   await Promise.all(
-    [device1, device2].map(device =>
+    [alice1, alice2].map(device =>
       device.doesElementExist({
         strategy: 'accessibility id',
         selector: 'Conversation list item',

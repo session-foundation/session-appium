@@ -1,5 +1,5 @@
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
-import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
+import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 bothPlatformsItSeparate({
@@ -18,47 +18,47 @@ async function sendVideoGroupiOS(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';
 
   const {
-    devices: { device1, device2, device3 },
-    prebuilt: { userA },
-  } = await open3AppsWith3FriendsAnd1GroupState({
+    devices: { alice1, bob1, charlie1 },
+    prebuilt: { alice },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
   });
   const testMessage = 'Testing-video-1';
-  const replyMessage = `Replying to video from ${userA.userName} in ${testGroupName}`;
-  await device1.sendVideoiOS(testMessage);
-  await device2.waitForTextElementToBePresent({
+  const replyMessage = `Replying to video from ${alice.userName} in ${testGroupName}`;
+  await alice1.sendVideoiOS(testMessage);
+  await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: testMessage,
   });
-  await device3.waitForTextElementToBePresent({
+  await charlie1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: testMessage,
   });
-  await device2.waitForTextElementToBePresent({
+  await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: testMessage,
     maxWait: 5000,
   });
-  await device2.longPressMessage(testMessage);
-  await device2.clickOnByAccessibilityID('Reply to message');
-  await device2.sendMessage(replyMessage);
-  await device1.waitForTextElementToBePresent({
+  await bob1.longPressMessage(testMessage);
+  await bob1.clickOnByAccessibilityID('Reply to message');
+  await bob1.sendMessage(replyMessage);
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
-  await device3.waitForTextElementToBePresent({
+  await charlie1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
   // Close server and devices
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }
 
 async function sendVideoGroupAndroid(platform: SupportedPlatformsType) {
@@ -67,26 +67,26 @@ async function sendVideoGroupAndroid(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';
 
   const {
-    devices: { device1, device2, device3 },
-    prebuilt: { userA },
-  } = await open3AppsWith3FriendsAnd1GroupState({
+    devices: { alice1, bob1, charlie1 },
+    prebuilt: { alice },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
   });
-  const replyMessage = `Replying to video from ${userA.userName} in ${testGroupName}`;
+  const replyMessage = `Replying to video from ${alice.userName} in ${testGroupName}`;
   // Click on attachments button
-  await device1.sendVideoAndroid();
+  await alice1.sendVideoAndroid();
   await Promise.all([
-    device2.trustAttachments(testGroupName),
-    device3.trustAttachments(testGroupName),
+    bob1.trustAttachments(testGroupName),
+    charlie1.trustAttachments(testGroupName),
   ]);
   // Check video appears in device 2 and device 3
   // (wait for loading animation to disappear and play icon to appear)
   // Device 2
   await Promise.all([
-    device2.waitForLoadingMedia(),
-    device2.waitForTextElementToBePresent({
+    bob1.waitForLoadingMedia(),
+    bob1.waitForTextElementToBePresent({
       strategy: 'id',
       selector: 'network.loki.messenger:id/play_overlay',
       maxWait: 8000,
@@ -94,30 +94,30 @@ async function sendVideoGroupAndroid(platform: SupportedPlatformsType) {
   ]);
   // Device 3
   await Promise.all([
-    device3.waitForLoadingMedia(),
-    device3.waitForTextElementToBePresent({
+    charlie1.waitForLoadingMedia(),
+    charlie1.waitForTextElementToBePresent({
       strategy: 'id',
       selector: 'network.loki.messenger:id/play_overlay',
       maxWait: 8000,
     }),
   ]);
   // Reply to message on device 2
-  await device2.longPress('Media message');
-  await device2.clickOnByAccessibilityID('Reply to message');
-  await device2.sendMessage(replyMessage);
+  await bob1.longPress('Media message');
+  await bob1.clickOnByAccessibilityID('Reply to message');
+  await bob1.sendMessage(replyMessage);
   // Check reply appears in device 1 and device 3
   await Promise.all([
-    device1.waitForTextElementToBePresent({
+    alice1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: replyMessage,
     }),
-    device3.waitForTextElementToBePresent({
+    charlie1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: replyMessage,
     }),
   ]);
   // Close app and server
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }

@@ -1,5 +1,5 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { open2AppsWithFriendsState } from './state_builder';
+import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
@@ -12,47 +12,47 @@ bothPlatformsIt({
 
 async function readStatus(platform: SupportedPlatformsType) {
   const {
-    devices: { device1, device2 },
-    prebuilt: { userA, userB },
-  } = await open2AppsWithFriendsState({
+    devices: { alice1, bob1 },
+    prebuilt: { alice, bob },
+  } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
   });
   const testMessage = 'Testing read status';
   // Go to settings to turn on read status
   // Device 1
-  await Promise.all([device1.turnOnReadReceipts(), device2.turnOnReadReceipts()]);
-  await device1.clickOnElementAll({
+  await Promise.all([alice1.turnOnReadReceipts(), bob1.turnOnReadReceipts()]);
+  await alice1.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Conversation list item',
-    text: userB.userName,
+    text: bob.userName,
   });
   // Send message from User A to User B to verify read status is working
-  await device1.sendMessage(testMessage);
+  await alice1.sendMessage(testMessage);
   await sleepFor(100);
-  await device2.clickOnElementAll({
+  await bob1.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Conversation list item',
-    text: userA.userName,
+    text: alice.userName,
   });
-  await device2.waitForTextElementToBePresent({
+  await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: testMessage,
   });
   // Check read status on device 1
-  await device1.onAndroid().waitForTextElementToBePresent({
+  await alice1.onAndroid().waitForTextElementToBePresent({
     strategy: 'id',
     selector: 'network.loki.messenger:id/messageStatusTextView',
     text: 'Read',
   });
 
-  await device1.onIOS().waitForTextElementToBePresent({
+  await alice1.onIOS().waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message sent status: Read',
   });
 
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }
 
 // Typing indicators working

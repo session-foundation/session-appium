@@ -3,7 +3,7 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { BlockedContactsSettings, BlockUser, BlockUserConfirmationModal } from './locators';
 import { ConversationSettings } from './locators/conversation';
 import { UserSettings } from './locators/settings';
-import { open3Apps2Friends2LinkedFirstUser } from './state_builder';
+import { open_Alice2_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
@@ -16,9 +16,9 @@ bothPlatformsIt({
 
 async function blockUserInConversationOptions(platform: SupportedPlatformsType) {
   const {
-    devices: { device1: alice1, device2: alice2, device3: bob1 },
-    prebuilt: { userB },
-  } = await open3Apps2Friends2LinkedFirstUser({ platform, focusFriendsConvo: true });
+    devices: { alice1, alice2, bob1 },
+    prebuilt: { bob },
+  } = await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: true });
   // Block contact
 
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
@@ -27,7 +27,7 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   await alice1.clickOnElementAll(new BlockUser(alice1));
   await alice1.checkModalStrings(
     englishStripped('block').toString(),
-    englishStripped('blockDescription').withArgs({ name: userB.userName }).toString(),
+    englishStripped('blockDescription').withArgs({ name: bob.userName }).toString(),
     true
   );
   // Confirm block option
@@ -47,13 +47,13 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
     await alice2.onAndroid().clickOnElementAll({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
-      text: `${userB.userName}`,
+      text: `${bob.userName}`,
     });
     await alice2.onAndroid().waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Blocked banner',
     });
-    console.info(`${userB.userName}` + ' has been blocked');
+    console.info(`${bob.userName}` + ' has been blocked');
   } else {
     console.info('Blocked banner not found');
   }
@@ -75,12 +75,12 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
     alice1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Contact',
-      text: userB.userName,
+      text: bob.userName,
     }),
     alice2.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Contact',
-      text: userB.userName,
+      text: bob.userName,
     }),
   ]);
   // Close app

@@ -14,10 +14,10 @@ bothPlatformsIt({
 
 async function createContact(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  const userA = await linkedDevice(device1, device3, USERNAME.ALICE);
-  const userB = await newUser(device2, USERNAME.BOB);
+  const alice = await linkedDevice(device1, device3, USERNAME.ALICE);
+  const bob = await newUser(device2, USERNAME.BOB);
 
-  await newContact(platform, device1, userA, device2, userB);
+  await newContact(platform, device1, alice, device2, bob);
   await device1.navigateBack();
   await device2.navigateBack();
   // Check username has changed from session id on both device 1 and 3
@@ -25,12 +25,12 @@ async function createContact(platform: SupportedPlatformsType) {
     device1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
-      text: userB.userName,
+      text: bob.userName,
     }),
     device3.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
-      text: userB.userName,
+      text: bob.userName,
     }),
   ]);
   // Check contact is added to contacts list on device 1 and 3 (linked device)

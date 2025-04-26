@@ -2,7 +2,7 @@ import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { LinkPreview, LinkPreviewMessage } from './locators';
-import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
+import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
@@ -20,62 +20,62 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   const testGroupName = 'Testing disappearing messages';
   const testLink = `https://getsession.org/`;
   const {
-    devices: { device1, device2, device3 },
-  } = await open3AppsWith3FriendsAnd1GroupState({
+    devices: { alice1, bob1, charlie1 },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
   });
 
-  await setDisappearingMessage(platform, device1, ['Group', timerType, time]);
+  await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   // Send a link
-  await device1.inputText(testLink, {
+  await alice1.inputText(testLink, {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
   // Enable link preview modal appears as soon as link is typed on android but on iOS it appears after
   if (platform === 'android') {
-    await device1.checkModalStrings(
+    await alice1.checkModalStrings(
       englishStripped('linkPreviewsEnable').toString(),
       englishStripped('linkPreviewsFirstDescription').toString(),
       true
     );
-    await device1.clickOnByAccessibilityID('Enable');
+    await alice1.clickOnByAccessibilityID('Enable');
   }
-  await device1.waitForTextElementToBePresent({
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message sent status: Sent',
     maxWait: 20000,
   });
   if (platform === 'ios') {
-    await device1.checkModalStrings(
+    await alice1.checkModalStrings(
       englishStripped('linkPreviewsEnable').toString(),
       englishStripped('linkPreviewsFirstDescription').toString()
     );
-    await device1.clickOnByAccessibilityID('Enable');
+    await alice1.clickOnByAccessibilityID('Enable');
   }
   // Accept dialog for link preview
   // No preview on first send
-  await device1.clickOnByAccessibilityID('Send message button');
+  await alice1.clickOnByAccessibilityID('Send message button');
   // Send again for image
-  await device1.inputText(testLink, {
+  await alice1.inputText(testLink, {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
   if (platform === 'ios') {
-    await device1.waitForTextElementToBePresent(new LinkPreview(device1));
+    await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
   } else {
     await sleepFor(1000);
   }
-  await device1.clickOnByAccessibilityID('Send message button');
+  await alice1.clickOnByAccessibilityID('Send message button');
   // Make sure image preview is available in device 2
   await Promise.all([
-    device2.waitForTextElementToBePresent({
+    bob1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: testLink,
     }),
-    device3.waitForTextElementToBePresent({
+    charlie1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: testLink,
@@ -85,7 +85,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   await sleepFor(30000);
   if (platform === 'ios') {
     await Promise.all(
-      [device1, device2, device3].map(device =>
+      [alice1, bob1, charlie1].map(device =>
         device.hasElementBeenDeleted({
           strategy: 'accessibility id',
           selector: 'Message body',
@@ -97,10 +97,10 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   }
   if (platform === 'android') {
     await Promise.all(
-      [device1, device2, device3].map(device =>
+      [alice1, bob1, charlie1].map(device =>
         device.hasElementBeenDeleted({ ...new LinkPreviewMessage(device).build(), maxWait: 1000 })
       )
     );
   }
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }

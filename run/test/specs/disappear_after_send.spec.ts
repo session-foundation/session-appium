@@ -4,7 +4,7 @@ import { sleepFor } from './utils';
 import { checkDisappearingControlMessage } from './utils/disappearing_control_messages';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
-import { open2AppsWithFriendsState } from './state_builder';
+import { open_Alice1_Bob1_friends } from './state_builder';
 
 bothPlatformsIt({
   title: 'Disappear after send',
@@ -15,9 +15,9 @@ bothPlatformsIt({
 
 async function disappearAfterSend(platform: SupportedPlatformsType) {
   const {
-    devices: { device1, device2 },
-    prebuilt: { userA, userB },
-  } = await open2AppsWithFriendsState({
+    devices: { alice1, bob1 },
+    prebuilt: { alice, bob },
+  } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
   });
@@ -29,23 +29,23 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
   // Select disappearing messages option
   await setDisappearingMessage(
     platform,
-    device1,
+    alice1,
     ['1:1', `Disappear after ${mode} option`, time],
-    device2
+    bob1
   );
   // Get control message based on key from json file
   await checkDisappearingControlMessage(
     platform,
-    userA.userName,
-    userB.userName,
-    device1,
-    device2,
+    alice.userName,
+    bob.userName,
+    alice1,
+    bob1,
     time,
     controlMode
   );
   // Send message to verify that deletion is working
-  await device1.sendMessage(testMessage);
-  await device2.clickOnElementByText({
+  await alice1.sendMessage(testMessage);
+  await bob1.clickOnElementByText({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: testMessage,
@@ -53,13 +53,13 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
   // Wait for message to disappear
   await sleepFor(30000);
   await Promise.all([
-    device1.hasElementBeenDeleted({
+    alice1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: testMessage,
       maxWait: 5000,
     }),
-    device2.hasElementBeenDeleted({
+    bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: testMessage,
@@ -68,5 +68,5 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
   ]);
 
   // Great success
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }

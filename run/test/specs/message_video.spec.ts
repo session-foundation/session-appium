@@ -1,5 +1,5 @@
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
-import { open2AppsWithFriendsState } from './state_builder';
+import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
@@ -19,9 +19,9 @@ async function sendVideoIos(platform: SupportedPlatformsType) {
   // Test sending a video
   // open devices
   const {
-    devices: { device1, device2 },
-    prebuilt: { userA },
-  } = await open2AppsWithFriendsState({
+    devices: { alice1, bob1 },
+    prebuilt: { alice },
+  } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
   });
@@ -29,55 +29,55 @@ async function sendVideoIos(platform: SupportedPlatformsType) {
 
   // Push image to device for selection
   // Click on attachments button
-  await device1.sendVideoiOS(testMessage);
+  await alice1.sendVideoiOS(testMessage);
   // Check if the 'Tap to download media' config appears
   // User B - Click on untrusted attachment message
-  await device2.trustAttachments(userA.userName);
+  await bob1.trustAttachments(alice.userName);
   // Reply to message
-  await device2.waitForTextElementToBePresent({
+  await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: testMessage,
   });
-  const replyMessage = await device2.replyToMessage(userA, testMessage);
-  await device1.waitForTextElementToBePresent({
+  const replyMessage = await bob1.replyToMessage(alice, testMessage);
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
   // Close app and server
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }
 
 async function sendVideoAndroid(platform: SupportedPlatformsType) {
   // Test sending a video
   // open devices
   const {
-    devices: { device1, device2 },
-    prebuilt: { userA },
-  } = await open2AppsWithFriendsState({
+    devices: { alice1, bob1 },
+    prebuilt: { alice },
+  } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
   });
-  const replyMessage = `Replying to video from ${userA.userName}`;
+  const replyMessage = `Replying to video from ${alice.userName}`;
   // Send video
-  await device1.sendVideoAndroid();
+  await alice1.sendVideoAndroid();
   // User B - Click on untrusted attachment message
-  await device2.trustAttachments(userA.userName);
-  await device2.waitForTextElementToBePresent({
+  await bob1.trustAttachments(alice.userName);
+  await bob1.waitForTextElementToBePresent({
     strategy: 'id',
     selector: 'network.loki.messenger:id/play_overlay',
   });
-  await device2.longPress('Media message');
-  await device2.clickOnByAccessibilityID('Reply to message');
-  await device2.sendMessage(replyMessage);
+  await bob1.longPress('Media message');
+  await bob1.clickOnByAccessibilityID('Reply to message');
+  await bob1.sendMessage(replyMessage);
   await sleepFor(2000);
-  await device1.waitForTextElementToBePresent({
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
 
   // Close app and server
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }

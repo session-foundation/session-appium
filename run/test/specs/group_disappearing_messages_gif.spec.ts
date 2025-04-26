@@ -1,6 +1,6 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
-import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
+import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
@@ -19,30 +19,30 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   const testGroupName = 'Disappear after sent test';
   const testMessage = "Testing disappearing messages for GIF's";
   const {
-    devices: { device1, device2, device3 },
-  } = await open3AppsWith3FriendsAnd1GroupState({
+    devices: { alice1, bob1, charlie1 },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
   });
-  await setDisappearingMessage(platform, device1, ['Group', timerType, time]);
+  await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   // Click on attachments button
-  await device1.sendGIF(testMessage);
+  await alice1.sendGIF(testMessage);
   // Cannot use isAndroid() here
   if (platform === 'android') {
     await Promise.all([
-      device2.trustAttachments(testGroupName),
-      device3.trustAttachments(testGroupName),
+      bob1.trustAttachments(testGroupName),
+      charlie1.trustAttachments(testGroupName),
     ]);
   }
   if (platform === 'ios') {
     await Promise.all([
-      device2.waitForTextElementToBePresent({
+      bob1.waitForTextElementToBePresent({
         strategy: 'accessibility id',
         selector: 'Message body',
         text: testMessage,
       }),
-      device3.waitForTextElementToBePresent({
+      charlie1.waitForTextElementToBePresent({
         strategy: 'accessibility id',
         selector: 'Message body',
         text: testMessage,
@@ -51,11 +51,11 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   }
   if (platform === 'android') {
     await Promise.all([
-      device2.waitForTextElementToBePresent({
+      bob1.waitForTextElementToBePresent({
         strategy: 'accessibility id',
         selector: 'Media message',
       }),
-      device3.waitForTextElementToBePresent({
+      charlie1.waitForTextElementToBePresent({
         strategy: 'accessibility id',
         selector: 'Media message',
       }),
@@ -66,7 +66,7 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   // Check if GIF has been deleted on both devices
   if (platform === 'ios') {
     await Promise.all(
-      [device1, device2, device3].map(device =>
+      [alice1, bob1, charlie1].map(device =>
         device.hasElementBeenDeleted({
           strategy: 'accessibility id',
           selector: 'Message body',
@@ -78,7 +78,7 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   }
   if (platform === 'android') {
     await Promise.all(
-      [device1, device2, device3].map(device =>
+      [alice1, bob1, charlie1].map(device =>
         device.hasElementBeenDeleted({
           strategy: 'accessibility id',
           selector: 'Media message',
@@ -88,5 +88,5 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
     );
   }
 
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }

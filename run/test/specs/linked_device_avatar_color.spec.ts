@@ -2,7 +2,7 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { isSameColor } from './utils/check_colour';
 import { UserSettings } from './locators/settings';
-import { open2AppsLinkedUser } from './state_builder';
+import { open_Alice2 } from './state_builder';
 
 bothPlatformsIt({
   title: 'Avatar color linked device',
@@ -12,20 +12,20 @@ bothPlatformsIt({
 });
 async function avatarColorLinkedDevice(platform: SupportedPlatformsType) {
   const {
-    devices: { device1, device2 },
-    prebuilt: { userA },
-  } = await open2AppsLinkedUser({ platform });
-  
+    devices: { alice1, alice2 },
+    prebuilt: { alice },
+  } = await open_Alice2({ platform });
+
   // Get Alice's avatar color on device 1 (Home Screen avatar) and turn it into a hex value
-  const device1PixelColor = await device1.getElementPixelColor(new UserSettings(device1));
+  const alice1PixelColor = await alice1.getElementPixelColor(new UserSettings(alice1));
   // Get Alice's avatar color on the linked device (Home Screen avatar) and turn it into a hex value
-  const device2PixelColor = await device2.getElementPixelColor(new UserSettings(device2));
+  const alice2PixelColor = await alice2.getElementPixelColor(new UserSettings(alice2));
   // Color matching devices 1 and 2
-  const colorMatch = isSameColor(device1PixelColor, device2PixelColor);
+  const colorMatch = isSameColor(alice1PixelColor, alice2PixelColor);
   if (!colorMatch) {
     throw new Error(
-      `The avatar color of ${userA.userName} does not match across devices. The colors are ${device1PixelColor} and ${device2PixelColor}`
+      `The avatar color of ${alice.userName} does not match across devices. The colors are ${alice1PixelColor} and ${alice2PixelColor}`
     );
   }
-  await closeApp(device1, device2);
+  await closeApp(alice1, alice2);
 }

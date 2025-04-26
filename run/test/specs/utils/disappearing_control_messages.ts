@@ -16,10 +16,10 @@ export const checkDisappearingControlMessage = async (
 ) => {
   // Two control messages to check - You have set and other user has set
   // "disappearingMessagesSet": "<b>{name}</b> has set messages to disappear {time} after they have been {disappearing_messages_type}.",
-  const disappearingMessagesSetUserA = englishStripped('disappearingMessagesSet')
+  const disappearingMessagesSetalice = englishStripped('disappearingMessagesSet')
     .withArgs({ name: userNameA, time, disappearing_messages_type: mode })
     .toString();
-  const disappearingMessagesSetUserB = englishStripped('disappearingMessagesSet')
+  const disappearingMessagesSetbob = englishStripped('disappearingMessagesSet')
     .withArgs({ name: userNameB, time, disappearing_messages_type: mode })
     .toString();
   // "disappearingMessagesSetYou": "<b>You</b> set messages to disappear {time} after they have been {disappearing_messages_type}.",
@@ -30,18 +30,18 @@ export const checkDisappearingControlMessage = async (
   if (platform === 'android') {
     await Promise.all([
       device1.disappearingControlMessage(disappearingMessagesSetYou),
-      device1.disappearingControlMessage(disappearingMessagesSetUserB),
+      device1.disappearingControlMessage(disappearingMessagesSetbob),
     ]);
     // Check device 2
     await Promise.all([
       device2.disappearingControlMessage(disappearingMessagesSetYou),
-      device2.disappearingControlMessage(disappearingMessagesSetUserA),
+      device2.disappearingControlMessage(disappearingMessagesSetalice),
     ]);
   }
   if (platform === 'ios') {
     await Promise.all([
       device1.disappearingControlMessage(disappearingMessagesSetYou),
-      device2.disappearingControlMessage(disappearingMessagesSetUserA),
+      device2.disappearingControlMessage(disappearingMessagesSetalice),
     ]);
   }
   // Check if control messages are syncing from both user A and user B
@@ -52,6 +52,6 @@ export const checkDisappearingControlMessage = async (
       text: userNameB,
     });
     await linkedDevice.disappearingControlMessage(disappearingMessagesSetYou);
-    await linkedDevice.disappearingControlMessage(disappearingMessagesSetUserB);
+    await linkedDevice.disappearingControlMessage(disappearingMessagesSetbob);
   }
 };

@@ -36,8 +36,8 @@ export type SetupData = {
   device1: DeviceWrapper | undefined;
   device2: DeviceWrapper | undefined;
   device3: DeviceWrapper | undefined;
-  userA: User | undefined;
-  userB: User | undefined;
+  alice: User | undefined;
+  bob: User | undefined;
 };
 
 export type Coordinates = {

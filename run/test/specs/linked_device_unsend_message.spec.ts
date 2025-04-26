@@ -2,7 +2,7 @@ import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
 import { DeletedMessage } from './locators/conversation';
-import { open3Apps2Friends2LinkedFirstUser } from './state_builder';
+import { open_Alice2_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 bothPlatformsIt({
@@ -14,9 +14,9 @@ bothPlatformsIt({
 
 async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   const {
-    devices: { device1: alice1, device2: alice2, device3: bob1 },
-    prebuilt: { userB },
-  } = await open3Apps2Friends2LinkedFirstUser({ platform, focusFriendsConvo: true });
+    devices: { alice1, alice2, bob1 },
+    prebuilt: { bob },
+  } = await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: true });
 
   // Send message from user a to user b
   const sentMessage = await alice1.sendMessage('Howdy');
@@ -29,7 +29,7 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   await alice2.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Conversation list item',
-    text: userB.userName,
+    text: bob.userName,
   });
   // Find message
   await alice2.findMessageWithBody(sentMessage);

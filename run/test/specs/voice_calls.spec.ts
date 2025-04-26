@@ -23,11 +23,11 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   // Open app
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and User B
-  const [userA, userB] = await Promise.all([
+  const [alice, bob] = await Promise.all([
     newUser(device1, USERNAME.ALICE),
     newUser(device2, USERNAME.BOB),
   ]);
-  await device1.sendNewMessage(userB, 'Testing calls');
+  await device1.sendNewMessage(bob, 'Testing calls');
   // Look for phone icon (shouldnt be there)
   await device1.hasElementBeenDeleted({
     strategy: 'accessibility id',
@@ -41,7 +41,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device2.onAndroid().clickOnByAccessibilityID('Accept message request');
 
   // Type into message input box
-  await device2.sendMessage(`Reply-message-${userB.userName}-to-${userA.userName}`);
+  await device2.sendMessage(`Reply-message-${bob.userName}-to-${alice.userName}`);
 
   // Verify config message states message request was accepted
   // "messageRequestsAccepted": "Your message request has been accepted.",
@@ -80,8 +80,8 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID('Call');
   // No test tags on modal as of yet
   // await device2.checkModalStrings(
-  //   englishStripped('callsMissedCallFrom').withArgs({ name: userA.userName }).toString(),
-  //   englishStripped('callsYouMissedCallPermissions').withArgs({ name: userA.userName }).toString()
+  //   englishStripped('callsMissedCallFrom').withArgs({ name: alice.userName }).toString(),
+  //   englishStripped('callsYouMissedCallPermissions').withArgs({ name: alice.userName }).toString()
   // );
   await device2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Okay' });
   // Hang up on device 1
@@ -90,7 +90,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device2.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Conversation list item',
-    text: userA.userName,
+    text: alice.userName,
   });
   await device2.clickOnByAccessibilityID('Call');
   await device2.clickOnByAccessibilityID('Settings');
@@ -111,7 +111,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device2.clickOnElementAll(new ExitUserProfile(device2));
   // Wait for change to take effect
   await sleepFor(1000);
-  // Make call on device 1 (userA)
+  // Make call on device 1 (alice)
   await device2.clickOnByAccessibilityID('Call');
   await device2.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
   await device1.clickOnByAccessibilityID('Call');
@@ -129,12 +129,12 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   // Check for control messages on both devices
   // "callsYouCalled": "You called {name}",
   const callsYouCalled = englishStripped('callsYouCalled')
-    .withArgs({ name: userB.userName })
+    .withArgs({ name: bob.userName })
     .toString();
   await device1.waitForControlMessageToBePresent(callsYouCalled);
   // "callsYouCalled": "You called {name}",
   const callsCalledYou = englishStripped('callsCalledYou')
-    .withArgs({ name: userA.userName })
+    .withArgs({ name: alice.userName })
     .toString();
   await device2.waitForControlMessageToBePresent(callsCalledYou);
   // Excellent
@@ -145,11 +145,11 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // Open app
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and User B
-  const [userA, userB] = await Promise.all([
+  const [alice, bob] = await Promise.all([
     newUser(device1, USERNAME.ALICE),
     newUser(device2, USERNAME.BOB),
   ]);
-  await device1.sendNewMessage(userB, 'Testing calls');
+  await device1.sendNewMessage(bob, 'Testing calls');
   // Look for phone icon (shouldnt be there)
   await device1.hasElementBeenDeleted({
     strategy: 'accessibility id',
@@ -161,7 +161,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Message request');
   await device2.clickOnByAccessibilityID('Accept message request');
   // Type into message input box
-  await device2.sendMessage(`Reply-message-${userB.userName}-to-${userA.userName}`);
+  await device2.sendMessage(`Reply-message-${bob.userName}-to-${alice.userName}`);
   // Verify config message states message request was accepted
   await device1.waitForControlMessageToBePresent('Your message request has been accepted.');
   // Phone icon should appear now that conversation has been approved
@@ -224,7 +224,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
     'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   );
   await device2.navigateBack();
-  // Make call on device 1 (userA)
+  // Make call on device 1 (alice)
   await device1.clickOnByAccessibilityID('Call');
   // Answer call on device 2
   await device2.clickOnElementById('network.loki.messenger:id/acceptCallButton');
@@ -233,8 +233,8 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // Hang up
   await device1.clickOnElementById('network.loki.messenger:id/endCallButton');
   // Check for config message 'Called User B' on device 1
-  await device1.waitForControlMessageToBePresent(`Called ${userB.userName}`);
-  await device2.waitForControlMessageToBePresent(`${userA.userName} called you`);
+  await device1.waitForControlMessageToBePresent(`Called ${bob.userName}`);
+  await device2.waitForControlMessageToBePresent(`${alice.userName} called you`);
   // Excellent
   await closeApp(device1, device2);
 }

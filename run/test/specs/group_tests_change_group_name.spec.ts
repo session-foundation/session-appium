@@ -6,7 +6,7 @@ import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { ConversationSettings } from './locators/conversation';
 import { SaveNameChangeButton } from './locators/settings';
-import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
+import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 
 bothPlatformsItSeparate({
   title: 'Change group name',
@@ -25,46 +25,46 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   const newGroupName = 'Changed group name';
 
   const {
-    devices: { device1, device2, device3 },
-  } = await open3AppsWith3FriendsAnd1GroupState({
+    devices: { alice1, bob1, charlie1 },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
   });
   // Click on settings or three dots
-  await device1.clickOnElementAll(new ConversationSettings(device1));
+  await alice1.clickOnElementAll(new ConversationSettings(alice1));
   // Click on Edit group option
   await sleepFor(1000);
   // Click on current group name
-  await device1.clickOnElementAll(new EditGroupName(device1));
-  await device1.checkModalStrings(
+  await alice1.clickOnElementAll(new EditGroupName(alice1));
+  await alice1.checkModalStrings(
     englishStripped(`groupInformationSet`).toString(),
     englishStripped(`groupNameVisible`).toString()
   );
-  await device1.deleteText(new EditGroupNameInput(device1));
-  await device1.inputText('   ', new EditGroupNameInput(device1));
-  const saveButton = await device1.waitForTextElementToBePresent({
+  await alice1.deleteText(new EditGroupNameInput(alice1));
+  await alice1.inputText('   ', new EditGroupNameInput(alice1));
+  const saveButton = await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Save',
   });
-  const attr = await device1.getAttribute('value', saveButton.ELEMENT);
+  const attr = await alice1.getAttribute('value', saveButton.ELEMENT);
   if (attr !== 'enabled') {
     console.log('Save button disabled - no text input');
   } else {
     throw new Error('Save button should be disabled');
   }
-  await device1.clickOnByAccessibilityID('Cancel');
+  await alice1.clickOnByAccessibilityID('Cancel');
   // Enter new group name
-  await device1.clickOnElementAll(new EditGroupName(device1));
-  await device1.deleteText(new EditGroupNameInput(device1));
-  await device1.inputText(newGroupName, new EditGroupNameInput(device1));
+  await alice1.clickOnElementAll(new EditGroupName(alice1));
+  await alice1.deleteText(new EditGroupNameInput(alice1));
+  await alice1.inputText(newGroupName, new EditGroupNameInput(alice1));
   // Click done/apply
-  await device1.clickOnElementAll(new SaveNameChangeButton(device1));
-  await device1.navigateBack();
-  await device1.waitForControlMessageToBePresent(
+  await alice1.clickOnElementAll(new SaveNameChangeButton(alice1));
+  await alice1.navigateBack();
+  await alice1.waitForControlMessageToBePresent(
     englishStripped('groupNameNew').withArgs({ group_name: newGroupName }).toString()
   );
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }
 
 async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
@@ -72,28 +72,28 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   const newGroupName = 'Changed group name';
 
   const {
-    devices: { device1, device2, device3 },
-  } = await open3AppsWith3FriendsAnd1GroupState({
+    devices: { alice1, bob1, charlie1 },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
   });
   // Click on settings or three dots
-  await device1.clickOnElementAll(new ConversationSettings(device1));
+  await alice1.clickOnElementAll(new ConversationSettings(alice1));
   // Click on Edit group option
   await sleepFor(1000);
-  await device1.clickOnElementAll(new EditGroup(device1));
+  await alice1.clickOnElementAll(new EditGroup(alice1));
   // Click on current group name
-  await device1.clickOnElementAll(new EditGroupName(device1));
+  await alice1.clickOnElementAll(new EditGroupName(alice1));
   // Enter new group name (same test tag for both name and input)
-  await device1.clickOnElementAll(new EditGroupName(device1));
-  await device1.inputText(newGroupName, new EditGroupName(device1));
+  await alice1.clickOnElementAll(new EditGroupName(alice1));
+  await alice1.inputText(newGroupName, new EditGroupName(alice1));
   // Click done/apply
-  await device1.clickOnByAccessibilityID('Confirm');
-  await device1.navigateBack(true);
+  await alice1.clickOnByAccessibilityID('Confirm');
+  await alice1.navigateBack(true);
   // Check control message for changed name
-  await device1.waitForControlMessageToBePresent(
+  await alice1.waitForControlMessageToBePresent(
     englishStripped('groupNameNew').withArgs({ group_name: newGroupName }).toString()
   );
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }

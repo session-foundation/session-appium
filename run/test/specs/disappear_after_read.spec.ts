@@ -1,6 +1,6 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, DisappearModes } from '../../types/testing';
-import { open2AppsWithFriendsState } from './state_builder';
+import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { checkDisappearingControlMessage } from './utils/disappearing_control_messages';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -15,9 +15,9 @@ bothPlatformsIt({
 
 async function disappearAfterRead(platform: SupportedPlatformsType) {
   const {
-    devices: { device1, device2 },
-    prebuilt: { userA, userB },
-  } = await open2AppsWithFriendsState({
+    devices: { alice1, bob1 },
+    prebuilt: { alice, bob },
+  } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
   });
@@ -28,33 +28,33 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
   // Click conversation options menu (three dots)
   await setDisappearingMessage(
     platform,
-    device1,
+    alice1,
     ['1:1', `Disappear after ${mode} option`, time],
-    device2
+    bob1
   );
   // Check control message is correct on device 2
   await checkDisappearingControlMessage(
     platform,
-    userA.userName,
-    userB.userName,
-    device1,
-    device2,
+    alice.userName,
+    bob.userName,
+    alice1,
+    bob1,
     time,
     mode
   );
   // Send message to verify that deletion is working
-  await device1.sendMessage(testMessage);
+  await alice1.sendMessage(testMessage);
   // Need function to read message
   // Wait for 10 seconds
   await sleepFor(30000);
   await Promise.all([
-    device1.hasElementBeenDeleted({
+    alice1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: testMessage,
       maxWait: 5000,
     }),
-    device2.hasElementBeenDeleted({
+    bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: testMessage,
@@ -62,5 +62,5 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
     }),
   ]);
   // Great success
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }

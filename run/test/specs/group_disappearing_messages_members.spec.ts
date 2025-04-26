@@ -7,7 +7,7 @@ import {
   DisappearingMessagesMenuOption,
   SetDisappearMessagesButton,
 } from './locators/disappearing_messages';
-import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
+import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 
 bothPlatformsIt({
   title: 'Group member disappearing messages',
@@ -19,26 +19,26 @@ bothPlatformsIt({
 async function membersCantSetDisappearingMessages(platform: SupportedPlatformsType) {
   const testGroupName = 'Testing disappearing messages';
   const {
-    devices: { device1, device2, device3 },
-  } = await open3AppsWith3FriendsAnd1GroupState({
+    devices: { alice1, bob1, charlie1 },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
   });
 
   // Member B navigates to DM settings
-  await device2.clickOnElementAll(new ConversationSettings(device2));
-  await device2.clickOnElementAll(new DisappearingMessagesMenuOption(device2));
+  await bob1.clickOnElementAll(new ConversationSettings(bob1));
+  await bob1.clickOnElementAll(new DisappearingMessagesMenuOption(bob1));
   // On iOS, the Set button becomes visible after an admin clicks on a timer option
   // This is a 'fake' click on a disabled radial to rule out the false positive of the Set button becoming visible
   // On Android, this is not necessary because the button is always visible for admins
-  await device2
+  await bob1
     .onIOS()
-    .clickOnElementAll(new DisappearingMessageRadial(device2, DISAPPEARING_TIMES.ONE_DAY));
-  const setButton = await device2.doesElementExist({
-    ...new SetDisappearMessagesButton(device2).build(),
+    .clickOnElementAll(new DisappearingMessageRadial(bob1, DISAPPEARING_TIMES.ONE_DAY));
+  const setButton = await bob1.doesElementExist({
+    ...new SetDisappearMessagesButton(bob1).build(),
     maxWait: 500,
   });
   if (setButton) throw new Error('Disappearing Messages Set button should not be visible');
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }

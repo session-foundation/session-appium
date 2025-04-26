@@ -1,7 +1,7 @@
 import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { LinkPreview, LinkPreviewMessage } from './locators';
-import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
+import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
@@ -22,117 +22,117 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
   const testLink = `https://getsession.org/`;
 
   const {
-    devices: { device1, device2, device3 },
-    prebuilt: { userA },
-  } = await open3AppsWith3FriendsAnd1GroupState({
+    devices: { alice1, bob1, charlie1 },
+    prebuilt: { alice },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
   });
-  const replyMessage = `Replying to link from ${userA.userName} in group ${testGroupName}`;
+  const replyMessage = `Replying to link from ${alice.userName} in group ${testGroupName}`;
   // Create contact between User A and User B
-  await device1.inputText(testLink, {
+  await alice1.inputText(testLink, {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
-  await device1.waitForTextElementToBePresent({
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message sent status: Sent',
     maxWait: 20000,
   });
   // Accept dialog for link preview
-  await device1.checkModalStrings(
+  await alice1.checkModalStrings(
     englishStripped('linkPreviewsEnable').toString(),
     englishStripped('linkPreviewsFirstDescription').toString()
   );
-  await device1.clickOnByAccessibilityID('Enable');
+  await alice1.clickOnByAccessibilityID('Enable');
   // No preview on first send
-  await device1.clickOnByAccessibilityID('Send message button');
+  await alice1.clickOnByAccessibilityID('Send message button');
   // Send again for image
-  await device1.inputText(testLink, {
+  await alice1.inputText(testLink, {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
-  await device1.waitForTextElementToBePresent(new LinkPreview(device1));
-  await device1.clickOnByAccessibilityID('Send message button');
-  await device2.waitForTextElementToBePresent({
+  await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
+  await alice1.clickOnByAccessibilityID('Send message button');
+  await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: testLink,
   });
-  await device3.waitForTextElementToBePresent({
+  await charlie1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: testLink,
   });
   // Reply to link
-  await device2.longPressMessage(testLink);
-  await device2.clickOnByAccessibilityID('Reply to message');
-  await device2.sendMessage(replyMessage);
-  await device1.waitForTextElementToBePresent({
+  await bob1.longPressMessage(testLink);
+  await bob1.clickOnByAccessibilityID('Reply to message');
+  await bob1.sendMessage(replyMessage);
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
-  await device3.waitForTextElementToBePresent({
+  await charlie1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }
 
 async function sendLinkGroupAndroid(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';
 
   const {
-    devices: { device1, device2, device3 },
-    prebuilt: { userA },
-  } = await open3AppsWith3FriendsAnd1GroupState({
+    devices: { alice1, bob1, charlie1 },
+    prebuilt: { alice },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
   });
   const testLink = `https://getsession.org/`;
   // Send a link
-  await device1.inputText(testLink, {
+  await alice1.inputText(testLink, {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
   // Accept dialog for link preview
-  await device1.checkModalStrings(
+  await alice1.checkModalStrings(
     englishStripped('linkPreviewsEnable').toString(),
     englishStripped('linkPreviewsFirstDescription').toString(),
     true
   );
-  await device1.clickOnByAccessibilityID('Enable');
+  await alice1.clickOnByAccessibilityID('Enable');
   //wait for preview to generate
   await sleepFor(5000);
   // No preview on first send
-  await device1.clickOnByAccessibilityID('Send message button');
-  await device1.waitForTextElementToBePresent({
+  await alice1.clickOnByAccessibilityID('Send message button');
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message sent status: Sent',
     maxWait: 20000,
   });
   await Promise.all([
-    device2.waitForTextElementToBePresent(new LinkPreviewMessage(device2)),
-    device3.waitForTextElementToBePresent(new LinkPreviewMessage(device3)),
+    bob1.waitForTextElementToBePresent(new LinkPreviewMessage(bob1)),
+    charlie1.waitForTextElementToBePresent(new LinkPreviewMessage(charlie1)),
   ]);
-  await device2.longPressMessage(testLink);
-  await device2.clickOnByAccessibilityID('Reply to message');
-  const replyMessage = await device2.sendMessage(`${userA.userName} message reply`);
+  await bob1.longPressMessage(testLink);
+  await bob1.clickOnByAccessibilityID('Reply to message');
+  const replyMessage = await bob1.sendMessage(`${alice.userName} message reply`);
   await Promise.all([
-    device1.waitForTextElementToBePresent({
+    alice1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: replyMessage,
     }),
-    device3.waitForTextElementToBePresent({
+    charlie1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: replyMessage,
     }),
   ]);
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }

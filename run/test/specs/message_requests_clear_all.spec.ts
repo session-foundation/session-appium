@@ -13,12 +13,12 @@ bothPlatformsIt({
 
 async function clearAllRequests(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const [userA, userB] = await Promise.all([
+  const [alice, bob] = await Promise.all([
     newUser(device1, USERNAME.ALICE),
     newUser(device2, USERNAME.BOB),
   ]);
   // Send message from Alice to Bob
-  await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
+  await device1.sendNewMessage(bob, `${alice.userName} to ${bob.userName}`);
   // Wait for banner to appear
   // Bob clicks on message request banner
   await device2.clickOnByAccessibilityID('Message requests banner');

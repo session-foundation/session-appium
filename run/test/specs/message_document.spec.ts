@@ -1,5 +1,5 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { open2AppsWithFriendsState } from './state_builder';
+import { open_Alice1_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 bothPlatformsIt({
@@ -10,36 +10,36 @@ bothPlatformsIt({
 });
 async function sendDocument(platform: SupportedPlatformsType) {
   const {
-    devices: { device1, device2 },
-    prebuilt: { userA },
-  } = await open2AppsWithFriendsState({
+    devices: { alice1, bob1 },
+    prebuilt: { alice },
+  } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
   });
   const testMessage = 'Testing-document-1';
-  const replyMessage = `Replying to document from ${userA.userName}`;
+  const replyMessage = `Replying to document from ${alice.userName}`;
 
-  await device1.sendDocument();
-  await device2.trustAttachments(userA.userName);
+  await alice1.sendDocument();
+  await bob1.trustAttachments(alice.userName);
   // Reply to message
-  await device2.onIOS().waitForTextElementToBePresent({
+  await bob1.onIOS().waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: testMessage,
   });
-  await device2.onAndroid().waitForTextElementToBePresent({
+  await bob1.onAndroid().waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Document',
   });
-  await device2.onIOS().longPressMessage(testMessage);
-  await device2.onAndroid().longPress('Document');
-  await device2.clickOnByAccessibilityID('Reply to message');
-  await device2.sendMessage(replyMessage);
-  await device1.waitForTextElementToBePresent({
+  await bob1.onIOS().longPressMessage(testMessage);
+  await bob1.onAndroid().longPress('Document');
+  await bob1.clickOnByAccessibilityID('Reply to message');
+  await bob1.sendMessage(replyMessage);
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
   // Close app and server
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }

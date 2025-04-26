@@ -16,17 +16,17 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   // Check accept request by sending text message
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create two users
-  const [userA, userB] = await Promise.all([
+  const [alice, bob] = await Promise.all([
     newUser(device1, USERNAME.ALICE),
     newUser(device2, USERNAME.BOB),
   ]);
-  const testMessage = `${userA.userName} to ${userB.userName}`;
+  const testMessage = `${alice.userName} to ${bob.userName}`;
   // Send message from Alice to Bob
   await device1.clickOnByAccessibilityID('New conversation button');
   // Select direct message option
   await device1.clickOnByAccessibilityID('New direct message');
   // Enter User B's session ID into input box
-  await device1.inputText(userB.accountID, new EnterAccountID(device1));
+  await device1.inputText(bob.accountID, new EnterAccountID(device1));
   // Click next
   await device1.scrollDown();
   await device1.clickOnByAccessibilityID('Next');
@@ -79,12 +79,12 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   });
 
   // Send message from Bob to Alice
-  await device2.sendMessage(`${userB.userName} to ${userA.userName}`);
+  await device2.sendMessage(`${bob.userName} to ${alice.userName}`);
   // Check control message for message request acceptance
   // "messageRequestsAccepted": "Your message request has been accepted.",
   const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
   const messageRequestYouHaveAccepted = englishStripped('messageRequestYouHaveAccepted')
-    .withArgs({ name: userA.userName })
+    .withArgs({ name: alice.userName })
     .toString();
   await Promise.all([
     device1.waitForControlMessageToBePresent(messageRequestsAccepted),

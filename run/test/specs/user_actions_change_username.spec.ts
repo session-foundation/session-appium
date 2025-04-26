@@ -21,7 +21,7 @@ bothPlatformsItSeparate({
 
 async function changeUsernameiOS(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-  const userA = await newUser(device, USERNAME.ALICE);
+  const alice = await newUser(device, USERNAME.ALICE);
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
   await device.clickOnElementAll(new UserSettings(device));
@@ -46,7 +46,7 @@ async function changeUsernameiOS(platform: SupportedPlatformsType) {
   if (changedUsername === newUsername) {
     console.log('Username change successful');
   }
-  if (changedUsername === userA.userName) {
+  if (changedUsername === alice.userName) {
     throw new Error('Username change unsuccessful');
   }
   await device.closeScreen();
@@ -55,7 +55,7 @@ async function changeUsernameiOS(platform: SupportedPlatformsType) {
 
 async function changeUsernameAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-  const userA = await newUser(device, USERNAME.ALICE);
+  const alice = await newUser(device, USERNAME.ALICE);
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
   await device.clickOnElementAll(new UserSettings(device));
@@ -76,7 +76,7 @@ async function changeUsernameAndroid(platform: SupportedPlatformsType) {
   if (changedUsername === newUsername) {
     console.log('Username change successful');
   }
-  if (changedUsername === userA.userName) {
+  if (changedUsername === alice.userName) {
     throw new Error('Username change unsuccessful');
   }
   await device.closeScreen();

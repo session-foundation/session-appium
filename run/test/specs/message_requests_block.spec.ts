@@ -18,10 +18,10 @@ bothPlatformsIt({
 async function blockedRequest(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
 
-  const userA = await newUser(device1, USERNAME.ALICE);
-  const userB = await linkedDevice(device2, device3, USERNAME.BOB);
+  const alice = await newUser(device1, USERNAME.ALICE);
+  const bob = await linkedDevice(device2, device3, USERNAME.BOB);
   // Send message from Alice to Bob
-  await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
+  await device1.sendNewMessage(bob, `${alice.userName} to ${bob.userName}`);
   // Wait for banner to appear on device 2 and 3
   await Promise.all([
     device2.waitForTextElementToBePresent({
@@ -44,7 +44,7 @@ async function blockedRequest(platform: SupportedPlatformsType) {
   // TODO add check modal
   await device2.checkModalStrings(
     englishStripped('block').toString(),
-    englishStripped('blockDescription').withArgs({ name: userA.userName }).toString(),
+    englishStripped('blockDescription').withArgs({ name: alice.userName }).toString(),
     true
   );
   await device2.clickOnElementAll(new BlockUserConfirmationModal(device1));
@@ -60,7 +60,7 @@ async function blockedRequest(platform: SupportedPlatformsType) {
       selector: 'Message requests banner',
     }),
   ]);
-  const blockedMessage = `"${userA.userName} to ${userB.userName} - shouldn't get through"`;
+  const blockedMessage = `"${alice.userName} to ${bob.userName} - shouldn't get through"`;
   await device1.sendMessage(blockedMessage);
   await device2.navigateBack();
   await device2.waitForTextElementToBePresent({
@@ -88,12 +88,12 @@ async function blockedRequest(platform: SupportedPlatformsType) {
     device2.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Contact',
-      text: userA.userName,
+      text: alice.userName,
     }),
     device3.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Contact',
-      text: userA.userName,
+      text: alice.userName,
     }),
   ]);
   // Close app

@@ -2,7 +2,7 @@ import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { LinkPreview } from './locators';
-import { open2AppsWithFriendsState } from './state_builder';
+import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
@@ -25,40 +25,40 @@ const testLink = `https://getsession.org/`;
 
 async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
   const {
-    devices: { device1, device2 },
-  } = await open2AppsWithFriendsState({
+    devices: { alice1, bob1 },
+  } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
   });
-  await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
+  await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   // Send a link
-  await device1.inputText(testLink, {
+  await alice1.inputText(testLink, {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
-  await device1.waitForTextElementToBePresent({
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message sent status: Sent',
     maxWait: 20000,
   });
   // Accept dialog for link preview
-  await device1.checkModalStrings(
+  await alice1.checkModalStrings(
     englishStripped('linkPreviewsEnable').toString(),
     englishStripped('linkPreviewsFirstDescription').toString()
   );
-  await device1.clickOnByAccessibilityID('Enable');
+  await alice1.clickOnByAccessibilityID('Enable');
   // No preview on first send
-  await device1.clickOnByAccessibilityID('Send message button');
+  await alice1.clickOnByAccessibilityID('Send message button');
   // Send again for image
-  await device1.inputText(testLink, {
+  await alice1.inputText(testLink, {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
   // Wait for link preview to load
-  await device1.waitForTextElementToBePresent(new LinkPreview(device1));
-  await device1.clickOnByAccessibilityID('Send message button');
+  await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
+  await alice1.clickOnByAccessibilityID('Send message button');
   // Make sure image preview is available in device 2
-  await device2.waitForTextElementToBePresent({
+  await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: testLink,
@@ -66,71 +66,71 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
   // Wait for 30 seconds to disappear
   await sleepFor(30000);
   await Promise.all([
-    device1.hasElementBeenDeleted({
+    alice1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
       maxWait: 1000,
       text: testLink,
     }),
-    device2.hasElementBeenDeleted({
+    bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
       maxWait: 1000,
       text: testLink,
     }),
   ]);
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }
 
 async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsType) {
   const {
-    devices: { device1, device2 },
-  } = await open2AppsWithFriendsState({
+    devices: { alice1, bob1 },
+  } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
   });
-  await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
-  // await device1.navigateBack();
+  await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
+  // await alice1.navigateBack();
   // Send a link
-  await device1.inputText(testLink, {
+  await alice1.inputText(testLink, {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
   // Accept dialog for link preview
-  await device1.checkModalStrings(
+  await alice1.checkModalStrings(
     englishStripped('linkPreviewsEnable').toString(),
     englishStripped('linkPreviewsFirstDescription').toString(),
     true
   );
-  await device1.clickOnByAccessibilityID('Enable');
+  await alice1.clickOnByAccessibilityID('Enable');
   // No preview on first send
   // Wait for preview to load
   await sleepFor(2000);
-  await device1.clickOnByAccessibilityID('Send message button');
-  await device1.waitForTextElementToBePresent({
+  await alice1.clickOnByAccessibilityID('Send message button');
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message sent status: Sent',
     maxWait: 20000,
   });
   // Send again for image
   // Make sure image preview is available in device 2
-  await device2.waitForTextElementToBePresent({
+  await bob1.waitForTextElementToBePresent({
     strategy: 'id',
     selector: 'network.loki.messenger:id/linkPreviewView',
   });
   // Wait for 30 seconds to disappear
   await sleepFor(30000);
   await Promise.all([
-    device1.hasElementBeenDeleted({
+    alice1.hasElementBeenDeleted({
       strategy: 'id',
       selector: 'network.loki.messenger:id/linkPreviewView',
       maxWait: 1000,
     }),
-    device2.hasElementBeenDeleted({
+    bob1.hasElementBeenDeleted({
       strategy: 'id',
       selector: 'network.loki.messenger:id/linkPreviewView',
       maxWait: 1000,
     }),
   ]);
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }

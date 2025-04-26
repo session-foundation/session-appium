@@ -1,6 +1,6 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
-import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
+import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
@@ -18,23 +18,23 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   const timerType = 'Disappear after send option';
   const {
-    devices: { device1, device2, device3 },
-  } = await open3AppsWith3FriendsAnd1GroupState({
+    devices: { alice1, bob1, charlie1 },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
   });
 
-  await setDisappearingMessage(platform, device1, ['Group', timerType, time]);
-  // await device1.navigateBack();
-  await device1.sendImage(platform, testMessage);
+  await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
+  // await alice1.navigateBack();
+  await alice1.sendImage(platform, testMessage);
   await Promise.all([
-    device2.onAndroid().trustAttachments(testGroupName),
-    device3.onAndroid().trustAttachments(testGroupName),
+    bob1.onAndroid().trustAttachments(testGroupName),
+    charlie1.onAndroid().trustAttachments(testGroupName),
   ]);
   if (platform === 'ios') {
     await Promise.all(
-      [device2, device3].map(device =>
+      [bob1, charlie1].map(device =>
         device.waitForTextElementToBePresent({
           strategy: 'accessibility id',
           selector: 'Message body',
@@ -46,7 +46,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   }
   if (platform === 'android') {
     await Promise.all(
-      [device2, device3].map(device =>
+      [bob1, charlie1].map(device =>
         device.waitForTextElementToBePresent({
           strategy: 'accessibility id',
           selector: 'Media message',
@@ -59,7 +59,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   await sleepFor(30000);
   if (platform === 'ios') {
     await Promise.all(
-      [device1, device2, device3].map(device =>
+      [alice1, bob1, charlie1].map(device =>
         device.hasElementBeenDeleted({
           strategy: 'accessibility id',
           selector: 'Message body',
@@ -71,7 +71,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   }
   if (platform === 'android') {
     await Promise.all(
-      [device1, device2, device3].map(device =>
+      [alice1, bob1, charlie1].map(device =>
         device.hasElementBeenDeleted({
           strategy: 'accessibility id',
           selector: 'Media message',
@@ -80,5 +80,5 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
       )
     );
   }
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }

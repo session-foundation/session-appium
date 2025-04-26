@@ -1,5 +1,5 @@
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
-import { open3AppsWith3FriendsAnd1GroupState } from './state_builder';
+import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
@@ -20,42 +20,42 @@ async function sendImageGroupiOS(platform: SupportedPlatformsType) {
   const testMessage = 'Sending image to group';
 
   const {
-    devices: { device1, device2, device3 },
-    prebuilt: { userA },
-  } = await open3AppsWith3FriendsAnd1GroupState({
+    devices: { alice1, bob1, charlie1 },
+    prebuilt: { alice },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
   });
-  await device1.sendImage(platform, testMessage);
-  await device1.waitForTextElementToBePresent({
+  await alice1.sendImage(platform, testMessage);
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: `Message sent status: Sent`,
     maxWait: 50000,
   });
   await Promise.all([
-    device2.waitForTextElementToBePresent({
+    bob1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: testMessage,
       maxWait: 5000,
     }),
-    device3.waitForTextElementToBePresent({
+    charlie1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: testMessage,
       maxWait: 5000,
     }),
   ]);
-  const replyMessage = await device2.replyToMessage(userA, testMessage);
+  const replyMessage = await bob1.replyToMessage(alice, testMessage);
   await Promise.all([
-    device1.waitForTextElementToBePresent({
+    alice1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: replyMessage,
       maxWait: 5000,
     }),
-    device3.waitForTextElementToBePresent({
+    charlie1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: replyMessage,
@@ -63,7 +63,7 @@ async function sendImageGroupiOS(platform: SupportedPlatformsType) {
     }),
   ]);
   // Close server and devices
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }
 
 async function sendImageGroupAndroid(platform: SupportedPlatformsType) {
@@ -71,27 +71,27 @@ async function sendImageGroupAndroid(platform: SupportedPlatformsType) {
   const testMessage = 'Testing image sending to groups';
 
   const {
-    devices: { device1, device2, device3 },
-    prebuilt: { userA },
-  } = await open3AppsWith3FriendsAnd1GroupState({
+    devices: { alice1, bob1, charlie1 },
+    prebuilt: { alice },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
   });
-  const replyMessage = `Replying to image from ${userA.userName}`;
-  await device1.sendImage(platform, testMessage);
+  const replyMessage = `Replying to image from ${alice.userName}`;
+  await alice1.sendImage(platform, testMessage);
   // Wait for image to appear in conversation screen
   await sleepFor(500);
   await Promise.all([
-    device2.trustAttachments(testGroupName),
-    device3.trustAttachments(testGroupName),
+    bob1.trustAttachments(testGroupName),
+    charlie1.trustAttachments(testGroupName),
   ]);
   await Promise.all([
-    device2.waitForTextElementToBePresent({
+    bob1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Media message',
     }),
-    device3.waitForTextElementToBePresent({
+    charlie1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Media message',
     }),
@@ -99,21 +99,21 @@ async function sendImageGroupAndroid(platform: SupportedPlatformsType) {
   // Reply to image - user B
   // Sleep for is waiting for image to load
   await sleepFor(1000);
-  await device2.longPress('Media message');
-  await device2.clickOnByAccessibilityID('Reply to message');
-  await device2.sendMessage(replyMessage);
+  await bob1.longPress('Media message');
+  await bob1.clickOnByAccessibilityID('Reply to message');
+  await bob1.sendMessage(replyMessage);
   await Promise.all([
-    device1.waitForTextElementToBePresent({
+    alice1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: replyMessage,
     }),
-    device3.waitForTextElementToBePresent({
+    charlie1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: replyMessage,
     }),
   ]);
   // Close server and devices
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }

@@ -19,8 +19,8 @@ export const createGroup = async (
 ): Promise<Group> => {
   const group: Group = { userName, userOne, userTwo, userThree };
 
-  const userAMessage = `${userOne.userName} to ${userName}`;
-  const userBMessage = `${userTwo.userName} to ${userName}`;
+  const aliceMessage = `${userOne.userName} to ${userName}`;
+  const bobMessage = `${userTwo.userName} to ${userName}`;
   const userCMessage = `${userThree.userName} to ${userName}`;
   // Create contact between User A and User B
   await newContact(platform, device1, userOne, device2, userTwo);
@@ -81,32 +81,32 @@ export const createGroup = async (
   ]);
 
   // Send message from User A to group to verify all working
-  await device1.sendMessage(userAMessage);
-  // Did the other devices receive UserA's message?
+  await device1.sendMessage(aliceMessage);
+  // Did the other devices receive alice's message?
   await Promise.all([
     device2.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
-      text: userAMessage,
+      text: aliceMessage,
     }),
     device3.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
-      text: userAMessage,
+      text: aliceMessage,
     }),
   ]);
   // Send message from User B to group
-  await device2.sendMessage(userBMessage);
+  await device2.sendMessage(bobMessage);
   await Promise.all([
     device1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
-      text: userBMessage,
+      text: bobMessage,
     }),
     device3.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
-      text: userBMessage,
+      text: bobMessage,
     }),
   ]);
   // Send message to User C to group

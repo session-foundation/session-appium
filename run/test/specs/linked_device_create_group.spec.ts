@@ -25,15 +25,15 @@ bothPlatformsItSeparate({
 
 async function linkedGroupiOS(platform: SupportedPlatformsType) {
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
-  const userA = await linkedDevice(device1, device2, USERNAME.ALICE);
-  const [userB, userC] = await Promise.all([
+  const alice = await linkedDevice(device1, device2, USERNAME.ALICE);
+  const [bob, userC] = await Promise.all([
     newUser(device3, USERNAME.BOB),
     newUser(device4, USERNAME.CHARLIE),
   ]);
   const testGroupName = 'Linked device group';
   const newGroupName = 'New group name';
   // Note we keep this createGroup here as we want it to **indeed** use the UI to create the group
-  await createGroup(platform, device1, userA, device3, userB, device4, userC, testGroupName);
+  await createGroup(platform, device1, alice, device3, bob, device4, userC, testGroupName);
   // Test that group has loaded on linked device
   await device2.clickOnElementAll({
     strategy: 'accessibility id',
@@ -87,14 +87,14 @@ async function linkedGroupAndroid(platform: SupportedPlatformsType) {
   const newGroupName = 'Changed group name';
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
   // Create users A, B and C
-  const userA = await linkedDevice(device1, device2, USERNAME.ALICE);
-  const [userB, userC] = await Promise.all([
+  const alice = await linkedDevice(device1, device2, USERNAME.ALICE);
+  const [bob, userC] = await Promise.all([
     newUser(device3, USERNAME.BOB),
     newUser(device4, USERNAME.CHARLIE),
   ]);
   // Create group
   // Note we keep this createGroup here as we want it to **indeed** use the UI to create the group
-  await createGroup(platform, device1, userA, device3, userB, device4, userC, testGroupName);
+  await createGroup(platform, device1, alice, device3, bob, device4, userC, testGroupName);
   // Test that group has loaded on linked device
   await device2.clickOnElementAll({
     strategy: 'accessibility id',
