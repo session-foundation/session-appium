@@ -26,8 +26,11 @@ function getChalkColorForStatus(result: Pick<TestResult, 'status'>) {
         : chalk.red;
 }
 
-function testResultToDurationStr(tests: Array<Pick<TestAndResult, 'result'>>) {
+function testResultToDurationStr(tests: Array<Pick<TestAndResult, 'result'>>, asNumber = false) {
   const inSeconds = tests.map(m => m.result).map(r => Math.floor(r.duration / 1000));
+  if (asNumber) {
+    return inSeconds.map(m => m).join(',');
+  }
   return inSeconds.map(m => `${m}s`).join(',');
 }
 
@@ -36,7 +39,7 @@ function getGroupedByResultsDetails(testAndResults: Array<TestAndResult>) {
   const allFailed = testAndResults.every(m => m.result.status === 'failed');
   const allSkipped = testAndResults.every(m => m.result.status === 'skipped');
   const firstItem = testAndResults[0]; // we know they all have the same state
-  const statuses = testAndResults.map(m => `"${m.result.status}"`).join(',');
+  const statuses = testAndResults.map(m => m.result.status).join(',');
 
   const times =
     testAndResults.length === 1
@@ -49,7 +52,7 @@ function getGroupedByResultsDetails(testAndResults: Array<TestAndResult>) {
     allFailed,
     allPassed,
     allSkipped,
-    firstItem,
+    testTitle: firstItem.test.title,
     statuses,
     times,
     runCount: testAndResults.length,
@@ -57,13 +60,14 @@ function getGroupedByResultsDetails(testAndResults: Array<TestAndResult>) {
 }
 
 function formatGroupedByResultsCsv(testAndResults: Array<TestAndResult>) {
-  const { firstItem, statuses, runCount } = getGroupedByResultsDetails(testAndResults);
-  const durations = testResultToDurationStr(testAndResults);
-  console.log(`${firstItem.test.title},${runCount},${statuses},${durations}`);
+  const { testTitle, statuses, runCount } = getGroupedByResultsDetails(testAndResults);
+  const durations = testResultToDurationStr(testAndResults, true);
+  const titleWithoutTags = testTitle.slice(0, testTitle.indexOf('@') - 1);
+  console.log(`${titleWithoutTags},${runCount},${statuses},${durations}`);
 }
 
 function formatGroupedByResults(testAndResults: Array<TestAndResult>) {
-  const { allFailed, allPassed, allSkipped, firstItem, statuses, times } =
+  const { allFailed, allPassed, allSkipped, testTitle, statuses, times } =
     getGroupedByResultsDetails(testAndResults);
   console.log(
     `${getChalkColorForStatus(
@@ -76,7 +80,7 @@ function formatGroupedByResults(testAndResults: Array<TestAndResult>) {
             : { status: 'interrupted' }
     )(
       `\t\t\t"${
-        firstItem.test.title
+        testTitle
       }": run ${times}, statuses:[${statuses}], durations: [${testResultToDurationStr(
         testAndResults
       )}]`
