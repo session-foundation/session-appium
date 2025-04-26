@@ -68,16 +68,19 @@ async function disappearingGifMessage1o1Android(platform: SupportedPlatformsType
   // Check if the 'Tap to download media' config appears
   // Click on config
   await bob1.trustAttachments(USERNAME.ALICE);
+
+  // The UI takes some sime to refresh the component once we click "trust sender", so allow 5s here
+  const maxWaitForMediaMessage = 5000;
   await Promise.all([
     alice1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Media message',
-      maxWait: 1000,
+      maxWait: maxWaitForMediaMessage,
     }),
     bob1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Media message',
-      maxWait: 1000,
+      maxWait: maxWaitForMediaMessage,
     }),
   ]);
   // Wait for 30 seconds (time)

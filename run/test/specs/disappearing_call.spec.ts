@@ -59,7 +59,7 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType) {
     selector: 'Allow voice and video calls',
   });
   await bob1.clickOnByAccessibilityID('Enable');
-  await sleepFor(500);
+  await sleepFor(500, true);
   await bob1.clickOnByAccessibilityID('Close button');
   // Make call on device 1 (alice)
   await alice1.clickOnByAccessibilityID('Call');

@@ -173,7 +173,7 @@ export class DeviceWrapper {
       return;
     }
     if (this.isAndroid()) {
-      await runScriptAndLog(`${getAdbFullPath()} -s emulator-5554 shell input keyevent 3`, true);
+      await runScriptAndLog(`${getAdbFullPath()} -s ${this.getUdid()} shell input keyevent 3`, true);
       return;
     }
   }
@@ -1095,7 +1095,7 @@ export class DeviceWrapper {
     }
   }
 
-  public async pushMediaToDevice(mediaFileName: string, forcedDate?: string) {
+  public async pushMediaToDevice(mediaFileName: 'profile_picture.jpg' | 'test_file.pdf' | 'test_image.jpg' | 'test_video.mp4', forcedDate?: string) {
     if (this.isIOS()) {
       await runScriptAndLog(`touch -a -m -t ${forcedDate} 'run/test/specs/media/${mediaFileName}'`);
       await runScriptAndLog(
@@ -1104,12 +1104,12 @@ export class DeviceWrapper {
       );
     } else {
       await runScriptAndLog(
-        `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/${mediaFileName}' /storage/emulated/0/Download`,
+        `${getAdbFullPath()} -s ${this.getUdid()} push 'run/test/specs/media/${mediaFileName}' /storage/emulated/0/Download`,
         true
       );
       // Refreshes the photos UI to force the image appear
       await runScriptAndLog(
-        `${getAdbFullPath()} -s emulator-5554 shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage/emulated/0/Download/${mediaFileName}`,
+        `${getAdbFullPath()} -s ${this.getUdid()} shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage/emulated/0/Download/${mediaFileName}`,
         true
       );
     }
@@ -1170,7 +1170,7 @@ export class DeviceWrapper {
         text: fileName,
       });
       if (!testImage) {
-        await this.pushMediaToDevice(platform, fileName);
+        await this.pushMediaToDevice('test_image.jpg', fileName);
       }
       await sleepFor(100);
       await this.clickOnTextElementById('android:id/title', fileName);
@@ -1286,7 +1286,7 @@ export class DeviceWrapper {
       text: fileName,
     });
     if (!testVideo) {
-      await this.pushMediaToDevice('android', fileName);
+      await this.pushMediaToDevice('test_video.mp4', fileName);
     }
     await sleepFor(100);
     await this.clickOnTextElementById('android:id/title', fileName);
@@ -1315,7 +1315,7 @@ export class DeviceWrapper {
         text: fileName,
       });
       if (!testDocument) {
-        await this.pushMediaToDevice('android', fileName);
+        await this.pushMediaToDevice('test_file.pdf', fileName);
       }
       await sleepFor(1000);
       await this.clickOnTextElementById('android:id/title', fileName);
@@ -1475,7 +1475,7 @@ export class DeviceWrapper {
       });
       // If no image, push file to this
       if (!profilePicture) {
-        await this.pushMediaToDevice('android', fileName);
+        await this.pushMediaToDevice('profile_picture.jpg', fileName);
         await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Show roots' });
         await this.clickOnElementAll({
           strategy: 'id',
@@ -1847,6 +1847,13 @@ export class DeviceWrapper {
     const base64image = await this.getElementScreenshot(element.ELEMENT);
     const pixelColor = await parseDataImage(base64image);
     return pixelColor;
+  }
+
+  private getUdid() {
+    if (!this.udid) {
+      throw new Error("getUdid: stored udid is empty")
+    }
+    return this.udid
   }
 
   /* === all the utilities function ===  */
