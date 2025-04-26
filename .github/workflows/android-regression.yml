@@ -189,7 +189,7 @@ jobs:
         run: |
           cd forked-session-appium
           pwd
-          yarn test "Unsent message syncs @${PLATFORM}" #Note: this has to be double quotes
+          yarn test "Delete message linked device @${PLATFORM}" #Note: this has to be double quotes
 
       # - name: Run the 1-devices tests ​​with 4 workers
       #   continue-on-error: true

@@ -288,6 +288,46 @@ export async function open2AppsLinkedUser({ platform }: WithPlatform) {
   };
 }
 
+/**
+ * Create two users Alice and Bob and push their respective configs,
+ * but do not make them friends.
+ * Alice has 2 devices, bob has 1 device
+ */
+export async function open3Apps2UsersLinkedFirstUser({ platform }: WithPlatform) {
+  const prebuiltStateKey = '2users';
+  const appsToOpen = 3;
+  const result = await openAppsWithState({
+    platform,
+    appsToOpen,
+    stateToBuildKey: prebuiltStateKey,
+    groupName: undefined,
+  });
+  // we want the first user to have the first 2 devices linked
+  const alice = result.prebuilt.users[0];
+  const bob = result.prebuilt.users[1];
+  const alice1 = result.devices[0];
+  const alice2 = result.devices[1];
+  const bob1 = result.devices[2];
+
+  const seedPhrases = [alice.seedPhrase, alice.seedPhrase, bob.seedPhrase];
+  await linkDevices(result.devices, seedPhrases);
+
+  const formattedUsers: WithUsers<2> = {
+    userA: alice,
+    userB: bob,
+  };
+
+  return {
+    devices: {
+      // alice has two devices linked right away
+      device1: alice1,
+      device2: alice2,
+      device3: bob1,
+    },
+    prebuilt: { ...formattedUsers },
+  };
+}
+
 export async function open3Apps2Friends2LinkedFirstUser({
   platform,
   focusFriendsConvo,
