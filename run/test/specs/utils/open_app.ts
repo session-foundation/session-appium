@@ -205,6 +205,11 @@ const openAndroidApp = async (
   const emulatorAlreadyRunning = await isEmulatorRunning(targetName);
   console.info('emulatorAlreadyRunning', targetName, emulatorAlreadyRunning);
   if (!emulatorAlreadyRunning) {
+    if (process.env.CI) {
+      throw new Error(
+        `Emulator "${targetName}" is not running but it should have been started earlier.`
+      );
+    }
     await createAndroidEmulator(targetName);
     void startAndroidEmulator(targetName);
   }
