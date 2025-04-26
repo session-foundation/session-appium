@@ -550,7 +550,7 @@ export const simpleDictionary = {
     en: 'Ban User',
     args: undefined,
   },
-  banbobanned: {
+  banUserBanned: {
     en: 'User banned',
     args: undefined,
   },

@@ -72,11 +72,6 @@ on:
           - '3'
         default: '3'
 
-concurrency:
-  group: ${{ github.workflow }}
-  cancel-in-progress: true
-
-
 jobs:
   ios-regression:
     runs-on: [self-hosted, macOS]

@@ -206,7 +206,7 @@ export async function open_Alice1_Bob1_Charlie1_Unknown1({
   });
 
   const seedPhrases = result.prebuilt.users.map(m => m.seedPhrase);
-  await linkDevices(result.devices, seedPhrases);
+  await linkDevices(result.devices.slice(0, -1), seedPhrases);
 
   const formattedGroup = { group: result.prebuilt.group };
 

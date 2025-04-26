@@ -81,7 +81,7 @@ yarn install --frozen # to install packages referenced from yarn.lock
 Then, choose an option:
 
 ```
-yarn build-and-test # Build typescript and run the tests
+yarn tsc # Build typescript files
 yarn run test # Run all the tests
 
 Platform specific

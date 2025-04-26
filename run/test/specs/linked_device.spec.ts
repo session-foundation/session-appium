@@ -1,7 +1,8 @@
+import { USERNAME } from '@session-foundation/qa-seeder';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { UserSettings } from './locators/settings';
-import { open_Alice2 } from './state_builder';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { linkedDevice } from './utils/link_device';
+import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Link device',
@@ -12,10 +13,9 @@ bothPlatformsIt({
 
 async function linkDevice(platform: SupportedPlatformsType) {
   // Open server and two devices
-  const {
-    devices: { alice1, alice2 },
-    prebuilt: { alice },
-  } = await open_Alice2({ platform });
+  const { device1: alice1, device2: alice2 } = await openAppTwoDevices(platform);
+  // link device
+  const alice = await linkedDevice(alice1, alice2, USERNAME.ALICE);
   // Check that 'Youre almost finished' reminder doesn't pop up on alice2
   await alice2.hasElementBeenDeleted({
     strategy: 'accessibility id',
@@ -40,7 +40,7 @@ async function linkDevice(platform: SupportedPlatformsType) {
   await alice2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Account ID',
-    text: alice.sessionId,
+    text: alice.accountID,
   });
 
   await closeApp(alice1, alice2);
