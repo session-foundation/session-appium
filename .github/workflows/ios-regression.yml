@@ -1,5 +1,5 @@
 name: iOS regression tests
-run-name: '${{ inputs.RISK }} regressions on: ${{ inputs.BRANCH_TO_CHECKOUT }} (${{ inputs.APPIUM_REPO }})'
+run-name: '${{ inputs.RISK }} regressions on ${{ github.head_ref || github.ref }}'
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
         description: 'ipa url to test'
         required: true
         type: string
-        default: https://oxen.rocks/session-foundation/session-ios/dev/session-ios-20250403T021527Z-c1d2ffbc4-sim.tar.xz
+        default: https://oxen.rocks/session-foundation/session-ios/dev/session-ios-20250408T201952Z-233314350-sim.tar.xz
 
       RISK:
         description: 'risks to target'
@@ -19,22 +19,6 @@ on:
           - 'medium-risk'
           - 'low-risk'
           - ''
-
-      APPIUM_REPO:
-        description: 'appium repo to checkout'
-        required: true
-        type: choice
-        options:
-          - session-foundation/session-appium
-          - burtonemily/session-appium
-          - bilb/session-appium
-        default: session-foundation/session-appium
-
-      BRANCH_TO_CHECKOUT:
-        description: 'branch to checkout'
-        required: true
-        type: string
-        default: kick-member-test
 
       PLAYWRIGHT_RETRIES_COUNT:
         description: 'retries of failing tests to do at most'
@@ -47,7 +31,7 @@ on:
         default: '0'
 
       PRINT_FAILED_TEST_LOGS:
-        description: 'print failed test logs (1 to enable)'
+        description: 'print failed test logs (1 to enable) - DONT DO FOR FULL REGRESSION (it crashes github)'
         required: true
         type: choice
         options:
@@ -55,7 +39,7 @@ on:
           - '1'
         default: '0'
       PRINT_ONGOING_TEST_LOGS:
-        description: 'print ongoing test logs (1 to enable)'
+        description: 'print ongoing test logs (1 to enable) - DONT DO FOR FULL REGRESSION (it crashes github)'
         required: true
         type: choice
         options:
@@ -63,7 +47,7 @@ on:
           - '1'
         default: '0'
       PLAYWRIGHT_WORKERS_COUNT:
-        description: 'number of workers to use'
+        description: 'number of workers to use (ios only)'
         required: true
         type: choice
         options:
@@ -77,18 +61,19 @@ jobs:
     runs-on: [self-hosted, macOS]
     env:
       PLATFORM: 'ios'
-      CI: '1'
-      IOS_APP_PATH_PREFIX: '../extracted/Session.app'
-      ANDROID_APK: '../extracted/session-android.apk'
+      CI: 1
+      IOS_APP_PATH_PREFIX: './extracted/Session.app'
+      ANDROID_APK: '<just_not_empty>'
+      APPIUM_ADB_FULL_PATH: '<just_not_empty>'
+      ANDROID_SDK_ROOT: '<just_not_empty>'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
-      PLAYWRIGHT_WORKERS_COUNT: 3
-      PLAYWRIGHT_REPEAT_COUNT: 0
-      SDK_MANAGER_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/cmdline-tools/latest/bin/sdkmanager'
-      AVD_MANAGER_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/cmdline-tools/latest/bin/avdmanager'
-      ANDROID_SYSTEM_IMAGE: 'system-images;android-35;google_atd;x86_64'
-      EMULATOR_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/emulator/emulator'
+      PLAYWRIGHT_WORKERS_COUNT: 3 # for iOS, this is the max we can have on our self-hosted runner
+      SDK_MANAGER_FULL_PATH: '<just_not_empty>'
+      AVD_MANAGER_FULL_PATH: '<just_not_empty>'
+      ANDROID_SYSTEM_IMAGE: '<just_not_empty>'
+      EMULATOR_FULL_PATH: '<just_not_empty>'
       IOS_1_SIMULATOR: '4A75A0E1-9EDE-4169-93C3-DCE0F0C7664F'
       IOS_2_SIMULATOR: 'ACB6A587-8556-4EA0-87CF-4326A9A22051'
       IOS_3_SIMULATOR: 'D90B2AE2-FF30-49BE-9370-B789BAEED3BB'
@@ -106,77 +91,22 @@ jobs:
       - uses: actions/checkout@v4
         with:
           lfs: true
-      - name: Runner Details
-        run: |
-          echo "BRANCH_TO_CHECKOUT ${{ github.event.inputs.BRANCH_TO_CHECKOUT }}"
-          echo "APPIUM_REPO ${{ github.event.inputs.APPIUM_REPO }}"
-          echo "APK_URL ${{ github.event.inputs.APK_URL }}"
-          echo "RISK ${{ github.event.inputs.RISK }}"
 
-      - name: Download ipa
+      - name: Download ipa and extract it
         run: |
           curl -o session-ios.sim.tar.xz ${{ github.event.inputs.APK_URL }}
           ls
           pwd
-
-      - name: Inspect archive contents
-        run: |
           tar -tf session-ios.sim.tar.xz
-
-      - name: Extract app
-        run: |
           tar xf session-ios.sim.tar.xz
           mkdir -p extracted
-          mv *.app extracted/ || echo "No .app files found to move"
+          mv session-ios-*-sim/*.app extracted/
           ls extracted
 
-      - name: Verify extracted files
-        run: |
-          if [ ! -d "extracted" ]; then
-            echo "Extraction failed: extracted directory not found"
-            exit 1
-          fi
-          ls extracted
+      - name: Setup for both platforms
+        uses: ./github/actions/setup
 
-      - name: Rename extracted folder
-        run: |
-          mkdir -p extracted
-          mv session-ios extracted || echo "No session-ios directory to move"
-          ls extracted
-
-      - uses: actions/checkout@v4
-        with:
-          repository: ${{ github.event.inputs.APPIUM_REPO }}
-          ref: ${{ github.event.inputs.BRANCH_TO_CHECKOUT }}
-          path: 'forked-session-appium'
-
-      - uses: actions/setup-node@v4
-        with:
-          # node-version-file: 'forked-session-appium/.nvmrc'
-          node-version: 18.15.0
-
-      - name: Install yarn
-        run: |
-          npm install -g yarn
-          corepack enable
-          yarn set version 4.1.1
-      - name: Install test dependencies
-        run: |
-          cd forked-session-appium
-          ls
-          git status
-          touch yarn.lock
-          yarn install --immutable
-      - name: Start Appium server
-        run: |
-          cd forked-session-appium
-          yarn "./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --allow-cors"
-
-      - name: Build the iOS tests
-        run: |
-          cd forked-session-appium
-          yarn tsc
-      - name: Start simulators
+      - name: Stop simulators (they are started by playwright)
         shell: bash
         run: |
           source ./scripts/ci.sh
@@ -188,11 +118,24 @@ jobs:
           PLATFORM: ${{ env.PLATFORM }}
           RISK: ${{ github.event.inputs.RISK }}
 
-      - name: Run the iOS tests​​
+      - name: Run the iOS tests​​ (all device counts)
+        env:
+          DEVICES_PER_TEST_COUNT: 4
         run: |
-          cd forked-session-appium
           pwd
-          yarn test '@ios @${{ github.event.inputs.RISK }}'
+          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
+
+      - name: Upload results of this run
+        uses: ./github/actions/upload-test-results
+        with:
+          PLATFORM: ${{ env.PLATFORM }}
+          UPLOAD_IDENTIFIER: 'devices-other-test-run'
+
+      - name: Upload csv of this whole run
+        uses: ./github/actions/upload-csv-test-results
+        if: always()
+        with:
+          PLATFORM: ${{ env.PLATFORM }}
 
       - name: Stop emulators
         if: always()

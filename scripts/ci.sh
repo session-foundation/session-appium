@@ -152,5 +152,6 @@ function start_simulators_from_env_iOS() {
 function stop_simulators_from_env_iOS() {
     echo "Stopping iOS simulators from environment variables..."
     xcrun simctl shutdown all
+    osascript -e 'tell application "Simulator" to quit'
 
 }
