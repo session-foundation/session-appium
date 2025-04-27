@@ -39,31 +39,33 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
 
   // Wait for 30 seconds
   await sleepFor(30000);
+  const maxWaitValidateMsgDisappeared = 1000;
   if (platform === 'ios') {
     await Promise.all([
       alice1.hasElementBeenDeleted({
         strategy: 'accessibility id',
         selector: 'Message body',
-        maxWait: 1000,
+        maxWait: maxWaitValidateMsgDisappeared,
         text: testMessage,
       }),
       bob1.hasElementBeenDeleted({
         strategy: 'accessibility id',
         selector: 'Message body',
-        maxWait: 1000,
+        maxWait: maxWaitValidateMsgDisappeared,
         text: testMessage,
       }),
     ]);
-  }
-  if (platform === 'android') {
+  } else if (platform === 'android') {
     await Promise.all([
       alice1.hasElementBeenDeleted({
         strategy: 'accessibility id',
         selector: 'Media message',
+        maxWait: maxWaitValidateMsgDisappeared,
       }),
       bob1.hasElementBeenDeleted({
         strategy: 'accessibility id',
         selector: 'Media message',
+        maxWait: maxWaitValidateMsgDisappeared,
       }),
     ]);
   }

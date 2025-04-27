@@ -273,6 +273,40 @@ export async function open_Alice2({ platform }: WithPlatform) {
   };
 }
 
+/**
+ * Open 2 devices, one for Alice, one for Bob, but they are not friends
+ */
+export async function open_Alice1_bob1({ platform }: WithPlatform) {
+  const appsToOpen = 2;
+  const result = await openAppsWithState({
+    platform,
+    appsToOpen,
+    stateToBuildKey: '2users',
+    groupName: undefined,
+  });
+  const alice = result.prebuilt.users[0];
+  const bob = result.prebuilt.users[1];
+
+  const alice1 = result.devices[0];
+  const bob1 = result.devices[1];
+
+  const seedPhrases = [alice.seedPhrase, bob.seedPhrase];
+  await linkDevices(result.devices, seedPhrases);
+
+  const formattedUsers: WithUsers<2> = {
+    alice,
+    bob,
+  };
+
+  return {
+    devices: {
+      alice1,
+      bob1,
+    },
+    prebuilt: { ...formattedUsers },
+  };
+}
+
 export async function open_Alice2_Bob1_friends({
   platform,
   focusFriendsConvo,

@@ -81,6 +81,10 @@ async function sendCommunityInviteMessageAndroid(platform: SupportedPlatformsTyp
   // Join community
   await sleepFor(100);
   await alice1.navigateBack();
+  // Android (currently) needs a message to be present for the Contacts to show in "Invit Contacts"
+  await alice1.sendNewMessage({ accountID: bob.sessionId }, 'Alice to Bob');
+  await alice1.navigateBack();
+
   await joinCommunity(alice1, testCommunityLink, testCommunityName);
   // Wait for community to load
   // Add user B to community

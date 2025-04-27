@@ -40,6 +40,7 @@ async function leaveGroup(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Conversation list item',
     text: testGroupName,
+    maxWait: 5000,
   });
   await closeApp(alice1, bob1, charlie1);
 }

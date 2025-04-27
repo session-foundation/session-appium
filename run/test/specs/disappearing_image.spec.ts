@@ -26,7 +26,8 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   await sleepFor(500);
   await alice1.sendImage(platform, testMessage);
-  await bob1.trustAttachments(USERNAME.ALICE);
+  await bob1.trustAttachments(USERNAME.ALICE); // The UI takes some sime to refresh the component once we click "trust sender", so allow 5s here
+
   // Wait for 30 seconds
   await sleepFor(30000);
   await Promise.all([

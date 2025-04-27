@@ -1,6 +1,8 @@
-export function sleepFor(ms: number) {
+export function sleepFor(ms: number, logIt: boolean = false) {
   return new Promise(resolve => {
     setTimeout(resolve, ms);
-    console.log(`Sleeping for ${ms} milliseconds`);
+    if (logIt || ms > 3000) {
+      console.log(`Sleeping for ${ms} milliseconds`);
+    }
   });
 }

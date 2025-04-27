@@ -4,7 +4,7 @@ import { SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Check performance',
-  risk: undefined, // does it really make sense to allow risk to be undefined?
+  risk: 'low',
   testCb: checkPerformance,
   countOfDevicesNeeded: 2,
 });

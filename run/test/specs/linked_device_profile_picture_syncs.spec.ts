@@ -47,9 +47,7 @@ async function avatarRestored(platform: SupportedPlatformsType) {
   await sleepFor(5000);
   await alice2.closeScreen();
   await alice2.clickOnElementAll(new UserSettings(alice2));
-  const profilePictureLinked = await alice2.waitForTextElementToBePresent(
-    new UserSettings(alice2)
-  );
+  const profilePictureLinked = await alice2.waitForTextElementToBePresent(new UserSettings(alice2));
   const base64A = await alice2.getElementScreenshot(profilePictureLinked.ELEMENT);
   const actualPixelColorLinked = await parseDataImage(base64A);
   if (actualPixelColorLinked !== expectedPixelHexColour) {
