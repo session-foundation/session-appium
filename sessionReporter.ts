@@ -117,7 +117,11 @@ class SessionReporter implements Reporter {
       `\t\tStarting the run with ${this.allTestsCount} tests, with ${this.countWorkers} workers, ${config.projects[0].retries} retries and ${config.projects[0].repeatEach} repeats`
     );
     this.startTime = Date.now();
-    rmSync(csvResultFilename, { force: true });
+
+    // only remove the csv file on local runs, so we have in that csv file the whole test results
+    if (!process.env.CI) {
+      rmSync(csvResultFilename, { force: true });
+    }
   }
 
   onTestBegin(test: TestCase, result: TestResult) {

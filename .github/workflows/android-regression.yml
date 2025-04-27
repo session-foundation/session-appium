@@ -200,6 +200,12 @@ jobs:
           pwd
           npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
+      - name: Upload test results for 1 devices
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-android-1-devices
+          path: forked-session-appium/test-results
+
       - name: Run the 2-devices tests ​​with 2 workers
         continue-on-error: true
         id: devices-2-test-run
@@ -210,6 +216,12 @@ jobs:
           cd forked-session-appium
           pwd
           npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
+
+      - name: Upload test results for 2 devices
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-android-2-devices
+          path: forked-session-appium/test-results
 
       - name: Run the tests ​​other tests with 1 worker
         continue-on-error: true
@@ -222,9 +234,16 @@ jobs:
           pwd
           npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload test results for other devices
+        uses: actions/upload-artifact@v4
         with:
-          name: test-results.csv
+          name: test-results-android-other-devices
+          path: forked-session-appium/test-results
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-android.csv
           path: forked-session-appium/test-results.csv
 
       - name: Kill all running emulators
