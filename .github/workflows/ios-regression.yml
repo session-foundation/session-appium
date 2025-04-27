@@ -55,6 +55,14 @@ on:
           - '2'
           - '3'
         default: '3'
+      HIDE_WEBDRIVER_LOGS:
+        description: 'print webdriver logs (1 to hide, 0 to show). PRINT_ONGOING_TEST_LOGS or PRINT_FAILED_TEST_LOGS must be 1'
+        required: true
+        type: choice
+        options:
+          - '0'
+          - '1'
+        default: '1'
 
 jobs:
   ios-regression:
@@ -106,11 +114,16 @@ jobs:
       - name: Setup for both platforms
         uses: ./github/actions/setup
 
-      - name: Stop simulators (they are started by playwright)
+      - name: Stop simulators
         shell: bash
         run: |
-          source ./scripts/ci.sh
-          stop_simulators_from_env_iOS
+          npx --yes ts-node scripts/stop_ios.ts
+
+      - name: Start simulators
+        shell: bash
+        if: false # appium is starting the simulators (seems to be somewhat more reliable)
+        run: |
+          npx --yes ts-node scripts/start_ios.ts # don't auto start the simulators, let appium do it (seems somewhat more reliable)
 
       - name: List tests part of this run
         uses: ./github/actions/list-tests
@@ -123,7 +136,7 @@ jobs:
           DEVICES_PER_TEST_COUNT: 4
         run: |
           pwd
-          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
+          _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results
@@ -143,4 +156,4 @@ jobs:
         shell: bash
         run: |
           source ./scripts/ci.sh
-          stop_simulators_from_env_iOS
+          npx --yes ts-node scripts/stop_ios.ts

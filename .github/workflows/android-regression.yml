@@ -46,6 +46,14 @@ on:
           - '0'
           - '1'
         default: '0'
+      HIDE_WEBDRIVER_LOGS:
+        description: 'print webdriver logs (1 to hide, 0 to show). PRINT_ONGOING_TEST_LOGS or PRINT_FAILED_TEST_LOGS must be 1'
+        required: true
+        type: choice
+        options:
+          - '0'
+          - '1'
+        default: '1'
 
 jobs:
   android-regression:
@@ -133,7 +141,7 @@ jobs:
           DEVICES_PER_TEST_COUNT: 1
         run: |
           pwd
-          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
+          _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results
@@ -149,7 +157,7 @@ jobs:
           DEVICES_PER_TEST_COUNT: 2
         run: |
           pwd
-          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
+          _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results
@@ -165,7 +173,7 @@ jobs:
           DEVICES_PER_TEST_COUNT: 4
         run: |
           pwd
-          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
+          _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results
