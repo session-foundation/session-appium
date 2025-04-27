@@ -1,0 +1,22 @@
+name: list-tests
+
+description: |
+  Lists all Playwright tests to run for a given platform and risk.
+
+inputs:
+  PLATFORM:
+    description: "Platform to filter tests 'android'|'ios'"
+    required: true
+  RISK:
+    description: "Risk level to filter tests 'high-risk'|'medium-risk'|'low-risk'|''"
+    required: false
+
+runs:
+  using: 'composite'
+  steps:
+    - name: List all tests to run for platform ${{ inputs.PLATFORM }} with risk ${{ inputs.RISK }}
+      shell: bash
+      run: |
+        cd forked-session-appium
+        pwd
+        npx playwright test --list --reporter list --grep "(?=.*@${{ inputs.PLATFORM }})(?=.*@${{ inputs.RISK }})"

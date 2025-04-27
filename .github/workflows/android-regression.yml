@@ -69,6 +69,7 @@ jobs:
     runs-on: [self-hosted, linux, X64, qa-android]
     env:
       PLATFORM: 'android'
+      CI: 1
       IOS_APP_PATH_PREFIX: '../extracted/Session.app'
       ANDROID_APK: '../extracted/session-android.apk'
       APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
@@ -92,7 +93,6 @@ jobs:
       IOS_10_SIMULATOR: 'C0EE6A21-044D-4B6E-B9A5-7AB977ADF305'
       IOS_11_SIMULATOR: 'B8E78B21-1432-41F3-A398-DE4FF8CF9DED'
       IOS_12_SIMULATOR: '8214A3A2-D4E1-4AA8-BB0F-394E3A49BCFA'
-      CI: 'true'
 
     steps:
       - uses: actions/checkout@v4
@@ -172,22 +172,11 @@ jobs:
           source ./scripts/ci.sh
           start_with_snapshots
 
-      - name: List all tests
-        run: |
-          cd forked-session-appium
-          pwd
-          npx playwright test --list --reporter list --grep "@${PLATFORM}"
-
-      - name: Run the single test
-        continue-on-error: true
-        id: single-test-run
-        env:
-          PLAYWRIGHT_WORKERS_COUNT: 1
-          DEVICES_PER_TEST_COUNT: 2
-        run: |
-          cd forked-session-appium
-          pwd
-          # npx playwright test --grep "Delete message linked device @${PLATFORM}" #Note: this has to be double quotes
+      - name: List tests part of this run
+        uses: ./github/actions/list-tests
+        with:
+          PLATFORM: ${{ env.PLATFORM }}
+          RISK: ${{ github.event.inputs.RISK }}
 
       - name: Run the 1-devices tests ​​with 4 workers
         continue-on-error: true
@@ -200,11 +189,11 @@ jobs:
           pwd
           npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
-      - name: Upload test results for 1 devices
-        uses: actions/upload-artifact@v4
+      - name: Upload results of this run
+        uses: ./github/actions/upload-test-results
         with:
-          name: test-results-android-1-devices
-          path: forked-session-appium/test-results
+          PLATFORM: ${{ env.PLATFORM }}
+          UPLOAD_IDENTIFIER: 'devices-1-test-run'
 
       - name: Run the 2-devices tests ​​with 2 workers
         continue-on-error: true
@@ -217,11 +206,11 @@ jobs:
           pwd
           npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
-      - name: Upload test results for 2 devices
-        uses: actions/upload-artifact@v4
+      - name: Upload results of this run
+        uses: ./github/actions/upload-test-results
         with:
-          name: test-results-android-2-devices
-          path: forked-session-appium/test-results
+          PLATFORM: ${{ env.PLATFORM }}
+          UPLOAD_IDENTIFIER: 'devices-2-test-run'
 
       - name: Run the tests ​​other tests with 1 worker
         continue-on-error: true
@@ -234,18 +223,20 @@ jobs:
           pwd
           npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
 
-      - name: Upload test results for other devices
-        uses: actions/upload-artifact@v4
+      - name: Upload results of this run
+        uses: ./github/actions/upload-test-results
         with:
-          name: test-results-android-other-devices
-          path: forked-session-appium/test-results
+          PLATFORM: ${{ env.PLATFORM }}
+          UPLOAD_IDENTIFIER: 'devices-other-test-run'
 
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Upload csv of this whole run
+        uses: ./github/actions/upload-csv-test-results
         with:
-          name: test-results-android.csv
-          path: forked-session-appium/test-results.csv
+          PLATFORM: ${{ env.PLATFORM }}
+
+      - name: Check if any tests failed
+        if: steps.devices-1-test-run != 'success' || steps.devices-2-test-run != 'success' || steps.other-devices-test-run.outcome != 'success'
+        run: echo 'Some test failed, see above'; exit 1
 
       - name: Kill all running emulators
         if: always()
@@ -254,19 +245,3 @@ jobs:
         run: |
           source ./scripts/ci.sh
           killall_emulators
-
-      - name: Check Single test result
-        if: steps.single-test-run.outcome != 'success'
-        run: echo 'single-test-run Failed'; exit 1
-
-      - name: Check devices-1-test-run
-        if: steps.devices-1-test-run.outcome != 'success'
-        run: echo '1-devices-test-run'; exit 1
-
-      - name: Check devices-2-test-run
-        if: steps.devices-2-test-run != 'success'
-        run: echo 'devices-2-test-run Failed'; exit 1
-
-      - name: Check other-devices-test-run
-        if: steps.other-devices-test-run.outcome != 'success'
-        run: echo 'other-devices-test-run Failed'; exit 1

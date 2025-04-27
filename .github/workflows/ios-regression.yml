@@ -76,6 +76,8 @@ jobs:
   ios-regression:
     runs-on: [self-hosted, macOS]
     env:
+      PLATFORM: 'ios'
+      CI: '1'
       IOS_APP_PATH_PREFIX: '../extracted/Session.app'
       ANDROID_APK: '../extracted/session-android.apk'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
@@ -176,11 +178,12 @@ jobs:
         run: |
           source ./scripts/ci.sh
           stop_simulators_from_env_iOS
-      - name: List all tests
-        run: |
-          cd forked-session-appium
-          pwd
-          npx playwright test --list --reporter list --grep "@ios @${{ github.event.inputs.RISK }}"
+
+      - name: List tests part of this run
+        uses: ./github/actions/list-tests
+        with:
+          PLATFORM: ${{ env.PLATFORM }}
+          RISK: ${{ github.event.inputs.RISK }}
 
       - name: Run the iOS tests​​
         run: |
