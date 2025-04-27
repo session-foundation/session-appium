@@ -779,18 +779,18 @@ export class DeviceWrapper {
       try {
         if (text) {
           console.log(
-            `Waiting for ${locator.strategy}: '${locator.selector}' to be present with ${text}`
+            `Waiting for "${locator.strategy}": '${locator.selector}' to be present with ${text}`
           );
           const els = await this.findElements(locator.strategy, locator.selector);
           el = await this.findMatchingTextInElementArray(els, text);
         } else {
-          console.log(`Waiting for ${locator.strategy} and ${locator.selector} to be present`);
+          console.log(`Waiting for "${locator.strategy}" and "${locator.selector}" to be present`);
           el = await this.findElement(locator.strategy, locator.selector);
         }
       } catch (e: any) {
         console.info(
           'waitForTextElementToBePresent threw: ',
-          `${locator.strategy}: '${locator.selector}'`
+          `"${locator.strategy}": "${locator.selector}"`
         );
       }
       if (!el) {
