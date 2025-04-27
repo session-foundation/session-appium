@@ -1,0 +1,32 @@
+name: print-runner-details
+
+description: |
+  Print some details about how the runner is configured and tests being run
+
+inputs:
+  APK_URL:
+    description: 'APK_URL'
+    required: true
+  RISK:
+    description: 'RISK'
+    required: true
+  PRINT_FAILED_TEST_LOGS:
+    description: 'PRINT_FAILED_TEST_LOGS'
+    required: true
+  PRINT_ONGOING_TEST_LOGS:
+    description: 'PRINT_ONGOING_TEST_LOGS'
+    required: true
+  PLAYWRIGHT_RETRIES_COUNT:
+    description: 'PLAYWRIGHT_RETRIES_COUNT'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Runner Details
+      run: |
+        echo "APK_URL '${{ inputs.APK_URL }}'"
+        echo "RISK: '${{ inputs.RISK }}'"
+        echo "PRINT_FAILED_TEST_LOGS '${{ inputs.PRINT_FAILED_TEST_LOGS }}'"
+        echo "PRINT_ONGOING_TEST_LOGS: '${{ inputs.PRINT_ONGOING_TEST_LOGS }}'"
+        echo "PLAYWRIGHT_RETRIES_COUNT: '${{ inputs.PLAYWRIGHT_RETRIES_COUNT }}'"

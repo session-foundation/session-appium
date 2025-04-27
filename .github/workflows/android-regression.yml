@@ -1,5 +1,5 @@
 name: Android regression tests
-run-name: '${{ inputs.RISK }} regressions on: ${{ inputs.BRANCH_TO_CHECKOUT }} (${{ inputs.APPIUM_REPO }})'
+run-name: '${{ inputs.RISK }} regressions on ${{ github.head_ref || github.ref }}'
 
 on:
   workflow_dispatch:
@@ -19,23 +19,6 @@ on:
           - 'medium-risk'
           - 'low-risk'
           - ''
-
-      APPIUM_REPO:
-        description: 'appium repo to checkout'
-        required: true
-        type: choice
-        options:
-          - session-foundation/session-appium
-          - burtonemily/session-appium
-          - Miki-Session/session-appium
-          - bilb/session-appium
-        default: session-foundation/session-appium
-
-      BRANCH_TO_CHECKOUT:
-        description: 'branch to checkout'
-        required: true
-        type: string
-        default: add-tooling
 
       PLAYWRIGHT_RETRIES_COUNT:
         description: 'retries of failing tests to do at most'
@@ -99,31 +82,25 @@ jobs:
         with:
           lfs: true
 
-      - name: Runner Details
-        run: |
-          echo "BRANCH_TO_CHECKOUT ${{ github.event.inputs.BRANCH_TO_CHECKOUT }}"
-          echo "APPIUM_REPO ${{ github.event.inputs.APPIUM_REPO }}"
-          echo "APK_URL ${{ github.event.inputs.APK_URL }}"
-          echo "RISK ${{ github.event.inputs.RISK }}"
+      - uses: ./github/actions/print-runner-details
+        with:
+          APK_URL: ${{ github.event.inputs.APK_URL }}
+          RISK: ${{ github.event.inputs.RISK }}
+          PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
+          PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
+          PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
 
-      - name: Download APK
+      - name: Download APK & extract it
         run: |
+          pwd
           wget -q -O session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
           ls
-          pwd
-
-      - name: Extract APK
-        run: |
           tar xf session-android.apk.tar.xz
-          pwd
-
-      - name: Rename extracted folder
-        run: |
+          ls
           mv session-android-*universal extracted
           ls extracted
           mv extracted/*.apk extracted/session-android.apk
           ls extracted
-          pwd
 
       - name: Setup for both platforms
         uses: ./github/actions/setup
@@ -202,6 +179,7 @@ jobs:
 
       - name: Upload csv of this whole run
         uses: ./github/actions/upload-csv-test-results
+        if: always()
         with:
           PLATFORM: ${{ env.PLATFORM }}
 
