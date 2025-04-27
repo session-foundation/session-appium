@@ -70,8 +70,8 @@ jobs:
     env:
       PLATFORM: 'android'
       CI: 1
-      IOS_APP_PATH_PREFIX: '../extracted/Session.app'
-      ANDROID_APK: '../extracted/session-android.apk'
+      IOS_APP_PATH_PREFIX: './extracted/Session.app'
+      ANDROID_APK: './extracted/session-android.apk'
       APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
       ANDROID_SDK_ROOT: '/opt/android'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
@@ -96,6 +96,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
+
       - name: Runner Details
         run: |
           echo "BRANCH_TO_CHECKOUT ${{ github.event.inputs.BRANCH_TO_CHECKOUT }}"
@@ -122,40 +125,11 @@ jobs:
           ls extracted
           pwd
 
-      - uses: actions/checkout@v4
-        with:
-          repository: ${{ github.event.inputs.APPIUM_REPO }}
-          ref: ${{ github.event.inputs.BRANCH_TO_CHECKOUT }}
-          path: 'forked-session-appium'
-          lfs: true
-
-      - uses: actions/setup-node@v4
-        with:
-          # node-version-file: 'forked-session-appium/.nvmrc'
-          node-version: 18.15.0
-
-      - name: Install yarn
-        run: |
-          npm install -g yarn
-          corepack enable
-          yarn set version 4.1.1
-
-      - name: Install test dependencies
-        run: |
-          cd forked-session-appium
-          ls
-          git status
-          touch yarn.lock
-          yarn install --immutable
-
-      - name: Start Appium server
-        run: |
-          cd forked-session-appium
-          yarn "./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --allow-cors"
+      - name: Setup for both platforms
+        uses: ./github/actions/setup
 
       - name: Build the Android tests
         run: |
-          cd forked-session-appium
           yarn tsc
 
       - name: Restart adb server
@@ -185,7 +159,6 @@ jobs:
           PLAYWRIGHT_WORKERS_COUNT: 4
           DEVICES_PER_TEST_COUNT: 1
         run: |
-          cd forked-session-appium
           pwd
           npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
@@ -202,7 +175,6 @@ jobs:
           PLAYWRIGHT_WORKERS_COUNT: 2
           DEVICES_PER_TEST_COUNT: 2
         run: |
-          cd forked-session-appium
           pwd
           npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
@@ -219,7 +191,6 @@ jobs:
           PLAYWRIGHT_WORKERS_COUNT: 1
           DEVICES_PER_TEST_COUNT: 4
         run: |
-          cd forked-session-appium
           pwd
           npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
 

@@ -17,6 +17,5 @@ runs:
     - name: List all tests to run for platform ${{ inputs.PLATFORM }} with risk ${{ inputs.RISK }}
       shell: bash
       run: |
-        cd forked-session-appium
         pwd
         npx playwright test --list --reporter list --grep "(?=.*@${{ inputs.PLATFORM }})(?=.*@${{ inputs.RISK }})"

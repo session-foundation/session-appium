@@ -1,0 +1,30 @@
+name: Setup environment for both platforms
+
+description: Setup environment for both platforms (node,deps,start appium)
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        # node-version-file: '.nvmrc'
+        node-version: 18.15.0
+
+    - name: Install yarn
+      shell: bash
+      run: |
+        npm install -g yarn
+        corepack enable
+        yarn set version 4.1.1
+
+    - name: Install test dependencies
+      shell: bash
+      run: |
+        ls
+        git status
+        yarn install --immutable
+
+    - name: Start Appium server
+      shell: bash
+      run: |
+        yarn "./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --allow-cors"

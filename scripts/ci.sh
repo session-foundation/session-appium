@@ -106,15 +106,15 @@ SIMULATOR_OS="18.2"
 # Function to boot simulators from environment variables
 function start_simulators_from_env_iOS() {
   echo "Starting iOS simulators from environment variables"
-  
+
 
   for i in {1..12}; do
     simulator_label=$i
     env_var="IOS_${simulator_label}_SIMULATOR"
     simulator_udid=$(printenv "$env_var")
-    
+
     echo "Iteration $i: Label: $simulator_label, Env var: $env_var, UDID: $simulator_udid"
-    
+
     if [[ -n "$simulator_udid" ]]; then
 
       echo "Booting $simulator_label simulator: $simulator_udid"
@@ -127,7 +127,7 @@ function start_simulators_from_env_iOS() {
         return 101
       fi
       sleep 5
-      
+
       booted=$(xcrun simctl list devices booted | grep "$simulator_udid")
       echo "Post-boot status for $simulator_udid: $booted"
       if [[ -z "$booted" ]]; then
@@ -139,7 +139,7 @@ function start_simulators_from_env_iOS() {
       return 104
     fi
   done
-  
+
   echo "Opening iOS Simulator app..."
   open -a Simulator
 
@@ -147,14 +147,6 @@ function start_simulators_from_env_iOS() {
 
 
 
-
-
-# Function to start the Appium server
-function start_appium_server() {
-    echo "Starting Appium server..."
-    cd forked-session-appium || return 110
-    start-server
-}
 
 # Function to stop running simulators
 function stop_simulators_from_env_iOS() {

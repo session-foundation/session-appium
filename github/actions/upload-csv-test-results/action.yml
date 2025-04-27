@@ -15,4 +15,4 @@ runs:
       uses: actions/upload-artifact@v4
       with:
         name: test-results-${{ inputs.PLATFORM }}.csv
-        path: forked-session-appium/test-results.csv
+        path: test-results.csv
