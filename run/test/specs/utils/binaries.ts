@@ -86,7 +86,6 @@ export const getWorkersCount = () => {
   return isFinite(asNumber) ? asNumber : 1;
 };
 
-
 export const getDevicesPerTestCount = () => {
   const asNumber = toNumber(process.env.DEVICES_PER_TEST_COUNT);
   return isFinite(asNumber) ? asNumber : 4;

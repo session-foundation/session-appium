@@ -18,7 +18,7 @@ async function avatarColor(platform: SupportedPlatformsType) {
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true,
+    focusFriendsConvo: false,
   });
 
   // Get Alice's avatar color on device 1 (Home Screen avatar) and turn it into a hex value

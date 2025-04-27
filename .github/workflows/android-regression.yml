@@ -222,6 +222,11 @@ jobs:
           pwd
           npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
 
+      - uses: actions/upload-artifact@v4
+        with:
+          name: test-results.csv
+          path: forked-session-appium/test-results.csv
+
       - name: Kill all running emulators
         if: always()
         continue-on-error: true # just so we don't fail

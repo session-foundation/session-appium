@@ -417,6 +417,6 @@ export type Id =
   | 'Remove'
   | 'Contact status';
 
-export type TestRisk = 'high' | 'medium' | 'low' | undefined;
+export type TestRisk = 'high' | 'medium' | 'low';
 
 export type ElementStates = 'new_account' | 'restore_account';

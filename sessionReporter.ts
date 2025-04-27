@@ -8,6 +8,7 @@ import type {
   TestResult,
 } from '@playwright/test/reporter';
 import chalk from 'chalk';
+import { appendFileSync, rmSync } from 'fs';
 import { Dictionary, groupBy, isString, mean, omit, sortBy } from 'lodash';
 
 type TestAndResult = { test: TestCase; result: TestResult };
@@ -53,17 +54,23 @@ function getGroupedByResultsDetails(testAndResults: Array<TestAndResult>) {
     allPassed,
     allSkipped,
     testTitle: firstItem.test.title,
+    tags: firstItem.test.tags,
     statuses,
     times,
     runCount: testAndResults.length,
   };
 }
 
+const csvResultFilename = 'test-results.csv';
+
 function formatGroupedByResultsCsv(testAndResults: Array<TestAndResult>) {
-  const { testTitle, statuses, runCount } = getGroupedByResultsDetails(testAndResults);
+  const { testTitle, statuses, runCount, tags } = getGroupedByResultsDetails(testAndResults);
   const durations = testResultToDurationStr(testAndResults, true);
   const titleWithoutTags = testTitle.slice(0, testTitle.indexOf('@') - 1);
-  console.log(`${titleWithoutTags},${runCount},${statuses},${durations}`);
+  const str = `${titleWithoutTags},${runCount},${statuses},${durations},${tags.join(',')}`;
+  console.log(str);
+  // also write the entry to the csv result file
+  appendFileSync(csvResultFilename, `${str}\n`);
 }
 
 function formatGroupedByResults(testAndResults: Array<TestAndResult>) {
@@ -110,6 +117,7 @@ class SessionReporter implements Reporter {
       `\t\tStarting the run with ${this.allTestsCount} tests, with ${this.countWorkers} workers, ${config.projects[0].retries} retries and ${config.projects[0].repeatEach} repeats`
     );
     this.startTime = Date.now();
+    rmSync(csvResultFilename, { force: true });
   }
 
   onTestBegin(test: TestCase, result: TestResult) {

@@ -42,6 +42,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
     );
     await alice1.clickOnByAccessibilityID('Enable');
   }
+
   await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message sent status: Sent',
@@ -57,6 +58,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   // Accept dialog for link preview
   // No preview on first send
   await alice1.clickOnByAccessibilityID('Send message button');
+
   // Send again for image
   await alice1.inputText(testLink, {
     strategy: 'accessibility id',
