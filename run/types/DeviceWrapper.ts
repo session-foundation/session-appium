@@ -791,10 +791,18 @@ export class DeviceWrapper {
         console.info(
           'waitForTextElementToBePresent threw: ',
           `${locator.strategy}: '${locator.selector}'`
+          ,e.message, e.stack
         );
       }
       if (!el) {
         await sleepFor(waitPerLoop);
+      } else {
+        if (text) {
+          console.log(`'${locator.selector}' and '${text}' has been found`);
+        } else {
+          console.log(`'${locator.selector}' has been found`);
+        }
+        break
       }
       currentWait += waitPerLoop;
 
@@ -803,11 +811,6 @@ export class DeviceWrapper {
           throw new Error(`Waited for too long looking for '${locator.selector}' and '${text}`);
         }
         throw new Error(`Waited for too long looking for '${locator.selector}'`);
-      }
-      if (text) {
-        console.log(`'${locator.selector}' and '${text}' has been found`);
-      } else {
-        console.log(`'${locator.selector}' has been found`);
       }
     }
     return el;

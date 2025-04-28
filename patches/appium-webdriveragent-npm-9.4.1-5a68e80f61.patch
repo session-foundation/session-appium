@@ -1,0 +1,40 @@
+diff --git a/build/lib/utils.js b/build/lib/utils.js
+index 0c68f00e3661fa4eda22d75c686ee96fc40f936f..977963171969315e21c0b613a493cffbd0ad0b29 100644
+--- a/build/lib/utils.js
++++ b/build/lib/utils.js
+@@ -264,10 +264,7 @@ async function getXctestrunFilePath(deviceInfo, sdkVersion, bootstrapPath) {
+  * @return {string} returns xctestrunFilePath for given device
+  */
+ function getXctestrunFileName(deviceInfo, version) {
+-    const archSuffix = deviceInfo.isRealDevice
+-        ? `os${version}-arm64`
+-        : `simulator${version}-${(0, os_1.arch)() === 'arm64' ? 'arm64' : 'x86_64'}`;
+-    return `WebDriverAgentRunner_${isTvOS(deviceInfo.platformName) ? 'tvOS_appletv' : 'iphone'}${archSuffix}.xctestrun`;
++    return 'WebDriverAgentRunner_iphonesimulator18.2-arm64.xctestrun'
+ }
+ /**
+  * Ensures the process is killed after the timeout
+diff --git a/lib/utils.js b/lib/utils.js
+index 77ca8f53af62c58f6999c97e38f5e31d29ccf96c..59578a7d4b2c7f19c927c23c9aaee95ab5655213 100644
+--- a/lib/utils.js
++++ b/lib/utils.js
+@@ -7,7 +7,6 @@ import { WDA_RUNNER_BUNDLE_ID, PLATFORM_NAME_TVOS } from './constants';
+ import B from 'bluebird';
+ import _fs from 'fs';
+ import { waitForCondition } from 'asyncbox';
+-import { arch } from 'os';
+ 
+ const PROJECT_FILE = 'project.pbxproj';
+ 
+@@ -261,10 +260,7 @@ async function getXctestrunFilePath (deviceInfo, sdkVersion, bootstrapPath) {
+  * @return {string} returns xctestrunFilePath for given device
+  */
+ function getXctestrunFileName (deviceInfo, version) {
+-  const archSuffix = deviceInfo.isRealDevice
+-    ? `os${version}-arm64`
+-    : `simulator${version}-${arch() === 'arm64' ? 'arm64' : 'x86_64'}`;
+-  return `WebDriverAgentRunner_${isTvOS(deviceInfo.platformName) ? 'tvOS_appletv' : 'iphone'}${archSuffix}.xctestrun`;
++  return 'WebDriverAgentRunner_iphonesimulator18.2-arm64.xctestrun'
+ }
+ 
+ /**
