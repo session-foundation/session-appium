@@ -816,7 +816,7 @@ export class DeviceWrapper {
     }
     return el;
   }
-  
+
   public async waitForControlMessageToBePresent(
     text: string,
     maxWait?: number
@@ -1098,8 +1098,8 @@ export class DeviceWrapper {
       console.log('Great success - default time is correct');
     }
   }
-  
-  // TODO bring in iOS changes from QA-1265 
+
+  // TODO bring in iOS changes from QA-1265
   public async pushMediaToDevice(mediaFileName: string, forcedDate?: string) {
     const filePath = path.join('run', 'test', 'specs', 'media', mediaFileName);
     if (this.isIOS()) {
@@ -1130,7 +1130,7 @@ export class DeviceWrapper {
     }
   }
 
-  // TODO bring in iOS changes from QA-1265 
+  // TODO bring in iOS changes from QA-1265
   public async sendImage(message: string, community?: boolean) {
     const ronSwansonBirthday = '196705060700.00';
     const fileName = 'test_image.jpg';
@@ -1192,7 +1192,7 @@ export class DeviceWrapper {
       maxWait: 20000,
     });
   }
-  // TODO bring in iOS changes from QA-1265 
+  // TODO bring in iOS changes from QA-1265
   public async sendVideoiOS(message: string) {
     const bestDayOfYear = `198809090700.00`;
     const formattedDate = `1988-09-08 21:00:00 +0000`;
@@ -1240,28 +1240,28 @@ export class DeviceWrapper {
   }
 
   public async sendVideoAndroid() {
-      // Push first
-      await this.pushMediaToDevice(testVideo);
-      // Click on attachments button
-      await this.clickOnElementAll(new AttachmentsButton(this));
-      await sleepFor(100);
-      // Select images button/tab
-      await this.clickOnByAccessibilityID('Documents folder');
-      await this.clickOnByAccessibilityID('Continue');
-      await this.clickOnElementAll({
-        strategy: 'id',
-        selector: 'com.android.permissioncontroller:id/permission_allow_button',
-        text: 'Allow',
-      });
-      await sleepFor(200);
-      await this.clickOnTextElementById('android:id/title', testVideo);
-      await this.waitForTextElementToBePresent({
-        ...new OutgoingMessageStatusSent(this).build(),
-        maxWait: 50000,
-      });
-    }
+    // Push first
+    await this.pushMediaToDevice(testVideo);
+    // Click on attachments button
+    await this.clickOnElementAll(new AttachmentsButton(this));
+    await sleepFor(100);
+    // Select images button/tab
+    await this.clickOnByAccessibilityID('Documents folder');
+    await this.clickOnByAccessibilityID('Continue');
+    await this.clickOnElementAll({
+      strategy: 'id',
+      selector: 'com.android.permissioncontroller:id/permission_allow_button',
+      text: 'Allow',
+    });
+    await sleepFor(200);
+    await this.clickOnTextElementById('android:id/title', testVideo);
+    await this.waitForTextElementToBePresent({
+      ...new OutgoingMessageStatusSent(this).build(),
+      maxWait: 50000,
+    });
+  }
 
-  // TODO bring in iOS changes from QA-1265 
+  // TODO bring in iOS changes from QA-1265
   public async sendDocument() {
     if (this.isAndroid()) {
       // Clear emulator and push file first
@@ -1395,7 +1395,7 @@ export class DeviceWrapper {
       await this.pressAndHold('New voice message');
     }
   }
-    // TODO bring in iOS changes from QA-1265 
+  // TODO bring in iOS changes from QA-1265
   public async uploadProfilePicture() {
     const spongeBobsBirthday = '199805010700.00';
     const formattedDateiOS = 'Photo, 01 May 1998, 7:00 am';
