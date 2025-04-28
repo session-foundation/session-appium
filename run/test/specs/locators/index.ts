@@ -1,6 +1,6 @@
 import { ANDROID_XPATHS, IOS_XPATHS } from '../../../constants';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { ElementStates, StrategyExtractionObj, USERNAME } from '../../../types/testing';
+import { ElementStates, StrategyExtractionObj } from '../../../types/testing';
 import { SupportedPlatformsType } from '../utils/open_app';
 
 export abstract class LocatorsInterface {
