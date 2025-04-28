@@ -224,7 +224,7 @@ export class BlockUser extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'accessibility id',
-          selector: `Block`,
+          selector: 'Block',
         };
     }
   }

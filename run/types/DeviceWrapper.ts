@@ -727,7 +727,7 @@ export class DeviceWrapper {
     do {
       if (!text) {
         try {
-          element = await this.waitForTextElementToBePresent({ ...locator, maxWait: maxWait });
+          element = await this.waitForTextElementToBePresent({ ...locator, maxWait });
           await sleepFor(100);
           console.log(`Element has been found, waiting for deletion`);
         } catch (e: any) {
@@ -736,7 +736,7 @@ export class DeviceWrapper {
         }
       } else {
         try {
-          element = await this.waitForTextElementToBePresent({ ...locator, maxWait: maxWait });
+          element = await this.waitForTextElementToBePresent({ ...locator, maxWait });
           await sleepFor(100);
           console.log(`Text element has been found, waiting for deletion`);
         } catch (e) {
@@ -1103,6 +1103,7 @@ export class DeviceWrapper {
   public async pushMediaToDevice(mediaFileName: string, forcedDate?: string) {
     const filePath = path.join('run', 'test', 'specs', 'media', mediaFileName);
     if (this.isIOS()) {
+      // TODO throw if forcedDate is not set
       await runScriptAndLog(`touch -a -m -t ${forcedDate} 'run/test/specs/media/${mediaFileName}'`);
       await runScriptAndLog(
         `xcrun simctl addmedia ${this.udid} 'run/test/specs/media/${mediaFileName}'`,
