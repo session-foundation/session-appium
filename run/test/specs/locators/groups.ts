@@ -155,18 +155,10 @@ export class RecreateGroupBannerMember extends LocatorsInterface {
 
 export class RecreateGroupButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Legacy Groups Recreate Button',
-        } as const;
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Accept message request',
-        } as const;
-    }
+    return {
+      strategy: 'accessibility id',
+      selector: 'Legacy Groups Recreate Button',
+    } as const;
   }
 }
 
