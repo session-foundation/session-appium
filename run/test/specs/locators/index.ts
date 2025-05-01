@@ -223,8 +223,9 @@ export class BlockUser extends LocatorsInterface {
         };
       case 'android':
         return {
-          strategy: 'accessibility id',
-          selector: 'Block',
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/title',
+          text: 'Block',
         };
     }
   }
