@@ -58,10 +58,10 @@ export class LongPressBlockOption extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'accessibility id',
-          selector: 'Block'
+          selector: 'Block',
         };
       case 'ios':
-        throw new Error('Not implemented')
-        };
+        throw new Error('Not implemented');
     }
   }
+}
