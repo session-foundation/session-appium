@@ -1,7 +1,8 @@
 import { englishStripped } from '../../localizer/Localizer';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { BlockedContactsSettings, BlockUser, BlockUserConfirmationModal } from './locators';
+import { BlockedContactsSettings, BlockUserConfirmationModal } from './locators';
+import { LongPressBlockOption } from './locators/home';
 import { UserSettings } from './locators/settings';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -24,7 +25,7 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Navigate back to conversation list
   await device1.navigateBack();
   await device1.longPressConversation(userB.userName);
-  await device1.clickOnElementAll(new BlockUser(device1));
+  await device1.clickOnElementAll(new LongPressBlockOption(device1));
   await device1.checkModalStrings(
     englishStripped('block').toString(),
     englishStripped('blockDescription').withArgs({ name: USERNAME.BOB }).toString(),
