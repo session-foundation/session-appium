@@ -88,14 +88,14 @@ async function sendLongMessageGroupAndroid(platform: SupportedPlatformsType) {
   ]);
   await device2.longPressMessage(longText);
   await device2.clickOnByAccessibilityID('Reply to message');
-  const replyMessage = await device2.sendMessage(`${userA.userName} message reply`); 
+  const replyMessage = await device2.sendMessage(`${userA.userName} message reply`);
   // Go out and back into the group to see the last message
   await device1.navigateBack();
   await device1.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Conversation list item',
     text: testGroupName,
-  })
+  });
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
@@ -107,7 +107,7 @@ async function sendLongMessageGroupAndroid(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Conversation list item',
     text: testGroupName,
-  })
+  });
   await device3.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
