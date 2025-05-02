@@ -9,7 +9,8 @@ import { setDisappearingMessage } from './utils/set_disappearing_messages';
 iosIt('Disappearing GIF message 1:1', 'low', disappearingGifMessage1o1Ios);
 androidIt('Disappearing GIF message 1:1', 'low', disappearingGifMessage1o1Android);
 
-const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+// The timing with 30 seconds was a bit tight in terms of the attachment downloading and becoming visible
+const time = DISAPPEARING_TIMES.ONE_MINUTE;
 const timerType = 'Disappear after send option';
 const testMessage = "Testing disappearing messages for GIF's";
 
@@ -29,7 +30,7 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
   // Click on config
   await device2.trustAttachments(USERNAME.ALICE);
   // Wait for 30 seconds
-  await sleepFor(30000);
+  await sleepFor(60000);
   // Check if GIF has been deleted on both devices
   await device1.hasElementBeenDeleted({
     strategy: 'accessibility id',
@@ -66,16 +67,16 @@ async function disappearingGifMessage1o1Android(platform: SupportedPlatformsType
     device1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Media message',
-      maxWait: 1000,
+      maxWait: 5000,
     }),
     device2.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Media message',
-      maxWait: 1000,
+      maxWait: 5000,
     }),
   ]);
-  // Wait for 30 seconds (time)
-  await sleepFor(30000);
+  // Wait for 60 seconds (time)
+  await sleepFor(60000);
   // Check if GIF has been deleted on both devices
   await Promise.all([
     device1.hasElementBeenDeleted({
