@@ -10,13 +10,22 @@ async function groupCreation(platform: SupportedPlatformsType) {
   const testGroupName = 'Test group';
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
-  const [userA, userB, userC] = await Promise.all([
+  const [userOne, userTwo, userThree] = await Promise.all([
     newUser(device1, USERNAME.ALICE),
     newUser(device2, USERNAME.BOB),
     newUser(device3, USERNAME.CHARLIE),
   ]);
-  // Create contact between User A and User B and User C
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
-  // Close server and devices
+
+  await createGroup(
+    platform,
+    device1,
+    userOne,
+    device2,
+    userTwo,
+    device3,
+    userThree,
+    testGroupName,
+    true
+  );
   await closeApp(device1, device2, device3);
 }

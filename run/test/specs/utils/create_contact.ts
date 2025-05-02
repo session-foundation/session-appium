@@ -35,7 +35,7 @@ export const newContact = async (
   return { Alice, Bob, device1, device2 };
 };
 
-const retryMsgSentForBanner = async (
+export const retryMsgSentForBanner = async (
   _platform: SupportedPlatformsType,
   device1: DeviceWrapper,
   device2: DeviceWrapper,
