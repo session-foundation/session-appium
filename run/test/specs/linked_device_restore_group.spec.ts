@@ -14,16 +14,16 @@ bothPlatformsIt({
 async function restoreGroup(platform: SupportedPlatformsType) {
   const testGroupName = 'Restore group';
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
-  const [alice, bob, userC] = await Promise.all([
+  const [alice, bob, charlie] = await Promise.all([
     newUser(device1, USERNAME.ALICE),
     newUser(device2, USERNAME.BOB),
     newUser(device3, USERNAME.CHARLIE),
   ]);
-  await createGroup(platform, device1, alice, device2, bob, device3, userC, testGroupName);
+  await createGroup(platform, device1, alice, device2, bob, device3, charlie, testGroupName);
 
   const aliceMessage = `${USERNAME.ALICE} to ${testGroupName}`;
   const bobMessage = `${USERNAME.BOB} to ${testGroupName}`;
-  const userCMessage = `${USERNAME.CHARLIE} to ${testGroupName}`;
+  const charlieMessage = `${USERNAME.CHARLIE} to ${testGroupName}`;
   await restoreAccount(device4, alice);
   //   Check that group has loaded on linked device
   await device4.clickOnElementAll({
@@ -52,7 +52,7 @@ async function restoreGroup(platform: SupportedPlatformsType) {
     device4.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
-      text: userCMessage,
+      text: charlieMessage,
     }),
   ]);
   const testMessage2 = 'Checking that message input is working';

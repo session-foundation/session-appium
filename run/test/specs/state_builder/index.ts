@@ -188,6 +188,11 @@ export async function open_Alice1_Bob1_Charlie1_friends_group({
   };
 }
 
+/**
+ * Open 4 devices, one for Alice, one for Bob, one for Charlie, and one extra, unlinked.
+ * This function is used for testing that we can do a bunch of actions without having a linked device,
+ * and then that linking a new device recovers the correct state.
+ */
 export async function open_Alice1_Bob1_Charlie1_Unknown1({
   platform,
   groupName,
@@ -276,7 +281,7 @@ export async function open_Alice2({ platform }: WithPlatform) {
 /**
  * Open 2 devices, one for Alice, one for Bob, but they are not friends
  */
-export async function open_Alice1_bob1({ platform }: WithPlatform) {
+export async function open_Alice1_bob1_notfriends({ platform }: WithPlatform) {
   const appsToOpen = 2;
   const result = await openAppsWithState({
     platform,

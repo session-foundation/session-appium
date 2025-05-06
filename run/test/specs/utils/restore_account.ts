@@ -51,7 +51,7 @@ export const restoreAccount = async (device: DeviceWrapper, user: User) => {
 
 /**
  * Restore the account linked to seed.
- * If the accoutn isn't found on the network, fail the test.
+ * If the account isn't found on the network, fail the test.
  */
 export const restoreAccountNoFallback = async (device: DeviceWrapper, recoveryPhrase: string) => {
   await device.clickOnElementAll({

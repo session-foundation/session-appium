@@ -21,7 +21,7 @@ export const createGroup = async (
 
   const aliceMessage = `${userOne.userName} to ${userName}`;
   const bobMessage = `${userTwo.userName} to ${userName}`;
-  const userCMessage = `${userThree.userName} to ${userName}`;
+  const charlieMessage = `${userThree.userName} to ${userName}`;
   // Create contact between User A and User B
   await newContact(platform, device1, userOne, device2, userTwo);
   await device1.navigateBack();
@@ -110,17 +110,17 @@ export const createGroup = async (
     }),
   ]);
   // Send message to User C to group
-  await device3.sendMessage(userCMessage);
+  await device3.sendMessage(charlieMessage);
   await Promise.all([
     device1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
-      text: userCMessage,
+      text: charlieMessage,
     }),
     device2.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
-      text: userCMessage,
+      text: charlieMessage,
     }),
   ]);
   return { userName, userOne, userTwo, userThree };

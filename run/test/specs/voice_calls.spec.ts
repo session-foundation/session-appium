@@ -1,7 +1,7 @@
 import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { ExitUserProfile } from './locators';
-import { open_Alice1_bob1 } from './state_builder';
+import { open_Alice1_bob1_notfriends } from './state_builder';
 import { sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
@@ -22,7 +22,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { alice, bob },
-  } = await open_Alice1_bob1({ platform });
+  } = await open_Alice1_bob1_notfriends({ platform });
 
   await alice1.sendNewMessage({ accountID: bob.sessionId }, 'Testing calls');
   // Look for phone icon (shouldnt be there)
@@ -142,10 +142,10 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { alice, bob },
-  } = await open_Alice1_bob1({ platform });
+  } = await open_Alice1_bob1_notfriends({ platform });
 
   await alice1.sendNewMessage({ accountID: bob.sessionId }, 'Testing calls');
-  // Look for phone icon (shouldnt be there)
+  // Look for phone icon (should not be there)
   await alice1.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Call',

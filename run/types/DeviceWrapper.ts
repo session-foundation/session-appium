@@ -745,7 +745,6 @@ export class DeviceWrapper {
           console.log(`Text element has been deleted, great success`);
         }
       }
-
     } while (Date.now() - start <= maxWait && element);
 
     if (element) {
