@@ -15,7 +15,8 @@ export const createGroup = async (
   userTwo: User,
   device3: DeviceWrapper,
   userThree: User,
-  userName: GROUPNAME
+  userName: GROUPNAME,
+  checkControlMessage?: boolean
 ): Promise<Group> => {
   const group: Group = { userName, userOne, userTwo, userThree };
 
@@ -43,7 +44,6 @@ export const createGroup = async (
   await device1.clickOnElementAll({ ...new Contact(device1).build(), text: userThree.userName });
   // Select tick
   await device1.clickOnElementAll(new CreateGroupButton(device1));
-  // Check for empty state on ios
   // Enter group chat on device 2 and 3
   await Promise.all([
     device2.clickOnElementAll({
@@ -57,29 +57,30 @@ export const createGroup = async (
       text: group.userName,
     }),
   ]);
-  // Sort by account ID
-  const [firstUser, secondUser] = sortByPubkey(userTwo, userThree);
-  // TODO remove onIOS once Android have implemented pubkey sorting
-  await Promise.all([
-    device1
-      .onIOS()
-      .waitForControlMessageToBePresent(
-        englishStripped(`groupMemberNewTwo`)
-          .withArgs({ name: firstUser, other_name: secondUser })
+  if (checkControlMessage) {
+    // Sort by account ID
+    const [firstUser, secondUser] = sortByPubkey(userTwo, userThree);
+    // TODO remove onIOS once Android have implemented pubkey sorting
+    await Promise.all([
+      device1
+        .onIOS()
+        .waitForControlMessageToBePresent(
+          englishStripped(`groupMemberNewTwo`)
+            .withArgs({ name: firstUser, other_name: secondUser })
+            .toString()
+        ),
+      device2.waitForControlMessageToBePresent(
+        englishStripped('groupInviteYouAndOtherNew')
+          .withArgs({ other_name: userThree.userName })
           .toString()
       ),
-    device2.waitForControlMessageToBePresent(
-      englishStripped('groupInviteYouAndOtherNew')
-        .withArgs({ other_name: userThree.userName })
-        .toString()
-    ),
-    device3.waitForControlMessageToBePresent(
-      englishStripped('groupInviteYouAndOtherNew')
-        .withArgs({ other_name: userTwo.userName })
-        .toString()
-    ),
-  ]);
-
+      device3.waitForControlMessageToBePresent(
+        englishStripped('groupInviteYouAndOtherNew')
+          .withArgs({ other_name: userTwo.userName })
+          .toString()
+      ),
+    ]);
+  }
   // Send message from User A to group to verify all working
   await device1.sendMessage(aliceMessage);
   // Did the other devices receive alice's message?

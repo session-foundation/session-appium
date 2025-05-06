@@ -31,7 +31,7 @@ export const newContact = async (
   console.info(`${sender.userName} and ${receiver.userName} are now contacts`);
 };
 
-const retryMsgSentForBanner = async (
+export const retryMsgSentForBanner = async (
   _platform: SupportedPlatformsType,
   device1: DeviceWrapper,
   device2: DeviceWrapper,

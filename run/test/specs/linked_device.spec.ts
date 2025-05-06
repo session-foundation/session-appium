@@ -1,5 +1,6 @@
 import { USERNAME } from '@session-foundation/qa-seeder';
 import { bothPlatformsIt } from '../../types/sessionIt';
+import { UsernameSettings } from './locators';
 import { UserSettings } from './locators/settings';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
@@ -25,18 +26,10 @@ async function linkDevice(platform: SupportedPlatformsType) {
   // Verify username and session ID match
   await alice2.clickOnElementAll(new UserSettings(alice2));
   // Check username
-  await alice2.onIOS().waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Username',
+  await alice2.waitForTextElementToBePresent({
+    ...new UsernameSettings(alice2).build(),
     text: alice.userName,
   });
-
-  await alice2.onAndroid().waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Display name',
-    text: alice.userName,
-  });
-
   await alice2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Account ID',
