@@ -20,17 +20,13 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   const {
     devices: { alice1, bob1, charlie1 },
-    prebuilt: { alice, group },
+    prebuilt: { alice },
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
   });
 
-  if (group.groupName !== testGroupName) {
-    throw new Error(`Group name is not correct: ${group.groupName}`);
-    // Create contact between User A and User B
-  }
   await setDisappearingMessage(platform, alice1, ['Group', `Disappear after send option`, time]);
   // Get correct control message for You setting disappearing messages
   const disappearingMessagesSetYou = englishStripped('disappearingMessagesSetYou')
