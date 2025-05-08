@@ -25,9 +25,8 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
   });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   await sleepFor(500);
-  await alice1.sendImage(platform, testMessage);
+  await alice1.sendImage(testMessage);
   await bob1.trustAttachments(USERNAME.ALICE);
-
   // Wait for 30 seconds
   await sleepFor(30000);
   await Promise.all([

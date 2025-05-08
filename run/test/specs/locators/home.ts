@@ -58,3 +58,16 @@ export class SearchButton extends LocatorsInterface {
     }
   }
 }
+export class LongPressBlockOption extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Block',
+        };
+      case 'ios':
+        throw new Error('Not implemented');
+    }
+  }
+}

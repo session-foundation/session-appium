@@ -61,17 +61,13 @@ jobs:
     env:
       PLATFORM: 'android'
       CI: 1
-      IOS_APP_PATH_PREFIX: './extracted/Session.app'
+      IOS_APP_PATH_PREFIX: '<just_not_empty>'
       ANDROID_APK: './extracted/session-android.apk'
       APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
       ANDROID_SDK_ROOT: '/opt/android'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
-      SDK_MANAGER_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/cmdline-tools/latest/bin/sdkmanager'
-      AVD_MANAGER_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/cmdline-tools/latest/bin/avdmanager'
-      ANDROID_SYSTEM_IMAGE: 'system-images;android-35;google_atd;x86_64'
-      EMULATOR_FULL_PATH: '/Users/emilyburton/Library/Android/sdk/emulator/emulator'
       IOS_1_SIMULATOR: '<just_not_empty>'
       IOS_2_SIMULATOR: '<just_not_empty>'
       IOS_3_SIMULATOR: '<just_not_empty>'
@@ -141,7 +137,7 @@ jobs:
           DEVICES_PER_TEST_COUNT: 1
         run: |
           pwd
-          _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
+          TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results

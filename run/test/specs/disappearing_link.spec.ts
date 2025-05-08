@@ -6,6 +6,7 @@ import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
+import { OutgoingMessageStatusSent } from './locators/conversation';
 
 bothPlatformsItSeparate({
   title: 'Disappearing link message 1:1',
@@ -37,8 +38,7 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
     selector: 'Message input box',
   });
   await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message sent status: Sent',
+    ...new OutgoingMessageStatusSent(alice1).build(),
     maxWait: 20000,
   });
   // Accept dialog for link preview
@@ -108,8 +108,7 @@ async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsTyp
   await sleepFor(2000);
   await alice1.clickOnByAccessibilityID('Send message button');
   await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message sent status: Sent',
+    ...new OutgoingMessageStatusSent(alice1).build(),
     maxWait: 20000,
   });
   // Send again for image

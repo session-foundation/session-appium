@@ -4,6 +4,7 @@ import { LinkPreview, LinkPreviewMessage } from './locators';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { OutgoingMessageStatusSent } from './locators/conversation';
 
 bothPlatformsItSeparate({
   title: 'Send link 1:1',
@@ -36,8 +37,7 @@ async function sendLinkIos(platform: SupportedPlatformsType) {
   });
   // await alice1.waitForLoadingAnimation();
   await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message sent status: Sent',
+    ...new OutgoingMessageStatusSent(alice1).build(),
     maxWait: 20000,
   });
   // Accept dialog for link preview
@@ -100,10 +100,10 @@ async function sendLinkAndroid(platform: SupportedPlatformsType) {
   await sleepFor(5000);
   await alice1.clickOnByAccessibilityID('Send message button');
   await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message sent status: Sent',
+    ...new OutgoingMessageStatusSent(alice1).build(),
     maxWait: 25000,
   });
+
   await bob1.waitForTextElementToBePresent(new LinkPreviewMessage(bob1));
   await closeApp(alice1, bob1);
 }

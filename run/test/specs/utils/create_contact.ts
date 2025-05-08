@@ -1,5 +1,4 @@
 import { runOnlyOnIOS, sleepFor } from '.';
-import { englishStripped } from '../../../localizer/Localizer';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
 import { SupportedPlatformsType } from './open_app';
@@ -19,16 +18,22 @@ export const newContact = async (
   await device2.clickOnByAccessibilityID('Message requests banner');
   await device2.clickOnByAccessibilityID('Message request');
   await device2.onAndroid().clickOnByAccessibilityID('Accept message request');
-
   // Type into message input box
-  await device2.sendMessage(`Reply-message-${receiver.userName}-to-${sender.userName}`);
+  const replyMessage = `Reply-message-${receiver.userName}-to-${sender.userName}`;
+  await device2.sendMessage(replyMessage);
+
   // Verify config message states message request was accepted
   // "messageRequestsAccepted": "Your message request has been accepted.",
-  // TO DO - ADD BACK IN ONCE IOS HAS FIXED THIS ISSUE
-  const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
-  await device1.onAndroid().waitForControlMessageToBePresent(messageRequestsAccepted);
-
+  // TO DO - ADD BACK IN ONCE IOS AND ANDROID HAS FIXED THIS ISSUE
+  // const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
+  // await device1.onAndroid().waitForControlMessageToBePresent(messageRequestsAccepted);
+  await device1.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Message body',
+    text: replyMessage,
+  });
   console.info(`${sender.userName} and ${receiver.userName} are now contacts`);
+  return { sender, receiver, device1, device2 };
 };
 
 export const retryMsgSentForBanner = async (

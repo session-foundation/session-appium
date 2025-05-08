@@ -26,8 +26,8 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   });
 
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
-  // await alice1.navigateBack();
-  await alice1.sendImage(platform, testMessage);
+  // await device1.navigateBack();
+  await alice1.sendImage(testMessage);
   await Promise.all([
     bob1.onAndroid().trustAttachments(testGroupName),
     charlie1.onAndroid().trustAttachments(testGroupName),

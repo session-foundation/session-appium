@@ -1,19 +1,19 @@
 import { englishStripped } from '../../localizer/Localizer';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { BlockedContactsSettings, BlockUser, BlockUserConfirmationModal } from './locators';
+import { BlockedContactsSettings, BlockUserConfirmationModal } from './locators';
+import { LongPressBlockOption } from './locators/home';
 import { UserSettings } from './locators/settings';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-// Block option not available on iOS in conversation list
+// Block option no longer available on iOS in conversation list
 androidIt({
   title: 'Block user in conversation list',
   risk: 'high',
   testCb: blockUserInConversationList,
   countOfDevicesNeeded: 2,
 });
-// No longer available on iOS
 
 async function blockUserInConversationList(platform: SupportedPlatformsType) {
   const {
@@ -25,9 +25,8 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   });
   // Navigate back to conversation list
   await alice1.navigateBack();
-  // on ios swipe left on conversation
   await alice1.longPressConversation(bob.userName);
-  await alice1.clickOnElementAll(new BlockUser(alice1));
+  await alice1.clickOnElementAll(new LongPressBlockOption(alice1));
   await alice1.checkModalStrings(
     englishStripped('block').toString(),
     englishStripped('blockDescription').withArgs({ name: USERNAME.BOB }).toString(),

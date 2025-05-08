@@ -17,7 +17,8 @@ bothPlatformsItSeparate({
   },
 });
 
-const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+// The timing with 30 seconds was a bit tight in terms of the attachment downloading and becoming visible
+const time = DISAPPEARING_TIMES.ONE_MINUTE;
 const timerType = 'Disappear after send option';
 const testMessage = "Testing disappearing messages for GIF's";
 
@@ -35,8 +36,8 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
   // Check if the 'Tap to download media' config appears
   // Click on config
   await bob1.trustAttachments(USERNAME.ALICE);
-  // Wait for 30 seconds
-  await sleepFor(30000);
+  // Wait for 60 seconds
+  await sleepFor(60000);
   // Check if GIF has been deleted on both devices
   await alice1.hasElementBeenDeleted({
     strategy: 'accessibility id',
@@ -83,8 +84,8 @@ async function disappearingGifMessage1o1Android(platform: SupportedPlatformsType
       maxWait: maxWaitForMediaMessage,
     }),
   ]);
-  // Wait for 30 seconds (time)
-  await sleepFor(30000);
+  // Wait for 60 seconds (time)
+  await sleepFor(60000);
   // Check if GIF has been deleted on both devices
   await Promise.all([
     alice1.hasElementBeenDeleted({

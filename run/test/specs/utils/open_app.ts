@@ -270,7 +270,7 @@ const openiOSApp = async (
 
   const capabilities = getIosCapabilities(actualCapabilitiesIndex as CapabilitiesIndexType);
   const udid = capabilities.alwaysMatch['appium:udid'] as string;
-
+  // TODO bring in changes from QA-1265
   const { device: wrappedDevice } = await cleanPermissions(opts, udid, capabilities);
   return { device: wrappedDevice };
 };

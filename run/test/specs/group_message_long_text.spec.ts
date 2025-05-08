@@ -2,6 +2,7 @@ import { longText } from '../../constants';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { OutgoingMessageStatusSent } from './locators/conversation';
 
 bothPlatformsItSeparate({
   title: 'Send long message to group',
@@ -73,8 +74,7 @@ async function sendLongMessageGroupAndroid(platform: SupportedPlatformsType) {
   // Click send
   await alice1.clickOnByAccessibilityID('Send message button');
   await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: `Message sent status: Sent`,
+    ...new OutgoingMessageStatusSent(alice1).build(),
     maxWait: 50000,
   });
 
@@ -93,12 +93,25 @@ async function sendLongMessageGroupAndroid(platform: SupportedPlatformsType) {
   await bob1.longPressMessage(longText);
   await bob1.clickOnByAccessibilityID('Reply to message');
   const replyMessage = await bob1.sendMessage(`${alice.userName} message reply`);
+  // Go out and back into the group to see the last message
+  await alice1.navigateBack();
+  await alice1.clickOnElementAll({
+    strategy: 'accessibility id',
+    selector: 'Conversation list item',
+    text: testGroupName,
+  });
   await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
-  // TO FIX: REPLY NOT FOUND ANDROID
+  // Go out and back into the group to see the last message
+  await charlie1.navigateBack();
+  await charlie1.clickOnElementAll({
+    strategy: 'accessibility id',
+    selector: 'Conversation list item',
+    text: testGroupName,
+  });
   await charlie1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',

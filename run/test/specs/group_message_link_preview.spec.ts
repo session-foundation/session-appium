@@ -4,6 +4,7 @@ import { LinkPreview, LinkPreviewMessage } from './locators';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { OutgoingMessageStatusSent } from './locators/conversation';
 
 bothPlatformsItSeparate({
   title: 'Send link to group',
@@ -35,11 +36,12 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
+
   await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message sent status: Sent',
+    ...new OutgoingMessageStatusSent(alice1).build(),
     maxWait: 20000,
   });
+
   // Accept dialog for link preview
   await alice1.checkModalStrings(
     englishStripped('linkPreviewsEnable').toString(),
@@ -111,8 +113,7 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType) {
   // No preview on first send
   await alice1.clickOnByAccessibilityID('Send message button');
   await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message sent status: Sent',
+    ...new OutgoingMessageStatusSent(alice1).build(),
     maxWait: 20000,
   });
   await Promise.all([

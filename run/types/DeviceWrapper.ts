@@ -7,6 +7,7 @@ import {
   ChangeProfilePictureButton,
   DownloadMediaButton,
   FirstGif,
+  ImageName,
   ImagePermissionsModalAllow,
   LocatorsInterface,
   PrivacyButton,
@@ -34,6 +35,8 @@ import {
   User,
   XPath,
 } from './testing';
+import { testFile, testImage, testVideo, profilePicture } from '../constants/testfiles';
+import { AttachmentsButton, OutgoingMessageStatusSent } from '../test/specs/locators/conversation';
 
 export type Coordinates = {
   x: number;
@@ -944,8 +947,7 @@ export class DeviceWrapper {
     }
     // Wait for tick
     await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: `Message sent status: Sent`,
+      ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 50000,
     });
 
@@ -993,10 +995,8 @@ export class DeviceWrapper {
       throw new Error('Send button not found: Need to restart iOS emulator: Known issue');
     }
     // Wait for tick
-
     await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: `Message sent status: Sent`,
+      ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 50000,
     });
 
@@ -1105,34 +1105,47 @@ export class DeviceWrapper {
     }
   }
 
+  // TODO bring in iOS changes from QA-1265
   public async pushMediaToDevice(
     mediaFileName: 'profile_picture.jpg' | 'test_file.pdf' | 'test_image.jpg' | 'test_video.mp4',
     forcedDate?: string
   ) {
+    // Use this when both iOS and Android code paths have been updated
+    // const filePath = path.join('run', 'test', 'specs', 'media', mediaFileName);
     if (this.isIOS()) {
+      // TODO throw if forcedDate is not set
       await runScriptAndLog(`touch -a -m -t ${forcedDate} 'run/test/specs/media/${mediaFileName}'`);
       await runScriptAndLog(
         `xcrun simctl addmedia ${this.udid} 'run/test/specs/media/${mediaFileName}'`,
         true
       );
-    } else {
+    }
+    if (this.isAndroid()) {
+      const ANDROID_DOWNLOAD_DIR = '/storage/emulated/0/Download';
+      // Clear downloads folder at runtime before pushing
       await runScriptAndLog(
-        `${getAdbFullPath()} -s ${this.getUdid()} push 'run/test/specs/media/${mediaFileName}' /storage/emulated/0/Download`,
+        `${getAdbFullPath()} -s ${this.udid} shell rm -rf ${ANDROID_DOWNLOAD_DIR}/*`,
         true
       );
-      // Refreshes the photos UI to force the image appear
+      // Push file
       await runScriptAndLog(
-        `${getAdbFullPath()} -s ${this.getUdid()} shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage/emulated/0/Download/${mediaFileName}`,
+        `${getAdbFullPath()} -s ${this.udid} push 'run/test/specs/media/${mediaFileName}' ${ANDROID_DOWNLOAD_DIR}`,
+        true
+      );
+
+      // Refreshes the photos UI to force the image to appear
+      await runScriptAndLog(
+        `${getAdbFullPath()} -s ${this.udid} shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file://${ANDROID_DOWNLOAD_DIR}/${mediaFileName}`,
         true
       );
     }
   }
 
-  // TODO FIX UP THIS FUNCTION
-  public async sendImage(platform: SupportedPlatformsType, message?: string, community?: boolean) {
+  // TODO bring in iOS changes from QA-1265
+  public async sendImage(message: string, community?: boolean) {
     const ronSwansonBirthday = '196705060700.00';
     const fileName = 'test_image.jpg';
-    if (platform === 'ios') {
+    if (this.isIOS()) {
       await this.clickOnByAccessibilityID('Attachments button');
       await sleepFor(5000);
       const keyboard = await this.isKeyboardVisible();
@@ -1156,74 +1169,43 @@ export class DeviceWrapper {
         await this.clickOnByAccessibilityID('Text input box');
         await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
       }
-      await this.clickOnElementAll(new SendMediaButton(this));
-      await this.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Message sent status: Sent',
-        maxWait: 50000,
-      });
-    } else {
-      await this.clickOnByAccessibilityID('Attachments button');
+    }
+    if (this.isAndroid()) {
+      // Push file first
+      await this.pushMediaToDevice(testImage);
+      await this.clickOnElementAll(new AttachmentsButton(this));
       await sleepFor(100);
-      await this.clickOnByAccessibilityID('Documents folder');
-      await this.clickOnByAccessibilityID('Continue');
+      await this.clickOnByAccessibilityID('Images folder');
       await this.clickOnElementAll({
         strategy: 'id',
-        selector: 'com.android.permissioncontroller:id/permission_allow_button',
-        text: 'Allow',
+        selector: 'com.android.permissioncontroller:id/permission_allow_all_button',
+        text: 'Allow all',
       });
-      await this.clickOnByAccessibilityID('Show roots');
       await sleepFor(500);
-      await this.clickOnTextElementById(`android:id/title`, 'Downloads');
-      await sleepFor(100);
-      const testImage = await this.doesElementExist({
+      await this.clickOnElementAll({
         strategy: 'id',
-        selector: 'android:id/title',
-        maxWait: 2000,
-        text: fileName,
+        selector: 'network.loki.messenger:id/mediapicker_folder_item_thumbnail',
       });
-      if (!testImage) {
-        await this.pushMediaToDevice('test_image.jpg', fileName);
-      }
       await sleepFor(100);
-      await this.clickOnTextElementById('android:id/title', fileName);
-      if (community) {
-        await this.scrollToBottom();
-      }
-      await this.waitForTextElementToBePresent({
+      await this.clickOnElementAll({
+        strategy: 'id',
+        selector: 'network.loki.messenger:id/mediapicker_image_item_thumbnail',
+      });
+      await this.inputText(message, {
         strategy: 'accessibility id',
-        selector: `Message sent status: Sent`,
-        maxWait: 60000,
+        selector: 'New direct message',
       });
     }
-  }
-
-  public async sendImageWithMessageAndroid(message: string) {
-    await this.clickOnByAccessibilityID('Attachments button');
-    await sleepFor(100);
-    await this.clickOnByAccessibilityID('Images folder');
-    await this.clickOnElementAll({
-      strategy: 'id',
-      selector: 'com.android.permissioncontroller:id/permission_allow_all_button',
-      text: 'Allow all',
-    });
-    await sleepFor(500);
-    await this.clickOnElementAll({
-      strategy: 'id',
-      selector: 'network.loki.messenger:id/mediapicker_folder_item_thumbnail',
-    });
-    await sleepFor(100);
-    await this.clickOnElementAll({
-      strategy: 'id',
-      selector: 'network.loki.messenger:id/mediapicker_image_item_thumbnail',
-    });
-    await this.inputText(message, {
-      strategy: 'accessibility id',
-      selector: 'New direct message',
-    });
     await this.clickOnElementAll(new SendMediaButton(this));
+    if (community) {
+      await this.scrollToBottom();
+    }
+    await this.waitForTextElementToBePresent({
+      ...new OutgoingMessageStatusSent(this).build(),
+      maxWait: 20000,
+    });
   }
-
+  // TODO bring in iOS changes from QA-1265
   public async sendVideoiOS(message: string) {
     const bestDayOfYear = `198809090700.00`;
     const formattedDate = `1988-09-08 21:00:00 +0000`;
@@ -1264,16 +1246,16 @@ export class DeviceWrapper {
     await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
     await this.clickOnByAccessibilityID('Send button');
     await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: `Message sent status: Sent`,
+      ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 10000,
     });
   }
 
   public async sendVideoAndroid() {
-    const fileName = 'test_video.mp4';
+    // Push first
+    await this.pushMediaToDevice(testVideo);
     // Click on attachments button
-    await this.clickOnByAccessibilityID('Attachments button');
+    await this.clickOnElementAll(new AttachmentsButton(this));
     await sleepFor(100);
     // Select images button/tab
     await this.clickOnByAccessibilityID('Documents folder');
@@ -1283,37 +1265,20 @@ export class DeviceWrapper {
       selector: 'com.android.permissioncontroller:id/permission_allow_button',
       text: 'Allow',
     });
-    await sleepFor(200);
-    // Select video
-    const mediaButtons = await this.findElementsByClass('android.widget.Button');
-    await sleepFor(500);
-    const videosButton = await this.findMatchingTextInElementArray(mediaButtons, 'Videos');
-    if (!videosButton) {
-      throw new Error('videosButton was not found');
-    }
-    await this.click(videosButton.ELEMENT);
-    const testVideo = await this.doesElementExist({
-      strategy: 'id',
-      selector: 'android:id/title',
-      maxWait: 1000,
-      text: fileName,
-    });
-    if (!testVideo) {
-      await this.pushMediaToDevice('test_video.mp4', fileName);
-    }
-    await sleepFor(100);
-    await this.clickOnTextElementById('android:id/title', fileName);
+    await sleepFor(2000);
+    await this.clickOnTextElementById('android:id/title', testVideo);
     await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: `Message sent status: Sent`,
+      ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 50000,
     });
   }
 
+  // TODO bring in iOS changes from QA-1265
   public async sendDocument() {
-    const fileName = 'test_file.pdf';
     if (this.isAndroid()) {
-      await this.clickOnByAccessibilityID('Attachments button');
+      // Clear emulator and push file first
+      await this.pushMediaToDevice(testFile);
+      await this.clickOnElementAll(new AttachmentsButton(this));
       await this.clickOnByAccessibilityID('Documents folder');
       await this.clickOnByAccessibilityID('Continue');
       await this.clickOnElementAll({
@@ -1321,20 +1286,15 @@ export class DeviceWrapper {
         selector: 'com.android.permissioncontroller:id/permission_allow_button',
         text: 'Allow',
       });
-      const testDocument = await this.doesElementExist({
-        strategy: 'id',
-        selector: 'android:id/title',
-        maxWait: 1000,
-        text: fileName,
-      });
-      if (!testDocument) {
-        await this.pushMediaToDevice('test_file.pdf', fileName);
-      }
-      await sleepFor(1000);
-      await this.clickOnTextElementById('android:id/title', fileName);
+      // Depending on previous emulator use the Files app either opens the 'Recent' or 'Downloads' folder
+      // If it is 'Recent' then the pushed file does not reliably show up
+      // So it's necessary to navigate to 'Downloads'
+      await this.clickOnByAccessibilityID('Show roots');
+      await sleepFor(100);
+      await this.clickOnTextElementById('android:id/title', 'Downloads');
+      await this.clickOnTextElementById('android:id/title', testFile);
       await this.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: `Message sent status: Sent`,
+        ...new OutgoingMessageStatusSent(this).build(),
         maxWait: 50000,
       });
     }
@@ -1354,7 +1314,7 @@ export class DeviceWrapper {
       });
 
       if (!testDocument) {
-        await this.pushMediaToDevice(fileName, spongeBobsBirthday);
+        await this.pushMediaToDevice(testFile, spongeBobsBirthday);
       }
       await sleepFor(100);
       await this.clickOnByAccessibilityID(formattedFileName);
@@ -1445,11 +1405,10 @@ export class DeviceWrapper {
       await this.pressAndHold('New voice message');
     }
   }
-
+  // TODO bring in iOS changes from QA-1265
   public async uploadProfilePicture() {
     const spongeBobsBirthday = '199805010700.00';
     const formattedDateiOS = 'Photo, 01 May 1998, 7:00 am';
-    const formattedDateAndroid = 'profile_picture.jpg, 27.75 kB, May 1, 1998';
     const fileName = 'profile_picture.jpg';
     await this.clickOnElementAll(new UserSettings(this));
     // Click on Profile picture
@@ -1472,35 +1431,16 @@ export class DeviceWrapper {
       });
       await this.clickOnByAccessibilityID('Done');
     } else if (this.isAndroid()) {
+      // Push file first
+      await this.pushMediaToDevice(profilePicture);
       await this.clickOnElementAll(new ImagePermissionsModalAllow(this));
       await sleepFor(1000);
       await this.clickOnElementAll({
         strategy: 'id',
-        selector: 'android:id/text1',
-        text: 'Files',
-        maxWait: 1000,
+        selector: 'Image button',
       });
       await sleepFor(500);
-      // Select file
-      const profilePicture = await this.doesElementExist({
-        strategy: 'accessibility id',
-        selector: formattedDateAndroid,
-        maxWait: 5000,
-      });
-      // If no image, push file to this
-      if (!profilePicture) {
-        await this.pushMediaToDevice('profile_picture.jpg', fileName);
-        await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Show roots' });
-        await this.clickOnElementAll({
-          strategy: 'id',
-          selector: 'android:id/title',
-          text: 'Downloads',
-        });
-      }
-      await this.clickOnElementAll({
-        strategy: 'accessibility id',
-        selector: formattedDateAndroid,
-      });
+      await this.clickOnElementAll(new ImageName(this));
       await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
     }
     await this.clickOnElementAll(new SaveProfilePictureButton(this));
@@ -1553,10 +1493,7 @@ export class DeviceWrapper {
       });
     }
     await this.clickOnByAccessibilityID('Send message button');
-    await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: `Message sent status: Sent`,
-    });
+    await this.waitForTextElementToBePresent(new OutgoingMessageStatusSent(this));
   }
 
   public async trustAttachments(conversationName: string) {
