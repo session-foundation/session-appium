@@ -994,70 +994,61 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@session-foundation/basic-types@npm:0.0.2":
-  version: 0.0.2
-  resolution: "@session-foundation/basic-types@npm:0.0.2"
+"@session-foundation/basic-types@npm:0.0.4, @session-foundation/basic-types@npm:^0.0.4":
+  version: 0.0.4
+  resolution: "@session-foundation/basic-types@npm:0.0.4"
   dependencies:
     buffer-crc32: "npm:^1.0.0"
-  checksum: 10c0/5681f6394ec8ca95f5826909dbf2ed761eb4f96259823e13e52e51996418cd72cfc41a744d80efb5ad2c449eca11000be649337eee5237189a4c44375e656351
+  checksum: 10c0/0b33409533af1e9a274664adc771934200e6eb0110630811cd30bf4d39dc39e83e5307bde44f48e0ef6582cfcb85fa34564ce14efd60740cfb8e49aa2cd2888e
   languageName: node
   linkType: hard
 
-"@session-foundation/basic-types@npm:^0.0.3":
-  version: 0.0.3
-  resolution: "@session-foundation/basic-types@npm:0.0.3"
-  dependencies:
-    buffer-crc32: "npm:^1.0.0"
-  checksum: 10c0/480f1d89a17549977f55562bb6237150aa6a9258da6cd7f064828a1ad1b22c73faa82fd2b4ffe326d8486e98dde461deccfec38d8ab39b1249343e0b184962cb
-  languageName: node
-  linkType: hard
-
-"@session-foundation/mnemonic@npm:^0.0.5":
-  version: 0.0.5
-  resolution: "@session-foundation/mnemonic@npm:0.0.5"
-  dependencies:
-    buffer-crc32: "npm:^1.0.0"
-  checksum: 10c0/6dc9cf00804ea2a48035e09f91c12fa9c2eefaaef21cc8d3010db48558ff1959bfcb788df10239baf2803a31c54f2de12f477b2e38dbfa23574b3226c7d25bce
-  languageName: node
-  linkType: hard
-
-"@session-foundation/playwright-reporter@npm:^0.0.6":
+"@session-foundation/mnemonic@npm:^0.0.6":
   version: 0.0.6
-  resolution: "@session-foundation/playwright-reporter@npm:0.0.6"
+  resolution: "@session-foundation/mnemonic@npm:0.0.6"
+  dependencies:
+    buffer-crc32: "npm:^1.0.0"
+  checksum: 10c0/ec797bf552fbb4943ffad394a7dca1980617374f51cfc2ffac873dacbf20595e23ede3d8c288e6c3ae15b53fa3afc6921f38d098a5f75aef503e5b3da5f25bc7
+  languageName: node
+  linkType: hard
+
+"@session-foundation/playwright-reporter@npm:^0.0.7":
+  version: 0.0.7
+  resolution: "@session-foundation/playwright-reporter@npm:0.0.7"
   dependencies:
     lodash: "npm:^4.17.21"
-  checksum: 10c0/b04052af5c41ce368d76d79676dca3e0973e3eb01bfe966fea5ff5780d52d27296da270261dc0a2fd2a84c1f647d2a31eca815cb8850fe5213daf346578d88e6
+  checksum: 10c0/28288c6bab6ea6086f8db5dda3cec0bda1ec5dd8d90ad6e5c2223033aac51c9189298a7f5b523e4da440689e9e2fca581128f7c4debe275ac0ef79c7fffb7f4c
   languageName: node
   linkType: hard
 
-"@session-foundation/qa-seeder@npm:^0.0.39":
-  version: 0.0.39
-  resolution: "@session-foundation/qa-seeder@npm:0.0.39"
+"@session-foundation/qa-seeder@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@session-foundation/qa-seeder@npm:0.1.0"
   dependencies:
-    "@session-foundation/basic-types": "npm:^0.0.3"
-    "@session-foundation/mnemonic": "npm:^0.0.5"
-    "@session-foundation/session-tooling": "npm:^0.0.10"
-    "@session-foundation/sodium": "npm:^0.0.2"
+    "@session-foundation/basic-types": "npm:^0.0.4"
+    "@session-foundation/mnemonic": "npm:^0.0.6"
+    "@session-foundation/session-tooling": "npm:^0.1.0"
+    "@session-foundation/sodium": "npm:^0.0.3"
     lodash: "npm:^4.17.21"
-  checksum: 10c0/1c73dd1645e6da6dd94424909ded64161a1edc6d64186f8e018a0d25d27eb2012622bab0072968fb560c8d2308378203bfbed48d90e1b7fdafe6dadad99f6797
+  checksum: 10c0/64b530b16e7c014fb836915292aa8e9328ba202567298941502604547264d20e08cb189e5fd5f5af78524ed245f15631d4569048d78c2bf9fd7bf9263446aed9
   languageName: node
   linkType: hard
 
-"@session-foundation/session-tooling@npm:^0.0.10":
-  version: 0.0.10
-  resolution: "@session-foundation/session-tooling@npm:0.0.10"
-  checksum: 10c0/df2177ae17ca49970a750f3d830ddcff83c9cfb178c72c8f633d10dd3258182b00608e6f4e232db3821dfcd03cfc0575c39b56e0dbd8a6380d103f1ba59db1af
+"@session-foundation/session-tooling@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@session-foundation/session-tooling@npm:0.1.0"
+  checksum: 10c0/3bed91e02268b47b5fda1695c9ce8d4f9e74e9643eaffe7b6b099e460260da1f54c79c5459c23ef87fcaebe88046dfda027ef7fd16494d69ad96a98937c426ff
   languageName: node
   linkType: hard
 
-"@session-foundation/sodium@npm:^0.0.2":
-  version: 0.0.2
-  resolution: "@session-foundation/sodium@npm:0.0.2"
+"@session-foundation/sodium@npm:^0.0.3":
+  version: 0.0.3
+  resolution: "@session-foundation/sodium@npm:0.0.3"
   dependencies:
-    "@session-foundation/basic-types": "npm:0.0.2"
+    "@session-foundation/basic-types": "npm:0.0.4"
     buffer-crc32: "npm:^1.0.0"
     libsodium-wrappers-sumo: "npm:^0.7.15"
-  checksum: 10c0/1febe637c0de94090d69c5fbe931f7a15b69adf90c2905b3fcf6bac4cadd50e924769d33fa07ec81720e82cbde02609771037bf4e1be2529a636765faa442301
+  checksum: 10c0/013d7eb3b8058c49f94d49443d19aadc30381b5d826971fe2f62d5ea48e184c2226043d47c0a0b0f3e541a569c25e31da185a399dc972b6008c5b9e421e6b8c3
   languageName: node
   linkType: hard
 
@@ -6995,8 +6986,8 @@ __metadata:
     "@appium/images-plugin": "npm:^3.0.17"
     "@eslint/js": "npm:^9.14.0"
     "@playwright/test": "npm:^1.45.1"
-    "@session-foundation/playwright-reporter": "npm:^0.0.6"
-    "@session-foundation/qa-seeder": "npm:^0.0.39"
+    "@session-foundation/playwright-reporter": "npm:^0.0.7"
+    "@session-foundation/qa-seeder": "npm:^0.1.0"
     "@types/lodash": "npm:^4.14.191"
     "@types/node": "npm:^20.14.10"
     "@types/sinon": "npm:^17.0.3"

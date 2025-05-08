@@ -24,6 +24,7 @@ runs:
   using: 'composite'
   steps:
     - name: Runner Details
+      shell: bash
       run: |
         echo "APK_URL '${{ inputs.APK_URL }}'"
         echo "RISK: '${{ inputs.RISK }}'"
