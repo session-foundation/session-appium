@@ -151,7 +151,7 @@ jobs:
         run: |
           tar xf session-ios.sim.tar.xz
           mkdir -p extracted
-          mv *.app extracted/ || echo "No .app files found to move"
+          mv session-ios-*-sim/Session.app extracted
           ls extracted
 
       - name: Verify extracted files
@@ -165,7 +165,7 @@ jobs:
       - name: Rename extracted folder
         run: |
           mkdir -p extracted
-          mv session-ios extracted || echo "No session-ios directory to move"
+          mv session-ios extracted 
           ls extracted
 
       - uses: actions/checkout@v4
