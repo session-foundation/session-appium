@@ -1282,7 +1282,7 @@ export class DeviceWrapper {
       // So it's necessary to navigate to 'Downloads'
       await this.clickOnByAccessibilityID('Show roots');
       await sleepFor(100);
-      await this.clickOnTextElementById('android:id/title','Downloads');;
+      await this.clickOnTextElementById('android:id/title', 'Downloads');
       await this.clickOnTextElementById('android:id/title', testFile);
       await this.waitForTextElementToBePresent({
         ...new OutgoingMessageStatusSent(this).build(),
