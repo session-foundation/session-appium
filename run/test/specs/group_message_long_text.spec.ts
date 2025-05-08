@@ -3,6 +3,7 @@ import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { OutgoingMessageStatusSent } from './locators/conversation';
 
 iosIt('Send long message to group', 'low', sendLongMessageGroupiOS);
 androidIt('Send long message to group', 'low', sendLongMessageGroupAndroid);
@@ -69,8 +70,7 @@ async function sendLongMessageGroupAndroid(platform: SupportedPlatformsType) {
   // Click send
   await device1.clickOnByAccessibilityID('Send message button');
   await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: `Message sent status: Sent`,
+    ...new OutgoingMessageStatusSent(device1).build(),
     maxWait: 50000,
   });
 

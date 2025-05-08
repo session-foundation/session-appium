@@ -7,6 +7,7 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
+import { OutgoingMessageStatusSent } from './locators/conversation';
 
 iosIt('Disappearing link message 1:1', 'low', disappearingLinkMessage1o1Ios);
 androidIt('Disappearing link message 1:1', 'low', disappearingLinkMessage1o1Android);
@@ -30,8 +31,7 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
     selector: 'Message input box',
   });
   await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message sent status: Sent',
+    ...new OutgoingMessageStatusSent(device1).build(),
     maxWait: 20000,
   });
   // Accept dialog for link preview
@@ -102,8 +102,7 @@ async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsTyp
   await sleepFor(2000);
   await device1.clickOnByAccessibilityID('Send message button');
   await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message sent status: Sent',
+    ...new OutgoingMessageStatusSent(device1).build(),
     maxWait: 20000,
   });
   // Send again for image

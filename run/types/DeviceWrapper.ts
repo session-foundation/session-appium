@@ -937,8 +937,7 @@ export class DeviceWrapper {
     }
     // Wait for tick
     await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: `Message sent status: Sent`,
+      ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 50000,
     });
 
@@ -986,10 +985,8 @@ export class DeviceWrapper {
       throw new Error('Send button not found: Need to restart iOS emulator: Known issue');
     }
     // Wait for tick
-
     await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: `Message sent status: Sent`,
+      ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 50000,
     });
 
@@ -1236,8 +1233,7 @@ export class DeviceWrapper {
     await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
     await this.clickOnByAccessibilityID('Send button');
     await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: `Message sent status: Sent`,
+      ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 10000,
     });
   }
@@ -1484,10 +1480,7 @@ export class DeviceWrapper {
       });
     }
     await this.clickOnByAccessibilityID('Send message button');
-    await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: `Message sent status: Sent`,
-    });
+    await this.waitForTextElementToBePresent(new OutgoingMessageStatusSent(this));
   }
 
   public async trustAttachments(conversationName: string) {
