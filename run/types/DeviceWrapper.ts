@@ -35,7 +35,6 @@ import {
   User,
   XPath,
 } from './testing';
-import * as path from 'path';
 import { testFile, testImage, testVideo, profilePicture } from '../constants/testfiles';
 import { AttachmentsButton, OutgoingMessageStatusSent } from '../test/specs/locators/conversation';
 
@@ -1101,7 +1100,8 @@ export class DeviceWrapper {
 
   // TODO bring in iOS changes from QA-1265
   public async pushMediaToDevice(mediaFileName: string, forcedDate?: string) {
-    const filePath = path.join('run', 'test', 'specs', 'media', mediaFileName);
+    // Use this when both iOS and Android code paths have been updated
+    // const filePath = path.join('run', 'test', 'specs', 'media', mediaFileName);
     if (this.isIOS()) {
       // TODO throw if forcedDate is not set
       await runScriptAndLog(`touch -a -m -t ${forcedDate} 'run/test/specs/media/${mediaFileName}'`);
@@ -1119,11 +1119,11 @@ export class DeviceWrapper {
       );
       // Push file
       await runScriptAndLog(
-        `${getAdbFullPath()} -s ${this.udid} push ${filePath} ${ANDROID_DOWNLOAD_DIR}`,
+        `${getAdbFullPath()} -s ${this.udid} push 'run/test/specs/media/${mediaFileName}' ${ANDROID_DOWNLOAD_DIR}`,
         true
       );
 
-      // Scan the file for media indexing (refresh Files UI)
+      // Refreshes the photos UI to force the image to appear
       await runScriptAndLog(
         `${getAdbFullPath()} -s ${this.udid} shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file://${ANDROID_DOWNLOAD_DIR}/${mediaFileName}`,
         true
@@ -1187,7 +1187,9 @@ export class DeviceWrapper {
       });
     }
     await this.clickOnElementAll(new SendMediaButton(this));
-    if (community) await this.scrollToBottom();
+    if (community) {
+      await this.scrollToBottom();
+    }
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
@@ -1280,9 +1282,7 @@ export class DeviceWrapper {
       // So it's necessary to navigate to 'Downloads'
       await this.clickOnByAccessibilityID('Show roots');
       await sleepFor(100);
-      await this.clickOnElementXPath(
-        `//android.widget.TextView[@resource-id="android:id/title" and @text="Downloads"]`
-      );
+      await this.clickOnTextElementById('android:id/title','Downloads');;
       await this.clickOnTextElementById('android:id/title', testFile);
       await this.waitForTextElementToBePresent({
         ...new OutgoingMessageStatusSent(this).build(),

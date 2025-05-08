@@ -136,7 +136,6 @@ export type XPath =
   | `//XCUIElementTypeStaticText[@name="Paste"]`
   | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`
   | `//XCUIElementTypeCell[@name="Session"]`
-  | `//android.widget.TextView[@resource-id="android:id/title" and @text="Downloads"]`
   | `//*[starts-with(@content-desc, "Photo taken on")]`;
 
 export type AccessibilityId =
