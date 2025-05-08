@@ -162,12 +162,6 @@ jobs:
           fi
           ls extracted
 
-      - name: Rename extracted folder
-        run: |
-          mkdir -p extracted
-          mv session-ios extracted 
-          ls extracted
-
       - uses: actions/checkout@v4
         with:
           repository: ${{ github.event.inputs.APPIUM_REPO }}
