@@ -3,6 +3,7 @@ import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { OutgoingMessageStatusSent } from './locators/conversation';
 
 iosIt('Send long message to group', 'low', sendLongMessageGroupiOS);
 androidIt('Send long message to group', 'low', sendLongMessageGroupAndroid);
@@ -69,8 +70,7 @@ async function sendLongMessageGroupAndroid(platform: SupportedPlatformsType) {
   // Click send
   await device1.clickOnByAccessibilityID('Send message button');
   await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: `Message sent status: Sent`,
+    ...new OutgoingMessageStatusSent(device1).build(),
     maxWait: 50000,
   });
 
@@ -89,12 +89,25 @@ async function sendLongMessageGroupAndroid(platform: SupportedPlatformsType) {
   await device2.longPressMessage(longText);
   await device2.clickOnByAccessibilityID('Reply to message');
   const replyMessage = await device2.sendMessage(`${userA.userName} message reply`);
+  // Go out and back into the group to see the last message
+  await device1.navigateBack();
+  await device1.clickOnElementAll({
+    strategy: 'accessibility id',
+    selector: 'Conversation list item',
+    text: testGroupName,
+  });
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
-  // TO FIX: REPLY NOT FOUND ANDROID
+  // Go out and back into the group to see the last message
+  await device3.navigateBack();
+  await device3.clickOnElementAll({
+    strategy: 'accessibility id',
+    selector: 'Conversation list item',
+    text: testGroupName,
+  });
   await device3.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',

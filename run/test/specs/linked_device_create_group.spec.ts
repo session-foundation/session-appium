@@ -97,6 +97,8 @@ async function linkedGroupAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new EditGroup(device1));
   // Click on current group name
   await device1.clickOnElementAll(new EditGroupNameInput(device1));
+  // Remove current group name
+  await device1.deleteText(new EditGroupNameInput(device1));
   // Enter new group name (same test tag for both)
   await device1.clickOnElementAll(new EditGroupNameInput(device1));
   await device1.inputText(newGroupName, new EditGroupNameInput(device1));

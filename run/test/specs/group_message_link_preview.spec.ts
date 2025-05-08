@@ -6,6 +6,7 @@ import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { OutgoingMessageStatusSent } from './locators/conversation';
 
 iosIt('Send link to group', 'high', sendLinkGroupiOS);
 androidIt('Send link to group', 'high', sendLinkGroupAndroid);
@@ -28,10 +29,10 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
     selector: 'Message input box',
   });
   await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message sent status: Sent',
+    ...new OutgoingMessageStatusSent(device1).build(),
     maxWait: 20000,
   });
+
   // Accept dialog for link preview
   await device1.checkModalStrings(
     englishStripped('linkPreviewsEnable').toString(),
@@ -103,8 +104,7 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType) {
   // No preview on first send
   await device1.clickOnByAccessibilityID('Send message button');
   await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message sent status: Sent',
+    ...new OutgoingMessageStatusSent(device1).build(),
     maxWait: 20000,
   });
   await Promise.all([

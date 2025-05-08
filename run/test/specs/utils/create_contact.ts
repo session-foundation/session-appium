@@ -18,10 +18,19 @@ export const newContact = async (
   await device2.clickOnByAccessibilityID('Message requests banner');
   await device2.clickOnByAccessibilityID('Message request');
   await device2.onAndroid().clickOnByAccessibilityID('Accept message request');
-
   // Type into message input box
-  await device2.sendMessage(`Reply-message-${Bob.userName}-to-${Alice.userName}`);
-
+  const replyMessage = `Reply-message-${Bob.userName}-to-${Alice.userName}`;
+  await device2.sendMessage(replyMessage);
+  // Verify config message states message request was accepted
+  // "messageRequestsAccepted": "Your message request has been accepted.",
+  // TO DO - ADD BACK IN ONCE IOS AND ANDROID HAS FIXED THIS ISSUE
+  // const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
+  // await device1.onAndroid().waitForControlMessageToBePresent(messageRequestsAccepted);
+  await device1.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Message body',
+    text: replyMessage,
+  });
   console.info(`${Alice.userName} and ${Bob.userName} are now contacts`);
   return { Alice, Bob, device1, device2 };
 };

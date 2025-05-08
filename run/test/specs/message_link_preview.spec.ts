@@ -6,6 +6,7 @@ import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { OutgoingMessageStatusSent } from './locators/conversation';
 
 iosIt('Send link 1:1', 'high', sendLinkIos);
 androidIt('Send link 1:1', 'high', sendLinkAndroid);
@@ -29,8 +30,7 @@ async function sendLinkIos(platform: SupportedPlatformsType) {
   });
   // await device1.waitForLoadingAnimation();
   await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message sent status: Sent',
+    ...new OutgoingMessageStatusSent(device1).build(),
     maxWait: 20000,
   });
   // Accept dialog for link preview
@@ -94,10 +94,10 @@ async function sendLinkAndroid(platform: SupportedPlatformsType) {
   await sleepFor(5000);
   await device1.clickOnByAccessibilityID('Send message button');
   await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message sent status: Sent',
+    ...new OutgoingMessageStatusSent(device1).build(),
     maxWait: 25000,
   });
+
   await device2.waitForTextElementToBePresent(new LinkPreviewMessage(device2));
   await closeApp(device1, device2);
 }

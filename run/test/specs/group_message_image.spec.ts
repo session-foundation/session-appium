@@ -4,6 +4,7 @@ import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { OutgoingMessageStatusSent } from './locators/conversation';
 
 iosIt('Send image to group', 'high', sendImageGroupiOS);
 androidIt('Send image to group', 'high', sendImageGroupAndroid);
@@ -20,10 +21,9 @@ async function sendImageGroupiOS(platform: SupportedPlatformsType) {
   ]);
   // Create contact between User A and User B
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
-  await device1.sendImage(platform, testMessage);
+  await device1.sendImage(testMessage);
   await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: `Message sent status: Sent`,
+    ...new OutgoingMessageStatusSent(device1).build(),
     maxWait: 50000,
   });
   await Promise.all([
@@ -72,7 +72,7 @@ async function sendImageGroupAndroid(platform: SupportedPlatformsType) {
   // Create contact between User A and User B
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   const replyMessage = `Replying to image from ${userA.userName}`;
-  await device1.sendImage(platform, testMessage);
+  await device1.sendImage(testMessage);
   // Wait for image to appear in conversation screen
   await sleepFor(500);
   await Promise.all([

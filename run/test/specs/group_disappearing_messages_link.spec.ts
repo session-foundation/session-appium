@@ -7,6 +7,7 @@ import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
+import { OutgoingMessageStatusSent } from './locators/conversation';
 
 bothPlatformsIt('Disappearing link to group', 'low', disappearingLinkMessageGroup);
 
@@ -40,8 +41,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
     await device1.clickOnByAccessibilityID('Enable');
   }
   await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message sent status: Sent',
+    ...new OutgoingMessageStatusSent(device1).build(),
     maxWait: 20000,
   });
   if (platform === 'ios') {
