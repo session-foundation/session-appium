@@ -29,7 +29,7 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
   // Check if the 'Tap to download media' config appears
   // Click on config
   await device2.trustAttachments(USERNAME.ALICE);
-  // Wait for 30 seconds
+  // Wait for 60 seconds
   await sleepFor(60000);
   // Check if GIF has been deleted on both devices
   await device1.hasElementBeenDeleted({
