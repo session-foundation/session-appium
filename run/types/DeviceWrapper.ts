@@ -1254,7 +1254,7 @@ export class DeviceWrapper {
       selector: 'com.android.permissioncontroller:id/permission_allow_button',
       text: 'Allow',
     });
-    await sleepFor(200);
+    await sleepFor(2000);
     await this.clickOnTextElementById('android:id/title', testVideo);
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
