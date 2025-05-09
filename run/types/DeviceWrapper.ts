@@ -1289,7 +1289,7 @@ export class DeviceWrapper {
         // Close Safari to go back to Session
         await clickOnCoordinates(this, InteractionPoints.BackToSessionButton);
       }
-      // Finally, we send the file
+      // Ready to send the file
       await this.clickOnByAccessibilityID(formattedFileName);
       await sleepFor(500);
       await this.clickOnByAccessibilityID('Text input box');
@@ -1395,7 +1395,6 @@ export class DeviceWrapper {
       await this.pressAndHold('New voice message');
     }
   }
-  // TODO bring in iOS changes from QA-1265
   public async uploadProfilePicture() {
     const forcedDate = '199805010700.00'; // Spongebob's Birthday
     const forcedAccessibilityIDiOS = 'Photo, 01 May 1998, 7:00 AM';
