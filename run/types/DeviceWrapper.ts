@@ -14,7 +14,6 @@ import {
   ReadReceiptsButton,
   SendMediaButton,
 } from '../../run/test/specs/locators';
-import { IOS_XPATHS } from '../constants';
 import { englishStripped } from '../localizer/Localizer';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
@@ -35,8 +34,11 @@ import {
   User,
   XPath,
 } from './testing';
-import { testFile, testImage, testVideo, profilePicture } from '../constants/testfiles';
+import { testFile, testImage, testVideo, profilePicture, pdfURL } from '../constants/testfiles';
 import { AttachmentsButton, OutgoingMessageStatusSent } from '../test/specs/locators/conversation';
+import * as path from 'path';
+import { IOSSaveToFiles, IOSSaveButton, IOSReplaceButton } from '../test/specs/locators/external';
+import { SafariShareButton } from '../test/specs/locators/browsers';
 
 export type Coordinates = {
   x: number;
@@ -1105,22 +1107,20 @@ export class DeviceWrapper {
     }
   }
 
-  // TODO bring in iOS changes from QA-1265
   public async pushMediaToDevice(
     mediaFileName: 'profile_picture.jpg' | 'test_file.pdf' | 'test_image.jpg' | 'test_video.mp4',
     forcedDate?: string
   ) {
-    // Use this when both iOS and Android code paths have been updated
-    // const filePath = path.join('run', 'test', 'specs', 'media', mediaFileName);
+    const filePath = path.join('run', 'test', 'specs', 'media', mediaFileName);
     if (this.isIOS()) {
-      // TODO throw if forcedDate is not set
-      await runScriptAndLog(`touch -a -m -t ${forcedDate} 'run/test/specs/media/${mediaFileName}'`);
-      await runScriptAndLog(
-        `xcrun simctl addmedia ${this.udid} 'run/test/specs/media/${mediaFileName}'`,
-        true
-      );
-    }
-    if (this.isAndroid()) {
+      if (!forcedDate) {
+        throw new Error('forcedDate is required for iOS');
+      }
+      // Modify timestamp of local file because iOS uses that as an identifier
+      await runScriptAndLog(`touch -a -m -t ${forcedDate} ${filePath}`);
+      // Push file to simulator
+      await runScriptAndLog(`xcrun simctl addmedia ${this.udid} ${filePath}`, true);
+    } else if (this.isAndroid()) {
       const ANDROID_DOWNLOAD_DIR = '/storage/emulated/0/Download';
       // Clear downloads folder at runtime before pushing
       await runScriptAndLog(
@@ -1129,10 +1129,9 @@ export class DeviceWrapper {
       );
       // Push file
       await runScriptAndLog(
-        `${getAdbFullPath()} -s ${this.udid} push 'run/test/specs/media/${mediaFileName}' ${ANDROID_DOWNLOAD_DIR}`,
+        `${getAdbFullPath()} -s ${this.udid} push ${filePath} ${ANDROID_DOWNLOAD_DIR}`,
         true
       );
-
       // Refreshes the photos UI to force the image to appear
       await runScriptAndLog(
         `${getAdbFullPath()} -s ${this.udid} shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file://${ANDROID_DOWNLOAD_DIR}/${mediaFileName}`,
@@ -1141,12 +1140,14 @@ export class DeviceWrapper {
     }
   }
 
-  // TODO bring in iOS changes from QA-1265
   public async sendImage(message: string, community?: boolean) {
-    const ronSwansonBirthday = '196705060700.00';
-    const fileName = 'test_image.jpg';
     if (this.isIOS()) {
-      await this.clickOnByAccessibilityID('Attachments button');
+      // Force accessibility ID by forcing custom file date
+      const forcedDate = '196705060700.00'; // Ron Swanson's birthday
+      const forcedAccessibilityID = '1967-05-05 21:00:00 +0000'; // forcedDate in UTC (-10hrs)
+      // Push file first
+      await this.pushMediaToDevice(testImage, forcedDate);
+      await this.clickOnElementAll(new AttachmentsButton(this));
       await sleepFor(5000);
       const keyboard = await this.isKeyboardVisible();
       if (keyboard) {
@@ -1154,23 +1155,12 @@ export class DeviceWrapper {
       } else {
         await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardClosed);
       }
+      await sleepFor(1000);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      const testImage = await this.doesElementExist({
-        strategy: 'accessibility id',
-        selector: `1967-05-05 21:00:00 +0000`,
-        maxWait: 1000,
-      });
-      if (!testImage) {
-        await this.pushMediaToDevice(fileName, ronSwansonBirthday);
-      }
-      await sleepFor(100);
-      await this.clickOnByAccessibilityID(`1967-05-05 21:00:00 +0000`, 1000);
-      if (message) {
-        await this.clickOnByAccessibilityID('Text input box');
-        await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
-      }
-    }
-    if (this.isAndroid()) {
+      await this.clickOnByAccessibilityID(forcedAccessibilityID, 1000);
+      await this.clickOnByAccessibilityID('Text input box');
+      await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
+    } else if (this.isAndroid()) {
       // Push file first
       await this.pushMediaToDevice(testImage);
       await this.clickOnElementAll(new AttachmentsButton(this));
@@ -1205,12 +1195,13 @@ export class DeviceWrapper {
       maxWait: 20000,
     });
   }
-  // TODO bring in iOS changes from QA-1265
   public async sendVideoiOS(message: string) {
-    const bestDayOfYear = `198809090700.00`;
-    const formattedDate = `1988-09-08 21:00:00 +0000`;
-    const fileName = 'test_video.mp4';
-    await this.clickOnByAccessibilityID('Attachments button');
+    // Force accessibility ID by forcing custom file date
+    const forcedDate = `198809090700.00`;
+    const forcedAccessibilityID = `1988-09-08 21:00:00 +0000`; // forcedDate in UTC (-10hrs)
+    // Push first
+    await this.pushMediaToDevice(testVideo, forcedDate);
+    await this.clickOnElementAll(new AttachmentsButton(this));
     // Select images button/tab
     await sleepFor(5000);
     const keyboard = await this.isKeyboardVisible();
@@ -1226,28 +1217,14 @@ export class DeviceWrapper {
       maxWait: 500,
     });
     await this.clickOnByAccessibilityID('Recents');
-    // Select video
-    const videoFolder = await this.doesElementExist({
-      strategy: 'xpath',
-      selector: IOS_XPATHS.VIDEO_TOGGLE,
-      maxWait: 5000,
-    });
-    if (videoFolder) {
-      console.log('Videos folder found');
-      await this.clickOnByAccessibilityID('Videos');
-      await this.clickOnByAccessibilityID(formattedDate);
-    } else {
-      console.log('Videos folder NOT found');
-      await this.pushMediaToDevice(fileName, bestDayOfYear);
-      await this.clickOnByAccessibilityID(formattedDate, 5000);
-    }
-    // Send with message
+    await this.clickOnByAccessibilityID('Videos');
+    await this.clickOnByAccessibilityID(forcedAccessibilityID);
     await this.clickOnByAccessibilityID('Text input box');
     await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
     await this.clickOnByAccessibilityID('Send button');
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
-      maxWait: 10000,
+      maxWait: 50000,
     });
   }
 
@@ -1273,10 +1250,55 @@ export class DeviceWrapper {
     });
   }
 
-  // TODO bring in iOS changes from QA-1265
   public async sendDocument() {
-    if (this.isAndroid()) {
-      // Clear emulator and push file first
+    if (this.isIOS()) {
+      const formattedFileName = 'dummy, pdf';
+      const testMessage = 'Testing-document-1';
+      await this.clickOnElementAll(new AttachmentsButton(this));
+      const keyboard = await this.isKeyboardVisible();
+      if (keyboard) {
+        await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardOpen);
+      } else {
+        await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardClosed);
+      }
+      await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
+      await sleepFor(100);
+      const pdfFile = await this.doesElementExist({
+        strategy: 'accessibility id',
+        selector: formattedFileName,
+        maxWait: 2000,
+      });
+      if (!pdfFile) {
+        // Xcode doesn't allow non-media files to be pushed to the simulator
+        // So if there's no file on device, the only workaround is to download one from the Internet
+        // The quickest way to do that is the open a PDF URL in Safari
+        await runScriptAndLog(`xcrun simctl openurl ${this.udid} ${pdfURL}`, true);
+        // Safari is open but now the file must be downloaded
+        await this.clickOnElementAll(new SafariShareButton(this));
+        await this.clickOnElementAll(new IOSSaveToFiles(this));
+        await this.clickOnElementAll(new IOSSaveButton(this));
+        // If for some weird reason the file is already present (but not found in the file picker)
+        // Then iOS could complain about duplicate files
+        const replaceButton = await this.doesElementExist({
+          ...new IOSReplaceButton(this).build(),
+          maxWait: 1000,
+        });
+        if (replaceButton) {
+          await this.clickOnElementAll(new IOSReplaceButton(this));
+        }
+        // Close Safari to go back to Session
+        await clickOnCoordinates(this, InteractionPoints.BackToSessionButton);
+      }
+      // Finally, we send the file
+      await this.clickOnByAccessibilityID(formattedFileName);
+      await sleepFor(500);
+      await this.clickOnByAccessibilityID('Text input box');
+      await this.inputText(testMessage, {
+        strategy: 'accessibility id',
+        selector: 'Text input box',
+      });
+      await this.clickOnByAccessibilityID('Send button');
+    } else if (this.isAndroid()) {
       await this.pushMediaToDevice(testFile);
       await this.clickOnElementAll(new AttachmentsButton(this));
       await this.clickOnByAccessibilityID('Documents folder');
@@ -1286,46 +1308,14 @@ export class DeviceWrapper {
         selector: 'com.android.permissioncontroller:id/permission_allow_button',
         text: 'Allow',
       });
-      // Depending on previous emulator use the Files app either opens the 'Recent' or 'Downloads' folder
-      // If it is 'Recent' then the pushed file does not reliably show up
-      // So it's necessary to navigate to 'Downloads'
-      await this.clickOnByAccessibilityID('Show roots');
-      await sleepFor(100);
-      await this.clickOnTextElementById('android:id/title', 'Downloads');
+      await sleepFor(1000);
       await this.clickOnTextElementById('android:id/title', testFile);
-      await this.waitForTextElementToBePresent({
-        ...new OutgoingMessageStatusSent(this).build(),
-        maxWait: 50000,
-      });
     }
-    if (this.isIOS()) {
-      const formattedFileName = 'test_file, pdf';
-      const testMessage = 'Testing-document-1';
-      const spongeBobsBirthday = '199905010700.00';
-      await this.clickOnByAccessibilityID('Attachments button');
-      await sleepFor(100);
-      await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardOpen);
-      await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      const testDocument = await this.doesElementExist({
-        strategy: 'accessibility id',
-        selector: formattedFileName,
-        text: undefined,
-        maxWait: 1000,
-      });
-
-      if (!testDocument) {
-        await this.pushMediaToDevice(testFile, spongeBobsBirthday);
-      }
-      await sleepFor(100);
-      await this.clickOnByAccessibilityID(formattedFileName);
-      await sleepFor(500);
-      await this.clickOnByAccessibilityID('Text input box');
-      await this.inputText(testMessage, {
-        strategy: 'accessibility id',
-        selector: 'Text input box',
-      });
-      await this.clickOnByAccessibilityID('Send button');
-    }
+    // Checking Sent status on both platforms
+    await this.waitForTextElementToBePresent({
+      ...new OutgoingMessageStatusSent(this).build(),
+      maxWait: 50000,
+    });
   }
 
   public async sendGIF(message: string) {
@@ -1407,27 +1397,19 @@ export class DeviceWrapper {
   }
   // TODO bring in iOS changes from QA-1265
   public async uploadProfilePicture() {
-    const spongeBobsBirthday = '199805010700.00';
-    const formattedDateiOS = 'Photo, 01 May 1998, 7:00 am';
-    const fileName = 'profile_picture.jpg';
+    const forcedDate = '199805010700.00'; // Spongebob's Birthday
+    const forcedAccessibilityIDiOS = 'Photo, 01 May 1998, 7:00 AM';
     await this.clickOnElementAll(new UserSettings(this));
     // Click on Profile picture
     await this.clickOnElementAll(new UserSettings(this));
     await this.clickOnElementAll(new ChangeProfilePictureButton(this));
     if (this.isIOS()) {
+      // Push file first
+      await this.pushMediaToDevice(profilePicture, forcedDate);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      const profilePicture = await this.doesElementExist({
-        strategy: 'accessibility id',
-        selector: formattedDateiOS,
-        maxWait: 2000,
-      });
-      if (!profilePicture) {
-        await this.pushMediaToDevice(fileName, spongeBobsBirthday);
-      }
-      await sleepFor(100);
       await this.clickOnElementAll({
         strategy: 'accessibility id',
-        selector: formattedDateiOS,
+        selector: forcedAccessibilityIDiOS,
       });
       await this.clickOnByAccessibilityID('Done');
     } else if (this.isAndroid()) {
