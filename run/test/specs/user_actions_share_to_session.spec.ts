@@ -8,66 +8,71 @@ import {
   ShareExtensionIcon,
 } from './locators';
 import { PhotoLibrary } from './locators/external';
+import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
+import { SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsIt('Share to session', 'low', shareToSession);
+bothPlatformsIt({
+  title: 'Share to session',
+  risk: 'low',
+  testCb: shareToSession,
+  countOfDevicesNeeded: 2,
+});
 
 async function shareToSession(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
+  const {
+    devices: { alice1, bob1 },
+  } = await open_Alice1_Bob1_friends({
+    platform,
+    focusFriendsConvo: true,
+  });
   const testMessage = 'Testing sharing an image through photo gallery to Session';
   const ronSwansonBirthday = '196705060700.00';
   const fileName = 'test_image.jpg';
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  await newContact(platform, device1, userA, device2, userB);
+
   // Need to make sure contact is confirm before moving away from Session
   await sleepFor(1000);
-  await device1.pressHome();
+  await alice1.pressHome();
   await sleepFor(2000);
   //  Photo app is on different page than Session
-  await device1.onIOS().swipeRightAny('Session');
-  await device1.clickOnElementAll(new PhotoLibrary(device1));
+  await alice1.onIOS().swipeRightAny('Session');
+  await alice1.clickOnElementAll(new PhotoLibrary(alice1));
   await sleepFor(2000);
   let testImage;
   if (platform === 'android') {
-    testImage = await device1.doesElementExist({
-      ...new ImageName(device1).build(),
+    testImage = await alice1.doesElementExist({
+      ...new ImageName(alice1).build(),
       maxWait: 5000,
     });
   } else {
-    testImage = await device1.doesElementExist({
+    testImage = await alice1.doesElementExist({
       strategy: 'accessibility id',
       selector: 'Photo, 25 March, 11:09 am',
     });
   }
   if (!testImage) {
-    await device1.pushMediaToDevice(fileName, ronSwansonBirthday);
+    await alice1.pushMediaToDevice(fileName, ronSwansonBirthday);
   }
-  await device1.onIOS().clickOnByAccessibilityID('Photo, 25 March, 11:09 am', 1000);
-  await device1.onAndroid().clickOnElementAll(new ImageName(device1));
-  await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Share' });
-  await device1.clickOnElementAll(new ShareExtensionIcon(device1));
-  await device1.clickOnElementAll({
+  await alice1.onIOS().clickOnByAccessibilityID('Photo, 25 March, 11:09 am', 1000);
+  await alice1.onAndroid().clickOnElementAll(new ImageName(alice1));
+  await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Share' });
+  await alice1.clickOnElementAll(new ShareExtensionIcon(alice1));
+  await alice1.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Contact',
     text: USERNAME.BOB,
   });
-  await device1.inputText(testMessage, new MediaMessageInput(device1));
-  await device1.clickOnElementAll(new SendMediaButton(device1));
+  await alice1.inputText(testMessage, new MediaMessageInput(alice1));
+  await alice1.clickOnElementAll(new SendMediaButton(alice1));
   // Loading screen...
-  await device1.waitForLoadingOnboarding();
+  await alice1.waitForLoadingOnboarding();
   //   Check Bob's device
   //   TODO replace with TrustUser function when Groups are merged
-  await device2.clickOnByAccessibilityID('Untrusted attachment message');
+  await bob1.clickOnByAccessibilityID('Untrusted attachment message');
   await sleepFor(500);
   // User B - Click on 'download'
-  await device2.clickOnElementAll(new DownloadMediaButton(device2));
-  await device2.waitForTextElementToBePresent({
+  await bob1.clickOnElementAll(new DownloadMediaButton(bob1));
+  await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: testMessage,

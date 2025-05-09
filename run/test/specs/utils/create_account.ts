@@ -1,11 +1,12 @@
+import type { UserNameType } from '@session-foundation/qa-seeder';
 import { sleepFor } from '.';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { User, USERNAME } from '../../../types/testing';
+import { User } from '../../../types/testing';
 import { RevealRecoveryPhraseButton } from '../locators';
 import { DisplayNameInput } from '../locators/onboarding';
 import { UserSettings } from '../locators/settings';
 
-export const newUser = async (device: DeviceWrapper, userName: USERNAME): Promise<User> => {
+export const newUser = async (device: DeviceWrapper, userName: UserNameType): Promise<User> => {
   // Click create session ID
 
   await device.clickOnElementAll({

@@ -5,8 +5,12 @@ import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from 
 import { isChromeFirstTimeOpen } from './utils/chrome_first_time_open';
 import { URLInputField, SafariAddressBar } from './locators/browsers';
 
-bothPlatformsIt('Onboarding terms of service', 'high', onboardingTOS);
-
+bothPlatformsIt({
+  title: 'Onboarding terms of service',
+  risk: 'high',
+  testCb: onboardingTOS,
+  countOfDevicesNeeded: 1,
+});
 async function onboardingTOS(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   const tosURL = 'https://getsession.org/terms-of-service';

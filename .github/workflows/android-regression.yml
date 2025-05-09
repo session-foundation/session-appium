@@ -1,5 +1,5 @@
 name: Android regression tests
-run-name: '${{ inputs.RISK }} regressions on: ${{ inputs.BRANCH_TO_CHECKOUT }} (${{ inputs.APPIUM_REPO }})'
+run-name: '${{ inputs.RISK }} regressions on ${{ github.head_ref || github.ref }}'
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
         description: 'url to test'
         required: true
         type: string
-        default: https://oxen.rocks/session-foundation/session-android/release/1.20.3/session-android-20241101T052421Z-be16d3bf9-universal.tar.xz
+        default: https://oxen.rocks/session-foundation/session-android/release/1.22.1/session-android-20250406T231441Z-a9bfe783a-universal.tar.xz
 
       RISK:
         description: 'risks to target'
@@ -19,45 +19,6 @@ on:
           - 'medium-risk'
           - 'low-risk'
           - ''
-
-      APPIUM_REPO:
-        description: 'appium repo to checkout'
-        required: true
-        type: choice
-        options:
-          - session-foundation/session-appium
-          - burtonemily/session-appium
-          - Miki-Session/session-appium
-          - bilb/session-appium
-        default: session-foundation/session-appium
-
-      BRANCH_TO_CHECKOUT:
-        description: 'branch to checkout'
-        required: true
-        type: string
-        default: test-ci-regression
-
-      # SHARD_NUMBER:
-      #   description: 'shard number'
-      #   required: true
-      #   type: choice
-      #   options:
-      #     - '1'
-      #     - '2'
-      #     - '3'
-      #     - '4'
-      #   default: '1'
-
-      # SHARD_COUNT:
-      #   description: 'shard count'
-      #   required: true
-      #   type: choice
-      #   options:
-      #     - '1'
-      #     - '2'
-      #     - '3'
-      #     - '4'
-      #   default: '1'
 
       PLAYWRIGHT_RETRIES_COUNT:
         description: 'retries of failing tests to do at most'
@@ -85,24 +46,23 @@ on:
           - '0'
           - '1'
         default: '0'
-      PLAYWRIGHT_WORKERS_COUNT:
-        description: 'number of workers to use - ONLY 1 WORKER IS SUPPORTED FOR ANDROID'
+      HIDE_WEBDRIVER_LOGS:
+        description: 'print webdriver logs (1 to hide, 0 to show). PRINT_ONGOING_TEST_LOGS or PRINT_FAILED_TEST_LOGS must be 1'
         required: true
         type: choice
         options:
+          - '0'
           - '1'
         default: '1'
-
-# concurrency:
-#   group: ${{ github.workflow }}
-#   cancel-in-progress: true
 
 jobs:
   android-regression:
     runs-on: [self-hosted, linux, X64, qa-android]
     env:
+      PLATFORM: 'android'
+      CI: 1
       IOS_APP_PATH_PREFIX: '<just_not_empty>'
-      ANDROID_APK: '../extracted/session-android.apk'
+      ANDROID_APK: './extracted/session-android.apk'
       APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
       ANDROID_SDK_ROOT: '/opt/android'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
@@ -121,72 +81,33 @@ jobs:
       IOS_11_SIMULATOR: '<just_not_empty>'
       IOS_12_SIMULATOR: '<just_not_empty>'
 
-      # echo "SHARD_NUMBER ${{ github.event.inputs.SHARD_NUMBER }}"
-      # echo "SHARD_COUNT ${{ github.event.inputs.SHARD_COUNT }}"
-
     steps:
       - uses: actions/checkout@v4
-      - name: Runner Details
-        run: |
-          echo "BRANCH_TO_CHECKOUT ${{ github.event.inputs.BRANCH_TO_CHECKOUT }}"
-          echo "APPIUM_REPO ${{ github.event.inputs.APPIUM_REPO }}"
-          echo "APK_URL ${{ github.event.inputs.APK_URL }}"
-          echo "RISK ${{ github.event.inputs.RISK }}"
+        with:
+          lfs: true
 
-      - name: Download APK
+      - uses: ./github/actions/print-runner-details
+        with:
+          APK_URL: ${{ github.event.inputs.APK_URL }}
+          RISK: ${{ github.event.inputs.RISK }}
+          PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
+          PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
+          PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
+
+      - name: Download APK & extract it
         run: |
+          pwd
           wget -q -O session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
           ls
-          pwd
-
-      - name: Extract APK
-        run: |
           tar xf session-android.apk.tar.xz
-          pwd
-
-      - name: Rename extracted folder
-        run: |
+          ls
           mv session-android-*universal extracted
           ls extracted
           mv extracted/*.apk extracted/session-android.apk
           ls extracted
-          pwd
 
-      - uses: actions/checkout@v4
-        with:
-          repository: ${{ github.event.inputs.APPIUM_REPO }}
-          ref: ${{ github.event.inputs.BRANCH_TO_CHECKOUT }}
-          path: 'forked-session-appium'
-          lfs: true
-
-      - uses: actions/setup-node@v4
-        with:
-          # node-version-file: 'forked-session-appium/.nvmrc'
-          node-version: 18.15.0
-
-      - name: Install yarn
-        run: |
-          npm install -g yarn
-          corepack enable
-          yarn set version 4.1.1
-
-      - name: Install test dependencies
-        run: |
-          cd forked-session-appium
-          ls
-          git status
-          touch yarn.lock
-          yarn install --immutable
-
-      - name: Start Appium server
-        run: |
-          cd forked-session-appium
-          yarn "./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --allow-cors"
-
-      - name: Build the Android tests
-        run: |
-          cd forked-session-appium
-          yarn tsc
+      - name: Setup for both platforms
+        uses: ./github/actions/setup
 
       - name: Restart adb server
         shell: bash
@@ -202,19 +123,71 @@ jobs:
           source ./scripts/ci.sh
           start_with_snapshots
 
-      - name: List all tests
-        run: |
-          cd forked-session-appium
-          pwd
-          npx playwright test --list --grep "@${{ github.event.inputs.RISK }}"
+      - name: List tests part of this run
+        uses: ./github/actions/list-tests
+        with:
+          PLATFORM: ${{ env.PLATFORM }}
+          RISK: ${{ github.event.inputs.RISK }}
 
-      - name: Run the tests # ${{ github.event.inputs.SHARD_NUMBER }}​​/${{ github.event.inputs.SHARD_COUNT }}​​
+      - name: Run the 1-devices tests ​​with 4 workers
+        continue-on-error: true
+        id: devices-1-test-run
+        env:
+          PLAYWRIGHT_WORKERS_COUNT: 4
+          DEVICES_PER_TEST_COUNT: 1
         run: |
-          cd forked-session-appium
           pwd
-          yarn test "android @${{ github.event.inputs.RISK }}"
+          TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
-      - name: Kill all running emulators
+      - name: Upload results of this run
+        uses: ./github/actions/upload-test-results
+        with:
+          PLATFORM: ${{ env.PLATFORM }}
+          UPLOAD_IDENTIFIER: 'devices-1-test-run'
+
+      - name: Run the 2-devices tests ​​with 2 workers
+        continue-on-error: true
+        id: devices-2-test-run
+        env:
+          PLAYWRIGHT_WORKERS_COUNT: 2
+          DEVICES_PER_TEST_COUNT: 2
+        run: |
+          pwd
+          _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
+
+      - name: Upload results of this run
+        uses: ./github/actions/upload-test-results
+        with:
+          PLATFORM: ${{ env.PLATFORM }}
+          UPLOAD_IDENTIFIER: 'devices-2-test-run'
+
+      - name: Run the tests ​​other tests with 1 worker
+        continue-on-error: true
+        id: other-devices-test-run
+        env:
+          PLAYWRIGHT_WORKERS_COUNT: 1
+          DEVICES_PER_TEST_COUNT: 4
+        run: |
+          pwd
+          _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
+
+      - name: Upload results of this run
+        uses: ./github/actions/upload-test-results
+        with:
+          PLATFORM: ${{ env.PLATFORM }}
+          UPLOAD_IDENTIFIER: 'devices-other-test-run'
+
+      - name: Upload csv of this whole run
+        uses: ./github/actions/upload-csv-test-results
+        if: always()
+        with:
+          PLATFORM: ${{ env.PLATFORM }}
+
+      - name: Check if any tests failed
+        if: steps.devices-1-test-run != 'success' || steps.devices-2-test-run != 'success' || steps.other-devices-test-run.outcome != 'success'
+        run: echo 'Some test failed, see above'; exit 1
+
+      - name: Stop emulators
         if: always()
         continue-on-error: true # just so we don't fail
         shell: bash

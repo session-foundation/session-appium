@@ -1,99 +1,108 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
+import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { createGroup } from './utils/create_group';
-import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-iosIt('Send GIF to group', 'medium', sendGifGroupiOS);
-androidIt('Send GIF to group', 'medium', sendGifGroupAndroid);
+bothPlatformsItSeparate({
+  title: 'Send GIF to group',
+  risk: 'medium',
+  countOfDevicesNeeded: 3,
+  ios: {
+    testCb: sendGifGroupiOS,
+  },
+  android: {
+    testCb: sendGifGroupAndroid,
+  },
+});
 
 async function sendGifGroupiOS(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // Create users A, B and C
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-    newUser(device3, USERNAME.CHARLIE),
-  ]);
+
+  const {
+    devices: { alice1, bob1, charlie1 },
+    prebuilt: { alice },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
+    platform,
+    groupName: testGroupName,
+    focusGroupConvo: true,
+  });
+
   const testMessage = 'Testing-GIF-1';
-  const replyMessage = `Replying to GIF from ${userA.userName}`;
-  // Create contact between User A and User B
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
-  await device1.sendGIF(testMessage);
+  const replyMessage = `Replying to GIF from ${alice.userName}`;
+
+  await alice1.sendGIF(testMessage);
   await sleepFor(500);
-  await device2.waitForTextElementToBePresent({
+  await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: testMessage,
   });
-  await device3.waitForTextElementToBePresent({
+  await charlie1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: testMessage,
   });
-  await device2.longPressMessage(testMessage);
-  // Check reply came through on device1
-  await device2.clickOnByAccessibilityID('Reply to message');
-  await device2.sendMessage(replyMessage);
-  await device1.waitForTextElementToBePresent({
+  await bob1.longPressMessage(testMessage);
+  // Check reply came through on alice1
+  await bob1.clickOnByAccessibilityID('Reply to message');
+  await bob1.sendMessage(replyMessage);
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
-  await device3.waitForTextElementToBePresent({
+  await charlie1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }
 
 async function sendGifGroupAndroid(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // Create users A, B and C
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-    newUser(device3, USERNAME.CHARLIE),
-  ]);
-  // Create contact between User A and User B
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
+
+  const {
+    devices: { alice1, bob1, charlie1 },
+    prebuilt: { alice },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
+    platform,
+    groupName: testGroupName,
+    focusGroupConvo: true,
+  });
   const testMessage = 'Testing-GIF-1';
-  const replyMessage = `Replying to GIF from ${userA.userName}`;
+  const replyMessage = `Replying to GIF from ${alice.userName}`;
   // Click on attachments button
-  await device1.sendGIF(testMessage);
+  await alice1.sendGIF(testMessage);
   await Promise.all([
-    device2.trustAttachments(testGroupName),
-    device3.trustAttachments(testGroupName),
+    bob1.trustAttachments(testGroupName),
+    charlie1.trustAttachments(testGroupName),
   ]);
   // Reply to message
-  await device2.waitForTextElementToBePresent({
+  await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Media message',
     maxWait: 10000,
   });
-  await device3.waitForTextElementToBePresent({
+  await charlie1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Media message',
     maxWait: 10000,
   });
-  await device2.longPress('Media message');
-  // Check reply came through on device1
-  await device2.clickOnByAccessibilityID('Reply to message');
-  await device2.sendMessage(replyMessage);
-  await device1.waitForTextElementToBePresent({
+  await bob1.longPress('Media message');
+  // Check reply came through on alice1
+  await bob1.clickOnByAccessibilityID('Reply to message');
+  await bob1.sendMessage(replyMessage);
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
-  await device3.waitForTextElementToBePresent({
+  await charlie1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
   // Close app
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }

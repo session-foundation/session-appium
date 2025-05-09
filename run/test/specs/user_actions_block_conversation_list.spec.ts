@@ -4,51 +4,52 @@ import { USERNAME } from '../../types/testing';
 import { BlockedContactsSettings, BlockUserConfirmationModal } from './locators';
 import { LongPressBlockOption } from './locators/home';
 import { UserSettings } from './locators/settings';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { open_Alice1_Bob1_friends } from './state_builder';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 // Block option no longer available on iOS in conversation list
-androidIt('Block user in conversation list', 'high', blockUserInConversationList);
+androidIt({
+  title: 'Block user in conversation list',
+  risk: 'high',
+  testCb: blockUserInConversationList,
+  countOfDevicesNeeded: 2,
+});
 
 async function blockUserInConversationList(platform: SupportedPlatformsType) {
-  // Open App
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create Alice
-  // Create Bob
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
+  const {
+    devices: { alice1, bob1 },
+    prebuilt: { bob },
+  } = await open_Alice1_Bob1_friends({
+    platform,
+    focusFriendsConvo: true,
+  });
   // Navigate back to conversation list
-  await device1.navigateBack();
-  await device1.longPressConversation(userB.userName);
-  await device1.clickOnElementAll(new LongPressBlockOption(device1));
-  await device1.checkModalStrings(
+  await alice1.navigateBack();
+  await alice1.longPressConversation(bob.userName);
+  await alice1.clickOnElementAll(new LongPressBlockOption(alice1));
+  await alice1.checkModalStrings(
     englishStripped('block').toString(),
     englishStripped('blockDescription').withArgs({ name: USERNAME.BOB }).toString(),
     true
   );
-  await device1.clickOnElementAll(new BlockUserConfirmationModal(device1));
-  await device1.clickOnElementAll({
+  await alice1.clickOnElementAll(new BlockUserConfirmationModal(alice1));
+  await alice1.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Conversation list item',
-    text: userB.userName,
+    text: bob.userName,
   });
-  await device1.waitForTextElementToBePresent({
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Blocked banner',
   });
-  await device1.navigateBack();
-  await device1.clickOnElementAll(new UserSettings(device1));
-  await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
-  await device1.clickOnElementAll(new BlockedContactsSettings(device1));
-  await device1.waitForTextElementToBePresent({
+  await alice1.navigateBack();
+  await alice1.clickOnElementAll(new UserSettings(alice1));
+  await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
+  await alice1.clickOnElementAll(new BlockedContactsSettings(alice1));
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Contact',
-    text: userB.userName,
+    text: bob.userName,
   });
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }

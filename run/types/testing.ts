@@ -1,17 +1,14 @@
 import { DeviceWrapper } from './DeviceWrapper';
 
+import { UserNameType, USERNAME as usernameFromSeeder } from '@session-foundation/qa-seeder';
+
 export type User = {
-  userName: USERNAME;
+  userName: UserNameType;
   accountID: string;
   recoveryPhrase: string;
 };
 
-export enum USERNAME {
-  ALICE = 'Alice',
-  BOB = 'Bob',
-  CHARLIE = 'Charlie',
-  DRACULA = 'Dracula',
-}
+export const USERNAME = usernameFromSeeder;
 
 export type GROUPNAME =
   | 'Test group'
@@ -39,8 +36,8 @@ export type SetupData = {
   device1: DeviceWrapper | undefined;
   device2: DeviceWrapper | undefined;
   device3: DeviceWrapper | undefined;
-  userA: User | undefined;
-  userB: User | undefined;
+  alice: User | undefined;
+  bob: User | undefined;
 };
 
 export type Coordinates = {
@@ -328,7 +325,7 @@ export type AccessibilityId =
   | 'TabBarItemTitle'
   | 'URL'
   | 'Session | Send Messages, Not Metadata. | Private Messenger'
-  | `${USERNAME}`
+  | UserNameType
   | 'Invite button'
   | 'Confirm invite button'
   | 'Edit'
@@ -422,6 +419,6 @@ export type Id =
   | 'Image button'
   | 'android.widget.TextView';
 
-export type TestRisk = 'high' | 'medium' | 'low' | undefined;
+export type TestRisk = 'high' | 'medium' | 'low';
 
 export type ElementStates = 'new_account' | 'restore_account';

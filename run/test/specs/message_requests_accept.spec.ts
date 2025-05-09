@@ -5,18 +5,23 @@ import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-bothPlatformsIt('Accept message request', 'high', acceptRequest);
+bothPlatformsIt({
+  title: 'Accept message request',
+  risk: 'high',
+  testCb: acceptRequest,
+  countOfDevicesNeeded: 3,
+});
 
 async function acceptRequest(platform: SupportedPlatformsType) {
   // Check 'accept' button
   // Open app
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create two users
-  const userA = await newUser(device1, USERNAME.ALICE);
-  const userB = await linkedDevice(device2, device3, USERNAME.BOB);
+  const alice = await newUser(device1, USERNAME.ALICE);
+  const bob = await linkedDevice(device2, device3, USERNAME.BOB);
 
   // Send message from Alice to Bob
-  await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
+  await device1.sendNewMessage(bob, `${alice.userName} to ${bob.userName}`);
   // Wait for banner to appear
   // Bob clicks on message request banner
   await device2.clickOnByAccessibilityID('Message requests banner');
@@ -28,7 +33,7 @@ async function acceptRequest(platform: SupportedPlatformsType) {
   // "messageRequestsAccepted": "Your message request has been accepted.",
   const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
   const messageRequestYouHaveAccepted = englishStripped('messageRequestYouHaveAccepted')
-    .withArgs({ name: userA.userName })
+    .withArgs({ name: alice.userName })
     .toString();
   await Promise.all([
     device1.waitForControlMessageToBePresent(messageRequestsAccepted),
@@ -40,12 +45,12 @@ async function acceptRequest(platform: SupportedPlatformsType) {
     device2.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
-      text: userA.userName,
+      text: alice.userName,
     }),
     device3.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
-      text: userA.userName,
+      text: alice.userName,
     }),
   ]);
   // Close app

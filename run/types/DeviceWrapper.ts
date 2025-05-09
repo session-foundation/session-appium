@@ -176,7 +176,10 @@ export class DeviceWrapper {
       return;
     }
     if (this.isAndroid()) {
-      await runScriptAndLog(`${getAdbFullPath()} -s emulator-5554 shell input keyevent 3`, true);
+      await runScriptAndLog(
+        `${getAdbFullPath()} -s ${this.getUdid()} shell input keyevent 3`,
+        true
+      );
       return;
     }
   }
@@ -715,7 +718,7 @@ export class DeviceWrapper {
   public async hasElementBeenDeleted(
     args: {
       text?: string;
-      maxWait?: number;
+      maxWait: number;
     } & (StrategyExtractionObj | LocatorsInterface)
   ) {
     const start = Date.now();
@@ -726,6 +729,7 @@ export class DeviceWrapper {
     do {
       if (!text) {
         try {
+          // Note: we need a `maxWait` here to make sure we don't wait for an element that we expect is deleted for too long
           element = await this.waitForTextElementToBePresent({ ...locator, maxWait });
           await sleepFor(100);
           console.log(`Element has been found, waiting for deletion`);
@@ -735,6 +739,7 @@ export class DeviceWrapper {
         }
       } else {
         try {
+          // Note: we need a `maxWait` here to make sure we don't wait for an element that we expect is deleted for too long
           element = await this.waitForTextElementToBePresent({ ...locator, maxWait });
           await sleepFor(100);
           console.log(`Text element has been found, waiting for deletion`);
@@ -780,20 +785,18 @@ export class DeviceWrapper {
     const waitPerLoop = 100;
     while (el === null) {
       try {
+        const waitingForStr = `Waiting for "${locator.strategy}" and "${locator.selector}" to be present`;
         if (text) {
-          console.log(
-            `Waiting for ${locator.strategy}: '${locator.selector}' to be present with ${text}`
-          );
+          console.log(`${waitingForStr} with "${text}"`);
           const els = await this.findElements(locator.strategy, locator.selector);
           el = await this.findMatchingTextInElementArray(els, text);
         } else {
-          console.log(`Waiting for ${locator.strategy} and ${locator.selector} to be present`);
+          console.log(waitingForStr);
           el = await this.findElement(locator.strategy, locator.selector);
         }
       } catch (e: any) {
         console.info(
-          'waitForTextElementToBePresent threw: ',
-          `${locator.strategy}: '${locator.selector}'`
+          `waitForTextElementToBePresent threw: "${locator.strategy}": "${locator.selector}`
         );
       }
       if (!el) {
@@ -807,10 +810,12 @@ export class DeviceWrapper {
         }
         throw new Error(`Waited for too long looking for '${locator.selector}'`);
       }
-      if (text) {
-        console.log(`'${locator.selector}' and '${text}' has been found`);
-      } else {
-        console.log(`'${locator.selector}' has been found`);
+      if (el) {
+        if (text) {
+          console.log(`'${locator.selector}' and '${text}' has been found`);
+        } else {
+          console.log(`'${locator.selector}' has been found`);
+        }
       }
     }
     return el;
@@ -824,9 +829,10 @@ export class DeviceWrapper {
     const maxWaitMSec: number = typeof maxWait === 'number' ? maxWait : 15000;
     let currentWait = 0;
     const waitPerLoop = 100;
+    const textWithQuotes = `"${text}"`;
     while (el === null) {
       try {
-        console.log(`Waiting for control message to be present with ${text}`);
+        console.log(`Waiting for control message to be present with "${textWithQuotes}"`);
         const els = await this.findElements('accessibility id', 'Control message');
         el = await this.findMatchingTextInElementArray(els, text);
       } catch (e: any) {
@@ -838,10 +844,12 @@ export class DeviceWrapper {
       currentWait += waitPerLoop;
       if (currentWait >= maxWaitMSec) {
         console.log('Waited too long');
-        throw new Error(`Waited for too long looking for Control message ${text}`);
+        throw new Error(
+          `Waited for too long (${maxWaitMSec}ms) looking for Control message "${textWithQuotes}"`
+        );
       }
     }
-    console.log(`Control message ${text} has been found`);
+    console.log(`Control message "${textWithQuotes}" has been found`);
     return el;
   }
 
@@ -867,7 +875,9 @@ export class DeviceWrapper {
       currentWait += waitPerLoop;
       if (currentWait >= maxWaitMSec) {
         console.log('Waited too long');
-        throw new Error(`Waited for too long looking for Control message ${text}`);
+        throw new Error(
+          `Waited for too long (${maxWaitMSec}ms) looking for Control message ${text}`
+        );
       }
     }
     console.log(`Control message ${text} has been found`);
@@ -962,7 +972,7 @@ export class DeviceWrapper {
     }
   }
 
-  public async sendNewMessage(user: User, message: string) {
+  public async sendNewMessage(user: Pick<User, 'accountID'>, message: string) {
     // Sender workflow
     // Click on plus button
     await this.clickOnByAccessibilityID('New conversation button');
@@ -1012,7 +1022,7 @@ export class DeviceWrapper {
     return message;
   }
 
-  public async replyToMessage(user: User, body: string) {
+  public async replyToMessage(user: Pick<User, 'userName'>, body: string) {
     // Reply to media message from user B
     // Long press on imageSent element
     await this.longPressMessage(body);
@@ -1096,7 +1106,10 @@ export class DeviceWrapper {
   }
 
   // TODO bring in iOS changes from QA-1265
-  public async pushMediaToDevice(mediaFileName: string, forcedDate?: string) {
+  public async pushMediaToDevice(
+    mediaFileName: 'profile_picture.jpg' | 'test_file.pdf' | 'test_image.jpg' | 'test_video.mp4',
+    forcedDate?: string
+  ) {
     // Use this when both iOS and Android code paths have been updated
     // const filePath = path.join('run', 'test', 'specs', 'media', mediaFileName);
     if (this.isIOS()) {
@@ -1457,7 +1470,7 @@ export class DeviceWrapper {
     console.log(`Not an iOS device: shouldn't use this function`);
   }
 
-  public async mentionContact(platform: SupportedPlatformsType, contact: User) {
+  public async mentionContact(platform: SupportedPlatformsType, contact: Pick<User, 'userName'>) {
     await this.inputText(`@`, { strategy: 'accessibility id', selector: 'Message input box' });
     // Check that all users are showing in mentions box
     await this.waitForTextElementToBePresent({
@@ -1773,18 +1786,20 @@ export class DeviceWrapper {
     }
   }
 
-  public async getElementPixelColor(
-    args: {
-      text?: string;
-      maxWait?: number;
-    } & (StrategyExtractionObj | LocatorsInterface)
-  ): Promise<string> {
+  public async getElementPixelColor(args: LocatorsInterface): Promise<string> {
     // Wait for the element to be present
     const element = await this.waitForTextElementToBePresent(args);
     // Take a screenshot and return a hex color value
     const base64image = await this.getElementScreenshot(element.ELEMENT);
     const pixelColor = await parseDataImage(base64image);
     return pixelColor;
+  }
+
+  private getUdid() {
+    if (!this.udid) {
+      throw new Error('getUdid: stored udid is empty');
+    }
+    return this.udid;
   }
 
   /* === all the utilities function ===  */

@@ -1,58 +1,62 @@
 import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
 import { BlockUser, BlockUserConfirmationModal } from './locators';
 import { ConversationSettings } from './locators/conversation';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
+import { open_Alice1_Bob1_friends } from './state_builder';
+import { SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsIt('Unblock user', 'low', unblockUser);
+bothPlatformsIt({
+  title: 'Unblock user',
+  risk: 'low',
+  testCb: unblockUser,
+  countOfDevicesNeeded: 2,
+});
 
 async function unblockUser(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  const blockedMessage = `Blocked message from ${userB.userName} to ${userA.userName}`;
-  await newContact(platform, device1, userA, device2, userB);
-  await device1.clickOnElementAll(new ConversationSettings(device1));
-  await device1.clickOnElementAll(new BlockUser(device1));
-  await device1.checkModalStrings(
+  const {
+    devices: { alice1, bob1 },
+    prebuilt: { alice, bob },
+  } = await open_Alice1_Bob1_friends({
+    platform,
+    focusFriendsConvo: true,
+  });
+  const blockedMessage = `Blocked message from ${bob.userName} to ${alice.userName}`;
+  await alice1.clickOnElementAll(new ConversationSettings(alice1));
+  await alice1.clickOnElementAll(new BlockUser(alice1));
+  await alice1.checkModalStrings(
     englishStripped('block').toString(),
-    englishStripped('blockDescription').withArgs({ name: userB.userName }).toString(),
+    englishStripped('blockDescription').withArgs({ name: bob.userName }).toString(),
     true
   );
-  await device1.clickOnElementAll(new BlockUserConfirmationModal(device1));
-  await device1.onIOS().navigateBack();
-  const blockedStatus = await device1.waitForTextElementToBePresent({
+  await alice1.clickOnElementAll(new BlockUserConfirmationModal(alice1));
+  await alice1.onIOS().navigateBack();
+  const blockedStatus = await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Blocked banner',
   });
 
   if (blockedStatus) {
-    console.info(`${userB.userName} has been blocked`);
+    console.info(`${bob.userName} has been blocked`);
   } else {
     console.info('Blocked banner not found');
   }
   // Send message from Blocked User
-  await device2.sendMessage(blockedMessage);
-  await device1.doesElementExist({
+  await bob1.sendMessage(blockedMessage);
+  await alice1.doesElementExist({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: blockedMessage,
     maxWait: 5000,
   });
   // Now that user is blocked, unblock them
-  await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Blocked banner' });
-  await device1.checkModalStrings(
+  await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Blocked banner' });
+  await alice1.checkModalStrings(
     englishStripped('blockUnblock').toString(),
-    englishStripped('blockUnblockName').withArgs({ name: userB.userName }).toString(),
+    englishStripped('blockUnblockName').withArgs({ name: bob.userName }).toString(),
     true
   );
-  await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Unblock' });
-  await device1.doesElementExist({
+  await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Unblock' });
+  await alice1.doesElementExist({
     strategy: 'accessibility id',
     selector: 'Blocked banner',
     maxWait: 2000,

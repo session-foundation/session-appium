@@ -1,43 +1,46 @@
 import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
 import { ConversationSettings } from './locators/conversation';
 import { LeaveGroupButton } from './locators/groups';
-import { newUser } from './utils/create_account';
-import { createGroup } from './utils/create_group';
+import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils/index';
-import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-bothPlatformsIt('Leave group', 'high', leaveGroup);
+bothPlatformsIt({
+  title: 'Leave group',
+  risk: 'high',
+  testCb: leaveGroup,
+  countOfDevicesNeeded: 3,
+});
 
 async function leaveGroup(platform: SupportedPlatformsType) {
   const testGroupName = 'Leave group';
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // Create users A, B and C
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-    newUser(device3, USERNAME.CHARLIE),
-  ]);
 
-  // Create group with user A, user B and User C
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
-  await device3.clickOnElementAll(new ConversationSettings(device3));
+  const {
+    devices: { alice1, bob1, charlie1 },
+    prebuilt: { charlie },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
+    platform,
+    groupName: testGroupName,
+    focusGroupConvo: true,
+  });
+  await charlie1.clickOnElementAll(new ConversationSettings(charlie1));
   await sleepFor(1000);
-  await device3.clickOnElementAll(new LeaveGroupButton(device3));
+  await charlie1.clickOnElementAll(new LeaveGroupButton(charlie1));
   // Modal with Leave/Cancel
-  await device3.clickOnByAccessibilityID('Leave');
+  await charlie1.clickOnByAccessibilityID('Leave');
   // Check for control message
   const groupMemberLeft = englishStripped('groupMemberLeft')
-    .withArgs({ name: userC.userName })
+    .withArgs({ name: charlie.userName })
     .toString();
-  await device1.waitForControlMessageToBePresent(groupMemberLeft);
-  await device2.waitForControlMessageToBePresent(groupMemberLeft);
+  await alice1.waitForControlMessageToBePresent(groupMemberLeft);
+  await bob1.waitForControlMessageToBePresent(groupMemberLeft);
   // Check device 3 that group has disappeared
-  await device3.hasElementBeenDeleted({
+  await charlie1.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Conversation list item',
     text: testGroupName,
+    maxWait: 5000,
   });
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }

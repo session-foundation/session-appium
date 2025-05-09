@@ -9,6 +9,7 @@ import {
 } from '../locators/disappearing_messages';
 import { SupportedPlatformsType } from './open_app';
 import { sleepFor } from './sleep_for';
+
 export const setDisappearingMessage = async (
   platform: SupportedPlatformsType,
   device: DeviceWrapper,

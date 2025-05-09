@@ -6,18 +6,23 @@ import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-bothPlatformsIt('Disappear after send note to self', 'medium', disappearAfterSendNoteToSelf);
+bothPlatformsIt({
+  title: 'Disappear after send note to self',
+  risk: 'medium',
+  testCb: disappearAfterSendNoteToSelf,
+  countOfDevicesNeeded: 1,
+});
 
 async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   const testMessage = `Testing disappearing messages in Note to Self`;
-  const userA = await newUser(device, USERNAME.ALICE);
+  const alice = await newUser(device, USERNAME.ALICE);
   const controlMode: DisappearActions = 'sent';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   // Send message to self to bring up Note to Self conversation
   await device.clickOnByAccessibilityID('New conversation button');
   await device.clickOnByAccessibilityID('New direct message');
-  await device.inputText(userA.accountID, new EnterAccountID(device));
+  await device.inputText(alice.accountID, new EnterAccountID(device));
   await device.scrollDown();
   await device.clickOnByAccessibilityID('Next');
   await device.inputText('Creating note to self', {

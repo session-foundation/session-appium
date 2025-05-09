@@ -1,21 +1,22 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
-import { linkedDevice } from './utils/link_device';
-import { USERNAME } from '../../types/testing';
 import { verifyElementScreenshot } from './utils/verify_screenshots';
 import { EmptyLandingPageScreenshot } from './utils/screenshot_paths';
+import { USERNAME } from '@session-foundation/qa-seeder';
+import { linkedDevice } from './utils/link_device';
 
-bothPlatformsIt('Landing page restore account', 'low', landingPageRestoreAccount);
+bothPlatformsIt({
+  title: 'Landing page restore account',
+  risk: 'low',
+  testCb: landingPageRestoreAccount,
+  countOfDevicesNeeded: 2,
+});
 
 async function landingPageRestoreAccount(platform: SupportedPlatformsType) {
   // Creating a linked device is used as a shortcut to restore an account
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  await linkedDevice(device1, device2, USERNAME.ALICE);
+  const { device1: alice1, device2: alice2 } = await openAppTwoDevices(platform);
+  await linkedDevice(alice1, alice2, USERNAME.ALICE);
   // Verify that the Session logo is shown on the landing page
-  await verifyElementScreenshot(
-    device2,
-    new EmptyLandingPageScreenshot(device2),
-    'restore_account'
-  );
-  await closeApp(device1, device2);
+  await verifyElementScreenshot(alice2, new EmptyLandingPageScreenshot(alice2), 'restore_account');
+  await closeApp(alice1, alice2);
 }

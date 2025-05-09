@@ -1,38 +1,40 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
-import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { bothPlatformsIt } from '../../types/sessionIt';
+import { DISAPPEARING_TIMES } from '../../types/testing';
+import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { createGroup } from './utils/create_group';
-import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Disappearing image message to group', 'low', disappearingImageMessageGroup);
-androidIt('Disappearing image message to group', 'low', disappearingImageMessageGroup);
+bothPlatformsIt({
+  title: 'Disappearing image message to group',
+  risk: 'low',
+  countOfDevicesNeeded: 3,
+  testCb: disappearingImageMessageGroup,
+});
 
 async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
   const testMessage = 'Testing disappearing messages for images';
   const testGroupName = 'Testing disappearing messages';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   const timerType = 'Disappear after send option';
-  // Create user A and user B
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-    newUser(device3, USERNAME.CHARLIE),
-  ]);
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
+  const {
+    devices: { alice1, bob1, charlie1 },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
+    platform,
+    groupName: testGroupName,
+    focusGroupConvo: true,
+  });
 
-  await setDisappearingMessage(platform, device1, ['Group', timerType, time]);
+  await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   // await device1.navigateBack();
-  await device1.sendImage(testMessage);
+  await alice1.sendImage(testMessage);
   await Promise.all([
-    device2.onAndroid().trustAttachments(testGroupName),
-    device3.onAndroid().trustAttachments(testGroupName),
+    bob1.onAndroid().trustAttachments(testGroupName),
+    charlie1.onAndroid().trustAttachments(testGroupName),
   ]);
   if (platform === 'ios') {
     await Promise.all(
-      [device2, device3].map(device =>
+      [bob1, charlie1].map(device =>
         device.waitForTextElementToBePresent({
           strategy: 'accessibility id',
           selector: 'Message body',
@@ -44,7 +46,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   }
   if (platform === 'android') {
     await Promise.all(
-      [device2, device3].map(device =>
+      [bob1, charlie1].map(device =>
         device.waitForTextElementToBePresent({
           strategy: 'accessibility id',
           selector: 'Media message',
@@ -57,7 +59,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   await sleepFor(30000);
   if (platform === 'ios') {
     await Promise.all(
-      [device1, device2, device3].map(device =>
+      [alice1, bob1, charlie1].map(device =>
         device.hasElementBeenDeleted({
           strategy: 'accessibility id',
           selector: 'Message body',
@@ -69,7 +71,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   }
   if (platform === 'android') {
     await Promise.all(
-      [device1, device2, device3].map(device =>
+      [alice1, bob1, charlie1].map(device =>
         device.hasElementBeenDeleted({
           strategy: 'accessibility id',
           selector: 'Media message',
@@ -78,5 +80,5 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
       )
     );
   }
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }

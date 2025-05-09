@@ -8,15 +8,12 @@ import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
 import { DriverOpts } from 'appium/build/lib/appium';
 import { compact } from 'lodash';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { User, USERNAME } from '../../../types/testing';
 import { cleanPermissions } from './permissions';
-import { newUser } from './create_account';
-import { newContact } from './create_contact';
-import { linkedDevice } from './link_device';
 import { sleepFor } from './sleep_for';
 import {
   getAdbFullPath,
   getAndroidSystemImageToUse,
+  getDevicesPerTestCount,
   getEmulatorFullPath,
   getSdkManagerFullPath,
 } from './binaries';
@@ -28,41 +25,6 @@ export type SupportedPlatformsType = 'android' | 'ios';
 /* ******************Command to run Appium Server: *************************************
 ./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --use-plugins=execute-driver --allow-cors
 */
-
-// Basic test environment is 3 devices (device1, device2, device3) and 2 users (userA, userB)
-// Device 1 and 3 are linked devices by userA
-export const createBasicTestEnvironment = async (
-  platform: SupportedPlatformsType
-): Promise<{
-  devices: DeviceWrapper[];
-  Alice: User;
-  Bob: User;
-  closeApp(): Promise<void>;
-}> => {
-  const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
-  const userA = await linkedDevice(device1, device3, USERNAME.ALICE);
-  const userB = await newUser(device2, USERNAME.BOB);
-  await newContact(platform, device1, userA, device2, userB);
-  const closeApp = async (): Promise<void> => {
-    await Promise.all([compact([device1, device2, device3]).map(d => d.deleteSession())]);
-    console.info('sessions closed');
-  };
-  return {
-    devices: [device1, device2, device3],
-    Alice: userA,
-    Bob: userB,
-    closeApp,
-  };
-};
-
-export const setUp1o1TestEnvironment = async (platform: SupportedPlatformsType) => {
-  const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
-  const userA = await linkedDevice(device1, device3, USERNAME.ALICE);
-  const userB = await newUser(device2, USERNAME.BOB);
-  await newContact(platform, device1, userA, device2, userB);
-
-  return { device1, device2, device3, userA, userB };
-};
 
 export const openAppMultipleDevices = async (
   platform: SupportedPlatformsType,
@@ -223,10 +185,11 @@ const openAndroidApp = async (
 ): Promise<{
   device: DeviceWrapper;
 }> => {
-  const parrallelIndex = process.env.TEST_PARALLEL_INDEX || '1';
-  console.info('process.env.TEST_PARALLEL_INDEX:', process.env.TEST_PARALLEL_INDEX, parrallelIndex);
-  const parrallelIndexNumber = parseInt(parrallelIndex);
-  const actualCapabilitiesIndex = capabilitiesIndex + 4 * parrallelIndexNumber;
+  const parallelIndex = process.env.TEST_PARALLEL_INDEX || '1';
+  console.info('process.env.TEST_PARALLEL_INDEX:', process.env.TEST_PARALLEL_INDEX, parallelIndex);
+  const parallelIndexNumber = parseInt(parallelIndex);
+  const actualCapabilitiesIndex =
+    capabilitiesIndex + getDevicesPerTestCount() * parallelIndexNumber;
 
   if (!capabilityIsValid(actualCapabilitiesIndex)) {
     throw new Error(`Invalid actual capability given: ${actualCapabilitiesIndex}`);
@@ -242,6 +205,11 @@ const openAndroidApp = async (
   const emulatorAlreadyRunning = await isEmulatorRunning(targetName);
   console.info('emulatorAlreadyRunning', targetName, emulatorAlreadyRunning);
   if (!emulatorAlreadyRunning) {
+    if (process.env.CI) {
+      throw new Error(
+        `Emulator "${targetName}" is not running but it should have been started earlier.`
+      );
+    }
     await createAndroidEmulator(targetName);
     void startAndroidEmulator(targetName);
   }
@@ -294,7 +262,7 @@ const openiOSApp = async (
 
   // Calculate the actual capabilities index for the current worker
   const actualCapabilitiesIndex =
-    capabilitiesIndex + 4 * parseInt(process.env.TEST_PARALLEL_INDEX || '0');
+    capabilitiesIndex + getDevicesPerTestCount() * parseInt(process.env.TEST_PARALLEL_INDEX || '0');
 
   const opts: XCUITestDriverOpts = {
     address: `http://localhost:${APPIUM_PORT}`,
@@ -306,37 +274,9 @@ const openiOSApp = async (
   const { device: wrappedDevice } = await cleanPermissions(opts, udid, capabilities);
   return { device: wrappedDevice };
 };
-// TODO UPDATE THIS TO TAKE A VARIABLE COUNT OF ARGUMENTS THAT IS NOT AN ARRAY
-export const closeApp = async (
-  device1?: DeviceWrapper,
-  device2?: DeviceWrapper,
-  device3?: DeviceWrapper,
-  device4?: DeviceWrapper,
-  device5?: DeviceWrapper,
-  device6?: DeviceWrapper,
-  device7?: DeviceWrapper,
-  device8?: DeviceWrapper,
-  device9?: DeviceWrapper,
-  device10?: DeviceWrapper,
-  device11?: DeviceWrapper,
-  device12?: DeviceWrapper
-) => {
-  await Promise.all(
-    compact([
-      device1,
-      device2,
-      device3,
-      device4,
-      device5,
-      device6,
-      device7,
-      device8,
-      device9,
-      device10,
-      device11,
-      device12,
-    ]).map(d => d.deleteSession())
-  );
+
+export const closeApp = async (...devices: Array<DeviceWrapper>) => {
+  await Promise.all(compact(devices).map(d => d.deleteSession()));
 
   console.info('sessions closed');
 };

@@ -1,5 +1,5 @@
 import { englishStripped } from '../../localizer/Localizer';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { EmptyConversation, Hide } from './locators/conversation';
 import { CancelSearchButton, NoteToSelfOption } from './locators/global_search';
@@ -7,9 +7,19 @@ import { SearchButton } from './locators/home';
 import { newUser } from './utils/create_account';
 import { openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
-iosIt('Hide note to self', 'low', hideNoteToSelf);
-// Android currently shows 'Clear' instead of 'Hide' for note to self
-androidIt('Hide note to self', 'low', hideNoteToSelf, true);
+bothPlatformsItSeparate({
+  title: 'Hide note to self',
+  risk: 'low',
+  countOfDevicesNeeded: 1,
+  ios: {
+    testCb: hideNoteToSelf,
+  },
+  android: {
+    testCb: hideNoteToSelf,
+    // Android currently shows 'Clear' instead of 'Hide' for note to self
+    shouldSkip: true,
+  },
+});
 
 async function hideNoteToSelf(platform: SupportedPlatformsType) {
   const noteToSelf = englishStripped('noteToSelf').toString();
