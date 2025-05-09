@@ -1,6 +1,7 @@
 import { LocatorsInterface } from '.';
-import { StrategyExtractionObj, USERNAME } from '../../../types/testing';
+import { StrategyExtractionObj } from '../../../types/testing';
 import { englishStripped } from '../../../localizer/Localizer';
+import type { UserNameType } from '@session-foundation/qa-seeder';
 
 export class GroupNameInput extends LocatorsInterface {
   public build(): StrategyExtractionObj {
@@ -171,7 +172,7 @@ export class RecreateGroupButton extends LocatorsInterface {
 }
 
 export class GroupMember extends LocatorsInterface {
-  public build(username?: USERNAME): StrategyExtractionObj {
+  public build(username?: UserNameType): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
         return {

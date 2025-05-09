@@ -1,0 +1,21 @@
+name: upload-test-results
+
+description: |
+  Upload test results for a given platform
+
+inputs:
+  PLATFORM:
+    description: "Platform to filter tests 'android'|'ios'"
+    required: true
+  UPLOAD_IDENTIFIER:
+    description: 'identifier to upload the test results'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Upload test results for ${{ inputs.PLATFORM }} to ${{ inputs.UPLOAD_IDENTIFIER }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.UPLOAD_IDENTIFIER }}
+        path: test-results

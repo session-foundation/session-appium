@@ -15,6 +15,7 @@
     "types": ["@wdio/types", "node"],
     "target": "es2019",
     "outDir": "./dist",
-    "rootDir": "./"
+    "rootDir": "./",
+    "isolatedModules": false
   }
 }

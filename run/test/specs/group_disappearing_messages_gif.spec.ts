@@ -1,12 +1,16 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { DISAPPEARING_TIMES } from '../../types/testing';
+import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { createGroup } from './utils/create_group';
-import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-bothPlatformsIt('Disappearing GIF to group', 'low', disappearingGifMessageGroup);
+bothPlatformsIt({
+  title: 'Disappearing GIF to group',
+  risk: 'low',
+  testCb: disappearingGifMessageGroup,
+  countOfDevicesNeeded: 3,
+});
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
@@ -14,32 +18,31 @@ const timerType = 'Disappear after send option';
 async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   const testGroupName = 'Disappear after sent test';
   const testMessage = "Testing disappearing messages for GIF's";
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // Create user A and user B
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-    newUser(device3, USERNAME.CHARLIE),
-  ]);
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
-  await setDisappearingMessage(platform, device1, ['Group', timerType, time]);
+  const {
+    devices: { alice1, bob1, charlie1 },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
+    platform,
+    groupName: testGroupName,
+    focusGroupConvo: true,
+  });
+  await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   // Click on attachments button
-  await device1.sendGIF(testMessage);
+  await alice1.sendGIF(testMessage);
   // Cannot use isAndroid() here
   if (platform === 'android') {
     await Promise.all([
-      device2.trustAttachments(testGroupName),
-      device3.trustAttachments(testGroupName),
+      bob1.trustAttachments(testGroupName),
+      charlie1.trustAttachments(testGroupName),
     ]);
   }
   if (platform === 'ios') {
     await Promise.all([
-      device2.waitForTextElementToBePresent({
+      bob1.waitForTextElementToBePresent({
         strategy: 'accessibility id',
         selector: 'Message body',
         text: testMessage,
       }),
-      device3.waitForTextElementToBePresent({
+      charlie1.waitForTextElementToBePresent({
         strategy: 'accessibility id',
         selector: 'Message body',
         text: testMessage,
@@ -48,11 +51,11 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   }
   if (platform === 'android') {
     await Promise.all([
-      device2.waitForTextElementToBePresent({
+      bob1.waitForTextElementToBePresent({
         strategy: 'accessibility id',
         selector: 'Media message',
       }),
-      device3.waitForTextElementToBePresent({
+      charlie1.waitForTextElementToBePresent({
         strategy: 'accessibility id',
         selector: 'Media message',
       }),
@@ -63,7 +66,7 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   // Check if GIF has been deleted on both devices
   if (platform === 'ios') {
     await Promise.all(
-      [device1, device2, device3].map(device =>
+      [alice1, bob1, charlie1].map(device =>
         device.hasElementBeenDeleted({
           strategy: 'accessibility id',
           selector: 'Message body',
@@ -75,7 +78,7 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   }
   if (platform === 'android') {
     await Promise.all(
-      [device1, device2, device3].map(device =>
+      [alice1, bob1, charlie1].map(device =>
         device.hasElementBeenDeleted({
           strategy: 'accessibility id',
           selector: 'Media message',
@@ -85,5 +88,5 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
     );
   }
 
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }

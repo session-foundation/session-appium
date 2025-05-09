@@ -1,5 +1,5 @@
 import { englishStripped } from '../../localizer/Localizer';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { EditGroup } from './locators';
 import { ConversationSettings, MessageInput } from './locators/conversation';
@@ -9,60 +9,62 @@ import {
   MemberStatus,
   RemoveMemberButton,
 } from './locators/groups';
-import { newUser } from './utils/create_account';
-import { createGroup } from './utils/create_group';
-import { SupportedPlatformsType, openAppThreeDevices } from './utils/open_app';
+import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
+import { SupportedPlatformsType } from './utils/open_app';
 
-iosIt('Kick member', 'medium', kickMember);
-androidIt('Kick member', 'medium', kickMember);
+bothPlatformsIt({
+  title: 'Kick member',
+  risk: 'medium',
+  testCb: kickMember,
+  countOfDevicesNeeded: 3,
+});
 
 async function kickMember(platform: SupportedPlatformsType) {
   const testGroupName = 'Kick member';
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // Create users A, B and C
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-    newUser(device3, USERNAME.CHARLIE),
-  ]);
-  // Create group
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
-  await device1.clickOnElementAll(new ConversationSettings(device1));
-  await device1.clickOnElementAll(new EditGroup(device1));
-  await device1.clickOnElementAll({ ...new GroupMember(device1).build(USERNAME.BOB) });
-  await device1.clickOnElementAll(new RemoveMemberButton(device1));
-  await device1.checkModalStrings(
+
+  const {
+    devices: { alice1, bob1, charlie1 },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
+    platform,
+    groupName: testGroupName,
+    focusGroupConvo: true,
+  });
+  await alice1.clickOnElementAll(new ConversationSettings(alice1));
+  await alice1.clickOnElementAll(new EditGroup(alice1));
+  await alice1.clickOnElementAll({ ...new GroupMember(alice1).build(USERNAME.BOB) });
+  await alice1.clickOnElementAll(new RemoveMemberButton(alice1));
+  await alice1.checkModalStrings(
     englishStripped('remove').toString(),
     englishStripped('groupRemoveDescription')
       .withArgs({ name: USERNAME.BOB, group_name: testGroupName })
       .toString()
   );
-  await device1.clickOnElementAll(new ConfirmRemovalButton(device1));
-  await device1.waitForTextElementToBePresent(new MemberStatus(device1).build('Pending removal'));
-  await device1.hasElementBeenDeleted({
-    ...new GroupMember(device1).build(USERNAME.BOB),
+  await alice1.clickOnElementAll(new ConfirmRemovalButton(alice1));
+  await alice1.waitForTextElementToBePresent(new MemberStatus(alice1).build('Pending removal'));
+  await alice1.hasElementBeenDeleted({
+    ...new GroupMember(alice1).build(USERNAME.BOB),
     maxWait: 10000,
   });
-  await device1.navigateBack(true);
-  await device1.onIOS().navigateBack();
+  await alice1.navigateBack(true);
+  await alice1.onIOS().navigateBack();
   await Promise.all([
-    device1.waitForControlMessageToBePresent(
+    alice1.waitForControlMessageToBePresent(
       englishStripped('groupRemoved').withArgs({ name: USERNAME.BOB }).toString()
     ),
-    device3.waitForControlMessageToBePresent(
+    charlie1.waitForControlMessageToBePresent(
       englishStripped('groupRemoved').withArgs({ name: USERNAME.BOB }).toString()
     ),
   ]);
-  await device2.onAndroid().waitForTextElementToBePresent({
+  await bob1.onAndroid().waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Empty list',
     text: englishStripped('groupRemovedYou').withArgs({ group_name: testGroupName }).toString(),
   });
-  await device2.onIOS().waitForTextElementToBePresent({
+  await bob1.onIOS().waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Empty list',
   });
   //   Does message input exist? Is conversation settings visible?
-  await device2.doesElementExist({ ...new MessageInput(device2).build(), maxWait: 1000 });
-  await device2.doesElementExist({ ...new ConversationSettings(device2).build(), maxWait: 1000 });
+  await bob1.doesElementExist({ ...new MessageInput(bob1).build(), maxWait: 1000 });
+  await bob1.doesElementExist({ ...new ConversationSettings(bob1).build(), maxWait: 1000 });
 }

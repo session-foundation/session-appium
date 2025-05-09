@@ -1,25 +1,30 @@
 import { testCommunityLink, testCommunityName } from '../../constants/community';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
+import { open_Alice2 } from './state_builder';
 import { joinCommunity } from './utils/join_community';
-import { linkedDevice } from './utils/link_device';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-bothPlatformsIt('Join community test', 'high', joinCommunityTest);
+bothPlatformsIt({
+  title: 'Join community test',
+  risk: 'high',
+  testCb: joinCommunityTest,
+  countOfDevicesNeeded: 2,
+});
 
 async function joinCommunityTest(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
+  const {
+    devices: { alice1, alice2 },
+  } = await open_Alice2({ platform });
   const testMessage = `Test message + ${new Date().getTime()}`;
-  // Create user A and user B
-  await linkedDevice(device1, device2, USERNAME.ALICE);
-  await joinCommunity(device1, testCommunityLink, testCommunityName);
-  await device1.onIOS().scrollToBottom();
-  await device1.sendMessage(testMessage);
+
+  await joinCommunity(alice1, testCommunityLink, testCommunityName);
+  await alice1.onIOS().scrollToBottom();
+  await alice1.sendMessage(testMessage);
   // Has community synced to device 2?
-  await device2.waitForTextElementToBePresent({
+  await alice2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Conversation list item',
     text: testCommunityName,
   });
-  await closeApp(device1, device2);
+  await closeApp(alice1, alice2);
 }

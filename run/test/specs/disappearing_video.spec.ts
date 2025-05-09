@@ -1,68 +1,73 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-bothPlatformsIt('Disappearing video message 1:1', 'low', disappearingVideoMessage1o1);
+bothPlatformsIt({
+  title: 'Disappearing video message 1:1',
+  risk: 'low',
+  testCb: disappearingVideoMessage1o1,
+  countOfDevicesNeeded: 2,
+});
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 const testMessage = 'Testing disappearing messages for videos';
 
 async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create user A and user B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
-  await device1.onIOS().sendVideoiOS(testMessage);
-  await device1.onAndroid().sendVideoAndroid();
-  await device2.trustAttachments(USERNAME.ALICE);
-  await device2.onIOS().waitForTextElementToBePresent({
+  const {
+    devices: { alice1, bob1 },
+  } = await open_Alice1_Bob1_friends({
+    platform,
+    focusFriendsConvo: true,
+  });
+  await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
+  await alice1.onIOS().sendVideoiOS(testMessage);
+  await alice1.onAndroid().sendVideoAndroid();
+  await bob1.trustAttachments(USERNAME.ALICE);
+  await bob1.onIOS().waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: testMessage,
   });
-  await device2.onAndroid().waitForTextElementToBePresent({
+  await bob1.onAndroid().waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Media message',
   });
 
   // Wait for 30 seconds
   await sleepFor(30000);
+  const maxWaitValidateMsgDisappeared = 1000;
   if (platform === 'ios') {
     await Promise.all([
-      device1.hasElementBeenDeleted({
+      alice1.hasElementBeenDeleted({
         strategy: 'accessibility id',
         selector: 'Message body',
-        maxWait: 1000,
+        maxWait: maxWaitValidateMsgDisappeared,
         text: testMessage,
       }),
-      device2.hasElementBeenDeleted({
+      bob1.hasElementBeenDeleted({
         strategy: 'accessibility id',
         selector: 'Message body',
-        maxWait: 1000,
+        maxWait: maxWaitValidateMsgDisappeared,
         text: testMessage,
       }),
     ]);
-  }
-  if (platform === 'android') {
+  } else if (platform === 'android') {
     await Promise.all([
-      device1.hasElementBeenDeleted({
+      alice1.hasElementBeenDeleted({
         strategy: 'accessibility id',
         selector: 'Media message',
+        maxWait: maxWaitValidateMsgDisappeared,
       }),
-      device2.hasElementBeenDeleted({
+      bob1.hasElementBeenDeleted({
         strategy: 'accessibility id',
         selector: 'Media message',
+        maxWait: maxWaitValidateMsgDisappeared,
       }),
     ]);
   }
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }

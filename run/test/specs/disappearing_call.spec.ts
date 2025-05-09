@@ -1,185 +1,194 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
-import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
+import { DISAPPEARING_TIMES } from '../../types/testing';
+import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Disappearing call message 1o1', 'low', disappearingCallMessage1o1Ios, true);
-androidIt('Disappearing call message 1o1', 'low', disappearingCallMessage1o1Android, true);
+bothPlatformsItSeparate({
+  title: 'Disappearing call message 1o1',
+  risk: 'low',
+  countOfDevicesNeeded: 2,
+  ios: {
+    testCb: disappearingCallMessage1o1Ios,
+    shouldSkip: true,
+  },
+  android: {
+    testCb: disappearingCallMessage1o1Android,
+    shouldSkip: true,
+  },
+});
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 
 async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-
-  // Create user A and user B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
-  // await device1.navigateBack();
-  await device1.clickOnByAccessibilityID('Call');
+  const {
+    devices: { alice1, bob1 },
+    prebuilt: { alice, bob },
+  } = await open_Alice1_Bob1_friends({
+    platform,
+    focusFriendsConvo: true,
+  });
+  await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
+  // await alice1.navigateBack();
+  await alice1.clickOnByAccessibilityID('Call');
   // Enabled voice calls in privacy settings
-  await device1.waitForTextElementToBePresent({
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Settings',
   });
-  await device1.clickOnByAccessibilityID('Settings');
+  await alice1.clickOnByAccessibilityID('Settings');
   // Scroll to bottom of page to voice and video calls
   // Toggle voice settings on
   // Click enable on exposure IP address warning
-  await device1.modalPopup({
+  await alice1.modalPopup({
     strategy: 'accessibility id',
     selector: 'Allow voice and video calls',
   });
-  await device1.clickOnByAccessibilityID('Continue');
+  await alice1.clickOnByAccessibilityID('Continue');
   // Navigate back to conversation
   await sleepFor(500);
-  await device1.clickOnByAccessibilityID('Close button');
+  await alice1.clickOnByAccessibilityID('Close button');
   // Enable voice calls on device 2 for User B
-  await device2.clickOnByAccessibilityID('Call');
-  await device2.clickOnByAccessibilityID('Settings');
-  await device2.scrollDown();
-  await device2.modalPopup({
+  await bob1.clickOnByAccessibilityID('Call');
+  await bob1.clickOnByAccessibilityID('Settings');
+  await bob1.scrollDown();
+  await bob1.modalPopup({
     strategy: 'accessibility id',
     selector: 'Allow voice and video calls',
   });
-  await device2.clickOnByAccessibilityID('Enable');
-  await sleepFor(500);
-  await device2.clickOnByAccessibilityID('Close button');
-  // Make call on device 1 (userA)
-  await device1.clickOnByAccessibilityID('Call');
+  await bob1.clickOnByAccessibilityID('Enable');
+  await sleepFor(500, true);
+  await bob1.clickOnByAccessibilityID('Close button');
+  // Make call on device 1 (alice)
+  await alice1.clickOnByAccessibilityID('Call');
   // Answer call on device 2
-  await device2.clickOnByAccessibilityID('Answer call');
+  await bob1.clickOnByAccessibilityID('Answer call');
   // Wait 30 seconds
   // Hang up
-  await device1.clickOnByAccessibilityID('End call button');
+  await alice1.clickOnByAccessibilityID('End call button');
   // Check for config message 'Called User B' on device 1
-  await device1.waitForControlMessageToBePresent(`You called ${userB.userName}`);
-  await device1.waitForControlMessageToBePresent(`${userA.userName} called you`);
+  await alice1.waitForControlMessageToBePresent(`You called ${bob.userName}`);
+  await alice1.waitForControlMessageToBePresent(`${alice.userName} called you`);
   // Wait 30 seconds for control message to be deleted
   await sleepFor(30000);
-  await device1.hasElementBeenDeleted({
+  await alice1.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Control message',
-    text: `You called ${userB.userName}`,
+    text: `You called ${bob.userName}`,
     maxWait: 1000,
   });
-  await device2.hasElementBeenDeleted({
+  await bob1.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Control message',
-    text: `${userA.userName} called you`,
+    text: `${alice.userName} called you`,
     maxWait: 1000,
   });
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }
 
 async function disappearingCallMessage1o1Android(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
-  // Create user A and user B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
+  const {
+    devices: { alice1, bob1 },
+    prebuilt: { alice, bob },
+  } = await open_Alice1_Bob1_friends({
+    platform,
+    focusFriendsConvo: true,
+  });
+  await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
 
-  // await device1.navigateBack();
-  await device1.clickOnByAccessibilityID('Call');
+  // await alice1.navigateBack();
+  await alice1.clickOnByAccessibilityID('Call');
   // Enabled voice calls in privacy settings
-  await device1.waitForTextElementToBePresent({
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Settings',
   });
 
   // Scroll to bottom of page to voice and video calls
   await sleepFor(1000);
-  await device1.scrollDown();
-  const voicePermissions = await device1.waitForTextElementToBePresent({
+  await alice1.scrollDown();
+  const voicePermissions = await alice1.waitForTextElementToBePresent({
     strategy: 'id',
     selector: 'android:id/summary',
     text: 'Enables voice and video calls to and from other users.',
   });
 
-  await device1.click(voicePermissions.ELEMENT);
+  await alice1.click(voicePermissions.ELEMENT);
   // Toggle voice settings on
   // Click enable on exposure IP address warning
-  await device1.clickOnByAccessibilityID('Enable');
+  await alice1.clickOnByAccessibilityID('Enable');
   // Navigate back to conversation
-  await device1.waitForTextElementToBePresent({
+  await alice1.waitForTextElementToBePresent({
     strategy: 'id',
     selector: 'com.android.permissioncontroller:id/permission_allow_foreground_only_button',
   });
-  await device1.clickOnElementById(
+  await alice1.clickOnElementById(
     'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   );
 
-  await device1.navigateBack();
+  await alice1.navigateBack();
   // Enable voice calls on device 2 for User B
-  await device2.clickOnByAccessibilityID('Call');
+  await bob1.clickOnByAccessibilityID('Call');
   // Enabled voice calls in privacy settings
-  await device2.waitForTextElementToBePresent({
+  await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Settings',
     text: 'Settings',
   });
 
-  await device2.clickOnElementAll({
+  await bob1.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Settings',
   });
   // Scroll to bottom of page to voice and video calls
   await sleepFor(1000);
-  await device2.scrollDown();
-  const voicePermissions2 = await device2.waitForTextElementToBePresent({
+  await bob1.scrollDown();
+  const voicePermissions2 = await bob1.waitForTextElementToBePresent({
     strategy: 'id',
     selector: 'android:id/summary',
     text: 'Enables voice and video calls to and from other users.',
   });
 
-  await device2.click(voicePermissions2.ELEMENT);
+  await bob1.click(voicePermissions2.ELEMENT);
   // Toggle voice settings on
   // Click enable on exposure IP address warning
-  await device2.clickOnByAccessibilityID('Enable');
+  await bob1.clickOnByAccessibilityID('Enable');
   // Navigate back to conversation
-  await device2.waitForTextElementToBePresent({
+  await bob1.waitForTextElementToBePresent({
     strategy: 'id',
     selector: 'com.android.permissioncontroller:id/permission_allow_foreground_only_button',
   });
-  await device2.clickOnElementById(
+  await bob1.clickOnElementById(
     'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   );
-  await device2.navigateBack();
-  // Make call on device 1 (userA)
-  await device1.clickOnByAccessibilityID('Call');
+  await bob1.navigateBack();
+  // Make call on device 1 (alice)
+  await alice1.clickOnByAccessibilityID('Call');
   // Answer call on device 2
-  await device2.clickOnByAccessibilityID('Answer call');
+  await bob1.clickOnByAccessibilityID('Answer call');
   // Wait 5 seconds
   await sleepFor(5000);
   // Hang up
-  await device1.clickOnElementById('network.loki.messenger:id/endCallButton');
+  await alice1.clickOnElementById('network.loki.messenger:id/endCallButton');
   // Check for config message 'Called User B' on device 1
-  await device1.waitForControlMessageToBePresent(`Called ${userB.userName}`);
-  await device2.waitForControlMessageToBePresent(`${userA.userName} called you`);
+  await alice1.waitForControlMessageToBePresent(`Called ${bob.userName}`);
+  await bob1.waitForControlMessageToBePresent(`${alice.userName} called you`);
   // Wait 10 seconds for control message to be deleted
   await sleepFor(10000);
-  await device1.hasElementBeenDeleted({
+  await alice1.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Control message',
-    text: `You called ${userB.userName}`,
+    text: `You called ${bob.userName}`,
     maxWait: 1000,
   });
-  await device2.hasElementBeenDeleted({
+  await bob1.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Control message',
-    text: `${userA.userName} called you`,
+    text: `${alice.userName} called you`,
     maxWait: 1000,
   });
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }

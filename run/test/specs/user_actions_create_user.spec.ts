@@ -3,7 +3,12 @@ import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsIt('Create user', 'high', createUser);
+bothPlatformsIt({
+  title: 'Create user',
+  risk: 'high',
+  testCb: createUser,
+  countOfDevicesNeeded: 1,
+});
 
 async function createUser(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);

@@ -1,48 +1,60 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { DISAPPEARING_TIMES, DisappearModes, USERNAME } from '../../types/testing';
+import { DISAPPEARING_TIMES, DisappearModes } from '../../types/testing';
+import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
 import { checkDisappearingControlMessage } from './utils/disappearing_control_messages';
-import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-bothPlatformsIt('Disappear after read', 'high', disappearAfterRead);
+bothPlatformsIt({
+  title: 'Disappear after read',
+  risk: 'high',
+  testCb: disappearAfterRead,
+  countOfDevicesNeeded: 2,
+});
 
 async function disappearAfterRead(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create user A and user B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
+  const {
+    devices: { alice1, bob1 },
+    prebuilt: { alice, bob },
+  } = await open_Alice1_Bob1_friends({
+    platform,
+    focusFriendsConvo: true,
+  });
+
   const testMessage = 'Checking disappear after read is working';
   const mode: DisappearModes = 'read';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
   // Click conversation options menu (three dots)
   await setDisappearingMessage(
     platform,
-    device1,
+    alice1,
     ['1:1', `Disappear after ${mode} option`, time],
-    device2
+    bob1
   );
   // Check control message is correct on device 2
-  await checkDisappearingControlMessage(platform, userA, userB, device1, device2, time, mode);
+  await checkDisappearingControlMessage(
+    platform,
+    alice.userName,
+    bob.userName,
+    alice1,
+    bob1,
+    time,
+    mode
+  );
   // Send message to verify that deletion is working
-  await device1.sendMessage(testMessage);
+  await alice1.sendMessage(testMessage);
   // Need function to read message
   // Wait for 10 seconds
   await sleepFor(30000);
   await Promise.all([
-    device1.hasElementBeenDeleted({
+    alice1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: testMessage,
       maxWait: 5000,
     }),
-    device2.hasElementBeenDeleted({
+    bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: testMessage,
@@ -50,5 +62,5 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
     }),
   ]);
   // Great success
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }

@@ -1,42 +1,45 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { open_Alice1_Bob1_friends } from './state_builder';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-bothPlatformsIt('Send document 1:1', 'high', sendDocument);
-
+bothPlatformsIt({
+  title: 'Send document 1:1',
+  risk: 'high',
+  testCb: sendDocument,
+  countOfDevicesNeeded: 2,
+});
 async function sendDocument(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
+  const {
+    devices: { alice1, bob1 },
+    prebuilt: { alice },
+  } = await open_Alice1_Bob1_friends({
+    platform,
+    focusFriendsConvo: true,
+  });
   const testMessage = 'Testing-document-1';
-  const replyMessage = `Replying to document from ${userA.userName}`;
-  await newContact(platform, device1, userA, device2, userB);
+  const replyMessage = `Replying to document from ${alice.userName}`;
 
-  await device1.sendDocument();
-  await device2.trustAttachments(userA.userName);
+  await alice1.sendDocument();
+  await bob1.trustAttachments(alice.userName);
   // Reply to message
-  await device2.onIOS().waitForTextElementToBePresent({
+  await bob1.onIOS().waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: testMessage,
   });
-  await device2.onAndroid().waitForTextElementToBePresent({
+  await bob1.onAndroid().waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Document',
   });
-  await device2.onIOS().longPressMessage(testMessage);
-  await device2.onAndroid().longPress('Document');
-  await device2.clickOnByAccessibilityID('Reply to message');
-  await device2.sendMessage(replyMessage);
-  await device1.waitForTextElementToBePresent({
+  await bob1.onIOS().longPressMessage(testMessage);
+  await bob1.onAndroid().longPress('Document');
+  await bob1.clickOnByAccessibilityID('Reply to message');
+  await bob1.sendMessage(replyMessage);
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
   // Close app and server
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }

@@ -8,7 +8,12 @@ import {
 } from '../locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 
-bothPlatformsIt('Onboarding no name', 'low', onboardingNoName);
+bothPlatformsIt({
+  title: 'Onboarding no name',
+  risk: 'low',
+  testCb: onboardingNoName,
+  countOfDevicesNeeded: 1,
+});
 
 async function onboardingNoName(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);

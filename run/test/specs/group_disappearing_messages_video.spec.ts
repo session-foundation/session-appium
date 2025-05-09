@@ -1,12 +1,16 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { DISAPPEARING_TIMES } from '../../types/testing';
+import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { createGroup } from './utils/create_group';
-import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-bothPlatformsIt('Disappearing video to group', 'low', disappearingVideoMessageGroup);
+bothPlatformsIt({
+  title: 'Disappearing video to group',
+  risk: 'low',
+  testCb: disappearingVideoMessageGroup,
+  countOfDevicesNeeded: 3,
+});
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
@@ -14,37 +18,36 @@ const timerType = 'Disappear after send option';
 async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   const testMessage = 'Testing disappearing messages for videos';
   const testGroupName = 'Testing disappearing messages';
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // Create user A and user B
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-    newUser(device3, USERNAME.CHARLIE),
-  ]);
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
-  await setDisappearingMessage(platform, device1, ['Group', timerType, time]);
-  await device1.onIOS().sendVideoiOS(testMessage);
-  await device1.onAndroid().sendVideoAndroid();
+  const {
+    devices: { alice1, bob1, charlie1 },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
+    platform,
+    groupName: testGroupName,
+    focusGroupConvo: true,
+  });
+  await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
+  await alice1.onIOS().sendVideoiOS(testMessage);
+  await alice1.onAndroid().sendVideoAndroid();
   await sleepFor(30000);
   await Promise.all([
-    device1.hasElementBeenDeleted({
+    alice1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
       maxWait: 1000,
       text: testMessage,
     }),
-    device2.hasElementBeenDeleted({
+    bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
       maxWait: 1000,
       text: testMessage,
     }),
-    device3.hasElementBeenDeleted({
+    charlie1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
       maxWait: 1000,
       text: testMessage,
     }),
   ]);
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }

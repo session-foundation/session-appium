@@ -1,35 +1,40 @@
+import { USERNAME } from '@session-foundation/qa-seeder';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
 import { UsernameSettings } from './locators';
 import { UserSettings } from './locators/settings';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-bothPlatformsIt('Link device', 'high', linkDevice);
+bothPlatformsIt({
+  title: 'Link device',
+  risk: 'high',
+  testCb: linkDevice,
+  countOfDevicesNeeded: 2,
+});
 
 async function linkDevice(platform: SupportedPlatformsType) {
   // Open server and two devices
-  const { device1, device2 } = await openAppTwoDevices(platform);
+  const { device1: alice1, device2: alice2 } = await openAppTwoDevices(platform);
   // link device
-  const userA = await linkedDevice(device1, device2, USERNAME.ALICE);
-  // Check that 'Youre almost finished' reminder doesn't pop up on device2
-  await device2.hasElementBeenDeleted({
+  const alice = await linkedDevice(alice1, alice2, USERNAME.ALICE);
+  // Check that 'Youre almost finished' reminder doesn't pop up on alice2
+  await alice2.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Recovery phrase reminder',
     maxWait: 1000,
   });
   // Verify username and session ID match
-  await device2.clickOnElementAll(new UserSettings(device2));
+  await alice2.clickOnElementAll(new UserSettings(alice2));
   // Check username
-  await device2.waitForTextElementToBePresent({
-    ...new UsernameSettings(device2).build(),
-    text: USERNAME.ALICE,
+  await alice2.waitForTextElementToBePresent({
+    ...new UsernameSettings(alice2).build(),
+    text: alice.userName,
   });
-  await device2.waitForTextElementToBePresent({
+  await alice2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Account ID',
-    text: userA.accountID,
+    text: alice.accountID,
   });
 
-  await closeApp(device1, device2);
+  await closeApp(alice1, alice2);
 }

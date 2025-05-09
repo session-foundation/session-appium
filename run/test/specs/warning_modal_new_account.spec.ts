@@ -10,8 +10,14 @@ import {
   WarningModalQuitButton,
 } from './locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+
 // These modals no longer exist in groups rebuild for iOS
-androidIt('Warning modal new account', 'medium', warningModalNewAccount);
+androidIt({
+  title: 'Warning modal on new account',
+  risk: 'medium',
+  testCb: warningModalNewAccount,
+  countOfDevicesNeeded: 1,
+});
 
 async function warningModalNewAccount(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);

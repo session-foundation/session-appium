@@ -1,0 +1,18 @@
+name: upload-csv-test-results
+
+description: |
+  Upload csv test results for a given platform
+
+inputs:
+  PLATFORM:
+    description: "Platform to filter tests 'android'|'ios'"
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Upload condensed csv of results
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-${{ inputs.PLATFORM }}.csv
+        path: test-results.csv

@@ -8,7 +8,12 @@ import {
 } from '../locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 
-bothPlatformsIt('Onboarding incorrect seed', 'low', onboardingIncorrectSeed);
+bothPlatformsIt({
+  title: 'Onboarding incorrect seed',
+  risk: 'low',
+  testCb: onboardingIncorrectSeed,
+  countOfDevicesNeeded: 1,
+});
 
 async function onboardingIncorrectSeed(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);

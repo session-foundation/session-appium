@@ -1,39 +1,42 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
+import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-bothPlatformsIt('Send voice message 1:1', 'high', sendVoiceMessage);
+bothPlatformsIt({
+  title: 'Send voice message 1:1',
+  risk: 'high',
+  testCb: sendVoiceMessage,
+  countOfDevicesNeeded: 2,
+});
 
 async function sendVoiceMessage(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // create user a and user b
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
-  const replyMessage = `Replying to voice message from ${userA.userName}`;
-  await newContact(platform, device1, userA, device2, userB);
+  const {
+    devices: { alice1, bob1 },
+    prebuilt: { alice },
+  } = await open_Alice1_Bob1_friends({
+    platform,
+    focusFriendsConvo: true,
+  });
+  const replyMessage = `Replying to voice message from ${alice.userName}`;
   // Select voice message button to activate recording state
-  await device1.sendVoiceMessage();
+  await alice1.sendVoiceMessage();
   await sleepFor(500);
-  await device1.waitForTextElementToBePresent({
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Voice message',
   });
 
-  await device2.trustAttachments(userA.userName);
+  await bob1.trustAttachments(alice.userName);
   await sleepFor(500);
-  await device2.longPress('Voice message');
-  await device2.clickOnByAccessibilityID('Reply to message');
-  await device2.sendMessage(replyMessage);
+  await bob1.longPress('Voice message');
+  await bob1.clickOnByAccessibilityID('Reply to message');
+  await bob1.sendMessage(replyMessage);
 
-  await device1.waitForTextElementToBePresent({
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }

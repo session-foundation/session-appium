@@ -1,37 +1,41 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { open_Alice1_Bob1_friends } from './state_builder';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-bothPlatformsIt('Send image 1:1', 'high', sendImage);
+bothPlatformsIt({
+  title: 'Send image 1:1',
+  risk: 'high',
+  testCb: sendImage,
+  countOfDevicesNeeded: 2,
+});
 
 async function sendImage(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-  ]);
+  const {
+    devices: { alice1, bob1 },
+    prebuilt: { alice },
+  } = await open_Alice1_Bob1_friends({
+    platform,
+    focusFriendsConvo: true,
+  });
   const testMessage = 'Sending image from Alice to Bob';
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
+
   // Send test image to bob from Alice (device 1)
-  await device1.sendImage(testMessage);
+  await alice1.sendImage(testMessage);
   // Trust message on device 2 (bob)
-  await device2.trustAttachments(userA.userName);
-  await device2.waitForTextElementToBePresent({
+  await bob1.trustAttachments(alice.userName);
+  await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: testMessage,
   });
   // Reply to message (on device 2 - Bob)
-  const replyMessage = await device2.replyToMessage(userA, testMessage);
-  await device1.waitForTextElementToBePresent({
+  const replyMessage = await bob1.replyToMessage(alice, testMessage);
+  await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
 
   // Close app and server
-  await closeApp(device1, device2);
+  await closeApp(alice1, bob1);
 }

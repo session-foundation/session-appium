@@ -1,56 +1,57 @@
 import { englishStripped } from '../../localizer/Localizer';
-import { androidIt, iosIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
 import { DeletedMessage } from './locators/conversation';
-import { newUser } from './utils/create_account';
-import { createGroup } from './utils/create_group';
-import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
+import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
-iosIt('Unsend message in group', 'high', unsendMessageGroup);
-androidIt('Unsend message in group', 'high', unsendMessageGroup);
+bothPlatformsIt({
+  title: 'Unsend message in group',
+  risk: 'high',
+  countOfDevicesNeeded: 3,
+  testCb: unsendMessageGroup,
+});
 
 async function unsendMessageGroup(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // Create users A, B and C
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-    newUser(device3, USERNAME.CHARLIE),
-  ]);
-  // Create contact between User A and User B
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
-  const sentMessage = await device1.sendMessage('Checking unsend functionality');
+
+  const {
+    devices: { alice1, bob1, charlie1 },
+  } = await open_Alice1_Bob1_Charlie1_friends_group({
+    platform,
+    groupName: testGroupName,
+    focusGroupConvo: true,
+  });
+  const sentMessage = await alice1.sendMessage('Checking unsend functionality');
   await Promise.all([
-    device2.waitForTextElementToBePresent({
+    bob1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: sentMessage,
     }),
-    device3.waitForTextElementToBePresent({
+    charlie1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: sentMessage,
     }),
   ]);
   // Select and long press on message to delete it
-  await device1.longPressMessage(sentMessage);
+  await alice1.longPressMessage(sentMessage);
   // Select Delete icon
-  await device1.clickOnByAccessibilityID('Delete message');
+  await alice1.clickOnByAccessibilityID('Delete message');
   // Check modal is correct
-  await device1.checkModalStrings(
+  await alice1.checkModalStrings(
     englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
     englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()
   );
   // Select 'Delete for me'
-  await device1.clickOnElementAll(new DeleteMessageForEveryone(device1));
-  await device1.clickOnElementAll(new DeleteMessageConfirmationModal(device1));
+  await alice1.clickOnElementAll(new DeleteMessageForEveryone(alice1));
+  await alice1.clickOnElementAll(new DeleteMessageConfirmationModal(alice1));
   await Promise.all([
-    device1.waitForTextElementToBePresent(new DeletedMessage(device1)),
-    device2.waitForTextElementToBePresent(new DeletedMessage(device2)),
-    device3.waitForTextElementToBePresent(new DeletedMessage(device3)),
+    alice1.waitForTextElementToBePresent(new DeletedMessage(alice1)),
+    bob1.waitForTextElementToBePresent(new DeletedMessage(bob1)),
+    charlie1.waitForTextElementToBePresent(new DeletedMessage(charlie1)),
   ]);
   // Excellent
-  await closeApp(device1, device2, device3);
+  await closeApp(alice1, bob1, charlie1);
 }

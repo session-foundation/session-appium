@@ -1,4 +1,4 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { UserSettings } from './locators/settings';
 import { sleepFor } from './utils';
@@ -6,8 +6,17 @@ import { parseDataImage } from './utils/check_colour';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppOnPlatformSingleDevice } from './utils/open_app';
 
-iosIt('Change profile picture', 'medium', changeProfilePictureiOS);
-androidIt('Change profile picture', 'medium', changeProfilePictureAndroid);
+bothPlatformsItSeparate({
+  title: 'Change profile picture',
+  risk: 'medium',
+  countOfDevicesNeeded: 1,
+  ios: {
+    testCb: changeProfilePictureiOS,
+  },
+  android: {
+    testCb: changeProfilePictureAndroid,
+  },
+});
 
 async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);

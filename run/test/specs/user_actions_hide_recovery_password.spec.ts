@@ -11,7 +11,12 @@ import {
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsIt('Hide recovery password', 'medium', hideRecoveryPassword);
+bothPlatformsIt({
+  title: 'Hide recovery password',
+  risk: 'medium',
+  testCb: hideRecoveryPassword,
+  countOfDevicesNeeded: 2,
+});
 
 async function hideRecoveryPassword(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
