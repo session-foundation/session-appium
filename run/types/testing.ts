@@ -51,6 +51,8 @@ export const InteractionPoints: Record<string, Coordinates> = {
   GifButtonKeyboardOpen: { x: 34, y: 394 },
   GifButtonKeyboardClosed: { x: 34, y: 663 },
   DocumentKeyboardOpen: { x: 34, y: 445 },
+  DocumentKeyboardClosed: { x: 34, y: 713 },
+  BackToSessionButton: { x: 42, y: 42 },
 };
 
 export type Strategy = 'accessibility id' | 'xpath' | 'id' | 'class name';
@@ -252,6 +254,7 @@ export type AccessibilityId =
   | 'profile_picture.jpg, 27.75 kB, May 1, 1999'
   | 'profile_picture.jpg, 27.75 kB, May 1, 1998'
   | 'Photo, 01 May 1998, 7:00 am'
+  | 'Photo, 01 May 1998, 7:00 AM'
   | '1988-09-08 21:00:00 +0000'
   | 'Attachments button'
   | 'Documents folder'
@@ -350,7 +353,11 @@ export type AccessibilityId =
   | 'Legacy Groups Recreate Button'
   | 'Confirm leave'
   | 'Photo, 25 March, 11:09 am'
-  | 'Albums';
+  | 'Albums'
+  | 'dummy, pdf'
+  | 'Save to Files'
+  | 'Replace'
+  | 'ShareButton';
 
 export type Id =
   | 'Modal heading'
