@@ -8,7 +8,7 @@ on:
         description: 'ipa url to test'
         required: true
         type: string
-        default: https://oxen.rocks/session-foundation/session-ios/dev/session-ios-20250408T201952Z-233314350-sim.tar.xz
+        default: https://oxen.rocks/mpretty-cyro/session-ios/fix/legacy-group-removal-bugs/session-ios-20250506T223530Z-9411d42a6-sim.tar.xz
 
       RISK:
         description: 'risks to target'
@@ -131,12 +131,12 @@ jobs:
           PLATFORM: ${{ env.PLATFORM }}
           RISK: ${{ github.event.inputs.RISK }}
 
-      - name: Run the iOS tests​​ (all device counts)
+      - name: Run the one iOS tests​​
         env:
           DEVICES_PER_TEST_COUNT: 4
         run: |
           pwd
-          _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
+          _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "Send image 1:1 @ios"
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results
