@@ -62,3 +62,16 @@ export class SafariAddressBar extends LocatorsInterface {
     }
   }
 }
+export class SafariShareButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        throw new Error('Unsupported platform');
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'ShareButton',
+        } as const;
+    }
+  }
+}

@@ -1,9 +1,10 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { TermsOfServiceButton, SplashScreenLinks } from './locators/onboarding';
-import { runOnlyOnAndroid, runOnlyOnIOS } from './utils';
+import { clickOnCoordinates, runOnlyOnAndroid, runOnlyOnIOS } from './utils';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { isChromeFirstTimeOpen } from './utils/chrome_first_time_open';
 import { URLInputField, SafariAddressBar } from './locators/browsers';
+import { InteractionPoints } from '../../types/testing';
 
 bothPlatformsIt({
   title: 'Onboarding terms of service',
@@ -42,7 +43,9 @@ async function onboardingTOS(platform: SupportedPlatformsType) {
     console.log('The URLs match.');
   }
   // Close browser and app
-  await runOnlyOnIOS(platform, () => device.clickOnCoordinates(42, 42)); // I don't like this but nothing else works
+  await runOnlyOnIOS(platform, () =>
+    clickOnCoordinates(device, InteractionPoints.BackToSessionButton)
+  );
   await runOnlyOnAndroid(platform, () => device.back());
   await closeApp(device);
 }
