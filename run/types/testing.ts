@@ -135,7 +135,9 @@ export type XPath =
   | `//XCUIElementTypeStaticText[@name="Paste"]`
   | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`
   | `//XCUIElementTypeCell[@name="Session"]`
-  | `//*[starts-with(@content-desc, "Photo taken on")]`;
+  | `//*[starts-with(@content-desc, "Photo taken on")]`
+  | `//XCUIElementTypeImage`
+  | '//XCUIElementTypeCell';
 
 export type AccessibilityId =
   | 'Create account button'

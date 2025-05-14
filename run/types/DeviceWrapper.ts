@@ -34,11 +34,19 @@ import {
   User,
   XPath,
 } from './testing';
-import { testFile, testImage, testVideo, profilePicture, pdfURL } from '../constants/testfiles';
+import {
+  testFile,
+  testImage,
+  testVideo,
+  profilePicture,
+  pdfURL,
+  testVideoThumbnail,
+} from '../constants/testfiles';
 import { AttachmentsButton, OutgoingMessageStatusSent } from '../test/specs/locators/conversation';
 import * as path from 'path';
 import { IOSSaveToFiles, IOSSaveButton, IOSReplaceButton } from '../test/specs/locators/external';
 import { SafariShareButton } from '../test/specs/locators/browsers';
+import { matchAndTapImage } from '../test/specs/utils/matchAndTapImage';
 
 export type Coordinates = {
   x: number;
@@ -1108,16 +1116,10 @@ export class DeviceWrapper {
   }
 
   public async pushMediaToDevice(
-    mediaFileName: 'profile_picture.jpg' | 'test_file.pdf' | 'test_image.jpg' | 'test_video.mp4',
-    forcedDate?: string
+    mediaFileName: 'profile_picture.jpg' | 'test_file.pdf' | 'test_image.jpg' | 'test_video.mp4'
   ) {
     const filePath = path.join('run', 'test', 'specs', 'media', mediaFileName);
     if (this.isIOS()) {
-      if (!forcedDate) {
-        throw new Error('forcedDate is required for iOS');
-      }
-      // Modify timestamp of local file because iOS uses that as an identifier
-      await runScriptAndLog(`touch -a -m -t ${forcedDate} ${filePath}`);
       // Push file to simulator
       await runScriptAndLog(`xcrun simctl addmedia ${this.udid} ${filePath}`, true);
     } else if (this.isAndroid()) {
@@ -1142,11 +1144,8 @@ export class DeviceWrapper {
 
   public async sendImage(message: string, community?: boolean) {
     if (this.isIOS()) {
-      // Force accessibility ID by forcing custom file date
-      const forcedDate = '196705060700.00'; // Ron Swanson's birthday
-      const forcedAccessibilityID = '1967-05-05 21:00:00 +0000'; // forcedDate in UTC (-10hrs)
       // Push file first
-      await this.pushMediaToDevice(testImage, forcedDate);
+      await this.pushMediaToDevice(testImage);
       await this.clickOnElementAll(new AttachmentsButton(this));
       await sleepFor(5000);
       const keyboard = await this.isKeyboardVisible();
@@ -1157,7 +1156,11 @@ export class DeviceWrapper {
       }
       await sleepFor(1000);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      await this.clickOnByAccessibilityID(forcedAccessibilityID, 1000);
+      await matchAndTapImage(
+        this,
+        { strategy: 'xpath', selector: `//XCUIElementTypeImage` },
+        testImage
+      );
       await this.clickOnByAccessibilityID('Text input box');
       await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
     } else if (this.isAndroid()) {
@@ -1196,11 +1199,8 @@ export class DeviceWrapper {
     });
   }
   public async sendVideoiOS(message: string) {
-    // Force accessibility ID by forcing custom file date
-    const forcedDate = `198809090700.00`;
-    const forcedAccessibilityID = `1988-09-08 21:00:00 +0000`; // forcedDate in UTC (-10hrs)
     // Push first
-    await this.pushMediaToDevice(testVideo, forcedDate);
+    await this.pushMediaToDevice(testVideo);
     await this.clickOnElementAll(new AttachmentsButton(this));
     // Select images button/tab
     await sleepFor(5000);
@@ -1218,13 +1218,18 @@ export class DeviceWrapper {
     });
     await this.clickOnByAccessibilityID('Recents');
     await this.clickOnByAccessibilityID('Videos');
-    await this.clickOnByAccessibilityID(forcedAccessibilityID);
+    // A video can't be matched by its thumbnail so we use a video thumbnail file
+    await matchAndTapImage(
+      this,
+      { strategy: 'xpath', selector: `//XCUIElementTypeCell` },
+      testVideoThumbnail
+    );
     await this.clickOnByAccessibilityID('Text input box');
     await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
     await this.clickOnByAccessibilityID('Send button');
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
-      maxWait: 50000,
+      maxWait: 20000,
     });
   }
 
@@ -1246,7 +1251,7 @@ export class DeviceWrapper {
     await this.clickOnTextElementById('android:id/title', testVideo);
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
-      maxWait: 50000,
+      maxWait: 20000,
     });
   }
 
@@ -1314,7 +1319,7 @@ export class DeviceWrapper {
     // Checking Sent status on both platforms
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
-      maxWait: 50000,
+      maxWait: 20000,
     });
   }
 
@@ -1396,20 +1401,19 @@ export class DeviceWrapper {
     }
   }
   public async uploadProfilePicture() {
-    const forcedDate = '199805010700.00'; // Spongebob's Birthday
-    const forcedAccessibilityIDiOS = 'Photo, 01 May 1998, 7:00 AM';
     await this.clickOnElementAll(new UserSettings(this));
     // Click on Profile picture
     await this.clickOnElementAll(new UserSettings(this));
     await this.clickOnElementAll(new ChangeProfilePictureButton(this));
     if (this.isIOS()) {
       // Push file first
-      await this.pushMediaToDevice(profilePicture, forcedDate);
+      await this.pushMediaToDevice(profilePicture);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      await this.clickOnElementAll({
-        strategy: 'accessibility id',
-        selector: forcedAccessibilityIDiOS,
-      });
+      await matchAndTapImage(
+        this,
+        { strategy: 'xpath', selector: `//XCUIElementTypeImage` },
+        profilePicture
+      );
       await this.clickOnByAccessibilityID('Done');
     } else if (this.isAndroid()) {
       // Push file first

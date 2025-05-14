@@ -10,6 +10,7 @@ import {
 import { PhotoLibrary } from './locators/external';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
+import { matchAndTapImage } from './utils/matchAndTapImage';
 import { SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
@@ -27,33 +28,23 @@ async function shareToSession(platform: SupportedPlatformsType) {
     focusFriendsConvo: true,
   });
   const testMessage = 'Testing sharing an image through photo gallery to Session';
-  const ronSwansonBirthday = '196705060700.00';
   const fileName = 'test_image.jpg';
+  const fileNameThumbnail = 'test_image_thumbnail.png';
 
   // Need to make sure contact is confirm before moving away from Session
   await sleepFor(1000);
   await alice1.pressHome();
   await sleepFor(2000);
+  await alice1.pushMediaToDevice(fileName);
   //  Photo app is on different page than Session
   await alice1.onIOS().swipeRightAny('Session');
   await alice1.clickOnElementAll(new PhotoLibrary(alice1));
   await sleepFor(2000);
-  let testImage;
-  if (platform === 'android') {
-    testImage = await alice1.doesElementExist({
-      ...new ImageName(alice1).build(),
-      maxWait: 5000,
-    });
-  } else {
-    testImage = await alice1.doesElementExist({
-      strategy: 'accessibility id',
-      selector: 'Photo, 25 March, 11:09 am',
-    });
-  }
-  if (!testImage) {
-    await alice1.pushMediaToDevice(fileName, ronSwansonBirthday);
-  }
-  await alice1.onIOS().clickOnByAccessibilityID('Photo, 25 March, 11:09 am', 1000);
+  await matchAndTapImage(
+    alice1.onIOS(),
+    { strategy: 'xpath', selector: '//XCUIElementTypeCell' },
+    fileNameThumbnail
+  );
   await alice1.onAndroid().clickOnElementAll(new ImageName(alice1));
   await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Share' });
   await alice1.clickOnElementAll(new ShareExtensionIcon(alice1));
