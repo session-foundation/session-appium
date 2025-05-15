@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { ConversationSettings } from './locators/conversation';
 import { LeaveGroupButton } from './locators/groups';
@@ -30,7 +30,7 @@ async function leaveGroup(platform: SupportedPlatformsType) {
   // Modal with Leave/Cancel
   await charlie1.clickOnByAccessibilityID('Leave');
   // Check for control message
-  const groupMemberLeft = englishStripped('groupMemberLeft')
+  const groupMemberLeft = englishStrippedStr('groupMemberLeft')
     .withArgs({ name: charlie.userName })
     .toString();
   await alice1.waitForControlMessageToBePresent(groupMemberLeft);

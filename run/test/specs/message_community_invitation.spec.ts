@@ -4,9 +4,9 @@ import { sleepFor } from './utils';
 import { joinCommunity } from './utils/join_community';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { testCommunityLink, testCommunityName } from './../../constants/community';
-import { englishStripped } from '../../localizer/Localizer';
 import { ConversationSettings } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 
 bothPlatformsItSeparate({
   title: 'Send community invitation',
@@ -55,8 +55,8 @@ async function sendCommunityInvitationIos(platform: SupportedPlatformsType) {
     text: testCommunityName,
   });
   await bob1.checkModalStrings(
-    englishStripped('communityJoin').toString(),
-    englishStripped('communityJoinDescription')
+    englishStrippedStr('communityJoin').toString(),
+    englishStrippedStr('communityJoinDescription')
       .withArgs({ community_name: testCommunityName })
       .toString()
   );
@@ -109,8 +109,8 @@ async function sendCommunityInviteMessageAndroid(platform: SupportedPlatformsTyp
     text: testCommunityName,
   });
   await bob1.checkModalStrings(
-    englishStripped('communityJoin').toString(),
-    englishStripped('communityJoinDescription')
+    englishStrippedStr('communityJoin').toString(),
+    englishStrippedStr('communityJoinDescription')
       .withArgs({ community_name: testCommunityName })
       .toString(),
     true

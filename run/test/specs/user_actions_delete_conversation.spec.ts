@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteContactModalConfirm } from './locators/global';
@@ -39,8 +39,10 @@ async function deleteConversation(platform: SupportedPlatformsType) {
   await alice1.onAndroid().longPressConversation(bob.userName);
   await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Delete' });
   await alice1.checkModalStrings(
-    englishStripped('conversationsDelete').toString(),
-    englishStripped('conversationsDeleteDescription').withArgs({ name: USERNAME.BOB }).toString(),
+    englishStrippedStr('conversationsDelete').toString(),
+    englishStrippedStr('conversationsDeleteDescription')
+      .withArgs({ name: USERNAME.BOB })
+      .toString(),
     true
   );
   await alice1.clickOnElementAll(new DeleteContactModalConfirm(alice1));

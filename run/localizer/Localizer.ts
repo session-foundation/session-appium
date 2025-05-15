@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { CrowdinLocale } from './constants';
 import { pluralsDictionary, simpleDictionary } from './locales';
 
@@ -6,51 +5,9 @@ type SimpleDictionary = typeof simpleDictionary;
 type PluralDictionary = typeof pluralsDictionary;
 
 export type SimpleLocalizerTokens = keyof SimpleDictionary;
-type PluralLocalizerTokens = keyof PluralDictionary;
+export type PluralLocalizerTokens = keyof PluralDictionary;
 
 export type MergedLocalizerTokens = SimpleLocalizerTokens | PluralLocalizerTokens;
-
-let localeInUse: CrowdinLocale = 'en';
-
-type Logger = (message: string) => void;
-let logger: Logger | undefined;
-
-/**
- * Simpler than lodash. Duplicated to avoid having to import lodash in the file.
- * Because we share it with QA, but also to have a self contained localized tool that we can copy/paste
- */
-function isEmptyObject(obj: unknown) {
-  if (!obj) {
-    return true;
-  }
-  if (typeof obj !== 'object') {
-    return false;
-  }
-  return Object.keys(obj).length === 0;
-}
-
-function isRunningInMocha(): boolean {
-  return false;
-}
-
-export function setLogger(cb: Logger) {
-  if (logger && !isRunningInMocha()) {
-    console.debug('logger already initialized. overriding it');
-  }
-  logger = cb;
-}
-
-export function setLocaleInUse(crowdinLocale: CrowdinLocale) {
-  localeInUse = crowdinLocale;
-}
-
-function log(message: Parameters<Logger>[0]) {
-  if (!logger) {
-    console.log('logger is not set');
-    return;
-  }
-  logger(message);
-}
 
 export function isSimpleToken(token: string): token is SimpleLocalizerTokens {
   return token in simpleDictionary;
@@ -60,25 +17,7 @@ export function isPluralToken(token: string): token is PluralLocalizerTokens {
   return token in pluralsDictionary;
 }
 
-/**
- * This type extracts from a dictionary, the keys that have a property 'args' set (i.e. not undefined or never).
- */
-type TokenWithArgs<Dict> = {
-  [Key in keyof Dict]: Dict[Key] extends { args: undefined } | { args: never } ? never : Key;
-}[keyof Dict];
-
-type MergedTokenWithArgs = TokenWithArgs<SimpleDictionary> | TokenWithArgs<PluralDictionary>;
-
-export function isTokenWithArgs(token: string): token is MergedTokenWithArgs {
-  return (
-    (isSimpleToken(token) && !isEmptyObject(simpleDictionary[token]?.args)) ||
-    (isPluralToken(token) && !isEmptyObject(pluralsDictionary[token]?.args))
-  );
-}
-
 type DynamicArgStr = 'string' | 'number';
-
-export type LocalizerDictionary = SimpleDictionary;
 
 type ArgsTypeStrToTypes<T extends DynamicArgStr> = T extends 'string'
   ? string
@@ -102,14 +41,7 @@ type ArgsFromTokenStr<T extends SimpleLocalizerTokens | PluralLocalizerTokens> =
         : never
       : never;
 
-export type ArgsFromToken<T extends MergedLocalizerTokens> = MappedToTsTypes<ArgsFromTokenStr<T>>;
-
-/** The arguments for retrieving a localized message */
-export type GetMessageArgs<T extends MergedLocalizerTokens> = T extends MergedLocalizerTokens
-  ? T extends MergedTokenWithArgs
-    ? [T, ArgsFromToken<T>]
-    : [T]
-  : never;
+type ArgsFromToken<T extends MergedLocalizerTokens> = MappedToTsTypes<ArgsFromTokenStr<T>>;
 
 type MappedToTsTypes<T extends Record<string, DynamicArgStr>> = {
   [K in keyof T]: ArgsTypeStrToTypes<T[K]>;
@@ -121,7 +53,7 @@ type MappedToTsTypes<T extends Record<string, DynamicArgStr>> = {
  * @param identifier The identifier to use for the args. Use this if you want to de-sanitize the args later.
  * @returns The sanitized args
  */
-export function sanitizeArgs(
+function sanitizeArgs(
   args: Record<string, string | number>,
   identifier?: string
 ): Record<string, string | number> {
@@ -213,7 +145,7 @@ class LocalizedStringBuilder<T extends MergedLocalizerTokens> extends String {
 
       return str;
     } catch (error: any) {
-      log(error);
+      console.log(error);
       return this.token;
     }
   }
@@ -263,7 +195,7 @@ class LocalizedStringBuilder<T extends MergedLocalizerTokens> extends String {
 
       return this.resolvePluralString();
     } catch (error: any) {
-      log(error.message);
+      console.log(error.message);
       return this.token;
     }
   }
@@ -274,19 +206,19 @@ class LocalizedStringBuilder<T extends MergedLocalizerTokens> extends String {
     let num: number | string | undefined = this.args?.[pluralKey as keyof ArgsFromToken<T>];
 
     if (num === undefined) {
-      log(
+      console.log(
         `Attempted to get plural count for missing argument '${pluralKey} for token '${this.token}'`
       );
       num = 0;
     }
 
     if (typeof num !== 'number') {
-      log(
+      console.log(
         `Attempted to get plural count for argument '${pluralKey}' which is not a number for token '${this.token}'`
       );
       num = parseInt(num, 10);
       if (Number.isNaN(num)) {
-        log(
+        console.log(
           `Attempted to get parsed plural count for argument '${pluralKey}' which is not a number for token '${this.token}'`
         );
         num = 0;
@@ -308,7 +240,7 @@ class LocalizedStringBuilder<T extends MergedLocalizerTokens> extends String {
     });
 
     if (!pluralString) {
-      log(
+      console.log(
         `Plural string not found for cardinal '${cardinalRule}': '${this.token}' Falling back to 'other' cardinal`
       );
 
@@ -320,7 +252,7 @@ class LocalizedStringBuilder<T extends MergedLocalizerTokens> extends String {
       });
 
       if (!pluralString) {
-        log(`Plural string not found for fallback cardinal 'other': '${this.token}'`);
+        console.log(`Plural string not found for fallback cardinal 'other': '${this.token}'`);
 
         return this.token;
       }
@@ -342,33 +274,5 @@ class LocalizedStringBuilder<T extends MergedLocalizerTokens> extends String {
 }
 
 export function localize<T extends MergedLocalizerTokens>(token: T) {
-  return new LocalizedStringBuilder<T>(token, localeInUse);
-}
-
-export function localizeFromOld<T extends MergedLocalizerTokens>(token: T, args: ArgsFromToken<T>) {
-  return localize(token).withArgs(args);
-}
-
-type LocalizerHtmlTag = 'span' | 'div';
-/** Basic props for all calls of the Localizer component */
-type LocalizerComponentBaseProps<T extends MergedLocalizerTokens> = {
-  token: T;
-  asTag?: LocalizerHtmlTag;
-  className?: string;
-};
-
-/** The props for the localization component */
-export type LocalizerComponentProps<T extends MergedLocalizerTokens> =
-  T extends MergedLocalizerTokens
-    ? ArgsFromToken<T> extends never
-      ? LocalizerComponentBaseProps<T> & { args?: undefined }
-      : ArgsFromToken<T> extends Record<string, never>
-        ? LocalizerComponentBaseProps<T> & { args?: undefined }
-        : LocalizerComponentBaseProps<T> & { args: ArgsFromToken<T> }
-    : never;
-
-export type LocalizerComponentPropsObject = LocalizerComponentProps<MergedLocalizerTokens>;
-
-export function englishStripped<T extends MergedLocalizerTokens>(token: T) {
-  return localize(token).stripIt().forceEnglish();
+  return new LocalizedStringBuilder<T>(token, 'en');
 }

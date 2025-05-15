@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME, type AccessibilityId } from '../../types/testing';
 import { BlockedContactsSettings, BlockUserConfirmationModal } from './locators';
@@ -43,13 +43,13 @@ async function blockedRequest(platform: SupportedPlatformsType) {
   await sleepFor(1000);
   // TODO add check modal
   await device2.checkModalStrings(
-    englishStripped('block').toString(),
-    englishStripped('blockDescription').withArgs({ name: alice.userName }).toString(),
+    englishStrippedStr('block').toString(),
+    englishStrippedStr('blockDescription').withArgs({ name: alice.userName }).toString(),
     true
   );
   await device2.clickOnElementAll(new BlockUserConfirmationModal(device1));
   // "messageRequestsNonePending": "No pending message requests",
-  const messageRequestsNonePending = englishStripped('messageRequestsNonePending').toString();
+  const messageRequestsNonePending = englishStrippedStr('messageRequestsNonePending').toString();
   await Promise.all([
     device2.waitForTextElementToBePresent({
       strategy: 'accessibility id',

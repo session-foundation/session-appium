@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES } from '../../types/testing';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
@@ -29,11 +29,11 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
 
   await setDisappearingMessage(platform, alice1, ['Group', `Disappear after send option`, time]);
   // Get correct control message for You setting disappearing messages
-  const disappearingMessagesSetYou = englishStripped('disappearingMessagesSetYou')
+  const disappearingMessagesSetYou = englishStrippedStr('disappearingMessagesSetYou')
     .withArgs({ time, disappearing_messages_type: controlMode })
     .toString();
   // Get correct control message for alice setting disappearing messages
-  const disappearingMessagesSetControl = englishStripped('disappearingMessagesSet')
+  const disappearingMessagesSetControl = englishStrippedStr('disappearingMessagesSet')
     .withArgs({ name: alice.userName, time, disappearing_messages_type: controlMode })
     .toString();
   // Check control message is correct on device 1, 2 and 3

@@ -1,4 +1,4 @@
-import { englishStripped } from '../../../localizer/Localizer';
+import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import {
   ContinueButton,
@@ -19,7 +19,7 @@ async function onboardingNoName(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   await device.clickOnElementAll(new CreateAccountButton(device));
   // the expected error is 'Please enter a display name' which is represented by the following localized string
-  const expectedError = englishStripped('displayNameErrorDescription').toString();
+  const expectedError = englishStrippedStr('displayNameErrorDescription').toString();
   const emptyName = '';
   // this check is to avoid false positives
   if (emptyName.length > 0) {

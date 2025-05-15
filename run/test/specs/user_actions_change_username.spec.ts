@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { TickButton, UsernameInput, UsernameSettings } from './locators';
@@ -29,8 +29,8 @@ async function changeUsernameiOS(platform: SupportedPlatformsType) {
   await device.clickOnElementAll(new UsernameSettings(device));
   // New modal pops up
   await device.checkModalStrings(
-    englishStripped('displayNameSet').toString(),
-    englishStripped('displayNameVisible').toString()
+    englishStrippedStr('displayNameSet').toString(),
+    englishStrippedStr('displayNameVisible').toString()
   );
   // type in new username
   await sleepFor(100);

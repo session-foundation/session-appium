@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME, type AccessibilityId } from '../../types/testing';
 import { DeleteMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
@@ -28,13 +28,13 @@ async function deleteRequest(platform: SupportedPlatformsType) {
   await device2.onAndroid().longPress('Message request');
   await device2.clickOnElementAll(new DeleteMessageRequestButton(device2));
   await device2.checkModalStrings(
-    englishStripped('delete').toString(),
-    englishStripped('messageRequestsDelete').toString(),
+    englishStrippedStr('delete').toString(),
+    englishStrippedStr('messageRequestsDelete').toString(),
     true
   );
   await device2.clickOnElementAll(new DeleteMesssageRequestConfirmation(device2));
   // "messageRequestsNonePending": "No pending message requests",
-  const messageRequestsNonePending = englishStripped('messageRequestsNonePending').toString();
+  const messageRequestsNonePending = englishStrippedStr('messageRequestsNonePending').toString();
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: messageRequestsNonePending as AccessibilityId,

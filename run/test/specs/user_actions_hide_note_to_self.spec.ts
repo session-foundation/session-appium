@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { EmptyConversation, Hide } from './locators/conversation';
@@ -22,13 +22,13 @@ bothPlatformsItSeparate({
 });
 
 async function hideNoteToSelf(platform: SupportedPlatformsType) {
-  const noteToSelf = englishStripped('noteToSelf').toString();
+  const noteToSelf = englishStrippedStr('noteToSelf').toString();
   const { device } = await openAppOnPlatformSingleDevice(platform);
   await newUser(device, USERNAME.ALICE);
   await device.clickOnElementAll(new SearchButton(device));
   await device.clickOnElementAll(new NoteToSelfOption(device));
   await device.waitForTextElementToBePresent(
-    new EmptyConversation(device).build(englishStripped('noteToSelfEmpty').toString())
+    new EmptyConversation(device).build(englishStrippedStr('noteToSelfEmpty').toString())
   );
   await device.sendMessage('Creating note to self');
   await device.navigateBack();
@@ -37,8 +37,8 @@ async function hideNoteToSelf(platform: SupportedPlatformsType) {
   await device.onAndroid().longPressConversation(noteToSelf);
   await device.clickOnElementAll(new Hide(device));
   await device.checkModalStrings(
-    englishStripped('noteToSelfHide').toString(),
-    englishStripped('noteToSelfHideDescription').toString()
+    englishStrippedStr('noteToSelfHide').toString(),
+    englishStrippedStr('noteToSelfHideDescription').toString()
   );
   await device.clickOnElementAll(new Hide(device));
   await device.doesElementExist({

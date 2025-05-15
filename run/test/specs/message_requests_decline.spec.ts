@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME, type AccessibilityId } from '../../types/testing';
 import { DeclineMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
@@ -38,13 +38,13 @@ async function declineRequest(platform: SupportedPlatformsType) {
   // Are you sure you want to delete message request only for ios
   await sleepFor(3000);
   await device2.checkModalStrings(
-    englishStripped('delete').toString(),
-    englishStripped('messageRequestsDelete').toString(),
+    englishStrippedStr('delete').toString(),
+    englishStrippedStr('messageRequestsDelete').toString(),
     true
   );
   await device2.clickOnElementAll(new DeleteMesssageRequestConfirmation(device2));
   // "messageRequestsNonePending": "No pending message requests",
-  const messageRequestsNonePending = englishStripped('messageRequestsNonePending').toString();
+  const messageRequestsNonePending = englishStrippedStr('messageRequestsNonePending').toString();
   await Promise.all([
     device2.waitForTextElementToBePresent({
       strategy: 'accessibility id',

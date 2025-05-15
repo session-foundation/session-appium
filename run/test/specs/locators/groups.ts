@@ -1,6 +1,6 @@
 import { LocatorsInterface } from '.';
+import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
 import { StrategyExtractionObj } from '../../../types/testing';
-import { englishStripped } from '../../../localizer/Localizer';
 import type { UserNameType } from '@session-foundation/qa-seeder';
 
 export class GroupNameInput extends LocatorsInterface {
@@ -123,7 +123,7 @@ export class LatestReleaseBanner extends LocatorsInterface {
         return {
           strategy: 'id',
           selector: 'Version warning banner',
-          text: englishStripped('groupInviteVersion').toString(),
+          text: englishStrippedStr('groupInviteVersion').toString(),
         } as const;
       case 'ios':
         // On iOS, the text is currently not exposed to Appium
@@ -139,7 +139,7 @@ export class RecreateGroupBannerAdmin extends LocatorsInterface {
     return {
       strategy: 'accessibility id',
       selector: 'Legacy group banner',
-      text: englishStripped('legacyGroupAfterDeprecationAdmin').toString(),
+      text: englishStrippedStr('legacyGroupAfterDeprecationAdmin').toString(),
     } as const;
   }
 }
@@ -149,7 +149,7 @@ export class RecreateGroupBannerMember extends LocatorsInterface {
     return {
       strategy: 'accessibility id',
       selector: 'Legacy group banner',
-      text: englishStripped('legacyGroupAfterDeprecationMember').toString(),
+      text: englishStrippedStr('legacyGroupAfterDeprecationMember').toString(),
     } as const;
   }
 }

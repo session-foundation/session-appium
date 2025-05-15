@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { androidIt } from '../../types/sessionIt';
 import {
   AccountRestoreButton,
@@ -29,8 +29,8 @@ async function warningModalRestoreAccount(platform: SupportedPlatformsType) {
   // Pressing Back on the Message Notifications screen to trigger the Warning modal
   await device.clickOnElementAll(new BackButton(device));
   await device.checkModalStrings(
-    englishStripped('warning').toString(),
-    englishStripped('onboardingBackLoadAccount').toString()
+    englishStrippedStr('warning').toString(),
+    englishStrippedStr('onboardingBackLoadAccount').toString()
   );
   await device.clickOnElementAll(new WarningModalQuitButton(device));
   await closeApp(device);

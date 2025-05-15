@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { EnterAccountID } from './locators/start_conversation';
@@ -31,7 +31,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   await device1.scrollDown();
   await device1.clickOnByAccessibilityID('Next');
   //messageRequestPendingDescription: "You will be able to send voice messages and attachments once the recipient has approved this message request."
-  const messageRequestPendingDescription = englishStripped(
+  const messageRequestPendingDescription = englishStrippedStr(
     'messageRequestPendingDescription'
   ).toString();
   await device1.onIOS().waitForTextElementToBePresent({
@@ -67,7 +67,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Message request');
   // Check control message warning of sending message request reply
   // "messageRequestsAcceptDescription": "Sending a message to this user will automatically accept their message request and reveal your Account ID."
-  const messageRequestsAcceptDescription = englishStripped(
+  const messageRequestsAcceptDescription = englishStrippedStr(
     'messageRequestsAcceptDescription'
   ).toString();
   await device2.onIOS().waitForControlMessageToBePresent(messageRequestsAcceptDescription);
@@ -82,8 +82,8 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   await device2.sendMessage(`${bob.userName} to ${alice.userName}`);
   // Check control message for message request acceptance
   // "messageRequestsAccepted": "Your message request has been accepted.",
-  const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
-  const messageRequestYouHaveAccepted = englishStripped('messageRequestYouHaveAccepted')
+  const messageRequestsAccepted = englishStrippedStr('messageRequestsAccepted').toString();
+  const messageRequestYouHaveAccepted = englishStrippedStr('messageRequestYouHaveAccepted')
     .withArgs({ name: alice.userName })
     .toString();
   await Promise.all([

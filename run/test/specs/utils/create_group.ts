@@ -1,4 +1,4 @@
-import { englishStripped } from '../../../localizer/Localizer';
+import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { Group, GROUPNAME, User } from '../../../types/testing';
 import { Contact } from '../locators/global';
@@ -65,17 +65,17 @@ export const createGroup = async (
       device1
         .onIOS()
         .waitForControlMessageToBePresent(
-          englishStripped(`groupMemberNewTwo`)
+          englishStrippedStr(`groupMemberNewTwo`)
             .withArgs({ name: firstUser, other_name: secondUser })
             .toString()
         ),
       device2.waitForControlMessageToBePresent(
-        englishStripped('groupInviteYouAndOtherNew')
+        englishStrippedStr('groupInviteYouAndOtherNew')
           .withArgs({ other_name: userThree.userName })
           .toString()
       ),
       device3.waitForControlMessageToBePresent(
-        englishStripped('groupInviteYouAndOtherNew')
+        englishStrippedStr('groupInviteYouAndOtherNew')
           .withArgs({ other_name: userTwo.userName })
           .toString()
       ),

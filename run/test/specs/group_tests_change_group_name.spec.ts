@@ -1,4 +1,3 @@
-import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { EditGroup, EditGroupName } from './locators';
 import { EditGroupNameInput } from './locators/groups';
@@ -7,6 +6,7 @@ import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { ConversationSettings } from './locators/conversation';
 import { SaveNameChangeButton } from './locators/settings';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 
 bothPlatformsItSeparate({
   title: 'Change group name',
@@ -38,8 +38,8 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   // Click on current group name
   await alice1.clickOnElementAll(new EditGroupName(alice1));
   await alice1.checkModalStrings(
-    englishStripped(`groupInformationSet`).toString(),
-    englishStripped(`groupNameVisible`).toString()
+    englishStrippedStr(`groupInformationSet`).toString(),
+    englishStrippedStr(`groupNameVisible`).toString()
   );
   await alice1.deleteText(new EditGroupNameInput(alice1));
   await alice1.inputText('   ', new EditGroupNameInput(alice1));
@@ -62,7 +62,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   await alice1.clickOnElementAll(new SaveNameChangeButton(alice1));
   await alice1.navigateBack();
   await alice1.waitForControlMessageToBePresent(
-    englishStripped('groupNameNew').withArgs({ group_name: newGroupName }).toString()
+    englishStrippedStr('groupNameNew').withArgs({ group_name: newGroupName }).toString()
   );
   await closeApp(alice1, bob1, charlie1);
 }
@@ -93,7 +93,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   await alice1.navigateBack(true);
   // Check control message for changed name
   await alice1.waitForControlMessageToBePresent(
-    englishStripped('groupNameNew').withArgs({ group_name: newGroupName }).toString()
+    englishStrippedStr('groupNameNew').withArgs({ group_name: newGroupName }).toString()
   );
   await closeApp(alice1, bob1, charlie1);
 }
