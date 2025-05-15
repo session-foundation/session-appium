@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { LeaveGroup } from './locators';
@@ -36,7 +36,7 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   await sleepFor(5000);
   await device4.onIOS().hasTextElementBeenDeleted('Conversation list item', testGroupName);
   // Create control message for user leaving group
-  const groupMemberLeft = englishStripped('groupMemberLeft')
+  const groupMemberLeft = englishStrippedStr('groupMemberLeft')
     .withArgs({ name: charlie.userName })
     .toString();
   await Promise.all([

@@ -1,4 +1,4 @@
-import { englishStripped } from '../../../localizer/Localizer';
+import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import {
   AccountRestoreButton,
@@ -20,7 +20,7 @@ async function onboardingNoSeed(platform: SupportedPlatformsType) {
   await device.clickOnElementAll(new AccountRestoreButton(device));
   const emptySeed = '';
   // the expected error is 'Recovery Password not long enough' which is represented by the following localized string
-  const expectedError = englishStripped('recoveryPasswordErrorMessageShort').toString();
+  const expectedError = englishStrippedStr('recoveryPasswordErrorMessageShort').toString();
   // this check is to avoid false positives
   if (emptySeed.length > 0) {
     throw new Error('The emptySeed string is not empty but it must be.');

@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
@@ -31,8 +31,8 @@ async function acceptRequest(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Accept message request');
   // Check control message for message request acceptance
   // "messageRequestsAccepted": "Your message request has been accepted.",
-  const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
-  const messageRequestYouHaveAccepted = englishStripped('messageRequestYouHaveAccepted')
+  const messageRequestsAccepted = englishStrippedStr('messageRequestsAccepted').toString();
+  const messageRequestYouHaveAccepted = englishStrippedStr('messageRequestYouHaveAccepted')
     .withArgs({ name: alice.userName })
     .toString();
   await Promise.all([
