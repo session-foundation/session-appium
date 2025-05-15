@@ -51,6 +51,8 @@ export const InteractionPoints: Record<string, Coordinates> = {
   GifButtonKeyboardOpen: { x: 34, y: 394 },
   GifButtonKeyboardClosed: { x: 34, y: 663 },
   DocumentKeyboardOpen: { x: 34, y: 445 },
+  NetworkPageAndroid: { x: 880, y: 1150 },
+  NetworkPageIOS: { x: 308, y: 220 },
 };
 
 export type Strategy = 'accessibility id' | 'xpath' | 'id' | 'class name';
@@ -350,6 +352,11 @@ export type AccessibilityId =
   | 'Legacy Groups Recreate Button'
   | 'Confirm leave'
   | 'Photo, 25 March, 11:09 am'
+  | 'Session Network'
+  | 'Learn more link'
+  | 'Open'
+  | 'Learn about staking link'
+  | 'Last updated timestamp'
   | 'Albums';
 
 export type Id =
@@ -416,6 +423,11 @@ export type Id =
   | 'Remove contact button'
   | 'Remove'
   | 'Contact status'
+  | 'Learn more link'
+  | 'Learn about staking link'
+  | 'Open'
+  | 'session-network-menu-item'
+  | 'Last updated timestamp'
   | 'Image button'
   | 'android.widget.TextView';
 

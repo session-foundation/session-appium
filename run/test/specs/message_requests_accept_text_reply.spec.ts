@@ -1,6 +1,7 @@
 import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { MessageInput } from './locators/conversation';
 import { EnterAccountID } from './locators/start_conversation';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
@@ -45,10 +46,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
     text: messageRequestPendingDescription,
   });
 
-  await device1.inputText(testMessage, {
-    strategy: 'accessibility id',
-    selector: 'Message input box',
-  });
+  await device1.inputText(testMessage, new MessageInput(device1));
   // Click send
   await device1.clickOnElementAll({
     strategy: 'accessibility id',
