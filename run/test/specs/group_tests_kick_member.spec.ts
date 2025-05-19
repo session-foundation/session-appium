@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { EditGroup } from './locators';
@@ -34,8 +34,8 @@ async function kickMember(platform: SupportedPlatformsType) {
   await alice1.clickOnElementAll({ ...new GroupMember(alice1).build(USERNAME.BOB) });
   await alice1.clickOnElementAll(new RemoveMemberButton(alice1));
   await alice1.checkModalStrings(
-    englishStripped('remove').toString(),
-    englishStripped('groupRemoveDescription')
+    englishStrippedStr('remove').toString(),
+    englishStrippedStr('groupRemoveDescription')
       .withArgs({ name: USERNAME.BOB, group_name: testGroupName })
       .toString()
   );
@@ -49,16 +49,16 @@ async function kickMember(platform: SupportedPlatformsType) {
   await alice1.onIOS().navigateBack();
   await Promise.all([
     alice1.waitForControlMessageToBePresent(
-      englishStripped('groupRemoved').withArgs({ name: USERNAME.BOB }).toString()
+      englishStrippedStr('groupRemoved').withArgs({ name: USERNAME.BOB }).toString()
     ),
     charlie1.waitForControlMessageToBePresent(
-      englishStripped('groupRemoved').withArgs({ name: USERNAME.BOB }).toString()
+      englishStrippedStr('groupRemoved').withArgs({ name: USERNAME.BOB }).toString()
     ),
   ]);
   await bob1.onAndroid().waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Empty list',
-    text: englishStripped('groupRemovedYou').withArgs({ group_name: testGroupName }).toString(),
+    text: englishStrippedStr('groupRemovedYou').withArgs({ group_name: testGroupName }).toString(),
   });
   await bob1.onIOS().waitForTextElementToBePresent({
     strategy: 'accessibility id',

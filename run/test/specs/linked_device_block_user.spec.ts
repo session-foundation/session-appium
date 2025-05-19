@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { BlockedContactsSettings, BlockUser, BlockUserConfirmationModal } from './locators';
 import { ConversationSettings } from './locators/conversation';
@@ -26,8 +26,8 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   await sleepFor(500);
   await alice1.clickOnElementAll(new BlockUser(alice1));
   await alice1.checkModalStrings(
-    englishStripped('block').toString(),
-    englishStripped('blockDescription').withArgs({ name: bob.userName }).toString(),
+    englishStrippedStr('block').toString(),
+    englishStrippedStr('blockDescription').withArgs({ name: bob.userName }).toString(),
     true
   );
   // Confirm block option

@@ -1,4 +1,3 @@
-import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { LinkPreview } from './locators';
@@ -7,6 +6,7 @@ import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 import { OutgoingMessageStatusSent } from './locators/conversation';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 
 bothPlatformsItSeparate({
   title: 'Disappearing link message 1:1',
@@ -43,8 +43,8 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
   });
   // Accept dialog for link preview
   await alice1.checkModalStrings(
-    englishStripped('linkPreviewsEnable').toString(),
-    englishStripped('linkPreviewsFirstDescription').toString()
+    englishStrippedStr('linkPreviewsEnable').toString(),
+    englishStrippedStr('linkPreviewsFirstDescription').toString()
   );
   await alice1.clickOnByAccessibilityID('Enable');
   // No preview on first send
@@ -98,8 +98,8 @@ async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsTyp
   });
   // Accept dialog for link preview
   await alice1.checkModalStrings(
-    englishStripped('linkPreviewsEnable').toString(),
-    englishStripped('linkPreviewsFirstDescription').toString(),
+    englishStrippedStr('linkPreviewsEnable').toString(),
+    englishStrippedStr('linkPreviewsFirstDescription').toString(),
     true
   );
   await alice1.clickOnByAccessibilityID('Enable');
