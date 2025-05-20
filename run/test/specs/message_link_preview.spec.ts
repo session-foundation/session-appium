@@ -35,7 +35,6 @@ async function sendLinkIos(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
-  // await alice1.waitForLoadingAnimation();
   // Accept dialog for link preview
   await alice1.checkModalStrings(
     englishStripped('linkPreviewsEnable').toString(),
@@ -43,6 +42,10 @@ async function sendLinkIos(platform: SupportedPlatformsType) {
   );
   await alice1.clickOnByAccessibilityID('Enable');
   await alice1.clickOnByAccessibilityID('Send message button');
+  await alice1.waitForTextElementToBePresent({
+    ...new OutgoingMessageStatusSent(alice1).build(),
+    maxWait: 20000,
+  });
   await alice1.inputText(testLink, {
     strategy: 'accessibility id',
     selector: 'Message input box',
