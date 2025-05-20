@@ -58,3 +58,7 @@ export function hexToRgbObject(hex: string): { R: number; G: number; B: number }
     B: decimalValue & 255,
   };
 }
+
+export function ensureHttpsURL(url: string): string {
+  return url.startsWith('https://') ? url : `https://${url}`;
+}

@@ -1,5 +1,6 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { MessageInput } from './locators/conversation';
 import { EnterAccountID } from './locators/start_conversation';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -25,10 +26,7 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   await device.inputText(alice.accountID, new EnterAccountID(device));
   await device.scrollDown();
   await device.clickOnByAccessibilityID('Next');
-  await device.inputText('Creating note to self', {
-    strategy: 'accessibility id',
-    selector: 'Message input box',
-  });
+  await device.inputText('Creating note to self', new MessageInput(device));
   await device.clickOnByAccessibilityID('Send message button');
   // Enable disappearing messages
   await setDisappearingMessage(platform, device, [
@@ -53,5 +51,3 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   // Great success
   await closeApp(device);
 }
-
-// TO DO - ADD TEST TO TURN OFF DISAPPEARING MESSAGES
