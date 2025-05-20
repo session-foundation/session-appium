@@ -11,6 +11,7 @@ import { UserSettings } from './locators/settings';
 import { isChromeFirstTimeOpen } from './utils/chrome_first_time_open';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+import { ensureHttpsURL } from './utils/utilities';
 
 bothPlatformsIt({
   title: 'Network page learn more staking link',
@@ -40,11 +41,9 @@ async function networkPageLearnMore(platform: SupportedPlatformsType) {
     await isChromeFirstTimeOpen(device);
   }
   const urlField = await device.waitForTextElementToBePresent(new URLInputField(device));
-  const actualUrlField = await device.getTextFromElement(urlField);
+  const retrievedURL = await device.getTextFromElement(urlField);
   // Add https:// to the retrieved URL if the UI doesn't show it (Chrome doesn't, Safari does)
-  const fullRetrievedURL = actualUrlField.startsWith('https://')
-    ? actualUrlField
-    : `https://${actualUrlField}`;
+  const fullRetrievedURL = ensureHttpsURL(retrievedURL);
   // Verify that it's the correct URL
   if (fullRetrievedURL !== linkURL) {
     throw new Error(

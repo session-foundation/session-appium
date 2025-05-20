@@ -11,6 +11,8 @@ import { UserSettings } from './locators/settings';
 import { isChromeFirstTimeOpen } from './utils/chrome_first_time_open';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+import { ensureHttpsURL } from './utils/utilities';
+import { verifyElementScreenshot } from './utils/verify_screenshots';
 
 bothPlatformsIt({
   title: 'Network page learn more network link',
@@ -21,7 +23,7 @@ bothPlatformsIt({
 
 async function networkPageLearnMore(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-  const linkURL = 'https://getsession.org/session-network';
+  const linkURL = 'https://docs.getsession.org/session-network ';
   await newUser(device, USERNAME.ALICE);
   await device.clickOnElementAll(new UserSettings(device));
   await device.onAndroid().scrollDown();
@@ -42,9 +44,7 @@ async function networkPageLearnMore(platform: SupportedPlatformsType) {
   const urlField = await device.waitForTextElementToBePresent(new URLInputField(device));
   const actualUrlField = await device.getTextFromElement(urlField);
   // Add https:// to the retrieved URL if the UI doesn't show it (Chrome doesn't, Safari does)
-  const fullRetrievedURL = actualUrlField.startsWith('https://')
-    ? actualUrlField
-    : `https://${actualUrlField}`;
+  const fullRetrievedURL = ensureHttpsURL(actualUrlField);
   // Verify that it's the correct URL
   if (fullRetrievedURL !== linkURL) {
     throw new Error(
@@ -54,6 +54,7 @@ async function networkPageLearnMore(platform: SupportedPlatformsType) {
     console.log('The URLs match.');
   }
   // TODO need to verify that the page loaded correctly (need to wait for page to be made)
+  
   // Close browser and app
   await device.onIOS().clickOnCoordinates(42, 42);
   await device.onAndroid().back();
