@@ -51,6 +51,7 @@ export const InteractionPoints: Record<string, Coordinates> = {
   GifButtonKeyboardOpen: { x: 34, y: 394 },
   GifButtonKeyboardClosed: { x: 34, y: 663 },
   DocumentKeyboardOpen: { x: 34, y: 445 },
+  DocumentKeyboardClosed: { x: 34, y: 712 },
 };
 
 export type Strategy = 'accessibility id' | 'xpath' | 'id' | 'class name';

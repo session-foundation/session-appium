@@ -1304,7 +1304,12 @@ export class DeviceWrapper {
       const spongeBobsBirthday = '199905010700.00';
       await this.clickOnByAccessibilityID('Attachments button');
       await sleepFor(100);
-      await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardOpen);
+      const keyboard = await this.isKeyboardVisible();
+      if (keyboard) {
+        await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardOpen);
+      } else {
+        await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardClosed);
+      }
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
       const testDocument = await this.doesElementExist({
         strategy: 'accessibility id',

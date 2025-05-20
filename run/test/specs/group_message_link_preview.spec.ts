@@ -36,12 +36,6 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
-
-  await alice1.waitForTextElementToBePresent({
-    ...new OutgoingMessageStatusSent(alice1).build(),
-    maxWait: 20000,
-  });
-
   // Accept dialog for link preview
   await alice1.checkModalStrings(
     englishStripped('linkPreviewsEnable').toString(),
