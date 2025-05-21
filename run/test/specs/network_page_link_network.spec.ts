@@ -12,7 +12,7 @@ import { isChromeFirstTimeOpen } from './utils/chrome_first_time_open';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { ensureHttpsURL } from './utils/utilities';
-import { verifyElementScreenshot } from './utils/verify_screenshots';
+import { verifyPageScreenshot } from './utils/verify_screenshots';
 
 bothPlatformsIt({
   title: 'Network page learn more network link',
@@ -23,7 +23,7 @@ bothPlatformsIt({
 
 async function networkPageLearnMore(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-  const linkURL = 'https://docs.getsession.org/session-network ';
+  const linkURL = 'https://docs.getsession.org/session-network';
   await newUser(device, USERNAME.ALICE);
   await device.clickOnElementAll(new UserSettings(device));
   await device.onAndroid().scrollDown();
@@ -53,8 +53,7 @@ async function networkPageLearnMore(platform: SupportedPlatformsType) {
   } else {
     console.log('The URLs match.');
   }
-  // TODO need to verify that the page loaded correctly (need to wait for page to be made)
-  
+  await verifyPageScreenshot(platform, device, 'network_page');
   // Close browser and app
   await device.onIOS().clickOnCoordinates(42, 42);
   await device.onAndroid().back();

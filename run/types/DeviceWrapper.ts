@@ -202,6 +202,10 @@ export class DeviceWrapper {
     return this.toShared().getElementScreenshot(elementId);
   }
 
+  public async getScreenshot(): Promise<string> {
+    return this.toShared().getScreenshot();
+  }
+
   // Session management
   public async createSession(caps: W3CCapabilities): Promise<[string, Record<string, any>]> {
     const createSession: string = await this.toShared().createSession(caps);

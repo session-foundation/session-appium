@@ -434,3 +434,5 @@ export type Id =
 export type TestRisk = 'high' | 'medium' | 'low';
 
 export type ElementStates = 'new_account' | 'restore_account';
+
+export type PageName = 'network_page' | 'staking_page';
