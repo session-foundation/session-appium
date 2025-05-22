@@ -351,7 +351,10 @@ export type AccessibilityId =
   | 'Legacy Groups Recreate Button'
   | 'Confirm leave'
   | 'Photo, 25 March, 11:09 am'
-  | 'Albums';
+  | 'Albums'
+  | 'Appearance'
+  | 'Select alternate app icon'
+  | 'MeetingSE';
 
 export type Id =
   | 'Modal heading'
@@ -418,7 +421,8 @@ export type Id =
   | 'Remove'
   | 'Contact status'
   | 'Image button'
-  | 'android.widget.TextView';
+  | 'network.loki.messenger:id/system_settings_app_icon'
+  | 'MeetingSE option';
 
 export type TestRisk = 'high' | 'medium' | 'low';
 

@@ -104,3 +104,82 @@ export class BlockedContacts extends LocatorsInterface {
     }
   }
 }
+
+export class AppearanceMenuItem extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Appearance',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Appearance',
+        } as const;
+    }
+  }
+}
+
+export class SelectAppIcon extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/system_settings_app_icon',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Select alternate app icon',
+        } as const;
+    }
+  }
+}
+export class AppDisguisePage extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'class name',
+          selector: 'android.widget.ScrollView',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'class name',
+          selector: 'XCUIElementTypeTable',
+        } as const;
+    }
+  }
+}
+export class AppDisguiseMeetingIcon extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'MeetingSE option',
+        } as const;
+      case 'ios':
+        // NOTE see SES-3809
+        throw new Error('No locators implemented for iOS');
+    }
+  }
+}
+
+export class CloseAppButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'class name',
+          selector: 'android.widget.TextView',
+          text: 'Close App',
+        } as const;
+      case 'ios':
+        throw new Error('Modal not implemented for iOS');
+    }
+  }
+}
