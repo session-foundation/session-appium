@@ -1,12 +1,13 @@
-import looksSame from 'looks-same';
 import * as fs from 'fs';
+import looksSame from 'looks-same';
 import * as path from 'path';
-import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { LocatorsInterfaceScreenshot } from '../locators';
 import { v4 as uuidv4 } from 'uuid';
+import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { PageName } from '../../../types/testing';
-import { BrowserPageScreenshot } from './screenshot_paths';
+import { LocatorsInterfaceScreenshot } from '../locators';
 import { SupportedPlatformsType } from './open_app';
+import { BrowserPageScreenshot } from './screenshot_paths';
+import { cropScreenshot, getDiffDirectory, saveImage } from './utilities';
 
 // The function takes a screenshot of an element and verifies it against a baseline screenshot
 // Supports locators with optional multiple states, enforcing correct state usage where applicable
@@ -29,8 +30,7 @@ export async function verifyElementScreenshot<
   // Declaring a UUID in advance so that the diff and screenshot files are matched alphanumerically
   const uuid = uuidv4();
   // Using Playwright's default test-results folder ensures cleanup at the beginning of each run
-  const diffsDir = path.join('test-results', 'diffs');
-  fs.mkdirSync(diffsDir, { recursive: true });
+  const diffsDir = getDiffDirectory();
   // Get the element screenshot as base64
   const elementToScreenshot = await device.waitForTextElementToBePresent(element);
   const elementScreenshotBase64: string = await device.getElementScreenshot(
@@ -71,37 +71,31 @@ export async function verifyPageScreenshot(
   device: DeviceWrapper,
   page: PageName
 ): Promise<void> {
-  const uuid = uuidv4();
   //  Create file path for the diff image (if doesn't exist)
-  const diffsDir = path.join('test-results', 'diffs');
-  fs.mkdirSync(diffsDir, { recursive: true });
+  const diffsDir = getDiffDirectory();
   // Capture screenshot
   const screenshotBase64 = await device.getScreenshot();
-  // Convert the base64 string to a Buffer
   const screenshotBuffer = Buffer.from(screenshotBase64, 'base64');
+  // Need to crop screenshot to cut out time
+  const croppedBuf = await cropScreenshot(device, screenshotBuffer);
   // Create file path for the screenshot
-  const screenshotName = path.join(diffsDir, `${uuid}_screenshot.png`);
-  // Save the screenshot to disk
-  fs.writeFileSync(screenshotName, screenshotBuffer);
+  const screenshotName = await saveImage(croppedBuf, diffsDir, 'screenshot');
   // Create custom file path for the baseline screenshot
-  const screenshotPath = new BrowserPageScreenshot();
-  const baselinePath = screenshotPath.screenshotFileName(platform, page);
-
+  const baselinePath = new BrowserPageScreenshot().screenshotFileName(platform, page);
   fs.mkdirSync(path.dirname(baselinePath), { recursive: true });
-  // if there _isn’t_ a baseline yet, create it now and exit cleanly
+
   if (!fs.existsSync(baselinePath)) {
-    fs.writeFileSync(baselinePath, screenshotBuffer);
+    fs.writeFileSync(baselinePath, croppedBuf);
     console.warn(`No baseline existed – created new baseline for "${page}" at:\n  ${baselinePath}`);
     return;
   }
   // otherwise compare against the existing baseline
-  const { equal, diffImage } = await looksSame(screenshotName, baselinePath, {
+  const { equal, diffImage } = await looksSame(croppedBuf, baselinePath, {
     createDiffImage: true,
   });
 
   if (!equal) {
-    const diffImagePath = path.join(diffsDir, `${uuid}_diff.png`);
-    await diffImage.save(diffImagePath);
+    const diffImagePath = await saveImage(diffImage, diffsDir, 'diff');
     throw new Error(`Screenshot did not match baseline. Diff saved to:\n  ${diffImagePath}`);
   }
   // Cleanup of element screenshot file on success

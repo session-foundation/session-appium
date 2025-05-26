@@ -1,3 +1,4 @@
+import { verifyPageScreenshot } from './utils/verify_screenshots';
 import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -52,7 +53,7 @@ async function networkPageLearnMore(platform: SupportedPlatformsType) {
   } else {
     console.log('The URLs match.');
   }
-  // TODO need to verify that the page loaded correctly (need to wait for page to be made)
+  await verifyPageScreenshot(platform, device, 'staking_page');
   // Close browser and app
   await device.onIOS().clickOnCoordinates(42, 42);
   await device.onAndroid().back();

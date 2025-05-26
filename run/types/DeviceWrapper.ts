@@ -206,6 +206,14 @@ export class DeviceWrapper {
     return this.toShared().getScreenshot();
   }
 
+  public async getViewportScreenshot(): Promise<string> {
+    return this.toShared().getViewportScreenshot();
+  }
+
+  public async getWindowRect(): Promise<{ height: number; width: number; x: number; y: number }> {
+    return this.toShared().getWindowRect();
+  }
+
   // Session management
   public async createSession(caps: W3CCapabilities): Promise<[string, Record<string, any>]> {
     const createSession: string = await this.toShared().createSession(caps);

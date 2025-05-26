@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+// import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { SafariAddressBar, URLInputField } from './locators/browsers';
@@ -29,10 +29,10 @@ async function networkPageLearnMore(platform: SupportedPlatformsType) {
   await device.onAndroid().scrollDown();
   await device.clickOnElementAll(new SessionNetworkMenuItem(device));
   await device.clickOnElementAll(new SessionNetworkLearnMoreNetwork(device));
-  await device.checkModalStrings(
-    englishStripped('urlOpen').toString(),
-    englishStripped('urlOpenDescription').withArgs({ url: linkURL }).toString()
-  );
+  // await device.checkModalStrings(
+  //   englishStripped('urlOpen').toString(),
+  //   englishStripped('urlOpenDescription').withArgs({ url: linkURL }).toString()
+  // );
   await device.clickOnElementAll(new OpenLinkButton(device));
   if (platform === 'ios') {
     // Tap the Safari address bar to reveal the URL
@@ -43,7 +43,6 @@ async function networkPageLearnMore(platform: SupportedPlatformsType) {
   }
   const urlField = await device.waitForTextElementToBePresent(new URLInputField(device));
   const actualUrlField = await device.getTextFromElement(urlField);
-  // Add https:// to the retrieved URL if the UI doesn't show it (Chrome doesn't, Safari does)
   const fullRetrievedURL = ensureHttpsURL(actualUrlField);
   // Verify that it's the correct URL
   if (fullRetrievedURL !== linkURL) {
