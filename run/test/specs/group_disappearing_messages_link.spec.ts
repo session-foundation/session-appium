@@ -1,4 +1,3 @@
-import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { LinkPreview, LinkPreviewMessage } from './locators';
@@ -7,6 +6,7 @@ import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 import { OutgoingMessageStatusSent } from './locators/conversation';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 
 bothPlatformsIt({
   title: 'Disappearing link to group',
@@ -37,8 +37,8 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   // Enable link preview modal appears as soon as link is typed on android but on iOS it appears after
   if (platform === 'android') {
     await alice1.checkModalStrings(
-      englishStripped('linkPreviewsEnable').toString(),
-      englishStripped('linkPreviewsFirstDescription').toString(),
+      englishStrippedStr('linkPreviewsEnable').toString(),
+      englishStrippedStr('linkPreviewsFirstDescription').toString(),
       true
     );
     await alice1.clickOnByAccessibilityID('Enable');
@@ -50,8 +50,8 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   });
   if (platform === 'ios') {
     await alice1.checkModalStrings(
-      englishStripped('linkPreviewsEnable').toString(),
-      englishStripped('linkPreviewsFirstDescription').toString()
+      englishStrippedStr('linkPreviewsEnable').toString(),
+      englishStrippedStr('linkPreviewsFirstDescription').toString()
     );
     await alice1.clickOnByAccessibilityID('Enable');
   }

@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { ExitUserProfile } from './locators';
 import { open_Alice1_bob1_notfriends } from './state_builder';
@@ -42,7 +42,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
 
   // Verify config message states message request was accepted
   // "messageRequestsAccepted": "Your message request has been accepted.",
-  const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
+  const messageRequestsAccepted = englishStrippedStr('messageRequestsAccepted').toString();
   await alice1.waitForControlMessageToBePresent(messageRequestsAccepted);
   // Phone icon should appear now that conversation has been approved
   await alice1.clickOnByAccessibilityID('Call');
@@ -64,8 +64,8 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
     selector: 'Voice and Video Calls - Switch',
   });
   await alice1.checkModalStrings(
-    englishStripped('callsVoiceAndVideoBeta').toString(),
-    englishStripped('callsVoiceAndVideoModalDescription').toString()
+    englishStrippedStr('callsVoiceAndVideoBeta').toString(),
+    englishStrippedStr('callsVoiceAndVideoModalDescription').toString()
   );
   await alice1.clickOnByAccessibilityID('Continue');
   // Navigate back to conversation
@@ -77,8 +77,8 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await alice1.clickOnByAccessibilityID('Call');
   // No test tags on modal as of yet
   // await bob1.checkModalStrings(
-  //   englishStripped('callsMissedCallFrom').withArgs({ name: alice.userName }).toString(),
-  //   englishStripped('callsYouMissedCallPermissions').withArgs({ name: alice.userName }).toString()
+  //   englishStrippedStr('callsMissedCallFrom').withArgs({ name: alice.userName }).toString(),
+  //   englishStrippedStr('callsYouMissedCallPermissions').withArgs({ name: alice.userName }).toString()
   // );
   await bob1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Okay' });
   // Hang up on device 1
@@ -101,8 +101,8 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
     selector: 'Voice and Video Calls - Switch',
   });
   await bob1.checkModalStrings(
-    englishStripped('callsVoiceAndVideoBeta').toString(),
-    englishStripped('callsVoiceAndVideoModalDescription').toString()
+    englishStrippedStr('callsVoiceAndVideoBeta').toString(),
+    englishStrippedStr('callsVoiceAndVideoModalDescription').toString()
   );
   await bob1.clickOnByAccessibilityID('Continue');
   await bob1.clickOnElementAll(new ExitUserProfile(bob1));
@@ -125,12 +125,12 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await alice1.clickOnByAccessibilityID('End call button');
   // Check for control messages on both devices
   // "callsYouCalled": "You called {name}",
-  const callsYouCalled = englishStripped('callsYouCalled')
+  const callsYouCalled = englishStrippedStr('callsYouCalled')
     .withArgs({ name: bob.userName })
     .toString();
   await alice1.waitForControlMessageToBePresent(callsYouCalled);
   // "callsYouCalled": "You called {name}",
-  const callsCalledYou = englishStripped('callsCalledYou')
+  const callsCalledYou = englishStrippedStr('callsCalledYou')
     .withArgs({ name: alice.userName })
     .toString();
   await bob1.waitForControlMessageToBePresent(callsCalledYou);

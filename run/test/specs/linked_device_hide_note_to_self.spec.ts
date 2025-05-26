@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { EmptyConversation, Hide } from './locators/conversation';
 import { CancelSearchButton, NoteToSelfOption } from './locators/global_search';
@@ -25,11 +25,11 @@ async function hideNoteToSelf(platform: SupportedPlatformsType) {
     devices: { alice1, alice2 },
   } = await open_Alice2({ platform });
 
-  const noteToSelf = englishStripped('noteToSelf').toString();
+  const noteToSelf = englishStrippedStr('noteToSelf').toString();
   await alice1.clickOnElementAll(new SearchButton(alice1));
   await alice1.clickOnElementAll(new NoteToSelfOption(alice1));
   await alice1.waitForTextElementToBePresent(
-    new EmptyConversation(alice1).build(englishStripped('noteToSelfEmpty').toString())
+    new EmptyConversation(alice1).build(englishStrippedStr('noteToSelfEmpty').toString())
   );
   await alice1.sendMessage('Creating note to self');
   await alice1.navigateBack();
@@ -44,8 +44,8 @@ async function hideNoteToSelf(platform: SupportedPlatformsType) {
   await alice1.onAndroid().longPressConversation(noteToSelf);
   await alice1.clickOnElementAll(new Hide(alice1));
   await alice1.checkModalStrings(
-    englishStripped('noteToSelfHide').toString(),
-    englishStripped('noteToSelfHideDescription').toString()
+    englishStrippedStr('noteToSelfHide').toString(),
+    englishStrippedStr('noteToSelfHideDescription').toString()
   );
   await alice1.clickOnElementAll(new Hide(alice1));
   await Promise.all(

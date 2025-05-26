@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import {
@@ -33,8 +33,8 @@ async function warningModalNewAccount(platform: SupportedPlatformsType) {
   // Pressing Back on the Display Name screen to trigger the Warning modal
   await device.clickOnElementAll(new BackButton(device));
   await device.checkModalStrings(
-    englishStripped('warning').toString(),
-    englishStripped('onboardingBackAccountCreation').toString()
+    englishStrippedStr('warning').toString(),
+    englishStrippedStr('onboardingBackAccountCreation').toString()
   );
   await device.clickOnElementAll(new WarningModalQuitButton(device));
   await closeApp(device);
