@@ -53,6 +53,7 @@ export const InteractionPoints: Record<string, Coordinates> = {
   DocumentKeyboardOpen: { x: 34, y: 445 },
   NetworkPageAndroid: { x: 880, y: 1150 },
   NetworkPageIOS: { x: 308, y: 220 },
+  DocumentKeyboardClosed: { x: 34, y: 712 },
 };
 
 export type Strategy = 'accessibility id' | 'xpath' | 'id' | 'class name';

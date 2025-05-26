@@ -1,10 +1,10 @@
-import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { LinkPreview, LinkPreviewMessage } from './locators';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { OutgoingMessageStatusSent } from './locators/conversation';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 
 bothPlatformsItSeparate({
   title: 'Send link 1:1',
@@ -35,18 +35,17 @@ async function sendLinkIos(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
-  // await alice1.waitForLoadingAnimation();
+  // Accept dialog for link preview
+  await alice1.checkModalStrings(
+    englishStrippedStr('linkPreviewsEnable').toString(),
+    englishStrippedStr('linkPreviewsFirstDescription').toString()
+  );
+  await alice1.clickOnByAccessibilityID('Enable');
+  await alice1.clickOnByAccessibilityID('Send message button');
   await alice1.waitForTextElementToBePresent({
     ...new OutgoingMessageStatusSent(alice1).build(),
     maxWait: 20000,
   });
-  // Accept dialog for link preview
-  await alice1.checkModalStrings(
-    englishStripped('linkPreviewsEnable').toString(),
-    englishStripped('linkPreviewsFirstDescription').toString()
-  );
-  await alice1.clickOnByAccessibilityID('Enable');
-  await alice1.clickOnByAccessibilityID('Send message button');
   await alice1.inputText(testLink, {
     strategy: 'accessibility id',
     selector: 'Message input box',
@@ -88,8 +87,8 @@ async function sendLinkAndroid(platform: SupportedPlatformsType) {
   });
   // Accept dialog for link preview
   await alice1.checkModalStrings(
-    englishStripped('linkPreviewsEnable').toString(),
-    englishStripped('linkPreviewsFirstDescription').toString(),
+    englishStrippedStr('linkPreviewsEnable').toString(),
+    englishStrippedStr('linkPreviewsFirstDescription').toString(),
     true
   );
   await alice1.clickOnElementAll({

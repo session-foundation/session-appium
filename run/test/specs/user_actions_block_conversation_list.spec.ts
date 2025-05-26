@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { BlockedContactsSettings, BlockUserConfirmationModal } from './locators';
@@ -28,8 +28,8 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   await alice1.longPressConversation(bob.userName);
   await alice1.clickOnElementAll(new LongPressBlockOption(alice1));
   await alice1.checkModalStrings(
-    englishStripped('block').toString(),
-    englishStripped('blockDescription').withArgs({ name: USERNAME.BOB }).toString(),
+    englishStrippedStr('block').toString(),
+    englishStrippedStr('blockDescription').withArgs({ name: USERNAME.BOB }).toString(),
     true
   );
   await alice1.clickOnElementAll(new BlockUserConfirmationModal(alice1));

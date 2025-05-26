@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { EditGroup, InviteContactsButton, InviteContactsMenuItem } from './locators';
@@ -61,13 +61,13 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   await Promise.all(
     [alice1, bob1, charlie1].map(device =>
       device.waitForControlMessageToBePresent(
-        englishStripped('groupMemberNew').withArgs({ name: USERNAME.DRACULA }).toString()
+        englishStrippedStr('groupMemberNew').withArgs({ name: USERNAME.DRACULA }).toString()
       )
     )
   );
   await unknown1.navigateBack();
   await unknown1.selectByText('Conversation list item', group.groupName);
   // Check for control message on device 4
-  await unknown1.waitForControlMessageToBePresent(englishStripped('groupInviteYou').toString());
+  await unknown1.waitForControlMessageToBePresent(englishStrippedStr('groupInviteYou').toString());
   await closeApp(alice1, bob1, charlie1, unknown1);
 }

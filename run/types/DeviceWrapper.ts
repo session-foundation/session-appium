@@ -15,7 +15,6 @@ import {
   SendMediaButton,
 } from '../../run/test/specs/locators';
 import { IOS_XPATHS } from '../constants';
-import { englishStripped } from '../localizer/Localizer';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
 import { EnterAccountID } from '../test/specs/locators/start_conversation';
@@ -37,6 +36,7 @@ import {
 } from './testing';
 import { testFile, testImage, testVideo, profilePicture } from '../constants/testfiles';
 import { AttachmentsButton, OutgoingMessageStatusSent } from '../test/specs/locators/conversation';
+import { englishStrippedStr } from '../localizer/englishStrippedStr';
 
 export type Coordinates = {
   x: number;
@@ -1321,7 +1321,12 @@ export class DeviceWrapper {
       const spongeBobsBirthday = '199905010700.00';
       await this.clickOnByAccessibilityID('Attachments button');
       await sleepFor(100);
-      await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardOpen);
+      const keyboard = await this.isKeyboardVisible();
+      if (keyboard) {
+        await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardOpen);
+      } else {
+        await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardClosed);
+      }
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
       const testDocument = await this.doesElementExist({
         strategy: 'accessibility id',
@@ -1360,8 +1365,8 @@ export class DeviceWrapper {
       }
     }
     await this.checkModalStrings(
-      englishStripped('giphyWarning').toString(),
-      englishStripped('giphyWarningDescription').toString(),
+      englishStrippedStr('giphyWarning').toString(),
+      englishStrippedStr('giphyWarningDescription').toString(),
       true
     );
     await this.clickOnByAccessibilityID('Continue', 5000);
@@ -1519,8 +1524,8 @@ export class DeviceWrapper {
       selector: 'Untrusted attachment message',
     });
     await this.checkModalStrings(
-      englishStripped(`attachmentsAutoDownloadModalTitle`).toString(),
-      englishStripped(`attachmentsAutoDownloadModalDescription`)
+      englishStrippedStr(`attachmentsAutoDownloadModalTitle`).toString(),
+      englishStrippedStr(`attachmentsAutoDownloadModalDescription`)
         .withArgs({ conversation_name: conversationName })
         .toString(),
       true

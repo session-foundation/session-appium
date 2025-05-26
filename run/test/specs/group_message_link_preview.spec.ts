@@ -1,10 +1,10 @@
-import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { LinkPreview, LinkPreviewMessage } from './locators';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { OutgoingMessageStatusSent } from './locators/conversation';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 
 bothPlatformsItSeparate({
   title: 'Send link to group',
@@ -36,20 +36,18 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
-
-  await alice1.waitForTextElementToBePresent({
-    ...new OutgoingMessageStatusSent(alice1).build(),
-    maxWait: 20000,
-  });
-
   // Accept dialog for link preview
   await alice1.checkModalStrings(
-    englishStripped('linkPreviewsEnable').toString(),
-    englishStripped('linkPreviewsFirstDescription').toString()
+    englishStrippedStr('linkPreviewsEnable').toString(),
+    englishStrippedStr('linkPreviewsFirstDescription').toString()
   );
   await alice1.clickOnByAccessibilityID('Enable');
   // No preview on first send
   await alice1.clickOnByAccessibilityID('Send message button');
+  await alice1.waitForTextElementToBePresent({
+    ...new OutgoingMessageStatusSent(alice1).build(),
+    maxWait: 20000,
+  });
   // Send again for image
   await alice1.inputText(testLink, {
     strategy: 'accessibility id',
@@ -103,8 +101,8 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType) {
   });
   // Accept dialog for link preview
   await alice1.checkModalStrings(
-    englishStripped('linkPreviewsEnable').toString(),
-    englishStripped('linkPreviewsFirstDescription').toString(),
+    englishStrippedStr('linkPreviewsEnable').toString(),
+    englishStrippedStr('linkPreviewsFirstDescription').toString(),
     true
   );
   await alice1.clickOnByAccessibilityID('Enable');

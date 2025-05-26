@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { TickButton, UsernameInput, UsernameSettings } from './locators';
 import { SaveNameChangeButton, UserSettings } from './locators/settings';
@@ -33,8 +33,8 @@ async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
   // select username
   await alice1.clickOnElementAll(new UsernameSettings(alice1));
   await alice1.checkModalStrings(
-    englishStripped('displayNameSet').toString(),
-    englishStripped('displayNameVisible').toString()
+    englishStrippedStr('displayNameSet').toString(),
+    englishStrippedStr('displayNameVisible').toString()
   );
   // type in new username
   await sleepFor(100);
