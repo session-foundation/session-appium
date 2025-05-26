@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { SafariAddressBar, URLInputField } from './locators/browsers';
@@ -30,8 +30,8 @@ async function networkPageLearnMore(platform: SupportedPlatformsType) {
   await device.clickOnElementAll(new SessionNetworkMenuItem(device));
   await device.clickOnElementAll(new SessionNetworkLearnMoreNetwork(device));
   await device.checkModalStrings(
-    englishStripped('urlOpen').toString(),
-    englishStripped('urlOpenDescription').withArgs({ url: linkURL }).toString()
+    englishStrippedStr('urlOpen').toString(),
+    englishStrippedStr('urlOpenDescription').withArgs({ url: linkURL }).toString()
   );
   await device.clickOnElementAll(new OpenLinkButton(device));
   if (platform === 'ios') {
