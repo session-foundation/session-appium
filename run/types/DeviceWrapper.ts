@@ -135,7 +135,12 @@ export class DeviceWrapper {
     await this.toShared().performActions(actions);
   }
 
-  public async pressCoordinates(xCoOrdinates: number, yCoOrdinates: number): Promise<void> {
+  public async pressCoordinates(
+    xCoOrdinates: number,
+    yCoOrdinates: number,
+    longPress?: boolean
+  ): Promise<void> {
+    const duration = longPress ? 1000 : 200;
     const actions = [
       {
         type: 'pointer',
@@ -149,7 +154,7 @@ export class DeviceWrapper {
             y: yCoOrdinates,
           },
           { type: 'pointerDown', button: 0 },
-          { type: 'pause', duration: 200 },
+          { type: 'pause', duration },
 
           { type: 'pointerUp', button: 0 },
         ],
@@ -195,6 +200,18 @@ export class DeviceWrapper {
 
   public async getElementScreenshot(elementId: string): Promise<string> {
     return this.toShared().getElementScreenshot(elementId);
+  }
+
+  public async getScreenshot(): Promise<string> {
+    return this.toShared().getScreenshot();
+  }
+
+  public async getViewportScreenshot(): Promise<string> {
+    return this.toShared().getViewportScreenshot();
+  }
+
+  public async getWindowRect(): Promise<{ height: number; width: number; x: number; y: number }> {
+    return this.toShared().getWindowRect();
   }
 
   // Session management
@@ -1603,6 +1620,22 @@ export class DeviceWrapper {
         strategy: 'accessibility id',
         selector: 'Scroll button',
       });
+    }
+  }
+
+  public async pullToRefresh() {
+    if (this.isAndroid()) {
+      await this.pressCoordinates(
+        InteractionPoints.NetworkPageAndroid.x,
+        InteractionPoints.NetworkPageAndroid.y,
+        true
+      );
+    } else {
+      await this.pressCoordinates(
+        InteractionPoints.NetworkPageIOS.x,
+        InteractionPoints.NetworkPageIOS.y,
+        true
+      );
     }
   }
 
