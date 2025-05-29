@@ -46,10 +46,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
     text: messageRequestPendingDescription,
   });
 
-  await device1.inputText(testMessage, {
-    strategy: 'accessibility id',
-    selector: 'Message input box',
-  });
+  await device1.inputText(testMessage, new MessageInput(device1));
   // Click send
   await device1.clickOnElementAll({
     strategy: 'accessibility id',

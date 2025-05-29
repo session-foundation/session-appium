@@ -1,7 +1,12 @@
 import { pick } from 'lodash';
 import * as util from 'util';
-
+import sharp from 'sharp';
+import path from 'path';
+import * as fs from 'fs';
+import { v4 as uuidv4 } from 'uuid';
+import { Suffix } from '../../../types/testing';
 import { exec as execNotPromised } from 'child_process';
+import { DeviceWrapper } from '../../../types/DeviceWrapper';
 const exec = util.promisify(execNotPromised);
 
 export async function runScriptAndLog(toRun: string, verbose = false): Promise<string> {
@@ -57,4 +62,48 @@ export function hexToRgbObject(hex: string): { R: number; G: number; B: number }
     G: (decimalValue >> 8) & 255,
     B: decimalValue & 255,
   };
+}
+
+export function ensureHttpsURL(url: string): string {
+  return url.startsWith('https://') ? url : `https://${url}`;
+}
+
+export async function cropScreenshot(device: DeviceWrapper, screenshotBuffer: Buffer) {
+  const { width, height } = await device.getWindowRect();
+  const cropTop = 250;
+  const cropLeft = 0;
+  const cropWidth = width;
+  const cropHeight = height - 250;
+
+  const croppedBuf = await sharp(screenshotBuffer)
+    .extract({ left: cropLeft, top: cropTop, width: cropWidth, height: cropHeight })
+    .png()
+    .toBuffer();
+
+  return croppedBuf;
+}
+
+export async function saveImage(
+  source: Buffer | { save: (fullPath: string) => Promise<void> },
+  directory: string,
+  suffix: Suffix,
+  customFileName?: string
+) {
+  const name = customFileName ?? `${uuidv4()}_${suffix}.png`;
+  const fullPath = path.join(directory, name);
+
+  fs.mkdirSync(path.dirname(fullPath), { recursive: true });
+
+  if (Buffer.isBuffer(source)) {
+    fs.writeFileSync(fullPath, source);
+  } else {
+    await source.save(fullPath);
+  }
+  return fullPath;
+}
+
+export function getDiffDirectory() {
+  const diffsDir = path.join('test-results', 'diffs');
+  fs.mkdirSync(diffsDir, { recursive: true });
+  return diffsDir;
 }
