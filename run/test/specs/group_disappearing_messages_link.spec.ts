@@ -44,10 +44,6 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
     await alice1.clickOnByAccessibilityID('Enable');
   }
 
-  await alice1.waitForTextElementToBePresent({
-    ...new OutgoingMessageStatusSent(alice1).build(),
-    maxWait: 20000,
-  });
   if (platform === 'ios') {
     await alice1.checkModalStrings(
       englishStrippedStr('linkPreviewsEnable').toString(),
@@ -56,8 +52,13 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
     await alice1.clickOnByAccessibilityID('Enable');
   }
   // Accept dialog for link preview
-  // No preview on first send
+  // Let preview load
+  await sleepFor(5000);
   await alice1.clickOnByAccessibilityID('Send message button');
+  await alice1.waitForTextElementToBePresent({
+    ...new OutgoingMessageStatusSent(alice1).build(),
+    maxWait: 20000,
+  });
 
   // Send again for image
   await alice1.inputText(testLink, {
@@ -67,7 +68,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   if (platform === 'ios') {
     await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
   } else {
-    await sleepFor(1000);
+    await sleepFor(5000);
   }
   await alice1.clickOnByAccessibilityID('Send message button');
   // Make sure image preview is available in device 2
