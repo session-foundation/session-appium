@@ -45,7 +45,7 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   });
   if (blockedStatus) {
     // Check linked device for blocked status (if shown on alice1)
-    await alice2.onAndroid().clickOnElementAll(new ConversationItem(alice2, bob.userName))
+    await alice2.onAndroid().clickOnElementAll(new ConversationItem(alice2, bob.userName));
     await alice2.onAndroid().waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Blocked banner',
