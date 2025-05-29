@@ -1,6 +1,7 @@
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { MessageInput } from './locators/conversation';
 import { PlusButton } from './locators/home';
 import { EnterAccountID, NewMessageOption, NextButton } from './locators/start_conversation';
 import { newUser } from './utils/create_account';
