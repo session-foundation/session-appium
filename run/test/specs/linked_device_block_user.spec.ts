@@ -2,7 +2,8 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { BlockedContactsSettings, BlockUser, BlockUserConfirmationModal } from './locators';
 import { ConversationSettings } from './locators/conversation';
-import { UserSettings } from './locators/settings';
+import { ConversationItem } from './locators/home';
+import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { open_Alice2_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -44,11 +45,7 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   });
   if (blockedStatus) {
     // Check linked device for blocked status (if shown on alice1)
-    await alice2.onAndroid().clickOnElementAll({
-      strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: `${bob.userName}`,
-    });
+    await alice2.onAndroid().clickOnElementAll(new ConversationItem(alice2, bob.userName))
     await alice2.onAndroid().waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Blocked banner',
@@ -64,8 +61,8 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
     alice2.clickOnElementAll(new UserSettings(alice2)),
   ]);
   await Promise.all([
-    alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' }),
-    alice2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' }),
+    alice1.clickOnElementAll(new ConversationsMenuItem(alice1)),
+    alice2.clickOnElementAll(new ConversationsMenuItem(alice2)),
   ]);
   await Promise.all([
     alice1.clickOnElementAll(new BlockedContactsSettings(alice1)),

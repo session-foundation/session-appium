@@ -11,10 +11,18 @@ export class MessageInput extends LocatorsInterface {
 
 export class ConversationSettings extends LocatorsInterface {
   public build() {
-    return {
-      strategy: 'accessibility id',
-      selector: 'More options',
-    } as const;
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'conversation-options-avatar',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'More options',
+        } as const;
+    }
   }
 }
 
@@ -91,5 +99,65 @@ export class OutgoingMessageStatusSent extends LocatorsInterface {
       strategy: 'accessibility id',
       selector: `Message sent status: Sent`,
     } as const;
+  }
+}
+
+export class CallButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Call button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Call',
+        } as const;
+    }
+  }
+}
+
+export class ConversationHeaderName extends LocatorsInterface {
+  public build(text?: string) {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Conversation header name',
+          text,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Conversation header name',
+          text,
+        } as const;
+    }
+  }
+}
+
+export class NotificationSettings extends LocatorsInterface {
+  public build() {
+    return {
+      strategy: 'accessibility id',
+      selector: 'Notifications',
+    } as const;
+  }
+}
+
+export class NotificationSwitch extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'com.android.settings:id/switch_text',
+          text: 'All Session notifications',
+        } as const;
+      case 'ios':
+        throw new Error('Platform not supported');
+    }
   }
 }

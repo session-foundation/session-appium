@@ -3,6 +3,7 @@ import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { OutgoingMessageStatusSent } from './locators/conversation';
+import { ConversationItem } from './locators/home';
 
 bothPlatformsItSeparate({
   title: 'Send long message to group',
@@ -95,11 +96,7 @@ async function sendLongMessageGroupAndroid(platform: SupportedPlatformsType) {
   const replyMessage = await bob1.sendMessage(`${alice.userName} message reply`);
   // Go out and back into the group to see the last message
   await alice1.navigateBack();
-  await alice1.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Conversation list item',
-    text: testGroupName,
-  });
+  await alice1.clickOnElementAll(new ConversationItem(alice1, testGroupName));
   await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
@@ -107,11 +104,7 @@ async function sendLongMessageGroupAndroid(platform: SupportedPlatformsType) {
   });
   // Go out and back into the group to see the last message
   await charlie1.navigateBack();
-  await charlie1.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Conversation list item',
-    text: testGroupName,
-  });
+  await charlie1.clickOnElementAll(new ConversationItem(charlie1, testGroupName));
   await charlie1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',

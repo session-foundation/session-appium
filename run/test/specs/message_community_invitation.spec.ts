@@ -7,6 +7,7 @@ import { testCommunityLink, testCommunityName } from './../../constants/communit
 import { ConversationSettings } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { ConversationItem } from './locators/home';
 
 bothPlatformsItSeparate({
   title: 'Send community invitation',
@@ -62,11 +63,7 @@ async function sendCommunityInvitationIos(platform: SupportedPlatformsType) {
   );
   await bob1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Join' });
   await bob1.navigateBack();
-  await bob1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Conversation list item',
-    text: testCommunityName,
-  });
+  await bob1.waitForTextElementToBePresent(new ConversationItem(bob1, testCommunityName));
   await closeApp(alice1, bob1);
 }
 
@@ -117,10 +114,6 @@ async function sendCommunityInviteMessageAndroid(platform: SupportedPlatformsTyp
   );
   await bob1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Join' });
   await bob1.navigateBack();
-  await bob1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Conversation list item',
-    text: testCommunityName,
-  });
+  await bob1.waitForTextElementToBePresent(new ConversationItem(bob1, testCommunityName));
   await closeApp(alice1, bob1);
 }

@@ -96,21 +96,6 @@ export class EditGroupName extends LocatorsInterface {
   }
 }
 
-export class PrivacyButton extends LocatorsInterface {
-  public build() {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'class name',
-          selector: 'android.widget.TextView',
-          text: 'Privacy',
-        } as const;
-      case 'ios':
-        return { strategy: 'id', selector: 'Privacy' } as const;
-    }
-  }
-}
-
 export class ReadReceiptsButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -224,8 +209,7 @@ export class BlockUser extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger:id/title',
-          text: 'Block',
+          selector: 'block-user-confirm-button',
         };
     }
   }
@@ -467,23 +451,6 @@ export class DeleteMesssageRequestConfirmation extends LocatorsInterface {
       strategy: 'accessibility id',
       selector: 'Delete',
     };
-  }
-}
-
-export class RevealRecoveryPhraseButton extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Reveal recovery phrase button',
-        };
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Continue',
-        };
-    }
   }
 }
 

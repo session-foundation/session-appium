@@ -1,7 +1,8 @@
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { ConversationSettings } from './locators/conversation';
-import { LeaveGroupButton } from './locators/groups';
+import { LeaveGroupButton, LeaveGroupConfirm } from './locators/groups';
+import { ConversationItem } from './locators/home';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
@@ -28,7 +29,7 @@ async function leaveGroup(platform: SupportedPlatformsType) {
   await sleepFor(1000);
   await charlie1.clickOnElementAll(new LeaveGroupButton(charlie1));
   // Modal with Leave/Cancel
-  await charlie1.clickOnByAccessibilityID('Leave');
+  await charlie1.clickOnElementAll(new LeaveGroupConfirm(charlie1));
   // Check for control message
   const groupMemberLeft = englishStrippedStr('groupMemberLeft')
     .withArgs({ name: charlie.userName })
@@ -37,9 +38,7 @@ async function leaveGroup(platform: SupportedPlatformsType) {
   await bob1.waitForControlMessageToBePresent(groupMemberLeft);
   // Check device 3 that group has disappeared
   await charlie1.hasElementBeenDeleted({
-    strategy: 'accessibility id',
-    selector: 'Conversation list item',
-    text: testGroupName,
+    ...new ConversationItem(charlie1, testGroupName).build(),
     maxWait: 5000,
   });
   await closeApp(alice1, bob1, charlie1);

@@ -1,5 +1,6 @@
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { CommunityInput, JoinCommunityButton } from '../locators';
+import { PlusButton } from '../locators/home';
 import { JoinCommunityOption } from '../locators/start_conversation';
 
 export const joinCommunity = async (
@@ -7,7 +8,7 @@ export const joinCommunity = async (
   communityLink: string,
   communityName: string
 ) => {
-  await device.clickOnByAccessibilityID('New conversation button');
+  await device.clickOnElementAll(new PlusButton(device));
   await device.clickOnElementAll(new JoinCommunityOption(device));
   await device.inputText(communityLink, new CommunityInput(device));
   await device.clickOnElementAll(new JoinCommunityButton(device));

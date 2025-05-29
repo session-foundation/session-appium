@@ -3,7 +3,7 @@ import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { BlockedContactsSettings, BlockUserConfirmationModal } from './locators';
 import { LongPressBlockOption } from './locators/home';
-import { UserSettings } from './locators/settings';
+import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
@@ -44,7 +44,7 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   });
   await alice1.navigateBack();
   await alice1.clickOnElementAll(new UserSettings(alice1));
-  await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
+  await alice1.clickOnElementAll(new ConversationsMenuItem(alice1));
   await alice1.clickOnElementAll(new BlockedContactsSettings(alice1));
   await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',

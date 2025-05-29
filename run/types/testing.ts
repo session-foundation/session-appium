@@ -77,6 +77,8 @@ export enum DISAPPEARING_TIMES {
   OFF_ANDROID = 'Disable disappearing messages',
 }
 
+export type DisappearingOptions = `Disappear after ${DisappearModes} option`;
+
 export type DisappearOpts1o1 = [
   '1:1',
   `Disappear after ${DisappearModes} option`,
@@ -351,7 +353,9 @@ export type AccessibilityId =
   | 'Legacy Groups Recreate Button'
   | 'Confirm leave'
   | 'Photo, 25 March, 11:09 am'
-  | 'Albums';
+  | 'Albums'
+  | `Disappear after ${DisappearActions} option`
+  | 'Call button';
 
 export type Id =
   | 'Modal heading'
@@ -387,7 +391,6 @@ export type Id =
   | 'Delete'
   | 'android:id/content_preview_text'
   | 'network.loki.messenger:id/search_result_title'
-  | 'Error message'
   | 'Enter display name'
   | 'Session id input box'
   | 'com.android.chrome:id/url_bar'
@@ -418,7 +421,37 @@ export type Id =
   | 'Remove'
   | 'Contact status'
   | 'Image button'
-  | 'android.widget.TextView';
+  | 'android.widget.TextView'
+  | 'Create account button'
+  | 'Restore your session button'
+  | 'Open URL'
+  | 'Loading animation'
+  | 'Slow mode notifications button'
+  | 'Reveal recovery phrase button'
+  | 'Recovery password container'
+  | 'Copy button'
+  | 'New direct message'
+  | 'Join community button'
+  | 'Invite friend button'
+  | 'Conversations'
+  | 'Hide recovery password button'
+  | 'error-message'
+  | 'Next'
+  | 'Set button'
+  | 'disappearing-messages-menu-option'
+  | 'Disable disappearing messages'
+  | DISAPPEARING_TIMES
+  | 'conversation-options-avatar'
+  | `Disappear after ${DisappearModes} option`
+  | 'Disappearing messages type and time'
+  | 'Account ID'
+  | 'Share button'
+  | 'Call'
+  | 'Conversation header name'
+  | 'block-user-confirm-button'
+  | 'Notifications'
+  | 'All Session notifications'
+  | 'com.android.settings:id/switch_text';
 
 export type TestRisk = 'high' | 'medium' | 'low';
 

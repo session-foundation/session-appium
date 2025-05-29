@@ -2,6 +2,7 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME, type AccessibilityId } from '../../types/testing';
 import { DeclineMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
+import { PlusButton } from './locators/home';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
@@ -59,10 +60,7 @@ async function declineRequest(platform: SupportedPlatformsType) {
   await sleepFor(100);
   await device2.navigateBack();
   // Look for new conversation button to make sure it all worked
-  await device2.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'New conversation button',
-  });
+  await device2.waitForTextElementToBePresent(new PlusButton(device2));
   // Close app
   await closeApp(device1, device2, device3);
 }

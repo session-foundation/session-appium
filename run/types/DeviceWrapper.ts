@@ -10,14 +10,29 @@ import {
   ImageName,
   ImagePermissionsModalAllow,
   LocatorsInterface,
-  PrivacyButton,
   ReadReceiptsButton,
   SendMediaButton,
 } from '../../run/test/specs/locators';
 import { IOS_XPATHS } from '../constants';
+import { profilePicture, testFile, testImage, testVideo } from '../constants/testfiles';
+import { englishStrippedStr } from '../localizer/englishStrippedStr';
+import {
+  AttachmentsButton,
+  MessageInput,
+  OutgoingMessageStatusSent,
+} from '../test/specs/locators/conversation';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
-import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
-import { EnterAccountID } from '../test/specs/locators/start_conversation';
+import { LoadingAnimation } from '../test/specs/locators/onboarding';
+import {
+  PrivacyMenuItem,
+  SaveProfilePictureButton,
+  UserSettings,
+} from '../test/specs/locators/settings';
+import {
+  EnterAccountID,
+  NewMessageOption,
+  NextButton,
+} from '../test/specs/locators/start_conversation';
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
 import { getAdbFullPath } from '../test/specs/utils/binaries';
 import { parseDataImage } from '../test/specs/utils/check_colour';
@@ -34,9 +49,7 @@ import {
   User,
   XPath,
 } from './testing';
-import { testFile, testImage, testVideo, profilePicture } from '../constants/testfiles';
-import { AttachmentsButton, OutgoingMessageStatusSent } from '../test/specs/locators/conversation';
-import { englishStrippedStr } from '../localizer/englishStrippedStr';
+import { PlusButton } from '../test/specs/locators/home';
 
 export type Coordinates = {
   x: number;
@@ -913,8 +926,7 @@ export class DeviceWrapper {
     do {
       try {
         loadingAnimation = await this.waitForTextElementToBePresent({
-          strategy: 'accessibility id',
-          selector: 'Loading animation',
+          ...new LoadingAnimation(this).build(),
           maxWait: 1000,
         });
 
@@ -975,17 +987,17 @@ export class DeviceWrapper {
   public async sendNewMessage(user: Pick<User, 'accountID'>, message: string) {
     // Sender workflow
     // Click on plus button
-    await this.clickOnByAccessibilityID('New conversation button');
+    await this.clickOnElementAll(new PlusButton(this));
     // Select direct message option
-    await this.clickOnByAccessibilityID('New direct message');
+    await this.clickOnElementAll(new NewMessageOption(this));
     // Enter User B's session ID into input box
     await this.inputText(user.accountID, new EnterAccountID(this));
     // Click next
     await this.scrollDown();
-    await this.clickOnByAccessibilityID('Next');
+    await this.clickOnElementAll(new NextButton(this));
     // Type message into message input box
 
-    await this.inputText(message, { strategy: 'accessibility id', selector: 'Message input box' });
+    await this.inputText(message, new MessageInput(this));
     // Click send
     const sendButton = await this.clickOnElementAll({
       strategy: 'accessibility id',
@@ -1094,7 +1106,7 @@ export class DeviceWrapper {
       }
     } else {
       const radioButton = await this.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
+        strategy: 'id',
         selector: timeOption,
       });
       const attr = await this.getAttribute('selected', radioButton.ELEMENT);
@@ -1637,7 +1649,7 @@ export class DeviceWrapper {
     await sleepFor(100);
     await this.clickOnElementAll(new UserSettings(this));
     await sleepFor(500);
-    await this.clickOnElementAll(new PrivacyButton(this));
+    await this.clickOnElementAll(new PrivacyMenuItem(this));
     await sleepFor(2000);
     await this.clickOnElementAll(new ReadReceiptsButton(this));
     await this.navigateBack();
