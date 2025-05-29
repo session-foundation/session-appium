@@ -52,8 +52,8 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
     await alice1.clickOnByAccessibilityID('Enable');
   }
   // Accept dialog for link preview
-  // Let preview load 
-  await sleepFor(5000); 
+  // Let preview load
+  await sleepFor(5000);
   await alice1.clickOnByAccessibilityID('Send message button');
   await alice1.waitForTextElementToBePresent({
     ...new OutgoingMessageStatusSent(alice1).build(),
