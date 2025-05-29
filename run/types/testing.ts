@@ -362,8 +362,7 @@ export type AccessibilityId =
   | 'Learn more link'
   | 'Open'
   | 'Learn about staking link'
-  | 'Last updated timestamp'
-  | 'Albums';
+  | 'Last updated timestamp';
 
 export type Id =
   | 'Modal heading'
