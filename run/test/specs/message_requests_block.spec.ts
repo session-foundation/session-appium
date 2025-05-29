@@ -2,7 +2,8 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME, type AccessibilityId } from '../../types/testing';
 import { BlockedContactsSettings, BlockUserConfirmationModal } from './locators';
-import { UserSettings } from './locators/settings';
+import { PlusButton } from './locators/home';
+import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
@@ -63,10 +64,7 @@ async function blockedRequest(platform: SupportedPlatformsType) {
   const blockedMessage = `"${alice.userName} to ${bob.userName} - shouldn't get through"`;
   await device1.sendMessage(blockedMessage);
   await device2.navigateBack();
-  await device2.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'New conversation button',
-  });
+  await device2.waitForTextElementToBePresent(new PlusButton(device2));
   // Need to wait to see if message gets through
   await sleepFor(5000);
   await device2.hasTextElementBeenDeleted('Message body', blockedMessage);
@@ -77,8 +75,8 @@ async function blockedRequest(platform: SupportedPlatformsType) {
     device3.clickOnElementAll(new UserSettings(device3)),
   ]);
   await Promise.all([
-    device2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' }),
-    device3.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' }),
+    device2.clickOnElementAll(new ConversationsMenuItem(device2)),
+    device3.clickOnElementAll(new ConversationsMenuItem(device3)),
   ]);
   await Promise.all([
     device2.clickOnElementAll(new BlockedContactsSettings(device2)),

@@ -1,5 +1,6 @@
 import { testCommunityLink, testCommunityName } from '../../constants/community';
 import { bothPlatformsIt } from '../../types/sessionIt';
+import { ConversationItem } from './locators/home';
 import { open_Alice2 } from './state_builder';
 import { joinCommunity } from './utils/join_community';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
@@ -21,10 +22,6 @@ async function joinCommunityTest(platform: SupportedPlatformsType) {
   await alice1.onIOS().scrollToBottom();
   await alice1.sendMessage(testMessage);
   // Has community synced to device 2?
-  await alice2.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Conversation list item',
-    text: testCommunityName,
-  });
+  await alice2.waitForTextElementToBePresent(new ConversationItem(alice2, testCommunityName));
   await closeApp(alice1, alice2);
 }

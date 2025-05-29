@@ -1,7 +1,7 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
-import { MessageInput } from './locators/conversation';
-import { EnterAccountID } from './locators/start_conversation';
+import { PlusButton } from './locators/home';
+import { EnterAccountID, NewMessageOption, NextButton } from './locators/start_conversation';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
@@ -21,12 +21,15 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   const controlMode: DisappearActions = 'sent';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   // Send message to self to bring up Note to Self conversation
-  await device.clickOnByAccessibilityID('New conversation button');
-  await device.clickOnByAccessibilityID('New direct message');
+  await device.clickOnElementAll(new PlusButton(device));
+  await device.clickOnElementAll(new NewMessageOption(device));
   await device.inputText(alice.accountID, new EnterAccountID(device));
   await device.scrollDown();
-  await device.clickOnByAccessibilityID('Next');
-  await device.inputText('Creating note to self', new MessageInput(device));
+  await device.clickOnElementAll(new NextButton(device));
+  await device.inputText('Creating note to self', {
+    strategy: 'accessibility id',
+    selector: 'Message input box',
+  });
   await device.clickOnByAccessibilityID('Send message button');
   // Enable disappearing messages
   await setDisappearingMessage(platform, device, [
