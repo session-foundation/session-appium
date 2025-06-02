@@ -37,10 +37,6 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
-  await alice1.waitForTextElementToBePresent({
-    ...new OutgoingMessageStatusSent(alice1).build(),
-    maxWait: 20000,
-  });
   // Accept dialog for link preview
   await alice1.checkModalStrings(
     englishStrippedStr('linkPreviewsEnable').toString(),
@@ -49,6 +45,10 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
   await alice1.clickOnByAccessibilityID('Enable');
   // No preview on first send
   await alice1.clickOnByAccessibilityID('Send message button');
+  await alice1.waitForTextElementToBePresent({
+  ...new OutgoingMessageStatusSent(alice1).build(),
+  maxWait: 20000,
+  });
   // Send again for image
   await alice1.inputText(testLink, {
     strategy: 'accessibility id',
