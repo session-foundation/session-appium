@@ -46,14 +46,14 @@ export type Coordinates = {
 };
 
 export const InteractionPoints: Record<string, Coordinates> = {
-  ImagesFolderKeyboardOpen: { x: 34, y: 498 },
-  ImagesFolderKeyboardClosed: { x: 34, y: 763 },
-  GifButtonKeyboardOpen: { x: 34, y: 394 },
-  GifButtonKeyboardClosed: { x: 34, y: 663 },
-  DocumentKeyboardOpen: { x: 34, y: 445 },
+  ImagesFolderKeyboardOpen: { x: 36, y: 527 },
+  ImagesFolderKeyboardClosed: { x: 36, y: 792 },
+  GifButtonKeyboardOpen: { x: 36, y: 420 },
+  GifButtonKeyboardClosed: { x: 36, y: 689 },
+  DocumentKeyboardOpen: { x: 36, y: 476 },
+  DocumentKeyboardClosed: { x: 36, y: 740 },
   NetworkPageAndroid: { x: 880, y: 1150 },
   NetworkPageIOS: { x: 308, y: 220 },
-  DocumentKeyboardClosed: { x: 34, y: 712 },
 };
 
 export type Strategy = 'accessibility id' | 'xpath' | 'id' | 'class name';
@@ -136,7 +136,8 @@ export type XPath =
   | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`
   | `//XCUIElementTypeCell[@name="Session"]`
   | `//*[starts-with(@content-desc, "Photo taken on")]`
-  | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`;
+  | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`
+  | '//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="Photo, 01 May 1998, 7:00 am"]';
 
 export type AccessibilityId =
   | 'Create account button'

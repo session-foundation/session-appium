@@ -1439,8 +1439,8 @@ export class DeviceWrapper {
     if (this.isIOS()) {
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
       const profilePicture = await this.doesElementExist({
-        strategy: 'accessibility id',
-        selector: formattedDateiOS,
+        strategy: 'xpath',
+        selector: `//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="${formattedDateiOS}"]`,
         maxWait: 2000,
       });
       if (!profilePicture) {
@@ -1448,8 +1448,8 @@ export class DeviceWrapper {
       }
       await sleepFor(100);
       await this.clickOnElementAll({
-        strategy: 'accessibility id',
-        selector: formattedDateiOS,
+        strategy: 'xpath',
+        selector: `//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="${formattedDateiOS}"]`,
       });
       await this.clickOnByAccessibilityID('Done');
     } else if (this.isAndroid()) {
