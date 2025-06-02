@@ -13,6 +13,7 @@ bothPlatformsIt({
   title: 'Group member disappearing messages',
   risk: 'medium',
   testCb: membersCantSetDisappearingMessages,
+  shouldSkip: true, // Skipped because the qa-seeder creates groups with only admins (and they can always set disappearing messages)
   countOfDevicesNeeded: 3,
 });
 

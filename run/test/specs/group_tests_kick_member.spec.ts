@@ -16,6 +16,7 @@ bothPlatformsIt({
   title: 'Kick member',
   risk: 'medium',
   testCb: kickMember,
+  shouldSkip: true, // Skipped because the qa-seeder creates groups with only admins (and they cannot be kicked)
   countOfDevicesNeeded: 3,
 });
 
