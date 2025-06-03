@@ -46,8 +46,8 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
   // No preview on first send
   await alice1.clickOnByAccessibilityID('Send message button');
   await alice1.waitForTextElementToBePresent({
-  ...new OutgoingMessageStatusSent(alice1).build(),
-  maxWait: 20000,
+    ...new OutgoingMessageStatusSent(alice1).build(),
+    maxWait: 20000,
   });
   // Send again for image
   await alice1.inputText(testLink, {

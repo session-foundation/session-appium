@@ -47,14 +47,20 @@ async function shareToSession(platform: SupportedPlatformsType) {
   } else {
     testImage = await alice1.doesElementExist({
       strategy: 'xpath',
-      selector: '//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="Photo, 17 April, 9:56 am"]',
+      selector:
+        '//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="Photo, 17 April, 9:56 am"]',
     });
   }
   if (!testImage) {
     await alice1.pushMediaToDevice(fileName, ronSwansonBirthday);
   }
-  await alice1.onIOS().clickOnByAccessibilityID('Select')
-  await alice1.onIOS().clickOnElementXPath('//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="Photo, 17 April, 9:56 am"]', 1000);
+  await alice1.onIOS().clickOnByAccessibilityID('Select');
+  await alice1
+    .onIOS()
+    .clickOnElementXPath(
+      '//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="Photo, 17 April, 9:56 am"]',
+      1000
+    );
   await alice1.onAndroid().clickOnElementAll(new ImageName(alice1));
   await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Share' });
   await alice1.clickOnElementAll(new ShareExtensionIcon(alice1));

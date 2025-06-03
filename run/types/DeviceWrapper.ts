@@ -1242,8 +1242,8 @@ export class DeviceWrapper {
       maxWait: 500,
     });
     await this.pushMediaToDevice(fileName, bestDayOfYear);
-    await sleepFor(5000)
-    await this.clickOnByAccessibilityID(formattedDate, 5000);    
+    await sleepFor(5000);
+    await this.clickOnByAccessibilityID(formattedDate, 5000);
     // Send with message
     await this.clickOnByAccessibilityID('Text input box');
     await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
