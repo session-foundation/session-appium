@@ -14,7 +14,6 @@ import {
   ReadReceiptsButton,
   SendMediaButton,
 } from '../../run/test/specs/locators';
-import { IOS_XPATHS } from '../constants';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
 import { EnterAccountID } from '../test/specs/locators/start_conversation';
@@ -1242,22 +1241,9 @@ export class DeviceWrapper {
       selector: 'Allow Full Access',
       maxWait: 500,
     });
-    await this.clickOnByAccessibilityID('Recents');
-    // Select video
-    const videoFolder = await this.doesElementExist({
-      strategy: 'xpath',
-      selector: IOS_XPATHS.VIDEO_TOGGLE,
-      maxWait: 5000,
-    });
-    if (videoFolder) {
-      console.log('Videos folder found');
-      await this.clickOnByAccessibilityID('Videos');
-      await this.clickOnByAccessibilityID(formattedDate);
-    } else {
-      console.log('Videos folder NOT found');
-      await this.pushMediaToDevice(fileName, bestDayOfYear);
-      await this.clickOnByAccessibilityID(formattedDate, 5000);
-    }
+    await this.pushMediaToDevice(fileName, bestDayOfYear);
+    await sleepFor(5000);
+    await this.clickOnByAccessibilityID(formattedDate, 5000);
     // Send with message
     await this.clickOnByAccessibilityID('Text input box');
     await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
@@ -1439,8 +1425,8 @@ export class DeviceWrapper {
     if (this.isIOS()) {
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
       const profilePicture = await this.doesElementExist({
-        strategy: 'accessibility id',
-        selector: formattedDateiOS,
+        strategy: 'xpath',
+        selector: `//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="${formattedDateiOS}"]`,
         maxWait: 2000,
       });
       if (!profilePicture) {
@@ -1448,8 +1434,8 @@ export class DeviceWrapper {
       }
       await sleepFor(100);
       await this.clickOnElementAll({
-        strategy: 'accessibility id',
-        selector: formattedDateiOS,
+        strategy: 'xpath',
+        selector: `//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="${formattedDateiOS}"]`,
       });
       await this.clickOnByAccessibilityID('Done');
     } else if (this.isAndroid()) {

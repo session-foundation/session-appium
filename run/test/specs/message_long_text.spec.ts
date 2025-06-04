@@ -2,6 +2,8 @@ import { longText } from '../../constants';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { sleepFor } from './utils';
+import { ConversationItem } from './locators/home';
 
 bothPlatformsItSeparate({
   title: 'Send long message 1:1',
@@ -20,7 +22,7 @@ async function sendLongMessageIos(platform: SupportedPlatformsType) {
   // Open device and server
   const {
     devices: { alice1, bob1 },
-    prebuilt: { alice },
+    prebuilt: { alice, bob },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
@@ -29,7 +31,10 @@ async function sendLongMessageIos(platform: SupportedPlatformsType) {
   await alice1.sendMessage(longText);
   // Reply to message (User B to User A)
   const sentMessage = await bob1.replyToMessage(alice, longText);
-  // Check reply came through on alice1
+  // The CI kept throwing a stale element error here so we leave the convo and come back
+  await alice1.navigateBack();
+  await alice1.clickOnElementAll(new ConversationItem(alice1, bob.userName));
+  await sleepFor(1000);
   await alice1.findMessageWithBody(sentMessage);
   // Close app
   await closeApp(alice1, bob1);
