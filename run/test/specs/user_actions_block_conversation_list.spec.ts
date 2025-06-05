@@ -44,6 +44,8 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   });
   await alice1.navigateBack();
   await alice1.clickOnElementAll(new UserSettings(alice1));
+  // 'Conversations' might be hidden beyond the Settings view, gotta scroll down to find it
+  await alice1.scrollDown();
   await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
   await alice1.clickOnElementAll(new BlockedContactsSettings(alice1));
   await alice1.waitForTextElementToBePresent({
