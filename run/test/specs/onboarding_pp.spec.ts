@@ -7,7 +7,7 @@ import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from 
 
 bothPlatformsIt({
   title: 'Onboarding privacy policy',
-  risk: 'high',
+  risk: 'debug', // TODO adjust this to high
   testCb: onboardingPP,
   countOfDevicesNeeded: 1,
 });

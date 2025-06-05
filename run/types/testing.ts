@@ -435,7 +435,7 @@ export type Id =
   | 'Image button'
   | 'android.widget.TextView';
 
-export type TestRisk = 'high' | 'medium' | 'low';
+export type TestRisk = 'high' | 'medium' | 'low' | 'debug'; // TODO remove this later
 
 export type ElementStates = 'new_account' | 'restore_account';
 
