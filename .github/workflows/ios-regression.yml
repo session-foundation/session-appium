@@ -137,6 +137,20 @@ jobs:
           pwd
           _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
+      - name: Generate Allure report
+        run: |
+          npx allure generate allure-results \
+            --clean \
+            -o allure-report
+          echo "Allure report generated into ./allure-report"
+
+      - name: Deploy Allure Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
+          commit_message: "ci: publish Allure report for iOS regressions"
+
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results
         with:
