@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { UsernameInput } from './locators';
@@ -35,8 +35,8 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   await alice1.clickOnElementAll(new UsernameInput(alice1));
   await sleepFor(500);
   await alice1.checkModalStrings(
-    englishStripped('nicknameSet').toString(),
-    englishStripped('nicknameDescription').withArgs({ name: USERNAME.BOB }).toString()
+    englishStrippedStr('nicknameSet').toString(),
+    englishStrippedStr('nicknameDescription').withArgs({ name: USERNAME.BOB }).toString()
   );
   // Type in nickname
   // await alice1.deleteText(new UsernameInput(alice1));

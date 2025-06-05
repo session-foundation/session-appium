@@ -40,9 +40,10 @@ async function shareToSession(platform: SupportedPlatformsType) {
   await alice1.onIOS().swipeRightAny('Session');
   await alice1.clickOnElementAll(new PhotoLibrary(alice1));
   await sleepFor(2000);
+  await alice1.onIOS().clickOnByAccessibilityID('Select');
   await matchAndTapImage(
     alice1.onIOS(),
-    { strategy: 'xpath', selector: '//XCUIElementTypeCell' },
+    { strategy: 'xpath', selector: '//XCUIElementTypeImage' },
     fileNameThumbnail
   );
   await alice1.onAndroid().clickOnElementAll(new ImageName(alice1));

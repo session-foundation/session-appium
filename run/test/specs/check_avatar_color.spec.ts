@@ -4,6 +4,7 @@ import { isSameColor } from './utils/check_colour';
 import { UserSettings } from './locators/settings';
 import { ConversationAvatar, ConversationSettings } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
+import { ConversationItem } from './locators/home';
 
 bothPlatformsIt({
   title: 'Avatar color',
@@ -25,6 +26,8 @@ async function avatarColor(platform: SupportedPlatformsType) {
   const alice1PixelColor = await alice1.getElementPixelColor(new UserSettings(alice1));
   // Get Alice's avatar color on device 2 and turn it into a hex value
   let bob1PixelColor;
+  // Open the conversation with Alice on Bob's device
+  await bob1.clickOnElementAll(new ConversationItem(bob1, alice.userName));
   // The conversation screen looks slightly different per platform so we're grabbing the avatar from different locators
   // On iOS the avatar doubles as the Conversation Settings button on the right
   // On Android, the avatar is a separate, non-interactable element on the left (and the settings has the 3-dot icon)

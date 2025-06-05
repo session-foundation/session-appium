@@ -1,4 +1,3 @@
-import { englishStripped } from '../../localizer/Localizer';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { LinkPreview } from './locators';
@@ -7,6 +6,7 @@ import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 import { OutgoingMessageStatusSent } from './locators/conversation';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 
 bothPlatformsItSeparate({
   title: 'Disappearing link message 1:1',
@@ -37,18 +37,18 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
-  await alice1.waitForTextElementToBePresent({
-    ...new OutgoingMessageStatusSent(alice1).build(),
-    maxWait: 20000,
-  });
   // Accept dialog for link preview
   await alice1.checkModalStrings(
-    englishStripped('linkPreviewsEnable').toString(),
-    englishStripped('linkPreviewsFirstDescription').toString()
+    englishStrippedStr('linkPreviewsEnable').toString(),
+    englishStrippedStr('linkPreviewsFirstDescription').toString()
   );
   await alice1.clickOnByAccessibilityID('Enable');
   // No preview on first send
   await alice1.clickOnByAccessibilityID('Send message button');
+  await alice1.waitForTextElementToBePresent({
+    ...new OutgoingMessageStatusSent(alice1).build(),
+    maxWait: 20000,
+  });
   // Send again for image
   await alice1.inputText(testLink, {
     strategy: 'accessibility id',
@@ -98,8 +98,8 @@ async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsTyp
   });
   // Accept dialog for link preview
   await alice1.checkModalStrings(
-    englishStripped('linkPreviewsEnable').toString(),
-    englishStripped('linkPreviewsFirstDescription').toString(),
+    englishStrippedStr('linkPreviewsEnable').toString(),
+    englishStrippedStr('linkPreviewsFirstDescription').toString(),
     true
   );
   await alice1.clickOnByAccessibilityID('Enable');

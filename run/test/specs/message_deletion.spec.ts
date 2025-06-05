@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DeleteMessageConfirmationModal, DeleteMessageLocally } from './locators';
 import { DeletedMessage } from './locators/conversation';
@@ -30,8 +30,8 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   // Select Delete icon
   await alice1.clickOnByAccessibilityID('Delete message');
   await alice1.checkModalStrings(
-    englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
-    englishStripped('deleteMessageConfirm').withArgs({ count: 1 }).toString()
+    englishStrippedStr('deleteMessage').withArgs({ count: 1 }).toString(),
+    englishStrippedStr('deleteMessageConfirm').withArgs({ count: 1 }).toString()
   );
   // Select 'Delete on this device only'
   await alice1.clickOnElementAll(new DeleteMessageLocally(alice1));
