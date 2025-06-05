@@ -63,6 +63,8 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
     alice1.clickOnElementAll(new UserSettings(alice1)),
     alice2.clickOnElementAll(new UserSettings(alice2)),
   ]);
+  // 'Conversations' might be hidden beyond the Settings view, gotta scroll down to find it
+  await Promise.all([alice1.scrollDown(), alice2.scrollDown()]);
   await Promise.all([
     alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' }),
     alice2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' }),

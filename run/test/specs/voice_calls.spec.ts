@@ -5,6 +5,7 @@ import { open_Alice1_bob1_notfriends } from './state_builder';
 import { sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
+// skipping tests because they are unreliable on virtual devices, see QA-478
 bothPlatformsItSeparate({
   title: 'Voice calls',
   risk: 'high',
@@ -15,6 +16,7 @@ bothPlatformsItSeparate({
   },
   android: {
     testCb: voiceCallAndroid,
+    shouldSkip: true,
   },
 });
 

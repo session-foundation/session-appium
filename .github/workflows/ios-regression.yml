@@ -5,10 +5,9 @@ on:
   workflow_dispatch:
     inputs:
       APK_URL:
-        description: 'ipa url to test'
+        description: 'ipa url to test (.tar.xz)'
         required: true
         type: string
-        default: https://oxen.rocks/session-foundation/session-ios/dev/session-ios-20250408T201952Z-233314350-sim.tar.xz
 
       RISK:
         description: 'risks to target'
