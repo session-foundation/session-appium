@@ -110,7 +110,7 @@ jobs:
       - name: Restore Allure history cache
         uses: actions/cache@v4
         with:
-          path: allure/allure-report/history
+          path: allure/allure-history-backup/
           key: allure-history-${{ github.workflow }}-${{ github.ref }}
           restore-keys: |
             allure-history-${{ github.workflow }}-
@@ -166,7 +166,7 @@ jobs:
       - name: Save Allure history cache
         uses: actions/cache@v4
         with:
-          path: allure/allure-report/history
+          path: allure/allure-history-backup/
           key: allure-history-${{ github.workflow }}-${{ github.ref }}-${{ github.run_id }}
           restore-keys: |
             allure-history-${{ github.workflow }}-${{ github.ref }}
