@@ -150,7 +150,6 @@ jobs:
           DEVICES_PER_TEST_COUNT: 1
         run: |
           pwd
-          ALLURE_RESULTS_DIR=allure/allure-results-devices-1 \
           TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
       - name: Upload results of this run
@@ -167,7 +166,6 @@ jobs:
           DEVICES_PER_TEST_COUNT: 2
         run: |
           pwd
-          ALLURE_RESULTS_DIR=allure/allure-results-devices-2 \
           _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
       - name: Upload results of this run
@@ -184,13 +182,7 @@ jobs:
           DEVICES_PER_TEST_COUNT: 4
         run: |
           pwd
-          ALLURE_RESULTS_DIR=allure/allure-results-other \
           _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
-
-      - name: Merge Allure results
-        run: |
-          mkdir -p allure/allure-results
-          cp -r allure/allure-results-devices-*/* allure/allure-results/ || true
 
       - name: Merge testing history and generate Allure report
         if: always()
