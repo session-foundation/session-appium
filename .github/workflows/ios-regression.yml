@@ -75,6 +75,7 @@ jobs:
     env:
       PLATFORM: 'ios'
       BUILD_NUMBER: ${{ github.event.inputs.BUILD_NUMBER }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CI: 1
       IOS_APP_PATH_PREFIX: './extracted/Session.app'
       ANDROID_APK: '<just_not_empty>'
