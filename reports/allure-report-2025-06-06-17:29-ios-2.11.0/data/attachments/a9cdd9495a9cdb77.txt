@@ -1,0 +1,299 @@
+
+
+==========> Running "Send image 1:1 @ios @high-risk @2-devices"
+
+
+starting capabilitiesIndex 0 ios
+openiOSApp
+starting capabilitiesIndex 1 ios
+openiOSApp
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"052932a21037bc013b9b3941bd947116233c9356c7d07df1cbb1d382939a0c4606","seedPhrase":"warped online foxes fixate sipped dullness smuggled abyss eleven slackens hive hectare hectare"},
+SessionUser: {"name":"Bob","sessionId":"05f50aff92b31dfe0579fb1a8bcd39fb68eddc56fba78f2805136e536a39c5255f","seedPhrase":"jockey fading puffin seismic tsunami anxiety gifts taboo okay yawning bikini uptight seismic"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"052932a21037bc013b9b3941bd947116233c9356c7d07df1cbb1d382939a0c4606","seedPhrase":"warped online foxes fixate sipped dullness smuggled abyss eleven slackens hive hectare hectare"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"052932a21037bc013b9b3941bd947116233c9356c7d07df1cbb1d382939a0c4606","seedPhrase":"warped online foxes fixate sipped dullness smuggled abyss eleven slackens hive hectare hectare"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"05f50aff92b31dfe0579fb1a8bcd39fb68eddc56fba78f2805136e536a39c5255f","seedPhrase":"jockey fading puffin seismic tsunami anxiety gifts taboo okay yawning bikini uptight seismic"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"05f50aff92b31dfe0579fb1a8bcd39fb68eddc56fba78f2805136e536a39c5255f","seedPhrase":"jockey fading puffin seismic tsunami anxiety gifts taboo okay yawning bikini uptight seismic"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"052932a21037bc013b9b3941bd947116233c9356c7d07df1cbb1d382939a0c4606","seedPhrase":"warped online foxes fixate sipped dullness smuggled abyss eleven slackens hive hectare hectare"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"05f50aff92b31dfe0579fb1a8bcd39fb68eddc56fba78f2805136e536a39c5255f","seedPhrase":"jockey fading puffin seismic tsunami anxiety gifts taboo okay yawning bikini uptight seismic"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 709,
+    [Symbol(trigger_async_id_symbol)]: 361,
+    [Symbol(kResourceStore)]: undefined
+  }
+]
+random snode for user: 052932a21037bc013b9b3941bd947116233c9356c7d07df1cbb1d382939a0c4606 is snode: cafe05f4c33852dbfa298bf798aeae23f531c2b9df2a86d017ebc4eb947eac87
+storing to snode https://185.150.191.191:22105/storage_rpc/v1
+storing to snode https://185.150.191.191:22105/storage_rpc/v1
+storing to snode https://185.150.191.191:22105/storage_rpc/v1
+storeStatus for Alice: [ 200, 200, 200 ]
+random snode for user: 05f50aff92b31dfe0579fb1a8bcd39fb68eddc56fba78f2805136e536a39c5255f is snode: 0c137d05b3ddf88d61ac6cc2850ed81f79dfda1cc75e86ec54594031a2bf8431
+storing to snode https://51.161.134.230:22021/storage_rpc/v1
+storing to snode https://51.161.134.230:22021/storage_rpc/v1
+storing to snode https://51.161.134.230:22021/storage_rpc/v1
+storeStatus for Bob: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "warped online foxes fixate sipped dullness smuggled abyss eleven slackens hive hectare hectare"
+	"Bob": "jockey fading puffin seismic tsunami anxiety gifts taboo okay yawning bikini uptight seismic" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+running  xcrun simctl privacy 56D8BA2F-BA0C-4D8F-8E5B-FD928E2C7C66 reset all undefined
+was run:  xcrun simctl privacy 56D8BA2F-BA0C-4D8F-8E5B-FD928E2C7C66 reset all undefined { stdout: '', stderr: '' }
+iosPermissions {
+  ELEMENT: '92010000-0000-0000-3370-000000000000',
+  'element-6066-11e4-a52e-4f735466cecf': '92010000-0000-0000-3370-000000000000'
+}
+Waiting for "xpath" and "//XCUIElementTypeAlert//*//XCUIElementTypeButton" to be present
+'//XCUIElementTypeAlert//*//XCUIElementTypeButton' has been found
+running  xcrun simctl privacy 064F4F80-B81C-4B72-9715-43CD18975139 reset all undefined
+was run:  xcrun simctl privacy 064F4F80-B81C-4B72-9715-43CD18975139 reset all undefined { stdout: '', stderr: '' }
+Waiting for "accessibility id" and "Restore your session button" to be present
+Waiting for "accessibility id" and "Restore your session button" to be present
+'Restore your session button' has been found
+'Restore your session button' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+Waiting for "accessibility id" and "Recovery password input" to be present
+Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+Waiting for "accessibility id" and "Recovery password input" to be present
+'Recovery password input' has been found
+'Recovery password input' has been found
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+'Continue' has been found
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow doesn't exist, time expired
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow doesn't exist, time expired
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+'New conversation button' has been found
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Text found to include Bob
+'Conversation list item' and 'Bob' has been found
+Text found to include Alice
+'Conversation list item' and 'Alice' has been found
+Waiting for "accessibility id" and "Attachments button" to be present
+'Attachments button' has been found
+Sleeping for 5000 milliseconds
+doesElementExist failed with accessibility id space
+space Doesn't exist but retrying
+doesElementExist failed with accessibility id space
+space Doesn't exist but retrying
+doesElementExist failed with accessibility id space
+space Doesn't exist but retrying
+doesElementExist failed with accessibility id space
+space Doesn't exist but retrying
+doesElementExist failed with accessibility id space
+space doesn't exist, time expired
+Tapped coordinates 36, 792
+doesElementExist failed with accessibility id Allow Full Access
+Allow Full Access Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow Full Access
+Allow Full Access Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow Full Access
+Allow Full Access Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow Full Access
+Allow Full Access Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow Full Access
+Allow Full Access doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+doesElementExist failed with accessibility id 1967-05-05 21:00:00 +0000
+1967-05-05 21:00:00 +0000 Doesn't exist but retrying
+doesElementExist failed with accessibility id 1967-05-05 21:00:00 +0000
+1967-05-05 21:00:00 +0000 Doesn't exist but retrying
+doesElementExist failed with accessibility id 1967-05-05 21:00:00 +0000
+1967-05-05 21:00:00 +0000 Doesn't exist but retrying
+doesElementExist failed with accessibility id 1967-05-05 21:00:00 +0000
+1967-05-05 21:00:00 +0000 Doesn't exist but retrying
+doesElementExist failed with accessibility id 1967-05-05 21:00:00 +0000
+1967-05-05 21:00:00 +0000 Doesn't exist but retrying
+doesElementExist failed with accessibility id 1967-05-05 21:00:00 +0000
+1967-05-05 21:00:00 +0000 Doesn't exist but retrying
+doesElementExist failed with accessibility id 1967-05-05 21:00:00 +0000
+1967-05-05 21:00:00 +0000 Doesn't exist but retrying
+doesElementExist failed with accessibility id 1967-05-05 21:00:00 +0000
+1967-05-05 21:00:00 +0000 Doesn't exist but retrying
+doesElementExist failed with accessibility id 1967-05-05 21:00:00 +0000
+1967-05-05 21:00:00 +0000 doesn't exist, time expired
+running  xcrun simctl addmedia 064F4F80-B81C-4B72-9715-43CD18975139 'run/test/specs/media/test_image.jpg'
+was run:  xcrun simctl addmedia 064F4F80-B81C-4B72-9715-43CD18975139 'run/test/specs/media/test_image.jpg' { stdout: '', stderr: '' }
+Waiting for "accessibility id" and "1967-05-05 21:00:00 +0000" to be present
+waitForTextElementToBePresent threw: "accessibility id": "1967-05-05 21:00:00 +0000
+Waiting for "accessibility id" and "1967-05-05 21:00:00 +0000" to be present
+waitForTextElementToBePresent threw: "accessibility id": "1967-05-05 21:00:00 +0000
+Waiting for "accessibility id" and "1967-05-05 21:00:00 +0000" to be present
+waitForTextElementToBePresent threw: "accessibility id": "1967-05-05 21:00:00 +0000
+Waiting for "accessibility id" and "1967-05-05 21:00:00 +0000" to be present
+waitForTextElementToBePresent threw: "accessibility id": "1967-05-05 21:00:00 +0000
+Waiting for "accessibility id" and "1967-05-05 21:00:00 +0000" to be present
+waitForTextElementToBePresent threw: "accessibility id": "1967-05-05 21:00:00 +0000
+Waiting for "accessibility id" and "1967-05-05 21:00:00 +0000" to be present
+waitForTextElementToBePresent threw: "accessibility id": "1967-05-05 21:00:00 +0000
+Waiting for "accessibility id" and "1967-05-05 21:00:00 +0000" to be present
+waitForTextElementToBePresent threw: "accessibility id": "1967-05-05 21:00:00 +0000
+Waiting for "accessibility id" and "1967-05-05 21:00:00 +0000" to be present
+waitForTextElementToBePresent threw: "accessibility id": "1967-05-05 21:00:00 +0000
+Waiting for "accessibility id" and "1967-05-05 21:00:00 +0000" to be present
+waitForTextElementToBePresent threw: "accessibility id": "1967-05-05 21:00:00 +0000
+Waiting for "accessibility id" and "1967-05-05 21:00:00 +0000" to be present
+waitForTextElementToBePresent threw: "accessibility id": "1967-05-05 21:00:00 +0000

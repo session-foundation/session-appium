@@ -1,0 +1,673 @@
+
+
+==========> Running "Send document 1:1 @ios @high-risk @2-devices"
+
+
+starting capabilitiesIndex 0 ios
+openiOSApp
+starting capabilitiesIndex 1 ios
+openiOSApp
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"05fcbbe4d2eacf0c24b2fdc2aa334edf2508c4a24b5b71353a7b30bc0ab37f0e05","seedPhrase":"victim efficient keyboard pistons evicted tadpoles furnished agony lids beware bypass pests efficient"},
+SessionUser: {"name":"Bob","sessionId":"05a37e0c878533ca91fcb67434559977a18b6543442c1d66ec7f908d7c4cbc0f31","seedPhrase":"tavern autumn suffice rewind eleven northern myth tuxedo guest dawn lemon jazz dawn"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"05fcbbe4d2eacf0c24b2fdc2aa334edf2508c4a24b5b71353a7b30bc0ab37f0e05","seedPhrase":"victim efficient keyboard pistons evicted tadpoles furnished agony lids beware bypass pests efficient"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05fcbbe4d2eacf0c24b2fdc2aa334edf2508c4a24b5b71353a7b30bc0ab37f0e05","seedPhrase":"victim efficient keyboard pistons evicted tadpoles furnished agony lids beware bypass pests efficient"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"05a37e0c878533ca91fcb67434559977a18b6543442c1d66ec7f908d7c4cbc0f31","seedPhrase":"tavern autumn suffice rewind eleven northern myth tuxedo guest dawn lemon jazz dawn"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"05a37e0c878533ca91fcb67434559977a18b6543442c1d66ec7f908d7c4cbc0f31","seedPhrase":"tavern autumn suffice rewind eleven northern myth tuxedo guest dawn lemon jazz dawn"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05fcbbe4d2eacf0c24b2fdc2aa334edf2508c4a24b5b71353a7b30bc0ab37f0e05","seedPhrase":"victim efficient keyboard pistons evicted tadpoles furnished agony lids beware bypass pests efficient"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"05a37e0c878533ca91fcb67434559977a18b6543442c1d66ec7f908d7c4cbc0f31","seedPhrase":"tavern autumn suffice rewind eleven northern myth tuxedo guest dawn lemon jazz dawn"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 431654,
+    [Symbol(trigger_async_id_symbol)]: 431476,
+    [Symbol(kResourceStore)]: undefined
+  }
+]
+random snode for user: 05a37e0c878533ca91fcb67434559977a18b6543442c1d66ec7f908d7c4cbc0f31 is snode: 6468e5d12e7968f3b66ea975da9bcb4a38f13c4f3bcfc345b5cbf30e7d4aeaf9
+storing to snode https://167.86.101.76:22021/storage_rpc/v1
+storing to snode https://167.86.101.76:22021/storage_rpc/v1
+storing to snode https://167.86.101.76:22021/storage_rpc/v1
+random snode for user: 05fcbbe4d2eacf0c24b2fdc2aa334edf2508c4a24b5b71353a7b30bc0ab37f0e05 is snode: e42e1d5ddac8f002be1584f902ca59251fe08e05f1280bd62427cc419fafa23c
+storing to snode https://173.212.204.166:22021/storage_rpc/v1
+storing to snode https://173.212.204.166:22021/storage_rpc/v1
+storing to snode https://173.212.204.166:22021/storage_rpc/v1
+storeStatus for Bob: [ 200, 200, 200 ]
+storeStatus for Alice: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "victim efficient keyboard pistons evicted tadpoles furnished agony lids beware bypass pests efficient"
+	"Bob": "tavern autumn suffice rewind eleven northern myth tuxedo guest dawn lemon jazz dawn" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+running  xcrun simctl privacy C0EE6A21-044D-4B6E-B9A5-7AB977ADF305 reset all undefined
+was run:  xcrun simctl privacy C0EE6A21-044D-4B6E-B9A5-7AB977ADF305 reset all undefined { stdout: '', stderr: '' }
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+running  xcrun simctl privacy 84884861-F8EF-4481-A001-B403F2649FCF reset all undefined
+was run:  xcrun simctl privacy 84884861-F8EF-4481-A001-B403F2649FCF reset all undefined { stdout: '', stderr: '' }
+Waiting for "accessibility id" and "Restore your session button" to be present
+Waiting for "accessibility id" and "Restore your session button" to be present
+'Restore your session button' has been found
+'Restore your session button' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+Waiting for "accessibility id" and "Recovery password input" to be present
+Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+Waiting for "accessibility id" and "Recovery password input" to be present
+'Recovery password input' has been found
+'Recovery password input' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Loading animation not found
+Loading animation has finished
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow doesn't exist, time expired
+doesElementExist failed with accessibility id Allow
+Allow doesn't exist, time expired
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+'New conversation button' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Text found to include Alice
+'Conversation list item' and 'Alice' has been found
+Text found to include Bob
+'Conversation list item' and 'Bob' has been found
+Waiting for "accessibility id" and "Attachments button" to be present
+'Attachments button' has been found
+doesElementExist failed with accessibility id space
+space Doesn't exist but retrying
+doesElementExist failed with accessibility id space
+space Doesn't exist but retrying
+doesElementExist failed with accessibility id space
+space Doesn't exist but retrying
+doesElementExist failed with accessibility id space
+space Doesn't exist but retrying
+doesElementExist failed with accessibility id space
+space doesn't exist, time expired
+Tapped coordinates 36, 740
+doesElementExist failed with accessibility id Allow Full Access
+Allow Full Access Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow Full Access
+Allow Full Access Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow Full Access
+Allow Full Access Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow Full Access
+Allow Full Access Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow Full Access
+Allow Full Access doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+doesElementExist failed with accessibility id test_file, pdf
+test_file, pdf Doesn't exist but retrying
+doesElementExist failed with accessibility id test_file, pdf
+test_file, pdf Doesn't exist but retrying
+doesElementExist failed with accessibility id test_file, pdf
+test_file, pdf Doesn't exist but retrying
+doesElementExist failed with accessibility id test_file, pdf
+test_file, pdf Doesn't exist but retrying
+doesElementExist failed with accessibility id test_file, pdf
+test_file, pdf Doesn't exist but retrying
+doesElementExist failed with accessibility id test_file, pdf
+test_file, pdf Doesn't exist but retrying
+doesElementExist failed with accessibility id test_file, pdf
+test_file, pdf Doesn't exist but retrying
+doesElementExist failed with accessibility id test_file, pdf
+test_file, pdf Doesn't exist but retrying
+doesElementExist failed with accessibility id test_file, pdf
+test_file, pdf doesn't exist, time expired
+running  xcrun simctl addmedia 84884861-F8EF-4481-A001-B403F2649FCF 'run/test/specs/media/test_file.pdf'
+cmd which failed: "xcrun simctl addmedia 84884861-F8EF-4481-A001-B403F2649FCF 'run/test/specs/media/test_file.pdf'"
+{
+  stdout: '',
+  stderr: "Failed to import '/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/run/test/specs/media/test_file.pdf', error [NSPOSIXErrorDomain] 22: The operation couldn’t be completed. File type unsupported.\n" +
+    '\n' +
+    'An error was encountered processing the command (domain=com.apple.CoreSimulator.LaunchdSimError, code=133):\n' +
+    'Multiple errors were returned; see stderr\n'
+}
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+waitForTextElementToBePresent threw: "accessibility id": "test_file, pdf
+Waiting for "accessibility id" and "test_file, pdf" to be present
+'test_file, pdf' has been found
+Waiting for "accessibility id" and "Text input box" to be present
+'Text input box' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Text input box' }
+Waiting for "accessibility id" and "Text input box" to be present
+'Text input box' has been found
+Waiting for "accessibility id" and "Send button" to be present
+'Send button' has been found
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+'Untrusted attachment message' has been found
+Waiting for "accessibility id" and "Modal heading" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Modal heading
+Waiting for "accessibility id" and "Modal heading" to be present
+'Modal heading' has been found
+Modal heading is correct
+Waiting for "accessibility id" and "Modal description" to be present
+'Modal description' has been found
+Modal description is correct
+Waiting for "accessibility id" and "Download" to be present
+'Download' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Testing-document-1"
+Text found to include Testing-document-1
+'Message body' and 'Testing-document-1' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Testing-document-1"
+Text found to include Testing-document-1
+'Message body' and 'Testing-document-1' has been found
+Waiting for "accessibility id" and "Reply to message" to be present
+'Reply to message' has been found
+LongClick successful
+Waiting for "accessibility id" and "Reply to message" to be present
+'Reply to message' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Replying to document from Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Replying to document from Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Replying to document from Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Replying to document from Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Replying to document from Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Replying to document from Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Replying to document from Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Replying to document from Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Replying to document from Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Replying to document from Alice"
+waitForTextElementToBePresent threw: "accessibility id": "Message body
+Waiting for "accessibility id" and "Message body" to be present with "Replying to document from Alice"
+Text found to include Replying to document from Alice
+'Message body' and 'Replying to document from Alice' has been found
+sessions closed
