@@ -165,6 +165,7 @@ jobs:
 
       - name: Save Allure history cache
         uses: actions/cache@v4
+        if: always()
         with:
           path: allure/allure-history-backup/
           key: allure-history-${{ github.workflow }}-${{ github.ref }}-${{ github.run_id }}
