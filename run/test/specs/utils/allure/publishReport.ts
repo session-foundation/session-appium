@@ -15,8 +15,8 @@ function publishToGhPages(dir: string, dest: string, repo: string, message: stri
         message,
         dotfiles: true,
         user: {
-          name: process.env.GITHUB_ACTOR ?? 'github-actions',
-          email: `${process.env.GITHUB_ACTOR ?? 'github-actions'}@users.noreply.github.com`,
+          name: 'github-actions',
+          email: 'github-actions@users.noreply.github.com',
         },
       },
       (err) => {

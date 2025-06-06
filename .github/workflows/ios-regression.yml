@@ -75,7 +75,6 @@ jobs:
     env:
       PLATFORM: 'ios'
       BUILD_NUMBER: ${{ github.event.inputs.BUILD_NUMBER }}
-      GITHUB_ACTOR: ${{ github.actor }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CI: 1
       IOS_APP_PATH_PREFIX: './extracted/Session.app'
@@ -107,6 +106,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           lfs: true
+
+      - name: Restore Allure history cache
+        uses: actions/cache@v4
+        with:
+          path: allure/allure-report/history
+          key: allure-history-${{ github.workflow }}-${{ github.ref }}
+          restore-keys: |
+            allure-history-${{ github.workflow }}-
 
       - name: Download ipa and extract it
         run: |
@@ -155,6 +162,15 @@ jobs:
         if: always()
         run: |
           npx ts-node run/test/specs/utils/allure/publishReport.ts
+
+      - name: Save Allure history cache
+        uses: actions/cache@v4
+        with:
+          path: allure/allure-report/history
+          key: allure-history-${{ github.workflow }}-${{ github.ref }}-${{ github.run_id }}
+          restore-keys: |
+            allure-history-${{ github.workflow }}-${{ github.ref }}
+            allure-history-${{ github.workflow }}-
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results
