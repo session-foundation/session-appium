@@ -36,7 +36,7 @@ async function generateAllureReport() {
 async function closeRun() {
   // Read platform & build from env
   const platform = process.env.PLATFORM as SupportedPlatformsType;
-  const build = process.env.BUILD!;
+  const build = process.env.BUILD_NUMBER!;
 
   await createEnvProperties(platform, build);
 
