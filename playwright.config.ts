@@ -19,7 +19,7 @@ export default defineConfig({
    * Note: `playwright-reporter` below is our custom playwright reporter.
    * It accepts a few options as environment variables, see its Readme.md file for more info.
    */
-  reporter: [['./node_modules/@session-foundation/playwright-reporter/dist/index.js'], ['allure-playwright']],
+  reporter: [['./node_modules/@session-foundation/playwright-reporter/dist/index.js'], ['allure-playwright', {outputFolder: 'allure/allure-results'}]],
   testDir: './run/test/specs',
   testIgnore: '*.js',
   // outputDir: './tests/automation/test-results',
