@@ -1,0 +1,91 @@
+
+
+==========> Running "Create user @ios @debug-risk @1-devices"
+
+
+starting capabilitiesIndex 0 ios
+openiOSApp
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+Error opening iOS app: UnknownError: An unknown server-side error occurred while processing the command. Original error: Could not proxy command to the remote server. Original error: connect ECONNREFUSED 127.0.0.1:1261
+    at JWProxy.command (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/@appium/base-driver/lib/jsonwp-proxy/proxy.js:350:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at XCUITestDriver.proxyCommand (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/appium-xcuitest-driver/lib/commands/proxy-helper.js:103:35)
+    at XCUITestDriver.onSettingsUpdate (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/appium-xcuitest-driver/lib/driver.js:336:14)
+    at DeviceSettings.update (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/@appium/base-driver/lib/basedriver/device-settings.js:64:7)
+    at XCUITestDriver.updateSettings (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/@appium/base-driver/lib/basedriver/driver.ts:418:12)
+    at DeviceWrapper.modalPopup (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/run/types/DeviceWrapper.ts:1757:5)
+    at cleanPermissions (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/run/test/specs/utils/permissions.ts:22:7)
+    at openiOSApp (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/run/test/specs/utils/open_app.ts:274:37)
+    at createUser (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/run/test/specs/user_actions_create_user.spec.ts:14:22)
+    at /Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/run/types/sessionIt.ts:41:7
+    at /Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/playwright/lib/worker/workerMain.js:338:9
+    at /Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/playwright/lib/worker/testInfo.js:285:11
+    at TimeoutManager.withRunnable (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/playwright/lib/worker/timeoutManager.js:64:14)
+    at TestInfoImpl._runAsStage (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/playwright/lib/worker/testInfo.js:283:7)
+    at /Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/playwright/lib/worker/workerMain.js:330:7
+    at /Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/playwright/lib/worker/testInfo.js:285:11
+    at TimeoutManager.withRunnable (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/playwright/lib/worker/timeoutManager.js:52:27)
+    at TestInfoImpl._runAsStage (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/playwright/lib/worker/testInfo.js:283:7)
+    at WorkerMain._runTest (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/playwright/lib/worker/workerMain.js:280:5)
+    at WorkerMain.runTestGroup (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/playwright/lib/worker/workerMain.js:204:11)
+    at process.<anonymous> (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/playwright/lib/common/process.js:95:22) {
+  jsonwpCode: 13,
+  error: 'unknown error',
+  w3cStatus: 500,
+  _stacktrace: null
+}
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+running  xcrun simctl privacy 84884861-F8EF-4481-A001-B403F2649FCF reset all undefined
+was run:  xcrun simctl privacy 84884861-F8EF-4481-A001-B403F2649FCF reset all undefined { stdout: '', stderr: '' }
+Waiting for "accessibility id" and "Create account button" to be present
+'Create account button' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Enter display name' }
+Waiting for "accessibility id" and "Enter display name" to be present
+'Enter display name' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Sleeping for 5000 milliseconds
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow doesn't exist, time expired
+Waiting for "accessibility id" and "Reveal recovery phrase button" to be present
+'Reveal recovery phrase button' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Recovery password container" to be present
+'Recovery password container' has been found
+Waiting for "accessibility id" and "Recovery password container" to be present
+'Recovery password container' has been found
+Alices recovery phrase is "reheat pram hive drowning aloof dangerous rotate faxed apology dwarf getting pipeline drowning"
+Waiting for "accessibility id" and "Back" to be present
+'Back' has been found
+Waiting for "accessibility id" and "User settings" to be present
+'User settings' has been found
+Waiting for "accessibility id" and "Account ID" to be present
+'Account ID' has been found
+Waiting for "accessibility id" and "Close button" to be present
+'Close button' has been found
+sessions closed
