@@ -9,6 +9,11 @@ on:
         required: true
         type: string
 
+      BUILD_NUMBER: 
+        description: 'build number used for the report (e.g. 2.11.0)'
+        required: true
+        type: string
+
       RISK:
         description: 'risks to target'
         required: false
@@ -69,6 +74,7 @@ jobs:
     runs-on: [self-hosted, macOS]
     env:
       PLATFORM: 'ios'
+      BUILD_NUMBER: ${{ github.event.inputs.BUILD_NUMBER }}
       CI: 1
       IOS_APP_PATH_PREFIX: './extracted/Session.app'
       ANDROID_APK: '<just_not_empty>'
@@ -138,19 +144,15 @@ jobs:
           pwd
           _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
-      - name: Generate Allure report
+      - name: Merge testing history and generate Allure report
+        if: always()
         run: |
-          npx allure generate allure-results \
-            --clean \
-            -o allure-report
-          echo "Allure report generated into ./allure-report"
+          npx ts-node run/test/specs/utils/allure/closeRun.ts
 
-      - name: Deploy Allure Report to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./allure-report
-          commit_message: "ci: publish Allure report for iOS regressions"
+      - name: Publish Allure Report to GitHub Pages
+        if: always()
+        run: |
+          npx ts-node run/test/specs/utils/allure/publishReport.ts
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results
