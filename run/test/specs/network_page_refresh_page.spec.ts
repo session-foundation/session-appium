@@ -7,7 +7,7 @@ import { SupportedPlatformsType, openAppOnPlatformSingleDevice } from './utils/o
 
 bothPlatformsIt({
   title: 'Refresh network page',
-  risk: 'debug', // TODO adjust this to low
+  risk: 'low',
   testCb: refreshNetworkPage,
   countOfDevicesNeeded: 1,
 });
