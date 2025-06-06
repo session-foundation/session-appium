@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Archived Allure Reports</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f8f8f8;
+    }
+    h1 {
+      color: #333;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin: 10px 0;
+      padding: 10px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    a {
+      text-decoration: none;
+      color: #007acc;
+      font-weight: bold;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Archived Allure Reports</h1>
+  <ul id="reportList"></ul>
+
+  <script>
+    // --- CONFIGURATION ---
+    // GitHub repository owner or organization name.
+    const owner = 'session-foundation';
+    // GitHub repository name where the archived reports are hosted.
+    const repo = 'session-appium';
+    // The branch where GitHub Pages are published (typically "gh-pages").
+    const branch = 'gh-pages';
+    // (Optional) if your archived reports are stored in a subfolder within the repository, set that path.
+    // For example, if all reports are under a "reports" folder, then set pathInRepo = 'reports'
+    // Otherwise, use an empty string to look in the repository root.
+    const pathInRepo = 'reports'; // e.g. 'reports' or '' if at root
+
+    // --- END CONFIGURATION ---
+
+    // The GitHub API URL for listing contents of the specified folder
+    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${pathInRepo}?ref=${branch}`;
+
+    // Function to create a link element for a report folder
+    function createReportLink(folderName) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      // Assuming each archived report has an index.html at the root of its folder.
+      a.href = `${pathInRepo}/${folderName}/index.html`;
+      a.target = '_blank';
+      a.textContent = folderName;
+      li.appendChild(a);
+      return li;
+    }
+
+    // Fetch the repository contents and filter for directories that look like archived reports.
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+        const reportList = document.getElementById('reportList');
+        reportList.innerHTML = '';
+
+        if (!Array.isArray(data)) {
+          reportList.innerHTML = '<li>Error: Unexpected data format.</li>';
+          return;
+        }
+
+        // Filter for directories whose name starts with "allure-report-"
+        const archivedReports = data.filter(item => 
+          item.type === 'dir' && item.name.startsWith('allure-report-')
+        );
+
+        if (archivedReports.length === 0) {
+          reportList.innerHTML = '<li>No archived reports found.</li>';
+          return;
+        }
+
+        // Sort the reports alphabetically or by date (if naming includes a timestamp)
+        archivedReports.sort((a, b) => b.name.localeCompare(a.name));
+
+        archivedReports.forEach(report => {
+          reportList.appendChild(createReportLink(report.name));
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching repository contents:', error);
+        document.getElementById('reportList').innerHTML = '<li>Error loading reports.</li>';
+      });
+  </script>
+</body>
+</html>
