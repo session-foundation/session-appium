@@ -1,0 +1,37 @@
+
+
+==========> Running "Onboarding privacy policy @ios @debug-risk @1-devices"
+
+
+starting capabilitiesIndex 0 ios
+openiOSApp
+Error opening iOS app: Error: Unable to launch WebDriverAgent. Original error: xcodebuild failed with code 65. This usually indicates an issue with the local Xcode setup or WebDriverAgent project configuration or the driver-to-platform version mismatch. Consider setting 'showXcodeLog' capability to true in order to check the Appium server log for build-related error messages.
+    at quitAndUninstall (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/appium-xcuitest-driver/lib/driver.js:800:15)
+    at /Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/appium-xcuitest-driver/lib/driver.js:870:13
+    at wrapped (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/asyncbox/lib/asyncbox.js:93:13)
+    at retry (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/asyncbox/lib/asyncbox.js:66:13)
+    at retryInterval (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/asyncbox/lib/asyncbox.js:103:10)
+    at /Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/appium-xcuitest-driver/lib/driver.js:835:7
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+running  xcrun simctl privacy 064F4F80-B81C-4B72-9715-43CD18975139 reset all undefined
+was run:  xcrun simctl privacy 064F4F80-B81C-4B72-9715-43CD18975139 reset all undefined { stdout: '', stderr: '' }
+Waiting for "accessibility id" and "Open URL" to be present
+'Open URL' has been found
+Waiting for "accessibility id" and "Privacy Policy" to be present
+'Privacy Policy' has been found
+Waiting for "accessibility id" and "TabBarItemTitle" to be present
+waitForTextElementToBePresent threw: "accessibility id": "TabBarItemTitle
+Waiting for "accessibility id" and "TabBarItemTitle" to be present
+waitForTextElementToBePresent threw: "accessibility id": "TabBarItemTitle
+Waiting for "accessibility id" and "TabBarItemTitle" to be present
+'TabBarItemTitle' has been found
+Waiting for "accessibility id" and "URL" to be present
+'URL' has been found
+The URLs match.
+Tapped coordinates 42, 42
+sessions closed
