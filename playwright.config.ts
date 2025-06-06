@@ -7,6 +7,7 @@ import {
   getRetriesCount,
   getWorkersCount,
 } from './run/test/specs/utils/binaries';
+import { allureResultsDir } from './run/constants/allure';
 
 // NOTE: without this, the wrong source map is loaded and the stacktraces are all wrong
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -19,7 +20,7 @@ export default defineConfig({
    * Note: `playwright-reporter` below is our custom playwright reporter.
    * It accepts a few options as environment variables, see its Readme.md file for more info.
    */
-  reporter: [['./node_modules/@session-foundation/playwright-reporter/dist/index.js'], ['allure-playwright', {outputFolder: 'allure/allure-results'}]],
+  reporter: [['./node_modules/@session-foundation/playwright-reporter/dist/index.js'], ['allure-playwright', {resultsDir: allureResultsDir}]],
   testDir: './run/test/specs',
   testIgnore: '*.js',
   // outputDir: './tests/automation/test-results',
