@@ -12,6 +12,7 @@ import { SupportedPlatformsType } from '../open_app';
 
 // Create environment.properties file with platform and build info
 async function createEnvProperties(platform: SupportedPlatformsType, build: string) {
+  await fs.ensureDir(allureResultsDir);
   const envPropertiesFile = path.join(allureResultsDir, 'environment.properties');
   const content = `platform=${platform}\nbuild=${build}`;
   await fs.writeFile(envPropertiesFile, content);
