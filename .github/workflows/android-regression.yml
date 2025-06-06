@@ -9,6 +9,11 @@ on:
         required: true
         type: string
 
+      BUILD_NUMBER: 
+        description: 'build number used for the report (e.g. 1.25.0)'
+        required: true
+        type: string
+
       RISK:
         description: 'risks to target'
         required: false
@@ -17,6 +22,7 @@ on:
           - 'high-risk'
           - 'medium-risk'
           - 'low-risk'
+          - 'debug'
           - ''
 
       PLAYWRIGHT_RETRIES_COUNT:
@@ -59,6 +65,8 @@ jobs:
     runs-on: [self-hosted, linux, X64, qa-android]
     env:
       PLATFORM: 'android'
+      BUILD_NUMBER: ${{ github.event.inputs.BUILD_NUMBER }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CI: 1
       IOS_APP_PATH_PREFIX: '<just_not_empty>'
       ANDROID_APK: './extracted/session-android.apk'
@@ -84,6 +92,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           lfs: true
+
+      - name: Restore Allure history cache
+        uses: actions/cache@v4
+        with:
+          path: allure/allure-history-backup/
+          key: allure-history-${{ github.workflow }}
 
       - uses: ./github/actions/print-runner-details
         with:
@@ -136,6 +150,7 @@ jobs:
           DEVICES_PER_TEST_COUNT: 1
         run: |
           pwd
+          ALLURE_RESULTS_DIR=allure/allure-results-devices-1 \
           TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
       - name: Upload results of this run
@@ -152,6 +167,7 @@ jobs:
           DEVICES_PER_TEST_COUNT: 2
         run: |
           pwd
+          ALLURE_RESULTS_DIR=allure/allure-results-devices-2 \
           _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
       - name: Upload results of this run
@@ -168,7 +184,30 @@ jobs:
           DEVICES_PER_TEST_COUNT: 4
         run: |
           pwd
+          ALLURE_RESULTS_DIR=allure/allure-results-other \
           _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
+
+      - name: Merge Allure results
+        run: |
+          mkdir -p allure/allure-results
+          cp -r allure/allure-results-devices-*/* allure/allure-results/ || true
+
+      - name: Merge testing history and generate Allure report
+        if: always()
+        run: |
+          npx ts-node run/test/specs/utils/allure/closeRun.ts
+
+      - name: Publish Allure Report to GitHub Pages
+        if: always()
+        run: |
+          npx ts-node run/test/specs/utils/allure/publishReport.ts
+
+      - name: Save Allure history cache
+        uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: allure/allure-history-backup/
+          key: allure-history-${{ github.workflow }}
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results

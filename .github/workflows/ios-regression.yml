@@ -111,9 +111,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: allure/allure-history-backup/
-          key: allure-history-${{ github.workflow }}-${{ github.ref }}
-          restore-keys: |
-            allure-history-${{ github.workflow }}-
+          key: allure-history-${{ github.workflow }}
+
 
       - name: Download ipa and extract it
         run: |
@@ -164,14 +163,11 @@ jobs:
           npx ts-node run/test/specs/utils/allure/publishReport.ts
 
       - name: Save Allure history cache
-        uses: actions/cache@v4
+        uses: actions/cache/save@v4
         if: always()
         with:
           path: allure/allure-history-backup/
-          key: allure-history-${{ github.workflow }}-${{ github.ref }}-${{ github.run_id }}
-          restore-keys: |
-            allure-history-${{ github.workflow }}-${{ github.ref }}
-            allure-history-${{ github.workflow }}-
+          key: allure-history-${{ github.workflow }}
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results
