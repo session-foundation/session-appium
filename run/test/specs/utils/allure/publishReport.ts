@@ -76,9 +76,9 @@ async function publishReport() {
     process.exit(1);
   }
 
-  const githubToken = process.env.GITHUB_TOKEN;
+  const githubToken = process.env.GH_TOKEN;
   if (!githubToken) {
-    console.error('GITHUB_TOKEN environment variable is not set.');
+    console.error('GH_TOKEN environment variable is not set.');
     process.exit(1);
   }
   const repoWithToken = `https://x-access-token:${githubToken}@github.com/session-foundation/session-appium.git`;
