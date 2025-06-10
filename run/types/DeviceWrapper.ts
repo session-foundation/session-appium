@@ -38,15 +38,14 @@ import {
   testImage,
   testVideo,
   profilePicture,
-  pdfURL,
   testVideoThumbnail,
 } from '../constants/testfiles';
 import { AttachmentsButton, OutgoingMessageStatusSent } from '../test/specs/locators/conversation';
 import { englishStrippedStr } from '../localizer/englishStrippedStr';
 import * as path from 'path';
-import { IOSSaveToFiles, IOSSaveButton, IOSReplaceButton } from '../test/specs/locators/external';
-import { SafariShareButton } from '../test/specs/locators/browsers';
-import { matchAndTapImage } from '../test/specs/utils/matchAndTapImage';
+import fs from 'fs/promises';
+import { getImageOccurrence } from '@appium/opencv';
+import { ensureFileInSimulatorDownloads } from '../test/specs/utils/file_to_simulator';
 
 export type Coordinates = {
   x: number;
@@ -688,6 +687,55 @@ export class DeviceWrapper {
     return message;
   }
 
+  public async matchAndTapImage(
+    locator: StrategyExtractionObj,
+    referenceImage: string
+  ): Promise<void> {
+    // Confidence threshold for image matching
+    const threshold = 0.85;
+  
+    // Locate candidate elements to scan for a visual match
+    const elements = await this.findElements(locator.strategy, locator.selector);
+    // Load the reference image from disk - this can be the same image pushed or a thumbnail
+    const filePath = path.join('run', 'test', 'specs', 'media', referenceImage);
+    const referenceBuffer = await fs.readFile(filePath);
+  
+    // Attempt to match the reference image against each candidate element
+    for (const el of elements) {
+      const base64 = await this.getElementScreenshot(el.ELEMENT);
+      const elementBuffer = Buffer.from(base64, 'base64');
+  
+      try {
+        const { rect: matchRect, score } = await getImageOccurrence(elementBuffer, referenceBuffer, {
+          threshold: threshold,
+        });
+        // If match is above threshold, tap the center and return result
+        if (score >= threshold) {
+          // Get the on-screen rect of the matched element
+          const elementRect = await this.getElementRect(el.ELEMENT);
+          if (!elementRect) continue; // fallback safety
+  
+          // Calculate match center relative to the full screen
+          const center = {
+            x: elementRect.x + matchRect.x + Math.floor(matchRect.width / 2),
+            y: elementRect.y + matchRect.y + Math.floor(matchRect.height / 2),
+            confidence: score,
+          };
+          await clickOnCoordinates(this, center);
+          console.log(`Image matched with ${(score * 100).toFixed(2)}%  confidence`);
+          return;
+        }
+      } catch {
+        // No match in this element — continue loop
+      }
+    }
+    // No match found in any of the elements
+    throw new Error(
+      `No matching image found in ${elements.length} elements for ${locator.strategy} '${locator.selector}'`
+    );
+  }
+  
+
   public async doesElementExist(
     args: { text?: string; maxWait?: number } & (StrategyExtractionObj | LocatorsInterface)
   ) {
@@ -1173,8 +1221,7 @@ export class DeviceWrapper {
       }
       await sleepFor(1000);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      await matchAndTapImage(
-        this,
+      await this.matchAndTapImage(
         { strategy: 'xpath', selector: `//XCUIElementTypeImage` },
         testImage
       );
@@ -1236,8 +1283,7 @@ export class DeviceWrapper {
     await this.clickOnByAccessibilityID('Recents');
     await this.clickOnByAccessibilityID('Videos');
     // A video can't be matched by its thumbnail so we use a video thumbnail file
-    await matchAndTapImage(
-      this,
+    await this.matchAndTapImage(
       { strategy: 'xpath', selector: `//XCUIElementTypeCell` },
       testVideoThumbnail
     );
@@ -1274,8 +1320,9 @@ export class DeviceWrapper {
 
   public async sendDocument() {
     if (this.isIOS()) {
-      const formattedFileName = 'dummy, pdf';
+      const formattedFileName = 'test_file, pdf';
       const testMessage = 'Testing-document-1';
+      ensureFileInSimulatorDownloads(this, testFile);
       await this.clickOnElementAll(new AttachmentsButton(this));
       const keyboard = await this.isKeyboardVisible();
       if (keyboard) {
@@ -1284,34 +1331,25 @@ export class DeviceWrapper {
         await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardClosed);
       }
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      await sleepFor(100);
-      const pdfFile = await this.doesElementExist({
+      // This flow is to ensure the file is found even if the simulator has been completely reset or started for the first time
+      // The file is copied to the "Downloads" folder but the file picker UI might open in an empty "Recents" folder
+      // If the file has been sent once before successfully, it should be found and sent immediately
+      let fileFound = await this.doesElementExist({
         strategy: 'accessibility id',
         selector: formattedFileName,
-        maxWait: 2000,
+        maxWait: 10000,
       });
-      if (!pdfFile) {
-        // Xcode doesn't allow non-media files to be pushed to the simulator
-        // So if there's no file on device, the only workaround is to download one from the Internet
-        // The quickest way to do that is the open a PDF URL in Safari
-        await runScriptAndLog(`xcrun simctl openurl ${this.udid} ${pdfURL}`, true);
-        // Safari is open but now the file must be downloaded
-        await this.clickOnElementAll(new SafariShareButton(this));
-        await this.clickOnElementAll(new IOSSaveToFiles(this));
-        await this.clickOnElementAll(new IOSSaveButton(this));
-        // If for some weird reason the file is already present (but not found in the file picker)
-        // Then iOS could complain about duplicate files
-        const replaceButton = await this.doesElementExist({
-          ...new IOSReplaceButton(this).build(),
-          maxWait: 1000,
+      if (!fileFound) {
+        await this.clickOnByAccessibilityID('Browse');
+        fileFound = await this.doesElementExist({
+          strategy: 'accessibility id',
+          selector: formattedFileName,
+          maxWait: 2000,
         });
-        if (replaceButton) {
-          await this.clickOnElementAll(new IOSReplaceButton(this));
-        }
-        // Close Safari to go back to Session
-        await clickOnCoordinates(this, InteractionPoints.BackToSessionButton);
+        if (!fileFound) {
+        await this.clickOnByAccessibilityID('Downloads');
       }
-      // Ready to send the file
+    }
       await this.clickOnByAccessibilityID(formattedFileName);
       await sleepFor(500);
       await this.clickOnByAccessibilityID('Text input box');
@@ -1426,8 +1464,7 @@ export class DeviceWrapper {
       // Push file first
       await this.pushMediaToDevice(profilePicture);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      await matchAndTapImage(
-        this,
+      await this.matchAndTapImage(
         { strategy: 'xpath', selector: `//XCUIElementTypeImage` },
         profilePicture
       );
