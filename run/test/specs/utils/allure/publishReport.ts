@@ -90,10 +90,6 @@ async function publishReport() {
   console.log(`Deploying report to GitHub Pages as: ${publishedReportName}`);
 
   try {
-    console.log('baseReportDir:', baseReportDir);
-    console.log('allureReportsDir:', allureReportsDir);
-    console.log('newReportDir:', newReportDir);
-    console.log('Contents of newReportDir:', await fs.readdir(newReportDir));
     await publishToGhPages(
       newReportDir,
       `reports/${publishedReportName}`,
