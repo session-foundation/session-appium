@@ -2,6 +2,7 @@ import path from 'path';
 import { EmptyLandingPage } from '../locators/home';
 import { SupportedPlatformsType } from './open_app';
 import { PageName } from '../../../types/testing';
+import { AppDisguisePage } from '../locators/settings';
 
 // Extends locator classes with baseline screenshot paths for visual regression testing
 // If a locator appears in multiple states, a state argument must be provided to screenshotFileName()
@@ -16,5 +17,11 @@ export class EmptyLandingPageScreenshot extends EmptyLandingPage {
 export class BrowserPageScreenshot {
   public screenshotFileName(platform: SupportedPlatformsType, pageName: PageName): string {
     return path.join('run', 'screenshots', platform, `browser_${pageName}.png`);
+  }
+}
+
+export class AppDisguisePageScreenshot extends AppDisguisePage {
+  public screenshotFileName(): string {
+    return path.join('run', 'screenshots', this.platform, 'app_disguise.png');
   }
 }
