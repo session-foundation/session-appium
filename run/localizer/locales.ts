@@ -14,6 +14,10 @@ export const simpleDictionary = {
     en: 'Copy Account ID',
     args: undefined,
   },
+  accountId: {
+    en: 'Account ID',
+    args: undefined,
+  },
   accountIdCopied: {
     en: 'Account ID Copied',
     args: undefined,
@@ -56,6 +60,14 @@ export const simpleDictionary = {
   },
   add: {
     en: 'Add',
+    args: undefined,
+  },
+  addAdmins: {
+    en: 'Add Admins',
+    args: undefined,
+  },
+  addAdminsDescription: {
+    en: 'Enter the Account ID of the user you are promoting to admin.<br/><br/>To add multiple users, enter each Account ID separated by a comma. Up to 20 Account IDs can be specified at a time.',
     args: undefined,
   },
   adminCannotBeRemoved: {
@@ -174,8 +186,20 @@ export const simpleDictionary = {
     en: 'App Icon',
     args: undefined,
   },
+  appIconAndNameChange: {
+    en: 'Change App Icon and Name',
+    args: undefined,
+  },
+  appIconAndNameChangeConfirmation: {
+    en: 'Changing the app icon and name requires Session to be closed. Notifications will continue to use the default Session icon and name.',
+    args: undefined,
+  },
   appIconAndNameDescription: {
     en: 'Alternate app icon and name is displayed on home screen and app drawer.',
+    args: undefined,
+  },
+  appIconAndNameSelectionDescription: {
+    en: 'The selected app icon and name is displayed on the home screen and app drawer.',
     args: undefined,
   },
   appIconAndNameSelectionTitle: {
@@ -542,6 +566,10 @@ export const simpleDictionary = {
     en: 'Unban User',
     args: undefined,
   },
+  banUnbanUserDescription: {
+    en: 'Enter the Account ID of the user you are unbanning',
+    args: undefined,
+  },
   banUnbanUserUnbanned: {
     en: 'User unbanned',
     args: undefined,
@@ -554,12 +582,16 @@ export const simpleDictionary = {
     en: 'User banned',
     args: undefined,
   },
+  banUserDescription: {
+    en: 'Enter the Account ID of the user you are banning',
+    args: undefined,
+  },
   block: {
     en: 'Block',
     args: undefined,
   },
   blockBlockedDescription: {
-    en: 'Unblock this contact to send a message.',
+    en: 'Unblock this contact to send a message',
     args: undefined,
   },
   blockBlockedNone: {
@@ -782,6 +814,14 @@ export const simpleDictionary = {
     en: 'Clear device only',
     args: undefined,
   },
+  clearDeviceRestart: {
+    en: 'Clear Device and Restart',
+    args: undefined,
+  },
+  clearDeviceRestore: {
+    en: 'Clear Device and Restore',
+    args: undefined,
+  },
   clearMessages: {
     en: 'Clear All Messages',
     args: undefined,
@@ -790,8 +830,16 @@ export const simpleDictionary = {
     en: 'Are you sure you want to clear all messages from your conversation with <b>{name}</b> from your device?',
     args: { name: 'string' },
   },
+  clearMessagesChatDescriptionUpdated: {
+    en: 'Are you sure you want to clear all messages from your conversation with <b>{name}</b> on this device?',
+    args: { name: 'string' },
+  },
   clearMessagesCommunity: {
     en: 'Are you sure you want to clear all <b>{community_name}</b> messages from your device?',
+    args: { community_name: 'string' },
+  },
+  clearMessagesCommunityUpdated: {
+    en: 'Are you sure you want to clear all messages from <b>{community_name}</b> on this device?',
     args: { community_name: 'string' },
   },
   clearMessagesForEveryone: {
@@ -806,16 +854,36 @@ export const simpleDictionary = {
     en: 'Are you sure you want to clear all <b>{group_name}</b> messages?',
     args: { group_name: 'string' },
   },
+  clearMessagesGroupAdminDescriptionUpdated: {
+    en: 'Are you sure you want to clear all messages from <b>{group_name}</b>?',
+    args: { group_name: 'string' },
+  },
   clearMessagesGroupDescription: {
     en: 'Are you sure you want to clear all <b>{group_name}</b> messages from your device?',
+    args: { group_name: 'string' },
+  },
+  clearMessagesGroupDescriptionUpdated: {
+    en: 'Are you sure you want to clear all messages from <b>{group_name}</b> on this device?',
     args: { group_name: 'string' },
   },
   clearMessagesNoteToSelfDescription: {
     en: 'Are you sure you want to clear all Note to Self messages from your device?',
     args: undefined,
   },
+  clearMessagesNoteToSelfDescriptionUpdated: {
+    en: 'Are you sure you want to clear all <b>Note to Self</b> messages on this device?',
+    args: undefined,
+  },
+  clearOnThisDevice: {
+    en: 'Clear on this device',
+    args: undefined,
+  },
   close: {
     en: 'Close',
+    args: undefined,
+  },
+  closeApp: {
+    en: 'Close App',
     args: undefined,
   },
   closeWindow: {
@@ -1082,8 +1150,16 @@ export const simpleDictionary = {
     en: 'Cut',
     args: undefined,
   },
+  databaseErrorClearDataWarning: {
+    en: 'Are you sure you want to delete all messages, attachments, and account data from this device and create a new account?',
+    args: undefined,
+  },
   databaseErrorGeneric: {
-    en: 'A database error occurred.<br/><br/>Export your application logs to share for troubleshooting. If this is unsuccessful, reinstall Session and restore your account.<br/><br/>Warning: This will result in loss of all messages, attachments, and account data older than two weeks.',
+    en: 'A database error occurred.<br/><br/>Export your application logs to share for troubleshooting. If this is unsuccessful, reinstall Session and restore your account.',
+    args: undefined,
+  },
+  databaseErrorRestoreDataWarning: {
+    en: 'Are you sure you want to delete all messages, attachments, and account data from this device and restore your account from the network?',
     args: undefined,
   },
   databaseErrorTimeout: {
@@ -1169,6 +1245,14 @@ export const simpleDictionary = {
   deleteAfterMessageDeletionStandardisationMessageDeletionForbidden: {
     en: 'You don’t have permission to delete others’ messages',
     args: undefined,
+  },
+  deleteContactDescription: {
+    en: 'Are you sure you want to delete <b>{name}</b> from your contacts?<br/><br/>This will delete your conversation, including all messages and attachments. Future messages from <b>{name}</b> will appear as a message request.',
+    args: { name: 'string' },
+  },
+  deleteConversationDescription: {
+    en: 'Are you sure you want to delete your conversation with <b>{name}</b>?<br/>This will permanently delete all messages and attachments.',
+    args: { name: 'string' },
   },
   deleteMessageDeletedGlobally: {
     en: 'This message was deleted',
@@ -1386,6 +1470,10 @@ export const simpleDictionary = {
     en: 'Document',
     args: undefined,
   },
+  donate: {
+    en: 'Donate',
+    args: undefined,
+  },
   done: {
     en: 'Done',
     args: undefined,
@@ -1498,6 +1586,10 @@ export const simpleDictionary = {
     en: 'Database Error',
     args: undefined,
   },
+  errorGeneric: {
+    en: 'Something went wrong. Please try again later.',
+    args: undefined,
+  },
   errorUnknown: {
     en: 'An unknown error occurred.',
     args: undefined,
@@ -1520,6 +1612,10 @@ export const simpleDictionary = {
   },
   followSystemSettings: {
     en: 'Follow system settings',
+    args: undefined,
+  },
+  forever: {
+    en: 'Forever',
     args: undefined,
   },
   from: {
@@ -1559,7 +1655,7 @@ export const simpleDictionary = {
     args: undefined,
   },
   groupDeleteDescription: {
-    en: 'Are you sure you want to delete <b>{group_name}</b>? This will remove all members and delete all group content.',
+    en: 'Are you sure you want to delete <b>{group_name}</b>?<br/><br/>This will remove all members and delete all group content.',
     args: { group_name: 'string' },
   },
   groupDeleteDescriptionMember: {
@@ -1767,7 +1863,7 @@ export const simpleDictionary = {
     args: { group_name: 'string' },
   },
   groupNotUpdatedWarning: {
-    en: 'Group has not been updated in over 30 days. You may experience issues sending messages or viewing Group information.',
+    en: 'This group has not been updated in over 30 days. You may experience issues sending messages or viewing group information.',
     args: undefined,
   },
   groupOnlyAdmin: {
@@ -1892,6 +1988,10 @@ export const simpleDictionary = {
   },
   hideMenuBarDescription: {
     en: 'Toggle system menu bar visibility',
+    args: undefined,
+  },
+  hideNoteToSelfDescription: {
+    en: 'Are you sure you want to hide <b>Note to Self</b> from your conversation list?',
     args: undefined,
   },
   hideOthers: {
@@ -2166,6 +2266,14 @@ export const simpleDictionary = {
     en: 'Replying to',
     args: undefined,
   },
+  messageRequestDisabledToastAttachments: {
+    en: 'You cannot send attachments until your Message Request is accepted',
+    args: undefined,
+  },
+  messageRequestDisabledToastVoiceMessages: {
+    en: 'You cannot send voice messages until your Message Request is accepted',
+    args: undefined,
+  },
   messageRequestGroupInvite: {
     en: '<b>{name}</b> invited you to join <b>{group_name}</b>.',
     args: { name: 'string', group_name: 'string' },
@@ -2204,6 +2312,10 @@ export const simpleDictionary = {
   },
   messageRequestsCommunitiesDescription: {
     en: 'Allow message requests from Community conversations.',
+    args: undefined,
+  },
+  messageRequestsContactDelete: {
+    en: 'Are you sure you want to delete this message request and the associated contact?',
     args: undefined,
   },
   messageRequestsDelete: {
@@ -2272,6 +2384,14 @@ export const simpleDictionary = {
   },
   minimize: {
     en: 'Minimize',
+    args: undefined,
+  },
+  modalMessageTooLongDescription: {
+    en: 'Please shorten your message to {count} characters or less.',
+    args: { count: 'number' },
+  },
+  modalMessageTooLongTitle: {
+    en: 'Your message is too long',
     args: undefined,
   },
   next: {
@@ -2425,6 +2545,14 @@ export const simpleDictionary = {
   notificationsMuted: {
     en: 'Muted',
     args: undefined,
+  },
+  notificationsMutedFor: {
+    en: 'Muted for {time_large}',
+    args: { time_large: 'string' },
+  },
+  notificationsMutedForTime: {
+    en: 'Muted until {date_time}',
+    args: { date_time: 'string' },
   },
   notificationsSlowMode: {
     en: 'Slow Mode',
@@ -2790,6 +2918,10 @@ export const simpleDictionary = {
     en: 'Session needs storage access to send photos and videos.',
     args: undefined,
   },
+  permissionsWriteCommunity: {
+    en: "You don't have write permissions in this community",
+    args: undefined,
+  },
   pin: {
     en: 'Pin',
     args: undefined,
@@ -2982,6 +3114,14 @@ export const simpleDictionary = {
     en: 'Redo',
     args: undefined,
   },
+  remainingCharactersOverTooltip: {
+    en: 'Message is too long',
+    args: undefined,
+  },
+  remainingCharactersTooltip: {
+    en: '{count} characters remaining',
+    args: { count: 'number' },
+  },
   remove: {
     en: 'Remove',
     args: undefined,
@@ -3090,6 +3230,10 @@ export const simpleDictionary = {
     en: 'Select All',
     args: undefined,
   },
+  selectAppIcon: {
+    en: 'Select app icon',
+    args: undefined,
+  },
   send: {
     en: 'Send',
     args: undefined,
@@ -3134,6 +3278,46 @@ export const simpleDictionary = {
     en: 'Message Requests',
     args: undefined,
   },
+  sessionNetworkCurrentPrice: {
+    en: 'Current SESH price',
+    args: undefined,
+  },
+  sessionNetworkDescription: {
+    en: 'Messages are sent using the Session Network. The network is comprised of nodes incentivized with Session Token, which keeps Session decentralized and secure. <span><b>Learn More</b> {icon}</span>',
+    args: { icon: 'string' },
+  },
+  sessionNetworkLearnAboutStaking: {
+    en: 'Learn About Staking',
+    args: undefined,
+  },
+  sessionNetworkMarketCap: {
+    en: 'Market Cap',
+    args: undefined,
+  },
+  sessionNetworkNodesSecuring: {
+    en: 'Session Nodes securing <span>your messages</span>',
+    args: undefined,
+  },
+  sessionNetworkNodesSwarm: {
+    en: 'Session Nodes in <span>your swarm</span>',
+    args: undefined,
+  },
+  sessionNetworkNotificationLive: {
+    en: 'Session Token is live! Explore the new Session Network section in Settings to learn how Session Token powers Session.',
+    args: undefined,
+  },
+  sessionNetworkSecuredBy: {
+    en: 'Network secured by',
+    args: undefined,
+  },
+  sessionNetworkTokenDescription: {
+    en: 'When you stake Session Token to secure the network, you earn rewards in SESH from the Staking Reward Pool.',
+    args: undefined,
+  },
+  sessionNew: {
+    en: '<span><b>•</b> New</span>',
+    args: undefined,
+  },
   sessionNotifications: {
     en: 'Notifications',
     args: undefined,
@@ -3156,6 +3340,10 @@ export const simpleDictionary = {
   },
   set: {
     en: 'Set',
+    args: undefined,
+  },
+  setCommunityDisplayPicture: {
+    en: 'Set Community Display Picture',
     args: undefined,
   },
   settingsRestartDescription: {
@@ -3198,6 +3386,14 @@ export const simpleDictionary = {
     en: 'Show Less',
     args: undefined,
   },
+  showNoteToSelf: {
+    en: 'Show Note to Self',
+    args: undefined,
+  },
+  showNoteToSelfDescription: {
+    en: 'Are you sure you want to show <b>Note to Self</b> in your conversation list?',
+    args: undefined,
+  },
   stickers: {
     en: 'Stickers',
     args: undefined,
@@ -3238,6 +3434,10 @@ export const simpleDictionary = {
     en: 'See and share typing indicators.',
     args: undefined,
   },
+  unavailable: {
+    en: 'Unavailable',
+    args: undefined,
+  },
   undo: {
     en: 'Undo',
     args: undefined,
@@ -3266,6 +3466,18 @@ export const simpleDictionary = {
     en: 'Session failed to update. Please go to https://getsession.org/download and install the new version manually, then contact our Help Center to let us know about this problem.',
     args: undefined,
   },
+  updateGroupInformation: {
+    en: 'Update Group Information',
+    args: undefined,
+  },
+  updateGroupInformationDescription: {
+    en: 'Group name and description are visible to all group members.',
+    args: undefined,
+  },
+  updateGroupInformationEnterShorterDescription: {
+    en: 'Please enter a shorter group description',
+    args: undefined,
+  },
   updateNewVersion: {
     en: 'A new version of Session is available, tap to update',
     args: undefined,
@@ -3285,6 +3497,10 @@ export const simpleDictionary = {
   updateVersion: {
     en: 'Version {version}',
     args: { version: 'string' },
+  },
+  updated: {
+    en: 'Last updated {relative_time} ago',
+    args: { relative_time: 'string' },
   },
   uploading: {
     en: 'Uploading',
