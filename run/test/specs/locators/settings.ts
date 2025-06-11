@@ -109,10 +109,6 @@ export class AppearanceMenuItem extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Appearance',
-        } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',

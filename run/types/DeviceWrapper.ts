@@ -1587,6 +1587,11 @@ export class DeviceWrapper {
     await this.scroll({ x: 760, y: 710 }, { x: 760, y: 1500 }, 100);
   }
 
+  public async swipeFromBottom(): Promise<void> {
+    const { width, height } = await this.getWindowRect();
+
+    await this.scroll({ x: width / 2, y: height * 0.95 }, { x: width / 2, y: height * 0.35 }, 100);
+  }
   public async scrollToBottom() {
     if (this.isAndroid()) {
       const scrollButton = await this.doesElementExist({

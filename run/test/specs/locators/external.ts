@@ -14,6 +14,7 @@ export class DisguisedApp extends LocatorsInterface {
     return {
       strategy: 'accessibility id',
       selector: 'MeetingSE',
+      maxWait: 5000,
     } as const;
   }
 }
