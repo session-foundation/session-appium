@@ -18,6 +18,8 @@ async function appDisguiseIcons(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   await newUser(device, USERNAME.ALICE);
   await device.clickOnElementAll(new UserSettings(device));
+  // Must scroll down to reveal the Appearance menu item
+  await device.scrollDown();
   await device.clickOnElementAll(new AppearanceMenuItem(device));
   await sleepFor(2000);
   // Must scroll down to reveal the app disguise option
