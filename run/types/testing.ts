@@ -354,7 +354,10 @@ export type AccessibilityId =
   | 'Save to Files'
   | 'Replace'
   | 'ShareButton'
-  | 'Select';
+  | 'Select'
+  | 'Appearance'
+  | 'Select alternate app icon'
+  | 'MeetingSE';
 
 export type Id =
   | 'Modal heading'
@@ -426,7 +429,8 @@ export type Id =
   | 'session-network-menu-item'
   | 'Last updated timestamp'
   | 'Image button'
-  | 'android.widget.TextView';
+  | 'network.loki.messenger:id/system_settings_app_icon'
+  | 'MeetingSE option';
 
 export type TestRisk = 'high' | 'medium' | 'low';
 

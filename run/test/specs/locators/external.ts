@@ -8,6 +8,16 @@ export class PhotoLibrary extends LocatorsInterface {
     } as const;
   }
 }
+
+export class DisguisedApp extends LocatorsInterface {
+  public build() {
+    return {
+      strategy: 'accessibility id',
+      selector: 'MeetingSE',
+      maxWait: 5000,
+    } as const;
+  }
+}
 export class IOSSaveToFiles extends LocatorsInterface {
   public build() {
     switch (this.platform) {
