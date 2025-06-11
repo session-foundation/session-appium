@@ -4,6 +4,7 @@ import { runOnlyOnAndroid, runOnlyOnIOS } from './utils';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { isChromeFirstTimeOpen } from './utils/chrome_first_time_open';
 import { URLInputField, SafariAddressBar } from './locators/browsers';
+import { ensureHttpsURL } from './utils/utilities';
 
 bothPlatformsIt({
   title: 'Onboarding terms of service',
@@ -29,17 +30,12 @@ async function onboardingTOS(platform: SupportedPlatformsType) {
   // Retrieve URL
   const urlField = await device.waitForTextElementToBePresent(new URLInputField(device));
   const retrievedURL = await device.getTextFromElement(urlField);
-  // Add https:// to the retrieved URL if the UI doesn't show it (Chrome doesn't, Safari does)
-  const fullRetrievedURL = retrievedURL.startsWith('https://')
-    ? retrievedURL
-    : `https://${retrievedURL}`;
+  const fullRetrievedURL = ensureHttpsURL(retrievedURL);
   // Verify that it's the correct URL
   if (fullRetrievedURL !== tosURL) {
     throw new Error(
       `The retrieved URL does not match the expected. The retrieved URL is ${fullRetrievedURL}`
     );
-  } else {
-    console.log('The URLs match.');
   }
   // Close browser and app
   await runOnlyOnIOS(platform, () => device.clickOnCoordinates(42, 42)); // I don't like this but nothing else works
