@@ -1,4 +1,4 @@
-import { englishStripped } from '../../../localizer/Localizer';
+import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import {
   ContinueButton,
@@ -21,7 +21,7 @@ async function onboardingLongName(platform: SupportedPlatformsType) {
   const tooLongName =
     'One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed int';
   // the expected error is 'Please enter a shorter display name' which is represented by the following localized string
-  const expectedError = englishStripped('displayNameErrorDescriptionShorter').toString();
+  const expectedError = englishStrippedStr('displayNameErrorDescriptionShorter').toString();
   await device.clickOnElementAll(new CreateAccountButton(device));
   // this check is to avoid false positives
   if (tooLongName.length <= 100) {

@@ -5,10 +5,9 @@ on:
   workflow_dispatch:
     inputs:
       APK_URL:
-        description: 'url to test'
+        description: 'apk url to test (.tar.xz)'
         required: true
         type: string
-        default: https://oxen.rocks/session-foundation/session-android/release/1.22.1/session-android-20250406T231441Z-a9bfe783a-universal.tar.xz
 
       RISK:
         description: 'risks to target'

@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
@@ -35,7 +35,7 @@ async function createContact(platform: SupportedPlatformsType) {
   // Verify config message states message request was accepted
   // "messageRequestsAccepted": "Your message request has been accepted.",
   // TO DO - ADD BACK IN ONCE IOS HAS FIXED THIS ISSUE
-  const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
+  const messageRequestsAccepted = englishStrippedStr('messageRequestsAccepted').toString();
   await device1.onAndroid().waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Control message',

@@ -1,4 +1,4 @@
-import { englishStripped } from '../../../localizer/Localizer';
+import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import {
   AccountRestoreButton,
@@ -22,7 +22,7 @@ async function onboardingIncorrectSeed(platform: SupportedPlatformsType) {
   const incorrectSeed =
     'ruby bakery illness push rift reef nabbing bawled hope zork silk lobster hope';
   // the expected error is 'Some words are incorrect' which is represented by the following localized string
-  const expectedError = englishStripped('recoveryPasswordErrorMessageIncorrect').toString();
+  const expectedError = englishStrippedStr('recoveryPasswordErrorMessageIncorrect').toString();
   await device.inputText(incorrectSeed, new SeedPhraseInput(device));
   // Trigger the validation by pressing Continue
   await device.clickOnElementAll(new ContinueButton(device));

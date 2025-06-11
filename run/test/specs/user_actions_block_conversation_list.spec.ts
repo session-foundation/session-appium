@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { BlockedContactsSettings, BlockUserConfirmationModal } from './locators';
@@ -28,8 +28,8 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   await alice1.longPressConversation(bob.userName);
   await alice1.clickOnElementAll(new LongPressBlockOption(alice1));
   await alice1.checkModalStrings(
-    englishStripped('block').toString(),
-    englishStripped('blockDescription').withArgs({ name: USERNAME.BOB }).toString(),
+    englishStrippedStr('block').toString(),
+    englishStrippedStr('blockDescription').withArgs({ name: USERNAME.BOB }).toString(),
     true
   );
   await alice1.clickOnElementAll(new BlockUserConfirmationModal(alice1));
@@ -44,6 +44,8 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   });
   await alice1.navigateBack();
   await alice1.clickOnElementAll(new UserSettings(alice1));
+  // 'Conversations' might be hidden beyond the Settings view, gotta scroll down to find it
+  await alice1.scrollDown();
   await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
   await alice1.clickOnElementAll(new BlockedContactsSettings(alice1));
   await alice1.waitForTextElementToBePresent({

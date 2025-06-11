@@ -1,4 +1,4 @@
-import { englishStripped } from '../../localizer/Localizer';
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { EditGroup, EditGroupName } from './locators';
@@ -49,8 +49,8 @@ async function linkedGroupiOS(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new EditGroupName(device1));
   //  Check new dialog
   await device1.checkModalStrings(
-    englishStripped(`groupInformationSet`).toString(),
-    englishStripped(`groupNameVisible`).toString()
+    englishStrippedStr(`groupInformationSet`).toString(),
+    englishStrippedStr(`groupNameVisible`).toString()
   );
   // Delete old name first
   await device1.deleteText(new EditGroupNameInput(device1));
@@ -61,7 +61,7 @@ async function linkedGroupiOS(platform: SupportedPlatformsType) {
   // Go back to conversation
   await device1.navigateBack();
   // Check control message for changed name
-  const groupNameNew = englishStripped('groupNameNew')
+  const groupNameNew = englishStrippedStr('groupNameNew')
     .withArgs({ group_name: newGroupName })
     .toString();
   // Control message should be "Group name is now {group_name}."
@@ -117,7 +117,7 @@ async function linkedGroupAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID('Confirm');
   await device1.navigateBack(true);
   // Check control message for changed name
-  const groupNameNew = englishStripped('groupNameNew')
+  const groupNameNew = englishStrippedStr('groupNameNew')
     .withArgs({ group_name: newGroupName })
     .toString();
   // Config message is "Group name is now {group_name}"

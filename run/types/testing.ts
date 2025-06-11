@@ -46,11 +46,14 @@ export type Coordinates = {
 };
 
 export const InteractionPoints: Record<string, Coordinates> = {
-  ImagesFolderKeyboardOpen: { x: 34, y: 498 },
-  ImagesFolderKeyboardClosed: { x: 34, y: 763 },
-  GifButtonKeyboardOpen: { x: 34, y: 394 },
-  GifButtonKeyboardClosed: { x: 34, y: 663 },
-  DocumentKeyboardOpen: { x: 34, y: 445 },
+  ImagesFolderKeyboardOpen: { x: 36, y: 527 },
+  ImagesFolderKeyboardClosed: { x: 36, y: 792 },
+  GifButtonKeyboardOpen: { x: 36, y: 420 },
+  GifButtonKeyboardClosed: { x: 36, y: 689 },
+  DocumentKeyboardOpen: { x: 36, y: 476 },
+  DocumentKeyboardClosed: { x: 36, y: 740 },
+  NetworkPageAndroid: { x: 880, y: 1150 },
+  NetworkPageIOS: { x: 308, y: 220 },
 };
 
 export type Strategy = 'accessibility id' | 'xpath' | 'id' | 'class name';
@@ -121,7 +124,6 @@ export type XPath =
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.TabHost/android.widget.LinearLayout/android.widget.FrameLayout/androidx.viewpager.widget.ViewPager/android.widget.RelativeLayout/android.widget.GridView/android.widget.LinearLayout/android.widget.LinearLayout[2]`
   | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout[2]/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[5]/android.widget.RelativeLayout/android.widget.TextView[2]`
-  | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]/android.widget.ImageView`
   | `//XCUIElementTypeStaticText[@name="Videos"]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
   | `//XCUIElementTypeSwitch[@name="Read Receipts, Send read receipts in one-to-one chats."]`
@@ -133,7 +135,10 @@ export type XPath =
   | `//XCUIElementTypeStaticText[@name="Paste"]`
   | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`
   | `//XCUIElementTypeCell[@name="Session"]`
-  | `//*[starts-with(@content-desc, "Photo taken on")]`;
+  | `//*[starts-with(@content-desc, "Photo taken on")]`
+  | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`
+  | '//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="Photo, 01 May 1998, 7:00 am"]'
+  | '//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="Photo, 17 April, 9:56 am"]';
 
 export type AccessibilityId =
   | 'Create account button'
@@ -350,7 +355,13 @@ export type AccessibilityId =
   | 'Legacy Groups Recreate Button'
   | 'Confirm leave'
   | 'Photo, 25 March, 11:09 am'
+  | 'Session Network'
+  | 'Learn more link'
+  | 'Open'
+  | 'Learn about staking link'
+  | 'Last updated timestamp'
   | 'Albums'
+  | 'Select'
   | 'Appearance'
   | 'Select alternate app icon'
   | 'MeetingSE';
@@ -419,6 +430,11 @@ export type Id =
   | 'Remove contact button'
   | 'Remove'
   | 'Contact status'
+  | 'Learn more link'
+  | 'Learn about staking link'
+  | 'Open'
+  | 'session-network-menu-item'
+  | 'Last updated timestamp'
   | 'Image button'
   | 'network.loki.messenger:id/system_settings_app_icon'
   | 'MeetingSE option';
@@ -426,3 +442,7 @@ export type Id =
 export type TestRisk = 'high' | 'medium' | 'low';
 
 export type ElementStates = 'new_account' | 'restore_account';
+
+export type PageName = 'network_page' | 'staking_page';
+
+export type Suffix = 'screenshot' | 'diff';

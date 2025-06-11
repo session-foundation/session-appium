@@ -14,8 +14,6 @@ import {
   ReadReceiptsButton,
   SendMediaButton,
 } from '../../run/test/specs/locators';
-import { IOS_XPATHS } from '../constants';
-import { englishStripped } from '../localizer/Localizer';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
 import { EnterAccountID } from '../test/specs/locators/start_conversation';
@@ -37,6 +35,7 @@ import {
 } from './testing';
 import { testFile, testImage, testVideo, profilePicture } from '../constants/testfiles';
 import { AttachmentsButton, OutgoingMessageStatusSent } from '../test/specs/locators/conversation';
+import { englishStrippedStr } from '../localizer/englishStrippedStr';
 
 export type Coordinates = {
   x: number;
@@ -135,7 +134,12 @@ export class DeviceWrapper {
     await this.toShared().performActions(actions);
   }
 
-  public async pressCoordinates(xCoOrdinates: number, yCoOrdinates: number): Promise<void> {
+  public async pressCoordinates(
+    xCoOrdinates: number,
+    yCoOrdinates: number,
+    longPress?: boolean
+  ): Promise<void> {
+    const duration = longPress ? 1000 : 200;
     const actions = [
       {
         type: 'pointer',
@@ -149,7 +153,7 @@ export class DeviceWrapper {
             y: yCoOrdinates,
           },
           { type: 'pointerDown', button: 0 },
-          { type: 'pause', duration: 200 },
+          { type: 'pause', duration },
 
           { type: 'pointerUp', button: 0 },
         ],
@@ -195,6 +199,18 @@ export class DeviceWrapper {
 
   public async getElementScreenshot(elementId: string): Promise<string> {
     return this.toShared().getElementScreenshot(elementId);
+  }
+
+  public async getScreenshot(): Promise<string> {
+    return this.toShared().getScreenshot();
+  }
+
+  public async getViewportScreenshot(): Promise<string> {
+    return this.toShared().getViewportScreenshot();
+  }
+
+  public async getWindowRect(): Promise<{ height: number; width: number; x: number; y: number }> {
+    return this.toShared().getWindowRect();
   }
 
   // Session management
@@ -1225,22 +1241,9 @@ export class DeviceWrapper {
       selector: 'Allow Full Access',
       maxWait: 500,
     });
-    await this.clickOnByAccessibilityID('Recents');
-    // Select video
-    const videoFolder = await this.doesElementExist({
-      strategy: 'xpath',
-      selector: IOS_XPATHS.VIDEO_TOGGLE,
-      maxWait: 5000,
-    });
-    if (videoFolder) {
-      console.log('Videos folder found');
-      await this.clickOnByAccessibilityID('Videos');
-      await this.clickOnByAccessibilityID(formattedDate);
-    } else {
-      console.log('Videos folder NOT found');
-      await this.pushMediaToDevice(fileName, bestDayOfYear);
-      await this.clickOnByAccessibilityID(formattedDate, 5000);
-    }
+    await this.pushMediaToDevice(fileName, bestDayOfYear);
+    await sleepFor(5000);
+    await this.clickOnByAccessibilityID(formattedDate, 5000);
     // Send with message
     await this.clickOnByAccessibilityID('Text input box');
     await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
@@ -1304,7 +1307,12 @@ export class DeviceWrapper {
       const spongeBobsBirthday = '199905010700.00';
       await this.clickOnByAccessibilityID('Attachments button');
       await sleepFor(100);
-      await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardOpen);
+      const keyboard = await this.isKeyboardVisible();
+      if (keyboard) {
+        await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardOpen);
+      } else {
+        await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardClosed);
+      }
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
       const testDocument = await this.doesElementExist({
         strategy: 'accessibility id',
@@ -1343,8 +1351,8 @@ export class DeviceWrapper {
       }
     }
     await this.checkModalStrings(
-      englishStripped('giphyWarning').toString(),
-      englishStripped('giphyWarningDescription').toString(),
+      englishStrippedStr('giphyWarning').toString(),
+      englishStrippedStr('giphyWarningDescription').toString(),
       true
     );
     await this.clickOnByAccessibilityID('Continue', 5000);
@@ -1417,8 +1425,8 @@ export class DeviceWrapper {
     if (this.isIOS()) {
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
       const profilePicture = await this.doesElementExist({
-        strategy: 'accessibility id',
-        selector: formattedDateiOS,
+        strategy: 'xpath',
+        selector: `//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="${formattedDateiOS}"]`,
         maxWait: 2000,
       });
       if (!profilePicture) {
@@ -1426,8 +1434,8 @@ export class DeviceWrapper {
       }
       await sleepFor(100);
       await this.clickOnElementAll({
-        strategy: 'accessibility id',
-        selector: formattedDateiOS,
+        strategy: 'xpath',
+        selector: `//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="${formattedDateiOS}"]`,
       });
       await this.clickOnByAccessibilityID('Done');
     } else if (this.isAndroid()) {
@@ -1502,8 +1510,8 @@ export class DeviceWrapper {
       selector: 'Untrusted attachment message',
     });
     await this.checkModalStrings(
-      englishStripped(`attachmentsAutoDownloadModalTitle`).toString(),
-      englishStripped(`attachmentsAutoDownloadModalDescription`)
+      englishStrippedStr(`attachmentsAutoDownloadModalTitle`).toString(),
+      englishStrippedStr(`attachmentsAutoDownloadModalDescription`)
         .withArgs({ conversation_name: conversationName })
         .toString(),
       true
@@ -1598,6 +1606,22 @@ export class DeviceWrapper {
         strategy: 'accessibility id',
         selector: 'Scroll button',
       });
+    }
+  }
+
+  public async pullToRefresh() {
+    if (this.isAndroid()) {
+      await this.pressCoordinates(
+        InteractionPoints.NetworkPageAndroid.x,
+        InteractionPoints.NetworkPageAndroid.y,
+        true
+      );
+    } else {
+      await this.pressCoordinates(
+        InteractionPoints.NetworkPageIOS.x,
+        InteractionPoints.NetworkPageIOS.y,
+        true
+      );
     }
   }
 
