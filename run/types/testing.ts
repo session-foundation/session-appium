@@ -364,7 +364,8 @@ export type AccessibilityId =
   | 'Select'
   | 'Appearance'
   | 'Select alternate app icon'
-  | 'MeetingSE';
+  | 'MeetingSE'
+  | 'Donate';
 
 export type Id =
   | 'Modal heading'
@@ -437,7 +438,8 @@ export type Id =
   | 'Last updated timestamp'
   | 'Image button'
   | 'network.loki.messenger:id/system_settings_app_icon'
-  | 'MeetingSE option';
+  | 'MeetingSE option'
+  | 'donate-menu-item';
 
 export type TestRisk = 'high' | 'medium' | 'low';
 
