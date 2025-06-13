@@ -1656,9 +1656,9 @@ export class DeviceWrapper {
 
   public async backToSession() {
     if (this.isIOS()) {
-      await clickOnCoordinates(this, InteractionPoints.BackToSession)
+      await clickOnCoordinates(this, InteractionPoints.BackToSession);
     } else if (this.isAndroid()) {
-      await this.back()
+      await this.back();
     }
   }
 
