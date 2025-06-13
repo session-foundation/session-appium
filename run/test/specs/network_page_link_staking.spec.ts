@@ -9,7 +9,7 @@ import {
   SessionNetworkMenuItem,
 } from './locators/network_page';
 import { UserSettings } from './locators/settings';
-import { isChromeFirstTimeOpen } from './utils/chrome_first_time_open';
+import { handleChromeFirstTimeOpen } from './utils/chrome_first_time_open';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { ensureHttpsURL } from './utils/utilities';
@@ -39,7 +39,7 @@ async function networkPageLearnMore(platform: SupportedPlatformsType) {
     await device.clickOnElementAll(new SafariAddressBar(device));
   } else {
     // Chrome can throw some modals on first open
-    await isChromeFirstTimeOpen(device);
+    await handleChromeFirstTimeOpen(device);
   }
   const urlField = await device.waitForTextElementToBePresent(new URLInputField(device));
   const retrievedURL = await device.getTextFromElement(urlField);

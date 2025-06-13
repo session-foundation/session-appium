@@ -1,7 +1,7 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { TermsOfServiceButton, SplashScreenLinks } from './locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { isChromeFirstTimeOpen } from './utils/chrome_first_time_open';
+import { handleChromeFirstTimeOpen } from './utils/chrome_first_time_open';
 import { URLInputField, SafariAddressBar } from './locators/browsers';
 import { ensureHttpsURL } from './utils/utilities';
 
@@ -24,7 +24,7 @@ async function onboardingTOS(platform: SupportedPlatformsType) {
     await device.clickOnElementAll(new SafariAddressBar(device));
   } else {
     // Chrome can throw some modals on first open
-    await isChromeFirstTimeOpen(device);
+    await handleChromeFirstTimeOpen(device);
   }
   // Retrieve URL
   const urlField = await device.waitForTextElementToBePresent(new URLInputField(device));
