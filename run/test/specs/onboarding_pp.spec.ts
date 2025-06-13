@@ -1,7 +1,6 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { SafariAddressBar, URLInputField } from './locators/browsers';
 import { PrivacyPolicyButton, SplashScreenLinks } from './locators/onboarding';
-import { runOnlyOnAndroid, runOnlyOnIOS } from './utils';
 import { isChromeFirstTimeOpen } from './utils/chrome_first_time_open';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { ensureHttpsURL } from './utils/utilities';
@@ -39,7 +38,6 @@ async function onboardingPP(platform: SupportedPlatformsType) {
     );
   }
   // Close browser and app
-  await runOnlyOnIOS(platform, () => device.clickOnCoordinates(42, 42)); // I don't like this but nothing else works
-  await runOnlyOnAndroid(platform, () => device.back());
+  await device.backToSession();
   await closeApp(device);
 }

@@ -54,7 +54,6 @@ async function networkPageLearnMore(platform: SupportedPlatformsType) {
   }
   await verifyPageScreenshot(platform, device, 'network_page');
   // Close browser and app
-  await device.onIOS().clickOnCoordinates(42, 42);
-  await device.onAndroid().back();
+  await device.backToSession();
   await closeApp(device);
 }

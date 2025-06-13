@@ -46,7 +46,6 @@ async function donateLinkout(platform: SupportedPlatformsType) {
     );
   }
   // Close browser and app
-  await device.onIOS().clickOnCoordinates(42, 42);
-  await device.onAndroid().back();
+  await device.backToSession();
   await closeApp(device);
 }
