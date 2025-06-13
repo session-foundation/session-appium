@@ -54,6 +54,7 @@ export const InteractionPoints: Record<string, Coordinates> = {
   DocumentKeyboardClosed: { x: 36, y: 740 },
   NetworkPageAndroid: { x: 880, y: 1150 },
   NetworkPageIOS: { x: 308, y: 220 },
+  BackToSession: { x: 42, y: 42 },
 };
 
 export type Strategy = 'accessibility id' | 'xpath' | 'id' | 'class name';
@@ -364,7 +365,8 @@ export type AccessibilityId =
   | 'Select'
   | 'Appearance'
   | 'Select alternate app icon'
-  | 'MeetingSE';
+  | 'MeetingSE'
+  | 'Donate';
 
 export type Id =
   | 'Modal heading'
@@ -437,7 +439,8 @@ export type Id =
   | 'Last updated timestamp'
   | 'Image button'
   | 'network.loki.messenger:id/system_settings_app_icon'
-  | 'MeetingSE option';
+  | 'MeetingSE option'
+  | 'donate-menu-item';
 
 export type TestRisk = 'high' | 'medium' | 'low';
 
