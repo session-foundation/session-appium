@@ -138,9 +138,7 @@ export type XPath =
   | `//*[starts-with(@content-desc, "Photo taken on")]`
   | `//XCUIElementTypeImage`
   | '//XCUIElementTypeCell'
-  | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`
-  | '//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="Photo, 01 May 1998, 7:00 am"]'
-  | '//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="Photo, 17 April, 9:56 am"]';
+  | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`;
 
 export type AccessibilityId =
   | 'Create account button'
@@ -287,6 +285,7 @@ export type AccessibilityId =
   | 'Add'
   | 'Community invitation'
   | 'Link preview'
+  | 'test_file, pdf'
   | 'Show roots'
   | 'Conversation header name'
   | 'Invite'
@@ -350,10 +349,11 @@ export type AccessibilityId =
   | 'Learn about staking link'
   | 'Last updated timestamp'
   | 'Albums'
-  | 'dummy, pdf'
   | 'Save to Files'
   | 'Replace'
   | 'ShareButton'
+  | 'Browse'
+  | 'Downloads'
   | 'Select'
   | 'Appearance'
   | 'Select alternate app icon'

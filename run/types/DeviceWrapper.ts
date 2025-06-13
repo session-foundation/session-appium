@@ -45,7 +45,8 @@ import { englishStrippedStr } from '../localizer/englishStrippedStr';
 import * as path from 'path';
 import fs from 'fs/promises';
 import { getImageOccurrence } from '@appium/opencv';
-import { ensureFileInSimulatorDownloads } from '../test/specs/utils/file_to_simulator';
+import { copyFileToSimulator } from '../test/specs/utils/copy_file_to_simulator';
+import sharp from 'sharp';
 
 export type Coordinates = {
   x: number;
@@ -686,55 +687,118 @@ export class DeviceWrapper {
     const message = await this.findMatchingTextAndAccessibilityId('Message body', textToLookFor);
     return message;
   }
+/**
+ * Attempts to visually match a reference image against all elements found by the given locator,
+ * and taps the best match (or the first high-confidence match if earlyMatch is enabled).
+ * This is useful for scenarios where UI elements cannot be reliably identified, 
+ * such as elements with date-based accessibility IDs. 
+ *
+ * @param locator - The strategy and selector to find candidate elements.
+ * @param referenceImageName - The filename of the reference image (in the media directory).
+ * @param earlyMatch - If true, taps immediately on the first match above the earlyMatchThreshold.
+ * @throws If no suitable match is found among the candidate elements.
+ */
+public async matchAndTapImage(
+  locator: StrategyExtractionObj,
+  referenceImageName: string,
+  earlyMatch: boolean = true,
+): Promise<void> {
+  const threshold = 0.85;
+  const earlyMatchThreshold = 0.97;
 
-  public async matchAndTapImage(
-    locator: StrategyExtractionObj,
-    referenceImage: string
-  ): Promise<void> {
-    // Confidence threshold for image matching
-    const threshold = 0.85;
-  
-    // Locate candidate elements to scan for a visual match
-    const elements = await this.findElements(locator.strategy, locator.selector);
-    // Load the reference image from disk - this can be the same image pushed or a thumbnail
-    const filePath = path.join('run', 'test', 'specs', 'media', referenceImage);
-    const referenceBuffer = await fs.readFile(filePath);
-  
-    // Attempt to match the reference image against each candidate element
-    for (const el of elements) {
-      const base64 = await this.getElementScreenshot(el.ELEMENT);
-      const elementBuffer = Buffer.from(base64, 'base64');
-  
-      try {
-        const { rect: matchRect, score } = await getImageOccurrence(elementBuffer, referenceBuffer, {
-          threshold: threshold,
-        });
-        // If match is above threshold, tap the center and return result
-        if (score >= threshold) {
-          // Get the on-screen rect of the matched element
-          const elementRect = await this.getElementRect(el.ELEMENT);
-          if (!elementRect) continue; // fallback safety
-  
-          // Calculate match center relative to the full screen
-          const center = {
-            x: elementRect.x + matchRect.x + Math.floor(matchRect.width / 2),
-            y: elementRect.y + matchRect.y + Math.floor(matchRect.height / 2),
-            confidence: score,
-          };
-          await clickOnCoordinates(this, center);
-          console.log(`Image matched with ${(score * 100).toFixed(2)}%  confidence`);
-          return;
-        }
-      } catch {
-        // No match in this element — continue loop
-      }
+  // Find all candidate elements matching the locator
+  const elements = await this.findElements(locator.strategy, locator.selector);
+  console.info(
+    `[matchAndTapImage] Found ${elements.length} elements for ${locator.strategy} "${locator.selector}"`
+  );
+
+  // Load the reference image buffer from disk
+  const referencePath = path.join('run', 'test', 'specs', 'media', referenceImageName);
+  const referenceBuffer = await fs.readFile(referencePath);
+
+  let bestMatch: {
+    center: { x: number; y: number; confidence: number };
+    score: number;
+  } | null = null;
+
+  // Iterate over each candidate element
+  for (const [i, el] of elements.entries()) {
+    console.info(`[matchAndTapImage] Processing element ${i + 1}/${elements.length}`);
+
+    // Take a screenshot of the element
+    const base64 = await this.getElementScreenshot(el.ELEMENT);
+    const elementBuffer = Buffer.from(base64, 'base64');
+
+    // Get the element's rectangle (position and size)
+    const rect = await this.getElementRect(el.ELEMENT);
+    if (!rect) {
+      continue;
     }
-    // No match found in any of the elements
+    // Get actual pixel dimensions of the element screenshot
+    const elementMeta = await sharp(elementBuffer).metadata();
+    // Get original reference image dimensions
+    const refMeta = await sharp(referenceBuffer).metadata();
+
+    let resizedRef: Buffer;
+
+    if (
+      elementMeta.width === refMeta.width &&
+      elementMeta.height === refMeta.height
+    ) {
+      // Skip resizing if reference already matches the screenshot dimensions
+      resizedRef = referenceBuffer;
+    } else {
+      // Resize the reference image to exactly match the screenshot dimensions
+      const targetWidth = elementMeta.width;
+      const targetHeight = elementMeta.height;
+
+      resizedRef = await sharp(referenceBuffer)
+        .resize(targetWidth, targetHeight)
+        .toBuffer();
+    }
+        
+
+    try {
+      const { rect: matchRect, score } = await getImageOccurrence(elementBuffer, resizedRef, { threshold });
+      console.info(`[matchAndTapImage] Match score for element ${i + 1}: ${score.toFixed(4)}`);
+      const center = {
+        x: rect.x + matchRect.x + Math.floor(matchRect.width / 2),
+        y: rect.y + matchRect.y + Math.floor(matchRect.height / 2),
+        confidence: score,
+      };
+      // If earlyMatch is enabled and the score is high enough, tap immediately
+      if (earlyMatch && score >= earlyMatchThreshold) {
+        console.info(
+          `[matchAndTapImage] Tapping first match with ${(score * 100).toFixed(2)}% confidence`
+        );
+        await clickOnCoordinates(this, center);
+        return;
+      }
+      // Otherwise, keep track of the best match so far
+      if (!bestMatch || score > bestMatch.score) {
+        bestMatch = { center, score };
+        console.info(`[matchAndTapImage] New best match: ${(score * 100).toFixed(2)}% confidence`);
+      }
+    } catch (err) {
+      // If matching fails for this element, log and continue to the next
+      console.warn(
+        `[matchAndTapImage] Matching failed for element ${i + 1}:`,
+        err instanceof Error ? err.message : err
+      );
+    }
+  }
+  // If no good match was found, throw an error
+  if (!bestMatch) {
     throw new Error(
-      `No matching image found in ${elements.length} elements for ${locator.strategy} '${locator.selector}'`
+      `[matchAndTapImage] No matching image found among ${elements.length} elements for ${locator.strategy} "${locator.selector}"`
     );
   }
-  
+  // Tap the best match found
+  console.info(
+    `[matchAndTapImage] Tapping best match with ${(bestMatch.score * 100).toFixed(2)}% confidence`
+  );
+  await clickOnCoordinates(this, bestMatch.center);
+}
 
   public async doesElementExist(
     args: { text?: string; maxWait?: number } & (StrategyExtractionObj | LocatorsInterface)
@@ -1221,8 +1285,9 @@ export class DeviceWrapper {
       }
       await sleepFor(1000);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
+      // await verifyElementScreenshot(this, new DummyScreenshot(this));
       await this.matchAndTapImage(
-        { strategy: 'xpath', selector: `//XCUIElementTypeImage` },
+        { strategy: 'xpath', selector: `//XCUIElementTypeCell` },
         testImage
       );
       await this.clickOnByAccessibilityID('Text input box');
@@ -1280,8 +1345,8 @@ export class DeviceWrapper {
       selector: 'Allow Full Access',
       maxWait: 500,
     });
-    await this.clickOnByAccessibilityID('Recents');
-    await this.clickOnByAccessibilityID('Videos');
+    // For some reason video gets added to the top of the Recents folder so it's best to scroll up
+    await this.scrollUp();
     // A video can't be matched by its thumbnail so we use a video thumbnail file
     await this.matchAndTapImage(
       { strategy: 'xpath', selector: `//XCUIElementTypeCell` },
@@ -1322,7 +1387,7 @@ export class DeviceWrapper {
     if (this.isIOS()) {
       const formattedFileName = 'test_file, pdf';
       const testMessage = 'Testing-document-1';
-      ensureFileInSimulatorDownloads(this, testFile);
+      copyFileToSimulator(this, testFile);
       await this.clickOnElementAll(new AttachmentsButton(this));
       const keyboard = await this.isKeyboardVisible();
       if (keyboard) {

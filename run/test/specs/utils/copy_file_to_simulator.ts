@@ -14,7 +14,8 @@ const MEDIA_ROOT = path.join('run', 'test', 'specs', 'media');
  */
 
 /**
- * Get the group container path for the Files app on the simulator.
+ * Gets the group container path for the Files app on the simulator.
+ * Inspired by https://medium.com/@liwp.stephen/solution-how-to-get-files-in-files-app-in-ios-simulator-de1e9c9dc6fe
  */
 function getFilesAppGroupContainerPath(udid: string): string {
   const listAppsOutput = execSync(`xcrun simctl listapps ${udid}`, { encoding: 'utf8' });
@@ -27,9 +28,12 @@ function getFilesAppGroupContainerPath(udid: string): string {
 }
 
 /**
- * Get the full destination path for the file in the simulator's Downloads folder.
+ * Gets the full destination path for the file in the simulator's Downloads folder.
  */
-function getSimulatorDownloadsPath(groupContainerPath: string, filename: string): { downloadsPath: string, destinationPath: string } {
+function getSimulatorDownloadsPath(
+  groupContainerPath: string,
+  filename: string
+): { downloadsPath: string; destinationPath: string } {
   const downloadsPath = path.join(groupContainerPath, 'File Provider Storage', 'Downloads');
   const destinationPath = path.join(downloadsPath, filename);
   return { downloadsPath, destinationPath };
@@ -38,11 +42,14 @@ function getSimulatorDownloadsPath(groupContainerPath: string, filename: string)
 /**
  * Copies a file from the 'media' directory to the simulator's "Downloads" folder on disk if not already present.
  */
-export function copyFileToSimulator(device: DeviceWrapper, filename: string): void {
-  const sourcePath = path.join(MEDIA_ROOT, filename);
+export function copyFileToSimulator(device: DeviceWrapper, fileName: string): void {
+  const sourcePath = path.join(MEDIA_ROOT, fileName);
 
   const groupContainerPath = getFilesAppGroupContainerPath(device.udid);
-  const { downloadsPath, destinationPath } = getSimulatorDownloadsPath(groupContainerPath, filename);
+  const { downloadsPath, destinationPath } = getSimulatorDownloadsPath(
+    groupContainerPath,
+    fileName
+  );
 
   if (fs.existsSync(destinationPath)) {
     console.log(`File already exists in simulator: ${destinationPath}`);
@@ -53,5 +60,5 @@ export function copyFileToSimulator(device: DeviceWrapper, filename: string): vo
   }
   fs.mkdirSync(downloadsPath, { recursive: true });
   fs.copyFileSync(sourcePath, destinationPath);
-  console.log(`Copied ${filename} to simulator Downloads at: ${downloadsPath}`);
+  console.log(`Copied ${fileName} to simulator Downloads at: ${downloadsPath}`);
 }
