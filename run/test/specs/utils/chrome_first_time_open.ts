@@ -2,7 +2,7 @@ import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { ChromeNotificationsNegativeButton, ChromeUseWithoutAnAccount } from '../locators/browsers';
 
 // First time open of Chrome triggers an account check and a notifications modal
-export async function isChromeFirstTimeOpen(device: DeviceWrapper) {
+export async function handleChromeFirstTimeOpen(device: DeviceWrapper) {
   const chromeUseWithoutAnAccount = await device.doesElementExist(
     new ChromeUseWithoutAnAccount(device)
   );

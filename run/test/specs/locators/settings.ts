@@ -179,3 +179,19 @@ export class CloseAppButton extends LocatorsInterface {
     }
   }
 }
+export class DonationsMenuItem extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'donate-menu-item',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Donate',
+        } as const;
+    }
+  }
+}

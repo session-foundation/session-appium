@@ -1748,6 +1748,14 @@ export class DeviceWrapper {
     }
   }
 
+  public async backToSession() {
+    if (this.isIOS()) {
+      await clickOnCoordinates(this, InteractionPoints.BackToSession);
+    } else if (this.isAndroid()) {
+      await this.back();
+    }
+  }
+
   /* ======= Settings functions =========*/
 
   public async turnOnReadReceipts() {
