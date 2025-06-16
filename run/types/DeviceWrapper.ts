@@ -717,7 +717,7 @@ export class DeviceWrapper {
     const referenceBuffer = await fs.readFile(referencePath);
 
     let bestMatch: {
-      center: { x: number; y: number; confidence: number };
+      center: { x: number; y: number };
       score: number;
     } | null = null;
 
@@ -760,8 +760,8 @@ export class DeviceWrapper {
         const center = {
           x: rect.x + matchRect.x + Math.floor(matchRect.width / 2),
           y: rect.y + matchRect.y + Math.floor(matchRect.height / 2),
-          confidence: score,
         };
+
         // If earlyMatch is enabled and the score is high enough, tap immediately
         if (earlyMatch && score >= earlyMatchThreshold) {
           console.info(
