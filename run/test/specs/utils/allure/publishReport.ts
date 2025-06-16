@@ -19,7 +19,7 @@ function publishToGhPages(dir: string, dest: string, repo: string, message: stri
           email: 'github-actions@users.noreply.github.com',
         },
       },
-      (err) => {
+      err => {
         if (err) {
           reject(err instanceof Error ? err : new Error(String(err)));
         } else {

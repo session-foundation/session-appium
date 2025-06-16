@@ -9,7 +9,7 @@ on:
         required: true
         type: string
 
-      BUILD_NUMBER: 
+      BUILD_NUMBER:
         description: 'build number used for the report (e.g. 2.11.0)'
         required: true
         type: string
@@ -113,7 +113,6 @@ jobs:
         with:
           path: allure/allure-history-backup/
           key: allure-history-${{ github.workflow }}
-
 
       - name: Download ipa and extract it
         run: |

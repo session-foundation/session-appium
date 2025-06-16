@@ -11,7 +11,11 @@ import {
 import { SupportedPlatformsType } from '../open_app';
 
 // Create environment.properties file with platform and build info
-async function createEnvProperties(platform: SupportedPlatformsType, build: string, apkUrl: string) {
+async function createEnvProperties(
+  platform: SupportedPlatformsType,
+  build: string,
+  apkUrl: string
+) {
   await fs.ensureDir(allureResultsDir);
   const envPropertiesFile = path.join(allureResultsDir, 'environment.properties');
   const content = `platform=${platform}\nbuild=${build}\napkUrl=${apkUrl}`;
@@ -64,7 +68,6 @@ async function closeRun() {
   await fs.emptyDir(allureResultsDir);
   console.log('Allure results cleared.');
 }
-
 
 closeRun().catch(err => {
   console.error('Error during execution:', err);
