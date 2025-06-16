@@ -65,6 +65,7 @@ jobs:
     runs-on: [self-hosted, linux, X64, qa-android]
     env:
       PLATFORM: 'android'
+      APK_URL: ${{ github.event.inputs.APK_URL }}
       BUILD_NUMBER: ${{ github.event.inputs.BUILD_NUMBER }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CI: 1

@@ -11,10 +11,10 @@ import {
 import { SupportedPlatformsType } from '../open_app';
 
 // Create environment.properties file with platform and build info
-async function createEnvProperties(platform: SupportedPlatformsType, build: string) {
+async function createEnvProperties(platform: SupportedPlatformsType, build: string, apkUrl: string) {
   await fs.ensureDir(allureResultsDir);
   const envPropertiesFile = path.join(allureResultsDir, 'environment.properties');
-  const content = `platform=${platform}\nbuild=${build}`;
+  const content = `platform=${platform}\nbuild=${build}\napkUrl=${apkUrl}`;
   await fs.writeFile(envPropertiesFile, content);
   console.log(`Created environment.properties:\n${content}`);
 }
@@ -34,11 +34,12 @@ async function generateAllureReport() {
 
 // Close test run: handle histories, generate report, and clean up
 async function closeRun() {
-  // Read platform & build from env
+  // Read platform & build info from env
   const platform = process.env.PLATFORM as SupportedPlatformsType;
   const build = process.env.BUILD_NUMBER!;
+  const apkUrl = process.env.APK_URL!;
 
-  await createEnvProperties(platform, build);
+  await createEnvProperties(platform, build, apkUrl);
 
   // Merge archived history if exists
   if (await fs.pathExists(backupHistoryDir)) {
