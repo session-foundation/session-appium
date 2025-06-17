@@ -1,9 +1,9 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { SafariAddressBar, URLInputField } from './locators/browsers';
 import { PrivacyPolicyButton, SplashScreenLinks } from './locators/onboarding';
-import { runOnlyOnAndroid, runOnlyOnIOS } from './utils';
-import { isChromeFirstTimeOpen } from './utils/chrome_first_time_open';
+import { handleChromeFirstTimeOpen } from './utils/chrome_first_time_open';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+import { ensureHttpsURL } from './utils/utilities';
 
 bothPlatformsIt({
   title: 'Onboarding privacy policy',
@@ -25,25 +25,19 @@ async function onboardingPP(platform: SupportedPlatformsType) {
     await device.clickOnElementAll(new SafariAddressBar(device));
   } else {
     // Chrome can throw some modals on first open
-    await isChromeFirstTimeOpen(device);
+    await handleChromeFirstTimeOpen(device);
   }
   // Retrieve URL
   const urlField = await device.waitForTextElementToBePresent(new URLInputField(device));
   const retrievedURL = await device.getTextFromElement(urlField);
-  // Add https:// to the retrieved URL if the UI doesn't show it (Chrome doesn't, Safari does)
-  const fullRetrievedURL = retrievedURL.startsWith('https://')
-    ? retrievedURL
-    : `https://${retrievedURL}`;
+  const fullRetrievedURL = ensureHttpsURL(retrievedURL);
   // Verify that it's the correct URL
   if (fullRetrievedURL !== ppURL) {
     throw new Error(
       `The retrieved URL does not match the expected. The retrieved URL is ${fullRetrievedURL}`
     );
-  } else {
-    console.log('The URLs match.');
   }
   // Close browser and app
-  await runOnlyOnIOS(platform, () => device.clickOnCoordinates(42, 42)); // I don't like this but nothing else works
-  await runOnlyOnAndroid(platform, () => device.back());
+  await device.backToSession();
   await closeApp(device);
 }

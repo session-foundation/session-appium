@@ -74,6 +74,8 @@ async function blockedRequest(platform: SupportedPlatformsType) {
     device2.clickOnElementAll(new UserSettings(device2)),
     device3.clickOnElementAll(new UserSettings(device3)),
   ]);
+  // 'Conversations' might be hidden beyond the Settings view, gotta scroll down to find it
+  await Promise.all([device2.scrollDown(), device3.scrollDown()]);
   await Promise.all([
     device2.clickOnElementAll(new ConversationsMenuItem(device2)),
     device3.clickOnElementAll(new ConversationsMenuItem(device3)),

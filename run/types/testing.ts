@@ -46,14 +46,15 @@ export type Coordinates = {
 };
 
 export const InteractionPoints: Record<string, Coordinates> = {
-  ImagesFolderKeyboardOpen: { x: 34, y: 498 },
-  ImagesFolderKeyboardClosed: { x: 34, y: 763 },
-  GifButtonKeyboardOpen: { x: 34, y: 394 },
-  GifButtonKeyboardClosed: { x: 34, y: 663 },
-  DocumentKeyboardOpen: { x: 34, y: 445 },
+  ImagesFolderKeyboardOpen: { x: 36, y: 527 },
+  ImagesFolderKeyboardClosed: { x: 36, y: 792 },
+  GifButtonKeyboardOpen: { x: 36, y: 420 },
+  GifButtonKeyboardClosed: { x: 36, y: 689 },
+  DocumentKeyboardOpen: { x: 36, y: 476 },
+  DocumentKeyboardClosed: { x: 36, y: 740 },
   NetworkPageAndroid: { x: 880, y: 1150 },
   NetworkPageIOS: { x: 308, y: 220 },
-  DocumentKeyboardClosed: { x: 34, y: 712 },
+  BackToSession: { x: 42, y: 42 },
 };
 
 export type Strategy = 'accessibility id' | 'xpath' | 'id' | 'class name';
@@ -138,7 +139,9 @@ export type XPath =
   | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`
   | `//XCUIElementTypeCell[@name="Session"]`
   | `//*[starts-with(@content-desc, "Photo taken on")]`
-  | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`;
+  | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`
+  | '//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="Photo, 01 May 1998, 7:00 am"]'
+  | '//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="Photo, 17 April, 9:56 am"]';
 
 export type AccessibilityId =
   | 'Create account button'
@@ -362,7 +365,12 @@ export type AccessibilityId =
   | 'Learn more link'
   | 'Open'
   | 'Learn about staking link'
-  | 'Last updated timestamp';
+  | 'Last updated timestamp'
+  | 'Select'
+  | 'Appearance'
+  | 'Select alternate app icon'
+  | 'MeetingSE'
+  | 'Donate';
 
 export type Id =
   | 'Modal heading'
@@ -433,6 +441,9 @@ export type Id =
   | 'session-network-menu-item'
   | 'Last updated timestamp'
   | 'Image button'
+  | 'network.loki.messenger:id/system_settings_app_icon'
+  | 'MeetingSE option'
+  | 'donate-menu-item'
   | 'android.widget.TextView'
   | 'Create account button'
   | 'Restore your session button'
