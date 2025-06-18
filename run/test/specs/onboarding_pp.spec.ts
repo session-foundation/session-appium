@@ -1,7 +1,7 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { SafariAddressBar, URLInputField } from './locators/browsers';
 import { PrivacyPolicyButton, SplashScreenLinks } from './locators/onboarding';
-import { handleChromeFirstTimeOpen } from './utils/chrome_first_time_open';
+import { handleChromeFirstTimeOpen } from './utils/handle_first_open';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { ensureHttpsURL } from './utils/utilities';
 

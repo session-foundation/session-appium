@@ -141,7 +141,8 @@ export type XPath =
   | `//*[starts-with(@content-desc, "Photo taken on")]`
   | `//XCUIElementTypeImage`
   | '//XCUIElementTypeCell'
-  | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`;
+  | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`
+  | `//XCUIElementTypeButton[@name="Continue"]`;
 
 export type AccessibilityId =
   | 'Create account button'

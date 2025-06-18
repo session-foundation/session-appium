@@ -52,5 +52,5 @@ async function unblockUser(platform: SupportedPlatformsType) {
     true
   );
   await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Unblock' });
-  await alice1.doesElementExist({...new BlockedBanner(alice1).build(), maxWait: 2000});
+  await alice1.doesElementExist({ ...new BlockedBanner(alice1).build(), maxWait: 2000 });
 }

@@ -1,7 +1,7 @@
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { BlockedContactsSettings, BlockUser, BlockUserConfirmationModal } from './locators';
-import { ConversationSettings } from './locators/conversation';
+import { ConversationSettings, BlockedBanner } from './locators/conversation';
 import { ConversationItem } from './locators/home';
 import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { open_Alice2_Bob1_friends } from './state_builder';
@@ -39,17 +39,11 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   await alice1.onIOS().navigateBack();
   // Look for alert at top of screen (Bob is blocked. Unblock them?)
   // Check device 1 for blocked status
-  const blockedStatus = await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Blocked banner',
-  });
+  const blockedStatus = await alice1.waitForTextElementToBePresent(new BlockedBanner(alice1));
   if (blockedStatus) {
     // Check linked device for blocked status (if shown on alice1)
     await alice2.onAndroid().clickOnElementAll(new ConversationItem(alice2, bob.userName));
-    await alice2.onAndroid().waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Blocked banner',
-    });
+    await alice2.onAndroid().waitForTextElementToBePresent(new BlockedBanner(alice2));
     console.info(`${bob.userName}` + ' has been blocked');
   } else {
     console.info('Blocked banner not found');
