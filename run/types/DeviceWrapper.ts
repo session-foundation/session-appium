@@ -769,11 +769,44 @@ export class DeviceWrapper {
         const { rect: matchRect, score } = await getImageOccurrence(elementBuffer, resizedRef, {
           threshold,
         });
+        // Calculate scale between resized image and element dimensions
+        const resizedMeta = await sharp(resizedRef).metadata();
+        const scaleX = rect.width / (resizedMeta.width ?? rect.width);
+        const scaleY = rect.height / (resizedMeta.height ?? rect.height);
+
+        // Calculate center of the match rectangle (in buffer space)
+        const matchCenterX = matchRect.x + Math.floor(matchRect.width / 2);
+        const matchCenterY = matchRect.y + Math.floor(matchRect.height / 2);
+
+        // Scale match center down to element space
+        const scaledCenterX = matchCenterX * scaleX;
+        const scaledCenterY = matchCenterY * scaleY;
+
+        // Final absolute coordinates
+        const tapX = Math.round(rect.x + scaledCenterX);
+        const tapY = Math.round(rect.y + scaledCenterY);
+
+        console.info(
+          `[matchAndTapImageDEBUG] Screenshot meta: ${resizedMeta.width}x${resizedMeta.height}`
+        );
+        console.info(
+          `[matchAndTapImageDEBUG] Element ${i + 1}: rect = x:${rect.x}, y:${rect.y}, width:${rect.width}, height:${rect.height}`
+        );
+        console.info(
+          `[matchAndTapImageDEBUG] Match rect = x:${matchRect.x}, y:${matchRect.y}, width:${matchRect.width}, height:${matchRect.height}`
+        );
+        console.info(
+          `[matchAndTapImageDEBUG] Scale factors: scaleX=${scaleX.toFixed(4)}, scaleY=${scaleY.toFixed(4)}`
+        );
+        console.info(
+          `[matchAndTapImageDEBUG] Match center in image space: (${matchCenterX}, ${matchCenterY})`
+        );
+        console.info(
+          `[matchAndTapImageDEBUG] Scaled center: (${scaledCenterX.toFixed(2)}, ${scaledCenterY.toFixed(2)})`
+        );
+        console.info(`[matchAndTapImageDEBUG] Raw tap coordinates: x:${tapX}, y:${tapY}`);
         console.info(`[matchAndTapImage] Match score for element ${i + 1}: ${score.toFixed(4)}`);
-        const center = {
-          x: rect.x + matchRect.x + Math.floor(matchRect.width / 2),
-          y: rect.y + matchRect.y + Math.floor(matchRect.height / 2),
-        };
+        const center = { x: tapX, y: tapY };
 
         // If earlyMatch is enabled and the score is high enough, tap immediately
         if (earlyMatch && score >= earlyMatchThreshold) {
