@@ -771,14 +771,14 @@ export class DeviceWrapper {
         });
         console.info(`[matchAndTapImage] Match score for element ${i + 1}: ${score.toFixed(4)}`);
 
-        /** 
-        * Matching is done on a resized reference image to account for device pixel density.
-        * However, the coordinates returned by getImageOccurrence are relative to the resized buffer,
-        * *not* the original screen element. This leads to incorrect tap positions unless we
-        * scale the match result back down to the actual dimensions of the element.
-        * The logic below handles this scaling correction, ensuring the tap lands at the correct
-        * screen coordinates — even when Retina displays and image resizing are involved.
-        */
+        /**
+         * Matching is done on a resized reference image to account for device pixel density.
+         * However, the coordinates returned by getImageOccurrence are relative to the resized buffer,
+         * *not* the original screen element. This leads to incorrect tap positions unless we
+         * scale the match result back down to the actual dimensions of the element.
+         * The logic below handles this scaling correction, ensuring the tap lands at the correct
+         * screen coordinates — even when Retina displays and image resizing are involved.
+         */
 
         // Calculate scale between resized image and element dimensions
         const resizedMeta = await sharp(resizedRef).metadata();
@@ -1563,7 +1563,7 @@ export class DeviceWrapper {
       // Push file first
       await this.pushMediaToDevice(profilePicture);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      await sleepFor(5000); // sometimes Appium doesn't recognize the XPATH immediately 
+      await sleepFor(5000); // sometimes Appium doesn't recognize the XPATH immediately
       await this.matchAndTapImage(
         { strategy: 'xpath', selector: `//XCUIElementTypeImage` },
         profilePicture
