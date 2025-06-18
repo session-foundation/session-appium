@@ -137,9 +137,9 @@ export type XPath =
   | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`
   | `//XCUIElementTypeCell[@name="Session"]`
   | `//*[starts-with(@content-desc, "Photo taken on")]`
-  | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`
-  | '//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="Photo, 01 May 1998, 7:00 am"]'
-  | '//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="Photo, 17 April, 9:56 am"]';
+  | `//XCUIElementTypeImage`
+  | '//XCUIElementTypeCell'
+  | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`;
 
 export type AccessibilityId =
   | 'Create account button'
@@ -253,12 +253,6 @@ export type AccessibilityId =
   | 'All Photos'
   | 'Allow Access to All Photos'
   | 'Allow Full Access'
-  | 'Photo, May 01, 1999, 7:00 AM'
-  | 'profile_picture.jpg, 27.75 kB, May 2, 1999'
-  | 'profile_picture.jpg, 27.75 kB, May 1, 1999'
-  | 'profile_picture.jpg, 27.75 kB, May 1, 1998'
-  | 'Photo, 01 May 1998, 7:00 am'
-  | '1988-09-08 21:00:00 +0000'
   | 'Attachments button'
   | 'Documents folder'
   | 'Images folder'
@@ -342,11 +336,6 @@ export type AccessibilityId =
   | 'Hide'
   | 'Session'
   | 'Share'
-  | 'Photo, 19 March 2024, 5:13 pm'
-  // Possible time string outputs from convertTime function
-  | '1967-05-06 07:00:00 +0000'
-  | '1967-05-05 20:00:00 +0000'
-  | '1967-05-05 21:00:00 +0000'
   | 'Pin'
   | 'Version warning banner'
   | 'Remove contact button'
@@ -355,13 +344,17 @@ export type AccessibilityId =
   | 'Legacy group banner'
   | 'Legacy Groups Recreate Button'
   | 'Confirm leave'
-  | 'Photo, 25 March, 11:09 am'
   | 'Session Network'
   | 'Learn more link'
   | 'Open'
   | 'Learn about staking link'
   | 'Last updated timestamp'
   | 'Albums'
+  | 'Save to Files'
+  | 'Replace'
+  | 'ShareButton'
+  | 'Browse'
+  | 'Downloads'
   | 'Select'
   | 'Appearance'
   | 'Select alternate app icon'
