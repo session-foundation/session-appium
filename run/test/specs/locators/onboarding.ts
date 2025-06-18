@@ -10,11 +10,13 @@ export class ErrorMessage extends LocatorsInterface {
         return {
           strategy: 'id',
           selector: 'error-message',
+          maxWait: 5000,
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Error message',
+          maxWait: 5000,
         } as const;
     }
   }
