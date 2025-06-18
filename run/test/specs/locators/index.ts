@@ -559,13 +559,11 @@ export class ImageName extends LocatorsInterface {
           selector: `//*[starts-with(@content-desc, "Photo taken on")]`,
         };
       case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Photo, 19 March 2024, 5:13 pm',
-        };
+        throw new Error(`No such element on iOS`);
     }
   }
 }
+
 // TODO update StrategyExtractionObj to include Locator class
 // export class PendingMessageRequestControlMessage extends LocatorsInterface {
 //   public build(): StrategyExtractionObj {

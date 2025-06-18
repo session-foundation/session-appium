@@ -13,7 +13,6 @@ import {
   ReadReceiptsButton,
   SendMediaButton,
 } from '../../run/test/specs/locators';
-import { profilePicture, testFile, testImage, testVideo } from '../constants/testfiles';
 import { englishStrippedStr } from '../localizer/englishStrippedStr';
 import {
   AttachmentsButton,
@@ -49,6 +48,18 @@ import {
   XPath,
 } from './testing';
 import { PlusButton } from '../test/specs/locators/home';
+import {
+  testFile,
+  testImage,
+  testVideo,
+  profilePicture,
+  testVideoThumbnail,
+} from '../constants/testfiles';
+import * as path from 'path';
+import fs from 'fs/promises';
+import { getImageOccurrence } from '@appium/opencv';
+import { copyFileToSimulator } from '../test/specs/utils/copy_file_to_simulator';
+import sharp from 'sharp';
 
 export type Coordinates = {
   x: number;
@@ -689,6 +700,116 @@ export class DeviceWrapper {
     const message = await this.findMatchingTextAndAccessibilityId('Message body', textToLookFor);
     return message;
   }
+  /**
+   * Attempts to visually match a reference image against all elements found by the given locator,
+   * and taps the best match (or the first high-confidence match if earlyMatch is enabled).
+   * This is useful for scenarios where UI elements cannot be reliably identified,
+   * such as elements with date-based accessibility IDs.
+   *
+   * @param locator - The strategy and selector to find candidate elements.
+   * @param referenceImageName - The filename of the reference image (in the media directory).
+   * @param earlyMatch - If true, taps immediately on the first match above the earlyMatchThreshold.
+   * @throws If no suitable match is found among the candidate elements.
+   */
+  public async matchAndTapImage(
+    locator: StrategyExtractionObj,
+    referenceImageName: string,
+    earlyMatch: boolean = true
+  ): Promise<void> {
+    const threshold = 0.85;
+    const earlyMatchThreshold = 0.97;
+
+    // Find all candidate elements matching the locator
+    const elements = await this.findElements(locator.strategy, locator.selector);
+    console.info(
+      `[matchAndTapImage] Found ${elements.length} elements for ${locator.strategy} "${locator.selector}"`
+    );
+
+    // Load the reference image buffer from disk
+    const referencePath = path.join('run', 'test', 'specs', 'media', referenceImageName);
+    const referenceBuffer = await fs.readFile(referencePath);
+
+    let bestMatch: {
+      center: { x: number; y: number };
+      score: number;
+    } | null = null;
+
+    // Iterate over each candidate element
+    for (const [i, el] of elements.entries()) {
+      console.info(`[matchAndTapImage] Processing element ${i + 1}/${elements.length}`);
+
+      // Take a screenshot of the element
+      const base64 = await this.getElementScreenshot(el.ELEMENT);
+      const elementBuffer = Buffer.from(base64, 'base64');
+
+      // Get the element's rectangle (position and size)
+      const rect = await this.getElementRect(el.ELEMENT);
+      if (!rect) {
+        continue;
+      }
+      // Get actual pixel dimensions of the element screenshot
+      const elementMeta = await sharp(elementBuffer).metadata();
+      // Get original reference image dimensions
+      const refMeta = await sharp(referenceBuffer).metadata();
+
+      let resizedRef: Buffer;
+
+      if (elementMeta.width === refMeta.width && elementMeta.height === refMeta.height) {
+        // Skip resizing if reference already matches the screenshot dimensions
+        resizedRef = referenceBuffer;
+      } else {
+        // Resize the reference image to exactly match the screenshot dimensions
+        const targetWidth = elementMeta.width;
+        const targetHeight = elementMeta.height;
+
+        resizedRef = await sharp(referenceBuffer).resize(targetWidth, targetHeight).toBuffer();
+      }
+
+      try {
+        const { rect: matchRect, score } = await getImageOccurrence(elementBuffer, resizedRef, {
+          threshold,
+        });
+        console.info(`[matchAndTapImage] Match score for element ${i + 1}: ${score.toFixed(4)}`);
+        const center = {
+          x: rect.x + matchRect.x + Math.floor(matchRect.width / 2),
+          y: rect.y + matchRect.y + Math.floor(matchRect.height / 2),
+        };
+
+        // If earlyMatch is enabled and the score is high enough, tap immediately
+        if (earlyMatch && score >= earlyMatchThreshold) {
+          console.info(
+            `[matchAndTapImage] Tapping first match with ${(score * 100).toFixed(2)}% confidence`
+          );
+          await clickOnCoordinates(this, center);
+          return;
+        }
+        // Otherwise, keep track of the best match so far
+        if (!bestMatch || score > bestMatch.score) {
+          bestMatch = { center, score };
+          console.info(
+            `[matchAndTapImage] New best match: ${(score * 100).toFixed(2)}% confidence`
+          );
+        }
+      } catch (err) {
+        // If matching fails for this element, log and continue to the next
+        console.warn(
+          `[matchAndTapImage] Matching failed for element ${i + 1}:`,
+          err instanceof Error ? err.message : err
+        );
+      }
+    }
+    // If no good match was found, throw an error
+    if (!bestMatch) {
+      throw new Error(
+        `[matchAndTapImage] No matching image found among ${elements.length} elements for ${locator.strategy} "${locator.selector}"`
+      );
+    }
+    // Tap the best match found
+    console.info(
+      `[matchAndTapImage] Tapping best match with ${(bestMatch.score * 100).toFixed(2)}% confidence`
+    );
+    await clickOnCoordinates(this, bestMatch.center);
+  }
 
   public async doesElementExist(
     args: { text?: string; maxWait?: number } & (StrategyExtractionObj | LocatorsInterface)
@@ -1133,22 +1254,14 @@ export class DeviceWrapper {
     }
   }
 
-  // TODO bring in iOS changes from QA-1265
   public async pushMediaToDevice(
-    mediaFileName: 'profile_picture.jpg' | 'test_file.pdf' | 'test_image.jpg' | 'test_video.mp4',
-    forcedDate?: string
+    mediaFileName: 'profile_picture.jpg' | 'test_file.pdf' | 'test_image.jpg' | 'test_video.mp4'
   ) {
-    // Use this when both iOS and Android code paths have been updated
-    // const filePath = path.join('run', 'test', 'specs', 'media', mediaFileName);
+    const filePath = path.join('run', 'test', 'specs', 'media', mediaFileName);
     if (this.isIOS()) {
-      // TODO throw if forcedDate is not set
-      await runScriptAndLog(`touch -a -m -t ${forcedDate} 'run/test/specs/media/${mediaFileName}'`);
-      await runScriptAndLog(
-        `xcrun simctl addmedia ${this.udid} 'run/test/specs/media/${mediaFileName}'`,
-        true
-      );
-    }
-    if (this.isAndroid()) {
+      // Push file to simulator
+      await runScriptAndLog(`xcrun simctl addmedia ${this.udid} ${filePath}`, true);
+    } else if (this.isAndroid()) {
       const ANDROID_DOWNLOAD_DIR = '/storage/emulated/0/Download';
       // Clear downloads folder at runtime before pushing
       await runScriptAndLog(
@@ -1157,10 +1270,9 @@ export class DeviceWrapper {
       );
       // Push file
       await runScriptAndLog(
-        `${getAdbFullPath()} -s ${this.udid} push 'run/test/specs/media/${mediaFileName}' ${ANDROID_DOWNLOAD_DIR}`,
+        `${getAdbFullPath()} -s ${this.udid} push ${filePath} ${ANDROID_DOWNLOAD_DIR}`,
         true
       );
-
       // Refreshes the photos UI to force the image to appear
       await runScriptAndLog(
         `${getAdbFullPath()} -s ${this.udid} shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file://${ANDROID_DOWNLOAD_DIR}/${mediaFileName}`,
@@ -1169,12 +1281,11 @@ export class DeviceWrapper {
     }
   }
 
-  // TODO bring in iOS changes from QA-1265
   public async sendImage(message: string, community?: boolean) {
-    const ronSwansonBirthday = '196705060700.00';
-    const fileName = 'test_image.jpg';
     if (this.isIOS()) {
-      await this.clickOnByAccessibilityID('Attachments button');
+      // Push file first
+      await this.pushMediaToDevice(testImage);
+      await this.clickOnElementAll(new AttachmentsButton(this));
       await sleepFor(5000);
       const keyboard = await this.isKeyboardVisible();
       if (keyboard) {
@@ -1182,23 +1293,16 @@ export class DeviceWrapper {
       } else {
         await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardClosed);
       }
+      await sleepFor(1000);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      const testImage = await this.doesElementExist({
-        strategy: 'accessibility id',
-        selector: `1967-05-05 21:00:00 +0000`,
-        maxWait: 1000,
-      });
-      if (!testImage) {
-        await this.pushMediaToDevice(fileName, ronSwansonBirthday);
-      }
-      await sleepFor(100);
-      await this.clickOnByAccessibilityID(`1967-05-05 21:00:00 +0000`, 1000);
-      if (message) {
-        await this.clickOnByAccessibilityID('Text input box');
-        await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
-      }
-    }
-    if (this.isAndroid()) {
+      // await verifyElementScreenshot(this, new DummyScreenshot(this));
+      await this.matchAndTapImage(
+        { strategy: 'xpath', selector: `//XCUIElementTypeCell` },
+        testImage
+      );
+      await this.clickOnByAccessibilityID('Text input box');
+      await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
+    } else if (this.isAndroid()) {
       // Push file first
       await this.pushMediaToDevice(testImage);
       await this.clickOnElementAll(new AttachmentsButton(this));
@@ -1233,12 +1337,10 @@ export class DeviceWrapper {
       maxWait: 20000,
     });
   }
-  // TODO bring in iOS changes from QA-1265
   public async sendVideoiOS(message: string) {
-    const bestDayOfYear = `198809090700.00`;
-    const formattedDate = `1988-09-08 21:00:00 +0000`;
-    const fileName = 'test_video.mp4';
-    await this.clickOnByAccessibilityID('Attachments button');
+    // Push first
+    await this.pushMediaToDevice(testVideo);
+    await this.clickOnElementAll(new AttachmentsButton(this));
     // Select images button/tab
     await sleepFor(5000);
     const keyboard = await this.isKeyboardVisible();
@@ -1253,16 +1355,19 @@ export class DeviceWrapper {
       selector: 'Allow Full Access',
       maxWait: 500,
     });
-    await this.pushMediaToDevice(fileName, bestDayOfYear);
-    await sleepFor(5000);
-    await this.clickOnByAccessibilityID(formattedDate, 5000);
-    // Send with message
+    // For some reason video gets added to the top of the Recents folder so it's best to scroll up
+    await this.scrollUp();
+    // A video can't be matched by its thumbnail so we use a video thumbnail file
+    await this.matchAndTapImage(
+      { strategy: 'xpath', selector: `//XCUIElementTypeCell` },
+      testVideoThumbnail
+    );
     await this.clickOnByAccessibilityID('Text input box');
     await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
     await this.clickOnByAccessibilityID('Send button');
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
-      maxWait: 10000,
+      maxWait: 20000,
     });
   }
 
@@ -1284,14 +1389,51 @@ export class DeviceWrapper {
     await this.clickOnTextElementById('android:id/title', testVideo);
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
-      maxWait: 50000,
+      maxWait: 20000,
     });
   }
 
-  // TODO bring in iOS changes from QA-1265
   public async sendDocument() {
-    if (this.isAndroid()) {
-      // Clear emulator and push file first
+    if (this.isIOS()) {
+      const formattedFileName = 'test_file, pdf';
+      const testMessage = 'Testing-document-1';
+      copyFileToSimulator(this, testFile);
+      await this.clickOnElementAll(new AttachmentsButton(this));
+      const keyboard = await this.isKeyboardVisible();
+      if (keyboard) {
+        await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardOpen);
+      } else {
+        await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardClosed);
+      }
+      await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
+      // This flow is to ensure the file is found even if the simulator has been completely reset or started for the first time
+      // The file is copied to the "Downloads" folder but the file picker UI might open in an empty "Recents" folder
+      // If the file has been sent once before successfully, it should be found and sent immediately
+      let fileFound = await this.doesElementExist({
+        strategy: 'accessibility id',
+        selector: formattedFileName,
+        maxWait: 10000,
+      });
+      if (!fileFound) {
+        await this.clickOnByAccessibilityID('Browse');
+        fileFound = await this.doesElementExist({
+          strategy: 'accessibility id',
+          selector: formattedFileName,
+          maxWait: 2000,
+        });
+        if (!fileFound) {
+          await this.clickOnByAccessibilityID('Downloads');
+        }
+      }
+      await this.clickOnByAccessibilityID(formattedFileName);
+      await sleepFor(500);
+      await this.clickOnByAccessibilityID('Text input box');
+      await this.inputText(testMessage, {
+        strategy: 'accessibility id',
+        selector: 'Text input box',
+      });
+      await this.clickOnByAccessibilityID('Send button');
+    } else if (this.isAndroid()) {
       await this.pushMediaToDevice(testFile);
       await this.clickOnElementAll(new AttachmentsButton(this));
       await this.clickOnByAccessibilityID('Documents folder');
@@ -1301,51 +1443,14 @@ export class DeviceWrapper {
         selector: 'com.android.permissioncontroller:id/permission_allow_button',
         text: 'Allow',
       });
-      // Depending on previous emulator use the Files app either opens the 'Recent' or 'Downloads' folder
-      // If it is 'Recent' then the pushed file does not reliably show up
-      // So it's necessary to navigate to 'Downloads'
-      await this.clickOnByAccessibilityID('Show roots');
-      await sleepFor(100);
-      await this.clickOnTextElementById('android:id/title', 'Downloads');
+      await sleepFor(1000);
       await this.clickOnTextElementById('android:id/title', testFile);
-      await this.waitForTextElementToBePresent({
-        ...new OutgoingMessageStatusSent(this).build(),
-        maxWait: 50000,
-      });
     }
-    if (this.isIOS()) {
-      const formattedFileName = 'test_file, pdf';
-      const testMessage = 'Testing-document-1';
-      const spongeBobsBirthday = '199905010700.00';
-      await this.clickOnByAccessibilityID('Attachments button');
-      await sleepFor(100);
-      const keyboard = await this.isKeyboardVisible();
-      if (keyboard) {
-        await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardOpen);
-      } else {
-        await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardClosed);
-      }
-      await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      const testDocument = await this.doesElementExist({
-        strategy: 'accessibility id',
-        selector: formattedFileName,
-        text: undefined,
-        maxWait: 1000,
-      });
-
-      if (!testDocument) {
-        await this.pushMediaToDevice(testFile, spongeBobsBirthday);
-      }
-      await sleepFor(100);
-      await this.clickOnByAccessibilityID(formattedFileName);
-      await sleepFor(500);
-      await this.clickOnByAccessibilityID('Text input box');
-      await this.inputText(testMessage, {
-        strategy: 'accessibility id',
-        selector: 'Text input box',
-      });
-      await this.clickOnByAccessibilityID('Send button');
-    }
+    // Checking Sent status on both platforms
+    await this.waitForTextElementToBePresent({
+      ...new OutgoingMessageStatusSent(this).build(),
+      maxWait: 20000,
+    });
   }
 
   public async sendGIF(message: string) {
@@ -1425,30 +1530,19 @@ export class DeviceWrapper {
       await this.pressAndHold('New voice message');
     }
   }
-  // TODO bring in iOS changes from QA-1265
   public async uploadProfilePicture() {
-    const spongeBobsBirthday = '199805010700.00';
-    const formattedDateiOS = 'Photo, 01 May 1998, 7:00 am';
-    const fileName = 'profile_picture.jpg';
     await this.clickOnElementAll(new UserSettings(this));
     // Click on Profile picture
     await this.clickOnElementAll(new UserSettings(this));
     await this.clickOnElementAll(new ChangeProfilePictureButton(this));
     if (this.isIOS()) {
+      // Push file first
+      await this.pushMediaToDevice(profilePicture);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      const profilePicture = await this.doesElementExist({
-        strategy: 'xpath',
-        selector: `//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="${formattedDateiOS}"]`,
-        maxWait: 2000,
-      });
-      if (!profilePicture) {
-        await this.pushMediaToDevice(fileName, spongeBobsBirthday);
-      }
-      await sleepFor(100);
-      await this.clickOnElementAll({
-        strategy: 'xpath',
-        selector: `//XCUIElementTypeImage[@name="PXGGridLayout-Info" and @label="${formattedDateiOS}"]`,
-      });
+      await this.matchAndTapImage(
+        { strategy: 'xpath', selector: `//XCUIElementTypeImage` },
+        profilePicture
+      );
       await this.clickOnByAccessibilityID('Done');
     } else if (this.isAndroid()) {
       // Push file first
