@@ -769,6 +769,17 @@ export class DeviceWrapper {
         const { rect: matchRect, score } = await getImageOccurrence(elementBuffer, resizedRef, {
           threshold,
         });
+        console.info(`[matchAndTapImage] Match score for element ${i + 1}: ${score.toFixed(4)}`);
+
+        /** 
+        * Matching is done on a resized reference image to account for device pixel density.
+        * However, the coordinates returned by getImageOccurrence are relative to the resized buffer,
+        * *not* the original screen element. This leads to incorrect tap positions unless we
+        * scale the match result back down to the actual dimensions of the element.
+        * The logic below handles this scaling correction, ensuring the tap lands at the correct
+        * screen coordinates — even when Retina displays and image resizing are involved.
+        */
+
         // Calculate scale between resized image and element dimensions
         const resizedMeta = await sharp(resizedRef).metadata();
         const scaleX = rect.width / (resizedMeta.width ?? rect.width);
@@ -786,26 +797,6 @@ export class DeviceWrapper {
         const tapX = Math.round(rect.x + scaledCenterX);
         const tapY = Math.round(rect.y + scaledCenterY);
 
-        console.info(
-          `[matchAndTapImageDEBUG] Screenshot meta: ${resizedMeta.width}x${resizedMeta.height}`
-        );
-        console.info(
-          `[matchAndTapImageDEBUG] Element ${i + 1}: rect = x:${rect.x}, y:${rect.y}, width:${rect.width}, height:${rect.height}`
-        );
-        console.info(
-          `[matchAndTapImageDEBUG] Match rect = x:${matchRect.x}, y:${matchRect.y}, width:${matchRect.width}, height:${matchRect.height}`
-        );
-        console.info(
-          `[matchAndTapImageDEBUG] Scale factors: scaleX=${scaleX.toFixed(4)}, scaleY=${scaleY.toFixed(4)}`
-        );
-        console.info(
-          `[matchAndTapImageDEBUG] Match center in image space: (${matchCenterX}, ${matchCenterY})`
-        );
-        console.info(
-          `[matchAndTapImageDEBUG] Scaled center: (${scaledCenterX.toFixed(2)}, ${scaledCenterY.toFixed(2)})`
-        );
-        console.info(`[matchAndTapImageDEBUG] Raw tap coordinates: x:${tapX}, y:${tapY}`);
-        console.info(`[matchAndTapImage] Match score for element ${i + 1}: ${score.toFixed(4)}`);
         const center = { x: tapX, y: tapY };
 
         // If earlyMatch is enabled and the score is high enough, tap immediately
