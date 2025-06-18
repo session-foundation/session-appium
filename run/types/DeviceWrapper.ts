@@ -1539,6 +1539,7 @@ export class DeviceWrapper {
       // Push file first
       await this.pushMediaToDevice(profilePicture);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
+      await sleepFor(1000);
       await this.matchAndTapImage(
         { strategy: 'xpath', selector: `//XCUIElementTypeImage` },
         profilePicture

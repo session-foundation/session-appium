@@ -6,7 +6,7 @@ import {
   BlockUserConfirmationModal,
   ExitUserProfile,
 } from './locators';
-import { ConversationSettings } from './locators/conversation';
+import { ConversationSettings, BlockedBanner } from './locators/conversation';
 import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
@@ -46,10 +46,7 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   await alice1.onIOS().navigateBack();
   // Look for alert at top of screen (Bob is blocked. Unblock them?)
   // Check device 1 for blocked status
-  const blockedStatus = await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Blocked banner',
-  });
+  const blockedStatus = await alice1.waitForTextElementToBePresent(new BlockedBanner(alice1));
   if (blockedStatus) {
     console.info(`${bob.userName} has been blocked`);
   } else {

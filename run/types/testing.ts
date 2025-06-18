@@ -235,7 +235,6 @@ export type AccessibilityId =
   | 'Confirm delete'
   | 'Delete'
   | 'Block'
-  | 'Block - Switch'
   | 'Unblock'
   | 'Confirm block'
   | 'Blocked contacts'

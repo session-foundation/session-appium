@@ -204,7 +204,7 @@ export class BlockUser extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Block - Switch',
+          selector: 'Block',
         };
       case 'android':
         return {

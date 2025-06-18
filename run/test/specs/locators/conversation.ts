@@ -161,3 +161,12 @@ export class NotificationSwitch extends LocatorsInterface {
     }
   }
 }
+
+export class BlockedBanner extends LocatorsInterface {
+  public build() {
+    return {
+      strategy: 'accessibility id',
+      selector: 'Blocked banner',
+    } as const;
+  }
+}
