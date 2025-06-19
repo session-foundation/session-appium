@@ -71,7 +71,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   });
   const nickName = 'New nickname';
   // Go back to conversation list
-  await alice1.navigateBack(true);
+  await alice1.navigateBack();
   // Select conversation in list with Bob
   await alice1.longPressConversation(bob.userName);
   // Select 'Details' option

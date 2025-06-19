@@ -51,7 +51,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Click done/apply
   await alice1.clickOnElementAll(new InviteContactConfirm(alice1));
   // Click done/apply again
-  await alice1.navigateBack(true);
+  await alice1.navigateBack();
   // iOS doesn't automatically go back to conversation settings
   await alice1.onIOS().navigateBack();
   // Check control messages

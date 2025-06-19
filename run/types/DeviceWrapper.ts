@@ -267,6 +267,41 @@ export class DeviceWrapper {
       Array<AppiumNextElementType>
     >;
   }
+  /**
+   * Attempts to click an element using a primary locator, and if not found, falls back to a secondary locator.
+   * This is useful for supporting UI transitions (e.g., between legacy and Compose Android screens) where
+   * the same UI element may have different locators depending context.
+   *
+   * @param primaryLocator - The first locator to try (e.g., new Compose locator or legacy locator).
+   * @param fallbackLocator - The locator to try if the primary is not found.
+   * @param maxWait - Maximum wait time in milliseconds for each locator (default: 3000).
+   * @throws If neither locator is found.
+   */
+  private async findWithFallback(
+    primaryLocator: LocatorsInterface | StrategyExtractionObj,
+    fallbackLocator: LocatorsInterface | StrategyExtractionObj,
+    maxWait: number = 3000
+  ): Promise<AppiumNextElementType> {
+    const primary =
+      primaryLocator instanceof LocatorsInterface ? primaryLocator.build() : primaryLocator;
+    const fallback =
+      fallbackLocator instanceof LocatorsInterface ? fallbackLocator.build() : fallbackLocator;
+    let found = await this.doesElementExist({ ...primary, maxWait });
+    if (found) {
+      await this.clickOnElementAll(primary);
+      return found;
+    }
+
+    console.warn(
+      `[navigateBack] Could not find primary locator with '${primary.strategy}', falling back on '${fallback.strategy}'`
+    );
+    found = await this.doesElementExist({ ...fallback, maxWait });
+    if (found) {
+      await this.clickOnElementAll(fallback);
+      return found;
+    }
+    throw new Error(`[navigateBack] Could not find primary or fallback locator`);
+  }
 
   public async longClick(element: AppiumNextElementType, durationMs: number) {
     if (this.isIOS()) {
@@ -1761,27 +1796,49 @@ export class DeviceWrapper {
     }
   }
 
-  public async navigateBack(newAndroid?: boolean) {
+  public async navigateBack(newAndroid: boolean = true) {
     if (this.isIOS()) {
       await this.clickOnByAccessibilityID('Back');
-    } else {
-      if (newAndroid) {
-        await this.clickOnElementAll({ strategy: 'id', selector: 'Navigate back' });
-      } else {
-        await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Navigate up' });
-      }
+      return;
+    } else if (this.isAndroid()) {
+      const newLocator = {
+        strategy: 'id',
+        selector: 'Navigate back',
+      } as StrategyExtractionObj;
+      const legacyLocator = {
+        strategy: 'accessibility id',
+        selector: 'Navigate up',
+      } as StrategyExtractionObj;
+      // Prefer new locator if newAndroid is true, otherwise prefer legacy
+      const [primary, fallback] = newAndroid
+        ? [newLocator, legacyLocator]
+        : [legacyLocator, newLocator];
+      await this.findWithFallback(primary, fallback);
     }
   }
 
-  public async closeScreen(newAndroid?: boolean) {
-    if (this.isAndroid()) {
-      if (newAndroid) {
-        await this.clickOnElementAll({ strategy: 'id', selector: 'Close button' });
-      } else {
-        await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Navigate up' });
-      }
-    } else {
+  public async closeScreen(newAndroid: boolean = true) {
+    if (this.isIOS()) {
       await this.clickOnByAccessibilityID('Close button');
+      return;
+    }
+
+    if (this.isAndroid()) {
+      const newLocator = {
+        strategy: 'id',
+        selector: 'Close button',
+      } as StrategyExtractionObj;
+
+      const legacyLocator = {
+        strategy: 'accessibility id',
+        selector: 'Navigate up',
+      } as StrategyExtractionObj;
+
+      const [primary, fallback] = newAndroid
+        ? [newLocator, legacyLocator]
+        : [legacyLocator, newLocator];
+
+      await this.findWithFallback(primary, fallback);
     }
   }
 
@@ -1907,50 +1964,56 @@ export class DeviceWrapper {
   public async checkModalStrings(
     expectedHeading: string,
     expectedDescription: string,
-    oldModalAndroid?: boolean
+    newAndroid: boolean = true
   ) {
-    // Check modal heading is correct
+    const useNewLocator = this.isIOS() || newAndroid;
+
+    // Sanitize
     function removeNewLines(input: string): string {
       return input.replace(/\n/gi, '');
     }
 
-    let elHeading;
-    // Some modals in Android haven't been updated to compose yet therefore need different locators
-    if (!oldModalAndroid) {
-      elHeading = await this.waitForTextElementToBePresent(new ModalHeading(this));
-    } else {
-      elHeading = await this.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Modal heading',
-      });
-    }
-    const actualHeading = await this.getTextFromElement(elHeading);
+    // Locators
+    const newHeading = new ModalHeading(this).build();
+    const legacyHeading = {
+      strategy: 'accessibility id',
+      selector: 'Modal heading',
+    } as StrategyExtractionObj;
+
+    const newDescription = new ModalDescription(this).build();
+    const legacyDescription = {
+      strategy: 'accessibility id',
+      selector: 'Modal description',
+    } as StrategyExtractionObj;
+
+    // Pick locator priority based on platform
+    const [headingPrimary, headingFallback] = useNewLocator
+      ? [newHeading, legacyHeading]
+      : [legacyHeading, newHeading];
+
+    const [descPrimary, descFallback] = useNewLocator
+      ? [newDescription, legacyDescription]
+      : [legacyDescription, newDescription];
+
+    // Modal Heading
+    const elHeading = await this.findWithFallback(headingPrimary, headingFallback);
+    const actualHeading = removeNewLines(await this.getTextFromElement(elHeading));
     if (expectedHeading === actualHeading) {
       console.log('Modal heading is correct');
     } else {
       throw new Error(
-        `Modal heading is incorrect. Expected heading: ${expectedHeading}, Actual heading: ${actualHeading}`
+        `Modal heading is incorrect.\nExpected: ${expectedHeading}\nActual: ${actualHeading}`
       );
     }
-    // Now check modal description
-    let elDescription;
-    if (!oldModalAndroid) {
-      elDescription = await this.waitForTextElementToBePresent(new ModalDescription(this));
-    } else {
-      elDescription = await this.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Modal description',
-      });
-    }
-    const actualDescription = await this.getTextFromElement(elDescription);
-    // Need to format the ACTUAL description that comes back from device to match
-    const formattedDescription = removeNewLines(actualDescription);
-    if (expectedDescription !== formattedDescription) {
-      throw new Error(
-        `Modal description is incorrect. Expected description: ${expectedDescription}, Actual description: ${formattedDescription}`
-      );
-    } else {
+    // Modal Description
+    const elDescription = await this.findWithFallback(descPrimary, descFallback);
+    const actualDescription = removeNewLines(await this.getTextFromElement(elDescription));
+    if (expectedDescription === actualDescription) {
       console.log('Modal description is correct');
+    } else {
+      throw new Error(
+        `Modal description is incorrect.\nExpected: ${expectedDescription}\nActual: ${actualDescription}`
+      );
     }
   }
 

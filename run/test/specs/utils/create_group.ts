@@ -27,14 +27,14 @@ export const createGroup = async (
   const charlieMessage = `${userThree.userName} to ${userName}`;
   // Create contact between User A and User B
   await newContact(platform, device1, userOne, device2, userTwo);
-  await device1.navigateBack(true);
+  await device1.navigateBack();
   await newContact(platform, device1, userOne, device3, userThree);
-  await device2.navigateBack(true);
+  await device2.navigateBack();
   // Create contact between User A and User C
   // Exit conversation back to list
-  await device1.navigateBack(true);
+  await device1.navigateBack();
   // Exit conversation back to list
-  await device3.navigateBack(true);
+  await device3.navigateBack();
   // Click plus button
   await device1.clickOnElementAll(new PlusButton(device1));
   // Select Closed Group option

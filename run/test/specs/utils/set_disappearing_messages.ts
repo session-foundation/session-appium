@@ -45,7 +45,7 @@ export const setDisappearingMessage = async (
 
   await device.clickOnElementAll(new DisappearingMessageRadial(device, timerDuration));
   await device.clickOnElementAll(new SetDisappearMessagesButton(device));
-  await device.navigateBack(true);
+  await device.navigateBack();
   // Extended the wait for the Follow settings button to settle in the UI, it was moving and confusing appium
   await sleepFor(2000);
   if (device2) {

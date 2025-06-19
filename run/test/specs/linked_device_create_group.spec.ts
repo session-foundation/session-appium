@@ -106,7 +106,7 @@ async function linkedGroupAndroid(platform: SupportedPlatformsType) {
   await device1.inputText(newGroupName, new EditGroupNameInput(device1));
   // Click done/apply
   await device1.clickOnByAccessibilityID('Confirm');
-  await device1.navigateBack(true);
+  await device1.navigateBack();
   // Check control message for changed name
   const groupNameNew = englishStrippedStr('groupNameNew')
     .withArgs({ group_name: newGroupName })

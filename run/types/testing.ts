@@ -464,10 +464,12 @@ export type Id =
   | 'Share button'
   | 'Call'
   | 'Conversation header name'
+  | 'block-user-menu-option'
   | 'block-user-confirm-button'
   | 'Notifications'
   | 'All Session notifications'
-  | 'com.android.settings:id/switch_text';
+  | 'com.android.settings:id/switch_text'
+  | 'Block';
 
 export type TestRisk = 'high' | 'medium' | 'low';
 

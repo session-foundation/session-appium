@@ -36,14 +36,13 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   // Check modal strings
   await alice1.checkModalStrings(
     englishStrippedStr('block').toString(),
-    englishStrippedStr('blockDescription').withArgs({ name: bob.userName }).toString(),
-    true
+    englishStrippedStr('blockDescription').withArgs({ name: bob.userName }).toString()
   );
   // Confirm block option
   await alice1.clickOnElementAll(new BlockUserConfirmationModal(alice1));
   await sleepFor(1000);
-  // On ios, you need to navigate back to conversation screen to confirm block
-  await alice1.onIOS().navigateBack();
+  // Navigate back to conversation screen to confirm block
+  await alice1.navigateBack();
   // Look for alert at top of screen (Bob is blocked. Unblock them?)
   // Check device 1 for blocked status
   const blockedStatus = await alice1.waitForTextElementToBePresent(new BlockedBanner(alice1));
@@ -65,8 +64,8 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
     selector: 'Contact',
     text: bob.userName,
   });
-  await alice1.navigateBack();
-  await alice1.navigateBack();
+  await alice1.navigateBack(false);
+  await alice1.navigateBack(false);
   await alice1.clickOnElementAll(new ExitUserProfile(alice1));
   // Send message from Blocked User
   await bob1.sendMessage(blockedMessage);
