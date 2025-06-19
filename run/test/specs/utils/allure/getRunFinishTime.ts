@@ -4,7 +4,7 @@ import { allureCurrentReportDir } from '../../../../constants/allure';
 
 export async function getRunFinishTime(): Promise<string> {
   const summaryPath = path.join(allureCurrentReportDir, 'widgets', 'summary.json');
-  const summaryContent = await fs.readFile(summaryPath, 'utf8');
+  const summaryContent = await fs.readFile(summaryPath, 'utf8') as string;
   const summary = JSON.parse(summaryContent);
   // raw timestamp from summary.time.stop, e.g. 1749169921134
   const rawTs = Number(summary.time.stop);

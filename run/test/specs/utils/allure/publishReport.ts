@@ -37,7 +37,7 @@ async function publishReport() {
     process.exit(1);
   }
 
-  const jsonContent = await fs.readFile(environmentFile, 'utf8');
+  const jsonContent = await fs.readFile(environmentFile, 'utf8') as string;
   let envData;
   try {
     envData = JSON.parse(jsonContent);

@@ -3,10 +3,7 @@ import path from 'path';
 import { exec } from 'child_process';
 import {
   allureCurrentReportDir,
-  resultsHistoryDir,
-  reportHistoryDir,
   allureResultsDir,
-  backupHistoryDir,
 } from '../../../../constants/allure';
 import { SupportedPlatformsType } from '../open_app';
 
@@ -45,24 +42,7 @@ async function closeRun() {
 
   await createEnvProperties(platform, build, apkUrl);
 
-  // Merge archived history if exists
-  if (await fs.pathExists(backupHistoryDir)) {
-    await fs.ensureDir(resultsHistoryDir);
-    await fs.copy(backupHistoryDir, resultsHistoryDir, { overwrite: true });
-    console.log('Archived history merged successfully.');
-  } else {
-    console.log('No archived history found.');
-  }
-
   await generateAllureReport();
-
-  // Archive the current run's history
-  if (await fs.pathExists(reportHistoryDir)) {
-    await fs.copy(reportHistoryDir, backupHistoryDir, { overwrite: true });
-    console.log('Current history archived successfully.');
-  } else {
-    console.log('No report history to archive.');
-  }
 
   // Clear allure-results directory for next run
   await fs.emptyDir(allureResultsDir);

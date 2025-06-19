@@ -108,11 +108,8 @@ jobs:
         with:
           lfs: true
 
-      - name: Restore Allure history cache
-        uses: actions/cache@v4
-        with:
-          path: allure/allure-history-backup/
-          key: allure-history-${{ github.workflow }}
+      - name: Fetch result history from gh-pages
+        run: ./scripts/fetch_allure_history.sh
 
       - name: Download ipa and extract it
         run: |
