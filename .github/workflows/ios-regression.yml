@@ -155,16 +155,17 @@ jobs:
           npx ts-node run/test/specs/utils/allure/closeRun.ts
 
       - name: Publish Allure Report to GitHub Pages
+        id: publish
         if: always()
         run: |
           npx ts-node run/test/specs/utils/allure/publishReport.ts
 
-      - name: Save Allure history cache
-        uses: actions/cache/save@v4
-        if: always()
-        with:
-          path: allure/allure-history-backup/
-          key: allure-history-${{ github.workflow }}
+      - name: Add Allure report link to summary
+        run: |
+          echo "### Allure Report for $PLATFORM" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "[Click here to view the report](${{ steps.publish.outputs.report_url }})" >> $GITHUB_STEP_SUMMARY
+
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results

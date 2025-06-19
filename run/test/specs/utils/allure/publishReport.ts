@@ -101,7 +101,19 @@ async function publishReport() {
     console.error('Error deploying report to GitHub Pages:', err);
     process.exit(1);
   }
+
+
+const reportUrl = `https://session-foundation.github.io/session-appium/reports/${publishedReportName}/`;
+
+const githubOutputPath = process.env.GITHUB_OUTPUT;
+if (githubOutputPath) {
+  fs.appendFileSync(githubOutputPath, `report_url=${reportUrl}\n`);
+  console.log('Wrote report URL to GITHUB_OUTPUT');
+} else {
+  console.log(`REPORT_URL=${reportUrl}`);
 }
+}
+
 
 publishReport().catch(err => {
   console.error('Error in publishReport script:', err);
