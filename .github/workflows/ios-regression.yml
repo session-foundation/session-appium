@@ -163,7 +163,7 @@ jobs:
       - name: Add Allure report link to summary
         if: always()
         run: |
-          echo "### Allure Report for $PLATFORM" >> $GITHUB_STEP_SUMMARY
+          echo "### Regression Test Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "[Click here to view the report](${{ steps.publish.outputs.report_url }})" >> $GITHUB_STEP_SUMMARY
 
