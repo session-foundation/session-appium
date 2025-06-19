@@ -5,6 +5,7 @@ import { EditGroup, InviteContactsButton, InviteContactsMenuItem } from './locat
 import { ConversationSettings } from './locators/conversation';
 import { Contact } from './locators/global';
 import { InviteContactConfirm } from './locators/groups';
+import { ConversationItem } from './locators/home';
 import { open_Alice1_Bob1_Charlie1_Unknown1 } from './state_builder';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -33,11 +34,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Exit to conversation list
   await alice1.navigateBack();
   // Select group conversation in list
-  await alice1.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Conversation list item',
-    text: group.groupName,
-  });
+  await alice1.clickOnElementAll(new ConversationItem(alice1, testGroupName));
   // Click more options
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   // Select edit group
@@ -54,7 +51,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Click done/apply
   await alice1.clickOnElementAll(new InviteContactConfirm(alice1));
   // Click done/apply again
-  await alice1.navigateBack(true);
+  await alice1.navigateBack();
   // iOS doesn't automatically go back to conversation settings
   await alice1.onIOS().navigateBack();
   // Check control messages

@@ -1,7 +1,10 @@
 import { LocatorsInterface } from '.';
-import { StrategyExtractionObj } from '../../../types/testing';
-import { DISAPPEARING_TIMES } from '../../../types/testing';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
+import {
+  DISAPPEARING_TIMES,
+  DisappearingOptions,
+  StrategyExtractionObj,
+} from '../../../types/testing';
 
 export class DisappearingMessagesMenuOption extends LocatorsInterface {
   public build(): StrategyExtractionObj {
@@ -9,8 +12,7 @@ export class DisappearingMessagesMenuOption extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: `network.loki.messenger:id/title`,
-          text: 'Disappearing messages',
+          selector: 'disappearing-messages-menu-option',
         };
       case 'ios':
         return {
@@ -25,6 +27,10 @@ export class DisappearingMessagesSubtitle extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Disappearing messages type and time',
+        };
       case 'ios':
         return {
           strategy: 'accessibility id',
@@ -39,7 +45,7 @@ export class DisableDisappearingMessages extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
+          strategy: 'id',
           selector: `Disable disappearing messages`,
         };
       case 'ios':
@@ -52,10 +58,18 @@ export class DisableDisappearingMessages extends LocatorsInterface {
 }
 export class SetDisappearMessagesButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Set button',
-    } as const;
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Set button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Set button',
+        } as const;
+    }
   }
 }
 
@@ -93,9 +107,41 @@ export class DisappearingMessageRadial extends LocatorsInterface {
     this.timer = timer;
   }
   public build(): StrategyExtractionObj {
-    return {
-      strategy: 'accessibility id',
-      selector: `${this.timer} - Radio`,
-    } as const;
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: this.timer,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: `${this.timer} - Radio`,
+        } as const;
+    }
+  }
+}
+
+export class DisappearingMessagesTimerType extends LocatorsInterface {
+  private timerType: DisappearingOptions;
+
+  constructor(device: DeviceWrapper, timerType: DisappearingOptions) {
+    super(device);
+    this.timerType = timerType;
+  }
+
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: this.timerType,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: this.timerType,
+        } as const;
+    }
   }
 }

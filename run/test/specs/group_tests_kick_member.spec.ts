@@ -45,7 +45,7 @@ async function kickMember(platform: SupportedPlatformsType) {
     ...new GroupMember(alice1).build(USERNAME.BOB),
     maxWait: 10000,
   });
-  await alice1.navigateBack(true);
+  await alice1.navigateBack();
   await alice1.onIOS().navigateBack();
   await Promise.all([
     alice1.waitForControlMessageToBePresent(

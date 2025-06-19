@@ -1,7 +1,9 @@
 import { sleepFor } from '.';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
-import { SeedPhraseInput } from '../locators/onboarding';
+import { AccountRestoreButton, SeedPhraseInput, SlowModeRadio } from '../locators/onboarding';
+import { ContinueButton } from '../../specs/locators/global';
+import { PlusButton } from '../locators/home';
 
 export const restoreAccount = async (device: DeviceWrapper, user: User) => {
   await device.clickOnElementAll({
@@ -12,11 +14,11 @@ export const restoreAccount = async (device: DeviceWrapper, user: User) => {
   // Wait for continue button to become active
   await sleepFor(500);
   // Continue with recovery phrase
-  await device.clickOnByAccessibilityID('Continue');
+  await device.clickOnElementAll(new ContinueButton(device));
   // Wait for any notifications to disappear
-  await device.clickOnByAccessibilityID('Slow mode notifications button');
+  await device.clickOnElementAll(new SlowModeRadio(device));
   // Click continue on message notification settings
-  await device.clickOnByAccessibilityID('Continue');
+  await device.clickOnElementAll(new ContinueButton(device));
   // Wait for loading animation to look for display name
   await device.waitForLoadingOnboarding();
   const displayName = await device.doesElementExist({
@@ -29,7 +31,7 @@ export const restoreAccount = async (device: DeviceWrapper, user: User) => {
       strategy: 'accessibility id',
       selector: 'Enter display name',
     });
-    await device.clickOnByAccessibilityID('Continue');
+    await device.clickOnElementAll(new ContinueButton(device));
   } else {
     console.info('Display name found: Loading account');
   }
@@ -38,15 +40,11 @@ export const restoreAccount = async (device: DeviceWrapper, user: User) => {
   await device.checkPermissions('Allow');
   await sleepFor(1000);
   await device.hasElementBeenDeleted({
-    strategy: 'accessibility id',
-    selector: 'Continue',
+    ...new ContinueButton(device).build(),
     maxWait: 1000,
   });
   // Check that button was clicked
-  await device.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'New conversation button',
-  });
+  await device.waitForTextElementToBePresent(new PlusButton(device));
 };
 
 /**
@@ -54,19 +52,16 @@ export const restoreAccount = async (device: DeviceWrapper, user: User) => {
  * If the account isn't found on the network, fail the test.
  */
 export const restoreAccountNoFallback = async (device: DeviceWrapper, recoveryPhrase: string) => {
-  await device.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Restore your session button',
-  });
+  await device.clickOnElementAll(new AccountRestoreButton(device));
   await device.inputText(recoveryPhrase, new SeedPhraseInput(device));
   // Wait for continue button to become active
   await sleepFor(500);
   // Continue with recovery phrase
-  await device.clickOnByAccessibilityID('Continue');
+  await device.clickOnElementAll(new ContinueButton(device));
   // Wait for any notifications to disappear
-  await device.clickOnByAccessibilityID('Slow mode notifications button');
+  await device.clickOnElementAll(new SlowModeRadio(device));
   // Click continue on message notification settings
-  await device.clickOnByAccessibilityID('Continue');
+  await device.clickOnElementAll(new ContinueButton(device));
   // Wait for loading animation to look for display name
   await device.waitForLoadingOnboarding();
   const displayName = await device.doesElementExist({
@@ -84,13 +79,9 @@ export const restoreAccountNoFallback = async (device: DeviceWrapper, recoveryPh
   await device.checkPermissions('Allow');
   await sleepFor(1000);
   await device.hasElementBeenDeleted({
-    strategy: 'accessibility id',
-    selector: 'Continue',
+    ...new ContinueButton(device).build(),
     maxWait: 1000,
   });
   // Check that button was clicked
-  await device.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'New conversation button',
-  });
+  await device.waitForTextElementToBePresent(new PlusButton(device));
 };

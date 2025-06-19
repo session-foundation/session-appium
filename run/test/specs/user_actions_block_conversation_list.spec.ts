@@ -3,9 +3,10 @@ import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { BlockedContactsSettings, BlockUserConfirmationModal } from './locators';
 import { LongPressBlockOption } from './locators/home';
-import { UserSettings } from './locators/settings';
+import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { BlockedBanner } from './locators/conversation';
 
 // Block option no longer available on iOS in conversation list
 androidIt({
@@ -38,15 +39,12 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
     selector: 'Conversation list item',
     text: bob.userName,
   });
-  await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Blocked banner',
-  });
+  await alice1.waitForTextElementToBePresent(new BlockedBanner(alice1));
   await alice1.navigateBack();
   await alice1.clickOnElementAll(new UserSettings(alice1));
   // 'Conversations' might be hidden beyond the Settings view, gotta scroll down to find it
   await alice1.scrollDown();
-  await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
+  await alice1.clickOnElementAll(new ConversationsMenuItem(alice1));
   await alice1.clickOnElementAll(new BlockedContactsSettings(alice1));
   await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',

@@ -8,7 +8,7 @@ import {
   SessionNetworkMenuItem,
 } from './locators/network_page';
 import { UserSettings } from './locators/settings';
-import { handleChromeFirstTimeOpen } from './utils/chrome_first_time_open';
+import { handleChromeFirstTimeOpen } from './utils/handle_first_open';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { ensureHttpsURL } from './utils/utilities';

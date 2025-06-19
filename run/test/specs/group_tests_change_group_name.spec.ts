@@ -38,8 +38,8 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   // Click on current group name
   await alice1.clickOnElementAll(new EditGroupName(alice1));
   await alice1.checkModalStrings(
-    englishStrippedStr(`groupInformationSet`).toString(),
-    englishStrippedStr(`groupNameVisible`).toString()
+    englishStrippedStr(`updateGroupInformation`).toString(),
+    englishStrippedStr(`updateGroupInformationDescription`).toString()
   );
   await alice1.deleteText(new EditGroupNameInput(alice1));
   await alice1.inputText('   ', new EditGroupNameInput(alice1));
@@ -90,7 +90,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   await alice1.inputText(newGroupName, new EditGroupName(alice1));
   // Click done/apply
   await alice1.clickOnByAccessibilityID('Confirm');
-  await alice1.navigateBack(true);
+  await alice1.navigateBack();
   // Check control message for changed name
   await alice1.waitForControlMessageToBePresent(
     englishStrippedStr('groupNameNew').withArgs({ group_name: newGroupName }).toString()

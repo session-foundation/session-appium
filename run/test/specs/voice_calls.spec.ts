@@ -1,6 +1,7 @@
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { ExitUserProfile } from './locators';
+import { CallButton, NotificationSettings, NotificationSwitch } from './locators/conversation';
 import { open_Alice1_bob1_notfriends } from './state_builder';
 import { sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
@@ -28,11 +29,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
 
   await alice1.sendNewMessage({ accountID: bob.sessionId }, 'Testing calls');
   // Look for phone icon (shouldnt be there)
-  await alice1.hasElementBeenDeleted({
-    strategy: 'accessibility id',
-    selector: 'Call',
-    maxWait: 1000,
-  });
+  await alice1.hasElementBeenDeleted({ ...new CallButton(alice1).build(), maxWait: 5000 });
   // Create contact
   await bob1.clickOnByAccessibilityID('Message requests banner');
   // Select message from User A
@@ -47,7 +44,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   const messageRequestsAccepted = englishStrippedStr('messageRequestsAccepted').toString();
   await alice1.waitForControlMessageToBePresent(messageRequestsAccepted);
   // Phone icon should appear now that conversation has been approved
-  await alice1.clickOnByAccessibilityID('Call');
+  await alice1.clickOnElementAll(new CallButton(alice1));
   // Enabled voice calls in privacy settings
   await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
@@ -72,16 +69,17 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await alice1.clickOnByAccessibilityID('Continue');
   // Navigate back to conversation
   await alice1.closeScreen();
-  await alice1.clickOnByAccessibilityID('Call');
+  await alice1.clickOnElementAll(new CallButton(alice1));
   // Need to allow microphone access
   await alice1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
   // Call hasn't connected until microphone access is granted
-  await alice1.clickOnByAccessibilityID('Call');
-  // No test tags on modal as of yet
-  // await bob1.checkModalStrings(
-  //   englishStrippedStr('callsMissedCallFrom').withArgs({ name: alice.userName }).toString(),
-  //   englishStrippedStr('callsYouMissedCallPermissions').withArgs({ name: alice.userName }).toString()
-  // );
+  await alice1.clickOnElementAll(new CallButton(alice1));
+  await bob1.checkModalStrings(
+    englishStrippedStr('callsMissedCallFrom').withArgs({ name: alice.userName }).toString(),
+    englishStrippedStr('callsYouMissedCallPermissions')
+      .withArgs({ name: alice.userName })
+      .toString()
+  );
   await bob1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Okay' });
   // Hang up on device 1
   await alice1.clickOnByAccessibilityID('End call button');
@@ -91,7 +89,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
     selector: 'Conversation list item',
     text: alice.userName,
   });
-  await bob1.clickOnByAccessibilityID('Call');
+  await bob1.clickOnElementAll(new CallButton(bob1));
   await bob1.clickOnByAccessibilityID('Settings');
   await bob1.scrollDown();
   await bob1.modalPopup({
@@ -107,13 +105,19 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
     englishStrippedStr('callsVoiceAndVideoModalDescription').toString()
   );
   await bob1.clickOnByAccessibilityID('Continue');
-  await bob1.clickOnElementAll(new ExitUserProfile(bob1));
+  await bob1.checkModalStrings(
+    englishStrippedStr('sessionNotifications').toString(),
+    englishStrippedStr('callsNotificationsRequired').toString()
+  );
+  await sleepFor(100);
+  await bob1.clickOnElementAll(new NotificationSettings(bob1));
+  await bob1.clickOnElementAll({ ...new ExitUserProfile(bob1).build(), maxWait: 1000 });
   // Wait for change to take effect
   await sleepFor(1000);
   // Make call on device 1 (alice)
-  await bob1.clickOnByAccessibilityID('Call');
+  await bob1.clickOnElementAll(new CallButton(bob1));
   await bob1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
-  await alice1.clickOnByAccessibilityID('Call');
+  await alice1.clickOnElementAll(new CallButton(alice1));
   // Wait for call to come through
   await sleepFor(1000);
   // Answer call on device 2
@@ -163,7 +167,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // Verify config message states message request was accepted
   await alice1.waitForControlMessageToBePresent('Your message request has been accepted.');
   // Phone icon should appear now that conversation has been approved
-  await alice1.clickOnByAccessibilityID('Call');
+  await alice1.clickOnElementAll(new CallButton(alice1));
   // Enabled voice calls in privacy settings
   await alice1.clickOnElementAll({
     strategy: 'accessibility id',
@@ -190,10 +194,17 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   await alice1.clickOnElementById(
     'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   );
-
+  await alice1.checkModalStrings(
+    englishStrippedStr('sessionNotifications').toString(),
+    englishStrippedStr('callsNotificationsRequired').toString(),
+    true
+  );
+  await sleepFor(100);
+  await alice1.clickOnElementAll(new NotificationSettings(alice1));
+  await alice1.clickOnElementAll(new NotificationSwitch(alice1));
   await alice1.navigateBack();
   // Enable voice calls on device 2 for User B
-  await bob1.clickOnByAccessibilityID('Call');
+  await bob1.clickOnElementAll(new CallButton(bob1));
   // Enabled voice calls in privacy settings
   await bob1.clickOnElementAll({
     strategy: 'accessibility id',
@@ -221,9 +232,18 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   await bob1.clickOnElementById(
     'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   );
+  await bob1.checkModalStrings(
+    englishStrippedStr('sessionNotifications').toString(),
+    englishStrippedStr('callsNotificationsRequired').toString(),
+    true
+  );
+  await sleepFor(100);
+  await bob1.clickOnElementAll(new NotificationSettings(bob1));
+  await bob1.clickOnElementAll(new NotificationSwitch(bob1));
+  await bob1.navigateBack();
   await bob1.navigateBack();
   // Make call on device 1 (alice)
-  await alice1.clickOnByAccessibilityID('Call');
+  await bob1.clickOnElementAll(new CallButton(bob1));
   // Answer call on device 2
   await bob1.clickOnElementById('network.loki.messenger:id/acceptCallButton');
   // Wait 5 seconds
