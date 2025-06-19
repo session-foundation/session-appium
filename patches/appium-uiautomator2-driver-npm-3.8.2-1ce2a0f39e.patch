@@ -1,5 +1,5 @@
 diff --git a/build/lib/driver.js b/build/lib/driver.js
-index 4287b4fc525093dee083bd37869947902bcc0398..3c8c6ab0b8c08ab6519268465e3c5bfd06068f86 100644
+index 4287b4fc525093dee083bd37869947902bcc0398..dc1536388c2c9782c382509a9d6c0968d793b1b7 100644
 --- a/build/lib/driver.js
 +++ b/build/lib/driver.js
 @@ -60,7 +60,7 @@ const screenshot_1 = require("./commands/screenshot");
@@ -7,7 +7,7 @@ index 4287b4fc525093dee083bd37869947902bcc0398..3c8c6ab0b8c08ab6519268465e3c5bfd
  // The range of ports we can use on the system for communicating to the
  // UiAutomator2 HTTP server on the device
 -const DEVICE_PORT_RANGE = [8200, 8299];
-+const DEVICE_PORT_RANGE = [8200, 8399];
++const DEVICE_PORT_RANGE = [8200, 8499];
  // The guard is needed to avoid dynamic system port allocation conflicts for
  // parallel driver sessions
  const DEVICE_PORT_ALLOCATION_GUARD = support_1.util.getLockFileGuard(node_path_1.default.resolve(node_os_1.default.tmpdir(), 'uia2_device_port_guard'), { timeout: 25, tryRecovery: true });
