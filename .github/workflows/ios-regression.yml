@@ -149,7 +149,7 @@ jobs:
           pwd
           _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
-      - name: Merge testing history and generate Allure report
+      - name: Generate Allure report
         if: always()
         run: |
           npx ts-node run/test/specs/utils/allure/closeRun.ts
@@ -161,6 +161,7 @@ jobs:
           npx ts-node run/test/specs/utils/allure/publishReport.ts
 
       - name: Add Allure report link to summary
+        if: always()
         run: |
           echo "### Allure Report for $PLATFORM" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
