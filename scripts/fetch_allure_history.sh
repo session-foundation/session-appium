@@ -2,6 +2,11 @@
 
 set -euo pipefail
 
+if [[ "${CI:-}" != "1" || "${ALLURE_ENABLED:-true}" == "false" ]]; then
+  echo "Skipping history fetch (CI=${CI:-unset}, ALLURE_ENABLED=${ALLURE_ENABLED:-unset})"
+  exit 0
+fi
+
 # GitHub repo and target clone dir
 GH_REPO="https://x-access-token:${GH_TOKEN}@github.com/session-foundation/session-appium.git"
 CLONE_DIR="gh-pages-temp"

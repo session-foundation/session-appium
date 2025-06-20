@@ -25,6 +25,15 @@ on:
           - 'debug'
           - ''
 
+      ALLURE_ENABLED:
+        description: 'generate allure report'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
       PLAYWRIGHT_RETRIES_COUNT:
         description: 'retries of failing tests to do at most'
         required: true
@@ -78,6 +87,7 @@ jobs:
       BUILD_NUMBER: ${{ github.event.inputs.BUILD_NUMBER }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CI: 1
+      ALLURE_ENABLED: ${{ github.event.inputs.ALLURE_ENABLED}}
       IOS_APP_PATH_PREFIX: './extracted/Session.app'
       ANDROID_APK: '<just_not_empty>'
       APPIUM_ADB_FULL_PATH: '<just_not_empty>'
@@ -110,7 +120,8 @@ jobs:
 
       - name: Fetch result history from gh-pages
         uses: ./github/actions/fetch-allure-history
-        with: 
+        if: ${{ env.ALLURE_ENABLED == 'true' }}
+        with:
           PLATFORM: ${{env.PLATFORM}}
           GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
@@ -152,15 +163,14 @@ jobs:
           pwd
           _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
-      - name: Generate and publish test report 
+      - name: Generate and publish test report
         uses: ./github/actions/generate-publish-test-report
-        if: always()
+        if: always() && ${{ env.ALLURE_ENABLED == 'true' }}
         with:
           PLATFORM: ${{ env.PLATFORM }}
           BUILD_NUMBER: ${{ env.BUILD_NUMBER }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           APK_URL: ${{env.APK_URL}}
-
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results

@@ -7,7 +7,7 @@ inputs:
     required: true
 
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - shell: bash
       run: ./scripts/fetch_allure_history.sh

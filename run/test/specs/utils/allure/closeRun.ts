@@ -1,11 +1,14 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { exec } from 'child_process';
-import {
-  allureCurrentReportDir,
-  allureResultsDir,
-} from '../../../../constants/allure';
+import { allureCurrentReportDir, allureResultsDir } from '../../../../constants/allure';
 import { SupportedPlatformsType } from '../open_app';
+
+// Bail out early if not on CI
+if (process.env.CI !== '1' || process.env.ALLURE_ENABLED === 'false') {
+  console.log('Skipping closeRun (CI != 1 or ALLURE_ENABLED is false)');
+  process.exit(0);
+}
 
 // Create environment.properties file with platform and build info
 async function createEnvProperties(

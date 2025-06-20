@@ -4,6 +4,12 @@ import { getRunFinishTime } from './getRunFinishTime';
 import { allureCurrentReportDir } from '../../../../constants/allure';
 import ghpages from 'gh-pages';
 
+// Bail out early if not on CI
+if (process.env.CI !== '1' || process.env.ALLURE_ENABLED === 'false') {
+  console.log('Skipping closeRun (CI != 1 or ALLURE_ENABLED is false)');
+  process.exit(0);
+}
+
 function publishToGhPages(dir: string, dest: string, repo: string, message: string): Promise<void> {
   return new Promise((resolve, reject) => {
     void ghpages.publish(
@@ -73,7 +79,7 @@ async function publishReport() {
   const newReportDir = path.join(platform, publishedReportName);
 
   try {
-    await fs.ensureDir(platform)
+    await fs.ensureDir(platform);
     await fs.copy(baseReportDir, newReportDir, { overwrite: true });
     console.log(`Report copied to ${newReportDir}`);
   } catch (err) {
@@ -103,18 +109,16 @@ async function publishReport() {
     process.exit(1);
   }
 
+  const reportUrl = `https://session-foundation.github.io/session-appium/${platform}/${publishedReportName}/`;
 
-const reportUrl = `https://session-foundation.github.io/session-appium/${platform}/${publishedReportName}/`;
-
-const githubOutputPath = process.env.GITHUB_OUTPUT;
-if (githubOutputPath) {
-  fs.appendFileSync(githubOutputPath, `report_url=${reportUrl}\n`);
-  console.log('Wrote report URL to GITHUB_OUTPUT');
-} else {
-  console.log(`REPORT_URL=${reportUrl}`);
+  const githubOutputPath = process.env.GITHUB_OUTPUT;
+  if (githubOutputPath) {
+    fs.appendFileSync(githubOutputPath, `report_url=${reportUrl}\n`);
+    console.log('Wrote report URL to GITHUB_OUTPUT');
+  } else {
+    console.log(`REPORT_URL=${reportUrl}`);
+  }
 }
-}
-
 
 publishReport().catch(err => {
   console.error('Error in publishReport script:', err);
