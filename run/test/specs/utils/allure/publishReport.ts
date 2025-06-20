@@ -67,6 +67,7 @@ async function publishReport() {
 
   console.log(`Extracted platform: ${platform}, build: ${build}`);
 
+  
   const baseReportDir = allureCurrentReportDir;
   let runFinishDate: string;
   try {
@@ -75,7 +76,8 @@ async function publishReport() {
     console.error('Error getting run finish time:', err);
     process.exit(1);
   }
-  const publishedReportName = `${runFinishDate}-${platform}-${build}-regression-report`;
+  const risk = process.env.RISK && process.env.RISK.trim() ? process.env.RISK : 'full';
+  const publishedReportName = `${runFinishDate}-${platform}-${build}-regression-report-${risk}`;
   const newReportDir = path.join(platform, publishedReportName);
 
   try {

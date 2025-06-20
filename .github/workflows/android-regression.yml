@@ -203,6 +203,7 @@ jobs:
           BUILD_NUMBER: ${{ env.BUILD_NUMBER }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           APK_URL: ${{env.APK_URL}}
+          RISK: ${{github.event.inputs.RISK}}
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results

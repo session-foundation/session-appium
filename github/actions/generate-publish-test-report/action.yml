@@ -9,6 +9,8 @@ inputs:
     required: true
   APK_URL:
     required: true
+  RISK:
+    required: true
 
 runs:
   using: 'composite'
@@ -32,6 +34,7 @@ runs:
         PLATFORM: ${{ inputs.PLATFORM }}
         BUILD_NUMBER: ${{ inputs.BUILD_NUMBER }}
         GH_TOKEN: ${{ inputs.GH_TOKEN }}
+        RISK: ${{inputs.RISK}}
 
     - name: Annotate run summary with report link
       shell: bash
