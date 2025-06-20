@@ -1,0 +1,777 @@
+
+
+==========> Running "Disappear after read @ios @high-risk @2-devices"
+
+
+starting capabilitiesIndex 0 ios
+openiOSApp
+starting capabilitiesIndex 1 ios
+openiOSApp
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"0541002dd7365b207128764d95ee683b24a12015cbc05f92b6164798a10e039934","seedPhrase":"dawn gutter hacksaw mullet mixture goodbye testing issued beware glass dizzy amnesty amnesty"},
+SessionUser: {"name":"Bob","sessionId":"05d77334a6af2488ce836e19ec2f2dd9b390d4fa484c5ea4f3bf3516d606c65e15","seedPhrase":"duration border avidly yields below pebbles slackens echo olive upstairs unjustly mouth mouth"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"0541002dd7365b207128764d95ee683b24a12015cbc05f92b6164798a10e039934","seedPhrase":"dawn gutter hacksaw mullet mixture goodbye testing issued beware glass dizzy amnesty amnesty"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"0541002dd7365b207128764d95ee683b24a12015cbc05f92b6164798a10e039934","seedPhrase":"dawn gutter hacksaw mullet mixture goodbye testing issued beware glass dizzy amnesty amnesty"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"05d77334a6af2488ce836e19ec2f2dd9b390d4fa484c5ea4f3bf3516d606c65e15","seedPhrase":"duration border avidly yields below pebbles slackens echo olive upstairs unjustly mouth mouth"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"05d77334a6af2488ce836e19ec2f2dd9b390d4fa484c5ea4f3bf3516d606c65e15","seedPhrase":"duration border avidly yields below pebbles slackens echo olive upstairs unjustly mouth mouth"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"0541002dd7365b207128764d95ee683b24a12015cbc05f92b6164798a10e039934","seedPhrase":"dawn gutter hacksaw mullet mixture goodbye testing issued beware glass dizzy amnesty amnesty"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"05d77334a6af2488ce836e19ec2f2dd9b390d4fa484c5ea4f3bf3516d606c65e15","seedPhrase":"duration border avidly yields below pebbles slackens echo olive upstairs unjustly mouth mouth"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [ Promise { <pending> } ]
+random snode for user: 05d77334a6af2488ce836e19ec2f2dd9b390d4fa484c5ea4f3bf3516d606c65e15 is snode: fe67e78ae24cb6cccbaa1e5b1282ca95d2a7447bf61a3e97cb4ad974d60c6631
+storing to snode https://104.233.200.23:22021/storage_rpc/v1
+storing to snode https://104.233.200.23:22021/storage_rpc/v1
+storing to snode https://104.233.200.23:22021/storage_rpc/v1
+random snode for user: 0541002dd7365b207128764d95ee683b24a12015cbc05f92b6164798a10e039934 is snode: 1f014f0bb8181eeea993f0335edd8843f09ea28e6f254b78adc9d83e79795fa0
+storing to snode https://144.76.164.202:22114/storage_rpc/v1
+storing to snode https://144.76.164.202:22114/storage_rpc/v1
+storing to snode https://144.76.164.202:22114/storage_rpc/v1
+storeStatus for Bob: [ 200, 200, 200 ]
+storeStatus for Alice: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "dawn gutter hacksaw mullet mixture goodbye testing issued beware glass dizzy amnesty amnesty"
+	"Bob": "duration border avidly yields below pebbles slackens echo olive upstairs unjustly mouth mouth" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+Error opening iOS app: Error: Unable to launch WebDriverAgent. Original error: xcodebuild failed with code 65. This usually indicates an issue with the local Xcode setup or WebDriverAgent project configuration or the driver-to-platform version mismatch. Consider setting 'showXcodeLog' capability to true in order to check the Appium server log for build-related error messages.
+    at quitAndUninstall (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/appium-xcuitest-driver/lib/driver.js:800:15)
+    at /Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/appium-xcuitest-driver/lib/driver.js:870:13
+    at wrapped (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/asyncbox/lib/asyncbox.js:93:13)
+    at retry (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/asyncbox/lib/asyncbox.js:66:13)
+    at retryInterval (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/asyncbox/lib/asyncbox.js:103:10)
+    at /Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/appium-xcuitest-driver/lib/driver.js:835:7
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+running  xcrun simctl privacy 56D8BA2F-BA0C-4D8F-8E5B-FD928E2C7C66 reset all undefined
+was run:  xcrun simctl privacy 56D8BA2F-BA0C-4D8F-8E5B-FD928E2C7C66 reset all undefined { stdout: '', stderr: '' }
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+running  xcrun simctl privacy 064F4F80-B81C-4B72-9715-43CD18975139 reset all undefined
+was run:  xcrun simctl privacy 064F4F80-B81C-4B72-9715-43CD18975139 reset all undefined { stdout: '', stderr: '' }
+Waiting for "accessibility id" and "Restore your session button" to be present
+Waiting for "accessibility id" and "Restore your session button" to be present
+'Restore your session button' has been found
+'Restore your session button' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+Waiting for "accessibility id" and "Recovery password input" to be present
+Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+Waiting for "accessibility id" and "Recovery password input" to be present
+'Recovery password input' has been found
+'Recovery password input' has been found
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+'Continue' has been found
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+'Slow mode notifications button' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow doesn't exist, time expired
+doesElementExist failed with accessibility id Allow
+Allow doesn't exist, time expired
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+'New conversation button' has been found
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Text found to include Alice
+'Conversation list item' and 'Alice' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Text found to include Bob
+'Conversation list item' and 'Bob' has been found
+Waiting for "accessibility id" and "More options" to be present
+'More options' has been found
+Waiting for "accessibility id" and "Disappearing Messages" to be present
+'Disappearing Messages' has been found
+Waiting for "accessibility id" and "Disappear after read option" to be present
+'Disappear after read option' has been found
+Waiting for "accessibility id" and "12 hours - Radio" to be present
+'12 hours - Radio' has been found
+Great success - default time is correct
+Waiting for "accessibility id" and "30 seconds" to be present
+'30 seconds' has been found
+Waiting for "accessibility id" and "Set button" to be present
+'Set button' has been found
+Waiting for "accessibility id" and "Back" to be present
+'Back' has been found
+Waiting for "accessibility id" and "Follow setting" to be present
+'Follow setting' has been found
+Waiting for "accessibility id" and "Set" to be present
+'Set' has been found
+Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+Waiting for control message to be present with Alice has set messages to disappear 30 seconds after they have been read.
+Text found to include You set messages to disappear 30 seconds after they have been read.
+Control message You set messages to disappear 30 seconds after they have been read. has been found
+Text found to include Alice has set messages to disappear 30 seconds after they have been read.
+Control message Alice has set messages to disappear 30 seconds after they have been read. has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Sleeping for 30000 milliseconds
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been deleted, great success
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been deleted, great success
+sessions closed
