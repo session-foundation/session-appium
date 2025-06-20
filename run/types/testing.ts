@@ -435,7 +435,7 @@ export type Id =
   | 'MeetingSE option'
   | 'donate-menu-item';
 
-export type TestRisk = 'high' | 'medium' | 'low' | 'debug'; // TODO remove this later
+export type TestRisk = 'high' | 'medium' | 'low';
 
 export type ElementStates = 'new_account' | 'restore_account';
 

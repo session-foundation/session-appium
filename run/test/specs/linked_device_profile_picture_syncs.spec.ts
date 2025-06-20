@@ -7,7 +7,7 @@ import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Avatar restored',
-  risk: 'debug', // TODO change this to what it has been before
+  risk: 'medium',
   testCb: avatarRestored,
   countOfDevicesNeeded: 2,
 });

@@ -5,7 +5,7 @@ import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from 
 
 bothPlatformsIt({
   title: 'Create user',
-  risk: 'debug', // TODO adjust this to high
+  risk: 'high',
   testCb: createUser,
   countOfDevicesNeeded: 1,
 });

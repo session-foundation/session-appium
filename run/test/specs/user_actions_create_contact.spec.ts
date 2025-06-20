@@ -10,7 +10,7 @@ import { sleepFor } from './utils/sleep_for';
 
 bothPlatformsIt({
   title: 'Create contact',
-  risk: 'debug', // TODO change this back to high
+  risk: 'high',
   testCb: createContact,
   countOfDevicesNeeded: 3,
 });
