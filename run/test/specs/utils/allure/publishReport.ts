@@ -103,7 +103,7 @@ async function publishReport() {
   }
 
 
-const reportUrl = `https://session-foundation.github.io/session-appium/reports/${publishedReportName}/`;
+const reportUrl = `https://session-foundation.github.io/session-appium/${platform}/${publishedReportName}/`;
 
 const githubOutputPath = process.env.GITHUB_OUTPUT;
 if (githubOutputPath) {
