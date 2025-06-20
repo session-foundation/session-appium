@@ -20,7 +20,7 @@ git clone --depth 1 --branch gh-pages "$GH_REPO" "$CLONE_DIR"
 
 # Locate the latest history folder for the platform
 echo "Searching for latest report for $PLATFORM"
-LATEST_HISTORY=$(find "$REPORTS_DIR" -type d -name "*-regression-report-*" | sort | tail -n1)
+LATEST_HISTORY=$(find "$REPORTS_DIR" -type d -name "run-*-${PLATFORM}-*" | sort | tail -n1)
 
 if [[ -z "$LATEST_HISTORY" ]]; then
   echo "No previous report found for '$PLATFORM'. Skipping history injection."

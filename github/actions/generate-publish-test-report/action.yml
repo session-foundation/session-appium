@@ -11,6 +11,10 @@ inputs:
     required: true
   RISK:
     required: true
+  GITHUB_RUN_NUMBER:
+    required: true
+  GITHUB_RUN_ATTEMPT:
+    required: true
 
 runs:
   using: 'composite'
@@ -35,6 +39,8 @@ runs:
         BUILD_NUMBER: ${{ inputs.BUILD_NUMBER }}
         GH_TOKEN: ${{ inputs.GH_TOKEN }}
         RISK: ${{inputs.RISK}}
+        GITHUB_RUN_NUMBER: ${{ inputs.GITHUB_RUN_NUMBER}}
+        GITHUB_RUN_ATTEMPT: ${{ inputs.GITHUB_RUN_ATTEMPT}}
 
     - name: Annotate run summary with report link
       shell: bash

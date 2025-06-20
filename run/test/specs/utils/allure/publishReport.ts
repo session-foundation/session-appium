@@ -1,6 +1,5 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { getRunFinishTime } from './getRunFinishTime';
 import { allureCurrentReportDir } from '../../../../constants/allure';
 import ghpages from 'gh-pages';
 
@@ -69,16 +68,22 @@ async function publishReport() {
 
   
   const baseReportDir = allureCurrentReportDir;
-  let runFinishDate: string;
-  try {
-    runFinishDate = await getRunFinishTime();
-  } catch (err) {
-    console.error('Error getting run finish time:', err);
-    process.exit(1);
-  }
+
+  // Create metadata.json for the front-end to fetch data from 
+  const runNumber = process.env.GITHUB_RUN_NUMBER
+  const runAttempt = process.env.GITHUB_RUN_ATTEMPT 
   const risk = process.env.RISK && process.env.RISK.trim() ? process.env.RISK : 'full';
-  const publishedReportName = `${runFinishDate}-${platform}-${build}-regression-report-${risk}`;
+  const publishedReportName = `run-${runNumber}.${runAttempt}-${platform}-${build}-${risk}`;
   const newReportDir = path.join(platform, publishedReportName);
+
+  const metadata = {
+  platform,
+  build,
+  risk,
+  runNumber: Number(runNumber),
+  runAttempt: Number(runAttempt),
+  };
+  fs.writeFileSync(path.join(baseReportDir, 'metadata.json'), JSON.stringify(metadata, null, 2));
 
   try {
     await fs.ensureDir(platform);
