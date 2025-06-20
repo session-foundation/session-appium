@@ -1,0 +1,16 @@
+name: Fetch Allure History
+description: Clones gh-pages and fetches the latest history
+inputs:
+  PLATFORM:
+    required: true
+  GH_TOKEN:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: ./scripts/fetch_allure_history.sh
+      env:
+        PLATFORM: ${{ inputs.PLATFORM }}
+        GH_TOKEN: ${{ inputs.GH_TOKEN }}

@@ -109,7 +109,10 @@ jobs:
           lfs: true
 
       - name: Fetch result history from gh-pages
-        run: ./scripts/fetch_allure_history.sh
+        uses: ./github/actions/fetch-allure-history
+        with: 
+          PLATFORM: ${{env.PLATFORM}}
+          GH_TOKEN: ${{env.GH_TOKEN}}
 
       - name: Download ipa and extract it
         run: |
@@ -149,23 +152,13 @@ jobs:
           pwd
           _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
-      - name: Generate Allure report
-        if: always()
-        run: |
-          npx ts-node run/test/specs/utils/allure/closeRun.ts
-
-      - name: Publish Allure Report to GitHub Pages
-        id: publish
-        if: always()
-        run: |
-          npx ts-node run/test/specs/utils/allure/publishReport.ts
-
-      - name: Add Allure report link to summary
-        if: always()
-        run: |
-          echo "### Regression Test Results" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "[Click here to view the report](${{ steps.publish.outputs.report_url }})" >> $GITHUB_STEP_SUMMARY
+      - name: Generate and publish test report 
+        uses: ./github/actions/finalize-test-report
+        with:
+          PLATFORM: ${{ env.PLATFORM }}
+          BUILD_NUMBER: ${{ env.BUILD_NUMBER }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APK_URL: ${{env.APK_URL}}
 
 
       - name: Upload results of this run
