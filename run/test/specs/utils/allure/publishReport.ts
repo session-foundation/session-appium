@@ -69,7 +69,7 @@ async function publishReport() {
     console.error('Error getting run finish time:', err);
     process.exit(1);
   }
-  const publishedReportName = `allure-report-${runFinishDate}-${platform}-${build}`;
+  const publishedReportName = `${runFinishDate}-${platform}-${build}-regression-report`;
   const newReportDir = path.join(allureReportsDir, publishedReportName);
 
   try {
@@ -92,7 +92,7 @@ async function publishReport() {
   try {
     await publishToGhPages(
       newReportDir,
-      `reports/${publishedReportName}`,
+      `${platform}/${publishedReportName}`,
       repoWithToken,
       `ci: publish Allure report for ${platform} ${build}`
     );
