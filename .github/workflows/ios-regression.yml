@@ -154,6 +154,7 @@ jobs:
 
       - name: Generate and publish test report 
         uses: ./github/actions/finalize-test-report
+        if: always()
         with:
           PLATFORM: ${{ env.PLATFORM }}
           BUILD_NUMBER: ${{ env.BUILD_NUMBER }}
