@@ -112,7 +112,7 @@ jobs:
         uses: ./github/actions/fetch-allure-history
         with: 
           PLATFORM: ${{env.PLATFORM}}
-          GH_TOKEN: ${{env.GH_TOKEN}}
+          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Download ipa and extract it
         run: |

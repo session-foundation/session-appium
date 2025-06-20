@@ -94,11 +94,11 @@ jobs:
         with:
           lfs: true
 
-      - name: Restore Allure history cache
-        uses: actions/cache@v4
-        with:
-          path: allure/allure-history-backup/
-          key: allure-history-${{ github.workflow }}
+      - name: Fetch result history from gh-pages
+        uses: ./github/actions/fetch-allure-history
+        with: 
+          PLATFORM: ${{env.PLATFORM}}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN}}   
 
       - uses: ./github/actions/print-runner-details
         with:
@@ -185,22 +185,14 @@ jobs:
           pwd
           _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
 
-      - name: Merge testing history and generate Allure report
-        if: always()
-        run: |
-          npx ts-node run/test/specs/utils/allure/closeRun.ts
-
-      - name: Publish Allure Report to GitHub Pages
-        if: always()
-        run: |
-          npx ts-node run/test/specs/utils/allure/publishReport.ts
-
-      - name: Save Allure history cache
-        uses: actions/cache/save@v4
+      - name: Generate and publish test report 
+        uses: ./github/actions/generate-publish-test-report
         if: always()
         with:
-          path: allure/allure-history-backup/
-          key: allure-history-${{ github.workflow }}
+          PLATFORM: ${{ env.PLATFORM }}
+          BUILD_NUMBER: ${{ env.BUILD_NUMBER }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APK_URL: ${{env.APK_URL}}
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results
