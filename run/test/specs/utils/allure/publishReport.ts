@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { getRunFinishTime } from './getRunFinishTime';
-import { allureCurrentReportDir, allureReportsDir } from '../../../../constants/allure';
+import { allureCurrentReportDir } from '../../../../constants/allure';
 import ghpages from 'gh-pages';
 
 function publishToGhPages(dir: string, dest: string, repo: string, message: string): Promise<void> {
@@ -37,7 +37,7 @@ async function publishReport() {
     process.exit(1);
   }
 
-  const jsonContent = await fs.readFile(environmentFile, 'utf8') as string;
+  const jsonContent = await fs.readFile(environmentFile, 'utf8');
   let envData;
   try {
     envData = JSON.parse(jsonContent);
@@ -70,9 +70,10 @@ async function publishReport() {
     process.exit(1);
   }
   const publishedReportName = `${runFinishDate}-${platform}-${build}-regression-report`;
-  const newReportDir = path.join(allureReportsDir, publishedReportName);
+  const newReportDir = path.join(platform, publishedReportName);
 
   try {
+    await fs.ensureDir(platform)
     await fs.copy(baseReportDir, newReportDir, { overwrite: true });
     console.log(`Report copied to ${newReportDir}`);
   } catch (err) {
