@@ -114,11 +114,9 @@ async function linkedGroupAndroid(platform: SupportedPlatformsType) {
   // Config message is "Group name is now {group_name}"
   await device1.waitForControlMessageToBePresent(groupNameNew);
   // Check linked device for name change (conversation header name)
-  await device2.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Conversation header name',
-    text: newGroupName,
-  });
+  await device2.waitForTextElementToBePresent(
+    new ConversationHeaderName(device2).build(newGroupName)
+  );
   await Promise.all([
     device2.waitForControlMessageToBePresent(groupNameNew),
     device3.waitForControlMessageToBePresent(groupNameNew),

@@ -277,7 +277,7 @@ export class DeviceWrapper {
    * @param maxWait - Maximum wait time in milliseconds for each locator (default: 3000).
    * @throws If neither locator is found.
    */
-  private async findWithFallback(
+  public async findWithFallback(
     primaryLocator: LocatorsInterface | StrategyExtractionObj,
     fallbackLocator: LocatorsInterface | StrategyExtractionObj,
     maxWait: number = 3000
@@ -1680,7 +1680,7 @@ export class DeviceWrapper {
       englishStrippedStr(`attachmentsAutoDownloadModalDescription`)
         .withArgs({ conversation_name: conversationName })
         .toString(),
-      true
+      false
     );
     await this.clickOnElementAll(new DownloadMediaButton(this));
   }

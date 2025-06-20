@@ -363,7 +363,8 @@ export type AccessibilityId =
   | 'Appearance'
   | 'Select alternate app icon'
   | 'MeetingSE'
-  | 'Donate';
+  | 'Donate'
+  | 'Manage Members';
 
 export type Id =
   | 'Modal heading'
@@ -469,7 +470,12 @@ export type Id =
   | 'Notifications'
   | 'All Session notifications'
   | 'com.android.settings:id/switch_text'
-  | 'Block';
+  | 'Block'
+  | 'blocked-banner'
+  | 'invite-contacts-menu-option'
+  | 'invite-contacts-button'
+  | 'Recovery password menu item'
+  | 'manage-members-menu-option';
 
 export type TestRisk = 'high' | 'medium' | 'low';
 

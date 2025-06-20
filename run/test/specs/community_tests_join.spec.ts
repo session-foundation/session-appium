@@ -2,6 +2,7 @@ import { testCommunityLink, testCommunityName } from '../../constants/community'
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { ConversationItem } from './locators/home';
 import { open_Alice2 } from './state_builder';
+import { sleepFor } from './utils';
 import { joinCommunity } from './utils/join_community';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 
@@ -19,7 +20,8 @@ async function joinCommunityTest(platform: SupportedPlatformsType) {
   const testMessage = `Test message + ${new Date().getTime()}`;
 
   await joinCommunity(alice1, testCommunityLink, testCommunityName);
-  await alice1.onIOS().scrollToBottom();
+  await sleepFor(5000);
+  await alice1.scrollToBottom();
   await alice1.sendMessage(testMessage);
   // Has community synced to device 2?
   await alice2.waitForTextElementToBePresent(new ConversationItem(alice2, testCommunityName));

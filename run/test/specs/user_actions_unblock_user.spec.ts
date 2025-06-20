@@ -30,7 +30,10 @@ async function unblockUser(platform: SupportedPlatformsType) {
   );
   await alice1.clickOnElementAll(new BlockUserConfirmationModal(alice1));
   await alice1.onIOS().navigateBack();
-  const blockedStatus = await alice1.waitForTextElementToBePresent(new BlockedBanner(alice1));
+  const blockedStatus = await alice1.waitForTextElementToBePresent({
+    ...new BlockedBanner(alice1).build(),
+    maxWait: 5000,
+  });
   if (blockedStatus) {
     console.info(`${bob.userName} has been blocked`);
   } else {

@@ -303,8 +303,7 @@ export class InviteContactsMenuItem extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger:id/title',
-          text: 'Invite Contacts',
+          selector: 'invite-contacts-menu-option',
         };
       case 'ios':
         return {

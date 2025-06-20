@@ -26,21 +26,6 @@ export class ConversationSettings extends LocatorsInterface {
   }
 }
 
-// android-only locator for the avatar
-export class ConversationAvatar extends LocatorsInterface {
-  public build() {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: 'network.loki.messenger:id/singleModeImageView',
-        } as const;
-      case 'ios':
-        throw new Error('Unsupported platform');
-    }
-  }
-}
-
 export class DeletedMessage extends LocatorsInterface {
   public build() {
     return {
@@ -164,9 +149,17 @@ export class NotificationSwitch extends LocatorsInterface {
 
 export class BlockedBanner extends LocatorsInterface {
   public build() {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Blocked banner',
-    } as const;
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'blocked-banner', // See SES-3992
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Blocked banner',
+        } as const;
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { bothPlatformsIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ImageName, MediaMessageInput, SendMediaButton, ShareExtensionIcon } from './locators';
 import { PhotoLibrary } from './locators/external';
@@ -8,10 +8,17 @@ import { SupportedPlatformsType } from './utils/open_app';
 import { testImage } from '../../constants/testfiles';
 import { handlePhotosFirstTimeOpen } from './utils/handle_first_open';
 
-bothPlatformsIt({
+// TODO investigate why the Android Photos app throws an unexpected error when sharing 
+bothPlatformsItSeparate({
   title: 'Share to session',
   risk: 'low',
+  ios: {
   testCb: shareToSession,
+  },
+  android: {
+    testCb: shareToSession,
+    shouldSkip: true,
+  },
   countOfDevicesNeeded: 2,
 });
 

@@ -1,5 +1,6 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { ConversationHeaderName } from './locators/conversation';
 import { ConversationItem } from './locators/home';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -29,11 +30,9 @@ async function restoreGroup(platform: SupportedPlatformsType) {
   //   Check that group has loaded on linked device
   await device4.clickOnElementAll(new ConversationItem(device4, testGroupName));
   // Check the group name has loaded
-  await device4.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Conversation header name',
-    text: testGroupName,
-  });
+  await device4.waitForTextElementToBePresent(
+    new ConversationHeaderName(device4).build(testGroupName)
+  );
   // Check all messages are present
   await Promise.all([
     device4.waitForTextElementToBePresent({

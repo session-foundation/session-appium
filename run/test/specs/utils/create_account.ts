@@ -39,9 +39,9 @@ export const newUser = async (device: DeviceWrapper, userName: UserNameType): Pr
   const recoveryPhrase = await device.getTextFromElement(recoveryPhraseContainer);
   console.log(`${userName}s recovery phrase is "${recoveryPhrase}"`);
   // Exit Modal
-  await device.navigateBack();
+  await device.navigateBack(false);
   await device.clickOnElementAll(new UserSettings(device));
   const accountID = await device.grabTextFromAccessibilityId('Account ID');
-  await device.closeScreen();
+  await device.closeScreen(false);
   return { userName, accountID, recoveryPhrase };
 };

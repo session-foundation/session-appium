@@ -8,6 +8,7 @@ import { ConversationSettings } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { ConversationItem } from './locators/home';
+import { GroupMember } from './locators/groups';
 
 bothPlatformsItSeparate({
   title: 'Send community invitation',
@@ -87,12 +88,10 @@ async function sendCommunityInviteMessageAndroid(platform: SupportedPlatformsTyp
   // Add user B to community
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   await alice1.clickOnElementAll(new InviteContactsMenuItem(alice1));
-  await alice1.clickOnElementByText({
-    strategy: 'accessibility id',
-    selector: 'Contact',
-    text: bob.userName,
-  });
-  await alice1.clickOnByAccessibilityID('Done');
+  await alice1.clickOnElementAll(new GroupMember(alice1).build(bob.userName));
+  await alice1.clickOnElementAll({
+    strategy: 'id', 
+    selector: 'invite-contacts-button'});
   // Check device 2 for invitation from user A
   await bob1.waitForTextElementToBePresent({
     strategy: 'id',
@@ -110,7 +109,7 @@ async function sendCommunityInviteMessageAndroid(platform: SupportedPlatformsTyp
     englishStrippedStr('communityJoinDescription')
       .withArgs({ community_name: testCommunityName })
       .toString(),
-    true
+    false
   );
   await bob1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Join' });
   await bob1.navigateBack();

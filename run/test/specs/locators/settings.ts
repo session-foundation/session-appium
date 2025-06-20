@@ -49,7 +49,7 @@ export class RecoveryPasswordMenuItem extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
+          strategy: 'id',
           selector: 'Recovery password menu item',
         } as const;
       case 'ios':
@@ -161,7 +161,7 @@ export class PrivacyMenuItem extends LocatorsInterface {
 }
 
 export class ConversationsMenuItem extends LocatorsInterface {
-  public build() {
+  public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
         return {

@@ -242,3 +242,19 @@ export class MemberStatus extends LocatorsInterface {
     }
   }
 }
+export class ManageMembersMenuItem extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'manage-members-menu-option',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Manage Members',
+        };
+    }
+  }
+}

@@ -45,7 +45,10 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   await alice1.navigateBack();
   // Look for alert at top of screen (Bob is blocked. Unblock them?)
   // Check device 1 for blocked status
-  const blockedStatus = await alice1.waitForTextElementToBePresent(new BlockedBanner(alice1));
+  const blockedStatus = await alice1.waitForTextElementToBePresent({
+    ...new BlockedBanner(alice1).build(),
+    maxWait: 5000,
+  });
   if (blockedStatus) {
     console.info(`${bob.userName} has been blocked`);
   } else {
