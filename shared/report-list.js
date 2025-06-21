@@ -80,7 +80,7 @@ function initReportPage(pathInRepo, platformLabel) {
       reportList.innerHTML = '';
 
       const reports = data.filter(item =>
-        item.type === 'dir' && item.name.includes('-regression-report')
+        item.type === 'dir' && item.name.includes('run-')
       );
 
       return Promise.all(reports.map(async report => {
