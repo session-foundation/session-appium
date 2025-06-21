@@ -1,0 +1,228 @@
+
+
+==========> Running "Accept message request with text @android @high-risk @2-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 1 1
+actualCapabilities worker 2
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 1 1
+actualCapabilities worker 3
+emulatorAlreadyRunning emulator-5560 true
+emulatorAlreadyRunning emulator-5558 true
+emulator-5560  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5560'
+  }
+}
+udid: emulator-5560
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+Waiting for "accessibility id" and "Create account button" to be present
+Waiting for "accessibility id" and "Create account button" to be present
+'Create account button' has been found
+'Create account button' has been found
+Locator being used: { strategy: 'id', selector: 'Enter display name' }
+Waiting for "id" and "Enter display name" to be present
+Locator being used: { strategy: 'id', selector: 'Enter display name' }
+Waiting for "id" and "Enter display name" to be present
+'Enter display name' has been found
+'Enter display name' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+'Slow mode notifications button' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Sleeping for 5000 milliseconds
+Sleeping for 5000 milliseconds
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "accessibility id" and "Reveal recovery phrase button" to be present
+'Reveal recovery phrase button' has been found
+Waiting for "accessibility id" and "Reveal recovery phrase button" to be present
+Waiting for "accessibility id" and "Reveal recovery phrase button" to be present
+'Reveal recovery phrase button' has been found
+Waiting for "accessibility id" and "Reveal recovery phrase button" to be present
+'Reveal recovery phrase button' has been found
+'Reveal recovery phrase button' has been found
+Waiting for "accessibility id" and "Recovery password container" to be present
+'Recovery password container' has been found
+Waiting for "accessibility id" and "Recovery password container" to be present
+Waiting for "accessibility id" and "Copy button" to be present
+'Copy button' has been found
+'Recovery password container' has been found
+Waiting for "accessibility id" and "Recovery password container" to be present
+Waiting for "accessibility id" and "Copy button" to be present
+'Copy button' has been found
+Waiting for "accessibility id" and "Recovery password container" to be present
+'Recovery password container' has been found
+Bobs recovery phrase is "sample liar judge ruffled pamphlet eskimos amidst alerts safety vivid edgy banjo pamphlet"
+Waiting for "accessibility id" and "Navigate up" to be present
+'Recovery password container' has been found
+'Navigate up' has been found
+Waiting for "accessibility id" and "User settings" to be present
+Alices recovery phrase is "haggled sieve nowhere meant mostly navy aside balding getting gauze slug business navy"
+Waiting for "accessibility id" and "Navigate up" to be present
+'Navigate up' has been found
+Waiting for "accessibility id" and "User settings" to be present
+waitForTextElementToBePresent threw: "accessibility id": "User settings
+'User settings' has been found
+Waiting for "accessibility id" and "User settings" to be present
+'User settings' has been found
+Waiting for "accessibility id" and "Account ID" to be present
+'Account ID' has been found
+Waiting for "accessibility id" and "Navigate up" to be present
+'Navigate up' has been found
+Waiting for "accessibility id" and "Account ID" to be present
+'Account ID' has been found
+Waiting for "accessibility id" and "Navigate up" to be present
+'Navigate up' has been found
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "accessibility id" and "New direct message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "New direct message
+Waiting for "accessibility id" and "New direct message" to be present
+'New direct message' has been found
+Locator being used: { strategy: 'id', selector: 'Session id input box' }
+Waiting for "id" and "Session id input box" to be present
+'Session id input box' has been found
+Waiting for "accessibility id" and "Next" to be present
+'Next' has been found
+Waiting for "id" and "network.loki.messenger:id/textSendAfterApproval" to be present with "You will be able to send voice messages and attachments once the recipient has approved this message request."
+Text found to include You will be able to send voice messages and attachments once the recipient has approved this message request.
+'network.loki.messenger:id/textSendAfterApproval' and 'You will be able to send voice messages and attachments once the recipient has approved this message request.' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+'Message requests banner' has been found
+Waiting for "accessibility id" and "Message request" to be present
+'Message request' has been found
+Waiting for "id" and "network.loki.messenger:id/sendAcceptsTextView" to be present with "Sending a message to this user will automatically accept their message request and reveal your Account ID."
+Text found to include Sending a message to this user will automatically accept their message request and reveal your Account ID.
+'network.loki.messenger:id/sendAcceptsTextView' and 'Sending a message to this user will automatically accept their message request and reveal your Account ID.' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Waiting for control message to be present with ""Your message request has been accepted.""
+Waiting for control message to be present with ""You have accepted the message request from Alice.""
+Waiting for control message to be present with ""Your message request has been accepted.""
+Waiting for control message to be present with ""Your message request has been accepted.""
+Waiting for control message to be present with ""Your message request has been accepted.""
+Text found to include You have accepted the message request from Alice.
+Control message ""You have accepted the message request from Alice."" has been found
+Waiting for control message to be present with ""Your message request has been accepted.""
+Waiting for control message to be present with ""Your message request has been accepted.""
+Waiting for control message to be present with ""Your message request has been accepted.""
+Waiting for control message to be present with ""Your message request has been accepted.""
+Text found to include Your message request has been accepted.
+Control message ""Your message request has been accepted."" has been found
+sessions closed

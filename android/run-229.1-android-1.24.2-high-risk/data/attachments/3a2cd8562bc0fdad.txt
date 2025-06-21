@@ -1,0 +1,515 @@
+
+
+==========> Running "Unsend message in group @android @high-risk @3-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+starting capabilitiesIndex 2 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 2
+[buildStateForTest] stateToBuild:"3friendsInGroup". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5558 true
+emulatorAlreadyRunning emulator-5556 true
+emulatorAlreadyRunning emulator-5554 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"05c324009a9e8dc6320b49612dd6c15a73f0d2d413633efacf7f5013ab99197016","seedPhrase":"hefty cube yellow pause height aided rowboat odds guarded dyslexic whipped drinks yellow"},
+SessionUser: {"name":"Bob","sessionId":"05659e1e7cc8d5fe8f68e7bd9495613885776cecc24aef522ef49303095f200c21","seedPhrase":"judge odometer giddy waveform nifty neither orders foamy frown goes match zigzags neither"},
+SessionUser: {"name":"Charlie","sessionId":"055765b34bca4857b7ed973a227e301d1234d640677dee8c93f68f55f78b78f258","seedPhrase":"toenail pyramid kickoff suede roared dangerous rays tolerant winter loincloth oozed medicate medicate"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"05c324009a9e8dc6320b49612dd6c15a73f0d2d413633efacf7f5013ab99197016","seedPhrase":"hefty cube yellow pause height aided rowboat odds guarded dyslexic whipped drinks yellow"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05c324009a9e8dc6320b49612dd6c15a73f0d2d413633efacf7f5013ab99197016","seedPhrase":"hefty cube yellow pause height aided rowboat odds guarded dyslexic whipped drinks yellow"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"05659e1e7cc8d5fe8f68e7bd9495613885776cecc24aef522ef49303095f200c21","seedPhrase":"judge odometer giddy waveform nifty neither orders foamy frown goes match zigzags neither"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05c324009a9e8dc6320b49612dd6c15a73f0d2d413633efacf7f5013ab99197016","seedPhrase":"hefty cube yellow pause height aided rowboat odds guarded dyslexic whipped drinks yellow"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Charlie","sessionId":"055765b34bca4857b7ed973a227e301d1234d640677dee8c93f68f55f78b78f258","seedPhrase":"toenail pyramid kickoff suede roared dangerous rays tolerant winter loincloth oozed medicate medicate"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"05659e1e7cc8d5fe8f68e7bd9495613885776cecc24aef522ef49303095f200c21","seedPhrase":"judge odometer giddy waveform nifty neither orders foamy frown goes match zigzags neither"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05c324009a9e8dc6320b49612dd6c15a73f0d2d413633efacf7f5013ab99197016","seedPhrase":"hefty cube yellow pause height aided rowboat odds guarded dyslexic whipped drinks yellow"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"05659e1e7cc8d5fe8f68e7bd9495613885776cecc24aef522ef49303095f200c21","seedPhrase":"judge odometer giddy waveform nifty neither orders foamy frown goes match zigzags neither"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"05659e1e7cc8d5fe8f68e7bd9495613885776cecc24aef522ef49303095f200c21","seedPhrase":"judge odometer giddy waveform nifty neither orders foamy frown goes match zigzags neither"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Charlie","sessionId":"055765b34bca4857b7ed973a227e301d1234d640677dee8c93f68f55f78b78f258","seedPhrase":"toenail pyramid kickoff suede roared dangerous rays tolerant winter loincloth oozed medicate medicate"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Charlie","sessionId":"055765b34bca4857b7ed973a227e301d1234d640677dee8c93f68f55f78b78f258","seedPhrase":"toenail pyramid kickoff suede roared dangerous rays tolerant winter loincloth oozed medicate medicate"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05c324009a9e8dc6320b49612dd6c15a73f0d2d413633efacf7f5013ab99197016","seedPhrase":"hefty cube yellow pause height aided rowboat odds guarded dyslexic whipped drinks yellow"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Charlie","sessionId":"055765b34bca4857b7ed973a227e301d1234d640677dee8c93f68f55f78b78f258","seedPhrase":"toenail pyramid kickoff suede roared dangerous rays tolerant winter loincloth oozed medicate medicate"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"05659e1e7cc8d5fe8f68e7bd9495613885776cecc24aef522ef49303095f200c21","seedPhrase":"judge odometer giddy waveform nifty neither orders foamy frown goes match zigzags neither"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Charlie","sessionId":"055765b34bca4857b7ed973a227e301d1234d640677dee8c93f68f55f78b78f258","seedPhrase":"toenail pyramid kickoff suede roared dangerous rays tolerant winter loincloth oozed medicate medicate"}
+creatorMetagroupW info: 64313a21693165313a243130313a64313a23693165313a2664313a6e32353a4d65737361676520636865636b7320666f722067726f75707365313a3c6c6c69306533323aea173b57beca8af18c3519a7bbf69c3e7a05d1c049fa9558341d8ebb48b0c96564656565313a3d64313a6e303a6565313a28303a313a296c65313a2b646565
+creatorMetagroupW members: 64313a21693165313a243335393a64313a23693165313a2664313a6d6433333a055765b34bca4857b7ed973a227e301d1234d640677dee8c93f68f55f78b78f25864313a6e373a436861726c69656533333a05659e1e7cc8d5fe8f68e7bd9495613885776cecc24aef522ef49303095f200c2164313a6e333a426f626533333a05c324009a9e8dc6320b49612dd6c15a73f0d2d413633efacf7f5013ab9919701664313a41693165313a6e353a416c696365656565313a3c6c6c69306533323aea173b57beca8af18c3519a7bbf69c3e7a05d1c049fa9558341d8ebb48b0c96564656565313a3d64313a6d6433333a055765b34bca4857b7ed973a227e301d1234d640677dee8c93f68f55f78b78f25864313a6e303a6533333a05659e1e7cc8d5fe8f68e7bd9495613885776cecc24aef522ef49303095f200c2164313a6e303a6533333a05c324009a9e8dc6320b49612dd6c15a73f0d2d413633efacf7f5013ab9919701664313a41303a313a6e303a65656565313a28303a313a296c65313a2b646565
+creatorMetagroupW keys: 64313a416c65313a4c6c65313a5064313a63323436323a64313a2332343adb72e99ba0d29c57ff228cc63c2876af47dc5b8f748553d1313a47693065313a4b34383a89a4d63e5d2d56a6ee3180e5e0832bc321e2cedaf3de5fead2810b798c90e6d5f3f15641b84684f96143de8bf41d02b5313a6b6c34383a7fb98c0df34f3e00d5140b2e985e396fd3164e2414579d1f7aef52ecb5c286fd7dce94eb272e6da07cb79ee4445e69f834383a660d6ae828c772600a46c5f03184bc9287d5a40708118dbf7dba153a289a71be5cf343568fdee895b9769c86807aa56334383aaae7ecf9971001a104c17beaa26526e0bbc74addc99e0f91e087f5fdf26012aac5641e3bb679abd2400f77a7ec3b270834383ac87266a0ca216e7b34b93355c26ef66c77abdf690c6f9ddd7303b950ef2dd295f8468c481304bf4887ab7d31f700034134383aeddac6eee437ffdaa44bf2b072cd528df85b46267b09946b9e73b33df6bf47bb66651c64cdd9e05e7e1179c76236951a34383a01b96b4be38247cc73c1189af1507c4f4f3e6767e39405bd05558a16fe5e5cd3cf4218c9a31df34fca0ca69eb9d4e2d734383a13b83d40969c57918365ff8e14e47b3d86674ca30913cb43020dd73a2b0f4d88574ee806d39755b81cc181b886dc52a534383a2e4ecc71f95c434b1a94c5ac265a81620dd70ec7f8d1dffba661fa0c769f044d664cdb713e6c0daeef1b27ac2b1bb64834383a5457a4651b5ca52179c3ab6e4280e160ef5556f49000ee274bf7702e9f1437ff65aa25d75a4facac6cf75f1b3fbd3f4f34383a5326b9eccad82fd862311bdf85d56005d6a6e92ff29914cdba19183abbaa9abc072620b9501428ac33e12ebac21fb56534383a474641ff32f028a91de7efcc610000b5826c6b0e39ca210f2e040f488c425092aec8385d7d4d743e2e0a38df343c096634383a9e1ab4c0f388f4b76e10cba2950e6659bf57a642169be74b353a0b01ccc78b88ac9269cad34ccacabdfd8c9efcee5f0d34383ac5440fbbd216b3a5a9884cdd980de9474d73542eb84e0503b1711c197ead9e66102f5b1ee2749ce6852c0a4c753a28b134383ae31021b4e44f994fe8eab1e26e1fca6b87119adce21b0f2fd0eb799a4cfb4f65ad69ca727fdd3a9ccb59e19a9068046a34383a98d6687b4314b572f5aa76f2aef41fda61db0e8cb9eeb8a1eaac2f9d8e42a91e04d9939784f4ffa4fc38f6ee4dd7526834383af59b26e79157a758910ae1c9527c173267afc1580bcd7f124a46fd7ad7cd687eabee2de1f639307e9aa71a2c9f1577b534383ac80c9ebd505f49158eaf643b9b6e62a4c6954071248f896ce49e8f0b5503d052e7af8cf542af04ac8b1b88cfc50a480034383aebc1314671c175de55ba889fe51c8586b86ced17e1f73cbf75c9dee9e42e74f66a357a15c2431d974f5e463eb5cfe76a34383a2080071c631346ece7f700a7adf16ac47c51a31a0fea81d29fcad58a746220934b4e43abf192a2293d9b4eae36c1cd9a34383a2622c6243011ce07c5dff4ed7793803ac5329d6fb4e3a359ed7766c9eb09c5e162a6b89f6a0a95ae16ea0025ff85f8d134383a40b7e5959678db982ebe8a1a20153da4bd4c441a486e47b24ef8ff4a441298dea5ab8444bb7e2d235d919605260ae8ce34383afa29b9bed1341ec811ad9769357907dedd03dc55958e9fd0072eccb487172faa44b56ddbcb8f54f716465bb29dadc9ee34383a8e57c92967129e2cc3b0b9c5a462d46aad33d06ce8e2607f7179b5957f37141eb7851991fb9786c95dc84b9aa6257ee634383ac4d4835870fc86389f6a92f82c75051f23a4c643890ad2d3cc7fa09747dd964ddd3fcee4482e1db6c4a5d7a013fcbea234383ab3541ac0066e276f33cd5d273f06421b32116fab3c2334445df1603f2fff26c8295c8f5b71e9960bd5d6c076df566ec134383af1ad6a90bcbe962efc65f4ebb8b4c2f6fc23908fc6206630f0b81a60f5443879b3cd85920492dca46b0e1bda8fa20fbd34383a9b0dd58a8ca590b56dfa99f4bc6d86b271cdbcffb0204cbb66e774846b112c9825191d56b5c415d8f0b88ebec541c0e434383a9166ac06f26dc6fc1027ce342576ffe8ff37347afe7d3f8b4b0c42be9a9ffb9d93d3b452fbbb26e82e546430e6c9552a34383a69f05a522a39135a84ce222a8b8c61f641d26c5e0d73a7ce1546184962db5fa0755c287ad8b68b7f2e1153cfe0a3b2d934383ac6013cf4427a21e3564b3c6ac8bd7fef1e5d85bd5dac4d37392c66a88319978a5adcb3ca5c9a2e1da949aa19edea75fd34383a232e356cb7c249176ec956e1ef5ae361d82df6e37842c07c9c0c2322dd7a63d69d2cb56191b20faf08a3fae5f46ee90834383a5c33423e06ffa896e179a5371b6de908bd867907afb5fde5bae2512040a479e612fe49d563c104a34fc2cf8a3431129b34383a3d9aa47d6783a7b64fdd7788555c486a65a2ac6e2432e63746d3f79156c1cfe1cee01fa528cf39ba26b947588005edeb34383a1edd701e9af4b093c40ed95bcacd71b08d5f433db15335e6330c2a014b9f97157e7e164478df7985339586db429071ec34383ad4e9cf5a3ae869813398c924ba717bd39d1484917f813a405d3989d5507e938d2236d56b9ac9eaf3eac2de5ed334385c34383a2c50839c277eaf8956b84e67867b310d23c1287b635425f23de449237459cd5e6b04bd84fb3bae91521eb66fb98d4b3c34383aa4ee549f594cde621054f2a8ca4c9c05e16065fc57ecb4f662985c82d9c162f0b2072f8b43ca86bff212cce0912e916434383abebb4031bb6a96ad9fd7538d0b492a4c3ed034c5f7d45e9f9bfea8db59e2e5ae4e18737743e7560ed27a5cdd4828232834383a24528925fd12e0597ad590f27e804f7e174d91d0963662bb9f1d0e4b321f0512f195b8c8b5a7fafe383f8815f716898a34383ae0d6f4051dc00d1ec2f5fb165453bcf0253a2e8c5a5ff1e9c31496510a9eb0e30d65dd3f8d3f0aefa1f9c23240fc7bd534383a2fb0e4a9bde38749a5c59015a2752005163e958f31728ea74bf37f0654a20ff3ac2abbb2d5faf22c2f21e4bd0ae2e57e34383aeeeac81e33f714ba50fdfa91c4609424b258e648e10225cfbb0e32ea2dc0abfc6fc3e3062fabfa125f90a1aba4a32b9834383aa3351c9b49906453b18d01daf19929979bd17d321a48d717714283fa73ad4e9e40b4b7646ecc6ee7e561fb5b351488d034383a14927eb585edfda38e0d31adb0f7b48f3878edebece96e78c3bb2fbd16a1da9a012cfe1e6fe6e885be2e78821b2bac3334383a6499829fea35ed65a807160beba12ae4e167f557b436373a1403fd9f3124b5c5e00b6af4f415ff36425f3366d0fffb3265313a7e36343a619174a87c90894460005589682289edf1f8e220fb7882261093c66f56d83607f3efff581a005604ce9361ab25639b03ded945e137b6e1764d320147b429590665313a67693065313a6b33323a9655067de5d6e350ee42cd5678af567b20d879efa3244a58a2aa4c723bed3ea66565
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+random snode for user: 05c324009a9e8dc6320b49612dd6c15a73f0d2d413633efacf7f5013ab99197016 is snode: 7ed09f619798505ff3102c20ade7b80c4496cba0b0c3350084c69af59890e065
+storing to snode https://45.79.95.176:22021/storage_rpc/v1
+storing to snode https://45.79.95.176:22021/storage_rpc/v1
+storing to snode https://45.79.95.176:22021/storage_rpc/v1
+random snode for user: 03e1a03ae6e458785a1b1c8440245363e35d7a40be6699a916c9d897bc519b57be is snode: 4396748bf514a9cf525e25aab0e3eb668c5337ddb594403bc7fab1ce9d50b40f
+promises [
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 130797,
+    [Symbol(trigger_async_id_symbol)]: 130523,
+    [Symbol(kResourceStore)]: undefined
+  },
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 131564,
+    [Symbol(trigger_async_id_symbol)]: 130846,
+    [Symbol(kResourceStore)]: undefined
+  }
+]
+storing to snode https://164.92.224.198:22021/storage_rpc/v1
+storing to snode https://164.92.224.198:22021/storage_rpc/v1
+storing to snode https://164.92.224.198:22021/storage_rpc/v1
+random snode for user: 055765b34bca4857b7ed973a227e301d1234d640677dee8c93f68f55f78b78f258 is snode: 1f502f096353bf0fc8c00979f3f87e12280b05d753e46225368f3fbf656c2a66
+storing to snode https://172.93.103.156:22102/storage_rpc/v1
+storing to snode https://172.93.103.156:22102/storage_rpc/v1
+storing to snode https://172.93.103.156:22102/storage_rpc/v1
+random snode for user: 05659e1e7cc8d5fe8f68e7bd9495613885776cecc24aef522ef49303095f200c21 is snode: 386fff69caf0102034063bb1f6ee4e86a919266964a5027bb4c1e3d8f3e701f5
+storing to snode https://164.68.126.100:22021/storage_rpc/v1
+storing to snode https://164.68.126.100:22021/storage_rpc/v1
+storing to snode https://164.68.126.100:22021/storage_rpc/v1
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+storeStatus for Alice: [ 200, 200, 200 ]
+storeStatus for Charlie: [ 200, 200, 200 ]
+storeStatus for (group) 03e1a03ae6e458785a1b1c8440245363e35d7a40be6699a916c9d897bc519b57be: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "hefty cube yellow pause height aided rowboat odds guarded dyslexic whipped drinks yellow"
+	"Bob": "judge odometer giddy waveform nifty neither orders foamy frown goes match zigzags neither"
+	"Charlie": "toenail pyramid kickoff suede roared dangerous rays tolerant winter loincloth oozed medicate medicate" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+Waiting for "accessibility id" and "Restore your session button" to be present
+Waiting for "accessibility id" and "Restore your session button" to be present
+Waiting for "accessibility id" and "Restore your session button" to be present
+'Restore your session button' has been found
+'Restore your session button' has been found
+'Restore your session button' has been found
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+waitForTextElementToBePresent threw: "id": "Recovery phrase input
+Waiting for "id" and "Recovery phrase input" to be present
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+'Recovery phrase input' has been found
+'Recovery phrase input' has been found
+'Recovery phrase input' has been found
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+'Continue' has been found
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Slow mode notifications button
+waitForTextElementToBePresent threw: "accessibility id": "Slow mode notifications button
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Slow mode notifications button
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+'Slow mode notifications button' has been found
+'Slow mode notifications button' has been found
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+'Continue' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+'Loading animation' has been found
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Loading animation not found
+Loading animation has finished
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "accessibility id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "accessibility id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "accessibility id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "accessibility id" and "Continue" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "accessibility id" and "Continue" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+'New conversation button' has been found
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Message checks for groups"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Message checks for groups"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Message checks for groups"
+Text found to include Message checks for groups
+Text found to include Message checks for groups
+'Conversation list item' and 'Message checks for groups' has been found
+Text found to include Message checks for groups
+'Conversation list item' and 'Message checks for groups' has been found
+'Conversation list item' and 'Message checks for groups' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Text found to include Checking unsend functionality
+'Message body' and 'Checking unsend functionality' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Text found to include Checking unsend functionality
+'Message body' and 'Checking unsend functionality' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking unsend functionality"
+Text found to include Checking unsend functionality
+'Message body' and 'Checking unsend functionality' has been found
+Waiting for "accessibility id" and "Reply to message" to be present
+'Reply to message' has been found
+LongClick successful
+Waiting for "accessibility id" and "Delete message" to be present
+'Delete message' has been found
+Waiting for "id" and "Modal heading" to be present
+'Modal heading' has been found
+Modal heading is correct
+Waiting for "id" and "Modal description" to be present
+'Modal description' has been found
+Modal description is correct
+Waiting for "accessibility id" and "Delete for everyone" to be present
+'Delete for everyone' has been found
+Waiting for "id" and "Delete" to be present
+'Delete' has been found
+Waiting for "accessibility id" and "Deleted message" to be present
+Waiting for "accessibility id" and "Deleted message" to be present
+Waiting for "accessibility id" and "Deleted message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+Waiting for "accessibility id" and "Deleted message" to be present
+Waiting for "accessibility id" and "Deleted message" to be present
+Waiting for "accessibility id" and "Deleted message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+Waiting for "accessibility id" and "Deleted message" to be present
+Waiting for "accessibility id" and "Deleted message" to be present
+Waiting for "accessibility id" and "Deleted message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+Waiting for "accessibility id" and "Deleted message" to be present
+Waiting for "accessibility id" and "Deleted message" to be present
+Waiting for "accessibility id" and "Deleted message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+Waiting for "accessibility id" and "Deleted message" to be present
+Waiting for "accessibility id" and "Deleted message" to be present
+Waiting for "accessibility id" and "Deleted message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+Waiting for "accessibility id" and "Deleted message" to be present
+Waiting for "accessibility id" and "Deleted message" to be present
+Waiting for "accessibility id" and "Deleted message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+Waiting for "accessibility id" and "Deleted message" to be present
+Waiting for "accessibility id" and "Deleted message" to be present
+Waiting for "accessibility id" and "Deleted message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+Waiting for "accessibility id" and "Deleted message" to be present
+Waiting for "accessibility id" and "Deleted message" to be present
+'Deleted message' has been found
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+Waiting for "accessibility id" and "Deleted message" to be present
+Waiting for "accessibility id" and "Deleted message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+Waiting for "accessibility id" and "Deleted message" to be present
+Waiting for "accessibility id" and "Deleted message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+Waiting for "accessibility id" and "Deleted message" to be present
+Waiting for "accessibility id" and "Deleted message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+'Deleted message' has been found
+Waiting for "accessibility id" and "Deleted message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+Waiting for "accessibility id" and "Deleted message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+Waiting for "accessibility id" and "Deleted message" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Deleted message
+Waiting for "accessibility id" and "Deleted message" to be present
+'Deleted message' has been found
+sessions closed
