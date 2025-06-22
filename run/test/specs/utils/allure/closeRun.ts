@@ -14,11 +14,11 @@ if (process.env.CI !== '1' || process.env.ALLURE_ENABLED === 'false') {
 async function createEnvProperties(
   platform: SupportedPlatformsType,
   build: string,
-  apkUrl: string
+  artifact: string
 ) {
   await fs.ensureDir(allureResultsDir);
   const envPropertiesFile = path.join(allureResultsDir, 'environment.properties');
-  const content = `platform=${platform}\nbuild=${build}\napkUrl=${apkUrl}`;
+  const content = `platform=${platform}\nbuild=${build}\nartifact=${artifact}`;
   await fs.writeFile(envPropertiesFile, content);
   console.log(`Created environment.properties:\n${content}`);
 }
@@ -41,9 +41,9 @@ async function closeRun() {
   // Read platform & build info from env
   const platform = process.env.PLATFORM as SupportedPlatformsType;
   const build = process.env.BUILD_NUMBER!;
-  const apkUrl = process.env.APK_URL!;
+  const artifact = process.env.APK_URL!;
 
-  await createEnvProperties(platform, build, apkUrl);
+  await createEnvProperties(platform, build, artifact);
 
   await generateAllureReport();
 

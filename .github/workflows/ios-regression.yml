@@ -174,7 +174,6 @@ jobs:
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
           GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
 
-
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results
         with:
