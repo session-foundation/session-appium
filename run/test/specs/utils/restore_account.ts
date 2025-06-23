@@ -7,10 +7,7 @@ import { PlusButton } from '../locators/home';
 import test from '@playwright/test';
 
 export const restoreAccount = async (device: DeviceWrapper, user: User) => {
-  await device.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Restore your session button',
-  });
+  await device.clickOnElementAll(new AccountRestoreButton(device));
   await device.inputText(user.recoveryPhrase, new SeedPhraseInput(device));
   // Wait for continue button to become active
   await sleepFor(500);
@@ -69,22 +66,22 @@ export const restoreAccountNoFallback = async (device: DeviceWrapper, recoveryPh
     const displayName = await device.doesElementExist({
       strategy: 'accessibility id',
       selector: 'Enter display name',
-      maxWait: 1000,
+      maxWait: 2000,
     });
     if (displayName) {
       throw new Error('Account not found');
     }
     console.info('Display name found: Loading account');
 
-  // Wait for permissions modal to pop up
-  await sleepFor(500);
-  await device.checkPermissions('Allow');
-  await sleepFor(1000);
-  await device.hasElementBeenDeleted({
-    ...new ContinueButton(device).build(),
-    maxWait: 1000,
+    // Wait for permissions modal to pop up
+    await sleepFor(500);
+    await device.checkPermissions('Allow');
+    await sleepFor(1000);
+    await device.hasElementBeenDeleted({
+      ...new ContinueButton(device).build(),
+      maxWait: 1000,
+    });
+    // Check that button was clicked
+    await device.waitForTextElementToBePresent(new PlusButton(device));
   });
-  // Check that button was clicked
-  await device.waitForTextElementToBePresent(new PlusButton(device));
-});
 };

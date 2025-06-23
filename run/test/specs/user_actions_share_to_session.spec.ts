@@ -8,12 +8,12 @@ import { SupportedPlatformsType } from './utils/open_app';
 import { testImage } from '../../constants/testfiles';
 import { handlePhotosFirstTimeOpen } from './utils/handle_first_open';
 
-// TODO investigate why the Android Photos app throws an unexpected error when sharing 
+// TODO investigate why the Android Photos app throws an unexpected error when sharing
 bothPlatformsItSeparate({
   title: 'Share to session',
   risk: 'low',
   ios: {
-  testCb: shareToSession,
+    testCb: shareToSession,
   },
   android: {
     testCb: shareToSession,

@@ -102,7 +102,7 @@ async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsTyp
     false
   );
   await alice1.clickOnByAccessibilityID('Enable');
-  // Preview takes a while to load 
+  // Preview takes a while to load
   await sleepFor(5000);
   await alice1.clickOnByAccessibilityID('Send message button');
   await alice1.waitForTextElementToBePresent({

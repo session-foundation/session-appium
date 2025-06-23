@@ -365,7 +365,8 @@ export type AccessibilityId =
   | 'MeetingSE'
   | 'Donate'
   | 'blocked-banner'
-  | 'Manage Members';
+  | 'Manage Members'
+  | `${GROUPNAME}`;
 
 export type Id =
   | 'Modal heading'
@@ -480,7 +481,10 @@ export type Id =
   | 'delete-for-everyone'
   | 'edit-profile-icon'
   | 'update-group-info-confirm-button'
-  | 'update-group-info-name-input';
+  | 'update-group-info-name-input'
+  | 'group-name'
+  | 'leave-group-menu-option'
+  | 'Leave';
 
 export type TestRisk = 'high' | 'medium' | 'low';
 

@@ -40,8 +40,8 @@ async function declineRequest(platform: SupportedPlatformsType) {
   await sleepFor(3000);
   await device2.checkModalStrings(
     englishStrippedStr('delete').toString(),
-    englishStrippedStr('messageRequestsDelete').toString(),
-    true
+    englishStrippedStr('messageRequestsContactDelete').toString(),
+    false
   );
   await device2.clickOnElementAll(new DeleteMesssageRequestConfirmation(device2));
   // "messageRequestsNonePending": "No pending message requests",
@@ -58,7 +58,7 @@ async function declineRequest(platform: SupportedPlatformsType) {
   ]);
   // Navigate back to home page
   await sleepFor(100);
-  await device2.navigateBack();
+  await device2.navigateBack(false);
   // Look for new conversation button to make sure it all worked
   await device2.waitForTextElementToBePresent(new PlusButton(device2));
   // Close app

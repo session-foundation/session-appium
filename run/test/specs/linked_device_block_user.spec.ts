@@ -28,15 +28,14 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   await alice1.clickOnElementAll(new BlockUser(alice1));
   await alice1.checkModalStrings(
     englishStrippedStr('block').toString(),
-    englishStrippedStr('blockDescription').withArgs({ name: bob.userName }).toString(),
-    true
+    englishStrippedStr('blockDescription').withArgs({ name: bob.userName }).toString()
   );
   // Confirm block option
   await alice1.clickOnElementAll(new BlockUserConfirmationModal(alice1));
   // On ios there is an alert that confirms that the user has been blocked
   await sleepFor(1000);
   // On ios, you need to navigate back to conversation screen to confirm block
-  await alice1.onIOS().navigateBack();
+  await alice1.navigateBack();
   // Look for alert at top of screen (Bob is blocked. Unblock them?)
   // Check device 1 for blocked status
   const blockedStatus = await alice1.waitForTextElementToBePresent(new BlockedBanner(alice1));

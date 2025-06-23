@@ -61,40 +61,6 @@ export class ApplyChanges extends LocatorsInterface {
   }
 }
 
-export class EditGroup extends LocatorsInterface {
-  public build() {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: 'edit-profile-icon'
-        } as const;
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Edit group',
-        } as const;
-    }
-  }
-}
-
-export class EditGroupName extends LocatorsInterface {
-  public build() {
-    switch (this.platform) {
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Username',
-        } as const;
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: 'update-group-info-name-input',
-        } as const;
-    }
-  }
-}
-
 export class ReadReceiptsButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {

@@ -90,8 +90,9 @@ async function disappearingCommunityInviteMessageAndroid(platform: SupportedPlat
   await alice1.clickOnElementAll(new InviteContactsMenuItem(alice1));
   await alice1.clickOnElementAll(new GroupMember(alice1).build(bob.userName));
   await alice1.clickOnElementAll({
-    strategy: 'id', 
-    selector: 'invite-contacts-button'});
+    strategy: 'id',
+    selector: 'invite-contacts-button',
+  });
   // Check device 2 for invitation from user A
   await bob1.waitForTextElementToBePresent({
     strategy: 'id',

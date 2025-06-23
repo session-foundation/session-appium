@@ -1,11 +1,13 @@
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { EditGroup, EditGroupName } from './locators';
 import { ConversationHeaderName, ConversationSettings } from './locators/conversation';
-import { EditGroupNameInput } from './locators/groups';
+import {
+  EditGroupNameInput,
+  UpdateGroupInformation,
+  SaveGroupNameChangeButton,
+} from './locators/groups';
 import { ConversationItem } from './locators/home';
-import { SaveNameChangeButton } from './locators/settings';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -43,7 +45,7 @@ async function linkedGroupiOS(platform: SupportedPlatformsType) {
   // Edit group
   await sleepFor(100);
   // click on group name to change it
-  await device1.clickOnElementAll(new EditGroupName(device1));
+  await device1.clickOnElementAll(new UpdateGroupInformation(device1, testGroupName));
   //  Check new dialog
   await device1.checkModalStrings(
     englishStrippedStr(`updateGroupInformation`).toString(),
@@ -54,7 +56,7 @@ async function linkedGroupiOS(platform: SupportedPlatformsType) {
   // Type in new group name
   await device1.inputText(newGroupName, new EditGroupNameInput(device1));
   // Save changes
-  await device1.clickOnElementAll(new SaveNameChangeButton(device1));
+  await device1.clickOnElementAll(new SaveGroupNameChangeButton(device1));
   // Go back to conversation
   await device1.navigateBack();
   // Check control message for changed name
@@ -96,7 +98,7 @@ async function linkedGroupAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new ConversationSettings(device1));
   // Click on Edit group option
   await sleepFor(1000);
-  await device1.clickOnElementAll(new EditGroup(device1));
+  await device1.clickOnElementAll(new UpdateGroupInformation(device1));
   // Click on current group name
   await device1.clickOnElementAll(new EditGroupNameInput(device1));
   // Remove current group name
@@ -105,7 +107,7 @@ async function linkedGroupAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new EditGroupNameInput(device1));
   await device1.inputText(newGroupName, new EditGroupNameInput(device1));
   // Click done/apply
-  await device1.clickOnByAccessibilityID('Confirm');
+  await device1.clickOnElementAll(new SaveGroupNameChangeButton(device1));
   await device1.navigateBack();
   // Check control message for changed name
   const groupNameNew = englishStrippedStr('groupNameNew')

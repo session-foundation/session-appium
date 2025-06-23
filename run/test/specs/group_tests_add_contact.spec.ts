@@ -1,10 +1,10 @@
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { EditGroup, InviteContactsButton, InviteContactsMenuItem } from './locators';
+import { InviteContactsButton, InviteContactsMenuItem } from './locators';
 import { ConversationSettings } from './locators/conversation';
 import { Contact } from './locators/global';
-import { InviteContactConfirm } from './locators/groups';
+import { InviteContactConfirm, ManageMembersMenuItem } from './locators/groups';
 import { ConversationItem } from './locators/home';
 import { open_Alice1_Bob1_Charlie1_Unknown1 } from './state_builder';
 import { sleepFor } from './utils';
@@ -38,7 +38,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Click more options
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   // Select edit group
-  await alice1.clickOnElementAll(new EditGroup(alice1));
+  await alice1.clickOnElementAll(new ManageMembersMenuItem(alice1));
   await sleepFor(1000);
   // Add contact to group
   await alice1.onIOS().clickOnElementAll(new InviteContactsMenuItem(alice1));
