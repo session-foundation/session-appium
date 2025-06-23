@@ -1,0 +1,329 @@
+
+
+==========> Running "Disappearing video message 1:1 @android @low-risk @2-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 1 1
+actualCapabilities worker 2
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 1 1
+actualCapabilities worker 3
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5560 true
+emulatorAlreadyRunning emulator-5558 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"05ba58a2558db6ae6c5689ce668ca4eab6380213927b1b87a29df246a6b5998e71","seedPhrase":"were withdrawn cause suffice artistic females jaunt sunken cafe wade annoyed speedy cause"},
+SessionUser: {"name":"Bob","sessionId":"05bb7d8e98be5bf197c8bc4e602e4461b162af6444ba7583423217b60481d6b16d","seedPhrase":"foyer arrow hobby biweekly acidic moat fall height hybrid jeopardy insult echo biweekly"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"05ba58a2558db6ae6c5689ce668ca4eab6380213927b1b87a29df246a6b5998e71","seedPhrase":"were withdrawn cause suffice artistic females jaunt sunken cafe wade annoyed speedy cause"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05ba58a2558db6ae6c5689ce668ca4eab6380213927b1b87a29df246a6b5998e71","seedPhrase":"were withdrawn cause suffice artistic females jaunt sunken cafe wade annoyed speedy cause"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"05bb7d8e98be5bf197c8bc4e602e4461b162af6444ba7583423217b60481d6b16d","seedPhrase":"foyer arrow hobby biweekly acidic moat fall height hybrid jeopardy insult echo biweekly"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"05bb7d8e98be5bf197c8bc4e602e4461b162af6444ba7583423217b60481d6b16d","seedPhrase":"foyer arrow hobby biweekly acidic moat fall height hybrid jeopardy insult echo biweekly"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05ba58a2558db6ae6c5689ce668ca4eab6380213927b1b87a29df246a6b5998e71","seedPhrase":"were withdrawn cause suffice artistic females jaunt sunken cafe wade annoyed speedy cause"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"05bb7d8e98be5bf197c8bc4e602e4461b162af6444ba7583423217b60481d6b16d","seedPhrase":"foyer arrow hobby biweekly acidic moat fall height hybrid jeopardy insult echo biweekly"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [ Promise { <pending> } ]
+emulator-5560  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5560'
+  }
+}
+udid: emulator-5560
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+random snode for user: 05bb7d8e98be5bf197c8bc4e602e4461b162af6444ba7583423217b60481d6b16d is snode: 43497b0b20be85f4dc04bbd9b09a4801555c919f5ab8013cb8d7e6a0b4fdf456
+storing to snode https://107.189.3.58:22021/storage_rpc/v1
+storing to snode https://107.189.3.58:22021/storage_rpc/v1
+storing to snode https://107.189.3.58:22021/storage_rpc/v1
+random snode for user: 05ba58a2558db6ae6c5689ce668ca4eab6380213927b1b87a29df246a6b5998e71 is snode: fc1890b2602949d9d2587688a05aa435ff8f65ebb118f903be95fb326c67659d
+storing to snode https://64.44.157.64:22021/storage_rpc/v1
+storing to snode https://64.44.157.64:22021/storage_rpc/v1
+storing to snode https://64.44.157.64:22021/storage_rpc/v1
+storeStatus for Alice: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "were withdrawn cause suffice artistic females jaunt sunken cafe wade annoyed speedy cause"
+	"Bob": "foyer arrow hobby biweekly acidic moat fall height hybrid jeopardy insult echo biweekly" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Restore your session button" to be present
+'Restore your session button' has been found
+'Restore your session button' has been found
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+'Recovery phrase input' has been found
+'Recovery phrase input' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Slow mode notifications button" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+Waiting for "id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+'Slow mode notifications button' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Loading animation not found
+Loading animation has finished
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+Waiting for "id" and "Continue" to be present
+'New conversation button' has been found
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Text found to include Alice
+'Conversation list item' and 'Alice' has been found
+Text found to include Bob
+'Conversation list item' and 'Bob' has been found
+Waiting for "id" and "conversation-options-avatar" to be present
+waitForTextElementToBePresent threw: "id": "conversation-options-avatar
+Waiting for "id" and "conversation-options-avatar" to be present
+'conversation-options-avatar' has been found
+Waiting for "id" and "disappearing-messages-menu-option" to be present
+'disappearing-messages-menu-option' has been found
+Waiting for "id" and "Disappear after send option" to be present
+'Disappear after send option' has been found
+Waiting for "id" and "1 day" to be present
+'1 day' has been found
+Great success - default time is correct
+Waiting for "id" and "30 seconds" to be present
+'30 seconds' has been found
+Waiting for "id" and "Set button" to be present
+'Set button' has been found
+Waiting for "id" and "Navigate back" to be present
+'Navigate back' has been found
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+'Follow setting' has been found
+Waiting for "accessibility id" and "Set" to be present
+'Set' has been found
+Waiting for "id" and "Disappearing messages type and time" to be present
+'Disappearing messages type and time' has been found
+running  /opt/android/platform-tools/adb -s emulator-5558 shell rm -rf /storage/emulated/0/Download/*
+was run:  /opt/android/platform-tools/adb -s emulator-5558 shell rm -rf /storage/emulated/0/Download/* { stdout: '', stderr: '' }
+running  /opt/android/platform-tools/adb -s emulator-5558 push run/test/specs/media/test_video.mp4 /storage/emulated/0/Download
+cmd which failed: "/opt/android/platform-tools/adb -s emulator-5558 push run/test/specs/media/test_video.mp4 /storage/emulated/0/Download"
+result: "run/test/specs/media/test_video.mp4: 1 file pushed, 0 skipped. 59.0 MB/s (1055736 bytes in 0.017s)
+"
+running  /opt/android/platform-tools/adb -s emulator-5558 shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage/emulated/0/Download/test_video.mp4
+was run:  /opt/android/platform-tools/adb -s emulator-5558 shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage/emulated/0/Download/test_video.mp4 {
+  stdout: 'Broadcasting: Intent { act=android.intent.action.MEDIA_SCANNER_SCAN_FILE dat=file:///... flg=0x400000 }\n' +
+    'Broadcast completed: result=0\n',
+  stderr: ''
+}
+Waiting for "accessibility id" and "Attachments button" to be present
+'Attachments button' has been found
+Waiting for "accessibility id" and "Documents folder" to be present
+'Documents folder' has been found
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "com.android.permissioncontroller:id/permission_allow_button" to be present with "Allow"
+Text found to include Allow
+'com.android.permissioncontroller:id/permission_allow_button' and 'Allow' has been found

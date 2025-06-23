@@ -1,0 +1,1802 @@
+
+
+==========> Running "Add contact to group @android @high-risk @4-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+starting capabilitiesIndex 2 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 2
+starting capabilitiesIndex 3 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 3
+[buildStateForTest] stateToBuild:"3friendsInGroup". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5560 true
+emulatorAlreadyRunning emulator-5558 true
+emulatorAlreadyRunning emulator-5556 true
+emulatorAlreadyRunning emulator-5554 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"057682989edbe4894c21a494cf72a0895e99a766bdbf63a701d0f97b1e85fb9d4f","seedPhrase":"corrode vigilant syllabus gypsy certain mundane gown having divers washing tubes unusual divers"},
+SessionUser: {"name":"Bob","sessionId":"0538f5091512458c33f4d8fe3a059ca1801e6e268845c555c05cbb4b7ed384ef59","seedPhrase":"duties awesome lazy language enjoy lipstick alpine yahoo sniff skirting tanks vague language"},
+SessionUser: {"name":"Charlie","sessionId":"05584b85b5b09f2525f63b44dfabea892f5d33db4f99736854218770b5baa41767","seedPhrase":"much adrenalin height rhino scenic evolved relic paradise pierce waxing bovine fixate relic"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"057682989edbe4894c21a494cf72a0895e99a766bdbf63a701d0f97b1e85fb9d4f","seedPhrase":"corrode vigilant syllabus gypsy certain mundane gown having divers washing tubes unusual divers"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"057682989edbe4894c21a494cf72a0895e99a766bdbf63a701d0f97b1e85fb9d4f","seedPhrase":"corrode vigilant syllabus gypsy certain mundane gown having divers washing tubes unusual divers"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"0538f5091512458c33f4d8fe3a059ca1801e6e268845c555c05cbb4b7ed384ef59","seedPhrase":"duties awesome lazy language enjoy lipstick alpine yahoo sniff skirting tanks vague language"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"057682989edbe4894c21a494cf72a0895e99a766bdbf63a701d0f97b1e85fb9d4f","seedPhrase":"corrode vigilant syllabus gypsy certain mundane gown having divers washing tubes unusual divers"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Charlie","sessionId":"05584b85b5b09f2525f63b44dfabea892f5d33db4f99736854218770b5baa41767","seedPhrase":"much adrenalin height rhino scenic evolved relic paradise pierce waxing bovine fixate relic"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"0538f5091512458c33f4d8fe3a059ca1801e6e268845c555c05cbb4b7ed384ef59","seedPhrase":"duties awesome lazy language enjoy lipstick alpine yahoo sniff skirting tanks vague language"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"057682989edbe4894c21a494cf72a0895e99a766bdbf63a701d0f97b1e85fb9d4f","seedPhrase":"corrode vigilant syllabus gypsy certain mundane gown having divers washing tubes unusual divers"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"0538f5091512458c33f4d8fe3a059ca1801e6e268845c555c05cbb4b7ed384ef59","seedPhrase":"duties awesome lazy language enjoy lipstick alpine yahoo sniff skirting tanks vague language"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"0538f5091512458c33f4d8fe3a059ca1801e6e268845c555c05cbb4b7ed384ef59","seedPhrase":"duties awesome lazy language enjoy lipstick alpine yahoo sniff skirting tanks vague language"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Charlie","sessionId":"05584b85b5b09f2525f63b44dfabea892f5d33db4f99736854218770b5baa41767","seedPhrase":"much adrenalin height rhino scenic evolved relic paradise pierce waxing bovine fixate relic"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Charlie","sessionId":"05584b85b5b09f2525f63b44dfabea892f5d33db4f99736854218770b5baa41767","seedPhrase":"much adrenalin height rhino scenic evolved relic paradise pierce waxing bovine fixate relic"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"057682989edbe4894c21a494cf72a0895e99a766bdbf63a701d0f97b1e85fb9d4f","seedPhrase":"corrode vigilant syllabus gypsy certain mundane gown having divers washing tubes unusual divers"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Charlie","sessionId":"05584b85b5b09f2525f63b44dfabea892f5d33db4f99736854218770b5baa41767","seedPhrase":"much adrenalin height rhino scenic evolved relic paradise pierce waxing bovine fixate relic"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"0538f5091512458c33f4d8fe3a059ca1801e6e268845c555c05cbb4b7ed384ef59","seedPhrase":"duties awesome lazy language enjoy lipstick alpine yahoo sniff skirting tanks vague language"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Charlie","sessionId":"05584b85b5b09f2525f63b44dfabea892f5d33db4f99736854218770b5baa41767","seedPhrase":"much adrenalin height rhino scenic evolved relic paradise pierce waxing bovine fixate relic"}
+creatorMetagroupW info: 64313a21693165313a243130343a64313a23693165313a2664313a6e32383a47726f757020746f207465737420616464696e6720636f6e7461637465313a3c6c6c69306533323aea173b57beca8af18c3519a7bbf69c3e7a05d1c049fa9558341d8ebb48b0c96564656565313a3d64313a6e303a6565313a28303a313a296c65313a2b646565
+creatorMetagroupW members: 64313a21693165313a243335393a64313a23693165313a2664313a6d6433333a0538f5091512458c33f4d8fe3a059ca1801e6e268845c555c05cbb4b7ed384ef5964313a6e333a426f626533333a05584b85b5b09f2525f63b44dfabea892f5d33db4f99736854218770b5baa4176764313a6e373a436861726c69656533333a057682989edbe4894c21a494cf72a0895e99a766bdbf63a701d0f97b1e85fb9d4f64313a41693165313a6e353a416c696365656565313a3c6c6c69306533323aea173b57beca8af18c3519a7bbf69c3e7a05d1c049fa9558341d8ebb48b0c96564656565313a3d64313a6d6433333a0538f5091512458c33f4d8fe3a059ca1801e6e268845c555c05cbb4b7ed384ef5964313a6e303a6533333a05584b85b5b09f2525f63b44dfabea892f5d33db4f99736854218770b5baa4176764313a6e303a6533333a057682989edbe4894c21a494cf72a0895e99a766bdbf63a701d0f97b1e85fb9d4f64313a41303a313a6e303a65656565313a28303a313a296c65313a2b646565
+creatorMetagroupW keys: 64313a416c65313a4c6c65313a5064313a63323436323a64313a2332343a2b6c0729143e083bdb11bdcf6cbe74c462e3aa172d3d895d313a47693065313a4b34383a98641786f2d57706e1257c560b56bc6d7a09aed7aff95a98bc7c10c101f88b38e0004f875301e5e604a867da60073f86313a6b6c34383a994485509e4c67264fa52103de2691072ffd5ca2553ad243ab98b22a4808ef1f64a262ef555d82a3aab75577d6ac08c734383a4a2030044757e8cf68df0ae14c21e1a19a29a28e2be67b5e0d4f272f1ba8516c9f74e282ffa106a36ebdf13d5a09630c34383a65b59ee89df9cb7e3dd6bd79c76a22434c087629c928b9d6dc67bd1f7e73b7355dfb4946061349a57ad32733bda0f8f634383a15cf9c61b4f97a5832ca4f09eb5020c5564a86d1a244ee36800bd889bbcf525945e01ea44435d5a95e8b58e3446fb28634383a4f7f234d77c80849349b5fe14ff437eb82c2a9bc36c31b5968de2e4de51c22e06f09bb22013d8fded67a99b3f6b8bf5634383ae723655174449f106b98be977249b5b1585c4e29f0dfda17b275fd4ce1bb0edf8e77bb54cf69a1fa66dea5901706446334383ae66da870d60a3900525e2bf41e9aacc591ecce3fbdadb430a6863edbad6bbbb77406e2d82b3d9bed122f258aaa6bba3734383a09b4777eadb818af60232e109fc59bdcd81c0d3702c9508b829b3a1e22b36a82ae20b65499a1ec61fbc0abb9845e0e9e34383adc9b30b85e7a472c4a8deeff536e43d8c7d016a576bf494b5aac5a3280f2d428107835a3003e45f6f6f45dfe5ac644e034383affa34dc64a180562ab5a472cab4a3359d40b687557875f3389fd02a55279e2c77ec3c395e02e3e9b94b4da60eb6cd19334383abefb158e3e9f15f8d5bf13b7ba4d17ebfebe76522f1102b9f5351576242f01f569c3a485295be1f68f70faa32e3c7cfa34383a120669674b0e06ae813c1ba3abff02e15dd66f57abdae797d86fd14f97a7af5f8c2225941305f8b066496c8da843dea234383a1d40d6a37cd41db09f43ef995497ecef8310dc3c87ad2161eae555b0d2eaa903236ccafe98db492af70aff2c9b23319734383ab87c5f1b116c9d23f9adfc90b5176566cc088d8b653f7b40ee4a449d5f3ae7bf8ac1afd277217ab1011f8c5833b6e2f534383aee130b8f6070639eae73dbeeadc5c83bd489b41461faf4ee1acb1e71cf3ca7a7104f8819d567cba82248ac3090ac58f434383ad83d6a3a86c3adbe689ba4be6f0143323b0f47ea966d19efba7cf19d8ac0454ccdbd98ea605f000d418af48465c6c6a534383a652e0f066892af73c29954d9ff4c15080f6e67d95b59fda3618959a12d7966cf6923476cf7c0009e1806fc030fbf315e34383a65721c975a5a9288e5a296b5a4157a300cacc80698d6bb3506e5ac0ae339055be3b319c4dd4564079c50dc12b53f3b6934383a31465e6bf57deb0c1c99c15e43bd449c490c7b76ecdc4c55fe0a7389a10c89f0b5dc9b17f69c6647808c9b26ff10b87634383aface482137ce1ed9c104aba549b855ec7b7059497084459e8bf4587e968b8fe235db0d891dd6f9ab41cc5c3497d77c0d34383a47dec355ffe484fc7ba0dcfbc4718be2555cad2b65cd411f78cf9eea7f43255774e18aa01e212469925525e19b3963f834383a02a793b505bcb684870ff179edb14de19e776edff4759ebf9ed37a75a333a2616100cd2893add9eb15d7599d6197034434383a4667fd3561936d5d532cdc85582233f4a2d30dc11b42e4c6bdb767d181ec489928e73e93c6293733269d1823598ceb7134383a441b5e3f131eb3d1210f63cef0eccec69dc49022f17c1752b98c59f2fcec878c66d4106ef9ac881b27d9918d7cee661734383a132923fd6ae3ba1ee342fa761fb25cb00dae69d2864c1551f56e5d534a7d06c0141b309b86b6e591866a80991a51130f34383a8d9e2a2d4960128da5f83c7f53996d7950999a6798d05c685a3a00afba243701a9be45319d932c61da10dbf93bcff53734383a46b5ce22fe9f62376ae965bc8209747a3849b0ad1f0029052fb13a5710d44ffb052fa2b84ef7791560b2468cb622413834383a03635c03036da7cd2e2b26950c9be318291ee162d0397d49a730abce98f883118c5ca19e9178e80c651278be971d7e8f34383a064c3d395ecc3996c414d7ccfc25f58e3ed07d0d5454cd184345457e0f39a9bbc7effae13940a6ab66ef609f7acd61df34383ade8935e0169e022ad9a8c99438e3f687883464abcc75143c9bf85e0a646a5dcb6e3c2a0b82120a6b18a42e9478b658fb34383a179bc9535a1e105892c174dd8e8eb4f56b6117cd8f9e0983d3ceac8fbead663c1d278ccef82f62f435155abe2c63524834383a4561610ee824c87f527cc1859381feb1bc4d031d208f314f0f016a9ca2937dcecbe829fff566a737486bc6542390d9b334383a69d0cc2a7f261f5b665d762ebaa65866fe71b17671d9bab20426a159964dbf601d0077c08ec2b8a39c06c17a7a87f74d34383acdd8e6b67705d6be12468e53721d92757753f642fd57d1ef3f72320fecda3fdc7dfa54676c90692b48e2ad5acfe8604134383aa84c4a61b8ae72dc085855c7a4df826e1fbfaab97c1a82dc50e4b7446843197859142dca1bbba6cda19d736dde98584234383a22df47d009fc404e94774d3c85286024e20b17d0be4d7999476847fc2493e50dc68a95fde19ab2d7ebbb16c3ba2274e034383ad5efe0a63dbd6e522bb919f3e51da2593d66c687f5f99f8d1cb29c4955644a99a8c4cfe4c0ef3dddebc247b4cade948234383a24360b503170cd6014a2f555ac4495ac04268f5bb924c1b4d2616bd90d2ef369a560cde9c91f15a40b63d5491c49b19e34383ac1f5258f2c7ff126bbf51f20f01562ddf2f1ab5b9fad70cff228d6bdbc6336bfabd49104cb96fa7a280d0bf358e8515434383adaa1a09a09cb95db80a951d5e53441f18620594610f67269d85a2bf0274acdcc3450d97ec42e52ee92650bc97058bcc334383aaf52847ee99ad76f493f71a6a2d03d527a022b33941556d23f304a8ccea4bac3836431c848310e6e1caf6cd1c88b921934383a7fcf76b2ede62bd64fef0703d016150a5b67f7008cfb983f0a104dd8499de690044412ba645347e0992d071a9f561b1c34383a96db84f03b91949634e045dbbd374590dc4f3374ec8f44f62862f25b6548f7f0ab9311d2e979ffe9a8efd970d3102f8d34383a9de29251647b516e2e1faa9362f4fb89d115a48dc77f26910f2036b47129ca75eace2676856a2244f3c1e2b21b783a8c34383a66d14023fb7c0ec78a23befdf76a045f2461d7addadb2c1cba4c207c8057117245896605a5d66395087112af9676003165313a7e36343a17d05e6b732851640d687f4430cdac9bd79e1a315e09b6de4327fd967e5ebbc9413cff178702d5d3e39cddfa9dbd6c4f3de0e310dbcb71174b4f3f210ebd610765313a67693065313a6b33323a858e4cdc92aed22da887930b835e69287e564ba503f0297826c15d4a3acb160b6565
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+random snode for user: 032ae9f776be396cfae4ac7c76f2b998565b004196442dfa0005333d88a3b3742b is snode: 9381e658bab25a7b52371b0966dc9ab8e493bee98780fdb2e6fdd2074661064b
+promises [
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 64364,
+    [Symbol(trigger_async_id_symbol)]: 64041,
+    [Symbol(kResourceStore)]: undefined
+  },
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 64896,
+    [Symbol(trigger_async_id_symbol)]: 64413,
+    [Symbol(kResourceStore)]: undefined
+  }
+]
+storing to snode https://5.189.152.176:22021/storage_rpc/v1
+storing to snode https://5.189.152.176:22021/storage_rpc/v1
+storing to snode https://5.189.152.176:22021/storage_rpc/v1
+random snode for user: 057682989edbe4894c21a494cf72a0895e99a766bdbf63a701d0f97b1e85fb9d4f is snode: 6342021c8cad779a539dea92143b85eec8dc5a7ebb59b6200a658d0de3dde371
+storing to snode https://195.128.102.119:22021/storage_rpc/v1
+storing to snode https://195.128.102.119:22021/storage_rpc/v1
+storing to snode https://195.128.102.119:22021/storage_rpc/v1
+random snode for user: 0538f5091512458c33f4d8fe3a059ca1801e6e268845c555c05cbb4b7ed384ef59 is snode: d130b02e1f3b11ec7bc6b7074a75cd942357c05f1060586c268f5db7f51518f2
+storing to snode https://205.185.120.200:22021/storage_rpc/v1
+storing to snode https://205.185.120.200:22021/storage_rpc/v1
+storing to snode https://205.185.120.200:22021/storage_rpc/v1
+random snode for user: 05584b85b5b09f2525f63b44dfabea892f5d33db4f99736854218770b5baa41767 is snode: df7907cf6d967bcef4374424b9326308086acb5044899e01e39f41eb2590c592
+storing to snode https://89.147.110.157:22115/storage_rpc/v1
+storing to snode https://89.147.110.157:22115/storage_rpc/v1
+storing to snode https://89.147.110.157:22115/storage_rpc/v1
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+emulator-5560  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5560'
+  }
+}
+udid: emulator-5560
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+storeStatus for Bob: [ 200, 200, 200 ]
+storeStatus for (group) 032ae9f776be396cfae4ac7c76f2b998565b004196442dfa0005333d88a3b3742b: [ 200, 200, 200 ]
+storeStatus for Charlie: [ 200, 200, 200 ]
+storeStatus for Alice: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "corrode vigilant syllabus gypsy certain mundane gown having divers washing tubes unusual divers"
+	"Bob": "duties awesome lazy language enjoy lipstick alpine yahoo sniff skirting tanks vague language"
+	"Charlie": "much adrenalin height rhino scenic evolved relic paradise pierce waxing bovine fixate relic" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Restore your session button" to be present
+'Restore your session button' has been found
+'Restore your session button' has been found
+'Restore your session button' has been found
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+waitForTextElementToBePresent threw: "id": "Recovery phrase input
+Waiting for "id" and "Recovery phrase input" to be present
+'Recovery phrase input' has been found
+'Recovery phrase input' has been found
+'Recovery phrase input' has been found
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Slow mode notifications button" to be present
+'Continue' has been found
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Slow mode notifications button" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+Waiting for "id" and "Slow mode notifications button" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+'Slow mode notifications button' has been found
+'Slow mode notifications button' has been found
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+'Continue' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Loading animation not found
+Loading animation has finished
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation not found
+Loading animation has finished
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+'New conversation button' has been found
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+Waiting for "id" and "Continue" to be present
+'New conversation button' has been found
+waitForTextElementToBePresent threw: "id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Group to test adding contact"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Group to test adding contact"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Group to test adding contact"
+Text found to include Group to test adding contact
+Text found to include Group to test adding contact
+'Conversation list item' and 'Group to test adding contact' has been found
+'Conversation list item' and 'Group to test adding contact' has been found
+Text found to include Group to test adding contact
+'Conversation list item' and 'Group to test adding contact' has been found
+Waiting for "id" and "Create account button" to be present
+'Create account button' has been found
+Locator being used: { strategy: 'id', selector: 'Enter display name' }
+Waiting for "id" and "Enter display name" to be present
+'Enter display name' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Sleeping for 5000 milliseconds
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "id" and "Reveal recovery phrase button" to be present
+'Reveal recovery phrase button' has been found
+Waiting for "id" and "Reveal recovery phrase button" to be present
+'Reveal recovery phrase button' has been found
+Waiting for "id" and "Recovery password container" to be present
+'Recovery password container' has been found
+Waiting for "id" and "Copy button" to be present
+'Copy button' has been found
+Draculas recovery phrase is "audio unquoted mesh metro veteran moisture sawmill mammal hybrid claim niche hairy mesh"
+Waiting for "accessibility id" and "Navigate up" to be present
+'Navigate up' has been found
+Waiting for "accessibility id" and "User settings" to be present
+waitForTextElementToBePresent threw: "accessibility id": "User settings
+Waiting for "accessibility id" and "User settings" to be present
+'User settings' has been found
+Waiting for "accessibility id" and "Account ID" to be present
+'Account ID' has been found
+Waiting for "accessibility id" and "Navigate up" to be present
+'Navigate up' has been found
+Waiting for "id" and "Navigate back" to be present
+'Navigate back' has been found
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "id" and "New direct message" to be present
+waitForTextElementToBePresent threw: "id": "New direct message
+Waiting for "id" and "New direct message" to be present
+'New direct message' has been found
+Locator being used: { strategy: 'id', selector: 'Session id input box' }
+Waiting for "id" and "Session id input box" to be present
+'Session id input box' has been found
+Waiting for "id" and "Next" to be present
+'Next' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message input box
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+'Message requests banner' has been found
+Waiting for "accessibility id" and "Message request" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message request
+Waiting for "accessibility id" and "Message request" to be present
+'Message request' has been found
+Waiting for "accessibility id" and "Accept message request" to be present
+'Accept message request' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Dracula-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Dracula-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Dracula-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Dracula-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Dracula-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Dracula-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Dracula-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Dracula-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Dracula-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Dracula-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Dracula-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Dracula-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Dracula-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Dracula-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Dracula-to-Alice"
+Text found to include Reply-message-Dracula-to-Alice
+'Message body' and 'Reply-message-Dracula-to-Alice' has been found
+Alice and Dracula are now contacts
+Waiting for "id" and "Navigate back" to be present
+'Navigate back' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Group to test adding contact"
+Text found to include Group to test adding contact
+'Conversation list item' and 'Group to test adding contact' has been found
+Waiting for "id" and "conversation-options-avatar" to be present
+waitForTextElementToBePresent threw: "id": "conversation-options-avatar
+Waiting for "id" and "conversation-options-avatar" to be present
+'conversation-options-avatar' has been found
+Waiting for "id" and "manage-members-menu-option" to be present
+'manage-members-menu-option' has been found
+Waiting for "id" and "Invite button" to be present
+'Invite button' has been found
+Waiting for "id" and "Contact" to be present with "Dracula"
+Waiting for "id" and "Contact" to be present with "Dracula"
+Text found to include Dracula
+'Contact' and 'Dracula' has been found
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button
+Waiting for "id" and "Confirm invite button" to be present
+waitForTextElementToBePresent threw: "id": "Confirm invite button

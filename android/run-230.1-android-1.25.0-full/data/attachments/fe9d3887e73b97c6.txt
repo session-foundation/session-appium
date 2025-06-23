@@ -1,0 +1,372 @@
+
+
+==========> Running "Read status @android @medium-risk @2-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5556 true
+emulatorAlreadyRunning emulator-5554 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"050b378b38e465fb3de947e943404f8ed98f4cbe54b058bb44fcc106cdab913b13","seedPhrase":"kettle cake oxidant icon answers inactive legion sincerely jobs seismic swung memoir inactive"},
+SessionUser: {"name":"Bob","sessionId":"0547318ba90a65515c33a63f6c6c04a2310b5f1207f52d9fe18832df22ad768f6a","seedPhrase":"epoxy losing vivid sprig excess toaster kisses espionage slackens apricot duke gutter gutter"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"050b378b38e465fb3de947e943404f8ed98f4cbe54b058bb44fcc106cdab913b13","seedPhrase":"kettle cake oxidant icon answers inactive legion sincerely jobs seismic swung memoir inactive"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"050b378b38e465fb3de947e943404f8ed98f4cbe54b058bb44fcc106cdab913b13","seedPhrase":"kettle cake oxidant icon answers inactive legion sincerely jobs seismic swung memoir inactive"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"0547318ba90a65515c33a63f6c6c04a2310b5f1207f52d9fe18832df22ad768f6a","seedPhrase":"epoxy losing vivid sprig excess toaster kisses espionage slackens apricot duke gutter gutter"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"0547318ba90a65515c33a63f6c6c04a2310b5f1207f52d9fe18832df22ad768f6a","seedPhrase":"epoxy losing vivid sprig excess toaster kisses espionage slackens apricot duke gutter gutter"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"050b378b38e465fb3de947e943404f8ed98f4cbe54b058bb44fcc106cdab913b13","seedPhrase":"kettle cake oxidant icon answers inactive legion sincerely jobs seismic swung memoir inactive"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"0547318ba90a65515c33a63f6c6c04a2310b5f1207f52d9fe18832df22ad768f6a","seedPhrase":"epoxy losing vivid sprig excess toaster kisses espionage slackens apricot duke gutter gutter"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 39119,
+    [Symbol(trigger_async_id_symbol)]: 38971,
+    [Symbol(kResourceStore)]: undefined
+  }
+]
+random snode for user: 050b378b38e465fb3de947e943404f8ed98f4cbe54b058bb44fcc106cdab913b13 is snode: b02d1bbd6cc7b043a4ff52d012b298c30e27cdf34cc31b1ef1f0795c7658137b
+storing to snode https://185.150.190.48:22109/storage_rpc/v1
+storing to snode https://185.150.190.48:22109/storage_rpc/v1
+storing to snode https://185.150.190.48:22109/storage_rpc/v1
+random snode for user: 0547318ba90a65515c33a63f6c6c04a2310b5f1207f52d9fe18832df22ad768f6a is snode: b1d0dc87a9e8ed9bd17ad6f87a98780a50e8e41badbdb3f0b609ebd4378a51e4
+storing to snode https://130.255.76.53:22021/storage_rpc/v1
+storing to snode https://130.255.76.53:22021/storage_rpc/v1
+storing to snode https://130.255.76.53:22021/storage_rpc/v1
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+storeStatus for Alice: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "kettle cake oxidant icon answers inactive legion sincerely jobs seismic swung memoir inactive"
+	"Bob": "epoxy losing vivid sprig excess toaster kisses espionage slackens apricot duke gutter gutter" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Restore your session button" to be present
+'Restore your session button' has been found
+'Restore your session button' has been found
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+'Recovery phrase input' has been found
+'Recovery phrase input' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+'Slow mode notifications button' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Loading animation not found
+Loading animation has finished
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+'New conversation button' has been found
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Text found to include Alice
+'Conversation list item' and 'Alice' has been found
+Text found to include Bob
+'Conversation list item' and 'Bob' has been found
+doesElementExist failed with id Navigate back
+Navigate back Doesn't exist but retrying
+doesElementExist failed with id Navigate back
+Navigate back Doesn't exist but retrying
+Waiting for "id" and "Navigate back" to be present
+Waiting for "id" and "Navigate back" to be present
+'Navigate back' has been found
+'Navigate back' has been found
+Waiting for "accessibility id" and "User settings" to be present
+Waiting for "accessibility id" and "User settings" to be present
+'User settings' has been found
+'User settings' has been found
+Waiting for "id" and "Privacy" to be present
+Waiting for "id" and "Privacy" to be present
+'Privacy' has been found
+'Privacy' has been found
+Waiting for "id" and "android:id/summary" to be present with "Show read receipts for all messages you send and receive."
+Text found to include Show read receipts for all messages you send and receive.
+'android:id/summary' and 'Show read receipts for all messages you send and receive.' has been found
+Waiting for "accessibility id" and "Navigate up" to be present
+Waiting for "id" and "android:id/summary" to be present with "Show read receipts for all messages you send and receive."
+Text found to include Show read receipts for all messages you send and receive.
+'android:id/summary' and 'Show read receipts for all messages you send and receive.' has been found
+'Navigate up' has been found
+Waiting for "accessibility id" and "Navigate up" to be present
+Waiting for "accessibility id" and "Navigate up" to be present
+'Navigate up' has been found
+'Navigate up' has been found
+Waiting for "accessibility id" and "Navigate up" to be present
+'Navigate up' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Text found to include Bob
+'Conversation list item' and 'Bob' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message input box
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Text found to include Alice
+'Conversation list item' and 'Alice' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Testing read status"
+Waiting for "accessibility id" and "Message body" to be present with "Testing read status"
+Waiting for "accessibility id" and "Message body" to be present with "Testing read status"
+Waiting for "accessibility id" and "Message body" to be present with "Testing read status"
+Waiting for "accessibility id" and "Message body" to be present with "Testing read status"
+Waiting for "accessibility id" and "Message body" to be present with "Testing read status"
+Waiting for "accessibility id" and "Message body" to be present with "Testing read status"
+Waiting for "accessibility id" and "Message body" to be present with "Testing read status"
+Waiting for "accessibility id" and "Message body" to be present with "Testing read status"
+Waiting for "accessibility id" and "Message body" to be present with "Testing read status"
+Waiting for "accessibility id" and "Message body" to be present with "Testing read status"
+Text found to include Testing read status
+'Message body' and 'Testing read status' has been found
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Waiting for "id" and "network.loki.messenger:id/messageStatusTextView" to be present with "Read"
+Text found to include Read
+'network.loki.messenger:id/messageStatusTextView' and 'Read' has been found
+sessions closed
