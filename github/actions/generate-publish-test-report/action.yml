@@ -1,0 +1,54 @@
+name: Generate and Publish Test Report
+description: Generates and publishes a regression test report
+inputs:
+  PLATFORM:
+    required: true
+  BUILD_NUMBER:
+    required: true
+  GH_TOKEN:
+    required: true
+  APK_URL:
+    required: true
+  RISK:
+    required: true
+  GITHUB_RUN_NUMBER:
+    required: true
+  GITHUB_RUN_ATTEMPT:
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Generate Allure report
+      shell: bash
+      run: |
+        npx ts-node run/test/specs/utils/allure/closeRun.ts
+      env:
+        PLATFORM: ${{ inputs.PLATFORM }}
+        BUILD_NUMBER: ${{ inputs.BUILD_NUMBER }}
+        GH_TOKEN: ${{ inputs.GH_TOKEN }}
+        APK_URL: ${{inputs.APK_URL}}
+
+    - name: Publish report to GitHub Pages
+      if: ${{ success() }}
+      id: publish
+      shell: bash
+      run: |
+        npx ts-node run/test/specs/utils/allure/publishReport.ts
+      env:
+        PLATFORM: ${{ inputs.PLATFORM }}
+        BUILD_NUMBER: ${{ inputs.BUILD_NUMBER }}
+        GH_TOKEN: ${{ inputs.GH_TOKEN }}
+        RISK: ${{inputs.RISK}}
+        GITHUB_RUN_NUMBER: ${{ inputs.GITHUB_RUN_NUMBER}}
+        GITHUB_RUN_ATTEMPT: ${{ inputs.GITHUB_RUN_ATTEMPT}}
+
+    - name: Annotate run summary with report link
+      if: ${{ success() }}
+      shell: bash
+      run: |
+        echo "### Regression Test Report" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "[Click here to view the report](${report_url})" >> $GITHUB_STEP_SUMMARY
+      env:
+        report_url: ${{ steps.publish.outputs.report_url }}

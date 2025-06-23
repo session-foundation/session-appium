@@ -4,6 +4,7 @@ import { User } from '../../../types/testing';
 import { AccountRestoreButton, SeedPhraseInput, SlowModeRadio } from '../locators/onboarding';
 import { ContinueButton } from '../../specs/locators/global';
 import { PlusButton } from '../locators/home';
+import test from '@playwright/test';
 
 export const restoreAccount = async (device: DeviceWrapper, user: User) => {
   await device.clickOnElementAll({
@@ -52,27 +53,28 @@ export const restoreAccount = async (device: DeviceWrapper, user: User) => {
  * If the account isn't found on the network, fail the test.
  */
 export const restoreAccountNoFallback = async (device: DeviceWrapper, recoveryPhrase: string) => {
-  await device.clickOnElementAll(new AccountRestoreButton(device));
-  await device.inputText(recoveryPhrase, new SeedPhraseInput(device));
-  // Wait for continue button to become active
-  await sleepFor(500);
-  // Continue with recovery phrase
-  await device.clickOnElementAll(new ContinueButton(device));
-  // Wait for any notifications to disappear
-  await device.clickOnElementAll(new SlowModeRadio(device));
-  // Click continue on message notification settings
-  await device.clickOnElementAll(new ContinueButton(device));
-  // Wait for loading animation to look for display name
-  await device.waitForLoadingOnboarding();
-  const displayName = await device.doesElementExist({
-    strategy: 'accessibility id',
-    selector: 'Enter display name',
-    maxWait: 1000,
-  });
-  if (displayName) {
-    throw new Error('Account not found');
-  }
-  console.info('Display name found: Loading account');
+  await test.step('Restore pre-seeded account', async () => {
+    await device.clickOnElementAll(new AccountRestoreButton(device));
+    await device.inputText(recoveryPhrase, new SeedPhraseInput(device));
+    // Wait for continue button to become active
+    await sleepFor(500);
+    // Continue with recovery phrase
+    await device.clickOnElementAll(new ContinueButton(device));
+    // Wait for any notifications to disappear
+    await device.clickOnElementAll(new SlowModeRadio(device));
+    // Click continue on message notification settings
+    await device.clickOnElementAll(new ContinueButton(device));
+    // Wait for loading animation to look for display name
+    await device.waitForLoadingOnboarding();
+    const displayName = await device.doesElementExist({
+      strategy: 'accessibility id',
+      selector: 'Enter display name',
+      maxWait: 1000,
+    });
+    if (displayName) {
+      throw new Error('Account not found');
+    }
+    console.info('Display name found: Loading account');
 
   // Wait for permissions modal to pop up
   await sleepFor(500);
@@ -84,4 +86,5 @@ export const restoreAccountNoFallback = async (device: DeviceWrapper, recoveryPh
   });
   // Check that button was clicked
   await device.waitForTextElementToBePresent(new PlusButton(device));
+});
 };
