@@ -293,14 +293,14 @@ export class DeviceWrapper {
     }
 
     console.warn(
-      `[navigateBack] Could not find primary locator with '${primary.strategy}', falling back on '${fallback.strategy}'`
+      `[findWithFallback] Could not find primary locator with '${primary.strategy}', falling back on '${fallback.strategy}'`
     );
     found = await this.doesElementExist({ ...fallback, maxWait });
     if (found) {
       await this.clickOnElementAll(fallback);
       return found;
     }
-    throw new Error(`[navigateBack] Could not find primary or fallback locator`);
+    throw new Error(`[findWithFallback] Could not find primary or fallback locator`);
   }
 
   public async longClick(element: AppiumNextElementType, durationMs: number) {
@@ -1860,9 +1860,9 @@ export class DeviceWrapper {
     await this.clickOnElementAll(new PrivacyMenuItem(this));
     await sleepFor(2000);
     await this.clickOnElementAll(new ReadReceiptsButton(this));
-    await this.navigateBack();
+    await this.navigateBack(false);
     await sleepFor(100);
-    await this.closeScreen();
+    await this.closeScreen(false);
   }
 
   public async checkPermissions(

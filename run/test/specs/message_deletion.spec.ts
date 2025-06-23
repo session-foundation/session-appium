@@ -34,7 +34,7 @@ async function deleteMessage(platform: SupportedPlatformsType) {
     englishStrippedStr('deleteMessageConfirm').withArgs({ count: 1 }).toString()
   );
   // Select 'Delete on this device only'
-  await alice1.clickOnElementAll(new DeleteMessageLocally(alice1)); // This is currently missing an AX ID on Android
+  await alice1.clickOnElementAll(new DeleteMessageLocally(alice1));
   await alice1.clickOnElementAll(new DeleteMessageConfirmationModal(alice1));
 
   // Device 1 should show 'Deleted message' message

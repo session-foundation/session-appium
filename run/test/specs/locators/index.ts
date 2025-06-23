@@ -67,8 +67,7 @@ export class EditGroup extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger:id/title',
-          text: 'Edit group',
+          selector: 'edit-profile-icon'
         } as const;
       case 'ios':
         return {
@@ -90,7 +89,7 @@ export class EditGroupName extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Group name',
+          selector: 'update-group-info-name-input',
         } as const;
     }
   }
@@ -319,8 +318,8 @@ export class DeleteMessageLocally extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
-          selector: 'Delete on this device only',
+          strategy: 'id',
+          selector: 'delete-only-on-this-device',
         };
       case 'ios':
         return {
@@ -336,8 +335,8 @@ export class DeleteMessageForEveryone extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
-          selector: 'Delete for everyone',
+          strategy: 'id',
+          selector: 'delete-for-everyone',
         };
       case 'ios':
         return {

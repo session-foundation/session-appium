@@ -1,5 +1,5 @@
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
-import { EditGroup, EditGroupName } from './locators';
+import { EditGroupName, EditGroup } from './locators';
 import { EditGroupNameInput } from './locators/groups';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
@@ -83,13 +83,10 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   // Click on Edit group option
   await sleepFor(1000);
   await alice1.clickOnElementAll(new EditGroup(alice1));
-  // Click on current group name
-  await alice1.clickOnElementAll(new EditGroupName(alice1));
-  // Enter new group name (same test tag for both name and input)
   await alice1.clickOnElementAll(new EditGroupName(alice1));
   await alice1.inputText(newGroupName, new EditGroupName(alice1));
   // Click done/apply
-  await alice1.clickOnByAccessibilityID('Confirm');
+  await alice1.clickOnElementById('update-group-info-confirm-button');
   await alice1.navigateBack();
   // Check control message for changed name
   await alice1.waitForControlMessageToBePresent(

@@ -364,6 +364,7 @@ export type AccessibilityId =
   | 'Select alternate app icon'
   | 'MeetingSE'
   | 'Donate'
+  | 'blocked-banner'
   | 'Manage Members';
 
 export type Id =
@@ -471,11 +472,15 @@ export type Id =
   | 'All Session notifications'
   | 'com.android.settings:id/switch_text'
   | 'Block'
-  | 'blocked-banner'
   | 'invite-contacts-menu-option'
   | 'invite-contacts-button'
   | 'Recovery password menu item'
-  | 'manage-members-menu-option';
+  | 'manage-members-menu-option'
+  | 'delete-only-on-this-device'
+  | 'delete-for-everyone'
+  | 'edit-profile-icon'
+  | 'update-group-info-confirm-button'
+  | 'update-group-info-name-input';
 
 export type TestRisk = 'high' | 'medium' | 'low';
 

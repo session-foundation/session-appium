@@ -24,7 +24,7 @@ export const restoreAccount = async (device: DeviceWrapper, user: User) => {
   const displayName = await device.doesElementExist({
     strategy: 'accessibility id',
     selector: 'Enter display name',
-    maxWait: 1000,
+    maxWait: 2000,
   });
   if (displayName) {
     await device.inputText(user.userName, {

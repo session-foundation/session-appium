@@ -152,8 +152,8 @@ export class BlockedBanner extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'blocked-banner', // See SES-3992
+          strategy: 'accessibility id',
+          selector: 'blocked-banner',
         } as const;
       case 'ios':
         return {
