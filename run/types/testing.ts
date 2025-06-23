@@ -484,7 +484,8 @@ export type Id =
   | 'update-group-info-name-input'
   | 'group-name'
   | 'leave-group-menu-option'
-  | 'Leave';
+  | 'Leave'
+  | 'Appearance';
 
 export type TestRisk = 'high' | 'medium' | 'low';
 
