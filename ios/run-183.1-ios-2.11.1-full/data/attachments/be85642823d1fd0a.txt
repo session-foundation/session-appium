@@ -1,0 +1,548 @@
+
+
+==========> Running "Disappear after send off 1:1 @ios @high-risk @3-devices"
+
+
+starting capabilitiesIndex 0 ios
+openiOSApp
+starting capabilitiesIndex 1 ios
+openiOSApp
+starting capabilitiesIndex 2 ios
+openiOSApp
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"0528431769b22baae8f7348e41d2590cc16b2fe570cbb028c560547d492d0ce76d","seedPhrase":"adjust remedy wonders bailed degrees bumper urban seventh obliged tilt kennel smash seventh"},
+SessionUser: {"name":"Bob","sessionId":"051e19acaf2b2b2fe4d785954a0238166e1d9361ed272a51b353ff5048461afd75","seedPhrase":"ardent cent inorganic doctor bumper audio rustled ensign archer distance tunnel doing archer"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"0528431769b22baae8f7348e41d2590cc16b2fe570cbb028c560547d492d0ce76d","seedPhrase":"adjust remedy wonders bailed degrees bumper urban seventh obliged tilt kennel smash seventh"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"0528431769b22baae8f7348e41d2590cc16b2fe570cbb028c560547d492d0ce76d","seedPhrase":"adjust remedy wonders bailed degrees bumper urban seventh obliged tilt kennel smash seventh"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"051e19acaf2b2b2fe4d785954a0238166e1d9361ed272a51b353ff5048461afd75","seedPhrase":"ardent cent inorganic doctor bumper audio rustled ensign archer distance tunnel doing archer"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"051e19acaf2b2b2fe4d785954a0238166e1d9361ed272a51b353ff5048461afd75","seedPhrase":"ardent cent inorganic doctor bumper audio rustled ensign archer distance tunnel doing archer"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"0528431769b22baae8f7348e41d2590cc16b2fe570cbb028c560547d492d0ce76d","seedPhrase":"adjust remedy wonders bailed degrees bumper urban seventh obliged tilt kennel smash seventh"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"051e19acaf2b2b2fe4d785954a0238166e1d9361ed272a51b353ff5048461afd75","seedPhrase":"ardent cent inorganic doctor bumper audio rustled ensign archer distance tunnel doing archer"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 154325,
+    [Symbol(trigger_async_id_symbol)]: 153647,
+    [Symbol(kResourceStore)]: undefined
+  }
+]
+random snode for user: 0528431769b22baae8f7348e41d2590cc16b2fe570cbb028c560547d492d0ce76d is snode: 1cc8ff8cec0a588ea7488a14c879d2d3b14ce1226761b6325d8fe580a786de62
+storing to snode https://93.115.20.135:22021/storage_rpc/v1
+storing to snode https://93.115.20.135:22021/storage_rpc/v1
+storing to snode https://93.115.20.135:22021/storage_rpc/v1
+random snode for user: 051e19acaf2b2b2fe4d785954a0238166e1d9361ed272a51b353ff5048461afd75 is snode: 0ded13763b02fe06237a0c6da10ce380d985f5adebe5a46afaa438784578685a
+storing to snode https://51.81.34.178:22021/storage_rpc/v1
+storing to snode https://51.81.34.178:22021/storage_rpc/v1
+storing to snode https://51.81.34.178:22021/storage_rpc/v1
+storeStatus for Alice: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "adjust remedy wonders bailed degrees bumper urban seventh obliged tilt kennel smash seventh"
+	"Bob": "ardent cent inorganic doctor bumper audio rustled ensign archer distance tunnel doing archer" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+running  xcrun simctl privacy 56D8BA2F-BA0C-4D8F-8E5B-FD928E2C7C66 reset all undefined
+was run:  xcrun simctl privacy 56D8BA2F-BA0C-4D8F-8E5B-FD928E2C7C66 reset all undefined { stdout: '', stderr: '' }
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+running  xcrun simctl privacy 064F4F80-B81C-4B72-9715-43CD18975139 reset all undefined
+was run:  xcrun simctl privacy 064F4F80-B81C-4B72-9715-43CD18975139 reset all undefined { stdout: '', stderr: '' }
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+running  xcrun simctl privacy 012D6656-D6DE-4932-A460-72F5629EB2E0 reset all undefined
+was run:  xcrun simctl privacy 012D6656-D6DE-4932-A460-72F5629EB2E0 reset all undefined { stdout: '', stderr: '' }
+Waiting for "accessibility id" and "Restore your session button" to be present
+Waiting for "accessibility id" and "Restore your session button" to be present
+Waiting for "accessibility id" and "Restore your session button" to be present
+'Restore your session button' has been found
+'Restore your session button' has been found
+'Restore your session button' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+Waiting for "accessibility id" and "Recovery password input" to be present
+Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+Waiting for "accessibility id" and "Recovery password input" to be present
+Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+Waiting for "accessibility id" and "Recovery password input" to be present
+'Recovery password input' has been found
+'Recovery password input' has been found
+'Recovery password input' has been found
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+'Continue' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+'Slow mode notifications button' has been found
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+'Continue' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+'Loading animation' has been found
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+'Loading animation' has been found
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Loading animation not found
+Loading animation has finished
+Waiting for "accessibility id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "accessibility id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow doesn't exist, time expired
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow doesn't exist, time expired
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+doesElementExist failed with accessibility id Allow
+Allow doesn't exist, time expired
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+'New conversation button' has been found
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+Waiting for "accessibility id" and "Continue" to be present
+'New conversation button' has been found
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Text found to include Alice
+'Conversation list item' and 'Alice' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+waitForTextElementToBePresent threw: "accessibility id": "Conversation list item
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Text found to include Bob
+'Conversation list item' and 'Bob' has been found
+Waiting for "accessibility id" and "More options" to be present
+'More options' has been found
+Waiting for "accessibility id" and "Disappearing Messages" to be present
+'Disappearing Messages' has been found
+Waiting for "accessibility id" and "Disappear after send option" to be present
+'Disappear after send option' has been found
+Waiting for "accessibility id" and "1 day - Radio" to be present
+'1 day - Radio' has been found
+Great success - default time is correct
+Waiting for "accessibility id" and "30 seconds - Radio" to be present
+'30 seconds - Radio' has been found
+Waiting for "accessibility id" and "Set button" to be present
+'Set button' has been found
+Waiting for "accessibility id" and "Back" to be present
+'Back' has been found
+Waiting for "accessibility id" and "Follow setting" to be present
+'Follow setting' has been found
+Waiting for "accessibility id" and "Set" to be present
+'Set' has been found
+Waiting for "accessibility id" and "Disappearing messages type and time" to be present
+'Disappearing messages type and time' has been found
+Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Alice has set messages to disappear 30 seconds after they have been sent.
+Text found to include You set messages to disappear 30 seconds after they have been sent.
+Control message You set messages to disappear 30 seconds after they have been sent. has been found
+Text found to include Alice has set messages to disappear 30 seconds after they have been sent.
+Control message Alice has set messages to disappear 30 seconds after they have been sent. has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Text found to include Bob
+'Conversation list item' and 'Bob' has been found
+Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+Text found to include You set messages to disappear 30 seconds after they have been sent.
+Control message You set messages to disappear 30 seconds after they have been sent. has been found
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Text found to include Bob has set messages to disappear 30 seconds after they have been sent.
+Control message Bob has set messages to disappear 30 seconds after they have been sent. has been found
+Waiting for "accessibility id" and "More options" to be present
+'More options' has been found
+Waiting for "accessibility id" and "Disappearing Messages" to be present
+'Disappearing Messages' has been found
+Waiting for "accessibility id" and "Off" to be present
+'Off' has been found
+Waiting for "accessibility id" and "Set button" to be present
+'Set button' has been found
+Waiting for "accessibility id" and "Back" to be present
+'Back' has been found
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Waiting for control message to be present with Alice has turned disappearing messages off. Messages they send will no longer disappear.
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Text found to include You turned off disappearing messages. Messages you send will no longer disappear.
+Control message You turned off disappearing messages. Messages you send will no longer disappear. has been found
+Waiting for control message to be present with Alice has turned disappearing messages off. Messages they send will no longer disappear.
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+disappearingControlMessage threw:  StaleElementReferenceError: The previously found element ""Control message" Cell" is not present in the current view anymore. Make sure the application UI has the expected state. You could also try to switch the binding strategy using the 'boundElementsByIndex' setting for the element lookup. Original error: No matches found for Identity Binding from input {(
+    Cell, {{0.0, 190.0}, {440.0, 80.7}}, identifier: 'Control message', label: 'You set messages to disappear 30 seconds after they have been sent.',
+    Cell, {{0.0, 270.7}, {440.0, 103.0}}, identifier: 'Control message', label: 'Alice has turned disappearing messages off. Messages they send will no longer disappear.'
+)}
+    at errorFromW3CJsonCode (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/@appium/base-driver/lib/protocol/errors.js:1110:25)
+    at ProxyRequestError.getActualError (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/@appium/base-driver/lib/protocol/errors.js:979:14)
+    at JWProxy.command (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/@appium/base-driver/lib/jsonwp-proxy/proxy.js:357:19)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at XCUITestDriver.proxyCommand (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/appium-xcuitest-driver/lib/commands/proxy-helper.js:103:35)
+    at XCUITestDriver.getText (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/appium-xcuitest-driver/lib/commands/element.js:150:14)
+    at DeviceWrapper.getTextFromElement (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/run/types/DeviceWrapper.ts:538:18)
+    at /Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/run/types/DeviceWrapper.ts:688:22
+    at async Promise.all (index 1)
+    at DeviceWrapper.findAsync (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/run/types/DeviceWrapper.ts:709:21)
+    at DeviceWrapper.findMatchingTextInElementArray (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/run/types/DeviceWrapper.ts:687:24)
+    at DeviceWrapper.disappearingControlMessage (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/run/types/DeviceWrapper.ts:1077:14)
+    at async Promise.all (index 1)
+    at disappearAfterSendOff1o1 (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/run/test/specs/disappear_after_send_off_1o1.spec.ts:68:3)
+    at /Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/run/types/sessionIt.ts:41:7
+    at /Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/playwright/lib/worker/workerMain.js:304:9
+    at /Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/playwright/lib/worker/testInfo.js:284:11
+    at TimeoutManager.withRunnable (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/playwright/lib/worker/timeoutManager.js:67:14)
+    at TestInfoImpl._runWithTimeout (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/playwright/lib/worker/testInfo.js:282:7)
+    at /Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/playwright/lib/worker/workerMain.js:302:7
+    at WorkerMain._runTest (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/playwright/lib/worker/workerMain.js:277:5)
+    at WorkerMain.runTestGroup (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/playwright/lib/worker/workerMain.js:193:11)
+    at process.<anonymous> (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/playwright/lib/common/process.js:65:22) {
+  jsonwpCode: 10,
+  error: 'stale element reference',
+  w3cStatus: 404,
+  _stacktrace: null
+}
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Waiting for control message to be present with Alice has turned disappearing messages off. Messages they send will no longer disappear.
+Text found to include Alice has turned disappearing messages off. Messages they send will no longer disappear.
+Control message Alice has turned disappearing messages off. Messages they send will no longer disappear. has been found
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Text found to include You turned off disappearing messages. Messages you send will no longer disappear.
+Control message You turned off disappearing messages. Messages you send will no longer disappear. has been found
+Waiting for "accessibility id" and "Follow setting" to be present
+'Follow setting' has been found
+Waiting for "accessibility id" and "Modal heading" to be present
+'Modal heading' has been found
+Modal heading is correct
+Waiting for "accessibility id" and "Modal description" to be present
+'Modal description' has been found
+Modal description is correct
+Waiting for "accessibility id" and "Confirm" to be present
+'Confirm' has been found
+doesElementExist failed with accessibility id Disappearing messages type and time
+Disappearing messages type and time Doesn't exist but retrying
+doesElementExist failed with accessibility id Disappearing messages type and time
+Disappearing messages type and time Doesn't exist but retrying
+doesElementExist failed with accessibility id Disappearing messages type and time
+Disappearing messages type and time Doesn't exist but retrying
+doesElementExist failed with accessibility id Disappearing messages type and time
+Disappearing messages type and time Doesn't exist but retrying
+doesElementExist failed with accessibility id Disappearing messages type and time
+Disappearing messages type and time Doesn't exist but retrying
+doesElementExist failed with accessibility id Disappearing messages type and time
+Disappearing messages type and time Doesn't exist but retrying
+doesElementExist failed with accessibility id Disappearing messages type and time
+Disappearing messages type and time Doesn't exist but retrying
+doesElementExist failed with accessibility id Disappearing messages type and time
+Disappearing messages type and time Doesn't exist but retrying
+doesElementExist failed with accessibility id Disappearing messages type and time
+Disappearing messages type and time Doesn't exist but retrying
+doesElementExist failed with accessibility id Disappearing messages type and time
+Disappearing messages type and time Doesn't exist but retrying
+doesElementExist failed with accessibility id Disappearing messages type and time
+Disappearing messages type and time Doesn't exist but retrying
+doesElementExist failed with accessibility id Disappearing messages type and time
+Disappearing messages type and time Doesn't exist but retrying
+doesElementExist failed with accessibility id Disappearing messages type and time
+Disappearing messages type and time doesn't exist, time expired
+doesElementExist failed with accessibility id Disappearing messages type and time
+Disappearing messages type and time doesn't exist, time expired
+doesElementExist failed with accessibility id Disappearing messages type and time
+Disappearing messages type and time doesn't exist, time expired
+sessions closed
