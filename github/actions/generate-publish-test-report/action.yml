@@ -30,6 +30,7 @@ runs:
         APK_URL: ${{inputs.APK_URL}}
 
     - name: Publish report to GitHub Pages
+      if: ${{ success() }}
       id: publish
       shell: bash
       run: |
@@ -43,6 +44,7 @@ runs:
         GITHUB_RUN_ATTEMPT: ${{ inputs.GITHUB_RUN_ATTEMPT}}
 
     - name: Annotate run summary with report link
+      if: ${{ success() }}
       shell: bash
       run: |
         echo "### Regression Test Report" >> $GITHUB_STEP_SUMMARY

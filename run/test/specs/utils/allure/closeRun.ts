@@ -54,4 +54,5 @@ async function closeRun() {
 
 closeRun().catch(err => {
   console.error('Error during execution:', err);
+  process.exit(1);
 });

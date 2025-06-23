@@ -42,7 +42,7 @@ async function publishReport() {
   const build = process.env.BUILD_NUMBER!;
   const runNumber = Number(process.env.GITHUB_RUN_NUMBER);
   const runAttempt = Number(process.env.GITHUB_RUN_ATTEMPT);
-  const risk = process.env.RISK && process.env.RISK.trim() ? process.env.RISK : 'full';
+  const risk = process.env.RISK?.trim() || 'full';
 
   const metadata = {
     platform,

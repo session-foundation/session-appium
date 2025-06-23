@@ -10,7 +10,34 @@ runs:
   using: 'composite'
   steps:
     - shell: bash
-      run: ./scripts/fetch_allure_history.sh
+      run: |
+        GH_REPO="https://x-access-token:${GH_TOKEN}@github.com/session-foundation/session-appium.git"
+        CLONE_DIR="gh-pages-temp"
+        REPORTS_DIR="${CLONE_DIR}/${PLATFORM}"
+
+        echo "Clearing temp clone"
+        rm -rf "$CLONE_DIR"
+
+        echo "Cloning gh-pages branch"
+        git clone --depth 1 --branch gh-pages "$GH_REPO" "$CLONE_DIR"
+
+        echo "Searching for latest report for $PLATFORM"
+        LATEST_HISTORY=$(find "$REPORTS_DIR" -type d -name "run-*-${PLATFORM}-*" | sort | tail -n1)
+
+        if [[ -z "$LATEST_HISTORY" ]]; then
+          echo "No previous report found for '$PLATFORM'. Skipping history injection."
+          rm -rf "$CLONE_DIR"
+          exit 0
+        fi
+
+        echo "Injecting history from: $LATEST_HISTORY"
+        mkdir -p allure/allure-results/history
+        cp -r "$LATEST_HISTORY/history/"* allure/allure-results/history/ || echo "No history files to copy"
+
+        echo "Cleaning up temp clone..."
+        rm -rf "$CLONE_DIR"
+
+        echo "Allure history injection complete for $PLATFORM"
       env:
         PLATFORM: ${{ inputs.PLATFORM }}
         GH_TOKEN: ${{ inputs.GH_TOKEN }}
