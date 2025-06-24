@@ -145,7 +145,7 @@ jobs:
         shell: bash
         run: |
           source ./scripts/ci.sh
-          start_with_snapshots
+          start_for_snapshots
 
       - name: List tests part of this run
         uses: ./github/actions/list-tests
