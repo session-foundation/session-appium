@@ -1451,14 +1451,15 @@ export class DeviceWrapper {
       text: testVideo,
       maxWait: 5000,
     });
+    // This codepath is purely for the CI 
     if (!videoElement) {
-      // Try to reveal the video element
+      // Try to reveal the video by selecting/filtering Videos in the native UI
       await this.clickOnElementAll({
         strategy: 'class name',
         selector: 'android.widget.Button',
         text: 'Videos',
       });
-      // Try again to find the video element after revealing
+      // Try again to find the video file after filtering
       videoElement = await this.doesElementExist({
         strategy: 'id',
         selector: 'android:id/title',
@@ -1473,7 +1474,7 @@ export class DeviceWrapper {
       });
     } else {
       throw new Error(
-        `Video element with text "${testVideo}" not found after attempting to reveal it.`
+        `Video "${testVideo}" not found after attempting to reveal it.`
       );
     }
     await this.waitForTextElementToBePresent({
@@ -1539,14 +1540,15 @@ export class DeviceWrapper {
         text: testFile,
         maxWait: 5000,
       });
+      // This codepath is purely for the CI
       if (!documentElement) {
-        // Try to reveal the video element
+        // Try to reveal the pdf by selecting/filtering Documents in the native UI
         await this.clickOnElementAll({
           strategy: 'class name',
           selector: 'android.widget.Button',
           text: 'Documents',
         });
-        // Try again to find the video element after revealing
+        // Try again to find the pdf file after revealing
         documentElement = await this.doesElementExist({
           strategy: 'id',
           selector: 'android:id/title',
@@ -1561,7 +1563,7 @@ export class DeviceWrapper {
         });
       } else {
         throw new Error(
-          `File element with text "${testFile}" not found after attempting to reveal it.`
+          `File "${testFile}" not found after attempting to reveal it.`
         );
       }
       await this.clickOnTextElementById('android:id/title', testFile);
