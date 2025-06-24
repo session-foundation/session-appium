@@ -48,12 +48,11 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     ...new Contact(alice1).build(),
     text: USERNAME.DRACULA,
   });
-  // Click done/apply
   await alice1.clickOnElementAll(new InviteContactConfirm(alice1));
-  // Click done/apply again
+  // Leave Manage Members
   await alice1.navigateBack();
-  // iOS doesn't automatically go back to conversation settings
-  await alice1.onIOS().navigateBack();
+  // Leave Conversation Settings
+  await alice1.navigateBack();
   // Check control messages
   await Promise.all(
     [alice1, bob1, charlie1].map(device =>
@@ -62,6 +61,9 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
       )
     )
   );
+  // Leave conversation
+  await unknown1.navigateBack();
+  // Leave Message Requests screen
   await unknown1.navigateBack();
   await unknown1.selectByText('Conversation list item', group.groupName);
   // Check for control message on device 4

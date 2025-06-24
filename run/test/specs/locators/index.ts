@@ -330,24 +330,6 @@ export class DeleteMessageConfirmationModal extends LocatorsInterface {
   }
 }
 
-export class LeaveGroup extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: `network.loki.messenger:id/title`,
-          text: 'Leave group',
-        };
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Leave group',
-        };
-    }
-  }
-}
-
 export class BlockUserConfirmationModal extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {

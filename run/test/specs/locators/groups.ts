@@ -45,7 +45,7 @@ export class InviteContactConfirm extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Confirm invite button',
+          selector: 'invite-contacts-button',
         } as const;
       case 'ios':
         return {
@@ -120,7 +120,7 @@ export class SaveGroupNameChangeButton extends LocatorsInterface {
   }
 }
 
-export class LeaveGroupButton extends LocatorsInterface {
+export class LeaveGroupMenuItem extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
