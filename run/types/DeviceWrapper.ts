@@ -1445,7 +1445,35 @@ export class DeviceWrapper {
       text: 'Allow',
     });
     await sleepFor(2000);
-    await this.clickOnTextElementById('android:id/title', testVideo);
+    let videoElement = await this.doesElementExist({
+      strategy: 'id',
+      selector: 'android:id/title',
+      text: testVideo,
+      maxWait: 5000,
+    });
+    if (!videoElement) {
+      // Try to reveal the video element
+      await this.clickOnElementAll({
+        strategy: 'class name',
+        selector: 'android.widget.Button',
+        text: 'Videos',
+      });
+      // Try again to find the video element after revealing
+      videoElement = await this.doesElementExist({
+        strategy: 'id',
+        selector: 'android:id/title',
+        text: testVideo,
+      });
+    }
+    if (videoElement) {
+      await this.clickOnElementAll({
+        strategy: 'id',
+        selector: 'android:id/title',
+        text: testVideo,
+      });
+    } else {
+      throw new Error(`Video element with text "${testVideo}" not found after attempting to reveal it.`);
+    }
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
