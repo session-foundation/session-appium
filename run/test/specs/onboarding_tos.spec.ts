@@ -3,7 +3,7 @@ import { TermsOfServiceButton, SplashScreenLinks } from './locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { handleChromeFirstTimeOpen } from './utils/handle_first_open';
 import { URLInputField, SafariAddressBar } from './locators/browsers';
-import { ensureHttpsURL } from './utils/utilities';
+import { assertUrlIsReachable, ensureHttpsURL } from './utils/utilities';
 
 bothPlatformsIt({
   title: 'Onboarding terms of service',
@@ -36,6 +36,7 @@ async function onboardingTOS(platform: SupportedPlatformsType) {
       `The retrieved URL does not match the expected. The retrieved URL is ${fullRetrievedURL}`
     );
   }
+  await assertUrlIsReachable(tosURL);
   // Close browser and app
   await device.backToSession();
   await closeApp(device);
