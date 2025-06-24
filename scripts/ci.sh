@@ -104,6 +104,7 @@ function start_without_snapshots() {
         DISPLAY=:0 emulator @emulator$i \
           -gpu host \
           -no-snapshot \
+          -wipe-data \
           -accel on &
         sleep 20
     done
