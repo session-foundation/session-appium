@@ -8,6 +8,8 @@ import { LocatorsInterfaceScreenshot } from '../locators';
 import { SupportedPlatformsType } from './open_app';
 import { BrowserPageScreenshot } from './screenshot_paths';
 import { cropScreenshot, getDiffDirectory, saveImage } from './utilities';
+import { allure } from 'allure-playwright'
+
 
 // The function takes a screenshot of an element and verifies it against a baseline screenshot
 // Supports locators with optional multiple states, enforcing correct state usage where applicable
@@ -54,6 +56,11 @@ export async function verifyElementScreenshot<
   if (!equal) {
     const diffImagePath = path.join(diffsDir, `${uuid}_diffImage.png`);
     await diffImage.save(diffImagePath);
+    void allure.attachment(
+      'Screenshot Diff', 
+      fs.readFileSync(diffImagePath),
+      'image/png'
+    );
     throw new Error(`The images do not match. The diff has been saved to ${diffImagePath}`);
   }
   // Cleanup of element screenshot file on success
