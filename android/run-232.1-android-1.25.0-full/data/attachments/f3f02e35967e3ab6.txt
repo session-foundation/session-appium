@@ -1,0 +1,228 @@
+
+
+==========> Running "Message requests clear all @android @medium-risk @2-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+emulatorAlreadyRunning emulator-5554 true
+emulatorAlreadyRunning emulator-5556 true
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+Waiting for "id" and "Create account button" to be present
+Waiting for "id" and "Create account button" to be present
+'Create account button' has been found
+'Create account button' has been found
+Locator being used: { strategy: 'id', selector: 'Enter display name' }
+Waiting for "id" and "Enter display name" to be present
+waitForTextElementToBePresent threw: "id": "Enter display name
+Waiting for "id" and "Enter display name" to be present
+Locator being used: { strategy: 'id', selector: 'Enter display name' }
+Waiting for "id" and "Enter display name" to be present
+'Enter display name' has been found
+'Enter display name' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Sleeping for 5000 milliseconds
+Sleeping for 5000 milliseconds
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "id" and "Reveal recovery phrase button" to be present
+'Reveal recovery phrase button' has been found
+Waiting for "id" and "Reveal recovery phrase button" to be present
+Waiting for "id" and "Reveal recovery phrase button" to be present
+'Reveal recovery phrase button' has been found
+Waiting for "id" and "Reveal recovery phrase button" to be present
+'Reveal recovery phrase button' has been found
+'Reveal recovery phrase button' has been found
+Waiting for "id" and "Recovery password container" to be present
+'Recovery password container' has been found
+Waiting for "id" and "Recovery password container" to be present
+'Recovery password container' has been found
+Waiting for "id" and "Copy button" to be present
+'Copy button' has been found
+Waiting for "id" and "Copy button" to be present
+'Copy button' has been found
+Alices recovery phrase is "nimbly ajar always alumni muzzle pool onion ruling putty cinema hookup lullaby hookup"
+Waiting for "accessibility id" and "Navigate up" to be present
+'Navigate up' has been found
+Waiting for "accessibility id" and "User settings" to be present
+Bobs recovery phrase is "evolved guarded hippo cuddled midst nanny paper serving lakes delayed tarnished nocturnal tarnished"
+Waiting for "accessibility id" and "Navigate up" to be present
+'Navigate up' has been found
+Waiting for "accessibility id" and "User settings" to be present
+waitForTextElementToBePresent threw: "accessibility id": "User settings
+'User settings' has been found
+Waiting for "accessibility id" and "User settings" to be present
+'User settings' has been found
+Waiting for "accessibility id" and "Account ID" to be present
+Waiting for "accessibility id" and "Account ID" to be present
+'Account ID' has been found
+'Account ID' has been found
+Waiting for "accessibility id" and "Navigate up" to be present
+Waiting for "accessibility id" and "Navigate up" to be present
+'Navigate up' has been found
+'Navigate up' has been found
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "id" and "New direct message" to be present
+waitForTextElementToBePresent threw: "id": "New direct message
+Waiting for "id" and "New direct message" to be present
+'New direct message' has been found
+Locator being used: { strategy: 'id', selector: 'Session id input box' }
+Waiting for "id" and "Session id input box" to be present
+'Session id input box' has been found
+Waiting for "id" and "Next" to be present
+'Next' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message input box
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+'Message requests banner' has been found
+Waiting for "accessibility id" and "Clear all" to be present
+'Clear all' has been found
+doesElementExist failed with id Modal heading
+Modal heading Doesn't exist but retrying
+doesElementExist failed with id Modal heading
+Modal heading Doesn't exist but retrying
+doesElementExist failed with id Modal heading
+Modal heading Doesn't exist but retrying
+doesElementExist failed with id Modal heading
+Modal heading Doesn't exist but retrying
+doesElementExist failed with id Modal heading
+Modal heading Doesn't exist but retrying
+doesElementExist failed with id Modal heading
+Modal heading Doesn't exist but retrying
+doesElementExist failed with id Modal heading
+Modal heading Doesn't exist but retrying
+doesElementExist failed with id Modal heading
+Modal heading Doesn't exist but retrying
+doesElementExist failed with id Modal heading
+Modal heading Doesn't exist but retrying
+doesElementExist failed with id Modal heading
+Modal heading Doesn't exist but retrying
+doesElementExist failed with id Modal heading
+Modal heading doesn't exist, time expired
+Waiting for "accessibility id" and "Modal heading" to be present
+'Modal heading' has been found
+Modal heading is correct
+doesElementExist failed with id Modal description
+Modal description Doesn't exist but retrying
+doesElementExist failed with id Modal description
+Modal description Doesn't exist but retrying
+doesElementExist failed with id Modal description
+Modal description Doesn't exist but retrying
+doesElementExist failed with id Modal description
+Modal description Doesn't exist but retrying
+doesElementExist failed with id Modal description
+Modal description Doesn't exist but retrying
+doesElementExist failed with id Modal description
+Modal description Doesn't exist but retrying
+doesElementExist failed with id Modal description
+Modal description Doesn't exist but retrying
+doesElementExist failed with id Modal description
+Modal description Doesn't exist but retrying
+doesElementExist failed with id Modal description
+Modal description Doesn't exist but retrying
+doesElementExist failed with id Modal description
+Modal description Doesn't exist but retrying
+doesElementExist failed with id Modal description
+Modal description Doesn't exist but retrying
+doesElementExist failed with id Modal description
+Modal description Doesn't exist but retrying
+doesElementExist failed with id Modal description
+Modal description doesn't exist, time expired
+Waiting for "accessibility id" and "Modal description" to be present
+'Modal description' has been found
+Modal description is correct
+Waiting for "accessibility id" and "Clear" to be present
+'Clear' has been found
+Waiting for "accessibility id" and "No pending message requests" to be present
+waitForTextElementToBePresent threw: "accessibility id": "No pending message requests
+Waiting for "accessibility id" and "No pending message requests" to be present
+waitForTextElementToBePresent threw: "accessibility id": "No pending message requests
+Waiting for "accessibility id" and "No pending message requests" to be present
+'No pending message requests' has been found
+sessions closed

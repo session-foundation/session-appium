@@ -1,0 +1,472 @@
+
+
+==========> Running "Change group name @android @medium-risk @3-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+starting capabilitiesIndex 2 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 2
+[buildStateForTest] stateToBuild:"3friendsInGroup". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5558 true
+emulatorAlreadyRunning emulator-5556 true
+emulatorAlreadyRunning emulator-5554 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"05f0fffb6282f39ee893d4fbdb26c1e71c44a5136281542a46d8be6d956fdd0f7e","seedPhrase":"hybrid moat mostly tinted yard swept cajun boxes mews dunes typist framed mews"},
+SessionUser: {"name":"Bob","sessionId":"05d0db1cc0ec985891ec7e7e92f31daeafb119f3c8961358b76ef71e7d528cc542","seedPhrase":"sprig mice bested repent reef tissue tufts verification five amply foxes lunar foxes"},
+SessionUser: {"name":"Charlie","sessionId":"05f55115f4d9f99554e03cfe872adf5a9f427b913846081af4518d94c177806b59","seedPhrase":"educated palace mouth match succeed howls mystery roped jogger memoir soothe diplomat mystery"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"05f0fffb6282f39ee893d4fbdb26c1e71c44a5136281542a46d8be6d956fdd0f7e","seedPhrase":"hybrid moat mostly tinted yard swept cajun boxes mews dunes typist framed mews"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05f0fffb6282f39ee893d4fbdb26c1e71c44a5136281542a46d8be6d956fdd0f7e","seedPhrase":"hybrid moat mostly tinted yard swept cajun boxes mews dunes typist framed mews"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"05d0db1cc0ec985891ec7e7e92f31daeafb119f3c8961358b76ef71e7d528cc542","seedPhrase":"sprig mice bested repent reef tissue tufts verification five amply foxes lunar foxes"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05f0fffb6282f39ee893d4fbdb26c1e71c44a5136281542a46d8be6d956fdd0f7e","seedPhrase":"hybrid moat mostly tinted yard swept cajun boxes mews dunes typist framed mews"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Charlie","sessionId":"05f55115f4d9f99554e03cfe872adf5a9f427b913846081af4518d94c177806b59","seedPhrase":"educated palace mouth match succeed howls mystery roped jogger memoir soothe diplomat mystery"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"05d0db1cc0ec985891ec7e7e92f31daeafb119f3c8961358b76ef71e7d528cc542","seedPhrase":"sprig mice bested repent reef tissue tufts verification five amply foxes lunar foxes"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05f0fffb6282f39ee893d4fbdb26c1e71c44a5136281542a46d8be6d956fdd0f7e","seedPhrase":"hybrid moat mostly tinted yard swept cajun boxes mews dunes typist framed mews"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"05d0db1cc0ec985891ec7e7e92f31daeafb119f3c8961358b76ef71e7d528cc542","seedPhrase":"sprig mice bested repent reef tissue tufts verification five amply foxes lunar foxes"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"05d0db1cc0ec985891ec7e7e92f31daeafb119f3c8961358b76ef71e7d528cc542","seedPhrase":"sprig mice bested repent reef tissue tufts verification five amply foxes lunar foxes"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Charlie","sessionId":"05f55115f4d9f99554e03cfe872adf5a9f427b913846081af4518d94c177806b59","seedPhrase":"educated palace mouth match succeed howls mystery roped jogger memoir soothe diplomat mystery"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Charlie","sessionId":"05f55115f4d9f99554e03cfe872adf5a9f427b913846081af4518d94c177806b59","seedPhrase":"educated palace mouth match succeed howls mystery roped jogger memoir soothe diplomat mystery"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05f0fffb6282f39ee893d4fbdb26c1e71c44a5136281542a46d8be6d956fdd0f7e","seedPhrase":"hybrid moat mostly tinted yard swept cajun boxes mews dunes typist framed mews"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Charlie","sessionId":"05f55115f4d9f99554e03cfe872adf5a9f427b913846081af4518d94c177806b59","seedPhrase":"educated palace mouth match succeed howls mystery roped jogger memoir soothe diplomat mystery"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"05d0db1cc0ec985891ec7e7e92f31daeafb119f3c8961358b76ef71e7d528cc542","seedPhrase":"sprig mice bested repent reef tissue tufts verification five amply foxes lunar foxes"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Charlie","sessionId":"05f55115f4d9f99554e03cfe872adf5a9f427b913846081af4518d94c177806b59","seedPhrase":"educated palace mouth match succeed howls mystery roped jogger memoir soothe diplomat mystery"}
+creatorMetagroupW info: 64313a21693165313a2438363a64313a23693165313a2664313a6e31303a546573742067726f757065313a3c6c6c69306533323aea173b57beca8af18c3519a7bbf69c3e7a05d1c049fa9558341d8ebb48b0c96564656565313a3d64313a6e303a6565313a28303a313a296c65313a2b646565
+creatorMetagroupW members: 64313a21693165313a243335393a64313a23693165313a2664313a6d6433333a05d0db1cc0ec985891ec7e7e92f31daeafb119f3c8961358b76ef71e7d528cc54264313a6e333a426f626533333a05f0fffb6282f39ee893d4fbdb26c1e71c44a5136281542a46d8be6d956fdd0f7e64313a41693165313a6e353a416c6963656533333a05f55115f4d9f99554e03cfe872adf5a9f427b913846081af4518d94c177806b5964313a6e373a436861726c6965656565313a3c6c6c69306533323aea173b57beca8af18c3519a7bbf69c3e7a05d1c049fa9558341d8ebb48b0c96564656565313a3d64313a6d6433333a05d0db1cc0ec985891ec7e7e92f31daeafb119f3c8961358b76ef71e7d528cc54264313a6e303a6533333a05f0fffb6282f39ee893d4fbdb26c1e71c44a5136281542a46d8be6d956fdd0f7e64313a41303a313a6e303a6533333a05f55115f4d9f99554e03cfe872adf5a9f427b913846081af4518d94c177806b5964313a6e303a65656565313a28303a313a296c65313a2b646565
+creatorMetagroupW keys: 64313a416c65313a4c6c65313a5064313a63323436323a64313a2332343a780d6d65bb80183ec96cbbdc8eb8be97f918a63b98b15e07313a47693065313a4b34383a0e1e789d016815d38b9ac05fb276a05cbdf90215a120f2dc61e04d305b311557bb9ac3c22b8a95b0f54bbd0be2596a0d313a6b6c34383af4e184f7eed20c659f9510621b69c1275d72cd9a8b1103393c107075988677831b667afdbf182d6521913082082b079934383a8a33a8d4d2fcba0f011cfd94b21159d1a45bc562792b806aa2a9d85efb667e2bbd4b1d4618ec6865b0c845837f91d98e34383ad5a24ac7796cf35a0a2b8bc40b04b1d3e95ad0eae0ab1388ff4503912bd92e3c81626a8c113984a190e3eee79e302c0634383a4ee66008e0d93c94cd8eab996a3c2d5bdc45ac98b9a9f982731a89cd9c0f3391318d605f8709922b6fdc1f36d001882134383a999cb2b72baf59dfaa40940c213fdae611a4f626218252dac13af42f7b688796e24d76b56999146eb98010dfe530c00634383a3fa2ec9a04141584de0c37418f6ac1952795413f8783584301a4676521438367d2c955bd27912e28a822cb5c65672a8234383afc17efff8e4a82dfee31a0471a9f201df0c7ffbd2f85907742ad7939fa3e212a20f64507cabcea529fb3888bf80470d234383a7fd994e14486cab71f150bb3f59c4acb13006efac6edab1b82da9b62f9511c02e0530375acc7c739e5fc64c9f940b15834383a60666e5fdf7306bf3ff530d11bac88458c6f9f3863af62a60f6142a873e1f79c4312e4d234b43a36c9acf088ff5897de34383a05f0e55baf9ec9e15445f23f2c8f1da8025683d1b3662026617891111a52dd65d997cfcacf3f4e4c79755be25e68df7134383a192ae6a2d30a3a48c4f2c88292889c922b4574fc50000d0d5a42541d191a5843cee718c865fe21c69b43be3e3010b9a734383af7a1b960f254251eca8aa71e1a31e028969e8b1027eb22a3c0dd6536869c6b8a05d67d5e08ed77c12395e7e77920e95034383a46a60b64e89de2e4cff03f2a27bd0c069756f2008a30b2aadfe5169670beb90800fd66e0476641e04e0bd4985ab5c47c34383ae517f29b1be4149211e04c839669968775a6f4c1389f00c22ed082b898fa8bdbd92d803b00a89a360fab375738da92cd34383ade4f5f48e468f6c194cb4406a02cbb40fcbab9f8c407aaf5a736bf1868fdf39e9add7e4dd4e165f91658ce33c1b2347534383afeb8578e4ad17a788a61651d03536290f2f2d5ac82765c46add5cbb002418ac9d07d860583b74fe2ee9554c64743bb8734383a30aee148931daf86273a8bbef41a7af50de3fa63418b4456a7aa787919caf9e55cd29f6831377afb41c974d5f4dc199734383a8ed3fb580a24be15de9ffc5492b81c797122249a162dc1630b21b942c0dd9f59527230fe6899d4e7c8fe5eb1f42095fd34383aa1409a1f612689cd5ec91e733abefec6ebc5f6afd67b35be7df8c019d82e8ac3e909e7e8936bdce0fc1709591ca1e5b834383ac670b64edb3962aade9492375837a83551b47769b88ffe8c1ee423ac79b1d91ced290e3d112c19276a60d300e8c333a034383aa219f935ce3885eca2dbea57d38af12cd3f544237568e24eb52347ec2a8e4b005b098913434f184c278deb2efe205f8c34383a5f937884a4d4b5763a3736f8310e7e67c2fb0fbb8d7104c53adbd17d95caededc71543d6710e89114197f730ade34f3834383ac9bd6fc2a2e66d42bb836b23609a99a705aaad93be9436f54dece5720c64701453b82a13d05d9a3d79e5effdcee114bf34383a8aa1a803103c8a055648f4e1505c89af865f662baa457612cf85e8dcc9c8bb651a15cc9b7ba97c6d6393d03e67c1b05f34383a11dbf682592ce8cd1acf985ed30b08a8ceabf8fee49da6b2ed0097c8574d34bbb1215d9fa4fd0539f24fabd1328d625534383ac72762cfa0703e751dc1970f2aa397b9bc92e0c9ebc95fdb2f86dedcc3dfa283afadf29a7a76b57350c689e1c6375ec234383acc7d10afc5d5ad661eb5ff51e9cf56daaa2e7d49ba47066623b1b9af021eb632a0af20b46351918b0912c665a0b3b75534383aa3f7955be32b8b8e742e790021b9c3b4744a109c849413b8d8ee3111e3a1acdce5340d4261e3198da695652b9f6bb60e34383a83679a22cb50f422873c647dbac1c431a1060af77b069295c8b928cf648caf143cb5ef92f8e3c4d83248b9094a953a3934383a2f6b02b299c130971436a6a2f874b87b396ea1630431532a1e5ff450045694cdbbfc53c87bc128ee388128cf93f7e07534383a3791b7d4c4b3db523637d6567da2e159a8aed69670f7c593c0092ff3a2a1269efe082bf802f39612a6f1cc39081a1ab034383a98e06db7a3b14408a9e013eb16ee898dc7029087259db865384319890dbfc1ae26f48128bd54d1797a9e43716583692c34383a082ca9a4074e844246ece6bd5c8405136d0ff648e5243320d168369451c1504d074544433c8d064ea1868e29b309015734383a9a67ae806de86174b49328055d3123a2e9e49ec911870cc81330b56cbbbd464eae561764da626836923ca747a152d41e34383aaaad5b77e0e016275866518b8fdee72bcd9f898c338e54cc093e1dabbd62ace86abcacab7c777f0abb09d4e37818eb5f34383a83fe598af3e974a58cb37e49bc3225ef32d185bd07b225f814bde6c6d16f8095d79761b69c959eb0ae6a42d806ba678e34383a2ee1788deeadf9ff0c32e7827cd5b644a6b95ead8c54c2e8fcd140ef4a68bf12d3fa909d3f23228f67cb87f4ff8cca0434383ad882882c14eb73d57b7c7d2f8ea4e3cc32a6f018adee1f8d89e63f79cfc29edfb4f71f0dff578ad756dc2a863d9e606134383ab291ecf893ee6c4a230a811b760788b8c4d3797bf53edff5365eb561ba23f68c3708190748649550211c92314bf5e7a534383ae09220e683d707d3c990cd69aee9de1adf566e119559e8e9781df848d773bfc1334ecf66a546e07c6f7234a10b8e26d634383a6cc9ca92da9632de04a8435f16cf2d9b93ec8b48325bcfe5581c5d621de7f3df1e10622e66590f340fd8d2766b94d88034383a56a83d7ab755803f99e7dcb9612b53dd3970090b26538164d63d7db340533a747b3e74cb6e7ac5b968c603eb83d1784134383a779eeb9cf006a54cbb22b810f59f462d5d728f85ac91ab1685eeb11f0f81bd431905e0956f4d67ae108d495708b5327e34383a6f0a8f825d8c6d379848e8d03ffa6e60f0ac5b5b1e4d9ff1841251b67b4e3524af72630748eb2cfb0ecd1718a45fe2c134383a5cd938fbba6ff585d233f7b3a4375a5f5847e6fa52bd79f73230c44be171194abbfb40924bd7d27b59d132f1771d822565313a7e36343ab6f14fccd3963777d61a4448e44df19accafcd9467ea809b7c8e8d7f2a68b3b2066c449d3372b449aa4c61db0c2e439669bc465cee6e24029cb4ffe5281b500465313a67693065313a6b33323a3b12cc26ffb949d7907bbc6b6cb7be0ef86ffec2798a506ee7529b4a35c880296565
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+random snode for user: 05d0db1cc0ec985891ec7e7e92f31daeafb119f3c8961358b76ef71e7d528cc542 is snode: 817542b448aa569d75b4a9dd03a153885b8018495337a1402f90312896bbaae1
+storing to snode https://104.243.32.47:22108/storage_rpc/v1
+storing to snode https://104.243.32.47:22108/storage_rpc/v1
+storing to snode https://104.243.32.47:22108/storage_rpc/v1
+random snode for user: 05f0fffb6282f39ee893d4fbdb26c1e71c44a5136281542a46d8be6d956fdd0f7e is snode: c5c42bbbca36ed6e1e41b6de05629cb2c834b900d869839d338d466e6d308a57
+storing to snode https://91.231.182.106:22021/storage_rpc/v1
+storing to snode https://91.231.182.106:22021/storage_rpc/v1
+storing to snode https://91.231.182.106:22021/storage_rpc/v1
+random snode for user: 03b151d0de8cd49148a65f49860b5e06f7e2d9c953905c6bf267d07471bf90be8f is snode: 101fa62c5ad7fa6f9563b25fd690ca368e596d42f1327611391ea0a7e2c0e624
+promises [
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 135086,
+    [Symbol(trigger_async_id_symbol)]: 134829,
+    [Symbol(kResourceStore)]: undefined
+  },
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 136134,
+    [Symbol(trigger_async_id_symbol)]: 135135,
+    [Symbol(kResourceStore)]: undefined
+  }
+]
+storing to snode https://198.98.53.254:22021/storage_rpc/v1
+storing to snode https://198.98.53.254:22021/storage_rpc/v1
+storing to snode https://198.98.53.254:22021/storage_rpc/v1
+random snode for user: 05f55115f4d9f99554e03cfe872adf5a9f427b913846081af4518d94c177806b59 is snode: cec7441232a6c2a697a2e8bbceffb7c85a846fd69a0d21b89016b0b46ddbceac
+storing to snode https://199.195.254.208:22021/storage_rpc/v1
+storing to snode https://199.195.254.208:22021/storage_rpc/v1
+storing to snode https://199.195.254.208:22021/storage_rpc/v1
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+storeStatus for Bob: [ 200, 200, 200 ]
+storeStatus for (group) 03b151d0de8cd49148a65f49860b5e06f7e2d9c953905c6bf267d07471bf90be8f: [ 200, 200, 200 ]
+storeStatus for Charlie: [ 200, 200, 200 ]
+storeStatus for Alice: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "hybrid moat mostly tinted yard swept cajun boxes mews dunes typist framed mews"
+	"Bob": "sprig mice bested repent reef tissue tufts verification five amply foxes lunar foxes"
+	"Charlie": "educated palace mouth match succeed howls mystery roped jogger memoir soothe diplomat mystery" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Restore your session button" to be present
+'Restore your session button' has been found
+'Restore your session button' has been found
+'Restore your session button' has been found
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+'Recovery phrase input' has been found
+'Recovery phrase input' has been found
+'Recovery phrase input' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+'Continue' has been found
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Slow mode notifications button" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+Waiting for "id" and "Slow mode notifications button" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+'Slow mode notifications button' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+'Slow mode notifications button' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation not found
+Loading animation has finished
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+'Loading animation' has been found
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+'Loading animation' has been found
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+'Loading animation' has been found
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+Waiting for "id" and "Continue" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+'New conversation button' has been found
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Continue
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Continue" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+'New conversation button' has been found
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Test group"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Test group"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Test group"
+Text found to include Test group
+Text found to include Test group
+'Conversation list item' and 'Test group' has been found
+'Conversation list item' and 'Test group' has been found
+Text found to include Test group
+'Conversation list item' and 'Test group' has been found
+Waiting for "id" and "conversation-options-avatar" to be present
+'conversation-options-avatar' has been found
+Waiting for "id" and "group-name" to be present
+'group-name' has been found
+Waiting for "id" and "update-group-info-name-input" to be present
+'update-group-info-name-input' has been found
+Locator being used: { strategy: 'id', selector: 'update-group-info-name-input' }
+Waiting for "id" and "update-group-info-name-input" to be present
+'update-group-info-name-input' has been found
+Waiting for "id" and "update-group-info-confirm-button" to be present
+'update-group-info-confirm-button' has been found
+doesElementExist failed with id Navigate back
+Navigate back Doesn't exist but retrying
+doesElementExist failed with id Navigate back
+Navigate back Doesn't exist but retrying
+doesElementExist failed with id Navigate back
+Navigate back Doesn't exist but retrying
+doesElementExist failed with id Navigate back
+Navigate back Doesn't exist but retrying
+doesElementExist failed with id Navigate back
+Navigate back Doesn't exist but retrying
+doesElementExist failed with id Navigate back
+Navigate back Doesn't exist but retrying
+doesElementExist failed with id Navigate back
+Navigate back Doesn't exist but retrying
+doesElementExist failed with id Navigate back
+Navigate back doesn't exist, time expired
+doesElementExist failed with accessibility id Navigate up
+Navigate up Doesn't exist but retrying
+doesElementExist failed with accessibility id Navigate up
+Navigate up Doesn't exist but retrying
+doesElementExist failed with accessibility id Navigate up
+Navigate up Doesn't exist but retrying
+doesElementExist failed with accessibility id Navigate up
+Navigate up Doesn't exist but retrying
+doesElementExist failed with accessibility id Navigate up
+Navigate up Doesn't exist but retrying
+doesElementExist failed with accessibility id Navigate up
+Navigate up Doesn't exist but retrying
+doesElementExist failed with accessibility id Navigate up
+Navigate up Doesn't exist but retrying
+doesElementExist failed with accessibility id Navigate up
+Navigate up Doesn't exist but retrying
+doesElementExist failed with accessibility id Navigate up
+Navigate up Doesn't exist but retrying
+doesElementExist failed with accessibility id Navigate up
+Navigate up Doesn't exist but retrying
+doesElementExist failed with accessibility id Navigate up
+Navigate up Doesn't exist but retrying
+doesElementExist failed with accessibility id Navigate up
+Navigate up doesn't exist, time expired

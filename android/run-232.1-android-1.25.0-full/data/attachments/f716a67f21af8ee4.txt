@@ -1,0 +1,504 @@
+
+
+==========> Running "Disappear after send off 1:1 @android @high-risk @3-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+starting capabilitiesIndex 2 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 2
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5558 true
+emulatorAlreadyRunning emulator-5556 true
+emulatorAlreadyRunning emulator-5554 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"05fb1fbf5cad036174a03b72ef520f4e9b664ff3384e25cbc43a0eea86a5709b64","seedPhrase":"ribbon yawning evolved guarded earth husband anecdote shyness civilian pegs fixate sake fixate"},
+SessionUser: {"name":"Bob","sessionId":"055383bfe3f5340244de6ea3369986d415b7a5b121c207bb46f8ed04881b2d982a","seedPhrase":"taken sixteen nuance eclipse tilt system sickness king general went lettuce popular king"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"05fb1fbf5cad036174a03b72ef520f4e9b664ff3384e25cbc43a0eea86a5709b64","seedPhrase":"ribbon yawning evolved guarded earth husband anecdote shyness civilian pegs fixate sake fixate"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05fb1fbf5cad036174a03b72ef520f4e9b664ff3384e25cbc43a0eea86a5709b64","seedPhrase":"ribbon yawning evolved guarded earth husband anecdote shyness civilian pegs fixate sake fixate"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"055383bfe3f5340244de6ea3369986d415b7a5b121c207bb46f8ed04881b2d982a","seedPhrase":"taken sixteen nuance eclipse tilt system sickness king general went lettuce popular king"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"055383bfe3f5340244de6ea3369986d415b7a5b121c207bb46f8ed04881b2d982a","seedPhrase":"taken sixteen nuance eclipse tilt system sickness king general went lettuce popular king"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05fb1fbf5cad036174a03b72ef520f4e9b664ff3384e25cbc43a0eea86a5709b64","seedPhrase":"ribbon yawning evolved guarded earth husband anecdote shyness civilian pegs fixate sake fixate"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"055383bfe3f5340244de6ea3369986d415b7a5b121c207bb46f8ed04881b2d982a","seedPhrase":"taken sixteen nuance eclipse tilt system sickness king general went lettuce popular king"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 52351,
+    [Symbol(trigger_async_id_symbol)]: 52154,
+    [Symbol(kResourceStore)]: undefined
+  }
+]
+random snode for user: 055383bfe3f5340244de6ea3369986d415b7a5b121c207bb46f8ed04881b2d982a is snode: 1f020f21f921303e2c982be1f1429555c2232ee0e5b30539dbe222f1340d09dc
+storing to snode https://144.76.164.202:22120/storage_rpc/v1
+storing to snode https://144.76.164.202:22120/storage_rpc/v1
+storing to snode https://144.76.164.202:22120/storage_rpc/v1
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+random snode for user: 05fb1fbf5cad036174a03b72ef520f4e9b664ff3384e25cbc43a0eea86a5709b64 is snode: 9a189679a00f60dc0ec9a862aec30d6d7d723f24fcb762dc9a1a5af8b4a74543
+storing to snode https://185.150.190.48:22114/storage_rpc/v1
+storing to snode https://185.150.190.48:22114/storage_rpc/v1
+storing to snode https://185.150.190.48:22114/storage_rpc/v1
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+storeStatus for Alice: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "ribbon yawning evolved guarded earth husband anecdote shyness civilian pegs fixate sake fixate"
+	"Bob": "taken sixteen nuance eclipse tilt system sickness king general went lettuce popular king" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Restore your session button" to be present
+'Restore your session button' has been found
+'Restore your session button' has been found
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+'Restore your session button' has been found
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+waitForTextElementToBePresent threw: "id": "Recovery phrase input
+Waiting for "id" and "Recovery phrase input" to be present
+'Recovery phrase input' has been found
+'Recovery phrase input' has been found
+'Recovery phrase input' has been found
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+Waiting for "id" and "Slow mode notifications button" to be present
+'Continue' has been found
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Slow mode notifications button" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+Waiting for "id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+'Slow mode notifications button' has been found
+'Slow mode notifications button' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation not found
+Loading animation has finished
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+'New conversation button' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Text found to include Alice
+'Conversation list item' and 'Alice' has been found
+Text found to include Bob
+'Conversation list item' and 'Bob' has been found
+Waiting for "id" and "conversation-options-avatar" to be present
+waitForTextElementToBePresent threw: "id": "conversation-options-avatar
+Waiting for "id" and "conversation-options-avatar" to be present
+'conversation-options-avatar' has been found
+Waiting for "id" and "disappearing-messages-menu-option" to be present
+'disappearing-messages-menu-option' has been found
+Waiting for "id" and "Disappear after send option" to be present
+'Disappear after send option' has been found
+Waiting for "id" and "1 day" to be present
+'1 day' has been found
+Great success - default time is correct
+Waiting for "id" and "30 seconds" to be present
+'30 seconds' has been found
+Waiting for "id" and "Set button" to be present
+'Set button' has been found
+Waiting for "id" and "Navigate back" to be present
+'Navigate back' has been found
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+'Follow setting' has been found
+Waiting for "accessibility id" and "Set" to be present
+'Set' has been found
+Waiting for "id" and "Disappearing messages type and time" to be present
+'Disappearing messages type and time' has been found
+Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Text found to include You set messages to disappear 30 seconds after they have been sent.
+Control message You set messages to disappear 30 seconds after they have been sent. has been found
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Text found to include Bob has set messages to disappear 30 seconds after they have been sent.
+Control message Bob has set messages to disappear 30 seconds after they have been sent. has been found
+Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with Alice has set messages to disappear 30 seconds after they have been sent.
+Text found to include Alice has set messages to disappear 30 seconds after they have been sent.
+Control message Alice has set messages to disappear 30 seconds after they have been sent. has been found
+Text found to include You set messages to disappear 30 seconds after they have been sent.
+Control message You set messages to disappear 30 seconds after they have been sent. has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Text found to include Bob
+'Conversation list item' and 'Bob' has been found
+Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+Text found to include You set messages to disappear 30 seconds after they have been sent.
+Control message You set messages to disappear 30 seconds after they have been sent. has been found
+Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+Text found to include Bob has set messages to disappear 30 seconds after they have been sent.
+Control message Bob has set messages to disappear 30 seconds after they have been sent. has been found
+Waiting for "id" and "conversation-options-avatar" to be present
+'conversation-options-avatar' has been found
+Waiting for "id" and "disappearing-messages-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "disappearing-messages-menu-option
+Waiting for "id" and "disappearing-messages-menu-option" to be present
+'disappearing-messages-menu-option' has been found
+Waiting for "id" and "Disable disappearing messages" to be present
+'Disable disappearing messages' has been found
+Waiting for "id" and "Set button" to be present
+'Set button' has been found
+Waiting for "id" and "Navigate back" to be present
+'Navigate back' has been found
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Waiting for control message to be present with Alice has turned disappearing messages off. Messages they send will no longer disappear.
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Text found to include You turned off disappearing messages. Messages you send will no longer disappear.
+Control message You turned off disappearing messages. Messages you send will no longer disappear. has been found
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Waiting for control message to be present with Alice has turned disappearing messages off. Messages they send will no longer disappear.
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Waiting for control message to be present with Alice has turned disappearing messages off. Messages they send will no longer disappear.
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Waiting for control message to be present with Alice has turned disappearing messages off. Messages they send will no longer disappear.
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Text found to include Alice has turned disappearing messages off. Messages they send will no longer disappear.
+Control message Alice has turned disappearing messages off. Messages they send will no longer disappear. has been found
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Waiting for control message to be present with You turned off disappearing messages. Messages you send will no longer disappear.
+Text found to include You turned off disappearing messages. Messages you send will no longer disappear.
+Control message You turned off disappearing messages. Messages you send will no longer disappear. has been found
+Waiting for "accessibility id" and "Follow setting" to be present
+'Follow setting' has been found
+Waiting for "accessibility id" and "Modal heading" to be present
+'Modal heading' has been found
+Modal heading is correct
+Waiting for "accessibility id" and "Modal description" to be present
+'Modal description' has been found
+Modal description is correct
+Waiting for "accessibility id" and "Confirm" to be present
+'Confirm' has been found
+doesElementExist failed with id Disappearing messages type and time
+Disappearing messages type and time Doesn't exist but retrying
+doesElementExist failed with id Disappearing messages type and time
+Disappearing messages type and time Doesn't exist but retrying
+doesElementExist failed with id Disappearing messages type and time
+Disappearing messages type and time Doesn't exist but retrying
+doesElementExist failed with id Disappearing messages type and time
+Disappearing messages type and time Doesn't exist but retrying
+doesElementExist failed with id Disappearing messages type and time
+Disappearing messages type and time doesn't exist, time expired
+doesElementExist failed with id Disappearing messages type and time
+Disappearing messages type and time doesn't exist, time expired
+sessions closed

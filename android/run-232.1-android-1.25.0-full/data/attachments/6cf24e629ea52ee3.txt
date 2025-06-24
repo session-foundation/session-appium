@@ -1,0 +1,378 @@
+
+
+==========> Running "Join community test @android @high-risk @2-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+[buildStateForTest] stateToBuild:"1user". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5556 true
+emulatorAlreadyRunning emulator-5554 true
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [ Promise { <pending> } ]
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+random snode for user: 05d49c1735e4536cad62ccb4346fc7922ebcbe6bdb678dec06a44cccc3ec7c741e is snode: 1f201f2d608d88d2c7e403014d6e87990c3eb944052a1f8562ad7ed4c92e9ee6
+storing to snode https://172.96.140.124:22101/storage_rpc/v1
+storing to snode https://172.96.140.124:22101/storage_rpc/v1
+storing to snode https://172.96.140.124:22101/storage_rpc/v1
+storeStatus for Alice: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "tucks dogs getting hover observant gusts oust suede vexed unlikely jobs relic relic" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Restore your session button" to be present
+'Restore your session button' has been found
+'Restore your session button' has been found
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+waitForTextElementToBePresent threw: "id": "Recovery phrase input
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+Waiting for "id" and "Recovery phrase input" to be present
+waitForTextElementToBePresent threw: "id": "Recovery phrase input
+Waiting for "id" and "Recovery phrase input" to be present
+'Recovery phrase input' has been found
+'Recovery phrase input' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Slow mode notifications button" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+Waiting for "id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+'Slow mode notifications button' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Continue" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+Waiting for "id" and "Continue" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+'New conversation button' has been found
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "id" and "Join community button" to be present
+waitForTextElementToBePresent threw: "id": "Join community button
+Waiting for "id" and "Join community button" to be present
+'Join community button' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Community input' }
+Waiting for "accessibility id" and "Community input" to be present
+'Community input' has been found
+Waiting for "accessibility id" and "Join community button" to be present
+'Join community button' has been found
+Waiting for "id" and "Conversation header name" to be present with "Testing All The Things!"
+Waiting for "id" and "Conversation header name" to be present with "Testing All The Things!"
+Waiting for "id" and "Conversation header name" to be present with "Testing All The Things!"
+Waiting for "id" and "Conversation header name" to be present with "Testing All The Things!"
+Waiting for "id" and "Conversation header name" to be present with "Testing All The Things!"
+Text found to include Testing All The Things!
+'Conversation header name' and 'Testing All The Things!' has been found
+Sleeping for 5000 milliseconds
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton Doesn't exist but retrying
+doesElementExist failed with id network.loki.messenger:id/scrollToBottomButton
+network.loki.messenger:id/scrollToBottomButton doesn't exist, time expired
+Scroll button not visible
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+Text found to include Testing All The Things!
+'Conversation list item' and 'Testing All The Things!' has been found
+sessions closed

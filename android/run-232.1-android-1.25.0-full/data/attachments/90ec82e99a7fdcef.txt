@@ -1,0 +1,170 @@
+
+
+==========> Running "Link device @android @high-risk @2-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 1 1
+actualCapabilities worker 2
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 1 1
+actualCapabilities worker 3
+emulatorAlreadyRunning emulator-5558 true
+emulatorAlreadyRunning emulator-5560 true
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+emulator-5560  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5560'
+  }
+}
+udid: emulator-5560
+Waiting for "id" and "Create account button" to be present
+'Create account button' has been found
+Locator being used: { strategy: 'id', selector: 'Enter display name' }
+Waiting for "id" and "Enter display name" to be present
+waitForTextElementToBePresent threw: "id": "Enter display name
+Waiting for "id" and "Enter display name" to be present
+'Enter display name' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Sleeping for 5000 milliseconds
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "id" and "Reveal recovery phrase button" to be present
+'Reveal recovery phrase button' has been found
+Waiting for "id" and "Reveal recovery phrase button" to be present
+'Reveal recovery phrase button' has been found
+Waiting for "id" and "Recovery password container" to be present
+'Recovery password container' has been found
+Waiting for "id" and "Copy button" to be present
+'Copy button' has been found
+Alices recovery phrase is "efficient mumble jaws vain yearbook jukebox wife duckling gleeful welders bulb furnished wife"
+Waiting for "accessibility id" and "Navigate up" to be present
+'Navigate up' has been found
+Waiting for "accessibility id" and "User settings" to be present
+waitForTextElementToBePresent threw: "accessibility id": "User settings
+Waiting for "accessibility id" and "User settings" to be present
+'User settings' has been found
+Waiting for "accessibility id" and "Account ID" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Account ID
+Waiting for "accessibility id" and "Account ID" to be present
+'Account ID' has been found
+Waiting for "accessibility id" and "Navigate up" to be present
+'Navigate up' has been found
+Waiting for "id" and "Restore your session button" to be present
+'Restore your session button' has been found
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+'Recovery phrase input' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+Waiting for "id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Device 2 linked
+Waiting for "accessibility id" and "Recovery phrase reminder" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Recovery phrase reminder
+Waiting for "accessibility id" and "Recovery phrase reminder" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Recovery phrase reminder
+Waiting for "accessibility id" and "Recovery phrase reminder" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Recovery phrase reminder
+Waiting for "accessibility id" and "Recovery phrase reminder" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Recovery phrase reminder
+Waiting for "accessibility id" and "Recovery phrase reminder" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Recovery phrase reminder
+Waiting for "accessibility id" and "Recovery phrase reminder" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Recovery phrase reminder
+Waiting for "accessibility id" and "Recovery phrase reminder" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Recovery phrase reminder
+Waiting for "accessibility id" and "Recovery phrase reminder" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Recovery phrase reminder
+Waiting for "accessibility id" and "Recovery phrase reminder" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Recovery phrase reminder
+Waiting for "accessibility id" and "Recovery phrase reminder" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Recovery phrase reminder
+Element has been deleted, great success
+Waiting for "accessibility id" and "User settings" to be present
+'User settings' has been found
+Waiting for "accessibility id" and "Display name" to be present with "Alice"
+Text found to include Alice
+'Display name' and 'Alice' has been found
+Waiting for "accessibility id" and "Account ID" to be present with "05d15de33499bf0a7dca010bcd44516ec6f1515865ea1559e8f241dc42ee69861c"
+Text found to include 05d15de33499bf0a7dca010bcd44516ec6f1515865ea1559e8f241dc42ee69861c
+'Account ID' and '05d15de33499bf0a7dca010bcd44516ec6f1515865ea1559e8f241dc42ee69861c' has been found
+sessions closed

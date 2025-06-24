@@ -1,0 +1,1765 @@
+
+
+==========> Running "Leave group linked device @android @high-risk @4-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+starting capabilitiesIndex 2 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 2
+starting capabilitiesIndex 3 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 3
+emulatorAlreadyRunning emulator-5560 true
+emulatorAlreadyRunning emulator-5558 true
+emulatorAlreadyRunning emulator-5556 true
+emulatorAlreadyRunning emulator-5554 true
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+emulator-5560  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5560'
+  }
+}
+udid: emulator-5560
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+Waiting for "id" and "Create account button" to be present
+'Create account button' has been found
+Locator being used: { strategy: 'id', selector: 'Enter display name' }
+Waiting for "id" and "Enter display name" to be present
+waitForTextElementToBePresent threw: "id": "Enter display name
+Waiting for "id" and "Enter display name" to be present
+'Enter display name' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Sleeping for 5000 milliseconds
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "id" and "Reveal recovery phrase button" to be present
+'Reveal recovery phrase button' has been found
+Waiting for "id" and "Reveal recovery phrase button" to be present
+'Reveal recovery phrase button' has been found
+Waiting for "id" and "Recovery password container" to be present
+'Recovery password container' has been found
+Waiting for "id" and "Copy button" to be present
+'Copy button' has been found
+Charlies recovery phrase is "toenail moment wade dove tadpoles oilfield nasty racetrack apply tasked toilet jaded apply"
+Waiting for "accessibility id" and "Navigate up" to be present
+'Navigate up' has been found
+Waiting for "accessibility id" and "User settings" to be present
+'User settings' has been found
+Waiting for "accessibility id" and "Account ID" to be present
+'Account ID' has been found
+Waiting for "accessibility id" and "Navigate up" to be present
+'Navigate up' has been found
+Waiting for "id" and "Restore your session button" to be present
+'Restore your session button' has been found
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+waitForTextElementToBePresent threw: "id": "Recovery phrase input
+Waiting for "id" and "Recovery phrase input" to be present
+'Recovery phrase input' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+Waiting for "id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Device 2 linked
+Waiting for "id" and "Create account button" to be present
+Waiting for "id" and "Create account button" to be present
+'Create account button' has been found
+'Create account button' has been found
+Locator being used: { strategy: 'id', selector: 'Enter display name' }
+Waiting for "id" and "Enter display name" to be present
+Locator being used: { strategy: 'id', selector: 'Enter display name' }
+Waiting for "id" and "Enter display name" to be present
+'Enter display name' has been found
+'Enter display name' has been found
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+'Slow mode notifications button' has been found
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+'Continue' has been found
+Sleeping for 5000 milliseconds
+Sleeping for 5000 milliseconds
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "id" and "Reveal recovery phrase button" to be present
+Waiting for "id" and "Reveal recovery phrase button" to be present
+'Reveal recovery phrase button' has been found
+Waiting for "id" and "Reveal recovery phrase button" to be present
+'Reveal recovery phrase button' has been found
+Waiting for "id" and "Reveal recovery phrase button" to be present
+'Reveal recovery phrase button' has been found
+'Reveal recovery phrase button' has been found
+Waiting for "id" and "Recovery password container" to be present
+Waiting for "id" and "Recovery password container" to be present
+'Recovery password container' has been found
+'Recovery password container' has been found
+Waiting for "id" and "Copy button" to be present
+Waiting for "id" and "Copy button" to be present
+'Copy button' has been found
+'Copy button' has been found
+Alices recovery phrase is "alkaline goggles gemstone akin festival either ounce vigilant itches voted decay austere voted"
+Bobs recovery phrase is "girth woven cent thirsty fabrics inline artistic blip vain ruined kiosk roped vain"
+Waiting for "accessibility id" and "Navigate up" to be present
+Waiting for "accessibility id" and "Navigate up" to be present
+'Navigate up' has been found
+Waiting for "accessibility id" and "User settings" to be present
+'Navigate up' has been found
+Waiting for "accessibility id" and "User settings" to be present
+waitForTextElementToBePresent threw: "accessibility id": "User settings
+Waiting for "accessibility id" and "User settings" to be present
+'User settings' has been found
+Waiting for "accessibility id" and "Account ID" to be present
+'User settings' has been found
+Waiting for "accessibility id" and "Account ID" to be present
+'Account ID' has been found
+'Account ID' has been found
+Waiting for "accessibility id" and "Navigate up" to be present
+Waiting for "accessibility id" and "Navigate up" to be present
+'Navigate up' has been found
+'Navigate up' has been found
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "id" and "New direct message" to be present
+waitForTextElementToBePresent threw: "id": "New direct message
+Waiting for "id" and "New direct message" to be present
+'New direct message' has been found
+Locator being used: { strategy: 'id', selector: 'Session id input box' }
+Waiting for "id" and "Session id input box" to be present
+'Session id input box' has been found
+Waiting for "id" and "Next" to be present
+'Next' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message input box
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+'Message requests banner' has been found
+Waiting for "accessibility id" and "Message request" to be present
+'Message request' has been found
+Waiting for "accessibility id" and "Accept message request" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Accept message request
+Waiting for "accessibility id" and "Accept message request" to be present
+'Accept message request' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Bob-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Bob-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Bob-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Bob-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Bob-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Bob-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Bob-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Bob-to-Alice"
+Text found to include Reply-message-Bob-to-Alice
+'Message body' and 'Reply-message-Bob-to-Alice' has been found
+Alice and Bob are now contacts
+Waiting for "id" and "Navigate back" to be present
+'Navigate back' has been found
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "id" and "New direct message" to be present
+waitForTextElementToBePresent threw: "id": "New direct message
+Waiting for "id" and "New direct message" to be present
+'New direct message' has been found
+Locator being used: { strategy: 'id', selector: 'Session id input box' }
+Waiting for "id" and "Session id input box" to be present
+'Session id input box' has been found
+Waiting for "id" and "Next" to be present
+'Next' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message input box
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+Waiting for "accessibility id" and "Message requests banner" to be present
+'Message requests banner' has been found
+Waiting for "accessibility id" and "Message request" to be present
+'Message request' has been found
+Waiting for "accessibility id" and "Accept message request" to be present
+'Accept message request' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+Text found to include Reply-message-Charlie-to-Alice
+'Message body' and 'Reply-message-Charlie-to-Alice' has been found
+Alice and Charlie are now contacts
+Waiting for "id" and "Navigate back" to be present
+'Navigate back' has been found
+Waiting for "id" and "Navigate back" to be present
+'Navigate back' has been found
+Waiting for "id" and "Navigate back" to be present
+'Navigate back' has been found
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "id" and "Create group" to be present
+waitForTextElementToBePresent threw: "id": "Create group
+Waiting for "id" and "Create group" to be present
+'Create group' has been found
+Locator being used: { strategy: 'id', selector: 'Group name input' }
+Waiting for "id" and "Group name input" to be present
+'Group name input' has been found
+Waiting for "id" and "Contact" to be present with "Bob"
+Text found to include Bob
+'Contact' and 'Bob' has been found
+Waiting for "id" and "Contact" to be present with "Charlie"
+Text found to include Charlie
+'Contact' and 'Charlie' has been found
+Waiting for "id" and "Create group" to be present
+'Create group' has been found
+Waiting for "accessibility id" and "Navigate up" to be present
+Waiting for "accessibility id" and "Navigate up" to be present
+'Navigate up' has been found
+'Navigate up' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Leave group linked device"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Leave group linked device"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Leave group linked device"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Leave group linked device"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Leave group linked device"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Leave group linked device"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Leave group linked device"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Leave group linked device"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Leave group linked device"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Leave group linked device"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Leave group linked device"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Leave group linked device"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Leave group linked device"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Leave group linked device"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Leave group linked device"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Leave group linked device"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Leave group linked device"
+Text found to include Leave group linked device
+'Conversation list item' and 'Leave group linked device' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Leave group linked device"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Leave group linked device"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Leave group linked device"
+Text found to include Leave group linked device
+'Conversation list item' and 'Leave group linked device' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Alice to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Alice to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Alice to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Alice to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Alice to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Alice to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Alice to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Alice to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Alice to Leave group linked device"
+Text found to include Alice to Leave group linked device
+'Message body' and 'Alice to Leave group linked device' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Alice to Leave group linked device"
+Text found to include Alice to Leave group linked device
+'Message body' and 'Alice to Leave group linked device' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Text found to include Bob to Leave group linked device
+'Message body' and 'Bob to Leave group linked device' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Bob to Leave group linked device"
+Text found to include Bob to Leave group linked device
+'Message body' and 'Bob to Leave group linked device' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Charlie to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Charlie to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Charlie to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Charlie to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Charlie to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Charlie to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Charlie to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Charlie to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Charlie to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Charlie to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Charlie to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Charlie to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Charlie to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Charlie to Leave group linked device"
+Text found to include Charlie to Leave group linked device
+'Message body' and 'Charlie to Leave group linked device' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Charlie to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Charlie to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Charlie to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Charlie to Leave group linked device"
+Waiting for "accessibility id" and "Message body" to be present with "Charlie to Leave group linked device"
+Text found to include Charlie to Leave group linked device
+'Message body' and 'Charlie to Leave group linked device' has been found
+Waiting for "id" and "conversation-options-avatar" to be present
+'conversation-options-avatar' has been found
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
+Waiting for "id" and "leave-group-menu-option" to be present
+waitForTextElementToBePresent threw: "id": "leave-group-menu-option
