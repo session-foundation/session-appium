@@ -1472,7 +1472,9 @@ export class DeviceWrapper {
         text: testVideo,
       });
     } else {
-      throw new Error(`Video element with text "${testVideo}" not found after attempting to reveal it.`);
+      throw new Error(
+        `Video element with text "${testVideo}" not found after attempting to reveal it.`
+      );
     }
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
@@ -1531,6 +1533,37 @@ export class DeviceWrapper {
         text: 'Allow',
       });
       await sleepFor(1000);
+      let documentElement = await this.doesElementExist({
+        strategy: 'id',
+        selector: 'android:id/title',
+        text: testFile,
+        maxWait: 5000,
+      });
+      if (!documentElement) {
+        // Try to reveal the video element
+        await this.clickOnElementAll({
+          strategy: 'class name',
+          selector: 'android.widget.Button',
+          text: 'Documents',
+        });
+        // Try again to find the video element after revealing
+        documentElement = await this.doesElementExist({
+          strategy: 'id',
+          selector: 'android:id/title',
+          text: testFile,
+        });
+      }
+      if (documentElement) {
+        await this.clickOnElementAll({
+          strategy: 'id',
+          selector: 'android:id/title',
+          text: testFile,
+        });
+      } else {
+        throw new Error(
+          `File element with text "${testFile}" not found after attempting to reveal it.`
+        );
+      }
       await this.clickOnTextElementById('android:id/title', testFile);
     }
     // Checking Sent status on both platforms
