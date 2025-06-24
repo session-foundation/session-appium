@@ -52,7 +52,6 @@ async function networkPageLearnMore(platform: SupportedPlatformsType) {
     console.log('The URLs match.');
   }
   await assertUrlIsReachable(linkURL);
-  // await verifyPageScreenshot(platform, device, 'network_page');
   // Close browser and app
   await device.backToSession();
   await closeApp(device);
