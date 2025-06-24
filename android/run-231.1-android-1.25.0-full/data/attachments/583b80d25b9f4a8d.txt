@@ -1,0 +1,185 @@
+dbug AndroidUiautomator2Driver@3793 
+dbug AndroidUiautomator2Driver@3793 Creating session with W3C capabilities: {
+dbug AndroidUiautomator2Driver@3793   "firstMatch": [
+dbug AndroidUiautomator2Driver@3793     {},
+dbug AndroidUiautomator2Driver@3793     {}
+dbug AndroidUiautomator2Driver@3793   ],
+dbug AndroidUiautomator2Driver@3793   "alwaysMatch": {
+dbug AndroidUiautomator2Driver@3793     "appium:app": "./extracted/session-android.apk",
+dbug AndroidUiautomator2Driver@3793     "appium:platformName": "Android",
+dbug AndroidUiautomator2Driver@3793     "appium:platformVersion": "14",
+dbug AndroidUiautomator2Driver@3793     "appium:appPackage": "network.loki.messenger",
+dbug AndroidUiautomator2Driver@3793     "appium:appActivity": "network.loki.messenger.RoutingActivity",
+dbug AndroidUiautomator2Driver@3793     "appium:automationName": "UiAutomator2",
+dbug AndroidUiautomator2Driver@3793     "appium:newCommandTimeout": 300000,
+dbug AndroidUiautomator2Driver@3793     "appium:eventTimings": false,
+dbug AndroidUiautomator2Driver@3793     "appium:udid": "emulator-5556"
+dbug AndroidUiautomator2Driver@3793   }
+dbug AndroidUiautomator2Driver@3793 }
+WARN BaseDriver The capabilities ["platformName"] are standard capabilities and do not require "appium:" prefix
+info AndroidUiautomator2Driver@3793 Session created with session id: c4800dc3-36b8-4094-b950-2ec1084e09ee
+info ADB Using 'adb' from '/opt/android/platform-tools/adb'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 start-server'
+info AndroidUiautomator2Driver@3793 Retrieving device list
+dbug ADB Trying to find connected Android devices
+dbug ADB Getting connected devices
+dbug ADB Connected devices: [{"udid":"emulator-5554","state":"device"},{"udid":"emulator-5556","state":"device"},{"udid":"emulator-5558","state":"device"},{"udid":"emulator-5560","state":"device"}]
+info AndroidUiautomator2Driver@3793 Using device: emulator-5556
+info ADB Using 'adb' from '/opt/android/platform-tools/adb'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 start-server'
+dbug ADB Setting device id to emulator-5556
+WARN BaseDriver The current application path './extracted/session-android.apk' is not absolute and has been rewritten to '/home/runner/actions-runner/_work/session-appium/session-appium/extracted/session-android.apk'. Consider using absolute paths rather than relative
+info BaseDriver Using local app '/home/runner/actions-runner/_work/session-appium/session-appium/extracted/session-android.apk'
+dbug AndroidUiautomator2Driver@3793 Checking whether app is actually present
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 shell getprop ro.build.version.sdk'
+dbug ADB Current device property 'ro.build.version.sdk': 34
+info ADB Getting device platform version
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 shell getprop ro.build.version.release'
+dbug ADB Current device property 'ro.build.version.release': 14
+dbug ADB Device API level: 34
+info AndroidUiautomator2Driver@3793 Relaxing hidden api policy
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 shell 'settings put global hidden_api_policy_pre_p_apps 1;settings put global hidden_api_policy_p_apps 1;settings put global hidden_api_policy 1''
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 wait-for-device'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 shell echo ping'
+dbug AndroidUiautomator2Driver@3793 Pushing settings apk to the device...
+dbug ADB Getting package info for 'io.appium.settings'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 shell dumpsys package io.appium.settings'
+info ADB Using 'aapt2' from '/opt/android/build-tools/34.0.0/aapt2'
+dbug ADB Reading package manifest: '/opt/android/build-tools/34.0.0/aapt2 dump badging /home/runner/actions-runner/_work/session-appium/session-appium/node_modules/io.appium.settings/apks/settings_apk-debug.apk'
+dbug ADB The version name of the installed 'io.appium.settings' is greater or equal to the application version name ('5.14.12' >= '5.14.12')
+dbug ADB There is no need to install/upgrade '/home/runner/actions-runner/_work/session-appium/session-appium/node_modules/io.appium.settings/apks/settings_apk-debug.apk'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 shell dumpsys activity services io.appium.settings'
+dbug AndroidUiautomator2Driver@3793 io.appium.settings is already running. There is no need to reset its permissions.
+dbug Logcat Starting logs capture with command: /opt/android/platform-tools/adb -P 5037 -s emulator-5556 logcat -v threadtime
+dbug AndroidUiautomator2Driver@3793 Forwarding UiAutomator2 Server port 6790 to local port 8202
+dbug ADB Forwarding system: 8202 to device: 6790
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 forward tcp:8202 tcp:6790'
+dbug AndroidUiautomator2Driver@3793 UIA2Proxy options: {"server":"127.0.0.1","port":8202,"keepAlive":true,"scheme":"http","base":"","reqBasePath":"","sessionId":null,"timeout":240000}
+dbug ADB Getting package info for 'io.appium.uiautomator2.server'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 shell dumpsys package io.appium.uiautomator2.server'
+dbug ADB Getting install status for io.appium.uiautomator2.server.test
+dbug ADB Checking app cert for /home/runner/actions-runner/_work/session-appium/session-appium/extracted/session-android.apk
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 shell cmd package list packages'
+dbug ADB Reading package manifest: '/opt/android/build-tools/34.0.0/aapt2 dump badging /home/runner/actions-runner/_work/session-appium/session-appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-v7.6.2.apk'
+dbug ADB 'io.appium.uiautomator2.server.test' is installed
+dbug ADB The version name of the installed 'io.appium.uiautomator2.server' is greater or equal to the application version name ('7.6.2' >= '7.6.2')
+dbug AndroidUiautomator2Driver@3793 Server packages status: [{"installState":"sameVersionInstalled","appPath":"/home/runner/actions-runner/_work/session-appium/session-appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-v7.6.2.apk","appId":"io.appium.uiautomator2.server"},{"installState":"sameVersionInstalled","appPath":"/home/runner/actions-runner/_work/session-appium/session-appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-debug-androidTest.apk","appId":"io.appium.uiautomator2.server.test"}]
+info AndroidUiautomator2Driver@3793 Server packages are not going to be (re)installed
+dbug AndroidUiautomator2Driver@3793 Waiting up to 30000ms for services to be available
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 shell pm list instrumentation'
+dbug AndroidUiautomator2Driver@3793 Instrumentation target 'io.appium.uiautomator2.server.test/androidx.test.runner.AndroidJUnitRunner' is available
+info ADB Adding packages ["io.appium.settings","io.appium.uiautomator2.server","io.appium.uiautomator2.server.test"] to Doze whitelist
+dbug ADB Got the following command chunks to execute: [["dumpsys","deviceidle","whitelist","+io.appium.settings",";","dumpsys","deviceidle","whitelist","+io.appium.uiautomator2.server",";","dumpsys","deviceidle","whitelist","+io.appium.uiautomator2.server.test",";"]]
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 shell dumpsys deviceidle whitelist +io.appium.settings ; dumpsys deviceidle whitelist +io.appium.uiautomator2.server ; dumpsys deviceidle whitelist +io.appium.uiautomator2.server.test ;'
+dbug ADB Using the previously cached signature entry for 'session-android.apk'
+dbug ADB Getting package info for 'network.loki.messenger'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 shell dumpsys package network.loki.messenger'
+dbug ADB App '/home/runner/actions-runner/_work/session-appium/session-appium/extracted/session-android.apk' is not installed
+dbug ADB Installing '/home/runner/actions-runner/_work/session-appium/session-appium/extracted/session-android.apk'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 help'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 features'
+info ADB The application at '/home/runner/actions-runner/_work/session-appium/session-appium/extracted/session-android.apk' will not be cached, because the device under test has confirmed the support of streamed installs
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 install /home/runner/actions-runner/_work/session-appium/session-appium/extracted/session-android.apk'
+info ADB The installation of 'session-android.apk' took 1743ms
+dbug ADB Install command stdout: Performing Streamed Install
+dbug ADB Success
+dbug AndroidUiautomator2Driver@3793 Performing shallow cleanup of automation leftovers
+dbug AndroidUiautomator2Driver@3793 No obsolete sessions have been detected (socket hang up)
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 shell am force-stop io.appium.uiautomator2.server'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 shell am force-stop io.appium.uiautomator2.server.test'
+info AndroidUiautomator2Driver@3793 Starting UIAutomator2 server 7.6.2
+info AndroidUiautomator2Driver@3793 Using UIAutomator2 server from '/home/runner/actions-runner/_work/session-appium/session-appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-v7.6.2.apk' and test from '/home/runner/actions-runner/_work/session-appium/session-appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-debug-androidTest.apk'
+info AndroidUiautomator2Driver@3793 Waiting up to 30000ms for UiAutomator2 to be online...
+dbug ADB Creating ADB subprocess with args: ["-P","5037","-s","emulator-5556","shell","am","instrument","-w","-e","disableAnalytics","true","io.appium.uiautomator2.server.test/androidx.test.runner.AndroidJUnitRunner"]
+dbug AndroidUiautomator2Driver@3793 Matched '/status' to command name 'getStatus'
+dbug AndroidUiautomator2Driver@3793 Proxying [GET /status] to [GET http://127.0.0.1:8202/status] with no body
+info AndroidUiautomator2Driver@3793 socket hang up
+dbug AndroidUiautomator2Driver@3793 Matched '/status' to command name 'getStatus'
+dbug AndroidUiautomator2Driver@3793 Proxying [GET /status] to [GET http://127.0.0.1:8202/status] with no body
+info AndroidUiautomator2Driver@3793 socket hang up
+dbug AndroidUiautomator2Driver@3793 [Instrumentation] 
+dbug AndroidUiautomator2Driver@3793 Matched '/status' to command name 'getStatus'
+dbug AndroidUiautomator2Driver@3793 Proxying [GET /status] to [GET http://127.0.0.1:8202/status] with no body
+dbug AndroidUiautomator2Driver@3793 Got response with status 200: {"sessionId":"None","value":{"build":{"version":"7.6.2","versionCode":218},"message":"UiAutomator2 Server is ready to accept commands","ready":true}}
+dbug AndroidUiautomator2Driver@3793 The initialization of the instrumentation process took 2143ms
+dbug AndroidUiautomator2Driver@3793 Matched '/session' to command name 'createSession'
+dbug AndroidUiautomator2Driver@3793 Proxying [POST /session] to [POST http://127.0.0.1:8202/session] with body: {"capabilities":{"firstMatch":[{"app":"./extracted/session-android.apk","platformName":"Android","platformVersion":"14","appPackage":"network.loki.messenger","appActivity":"network.loki.messenger.RoutingActivity","automationName":"UiAutomator2","newCommandTimeout":300000,"eventTimings":false,"udid":"emulator-5556","platform":"LINUX","webStorageEnabled":false,"takesScreenshot":true,"javascriptEnabled":true,"databaseEnabled":false,"networkConnectionEnabled":true,"locationContextEnabled":false,"warnings":{},"desired":{"app":"./extracted/session-android.apk","platformName":"Android","platformVersion":"14","appPackage":"network.loki.messenger","appActivity":"network.loki.messenger.RoutingActivity","automationName":"UiAutomator2","newCommandTimeout":300000,"eventTimings":false,"udid":"emulator-5556"},"deviceName":"emulator-5556","deviceUDID":"emulator-5556"}],"alwaysMatch":{}}}
+dbug AndroidUiautomator2Driver@3793 Got response with status 200: {"sessionId":"02e683b0-3de7-4307-9749-87643ffe3f04","value":{"capabilities":{"firstMatch":[{"app":"./extracted/session-android.apk","platformName":"Android","platformVersion":"14","appPackage":"network.loki.messenger","appActivity":"network.loki.messenger.RoutingActivity","automationName":"UiAutomator2","newCommandTimeout":300000,"eventTimings":false,"udid":"emulator-5556","platform":"LINUX","webStorageEnabled":false,"takesScreenshot":true,"javascriptEnabled":true,"databaseEnabled":false,"networkConnectionEnabled":true,"locationContextEnabled":false,"warnings":{},"desired":{"app":"./extracted/session-android.apk","platformName":"Android","platformVersion":"14","appPackage":"network.loki.messenger","appActivity":"network.loki.messenger.RoutingActivity","automationName":"UiAutomator2","newCommandTimeout":300000,"eventTimings":false,"udid":"emulator-5556"},"deviceName":"emulator-5556","deviceUDID":"emulator-5556"}],"alwaysMatch":{}},"sessionId":"02e683b0-3de7-4307-9749-87643ffe3f04"}}
+info AndroidUiautomator2Driver@3793 Determined the downstream protocol as 'W3C'
+dbug AndroidUiautomator2Driver@3793 Proxying [GET /appium/device/pixel_ratio] to [GET http://127.0.0.1:8202/session/02e683b0-3de7-4307-9749-87643ffe3f04/appium/device/pixel_ratio] with no body
+dbug AndroidUiautomator2Driver@3793 Matched '/appium/device/system_bars' to command name 'getSystemBars'
+dbug AndroidUiautomator2Driver@3793 Proxying [GET /appium/device/system_bars] to [GET http://127.0.0.1:8202/session/02e683b0-3de7-4307-9749-87643ffe3f04/appium/device/system_bars] with no body
+dbug AndroidUiautomator2Driver@3793 Matched '/window/current/size' to command name 'getWindowSize'
+dbug AndroidUiautomator2Driver@3793 Proxying [GET /window/current/size] to [GET http://127.0.0.1:8202/session/02e683b0-3de7-4307-9749-87643ffe3f04/window/current/size] with no body
+dbug AndroidUiautomator2Driver@3793 Proxying [GET /appium/device/info] to [GET http://127.0.0.1:8202/session/02e683b0-3de7-4307-9749-87643ffe3f04/appium/device/info] with no body
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 shell dumpsys window'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 shell dumpsys power'
+dbug AndroidUiautomator2Driver@3793 Got response with status 200: {"sessionId":"02e683b0-3de7-4307-9749-87643ffe3f04","value":2.625}
+dbug AndroidUiautomator2Driver@3793 Got response with status 200: {"sessionId":"02e683b0-3de7-4307-9749-87643ffe3f04","value":{"height":2400,"width":1080}}
+dbug AndroidUiautomator2Driver@3793 Got response with status 200: {"sessionId":"02e683b0-3de7-4307-9749-87643ffe3f04","value":{"statusBar":128}}
+dbug AndroidUiautomator2Driver@3793 Got response with status 200: {"sessionId":"02e683b0-3de7-4307-9749-87643ffe3f04","value":{"androidId":"72f1c5a980d13f3e","apiVersion":"34","bluetooth":{"state":"ON"},"brand":"google","carrierName":"T-Mobile","displayDensity":420,"locale":"en_US","manufacturer":"Google","model":"sdk_gphone64_x86_64","networks":[{"capabilities":{"SSID":null,"linkDownBandwidthKbps":30000,"linkUpstreamBandwidthKbps":15000,"networkCapabilities":"NET_CAPABILITY_MMS,NET_CAPABILITY_SUPL,NET_CAPABILITY_DUN,NET_CAPABILITY_FOTA,NET_CAPABILITY_IMS,NET_CAPABILITY_CBS,NET_CAPABILITY_INTERNET,NET_CAPABILITY_NOT_RESTRICTED,NET_CAPABILITY_TRUSTED,NET_CAPABILITY_NOT_VPN,NET_CAPABILITY_VALIDATED,NET_CAPABILITY_NOT_ROAMING,NET_CAPABILITY_NOT_CONGESTED,NET_CAPABILITY_NOT_SUSPENDED","signalStrength":-2147483648,"transportTypes":"TRANSPORT_CELLULAR"},"detailedState":"CONNECTED","extraInfo":"epc.tmobile.com","isAvailable":true,"isConnected":true,"isFailover":false,"isRoaming":false,"state":"CONNECTED","subtype":10,"subtypeName":"HSPA","type":0,"typeName":"MOBILE"},{"capabili...
+info AndroidUiautomator2Driver@3793 Screen already unlocked, doing nothing
+info AndroidUiautomator2Driver@3793 Starting 'network.loki.messenger/network.loki.messenger.RoutingActivity and waiting for 'network.loki.messenger/network.loki.messenger.RoutingActivity'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 shell am start-activity -W -n network.loki.messenger/network.loki.messenger.RoutingActivity -S -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000'
+dbug BaseDriver The value of 'ignoreUnimportantViews' setting did not change. Skipping the update for it
+dbug AndroidUiautomator2Driver@3793 Matched '/appium/settings' to command name 'updateSettings'
+dbug AndroidUiautomator2Driver@3793 Proxying [POST /appium/settings] to [POST http://127.0.0.1:8202/session/02e683b0-3de7-4307-9749-87643ffe3f04/appium/settings] with body: {"settings":{"ignoreUnimportantViews":false,"allowInvisibleElements":true,"enableMultiWindows":true,"disableIdLocatorAutocompletion":true}}
+dbug AndroidUiautomator2Driver@3793 Got response with status 200: {"sessionId":"02e683b0-3de7-4307-9749-87643ffe3f04","value":null}
+dbug AndroidUiautomator2Driver@3793 Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@3793 Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@3793 Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@3793 Proxying [POST /element] to [POST http://127.0.0.1:8202/session/02e683b0-3de7-4307-9749-87643ffe3f04/element] with body: {"strategy":"id","selector":"Restore your session button","context":"","multiple":false}
+info AndroidUiautomator2Driver@3793 Got response with status 404: {"sessionId":"02e683b0-3de7-4307-9749-87643ffe3f04","value":{"error":"no such element","message":"An element could not be located on the page using the given search parameters","stacktrace":"io.appium.uiautomator2.common.exceptions.ElementNotFoundException: An element could not be located on the page using the given search parameters\n\tat io.appium.uiautomator2.handler.FindElement.safeHandle(FindElement.java:63)\n\tat io.appium.uiautomator2.handler.request.SafeRequestHandler.handle(SafeRequestHandler.java:59)\n\tat io.appium.uiautomator2.server.AppiumServlet.handleRequest(AppiumServlet.java:259)\n\tat io.appium.uiautomator2.server.AppiumServlet.handleHttpRequest(AppiumServlet.java:253)\n\tat io.appium.uiautomator2.http.ServerHandler.channelRead(ServerHandler.java:77)\n\tat io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:374)\n\tat io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:360)\n\tat io.netty.chann...
+dbug W3C Matched W3C error code 'no such element' to NoSuchElementError
+dbug AndroidUiautomator2Driver@3793 Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@3793 Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@3793 Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@3793 Proxying [POST /element] to [POST http://127.0.0.1:8202/session/02e683b0-3de7-4307-9749-87643ffe3f04/element] with body: {"strategy":"id","selector":"Restore your session button","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@3793 Got response with status 200: {"sessionId":"02e683b0-3de7-4307-9749-87643ffe3f04","value":{"ELEMENT":"00000000-0000-003d-0000-000e00000007","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-003d-0000-000e00000007"}}
+dbug AndroidUiautomator2Driver@3793 Matched '/element/00000000-0000-003d-0000-000e00000007/click' to command name 'click'
+dbug AndroidUiautomator2Driver@3793 Proxying [POST /element/00000000-0000-003d-0000-000e00000007/click] to [POST http://127.0.0.1:8202/session/02e683b0-3de7-4307-9749-87643ffe3f04/element/00000000-0000-003d-0000-000e00000007/click] with body: {"element":"00000000-0000-003d-0000-000e00000007"}
+dbug AndroidUiautomator2Driver@3793 Got response with status 200: {"sessionId":"02e683b0-3de7-4307-9749-87643ffe3f04","value":null}
+dbug AndroidUiautomator2Driver@3793 Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@3793 Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@3793 Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@3793 Proxying [POST /element] to [POST http://127.0.0.1:8202/session/02e683b0-3de7-4307-9749-87643ffe3f04/element] with body: {"strategy":"id","selector":"Recovery phrase input","context":"","multiple":false}
+info AndroidUiautomator2Driver@3793 Got response with status 404: {"sessionId":"02e683b0-3de7-4307-9749-87643ffe3f04","value":{"error":"no such element","message":"An element could not be located on the page using the given search parameters","stacktrace":"io.appium.uiautomator2.common.exceptions.ElementNotFoundException: An element could not be located on the page using the given search parameters\n\tat io.appium.uiautomator2.handler.FindElement.safeHandle(FindElement.java:63)\n\tat io.appium.uiautomator2.handler.request.SafeRequestHandler.handle(SafeRequestHandler.java:59)\n\tat io.appium.uiautomator2.server.AppiumServlet.handleRequest(AppiumServlet.java:259)\n\tat io.appium.uiautomator2.server.AppiumServlet.handleHttpRequest(AppiumServlet.java:253)\n\tat io.appium.uiautomator2.http.ServerHandler.channelRead(ServerHandler.java:77)\n\tat io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:374)\n\tat io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:360)\n\tat io.netty.chann...
+dbug W3C Matched W3C error code 'no such element' to NoSuchElementError
+dbug AndroidUiautomator2Driver@3793 Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@3793 Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@3793 Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@3793 Proxying [POST /element] to [POST http://127.0.0.1:8202/session/02e683b0-3de7-4307-9749-87643ffe3f04/element] with body: {"strategy":"id","selector":"Recovery phrase input","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@3793 Got response with status 200: {"sessionId":"02e683b0-3de7-4307-9749-87643ffe3f04","value":{"ELEMENT":"00000000-0000-003e-0000-003b0000001a","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-003e-0000-003b0000001a"}}
+dbug AndroidUiautomator2Driver@3793 Matched '/element/00000000-0000-003e-0000-003b0000001a/value' to command name 'setValue'
+dbug AndroidUiautomator2Driver@3793 Added 'value' property ["r","u","b","y"," ","b","a","k","e","r","y"," ","i","l","l","n","e","s","s"," ","p","u","s","h"," ","r","i","f","t"," ","r","e","e","f"," ","n","a","b","b","i","n","g"," ","b","a","w","l","e","d"," ","h","o","p","e"," ","z","o","r","k"," ","s","i","l","k"," ","l","o","b","s","t","e","r"," ","h","o","p","e"] to 'setValue' request body
+dbug AndroidUiautomator2Driver@3793 Proxying [POST /element/00000000-0000-003e-0000-003b0000001a/value] to [POST http://127.0.0.1:8202/session/02e683b0-3de7-4307-9749-87643ffe3f04/element/00000000-0000-003e-0000-003b0000001a/value] with body: {"elementId":"00000000-0000-003e-0000-003b0000001a","text":"ruby bakery illness push rift reef nabbing bawled hope zork silk lobster hope","replace":false,"value":["r","u","b","y"," ","b","a","k","e","r","y"," ","i","l","l","n","e","s","s"," ","p","u","s","h"," ","r","i","f","t"," ","r","e","e","f"," ","n","a","b","b","i","n","g"," ","b","a","w","l","e","d"," ","h","o","p","e"," ","z","o","r","k"," ","s","i","l","k"," ","l","o","b","s","t","e","r"," ","h","o","p","e"]}
+dbug AndroidUiautomator2Driver@3793 Got response with status 200: {"sessionId":"02e683b0-3de7-4307-9749-87643ffe3f04","value":null}
+dbug AndroidUiautomator2Driver@3793 Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@3793 Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@3793 Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@3793 Proxying [POST /element] to [POST http://127.0.0.1:8202/session/02e683b0-3de7-4307-9749-87643ffe3f04/element] with body: {"strategy":"id","selector":"Continue","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@3793 Got response with status 200: {"sessionId":"02e683b0-3de7-4307-9749-87643ffe3f04","value":{"ELEMENT":"00000000-0000-003e-0000-00480000001a","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-003e-0000-00480000001a"}}
+dbug AndroidUiautomator2Driver@3793 Matched '/element/00000000-0000-003e-0000-00480000001a/click' to command name 'click'
+dbug AndroidUiautomator2Driver@3793 Proxying [POST /element/00000000-0000-003e-0000-00480000001a/click] to [POST http://127.0.0.1:8202/session/02e683b0-3de7-4307-9749-87643ffe3f04/element/00000000-0000-003e-0000-00480000001a/click] with body: {"element":"00000000-0000-003e-0000-00480000001a"}
+dbug AndroidUiautomator2Driver@3793 Got response with status 200: {"sessionId":"02e683b0-3de7-4307-9749-87643ffe3f04","value":null}
+dbug AndroidUiautomator2Driver@3793 Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@3793 Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@3793 Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@3793 Proxying [POST /element] to [POST http://127.0.0.1:8202/session/02e683b0-3de7-4307-9749-87643ffe3f04/element] with body: {"strategy":"id","selector":"error-message","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@3793 Got response with status 200: {"sessionId":"02e683b0-3de7-4307-9749-87643ffe3f04","value":{"ELEMENT":"00000000-0000-003e-0000-00590000001a","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-003e-0000-00590000001a"}}
+dbug AndroidUiautomator2Driver@3793 Matched '/element/00000000-0000-003e-0000-00590000001a/text' to command name 'getText'
+dbug AndroidUiautomator2Driver@3793 Proxying [GET /element/00000000-0000-003e-0000-00590000001a/text] to [GET http://127.0.0.1:8202/session/02e683b0-3de7-4307-9749-87643ffe3f04/element/00000000-0000-003e-0000-00590000001a/text] with no body
+dbug AndroidUiautomator2Driver@3793 Got response with status 200: {"sessionId":"02e683b0-3de7-4307-9749-87643ffe3f04","value":"Some of the words in your Recovery Password are incorrect. Please check and try again."}
+dbug AndroidUiautomator2Driver@3793 Deleting UiAutomator2 session
+dbug AndroidUiautomator2Driver@3793 Deleting UiAutomator2 server session
+dbug AndroidUiautomator2Driver@3793 Proxying [DELETE /] to [DELETE http://127.0.0.1:8202/session/02e683b0-3de7-4307-9749-87643ffe3f04] with no body
+dbug AndroidUiautomator2Driver@3793 Got response with status 200: {"sessionId":"02e683b0-3de7-4307-9749-87643ffe3f04","value":null}
+dbug AndroidUiautomator2Driver@3793 [Instrumentation] io.appium.uiautomator2.server.test.AppiumUiAutomator2Server:
+dbug AndroidUiautomator2Driver@3793 [Instrumentation] The process has exited with code null, signal SIGTERM
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 shell dumpsys activity services io.appium.settings/.recorder.RecorderService'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 shell am force-stop network.loki.messenger'
+dbug ADB Removing forwarded port socket connection: 8202 
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 forward --remove tcp:8202'
+info AndroidUiautomator2Driver@3793 Restoring hidden api policy to the device default configuration
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5556 shell 'settings delete global hidden_api_policy_pre_p_apps;settings delete global hidden_api_policy_p_apps;settings delete global hidden_api_policy''
+dbug Logcat Stopping logcat capture
