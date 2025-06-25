@@ -14,6 +14,7 @@ export default tseslint.config(
       'run/**/*.js',
       'scripts/*.js',
       'avd/',
+      'allure*/',
     ],
   },
   eslint.configs.recommended,
