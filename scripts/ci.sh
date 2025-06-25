@@ -87,34 +87,60 @@ function killall_emulators() {
 
 
 function start_with_snapshots() {
-    for i in {1..4}
-    do
-        EMU_CONFIG_FILE="$HOME/.android/avd/emulator$i.avd/emulator-user.ini"
-        # set the position fo each emulator to be next to the previous one
-        sed -i "s/^window.x.*/window.x=$(( 100 + (i-1) * 400))/" "$EMU_CONFIG_FILE"
+  for i in {1..4}; do
+    EMU_CONFIG_FILE="$HOME/.android/avd/emulator$i.avd/emulator-user.ini"
+    # Set window position (optional in headless)
+    sed -i "s/^window.x.*/window.x=$(( 100 + (i-1) * 400))/" "$EMU_CONFIG_FILE"
 
-        DISPLAY=:0 emulator @emulator$i -gpu host -accel on -no-snapshot-save -snapshot plop.snapshot  -force-snapshot-load &
-        sleep 5
+    DISPLAY=:0 emulator @emulator$i \
+      -gpu host \
+      -accel on \
+      -no-snapshot-save \
+      -snapshot plop.snapshot \
+      -force-snapshot-load \
+      -no-window &
+
+    sleep 5
+  done
+
+  echo "Waiting for emulators to become responsive..."
+
+  for port in 5554 5556 5558 5560; do
+    echo "Waiting for emulator-$port to become ADB responsive..."
+
+    # Wait for ADB to report 'device' instead of 'offline'
+    for i in {1..30}; do
+      state=$(adb -s emulator-$port get-state 2>/dev/null | tr -d '\r')
+      if [ "$state" == "device" ]; then
+        echo "emulator-$port is now ADB-ready."
+        break
+      fi
+      sleep 2
     done
-    
-    echo "Waiting for emulators to finish booting..."
 
-    for port in 5554 5556 5558 5560; do
-        echo "Waiting on emulator-$port..."
-        for i in {1..60}; do
-        booted=$(adb -s emulator-$port shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
-        if [ "$booted" == "1" ]; then
-            echo "emulator-$port booted."
-            break
-        fi
-        sleep 2
-        done
+    # Optional: if still not 'device', exit early
+    state=$(adb -s emulator-$port get-state 2>/dev/null | tr -d '\r')
+    if [ "$state" != "device" ]; then
+      echo "ERROR: emulator-$port stuck in '$state' state after timeout."
+      adb devices
+      exit 1
+    fi
 
-        booted=$(adb -s emulator-$port shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
-        if [ "$booted" != "1" ]; then
-        echo "ERROR: emulator-$port failed to boot within timeout."
-        adb devices
-        exit 1
-        fi
+    echo "Waiting for emulator-$port to report boot completed..."
+    for i in {1..60}; do
+      booted=$(adb -s emulator-$port shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
+      if [ "$booted" == "1" ]; then
+        echo "emulator-$port booted."
+        break
+      fi
+      sleep 2
     done
+
+    booted=$(adb -s emulator-$port shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
+    if [ "$booted" != "1" ]; then
+      echo "ERROR: emulator-$port failed to boot in time."
+      adb devices
+      exit 1
+    fi
+  done
 }
