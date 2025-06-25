@@ -102,6 +102,7 @@ function start_with_snapshots() {
 
     sleep 5
   done
+} 
 
 function wait_for_emulators() {
   echo "Waiting for emulators to boot and respond to adb..."
