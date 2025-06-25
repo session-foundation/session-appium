@@ -1354,7 +1354,7 @@ export class DeviceWrapper {
       }
       await sleepFor(1000);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      // await verifyElementScreenshot(this, new DummyScreenshot(this));
+      await sleepFor(2000); // Appium needs a moment, matchAndTapImage sometimes finds 0 elements otherwise
       await this.matchAndTapImage(
         { strategy: 'xpath', selector: `//XCUIElementTypeCell` },
         testImage
@@ -1414,8 +1414,10 @@ export class DeviceWrapper {
       selector: 'Allow Full Access',
       maxWait: 500,
     });
+    await sleepFor(2000); // Appium needs a moment, matchAndTapImage sometimes finds 0 elements otherwise
     // For some reason video gets added to the top of the Recents folder so it's best to scroll up
     await this.scrollUp();
+    await sleepFor(2000); // Appium needs a moment, matchAndTapImage sometimes finds 0 elements otherwise
     // A video can't be matched by its thumbnail so we use a video thumbnail file
     await this.matchAndTapImage(
       { strategy: 'xpath', selector: `//XCUIElementTypeCell` },
