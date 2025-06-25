@@ -1451,7 +1451,7 @@ export class DeviceWrapper {
       text: testVideo,
       maxWait: 5000,
     });
-    // This codepath is purely for the CI 
+    // This codepath is purely for the CI
     if (!videoElement) {
       // Try to reveal the video by selecting/filtering Videos in the native UI
       await this.clickOnElementAll({
@@ -1473,9 +1473,7 @@ export class DeviceWrapper {
         text: testVideo,
       });
     } else {
-      throw new Error(
-        `Video "${testVideo}" not found after attempting to reveal it.`
-      );
+      throw new Error(`Video "${testVideo}" not found after attempting to reveal it.`);
     }
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
@@ -1562,9 +1560,7 @@ export class DeviceWrapper {
           text: testFile,
         });
       } else {
-        throw new Error(
-          `File "${testFile}" not found after attempting to reveal it.`
-        );
+        throw new Error(`File "${testFile}" not found after attempting to reveal it.`);
       }
       await this.clickOnTextElementById('android:id/title', testFile);
     }
