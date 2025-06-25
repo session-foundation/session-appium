@@ -1,0 +1,1523 @@
+
+
+==========> Running "Unblock user @android @low-risk @2-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5556 true
+emulatorAlreadyRunning emulator-5554 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"05345899bbe59a8d4c060ffa23f4e825dffb37eb9ee08cc5ae5080d7620fdd2877","seedPhrase":"dwarf ardent scamper bimonthly bodies afar oilfield technical riots agnostic vegan audio oilfield"},
+SessionUser: {"name":"Bob","sessionId":"0500ed6828100a4cac1eb9215ba93f06680d4aa16984d1ff270b505e28d871637b","seedPhrase":"aplomb cake going females rover rudely unzip zodiac gumball guarded poverty inflamed inflamed"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"05345899bbe59a8d4c060ffa23f4e825dffb37eb9ee08cc5ae5080d7620fdd2877","seedPhrase":"dwarf ardent scamper bimonthly bodies afar oilfield technical riots agnostic vegan audio oilfield"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05345899bbe59a8d4c060ffa23f4e825dffb37eb9ee08cc5ae5080d7620fdd2877","seedPhrase":"dwarf ardent scamper bimonthly bodies afar oilfield technical riots agnostic vegan audio oilfield"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"0500ed6828100a4cac1eb9215ba93f06680d4aa16984d1ff270b505e28d871637b","seedPhrase":"aplomb cake going females rover rudely unzip zodiac gumball guarded poverty inflamed inflamed"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"0500ed6828100a4cac1eb9215ba93f06680d4aa16984d1ff270b505e28d871637b","seedPhrase":"aplomb cake going females rover rudely unzip zodiac gumball guarded poverty inflamed inflamed"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05345899bbe59a8d4c060ffa23f4e825dffb37eb9ee08cc5ae5080d7620fdd2877","seedPhrase":"dwarf ardent scamper bimonthly bodies afar oilfield technical riots agnostic vegan audio oilfield"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"0500ed6828100a4cac1eb9215ba93f06680d4aa16984d1ff270b505e28d871637b","seedPhrase":"aplomb cake going females rover rudely unzip zodiac gumball guarded poverty inflamed inflamed"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [ Promise { <pending> } ]
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+random snode for user: 05345899bbe59a8d4c060ffa23f4e825dffb37eb9ee08cc5ae5080d7620fdd2877 is snode: d36bef9b92c9edee797998d96a41a64a2d919c9ac5dbaeedb32ad6955c8cbc9e
+storing to snode https://178.62.226.233:22021/storage_rpc/v1
+storing to snode https://178.62.226.233:22021/storage_rpc/v1
+storing to snode https://178.62.226.233:22021/storage_rpc/v1
+random snode for user: 0500ed6828100a4cac1eb9215ba93f06680d4aa16984d1ff270b505e28d871637b is snode: 9294ba1c9e9bc131be57c76be1261a7bfcd974cbb1ac695e292aad8234ad237d
+storing to snode https://107.189.2.141:22021/storage_rpc/v1
+storing to snode https://107.189.2.141:22021/storage_rpc/v1
+storing to snode https://107.189.2.141:22021/storage_rpc/v1
+storeStatus for Alice: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "dwarf ardent scamper bimonthly bodies afar oilfield technical riots agnostic vegan audio oilfield"
+	"Bob": "aplomb cake going females rover rudely unzip zodiac gumball guarded poverty inflamed inflamed" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Restore your session button" to be present
+'Restore your session button' has been found
+'Restore your session button' has been found
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+'Recovery phrase input' has been found
+'Recovery phrase input' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Slow mode notifications button" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+Waiting for "id" and "Slow mode notifications button" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+Waiting for "id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+'Slow mode notifications button' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Loading animation not found
+Loading animation has finished
+'Loading animation' has been found
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+'Loading animation' has been found
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Continue
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Continue" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Continue
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Continue" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Continue
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Text found to include Bob
+'Conversation list item' and 'Bob' has been found
+Text found to include Alice
+'Conversation list item' and 'Alice' has been found
+Waiting for "id" and "conversation-options-avatar" to be present
+'conversation-options-avatar' has been found
+Waiting for "id" and "block-user-menu-option" to be present
+'block-user-menu-option' has been found
+Waiting for "id" and "Modal heading" to be present
+'Modal heading' has been found
+Modal heading is correct
+Waiting for "id" and "Modal description" to be present
+'Modal description' has been found
+Modal description is correct
+Waiting for "id" and "Block" to be present
+'Block' has been found
+Waiting for "id" and "Navigate back" to be present
+'Navigate back' has been found
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+'blocked-banner' has been found
+Bob has been blocked
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Couldn't find "Blocked message from Bob to Alice" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message from Bob to Alice" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message from Bob to Alice" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message from Bob to Alice" with matching accessibility id: Message body
+Message body doesn't exist, time expired
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
+Waiting for "accessibility id" and "blocked-banner" to be present
+waitForTextElementToBePresent threw: "accessibility id": "blocked-banner
