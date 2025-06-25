@@ -142,6 +142,7 @@ jobs:
           adb start-server;
 
       - name: Start emulators from snapshot
+        shell: bash
         run: |
           source ./scripts/ci.sh
           start_with_snapshots

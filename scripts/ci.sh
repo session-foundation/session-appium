@@ -96,4 +96,25 @@ function start_with_snapshots() {
         DISPLAY=:0 emulator @emulator$i -gpu host -accel on -no-snapshot-save -snapshot plop.snapshot  -force-snapshot-load &
         sleep 5
     done
+    
+    echo "Waiting for emulators to finish booting..."
+
+    for port in 5554 5556 5558 5560; do
+        echo "Waiting on emulator-$port..."
+        for i in {1..60}; do
+        booted=$(adb -s emulator-$port shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
+        if [ "$booted" == "1" ]; then
+            echo "emulator-$port booted."
+            break
+        fi
+        sleep 2
+        done
+
+        booted=$(adb -s emulator-$port shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
+        if [ "$booted" != "1" ]; then
+        echo "ERROR: emulator-$port failed to boot within timeout."
+        adb devices
+        exit 1
+        fi
+    done
 }
