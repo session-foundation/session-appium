@@ -61,10 +61,10 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
       )
     )
   );
-  // Leave conversation
+  // Leave conversation 
   await unknown1.navigateBack();
-  // Leave Message Requests screen
-  await unknown1.navigateBack();
+  // Leave Message Requests screen (Android)
+  await unknown1.onAndroid().navigateBack();
   await unknown1.selectByText('Conversation list item', group.groupName);
   // Check for control message on device 4
   await unknown1.waitForControlMessageToBePresent(englishStrippedStr('groupInviteYou').toString());
