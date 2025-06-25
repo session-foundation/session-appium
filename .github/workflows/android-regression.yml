@@ -146,6 +146,7 @@ jobs:
         run: |
           source ./scripts/ci.sh
           start_with_snapshots
+          wait_for_emulators
 
       - name: List tests part of this run
         uses: ./github/actions/list-tests

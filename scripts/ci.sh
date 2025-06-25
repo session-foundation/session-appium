@@ -103,42 +103,53 @@ function start_with_snapshots() {
     sleep 5
   done
 
-  echo "Waiting for emulators to become responsive..."
+function wait_for_emulators() {
+  echo "Waiting for emulators to boot and respond to adb..."
 
   for port in 5554 5556 5558 5560; do
-    echo "Waiting for emulator-$port to become ADB responsive..."
+    serial="emulator-$port"
 
-    # Wait for ADB to report 'device' instead of 'offline'
-    for i in {1..30}; do
-      state=$(adb -s emulator-$port get-state 2>/dev/null | tr -d '\r')
-      if [ "$state" == "device" ]; then
-        echo "emulator-$port is now ADB-ready."
+    echo "Waiting for $serial to appear in adb..."
+    for i in {1..60}; do
+      if adb devices | grep -q "$serial"; then
         break
       fi
       sleep 2
     done
 
-    # Optional: if still not 'device', exit early
-    state=$(adb -s emulator-$port get-state 2>/dev/null | tr -d '\r')
-    if [ "$state" != "device" ]; then
-      echo "ERROR: emulator-$port stuck in '$state' state after timeout."
+    if ! adb devices | grep -q "$serial"; then
+      echo "ERROR: $serial did not appear in adb within timeout."
       adb devices
       exit 1
     fi
 
-    echo "Waiting for emulator-$port to report boot completed..."
+    echo "$serial appeared. Waiting for adb to report 'device' state..."
     for i in {1..60}; do
-      booted=$(adb -s emulator-$port shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
-      if [ "$booted" == "1" ]; then
-        echo "emulator-$port booted."
+      state=$(adb -s "$serial" get-state 2>/dev/null | tr -d '\r')
+      if [ "$state" == "device" ]; then
         break
       fi
       sleep 2
     done
 
-    booted=$(adb -s emulator-$port shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
+    if [ "$state" != "device" ]; then
+      echo "ERROR: $serial is in '$state' state after timeout."
+      adb devices
+      exit 1
+    fi
+
+    echo "$serial is now adb-accessible. Waiting for system boot..."
+    for i in {1..60}; do
+      booted=$(adb -s "$serial" shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
+      if [ "$booted" == "1" ]; then
+        echo "$serial boot completed."
+        break
+      fi
+      sleep 2
+    done
+
     if [ "$booted" != "1" ]; then
-      echo "ERROR: emulator-$port failed to boot in time."
+      echo "ERROR: $serial failed to complete boot."
       adb devices
       exit 1
     fi
