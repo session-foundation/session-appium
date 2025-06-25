@@ -13,7 +13,6 @@ export interface ReportContext {
   runAttempt: number;
   reportFolder: string;
   reportUrl: string;
-  repoSlug: string;
   githubRunUrl: string;
 }
 
@@ -27,10 +26,9 @@ export function getReportContextFromEnv(): ReportContext {
   const risk = process.env.RISK?.trim() || 'full';
   const runNumber = Number(process.env.GITHUB_RUN_NUMBER);
   const runAttempt = Number(process.env.GITHUB_RUN_ATTEMPT);
-  const repoSlug = process.env.GITHUB_REPOSITORY!;
   const reportFolder = `run-${runNumber}.${runAttempt}-${platform}-${build}-${risk}`;
   const reportUrl = `https://session-foundation.github.io/session-appium/${platform}/${reportFolder}/`;
-  const githubRunUrl = `https://github.com/${repoSlug}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+  const githubRunUrl = `https://github.com/session-foundation/session-appium/actions/runs/${process.env.GITHUB_RUN_ID}`;
 
   return {
     platform,
@@ -41,33 +39,33 @@ export function getReportContextFromEnv(): ReportContext {
     runAttempt,
     reportFolder,
     reportUrl,
-    repoSlug,
     githubRunUrl,
   };
 }
-// The Environment block shows up in the main report dashboard
+// The Environment block shows up in the report dashboard
 export async function writeEnvironmentProperties(ctx: ReportContext) {
   await fs.ensureDir(allureResultsDir);
   const content = [
     `platform=${ctx.platform}`,
     `build=${ctx.build}`,
     `artifact=${ctx.artifact}`,
-    `appium=https://github.com/${ctx.repoSlug}/commit/${getGitCommitSha()}`,
+    `appium=https://github.com/session-foundation/session-appium/commit/${getGitCommitSha()}`,
     `branch=${getGitBranch()}`,
   ].join('\n');
 
   await fs.writeFile(path.join(allureResultsDir, 'environment.properties'), content);
   console.log('Created environment.properties');
 }
-// The Executors block shows up in the main report and links back to the CI run
+// The Executors block shows up in the report dashboard and links back to the CI run
+// It also allows us to access history through trend graphs and test results
 export async function writeExecutorJson(ctx: ReportContext) {
-  const buildOrder = ctx.runAttempt > 1 ? `${ctx.runNumber}.${ctx.runAttempt}` : `${ctx.runNumber}`;
+  const buildOrder = ctx.runAttempt > 1 ? `${ctx.runNumber}.${ctx.runAttempt}` : `${ctx.runNumber}`; 
   const executor = {
     name: 'GitHub Actions',
     type: 'github',
     url: ctx.githubRunUrl,
     buildOrder: buildOrder,
-    buildName: `GitHub Actions Run ${buildOrder} (${ctx.platform} ${ctx.build})`,
+    buildName: `GitHub Actions Run ${ctx.githubRunUrl}`,
     buildUrl: ctx.githubRunUrl,
     reportUrl: ctx.reportUrl,
   };
