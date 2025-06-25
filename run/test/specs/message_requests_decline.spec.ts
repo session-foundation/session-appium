@@ -38,11 +38,20 @@ async function declineRequest(platform: SupportedPlatformsType) {
   await device2.clickOnElementAll(new DeclineMessageRequestButton(device2));
   // Are you sure you want to delete message request only for ios
   await sleepFor(3000);
-  await device2.checkModalStrings(
-    englishStrippedStr('delete').toString(),
-    englishStrippedStr('messageRequestsContactDelete').toString(),
-    false
-  );
+  // TODO remove onIOS/onAndroid once SES-3846 has been completed
+  await device2
+    .onIOS()
+    .checkModalStrings(
+      englishStrippedStr('delete').toString(),
+      englishStrippedStr('messageRequestsDelete').toString()
+    );
+  await device2
+    .onAndroid()
+    .checkModalStrings(
+      englishStrippedStr('delete').toString(),
+      englishStrippedStr('messageRequestsContactDelete').toString(),
+      false
+    );
   await device2.clickOnElementAll(new DeleteMesssageRequestConfirmation(device2));
   // "messageRequestsNonePending": "No pending message requests",
   const messageRequestsNonePending = englishStrippedStr('messageRequestsNonePending').toString();

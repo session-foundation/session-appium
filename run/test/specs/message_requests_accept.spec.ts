@@ -41,7 +41,7 @@ async function acceptRequest(platform: SupportedPlatformsType) {
   ]);
   // Check conversation list for new contact (user A)
   await device2.navigateBack();
-  await device2.navigateBack(false);
+  await device2.onAndroid().navigateBack(false);
   await Promise.all([
     device2.waitForTextElementToBePresent({
       strategy: 'accessibility id',
