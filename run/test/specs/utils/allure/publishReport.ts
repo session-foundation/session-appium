@@ -36,6 +36,7 @@ function publishToGhPages(dir: string, dest: string, repo: string, message: stri
     );
   });
 }
+
 async function publishReport() {
   // Define and create metadata.json for the front-end to fetch data from
   const platform = process.env.PLATFORM as SupportedPlatformsType;
@@ -60,6 +61,24 @@ async function publishReport() {
   // Compose the published report directory name
   const publishedReportName = `run-${runNumber}.${runAttempt}-${platform}-${build}-${risk}`;
   const newReportDir = path.join(platform, publishedReportName);
+
+  // --- Inject custom CSS before copying the report ---
+  const stylesPath = path.join(allureCurrentReportDir, 'styles.css');
+  const customCss = `
+
+  /* Custom overrides */
+  .attachment__media,
+  .screen-diff__image {
+    max-height: 90vh;
+  }
+  `;
+
+  try {
+    await fs.appendFile(stylesPath, customCss);
+    console.log('Custom CSS injected into styles.css');
+  } catch (err) {
+    console.error(`Failed to patch styles.css: ${(err as Error).message}`);
+  }
 
   // Copy the current report to newReportDir for publishing
   // By doing so, the gh-pages branch hosts /android and /ios subpages with the respective reports
