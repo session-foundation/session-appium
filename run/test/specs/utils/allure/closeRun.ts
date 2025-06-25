@@ -1,8 +1,7 @@
 import fs from 'fs-extra';
-import path from 'path';
 import { exec } from 'child_process';
 import { allureCurrentReportDir, allureResultsDir } from '../../../../constants/allure';
-import { SupportedPlatformsType } from '../open_app';
+import { getReportContextFromEnv, writeEnvironmentProperties, writeExecutorJson } from './allureHelpers';
 
 // Bail out early if not on CI
 if (process.env.CI !== '1' || process.env.ALLURE_ENABLED === 'false') {
@@ -10,18 +9,18 @@ if (process.env.CI !== '1' || process.env.ALLURE_ENABLED === 'false') {
   process.exit(0);
 }
 
-// Create environment.properties file with platform and build info
-async function createEnvProperties(
-  platform: SupportedPlatformsType,
-  build: string,
-  artifact: string
-) {
-  await fs.ensureDir(allureResultsDir);
-  const envPropertiesFile = path.join(allureResultsDir, 'environment.properties');
-  const content = `platform=${platform}\nbuild=${build}\nartifact=${artifact}`;
-  await fs.writeFile(envPropertiesFile, content);
-  console.log(`Created environment.properties:\n${content}`);
-}
+// // Create environment.properties file with platform and build info
+// async function createEnvProperties(
+//   platform: SupportedPlatformsType,
+//   build: string,
+//   artifact: string
+// ) {
+//   await fs.ensureDir(allureResultsDir);
+//   const envPropertiesFile = path.join(allureResultsDir, 'environment.properties');
+//   const content = `platform=${platform}\nbuild=${build}\nartifact=${artifact}`;
+//   await fs.writeFile(envPropertiesFile, content);
+//   console.log(`Created environment.properties:\n${content}`);
+// }
 
 // Generate Allure report from the results directory
 async function generateAllureReport() {
@@ -36,15 +35,14 @@ async function generateAllureReport() {
   });
 }
 
-// Close test run: handle histories, generate report, and clean up
+// Close test run: manipulate custom files, generate report
 async function closeRun() {
-  // Read platform & build info from env
-  const platform = process.env.PLATFORM as SupportedPlatformsType;
-  const build = process.env.BUILD_NUMBER!;
-  const artifact = process.env.APK_URL!;
+  // Gather and write metadata files
+  const ctx = getReportContextFromEnv();
+  await writeEnvironmentProperties(ctx);
+  await writeExecutorJson(ctx);
 
-  await createEnvProperties(platform, build, artifact);
-
+  // Generate report
   await generateAllureReport();
 
   // Clear allure-results directory for next run
