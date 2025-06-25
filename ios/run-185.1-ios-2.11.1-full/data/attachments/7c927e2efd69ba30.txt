@@ -1,0 +1,403 @@
+
+
+==========> Running "Block user in conversation options @ios @high-risk @2-devices"
+
+
+starting capabilitiesIndex 0 ios
+openiOSApp
+starting capabilitiesIndex 1 ios
+openiOSApp
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"0585496f4d8e5e66a0d7cf6143ccac20d067ecf494afa9ef84b67ab86856e23c2f","seedPhrase":"nucleus pairing nail technical hobby zombie obedient token dabbing juicy vegan usher vegan"},
+SessionUser: {"name":"Bob","sessionId":"0501f3d92f9c11794c9c99a90fce8fdb7dd7b938d0b0771a8e28dc3588c6e73638","seedPhrase":"empty badge anvil jagged igloo aglow fungal dwelt banjo sash stockpile orange badge"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"0585496f4d8e5e66a0d7cf6143ccac20d067ecf494afa9ef84b67ab86856e23c2f","seedPhrase":"nucleus pairing nail technical hobby zombie obedient token dabbing juicy vegan usher vegan"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"0585496f4d8e5e66a0d7cf6143ccac20d067ecf494afa9ef84b67ab86856e23c2f","seedPhrase":"nucleus pairing nail technical hobby zombie obedient token dabbing juicy vegan usher vegan"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"0501f3d92f9c11794c9c99a90fce8fdb7dd7b938d0b0771a8e28dc3588c6e73638","seedPhrase":"empty badge anvil jagged igloo aglow fungal dwelt banjo sash stockpile orange badge"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"0501f3d92f9c11794c9c99a90fce8fdb7dd7b938d0b0771a8e28dc3588c6e73638","seedPhrase":"empty badge anvil jagged igloo aglow fungal dwelt banjo sash stockpile orange badge"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"0585496f4d8e5e66a0d7cf6143ccac20d067ecf494afa9ef84b67ab86856e23c2f","seedPhrase":"nucleus pairing nail technical hobby zombie obedient token dabbing juicy vegan usher vegan"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"0501f3d92f9c11794c9c99a90fce8fdb7dd7b938d0b0771a8e28dc3588c6e73638","seedPhrase":"empty badge anvil jagged igloo aglow fungal dwelt banjo sash stockpile orange badge"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 2993195,
+    [Symbol(trigger_async_id_symbol)]: 2992896,
+    [Symbol(kResourceStore)]: undefined
+  }
+]
+random snode for user: 0501f3d92f9c11794c9c99a90fce8fdb7dd7b938d0b0771a8e28dc3588c6e73638 is snode: 0a479a2b22bb76c6e492df2489ee76b2f3908b0c9d46ceadfc1bbf72fffdd9b1
+storing to snode https://104.243.41.194:22111/storage_rpc/v1
+storing to snode https://104.243.41.194:22111/storage_rpc/v1
+storing to snode https://104.243.41.194:22111/storage_rpc/v1
+random snode for user: 0585496f4d8e5e66a0d7cf6143ccac20d067ecf494afa9ef84b67ab86856e23c2f is snode: e1ba2c7879efb3c4f23ac2c090545f07010a67a1aadfa43fed89a97a4d317729
+storing to snode https://158.69.201.96:22021/storage_rpc/v1
+storing to snode https://158.69.201.96:22021/storage_rpc/v1
+storing to snode https://158.69.201.96:22021/storage_rpc/v1
+storeStatus for Bob: [ 200, 200, 200 ]
+storeStatus for Alice: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "nucleus pairing nail technical hobby zombie obedient token dabbing juicy vegan usher vegan"
+	"Bob": "empty badge anvil jagged igloo aglow fungal dwelt banjo sash stockpile orange badge" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+running  xcrun simctl privacy 4A75A0E1-9EDE-4169-93C3-DCE0F0C7664F reset all undefined
+was run:  xcrun simctl privacy 4A75A0E1-9EDE-4169-93C3-DCE0F0C7664F reset all undefined { stdout: '', stderr: '' }
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+running  xcrun simctl privacy ACB6A587-8556-4EA0-87CF-4326A9A22051 reset all undefined
+was run:  xcrun simctl privacy ACB6A587-8556-4EA0-87CF-4326A9A22051 reset all undefined { stdout: '', stderr: '' }
+Waiting for "accessibility id" and "Restore your session button" to be present
+Waiting for "accessibility id" and "Restore your session button" to be present
+'Restore your session button' has been found
+'Restore your session button' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+Waiting for "accessibility id" and "Recovery password input" to be present
+Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+Waiting for "accessibility id" and "Recovery password input" to be present
+'Recovery password input' has been found
+'Recovery password input' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Loading animation not found
+Loading animation has finished
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow doesn't exist, time expired
+doesElementExist failed with accessibility id Allow
+Allow doesn't exist, time expired
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+'New conversation button' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Text found to include Bob
+'Conversation list item' and 'Bob' has been found
+Text found to include Alice
+'Conversation list item' and 'Alice' has been found
+Waiting for "accessibility id" and "More options" to be present
+'More options' has been found
+Waiting for "accessibility id" and "Block" to be present
+'Block' has been found
+Waiting for "accessibility id" and "Modal heading" to be present
+'Modal heading' has been found
+Modal heading is correct
+Waiting for "accessibility id" and "Modal description" to be present
+'Modal description' has been found
+Modal description is correct
+Waiting for "accessibility id" and "Block" to be present
+'Block' has been found
+Waiting for "accessibility id" and "Back" to be present
+'Back' has been found
+Waiting for "accessibility id" and "Blocked banner" to be present
+'Blocked banner' has been found
+Bob has been blocked
+Waiting for "accessibility id" and "Back" to be present
+'Back' has been found
+Waiting for "accessibility id" and "User settings" to be present
+'User settings' has been found
+Waiting for "accessibility id" and "Conversations" to be present
+'Conversations' has been found
+Waiting for "accessibility id" and "Blocked Contacts" to be present
+'Blocked Contacts' has been found
+Waiting for "accessibility id" and "Contact" to be present with "Bob"
+Text found to include Bob
+'Contact' and 'Bob' has been found
+Waiting for "accessibility id" and "Back" to be present
+'Back' has been found
+Waiting for "accessibility id" and "Back" to be present
+'Back' has been found
+Waiting for "accessibility id" and "Close button" to be present
+'Close button' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body Doesn't exist but retrying
+Couldn't find "Blocked message" with matching accessibility id: Message body
+Message body doesn't exist, time expired
+sessions closed
