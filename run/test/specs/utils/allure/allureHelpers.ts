@@ -52,7 +52,8 @@ export async function writeEnvironmentProperties(ctx: ReportContext) {
     `platform=${ctx.platform}`,
     `build=${ctx.build}`,
     `artifact=${ctx.artifact}`,
-    `appiumRepo=https://github.com/${ctx.repoSlug}/commit/${getGitCommitSha()} (${getGitBranch()})`,
+    `appium=https://github.com/${ctx.repoSlug}/commit/${getGitCommitSha()}`,
+    `branch=${getGitBranch()}`,
   ].join('\n');
 
   await fs.writeFile(path.join(allureResultsDir, 'environment.properties'), content);

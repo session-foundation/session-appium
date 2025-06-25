@@ -1,7 +1,11 @@
 import fs from 'fs-extra';
 import { exec } from 'child_process';
 import { allureCurrentReportDir, allureResultsDir } from '../../../../constants/allure';
-import { getReportContextFromEnv, writeEnvironmentProperties, writeExecutorJson } from './allureHelpers';
+import {
+  getReportContextFromEnv,
+  writeEnvironmentProperties,
+  writeExecutorJson,
+} from './allureHelpers';
 
 // Bail out early if not on CI
 if (process.env.CI !== '1' || process.env.ALLURE_ENABLED === 'false') {

@@ -28,6 +28,7 @@ runs:
         BUILD_NUMBER: ${{ inputs.BUILD_NUMBER }}
         GH_TOKEN: ${{ inputs.GH_TOKEN }}
         APK_URL: ${{inputs.APK_URL}}
+        RISK: ${{inputs.RISK}}
 
     - name: Publish report to GitHub Pages
       if: ${{ success() }}

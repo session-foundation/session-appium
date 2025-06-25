@@ -40,25 +40,6 @@ function publishToGhPages(dir: string, dest: string, repo: string, message: stri
 async function publishReport() {
   const ctx = getReportContextFromEnv();
   await writeMetadataJson(ctx);
-  // // Define and create metadata.json for the front-end to fetch data from
-  // const platform = process.env.PLATFORM as SupportedPlatformsType;
-  // const build = process.env.BUILD_NUMBER!;
-  // const runNumber = Number(process.env.GITHUB_RUN_NUMBER);
-  // const runAttempt = Number(process.env.GITHUB_RUN_ATTEMPT);
-  // const risk = process.env.RISK?.trim() || 'full';
-
-  // const metadata = {
-  //   platform,
-  //   build,
-  //   risk,
-  //   runNumber,
-  //   runAttempt,
-  // };
-
-  // fs.writeFileSync(
-  //   path.join(allureCurrentReportDir, 'metadata.json'),
-  //   JSON.stringify(metadata, null, 2)
-  // );
 
   // Compose the published report directory name
   const publishedReportName = ctx.reportFolder;
