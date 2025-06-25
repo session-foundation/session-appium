@@ -62,7 +62,7 @@ async function publishReport() {
   const publishedReportName = `run-${runNumber}.${runAttempt}-${platform}-${build}-${risk}`;
   const newReportDir = path.join(platform, publishedReportName);
 
-  // --- Inject custom CSS before copying the report ---
+  // Inject custom CSS before copying the report
   const stylesPath = path.join(allureCurrentReportDir, 'styles.css');
   const customCss = `
 
