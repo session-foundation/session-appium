@@ -141,11 +141,10 @@ jobs:
           adb kill-server;
           adb start-server;
 
-      - name: Start emulators (clean boot)
+      - name: Start emulators from snapshot
         run: |
           source ./scripts/ci.sh
-          start_without_snapshots
-          wait_for_emulators
+          start_with_snapshots
 
       - name: List tests part of this run
         uses: ./github/actions/list-tests

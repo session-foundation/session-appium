@@ -97,30 +97,3 @@ function start_with_snapshots() {
         sleep 5
     done
 }
-
-function start_without_snapshots() {
-    for i in {1..4}
-    do
-        DISPLAY=:0 emulator @emulator$i \
-          -gpu host \
-          -no-snapshot \
-          -wipe-data \
-          -accel on &
-        sleep 20
-    done
-}
-
-function wait_for_emulators() {
-    for port in 5554 5556 5558 5560
-    do
-        for i in {1..60}; do
-            if adb -s emulator-$port shell getprop sys.boot_completed 2>/dev/null | grep -q "1"; then
-                echo "emulator-$port booted"
-                break
-            else
-                echo "Waiting for emulator-$port to boot..."
-                sleep 5
-            fi
-        done
-    done
-}
