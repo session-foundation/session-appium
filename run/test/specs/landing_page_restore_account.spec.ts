@@ -18,6 +18,11 @@ async function landingPageRestoreAccount(platform: SupportedPlatformsType, testI
   const { device1: alice1, device2: alice2 } = await openAppTwoDevices(platform);
   await linkedDevice(alice1, alice2, USERNAME.ALICE);
   // Verify that the Session logo is shown on the landing page
-  await verifyElementScreenshot(alice2, new EmptyLandingPageScreenshot(alice2), testInfo, 'restore_account');
+  await verifyElementScreenshot(
+    alice2,
+    new EmptyLandingPageScreenshot(alice2),
+    testInfo,
+    'restore_account'
+  );
   await closeApp(alice1, alice2);
 }
