@@ -1,0 +1,25 @@
+
+
+==========> Running "Onboarding no name @ios @low-risk @1-devices"
+
+
+starting capabilitiesIndex 0 ios
+openiOSApp
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+running  xcrun simctl privacy 4A75A0E1-9EDE-4169-93C3-DCE0F0C7664F reset all undefined
+was run:  xcrun simctl privacy 4A75A0E1-9EDE-4169-93C3-DCE0F0C7664F reset all undefined { stdout: '', stderr: '' }
+Waiting for "accessibility id" and "Create account button" to be present
+'Create account button' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Enter display name' }
+Waiting for "accessibility id" and "Enter display name" to be present
+'Enter display name' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Error message" to be present
+'Error message' has been found
+sessions closed
