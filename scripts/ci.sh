@@ -105,54 +105,16 @@ function start_with_snapshots() {
 } 
 
 function wait_for_emulators() {
-  echo "Waiting for emulators to boot and respond to adb..."
-
-  for port in 5554 5556 5558 5560; do
-    serial="emulator-$port"
-
-    echo "Waiting for $serial to appear in adb..."
-    for i in {1..60}; do
-      if adb devices | grep -q "$serial"; then
-        break
-      fi
-      sleep 2
+    for port in 5554 5556 5558 5560
+    do
+        for i in {1..60}; do
+            if adb -s emulator-$port shell getprop sys.boot_completed 2>/dev/null | grep -q "1"; then
+                echo "emulator-$port booted"
+                break
+            else
+                echo "Waiting for emulator-$port to boot..."
+                sleep 5
+            fi
+        done
     done
-
-    if ! adb devices | grep -q "$serial"; then
-      echo "ERROR: $serial did not appear in adb within timeout."
-      adb devices
-      exit 1
-    fi
-
-    echo "$serial appeared. Waiting for adb to report 'device' state..."
-    for i in {1..60}; do
-      state=$(adb -s "$serial" get-state 2>/dev/null | tr -d '\r')
-      if [ "$state" == "device" ]; then
-        break
-      fi
-      sleep 2
-    done
-
-    if [ "$state" != "device" ]; then
-      echo "ERROR: $serial is in '$state' state after timeout."
-      adb devices
-      exit 1
-    fi
-
-    echo "$serial is now adb-accessible. Waiting for system boot..."
-    for i in {1..60}; do
-      booted=$(adb -s "$serial" shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
-      if [ "$booted" == "1" ]; then
-        echo "$serial boot completed."
-        break
-      fi
-      sleep 2
-    done
-
-    if [ "$booted" != "1" ]; then
-      echo "ERROR: $serial failed to complete boot."
-      adb devices
-      exit 1
-    fi
-  done
 }
