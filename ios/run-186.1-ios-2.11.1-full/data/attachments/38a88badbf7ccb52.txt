@@ -1,0 +1,88 @@
+
+
+==========> Running "Change profile picture @ios @medium-risk @1-devices"
+
+
+starting capabilitiesIndex 0 ios
+openiOSApp
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+running  xcrun simctl privacy 84884861-F8EF-4481-A001-B403F2649FCF reset all undefined
+was run:  xcrun simctl privacy 84884861-F8EF-4481-A001-B403F2649FCF reset all undefined { stdout: '', stderr: '' }
+Waiting for "accessibility id" and "Create account button" to be present
+'Create account button' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Enter display name' }
+Waiting for "accessibility id" and "Enter display name" to be present
+'Enter display name' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Sleeping for 5000 milliseconds
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow doesn't exist, time expired
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Recovery password container" to be present
+'Recovery password container' has been found
+Alices recovery phrase is "ought apex afraid saxophone devoid avidly ability unknown biology unquoted runway bulb unknown"
+Waiting for "accessibility id" and "Back" to be present
+'Back' has been found
+Waiting for "accessibility id" and "User settings" to be present
+'User settings' has been found
+Waiting for "accessibility id" and "Account ID" to be present
+'Account ID' has been found
+Waiting for "accessibility id" and "Close button" to be present
+'Close button' has been found
+Waiting for "accessibility id" and "User settings" to be present
+'User settings' has been found
+Waiting for "accessibility id" and "User settings" to be present
+'User settings' has been found
+Waiting for "accessibility id" and "Upload" to be present
+'Upload' has been found
+running  xcrun simctl addmedia 84884861-F8EF-4481-A001-B403F2649FCF run/test/specs/media/profile_picture.jpg
+was run:  xcrun simctl addmedia 84884861-F8EF-4481-A001-B403F2649FCF run/test/specs/media/profile_picture.jpg { stdout: '', stderr: '' }
+iosPermissions {
+  ELEMENT: '4B040000-0000-0000-E027-010000000000',
+  'element-6066-11e4-a52e-4f735466cecf': '4B040000-0000-0000-E027-010000000000'
+}
+Waiting for "accessibility id" and "Allow Full Access" to be present
+'Allow Full Access' has been found
+Sleeping for 5000 milliseconds
+[matchAndTapImage] Found 22 elements for xpath "//XCUIElementTypeImage"
+[matchAndTapImage] Processing element 1/22
+[matchAndTapImage] Processing element 2/22
+[matchAndTapImage] Processing element 3/22
+[matchAndTapImage] Processing element 4/22
+[matchAndTapImage] Processing element 5/22
+[matchAndTapImage] Match score for element 5: 0.9968
+[matchAndTapImage] Tapping first match with 99.68% confidence
+Tapped coordinates 72, 254
+Waiting for "accessibility id" and "Done" to be present
+'Done' has been found
+Waiting for "accessibility id" and "Save" to be present
+'Save' has been found
+Sleeping for 4000 milliseconds
+Waiting for "accessibility id" and "User settings" to be present
+'User settings' has been found
+RGB Value of pixel is: 04cbfe
+Colour is correct
+sessions closed

@@ -1,0 +1,458 @@
+
+
+==========> Running "Disappear after read @ios @high-risk @2-devices"
+
+
+starting capabilitiesIndex 0 ios
+openiOSApp
+starting capabilitiesIndex 1 ios
+openiOSApp
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"05da213783565b44fafb9b43d5f2c1f60e095f31d30ea5530fee8fc7f40931ca7f","seedPhrase":"fuselage eclipse bifocals tumbling erosion unjustly sanity deodorant fight reheat around girth girth"},
+SessionUser: {"name":"Bob","sessionId":"05912e120273cbc607db5cae1370862c7fefffb36443b4789acdf002feab91633e","seedPhrase":"unzip toolbox hunter hire benches getting violin tuition tweezers cuffs ruthless inbound unzip"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"05da213783565b44fafb9b43d5f2c1f60e095f31d30ea5530fee8fc7f40931ca7f","seedPhrase":"fuselage eclipse bifocals tumbling erosion unjustly sanity deodorant fight reheat around girth girth"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05da213783565b44fafb9b43d5f2c1f60e095f31d30ea5530fee8fc7f40931ca7f","seedPhrase":"fuselage eclipse bifocals tumbling erosion unjustly sanity deodorant fight reheat around girth girth"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"05912e120273cbc607db5cae1370862c7fefffb36443b4789acdf002feab91633e","seedPhrase":"unzip toolbox hunter hire benches getting violin tuition tweezers cuffs ruthless inbound unzip"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"05912e120273cbc607db5cae1370862c7fefffb36443b4789acdf002feab91633e","seedPhrase":"unzip toolbox hunter hire benches getting violin tuition tweezers cuffs ruthless inbound unzip"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05da213783565b44fafb9b43d5f2c1f60e095f31d30ea5530fee8fc7f40931ca7f","seedPhrase":"fuselage eclipse bifocals tumbling erosion unjustly sanity deodorant fight reheat around girth girth"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"05912e120273cbc607db5cae1370862c7fefffb36443b4789acdf002feab91633e","seedPhrase":"unzip toolbox hunter hire benches getting violin tuition tweezers cuffs ruthless inbound unzip"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [ Promise { <pending> } ]
+random snode for user: 05da213783565b44fafb9b43d5f2c1f60e095f31d30ea5530fee8fc7f40931ca7f is snode: f32f12cc9f9e19d4faab517bf54cbdb2b30c1d55dc906309fd32f41619151b88
+storing to snode https://91.200.101.151:22102/storage_rpc/v1
+storing to snode https://91.200.101.151:22102/storage_rpc/v1
+storing to snode https://91.200.101.151:22102/storage_rpc/v1
+random snode for user: 05912e120273cbc607db5cae1370862c7fefffb36443b4789acdf002feab91633e is snode: db9ad0f417a0b79e2dd2923be8cc5289a3d552bdc5f7bad51574d98d7e584e5a
+storing to snode https://65.21.244.24:22021/storage_rpc/v1
+storing to snode https://65.21.244.24:22021/storage_rpc/v1
+storing to snode https://65.21.244.24:22021/storage_rpc/v1
+storeStatus for Alice: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "fuselage eclipse bifocals tumbling erosion unjustly sanity deodorant fight reheat around girth girth"
+	"Bob": "unzip toolbox hunter hire benches getting violin tuition tweezers cuffs ruthless inbound unzip" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+running  xcrun simctl privacy ACB6A587-8556-4EA0-87CF-4326A9A22051 reset all undefined
+was run:  xcrun simctl privacy ACB6A587-8556-4EA0-87CF-4326A9A22051 reset all undefined { stdout: '', stderr: '' }
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+running  xcrun simctl privacy 4A75A0E1-9EDE-4169-93C3-DCE0F0C7664F reset all undefined
+was run:  xcrun simctl privacy 4A75A0E1-9EDE-4169-93C3-DCE0F0C7664F reset all undefined { stdout: '', stderr: '' }
+Waiting for "accessibility id" and "Restore your session button" to be present
+Waiting for "accessibility id" and "Restore your session button" to be present
+'Restore your session button' has been found
+'Restore your session button' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+Waiting for "accessibility id" and "Recovery password input" to be present
+Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+Waiting for "accessibility id" and "Recovery password input" to be present
+'Recovery password input' has been found
+'Recovery password input' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+'Loading animation' has been found
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow doesn't exist, time expired
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow doesn't exist, time expired
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Text found to include Alice
+'Conversation list item' and 'Alice' has been found
+Text found to include Bob
+'Conversation list item' and 'Bob' has been found
+Waiting for "accessibility id" and "More options" to be present
+waitForTextElementToBePresent threw: "accessibility id": "More options
+Waiting for "accessibility id" and "More options" to be present
+waitForTextElementToBePresent threw: "accessibility id": "More options
+Waiting for "accessibility id" and "More options" to be present
+waitForTextElementToBePresent threw: "accessibility id": "More options
+Waiting for "accessibility id" and "More options" to be present
+'More options' has been found
+Waiting for "accessibility id" and "Disappearing Messages" to be present
+'Disappearing Messages' has been found
+Waiting for "accessibility id" and "Disappear after read option" to be present
+'Disappear after read option' has been found
+Waiting for "accessibility id" and "12 hours - Radio" to be present
+'12 hours - Radio' has been found
+Great success - default time is correct
+Waiting for "accessibility id" and "30 seconds - Radio" to be present
+'30 seconds - Radio' has been found
+Waiting for "accessibility id" and "Set button" to be present
+'Set button' has been found
+Waiting for "accessibility id" and "Back" to be present
+'Back' has been found
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+Waiting for "accessibility id" and "Follow setting" to be present
+'Follow setting' has been found
+Waiting for "accessibility id" and "Set" to be present
+'Set' has been found
+Waiting for "accessibility id" and "Disappearing messages type and time" to be present
+'Disappearing messages type and time' has been found
+Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+Waiting for control message to be present with Alice has set messages to disappear 30 seconds after they have been read.
+Text found to include You set messages to disappear 30 seconds after they have been read.
+Control message You set messages to disappear 30 seconds after they have been read. has been found
+Text found to include Alice has set messages to disappear 30 seconds after they have been read.
+Control message Alice has set messages to disappear 30 seconds after they have been read. has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Sleeping for 30000 milliseconds
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text found to include Checking disappear after read is working
+'Message body' and 'Checking disappear after read is working' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been found, waiting for deletion
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been deleted, great success
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after read is working"
+Text element has been deleted, great success
+sessions closed
