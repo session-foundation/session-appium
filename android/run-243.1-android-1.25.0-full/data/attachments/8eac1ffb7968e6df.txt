@@ -1,0 +1,434 @@
+
+
+==========> Running "Send community invitation @android @medium-risk @2-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5556 true
+emulatorAlreadyRunning emulator-5554 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"059443497cc7a6059d83481cc327988421e26aa9fd20f7beb181cfb743cfb7db01","seedPhrase":"kiwi hounded envy oaks mews wobbly apology emails pride onslaught faked cake emails"},
+SessionUser: {"name":"Bob","sessionId":"0573f64aaa38758384a3ce230ba8746f65db9fd1cca264bb4241d02a0d8c514f43","seedPhrase":"ghost unquoted cuddled possible eavesdrop nimbly ointment mugged bumper oars rogue seismic rogue"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"059443497cc7a6059d83481cc327988421e26aa9fd20f7beb181cfb743cfb7db01","seedPhrase":"kiwi hounded envy oaks mews wobbly apology emails pride onslaught faked cake emails"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"059443497cc7a6059d83481cc327988421e26aa9fd20f7beb181cfb743cfb7db01","seedPhrase":"kiwi hounded envy oaks mews wobbly apology emails pride onslaught faked cake emails"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"0573f64aaa38758384a3ce230ba8746f65db9fd1cca264bb4241d02a0d8c514f43","seedPhrase":"ghost unquoted cuddled possible eavesdrop nimbly ointment mugged bumper oars rogue seismic rogue"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"0573f64aaa38758384a3ce230ba8746f65db9fd1cca264bb4241d02a0d8c514f43","seedPhrase":"ghost unquoted cuddled possible eavesdrop nimbly ointment mugged bumper oars rogue seismic rogue"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"059443497cc7a6059d83481cc327988421e26aa9fd20f7beb181cfb743cfb7db01","seedPhrase":"kiwi hounded envy oaks mews wobbly apology emails pride onslaught faked cake emails"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"0573f64aaa38758384a3ce230ba8746f65db9fd1cca264bb4241d02a0d8c514f43","seedPhrase":"ghost unquoted cuddled possible eavesdrop nimbly ointment mugged bumper oars rogue seismic rogue"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [ Promise { <pending> } ]
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+random snode for user: 059443497cc7a6059d83481cc327988421e26aa9fd20f7beb181cfb743cfb7db01 is snode: e0f259d5620e7c6d16bcbe470d53f8e900c06eb5c00ab021c6f0e8d3028ef7d6
+storing to snode https://77.74.199.82:22021/storage_rpc/v1
+storing to snode https://77.74.199.82:22021/storage_rpc/v1
+storing to snode https://77.74.199.82:22021/storage_rpc/v1
+random snode for user: 0573f64aaa38758384a3ce230ba8746f65db9fd1cca264bb4241d02a0d8c514f43 is snode: 4a61efbeec269326fe46568061528d1db184c128bbae0c3bb008c2bc1aa45eba
+storing to snode https://165.227.131.168:22021/storage_rpc/v1
+storing to snode https://165.227.131.168:22021/storage_rpc/v1
+storing to snode https://165.227.131.168:22021/storage_rpc/v1
+storeStatus for Alice: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "kiwi hounded envy oaks mews wobbly apology emails pride onslaught faked cake emails"
+	"Bob": "ghost unquoted cuddled possible eavesdrop nimbly ointment mugged bumper oars rogue seismic rogue" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Restore your session button" to be present
+'Restore your session button' has been found
+'Restore your session button' has been found
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+'Recovery phrase input' has been found
+'Recovery phrase input' has been found
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Slow mode notifications button" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+'Slow mode notifications button' has been found
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+'Continue' has been found
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+'New conversation button' has been found
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Text found to include Bob
+'Conversation list item' and 'Bob' has been found
+Text found to include Alice
+'Conversation list item' and 'Alice' has been found
+Waiting for "id" and "Navigate back" to be present
+'Navigate back' has been found
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "id" and "New direct message" to be present
+waitForTextElementToBePresent threw: "id": "New direct message
+Waiting for "id" and "New direct message" to be present
+'New direct message' has been found
+Locator being used: { strategy: 'id', selector: 'Session id input box' }
+Waiting for "id" and "Session id input box" to be present
+'Session id input box' has been found
+Waiting for "id" and "Next" to be present
+'Next' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message input box
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Waiting for "id" and "Navigate back" to be present
+'Navigate back' has been found
+Waiting for "accessibility id" and "New conversation button" to be present
+waitForTextElementToBePresent threw: "accessibility id": "New conversation button
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "id" and "Join community button" to be present
+waitForTextElementToBePresent threw: "id": "Join community button
+Waiting for "id" and "Join community button" to be present
+'Join community button' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Community input' }
+Waiting for "accessibility id" and "Community input" to be present
+'Community input' has been found
+Waiting for "accessibility id" and "Join community button" to be present
+'Join community button' has been found
+Waiting for "id" and "Conversation header name" to be present with "Testing All The Things!"
+Waiting for "id" and "Conversation header name" to be present with "Testing All The Things!"
+Waiting for "id" and "Conversation header name" to be present with "Testing All The Things!"
+Text found to include Testing All The Things!
+'Conversation header name' and 'Testing All The Things!' has been found
+Waiting for "id" and "conversation-options-avatar" to be present
+'conversation-options-avatar' has been found
+Waiting for "id" and "invite-contacts-menu-option" to be present
+'invite-contacts-menu-option' has been found
+Waiting for "id" and "Contact" to be present with "Bob"
+Text found to include Bob
+'Contact' and 'Bob' has been found
+Waiting for "id" and "invite-contacts-button" to be present
+'invite-contacts-button' has been found
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Text found to include Testing All The Things!
+'network.loki.messenger:id/openGroupTitleTextView' and 'Testing All The Things!' has been found
+Waiting for "id" and "network.loki.messenger:id/openGroupTitleTextView" to be present with "Testing All The Things!"
+Text found to include Testing All The Things!
+'network.loki.messenger:id/openGroupTitleTextView' and 'Testing All The Things!' has been found
+doesElementExist failed with accessibility id Modal heading
+Modal heading Doesn't exist but retrying
+Waiting for "accessibility id" and "Modal heading" to be present
+'Modal heading' has been found
+Modal heading is correct
+Waiting for "accessibility id" and "Modal description" to be present
+'Modal description' has been found
+Modal description is correct
+Waiting for "accessibility id" and "Join" to be present
+'Join' has been found
+Waiting for "id" and "Navigate back" to be present
+'Navigate back' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+Text found to include Testing All The Things!
+'Conversation list item' and 'Testing All The Things!' has been found
+sessions closed

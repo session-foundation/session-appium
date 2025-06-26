@@ -1,0 +1,1282 @@
+
+
+==========> Running "Block message request in conversation @android @high-risk @3-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+starting capabilitiesIndex 2 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 2
+emulatorAlreadyRunning emulator-5558 true
+emulatorAlreadyRunning emulator-5556 true
+emulatorAlreadyRunning emulator-5554 true
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+Waiting for "id" and "Create account button" to be present
+'Create account button' has been found
+Locator being used: { strategy: 'id', selector: 'Enter display name' }
+Waiting for "id" and "Enter display name" to be present
+'Enter display name' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Sleeping for 5000 milliseconds
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button
+Waiting for "id" and "Reveal recovery phrase button" to be present
+waitForTextElementToBePresent threw: "id": "Reveal recovery phrase button

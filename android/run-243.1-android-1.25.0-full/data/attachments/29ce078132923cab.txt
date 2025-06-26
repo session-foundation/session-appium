@@ -1,0 +1,1113 @@
+
+
+==========> Running "Send document to group @android @high-risk @3-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+starting capabilitiesIndex 2 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 2
+[buildStateForTest] stateToBuild:"3friendsInGroup". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5558 true
+emulatorAlreadyRunning emulator-5556 true
+emulatorAlreadyRunning emulator-5554 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"05f5a4e3d38347cc0c1a9f31ff78696c8a1fc055fd54bea97d533db30ead0e9777","seedPhrase":"pizza umbrella habitat alumni upstairs ozone mystery having agile butter opacity corrode pizza"},
+SessionUser: {"name":"Bob","sessionId":"0523eb2b260cf1e9b3a6e4a1bc95ebf2779d1550502eb266f0a7bf4e3664fe3d0c","seedPhrase":"king saxophone nouns dapper lush suddenly iceberg oars arrow river abyss soggy river"},
+SessionUser: {"name":"Charlie","sessionId":"053632250b67b898e4da88f05758df39a8510324314ca27510e37afb1798a1751c","seedPhrase":"geometry keep sipped howls smash obliged often ensign voucher shelter daily liquid smash"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"05f5a4e3d38347cc0c1a9f31ff78696c8a1fc055fd54bea97d533db30ead0e9777","seedPhrase":"pizza umbrella habitat alumni upstairs ozone mystery having agile butter opacity corrode pizza"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05f5a4e3d38347cc0c1a9f31ff78696c8a1fc055fd54bea97d533db30ead0e9777","seedPhrase":"pizza umbrella habitat alumni upstairs ozone mystery having agile butter opacity corrode pizza"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"0523eb2b260cf1e9b3a6e4a1bc95ebf2779d1550502eb266f0a7bf4e3664fe3d0c","seedPhrase":"king saxophone nouns dapper lush suddenly iceberg oars arrow river abyss soggy river"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05f5a4e3d38347cc0c1a9f31ff78696c8a1fc055fd54bea97d533db30ead0e9777","seedPhrase":"pizza umbrella habitat alumni upstairs ozone mystery having agile butter opacity corrode pizza"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Charlie","sessionId":"053632250b67b898e4da88f05758df39a8510324314ca27510e37afb1798a1751c","seedPhrase":"geometry keep sipped howls smash obliged often ensign voucher shelter daily liquid smash"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"0523eb2b260cf1e9b3a6e4a1bc95ebf2779d1550502eb266f0a7bf4e3664fe3d0c","seedPhrase":"king saxophone nouns dapper lush suddenly iceberg oars arrow river abyss soggy river"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05f5a4e3d38347cc0c1a9f31ff78696c8a1fc055fd54bea97d533db30ead0e9777","seedPhrase":"pizza umbrella habitat alumni upstairs ozone mystery having agile butter opacity corrode pizza"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"0523eb2b260cf1e9b3a6e4a1bc95ebf2779d1550502eb266f0a7bf4e3664fe3d0c","seedPhrase":"king saxophone nouns dapper lush suddenly iceberg oars arrow river abyss soggy river"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"0523eb2b260cf1e9b3a6e4a1bc95ebf2779d1550502eb266f0a7bf4e3664fe3d0c","seedPhrase":"king saxophone nouns dapper lush suddenly iceberg oars arrow river abyss soggy river"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Charlie","sessionId":"053632250b67b898e4da88f05758df39a8510324314ca27510e37afb1798a1751c","seedPhrase":"geometry keep sipped howls smash obliged often ensign voucher shelter daily liquid smash"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Charlie","sessionId":"053632250b67b898e4da88f05758df39a8510324314ca27510e37afb1798a1751c","seedPhrase":"geometry keep sipped howls smash obliged often ensign voucher shelter daily liquid smash"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05f5a4e3d38347cc0c1a9f31ff78696c8a1fc055fd54bea97d533db30ead0e9777","seedPhrase":"pizza umbrella habitat alumni upstairs ozone mystery having agile butter opacity corrode pizza"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Charlie","sessionId":"053632250b67b898e4da88f05758df39a8510324314ca27510e37afb1798a1751c","seedPhrase":"geometry keep sipped howls smash obliged often ensign voucher shelter daily liquid smash"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"0523eb2b260cf1e9b3a6e4a1bc95ebf2779d1550502eb266f0a7bf4e3664fe3d0c","seedPhrase":"king saxophone nouns dapper lush suddenly iceberg oars arrow river abyss soggy river"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Charlie","sessionId":"053632250b67b898e4da88f05758df39a8510324314ca27510e37afb1798a1751c","seedPhrase":"geometry keep sipped howls smash obliged often ensign voucher shelter daily liquid smash"}
+creatorMetagroupW info: 64313a21693165313a243130313a64313a23693165313a2664313a6e32353a4d65737361676520636865636b7320666f722067726f75707365313a3c6c6c69306533323aea173b57beca8af18c3519a7bbf69c3e7a05d1c049fa9558341d8ebb48b0c96564656565313a3d64313a6e303a6565313a28303a313a296c65313a2b646565
+creatorMetagroupW members: 64313a21693165313a243335393a64313a23693165313a2664313a6d6433333a0523eb2b260cf1e9b3a6e4a1bc95ebf2779d1550502eb266f0a7bf4e3664fe3d0c64313a6e333a426f626533333a053632250b67b898e4da88f05758df39a8510324314ca27510e37afb1798a1751c64313a6e373a436861726c69656533333a05f5a4e3d38347cc0c1a9f31ff78696c8a1fc055fd54bea97d533db30ead0e977764313a41693165313a6e353a416c696365656565313a3c6c6c69306533323aea173b57beca8af18c3519a7bbf69c3e7a05d1c049fa9558341d8ebb48b0c96564656565313a3d64313a6d6433333a0523eb2b260cf1e9b3a6e4a1bc95ebf2779d1550502eb266f0a7bf4e3664fe3d0c64313a6e303a6533333a053632250b67b898e4da88f05758df39a8510324314ca27510e37afb1798a1751c64313a6e303a6533333a05f5a4e3d38347cc0c1a9f31ff78696c8a1fc055fd54bea97d533db30ead0e977764313a41303a313a6e303a65656565313a28303a313a296c65313a2b646565
+creatorMetagroupW keys: 64313a416c65313a4c6c65313a5064313a63323436323a64313a2332343aa4550ffbcd044e975de4e6f02ff806a0c445b9b34caf2632313a47693065313a4b34383aa1d90fb87a75008932e87e7a2df7252ab96ba8cbc965a9659bebcdaf89239a0e9be6d3d5e40761406ee08f8d2f34fd25313a6b6c34383a72bb74f4cefa8e42027895e9bede8697ba62b49fa3e47f16d289c8205898611f9366f0eeba4d6d0829ab00c03aea242334383ae17a389fe99c7945a06c9ca3eece1c152d877f94d7fb4981f0d6f841f368a553eeb6437783c0ca066090d5047bfc884834383a8976050f6e1d0a23c3ee7331a68dab6849bea707f543ae3f0dfa889495446ac2f42e816694bb2f5421c8509dee0d40a634383ac39207ff173c034bf81c52a6955e50b03672f329f2b337b5d7a90def192152f1c9dfd6a1d1fbfe335682840bbf45ba5434383a349960321413e8d4e75c4a81b93cead92363233bbed66b235b998c42beb83dc4d94860b208406d04781875ae90695eac34383a469f34678004d7cb01962a0d7f3ef442836da5dd4824132ed647a4bb0ca5b1185eff51e8186cad7b9107c4c9603b101e34383aeae98abc0442859513106c31a57c83ea319ab438d68e6de3c6ba05f4bf71fa77b67e30dbb9838963954b08474a200dd834383aa4eb1bd345fa83849c013493edc959c36768c1b228654baa7c32ebd43a8400d3413b8f54753b4a6f6b611cb3f432a82734383a5d57188ebd2891c445b2e2241a9ab6fc7936e664c6fb0e519b70dc85002ce126c6410810abed68a85ba9eea606175bcc34383af86e1c586db2de3e402015cd6fabfadf6b3e5658dbf987f01fe5b27a696798a4191893a38393a7f8412e44bcac2408fe34383a64a1cab1445ed94d16b3fdd51b41c106a82d6d6a487984fb388e89014d5d221554edaaff9aed585ea1a00c74a82cb18634383ad01e9550ac8d49908e5602950ef7bcab166d83c453cafa8d341ebac086324c49d9038727351e87a6035b7d26d7c4408a34383addeb50eff949abc85236aaafbea34966fe6fe0103306ed28f1caea5ffee3b4d5cf76ff13672f8a15d0f8f5712c4679bf34383a069dafc5ec0b4dc019431c1352686915f30d55e587963fe0fd088f41181fa613cdeb6fe586f31e368dc93ca3a626ee7934383a3c1bb398b5ea94f0476bedd048e6831f91b46baef3861e827ecea01e68540e8fd6f4c2c46083bcb48139f4b3088b393d34383adabe0b33a6986fce2071e2c8373933c7f1c222c0b735eab6b5d73c09a5caf9517dcf584b098ec284670a08d65cf3263134383a6f14ede23593f42d62f60e65753eea78346afcd7dfac5269b443fe445af620517dc0794efb12fb23cb33dc9b42d6452a34383ac2465b3a083fd8ae89d4593524ec56f3915b2cd6305cc450e26455592440d38d5a4e20d59a644edaa05d216552f2889834383a997b9a65e5d6eff428e30c736d554713a93ca863c83b3f83e6a0ce263cfd6579df041ca66b6af5b8d9559ea9b283b0f534383a126a7bd56807a5fbcf00b7d3764a286aadc74eaa97016e293e92a9158843add694599d36d499b17e6f8afbffe29fa7b734383a04f858104438dc648a6fd400a0a6444fe5f11d92c2f8d13d528add6336140752ed39c9567a43dd9b56bf34a62acc29e434383a65a6ec793e1a98ef84e62c74307aae36dbc08e8b70a4e5f3cb6cf76e5805cc43bc2eb04810cdf6c0f185fd707014997134383abac0b8822bb400b371bb14a852239f38bd26128ace5d494221e97f5773520dd9b6dcf216634b4602eb7872324515554334383a2fdc7337ea7cc7febf8054b3902c5cc875404b327ac1cfe2d6163cb9a991c1c3e87c097d3d23cd03781b09165a61dea134383a4e3d2c3c4845d54c2770efea5b6c909198c316bbbce2e0fa0826c63e37591c72d63f712e12475a6ef34017160424e5b034383aa7cd33cc1d91880dd5a330b7e4d5a88cc3c66b92d3d880f7069f54834addc92f81ab5863286ec263dc00ae4a9166e1d034383accf705137f26c944d28436508df24d48047274f32221b1039b32db1c289fc2280f11fd94092a09899464164e239a4d5634383ac19c4f27a83169c2c9911ce9666bff7d97bc26f05eb536e9d0eb8d995ce135d04099c2b20b2be5baaca22f24e7f9b30434383a6e5feb6716979073118119c8a90ed5bcd31fb67e1579b8b5d49188e93c8d303228573ecab40983c699837bbff1cfe35d34383a4046ba2d3c9000aec50795c58f1046ad32b1064c986ef7821ae39fb4cab6a089450cab7c02e3d3f3d6565d24809e6e0c34383ac5b9d98d504347f921b89a7c3bd086413e23dbedce21fe7bf6a980a9cf5b49b84ca68abed0519552b2711f3860a75ba434383a2a5d0243c9dbd2bc41a6740b5aa251381cf21b380ca0c7323afa6df086b7b4ea1cc23042c84d29f232603673bc990ac734383a746980a15658e432e8f7539dbd7307453831ff4c976aa250c8fef9366b8c9df2e4d818ddd02770a3e39f148d19aa986b34383a3551c5787787cdcdbf27b9c1c9996425664729c7efa7469bcf6517a71576153281c8377400756cefc7d7391b68aedd5f34383a8b04793a34bd7c27d9c68e05026087eae0bb552597a9ac332dd75e6dfb6810fd25e2de3ebc17a890dd2f0b08394e33c834383accdbcce79d99c45ceccf1940085ad5cc2ca7fdd4fe01e7f2068b7f2e72b5345ff62afa1fe2b6ea5ec4cee3b6936c9b1e34383a75822cd3e69e0c6249761b494e91fae68a1dd91fcd9a136abb3174868336d641e2f235ab60f6114018c7cda4da0b161b34383aadbd609e350126a740d6a30e4ad67dd708b467ffb1acc1f3e124276715929eb75dc21872dd06d7998105ea31868562b334383a053530cd98f445ccc16e60d4b2383e3ec46b9c9c805888c52b99eb1a9e5f0a44ec723c90ee704b79113ddabda93f011b34383a61fccc66621fa09610bfe40abed7f9abddf3e17564cd60ad0d37b867a9ee489343f29d6f82b9e20bcff0ff18b509173334383a16c475a780d760e81a2b69c91d6e7f9c178adea6c87064d50158307cc4b8de5714c6873d9d9fad378b57274b4c8cdad734383a99e68f84227d09a35c00d4a958c2c3cd14aff13d3374d3eed0fd220571556c2780cf6dc058a8693228897bb53e1dd05534383a66276477b4945df09d28a5bcacaef650085a41cc974903eb4a3e2d1adcbf6f19980c56147db1850d43a8c921859e23b434383a6fafd7e12eb7ad68cef9dbc83d99b1e9d9d2531e5ad6600164b721f53945ee942d9614e6c563d3328ed2513de814348f34383a6a42de08d8fde3702de91310064795fb5ed503f131d0f3cf8752c722b1e4d4242dc305a852f428d0b4c0d543f786bdf965313a7e36343a62f804432bf9213d85e372150ff1f5afeeae900b683cdf9d50c4806b196bd9e6180f9f1c5febc8566d59fa6af06f9246c5d41d66093cb0bd4bbb548d9e6c5a0165313a67693065313a6b33323aecda91a0ba07641f6e2806cd7a253eb018befeb18e8d6ca008c890315377b34e6565
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+random snode for user: 05f5a4e3d38347cc0c1a9f31ff78696c8a1fc055fd54bea97d533db30ead0e9777 is snode: 9b3228541271b91ada846f023f8a7b2a8cc613ba44eac11bcc13d3fbcd85a0c3
+storing to snode https://172.93.108.154:22104/storage_rpc/v1
+storing to snode https://172.93.108.154:22104/storage_rpc/v1
+storing to snode https://172.93.108.154:22104/storage_rpc/v1
+random snode for user: 053632250b67b898e4da88f05758df39a8510324314ca27510e37afb1798a1751c is snode: e95cc8aa5016e192f7a54bce275aa137ca91986ee93b2228a8c842d13a09d104
+storing to snode https://167.99.32.79:22021/storage_rpc/v1
+storing to snode https://167.99.32.79:22021/storage_rpc/v1
+storing to snode https://167.99.32.79:22021/storage_rpc/v1
+random snode for user: 03ab9a263e4f8b44d887e1f328811392eae252ede7550dd5730a58bfc3aa22594d is snode: fd54d3721a485b3e9ce5431142739349e3b8d4c58324749f038f5a78f7155542
+promises [
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 55819,
+    [Symbol(trigger_async_id_symbol)]: 55563,
+    [Symbol(kResourceStore)]: undefined
+  },
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 56868,
+    [Symbol(trigger_async_id_symbol)]: 55868,
+    [Symbol(kResourceStore)]: undefined
+  }
+]
+storing to snode https://209.222.101.54:22103/storage_rpc/v1
+storing to snode https://209.222.101.54:22103/storage_rpc/v1
+storing to snode https://209.222.101.54:22103/storage_rpc/v1
+random snode for user: 0523eb2b260cf1e9b3a6e4a1bc95ebf2779d1550502eb266f0a7bf4e3664fe3d0c is snode: 64835edf9845fb5f992edc787cb8349253d295a0bb7c16132d71ed30fd18b4bb
+storing to snode https://178.18.249.214:22021/storage_rpc/v1
+storing to snode https://178.18.249.214:22021/storage_rpc/v1
+storing to snode https://178.18.249.214:22021/storage_rpc/v1
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+storeStatus for Alice: [ 200, 200, 200 ]
+storeStatus for (group) 03ab9a263e4f8b44d887e1f328811392eae252ede7550dd5730a58bfc3aa22594d: [ 200, 200, 200 ]
+storeStatus for Charlie: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "pizza umbrella habitat alumni upstairs ozone mystery having agile butter opacity corrode pizza"
+	"Bob": "king saxophone nouns dapper lush suddenly iceberg oars arrow river abyss soggy river"
+	"Charlie": "geometry keep sipped howls smash obliged often ensign voucher shelter daily liquid smash" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Restore your session button" to be present
+'Restore your session button' has been found
+'Restore your session button' has been found
+'Restore your session button' has been found
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+'Recovery phrase input' has been found
+'Recovery phrase input' has been found
+'Recovery phrase input' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+'Continue' has been found
+'Slow mode notifications button' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+'Slow mode notifications button' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Loading animation not found
+Loading animation has finished
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+waitForTextElementToBePresent threw: "id": "Continue
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Continue" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+'New conversation button' has been found
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+'New conversation button' has been found
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Message checks for groups"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Message checks for groups"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Message checks for groups"
+Text found to include Message checks for groups
+'Conversation list item' and 'Message checks for groups' has been found
+Text found to include Message checks for groups
+'Conversation list item' and 'Message checks for groups' has been found
+Text found to include Message checks for groups
+'Conversation list item' and 'Message checks for groups' has been found
+running  /opt/android/platform-tools/adb -s emulator-5554 shell rm -rf /storage/emulated/0/Download/*
+was run:  /opt/android/platform-tools/adb -s emulator-5554 shell rm -rf /storage/emulated/0/Download/* { stdout: '', stderr: '' }
+running  /opt/android/platform-tools/adb -s emulator-5554 push run/test/specs/media/test_file.pdf /storage/emulated/0/Download
+cmd which failed: "/opt/android/platform-tools/adb -s emulator-5554 push run/test/specs/media/test_file.pdf /storage/emulated/0/Download"
+result: "run/test/specs/media/test_file.pdf: 1 file pushed, 0 skipped. 90.8 MB/s (113461 bytes in 0.001s)
+"
+running  /opt/android/platform-tools/adb -s emulator-5554 shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage/emulated/0/Download/test_file.pdf
+was run:  /opt/android/platform-tools/adb -s emulator-5554 shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage/emulated/0/Download/test_file.pdf {
+  stdout: 'Broadcasting: Intent { act=android.intent.action.MEDIA_SCANNER_SCAN_FILE dat=file:///... flg=0x400000 }\n' +
+    'Broadcast completed: result=0\n',
+  stderr: ''
+}
+Waiting for "accessibility id" and "Attachments button" to be present
+'Attachments button' has been found
+Waiting for "accessibility id" and "Documents folder" to be present
+'Documents folder' has been found
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "com.android.permissioncontroller:id/permission_allow_button" to be present with "Allow"
+Text found to include Allow
+'com.android.permissioncontroller:id/permission_allow_button' and 'Allow' has been found
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title doesn't exist, time expired
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
