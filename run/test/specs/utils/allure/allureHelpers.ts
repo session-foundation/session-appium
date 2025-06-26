@@ -11,6 +11,7 @@ export interface ReportContext {
   risk: string;
   runNumber: number;
   runAttempt: number;
+  runID: number,
   reportFolder: string;
   reportUrl: string;
   githubRunUrl: string;
@@ -26,9 +27,10 @@ export function getReportContextFromEnv(): ReportContext {
   const risk = process.env.RISK?.trim() || 'full';
   const runNumber = Number(process.env.GITHUB_RUN_NUMBER);
   const runAttempt = Number(process.env.GITHUB_RUN_ATTEMPT);
+  const runID = Number(process.env.GITHUB_RUN_ID)
   const reportFolder = `run-${runNumber}.${runAttempt}-${platform}-${build}-${risk}`;
   const reportUrl = `https://session-foundation.github.io/session-appium/${platform}/${reportFolder}/`;
-  const githubRunUrl = `https://github.com/session-foundation/session-appium/actions/runs/${process.env.GITHUB_RUN_ID}`;
+  const githubRunUrl = `https://github.com/session-foundation/session-appium/actions/runs/${runID}`;
 
   return {
     platform,
@@ -37,6 +39,7 @@ export function getReportContextFromEnv(): ReportContext {
     risk,
     runNumber,
     runAttempt,
+    runID,
     reportFolder,
     reportUrl,
     githubRunUrl,
@@ -65,7 +68,7 @@ export async function writeExecutorJson(ctx: ReportContext) {
     type: 'github',
     url: ctx.githubRunUrl,
     buildOrder: buildOrder,
-    buildName: `GitHub Actions Run ${ctx.githubRunUrl}`,
+    buildName: `GitHub Actions Run #${ctx.runID}`,
     buildUrl: ctx.githubRunUrl,
     reportUrl: ctx.reportUrl,
   };
