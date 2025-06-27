@@ -29,6 +29,8 @@ runs:
         GH_TOKEN: ${{ inputs.GH_TOKEN }}
         APK_URL: ${{inputs.APK_URL}}
         RISK: ${{inputs.RISK}}
+        GITHUB_RUN_NUMBER: ${{ inputs.GITHUB_RUN_NUMBER}}
+        GITHUB_RUN_ATTEMPT: ${{ inputs.GITHUB_RUN_ATTEMPT}}
 
     - name: Publish report to GitHub Pages
       if: ${{ success() }}
