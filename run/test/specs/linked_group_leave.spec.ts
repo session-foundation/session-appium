@@ -38,7 +38,6 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   // Modal with Leave/Cancel
   await device3.clickOnElementAll(new LeaveGroupConfirm(device3));
   // Check for control message
-  // Check for control message
   await sleepFor(5000);
   await device4.onIOS().hasTextElementBeenDeleted('Conversation list item', testGroupName);
   // Create control message for user leaving group

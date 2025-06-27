@@ -55,7 +55,7 @@ function create_emulators() {
         # Path to the AVD's config.ini file
         CONFIG_FILE="$HOME/.android/avd/emulator$i.avd/config.ini"
 
-        # Set the RAM size to GB (4192MB)
+        # Set the RAM size to 4GB (4192MB)
         sed -i 's/^hw\.ramSize=.*/hw.ramSize=4192/' "$CONFIG_FILE"
 
     done
@@ -89,10 +89,9 @@ function killall_emulators() {
 function start_with_snapshots() {
   for i in {1..4}; do
     EMU_CONFIG_FILE="$HOME/.android/avd/emulator$i.avd/emulator-user.ini"
-    # Set window position (optional in headless)
+    # Set window position
     sed -i "s/^window.x.*/window.x=$(( 100 + (i-1) * 400))/" "$EMU_CONFIG_FILE"
 
-    # DISPLAY=:0 emulator @emulator$i -gpu host -accel on -no-snapshot-save -snapshot plop.snapshot -force-snapshot-load -no-window &
     DISPLAY=:0 emulator @emulator$i -gpu host -accel on -no-snapshot-save -snapshot plop.snapshot -force-snapshot-load &
 
     sleep 5
