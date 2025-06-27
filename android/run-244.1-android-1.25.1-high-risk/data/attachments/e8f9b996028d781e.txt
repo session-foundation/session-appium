@@ -1,0 +1,372 @@
+
+
+==========> Running "Send document 1:1 @android @high-risk @2-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 1 1
+actualCapabilities worker 2
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 1 1
+actualCapabilities worker 3
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5560 true
+emulatorAlreadyRunning emulator-5558 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"05ce02b1b6a182c1a724f682b874bccf66b949cc6dd668e9fdbfcec332105ee178","seedPhrase":"austere goodbye hurried fading love budget oilfield beer biggest depth vehicle aquarium oilfield"},
+SessionUser: {"name":"Bob","sessionId":"05f1a012428ccca64d7431d77c1f4acf9bf9ffa0c915808643829c778987864413","seedPhrase":"javelin lively coal five bays sash nomad cupcake bunch teardrop autumn dinner bunch"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"05ce02b1b6a182c1a724f682b874bccf66b949cc6dd668e9fdbfcec332105ee178","seedPhrase":"austere goodbye hurried fading love budget oilfield beer biggest depth vehicle aquarium oilfield"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05ce02b1b6a182c1a724f682b874bccf66b949cc6dd668e9fdbfcec332105ee178","seedPhrase":"austere goodbye hurried fading love budget oilfield beer biggest depth vehicle aquarium oilfield"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"05f1a012428ccca64d7431d77c1f4acf9bf9ffa0c915808643829c778987864413","seedPhrase":"javelin lively coal five bays sash nomad cupcake bunch teardrop autumn dinner bunch"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"05f1a012428ccca64d7431d77c1f4acf9bf9ffa0c915808643829c778987864413","seedPhrase":"javelin lively coal five bays sash nomad cupcake bunch teardrop autumn dinner bunch"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05ce02b1b6a182c1a724f682b874bccf66b949cc6dd668e9fdbfcec332105ee178","seedPhrase":"austere goodbye hurried fading love budget oilfield beer biggest depth vehicle aquarium oilfield"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"05f1a012428ccca64d7431d77c1f4acf9bf9ffa0c915808643829c778987864413","seedPhrase":"javelin lively coal five bays sash nomad cupcake bunch teardrop autumn dinner bunch"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [ Promise { <pending> } ]
+emulator-5560  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5560'
+  }
+}
+udid: emulator-5560
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+random snode for user: 05ce02b1b6a182c1a724f682b874bccf66b949cc6dd668e9fdbfcec332105ee178 is snode: 23c572c4bb4c5d2eea42cedc85cc14d1e7fecfaafc554c6181915e1437f209b9
+storing to snode https://88.198.244.201:22100/storage_rpc/v1
+storing to snode https://88.198.244.201:22100/storage_rpc/v1
+storing to snode https://88.198.244.201:22100/storage_rpc/v1
+random snode for user: 05f1a012428ccca64d7431d77c1f4acf9bf9ffa0c915808643829c778987864413 is snode: b96f769e937bbc868e487279a24fa1dd904d1ef7dee036a14e12d95b5fde2a19
+storing to snode https://107.189.3.102:22021/storage_rpc/v1
+storing to snode https://107.189.3.102:22021/storage_rpc/v1
+storing to snode https://107.189.3.102:22021/storage_rpc/v1
+storeStatus for Alice: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "austere goodbye hurried fading love budget oilfield beer biggest depth vehicle aquarium oilfield"
+	"Bob": "javelin lively coal five bays sash nomad cupcake bunch teardrop autumn dinner bunch" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Restore your session button" to be present
+'Restore your session button' has been found
+'Restore your session button' has been found
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+waitForTextElementToBePresent threw: "id": "Recovery phrase input
+Waiting for "id" and "Recovery phrase input" to be present
+'Recovery phrase input' has been found
+'Recovery phrase input' has been found
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+'Slow mode notifications button' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Continue" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+Waiting for "id" and "Continue" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+'New conversation button' has been found
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Text found to include Alice
+'Conversation list item' and 'Alice' has been found
+Text found to include Bob
+'Conversation list item' and 'Bob' has been found
+running  /opt/android/platform-tools/adb -s emulator-5558 shell rm -rf /storage/emulated/0/Download/*
+was run:  /opt/android/platform-tools/adb -s emulator-5558 shell rm -rf /storage/emulated/0/Download/* { stdout: '', stderr: '' }
+running  /opt/android/platform-tools/adb -s emulator-5558 push run/test/specs/media/test_file.pdf /storage/emulated/0/Download
+cmd which failed: "/opt/android/platform-tools/adb -s emulator-5558 push run/test/specs/media/test_file.pdf /storage/emulated/0/Download"
+result: "run/test/specs/media/test_file.pdf: 1 file pushed, 0 skipped. 130.5 MB/s (113461 bytes in 0.001s)
+"
+running  /opt/android/platform-tools/adb -s emulator-5558 shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage/emulated/0/Download/test_file.pdf
+was run:  /opt/android/platform-tools/adb -s emulator-5558 shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage/emulated/0/Download/test_file.pdf {
+  stdout: 'Broadcasting: Intent { act=android.intent.action.MEDIA_SCANNER_SCAN_FILE dat=file:///... flg=0x400000 }\n' +
+    'Broadcast completed: result=0\n',
+  stderr: ''
+}
+Waiting for "accessibility id" and "Attachments button" to be present
+'Attachments button' has been found
+Waiting for "accessibility id" and "Documents folder" to be present
+'Documents folder' has been found
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "com.android.permissioncontroller:id/permission_allow_button" to be present with "Allow"
+Waiting for "id" and "com.android.permissioncontroller:id/permission_allow_button" to be present with "Allow"
+Text found to include Allow
+'com.android.permissioncontroller:id/permission_allow_button' and 'Allow' has been found
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title doesn't exist, time expired
+Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Text found to include Documents
+'android.widget.Button' and 'Documents' has been found
+Couldn't find "test_file.pdf" with matching id: android:id/title
+android:id/title Doesn't exist but retrying
+Text found to include test_file.pdf
+id: android:id/title with matching text "test_file.pdf" found
+Waiting for "id" and "android:id/title" to be present with "test_file.pdf"
+Text found to include test_file.pdf
+'android:id/title' and 'test_file.pdf' has been found

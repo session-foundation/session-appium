@@ -1,0 +1,1514 @@
+
+
+==========> Running "Delete message in group @android @high-risk @3-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+starting capabilitiesIndex 2 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 2
+[buildStateForTest] stateToBuild:"3friendsInGroup". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5558 true
+emulatorAlreadyRunning emulator-5556 true
+emulatorAlreadyRunning emulator-5554 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"0551fa12054a1a3b96f760de1fbf20484e96f6f934b66baa3ec96eec6a7466a115","seedPhrase":"gawk hiding orchid cohesive wrist tavern uphill insult meeting butter cobra arena arena"},
+SessionUser: {"name":"Bob","sessionId":"05ab5ac8ab808d5efb102554c9bd427dbd8f06b149f8d152e78beb940db8d48d51","seedPhrase":"oozed alkaline royal vulture sarcasm radar dads huge reduce arises eight dozen vulture"},
+SessionUser: {"name":"Charlie","sessionId":"0502da7a8bafa681bf2fa21291af27d3c8141831cf4ffd548b8dbcdd80c9ed4620","seedPhrase":"woes orbit obtains gotten python cactus inwardly cadets double roomy aching mural roomy"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"0551fa12054a1a3b96f760de1fbf20484e96f6f934b66baa3ec96eec6a7466a115","seedPhrase":"gawk hiding orchid cohesive wrist tavern uphill insult meeting butter cobra arena arena"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"0551fa12054a1a3b96f760de1fbf20484e96f6f934b66baa3ec96eec6a7466a115","seedPhrase":"gawk hiding orchid cohesive wrist tavern uphill insult meeting butter cobra arena arena"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"05ab5ac8ab808d5efb102554c9bd427dbd8f06b149f8d152e78beb940db8d48d51","seedPhrase":"oozed alkaline royal vulture sarcasm radar dads huge reduce arises eight dozen vulture"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"0551fa12054a1a3b96f760de1fbf20484e96f6f934b66baa3ec96eec6a7466a115","seedPhrase":"gawk hiding orchid cohesive wrist tavern uphill insult meeting butter cobra arena arena"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Charlie","sessionId":"0502da7a8bafa681bf2fa21291af27d3c8141831cf4ffd548b8dbcdd80c9ed4620","seedPhrase":"woes orbit obtains gotten python cactus inwardly cadets double roomy aching mural roomy"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"05ab5ac8ab808d5efb102554c9bd427dbd8f06b149f8d152e78beb940db8d48d51","seedPhrase":"oozed alkaline royal vulture sarcasm radar dads huge reduce arises eight dozen vulture"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"0551fa12054a1a3b96f760de1fbf20484e96f6f934b66baa3ec96eec6a7466a115","seedPhrase":"gawk hiding orchid cohesive wrist tavern uphill insult meeting butter cobra arena arena"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"05ab5ac8ab808d5efb102554c9bd427dbd8f06b149f8d152e78beb940db8d48d51","seedPhrase":"oozed alkaline royal vulture sarcasm radar dads huge reduce arises eight dozen vulture"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"05ab5ac8ab808d5efb102554c9bd427dbd8f06b149f8d152e78beb940db8d48d51","seedPhrase":"oozed alkaline royal vulture sarcasm radar dads huge reduce arises eight dozen vulture"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Charlie","sessionId":"0502da7a8bafa681bf2fa21291af27d3c8141831cf4ffd548b8dbcdd80c9ed4620","seedPhrase":"woes orbit obtains gotten python cactus inwardly cadets double roomy aching mural roomy"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Charlie","sessionId":"0502da7a8bafa681bf2fa21291af27d3c8141831cf4ffd548b8dbcdd80c9ed4620","seedPhrase":"woes orbit obtains gotten python cactus inwardly cadets double roomy aching mural roomy"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"0551fa12054a1a3b96f760de1fbf20484e96f6f934b66baa3ec96eec6a7466a115","seedPhrase":"gawk hiding orchid cohesive wrist tavern uphill insult meeting butter cobra arena arena"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Charlie","sessionId":"0502da7a8bafa681bf2fa21291af27d3c8141831cf4ffd548b8dbcdd80c9ed4620","seedPhrase":"woes orbit obtains gotten python cactus inwardly cadets double roomy aching mural roomy"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"05ab5ac8ab808d5efb102554c9bd427dbd8f06b149f8d152e78beb940db8d48d51","seedPhrase":"oozed alkaline royal vulture sarcasm radar dads huge reduce arises eight dozen vulture"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Charlie","sessionId":"0502da7a8bafa681bf2fa21291af27d3c8141831cf4ffd548b8dbcdd80c9ed4620","seedPhrase":"woes orbit obtains gotten python cactus inwardly cadets double roomy aching mural roomy"}
+creatorMetagroupW info: 64313a21693165313a243130313a64313a23693165313a2664313a6e32353a4d65737361676520636865636b7320666f722067726f75707365313a3c6c6c69306533323aea173b57beca8af18c3519a7bbf69c3e7a05d1c049fa9558341d8ebb48b0c96564656565313a3d64313a6e303a6565313a28303a313a296c65313a2b646565
+creatorMetagroupW members: 64313a21693165313a243335393a64313a23693165313a2664313a6d6433333a0502da7a8bafa681bf2fa21291af27d3c8141831cf4ffd548b8dbcdd80c9ed462064313a6e373a436861726c69656533333a0551fa12054a1a3b96f760de1fbf20484e96f6f934b66baa3ec96eec6a7466a11564313a41693165313a6e353a416c6963656533333a05ab5ac8ab808d5efb102554c9bd427dbd8f06b149f8d152e78beb940db8d48d5164313a6e333a426f62656565313a3c6c6c69306533323aea173b57beca8af18c3519a7bbf69c3e7a05d1c049fa9558341d8ebb48b0c96564656565313a3d64313a6d6433333a0502da7a8bafa681bf2fa21291af27d3c8141831cf4ffd548b8dbcdd80c9ed462064313a6e303a6533333a0551fa12054a1a3b96f760de1fbf20484e96f6f934b66baa3ec96eec6a7466a11564313a41303a313a6e303a6533333a05ab5ac8ab808d5efb102554c9bd427dbd8f06b149f8d152e78beb940db8d48d5164313a6e303a65656565313a28303a313a296c65313a2b646565
+creatorMetagroupW keys: 64313a416c65313a4c6c65313a5064313a63323436323a64313a2332343a428402005d5d5d851e4d163f0d08e5e3240a3617795c1660313a47693065313a4b34383ada3a6fbf4fb6bcaedda1be55ace348dfbbf993df460b1fe8233a9de18873962513a9f358958fb41b0eeac2e280462428313a6b6c34383ac76207a4ec52ef1a12b14c5607388e94cabd46d73053be597b9ca26504b8dbecc57f220c1f6327b3b4cb4870d67d2b4e34383acb62bab98ae86c4f5c5a3d9e257ffce4543c0d0b5d899d2c675fcbd922861cbf570444663fe3664f766a81954d2672a534383a82b8b1d4733712257e36ec27d3b2e048a4ee946c46a64c079a4ac3f77581dd84f7ad0e0bfc92287ba628c87fe982de5434383a7fd2221bc6a8f793293f787da7f6084ec5ac3e943bf9a6574e5fd30588a2e14ac03c1bc8c00a4b4cfdeca0a2762392ce34383a104dc713221fb1b0d4906eaa70fbf73b6f2a9cbd04477a4f13872fd7c3d0ff53defdcb5376501d96c7bd78d61052542734383a0fd489204b185bb21206fe87d57e1594c169e45046537f7a406fe858f275b3e5feff04f588853348c9e9dbc8ef0ba54d34383a5c602162d9db540f20529ea4e1a4bc3a55833c543c4482a99710278fabb66eed80c43eb77e80606e53cae2c52cef626734383a4388d0c9f7efbc0e8bd49b6b91d6b7521eec342eb167a9acd5201b55c9d88779a6d1bc943fcc4e3d936156cc23ba391b34383ac2d066d2981611b3aeff62af231d47fbee807854848afc086713f24096009f62dce9354bb65db42ac0c561eccc7a829834383ac94542765143c66e89f95bf5804c6762e7815814605db0a8051e8720be34a108bec17ba9cf92b9f99012c910b7dd7d6634383aaf021c85fcade964ba28cbc3d3a240eee3bfaa113044ff09c9e6761573813fa1de5589e6eb1999ace630f5809bc9858c34383af5ef60875e5c31b98f7542bf8923984c3e3e3d2eb8a9e20423c757d51b72a4a979ee99c659e257904e550a8a2bf7bd0334383a117afe617218552cf5784b3ff1699c9016592ee4a98342d4d11c532ba4f88565e857a73e520c701abba85e455eb178c034383a10734245fb5b8863a96703ef73541cf2222b01552ce60bab3f8e626433405f6c3fecafbb2509bba6875e05e7a9d8e32134383a55ab0956f1ca693eec5bae13b7de28700cce11883f5a0c1661e2d487a8b0eec31843c1329e3153bd0cf5c14c6dcde55734383a626e9b26fd63f1be917582db9c7b4790d303580f279eae1a3f9606678348bb80a9f24d6ef512118053f86403863003c634383ae97ee85dcfe966bf18bb8f1a1f8af29c4e17cf44028e6a5fab382440cca8877e2d46b86f22510ae87f1bb594fefa89dd34383a9bc7279aa690ed25b9746d3e3ba169a528b3c8517712b8bc8e88512c076189871987a86568511a38a5c808d3edfdc4d734383a2deb99037081ef9dadf396ec0a679499e612366796c3eb759a3424b5d4ff9bfcd8e1950e40b3a688444c9ed54dcebfa034383a6feca6506c990cd1a56e955d5eb107da41ea58a86debc2a9df35f8b6f4f64a437936baec60627e7dad2c349ced47a98c34383a3d06f4a2dbd35e323adf0057e8d538865b2e254e15c1dd7089cf3b5ed189708e9fa6aa5ecd05c64a01fba3b3ddc7145134383adb1f38aeb10d3c4b4ce6c2aafcbe862e8ca0bdd295d88366afe2561a30e627803ab525882b3058f3105c0e59298d906134383a22c183c011ac4a9214d1030af5212bab60936561e53664ff5e77b142eedded74c877e821770c0d2c9cc61da5f6ed1eed34383a9db5e1a5df6920b34e1afc2a3a5151045d80659015971fe7b81326cca962bff9865e3e546920a80efe6012f7ce472b1b34383ab89280e3b121a1d88ed83f413d6317f283f5e1196b999c0371ed0fa1f537f7595f8759bf9e39c3e7538a16210b8b863c34383a4828c233470f60ddd06d37ccf6e8befc1cb398957b046682fd0afa8d2b935a4865231baa651cb25012a7ccd94c11216b34383a62fef8e46a10c434f938a8ad5176e70b035377ea9bad94c73f7a89da01b16a99eef16423cc5a0ea222b70bc3d1300e7c34383a082390695c5853885a6c5a83daef3c7132ad64700a5e630d8de03f63dbc065b21300a9a6860e2253f87261fc51d3683534383ac84f6d11b4d8626917e05ab05198dc9112962babab9209725abaabbb83f9dc0cac4922751c3e3ac4848d2c0ceab857cf34383a6c01f921a9b8b5e7d79d0c49ed53eb68a9b2e9eb6bf6f0ca2eafb06a6d44760a7f247a95e21c2e266e7db4b4ce828b1b34383ad47578f3821a69023392779f41ccaa7ddfa768030507d82b889e9cd7f3a0bf565616b91eb408972975d708aa75b348d334383aab8f837d10a58934751744b3271dfec53007ca2308ed36ec141727b5a1b28915c8f8c91db5d5e563e36d38924f2acd1834383a8f631778844403f5b197109af8f3201a3e4101c6a87a5680f0796b98534d1f5c8cdb7e2d8c83f39a1bfb10408200737734383a340e76b531acff000f55b57bfa33cdc44432f6118e4653503011dd3e8f729b9a5a26d9329d4638e2b08121de5c6ebe1234383a0d3d73683c6ff932c26b84a36587d209a7d5c6427797706d509aa7d93727e2e1b39a0ee27c780171aaaecab8353557eb34383af9c4fc9959e1315c846616e2d276eb3aaee37d148ad4353667eb64515cd9dbd21cf2287a2afcee63574e1187ceb7532c34383a41729b171edaabd89cf8438f2b27a9bd191a8bf974b08bb1d82ee4038b9fe6bedc7f8fbbeff0a4f459d3f947e2fc800234383a3531b972105e61d3388162fbb2952faa66bab04305f6895b04512488287efa0fe1af5874a6b07b7a33d1e7779cbc26f434383a7042e8ce531cd47de4a6678e996ad303f2d051c804fc075850c67b86f07174801f7436d667bce95a0a46be17f0c3dcfd34383ab8e4868c5aed85b64bd81febaaa792210fb2e926809073d2f9e234f5cb86f69bab14aee22af8bde0b37e18ad0faaa74834383ab4d331b58c72e11577f0f39d8ee9c6884e6a4b93e615c218c3f9e6ad98623442f92b2cdc4dec3272fea9a26869ee261634383a5cdb2392ceaf5a52c2829049ee0ecbe2317b0268b2453266cdf0f76d3c8cbcaf92e9c1b2800bd398fcf6e3a4cb3143d634383ae1782822599605ec61118f1d2964e4b8dcd352ce59a5e2030157f6c8a50e3c063c346189dd13e1e917a1e6d6b57b457234383aa4145639ea8594993daef54df979ecf6d7d1adaf6dc3f32f2d36f175f52a72a94206f84bdea664b8c9d30a5918e58e6234383a4e4148b7f849bc50dea647bcdebe091bc6c702302cfb545028f98975217d441dfb2173ef6b26e5a7ecd924dfafc0a6ce65313a7e36343ae99acb9882c2627e0e3c96a1d270ca30e79b0e32c4ec99eacb19a769f9dd652cb4dd87517f179893ba957b3e2ff74d27fb6a11f12d79faa59848acda3a9f3d0465313a67693065313a6b33323aa53d8388a2667f0b46f1441526323b189df9f9b927e766d5d1ce512033a948c16565
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+random snode for user: 05ab5ac8ab808d5efb102554c9bd427dbd8f06b149f8d152e78beb940db8d48d51 is snode: 87ab3dbe2f86241d96686cb7256a45c9cb84777cf060f11fcc068a8d26ae17b1
+storing to snode https://185.150.191.68:22109/storage_rpc/v1
+storing to snode https://185.150.191.68:22109/storage_rpc/v1
+storing to snode https://185.150.191.68:22109/storage_rpc/v1
+random snode for user: 0551fa12054a1a3b96f760de1fbf20484e96f6f934b66baa3ec96eec6a7466a115 is snode: 15c457c08e7fb855b596e06081a1c7006b2de0c872ccfb1201c14b1a03757adb
+storing to snode https://51.79.173.182:22021/storage_rpc/v1
+storing to snode https://51.79.173.182:22021/storage_rpc/v1
+storing to snode https://51.79.173.182:22021/storage_rpc/v1
+random snode for user: 0502da7a8bafa681bf2fa21291af27d3c8141831cf4ffd548b8dbcdd80c9ed4620 is snode: 576e933dc3c50ab6d4dc04357ee613286c859e0f3164b978356130e35ee4c4bc
+storing to snode https://5.161.98.53:22021/storage_rpc/v1
+storing to snode https://5.161.98.53:22021/storage_rpc/v1
+storing to snode https://5.161.98.53:22021/storage_rpc/v1
+random snode for user: 039df148334c01fd62185c44f4d2e1895c3bd3cf20402e6337940231c2acd62414 is snode: 634a72a534d0f6458baa735a056463cd4ea087ddc8251dcbac042b9050fd958d
+promises [ Promise { <pending> }, Promise { <pending> } ]
+storing to snode https://135.181.105.205:22101/storage_rpc/v1
+storing to snode https://135.181.105.205:22101/storage_rpc/v1
+storing to snode https://135.181.105.205:22101/storage_rpc/v1
+storeStatus for Alice: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+storeStatus for (group) 039df148334c01fd62185c44f4d2e1895c3bd3cf20402e6337940231c2acd62414: [ 200, 200, 200 ]
+storeStatus for Charlie: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "gawk hiding orchid cohesive wrist tavern uphill insult meeting butter cobra arena arena"
+	"Bob": "oozed alkaline royal vulture sarcasm radar dads huge reduce arises eight dozen vulture"
+	"Charlie": "woes orbit obtains gotten python cactus inwardly cadets double roomy aching mural roomy" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+'Restore your session button' has been found
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+'Restore your session button' has been found
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+'Recovery phrase input' has been found
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+'Recovery phrase input' has been found
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Restore your session button" to be present
+'Continue' has been found
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+waitForTextElementToBePresent threw: "id": "Restore your session button
+'Slow mode notifications button' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+'Slow mode notifications button' has been found
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+'Continue' has been found
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+'Loading animation' has been found
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+'Loading animation' has been found
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Restore your session button" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Restore your session button" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Loading animation" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Restore your session button
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Restore your session button" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Restore your session button" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Restore your session button" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Restore your session button" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Restore your session button" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Restore your session button" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Restore your session button" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Restore your session button
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+Waiting for "id" and "Restore your session button" to be present
+'New conversation button' has been found
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Restore your session button" to be present
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
+Waiting for "id" and "Restore your session button" to be present
+waitForTextElementToBePresent threw: "id": "Restore your session button
