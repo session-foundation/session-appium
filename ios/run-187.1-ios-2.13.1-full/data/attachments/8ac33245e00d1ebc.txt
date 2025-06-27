@@ -1,0 +1,524 @@
+
+
+==========> Running "Share to session @ios @low-risk @2-devices"
+
+
+starting capabilitiesIndex 0 ios
+openiOSApp
+starting capabilitiesIndex 1 ios
+openiOSApp
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"05ebf52e19705bae65c22ad21767a1e61ea0cf12861b2dc49110e50290aa68c02c","seedPhrase":"inroads ardent mammal soggy history nexus camp inactive novelty agenda syllabus lettuce nexus"},
+SessionUser: {"name":"Bob","sessionId":"0526bb978c499ef9164d5a52c8f5920e60778b83e88489aea59185f888f85acf1f","seedPhrase":"gone itinerary karate obvious bounced muddy soil ulcers motherly lesson iguana roomy iguana"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"05ebf52e19705bae65c22ad21767a1e61ea0cf12861b2dc49110e50290aa68c02c","seedPhrase":"inroads ardent mammal soggy history nexus camp inactive novelty agenda syllabus lettuce nexus"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05ebf52e19705bae65c22ad21767a1e61ea0cf12861b2dc49110e50290aa68c02c","seedPhrase":"inroads ardent mammal soggy history nexus camp inactive novelty agenda syllabus lettuce nexus"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"0526bb978c499ef9164d5a52c8f5920e60778b83e88489aea59185f888f85acf1f","seedPhrase":"gone itinerary karate obvious bounced muddy soil ulcers motherly lesson iguana roomy iguana"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"0526bb978c499ef9164d5a52c8f5920e60778b83e88489aea59185f888f85acf1f","seedPhrase":"gone itinerary karate obvious bounced muddy soil ulcers motherly lesson iguana roomy iguana"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05ebf52e19705bae65c22ad21767a1e61ea0cf12861b2dc49110e50290aa68c02c","seedPhrase":"inroads ardent mammal soggy history nexus camp inactive novelty agenda syllabus lettuce nexus"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"0526bb978c499ef9164d5a52c8f5920e60778b83e88489aea59185f888f85acf1f","seedPhrase":"gone itinerary karate obvious bounced muddy soil ulcers motherly lesson iguana roomy iguana"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 290529,
+    [Symbol(trigger_async_id_symbol)]: 290442,
+    [Symbol(kResourceStore)]: undefined
+  }
+]
+random snode for user: 05ebf52e19705bae65c22ad21767a1e61ea0cf12861b2dc49110e50290aa68c02c is snode: cd6d8a7336f01a062ab14bd27218b1843fd45e5f99e4d48a1922806ff1e3faa3
+storing to snode https://95.216.137.153:22021/storage_rpc/v1
+storing to snode https://95.216.137.153:22021/storage_rpc/v1
+storing to snode https://95.216.137.153:22021/storage_rpc/v1
+random snode for user: 0526bb978c499ef9164d5a52c8f5920e60778b83e88489aea59185f888f85acf1f is snode: 07675c83ec30537c296f622cf38b8df50f2a4bbb11daa8a65ce562930a680e97
+storing to snode https://93.95.231.60:22115/storage_rpc/v1
+storing to snode https://93.95.231.60:22115/storage_rpc/v1
+storing to snode https://93.95.231.60:22115/storage_rpc/v1
+storeStatus for Alice: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "inroads ardent mammal soggy history nexus camp inactive novelty agenda syllabus lettuce nexus"
+	"Bob": "gone itinerary karate obvious bounced muddy soil ulcers motherly lesson iguana roomy iguana" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+running  xcrun simctl privacy 064F4F80-B81C-4B72-9715-43CD18975139 reset all undefined
+was run:  xcrun simctl privacy 064F4F80-B81C-4B72-9715-43CD18975139 reset all undefined { stdout: '', stderr: '' }
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+running  xcrun simctl privacy 56D8BA2F-BA0C-4D8F-8E5B-FD928E2C7C66 reset all undefined
+was run:  xcrun simctl privacy 56D8BA2F-BA0C-4D8F-8E5B-FD928E2C7C66 reset all undefined { stdout: '', stderr: '' }
+Waiting for "accessibility id" and "Restore your session button" to be present
+Waiting for "accessibility id" and "Restore your session button" to be present
+'Restore your session button' has been found
+'Restore your session button' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+Waiting for "accessibility id" and "Recovery password input" to be present
+Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+Waiting for "accessibility id" and "Recovery password input" to be present
+'Recovery password input' has been found
+'Recovery password input' has been found
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+'Continue' has been found
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+'Slow mode notifications button' has been found
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+'Continue' has been found
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Loading animation not found
+Loading animation has finished
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow doesn't exist, time expired
+doesElementExist failed with accessibility id Allow
+Allow doesn't exist, time expired
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+'New conversation button' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Text found to include Alice
+'Conversation list item' and 'Alice' has been found
+Text found to include Bob
+'Conversation list item' and 'Bob' has been found
+running  xcrun simctl addmedia 064F4F80-B81C-4B72-9715-43CD18975139 run/test/specs/media/test_image.jpg
+was run:  xcrun simctl addmedia 064F4F80-B81C-4B72-9715-43CD18975139 run/test/specs/media/test_image.jpg { stdout: '', stderr: '' }
+Waiting for "accessibility id" and "Session" to be present
+'Session' has been found
+{ y: 198, x: 235, width: 69, height: 91 }
+Swiped right on  Session
+Waiting for "accessibility id" and "Photos" to be present
+'Photos' has been found
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeButton[@name="Continue"]
+//XCUIElementTypeButton[@name="Continue"] doesn't exist, time expired
+Photos app opened without a "What's New" screen, proceeding
+Waiting for "accessibility id" and "Select" to be present
+'Select' has been found
+[matchAndTapImage] Found 49 elements for xpath "//XCUIElementTypeImage"
+[matchAndTapImage] Processing element 1/49
+[matchAndTapImage] Processing element 2/49
+[matchAndTapImage] Processing element 3/49
+[matchAndTapImage] Processing element 4/49
+[matchAndTapImage] Processing element 5/49
+[matchAndTapImage] Processing element 6/49
+[matchAndTapImage] Processing element 7/49
+[matchAndTapImage] Processing element 8/49
+[matchAndTapImage] Processing element 9/49
+[matchAndTapImage] Processing element 10/49
+[matchAndTapImage] Processing element 11/49
+[matchAndTapImage] Processing element 12/49
+[matchAndTapImage] Processing element 13/49
+[matchAndTapImage] Processing element 14/49
+[matchAndTapImage] Processing element 15/49
+[matchAndTapImage] Processing element 16/49
+[matchAndTapImage] Processing element 17/49
+[matchAndTapImage] Processing element 18/49
+[matchAndTapImage] Processing element 19/49
+[matchAndTapImage] Processing element 20/49
+[matchAndTapImage] Processing element 21/49
+[matchAndTapImage] Processing element 22/49
+[matchAndTapImage] Processing element 23/49
+[matchAndTapImage] Processing element 24/49
+[matchAndTapImage] Match score for element 24: 0.9818
+[matchAndTapImage] Tapping first match with 98.18% confidence
+Tapped coordinates 397, 377
+Waiting for "accessibility id" and "Share" to be present
+'Share' has been found
+Waiting for "xpath" and "//XCUIElementTypeCell[@name="Session"]" to be present
+'//XCUIElementTypeCell[@name="Session"]' has been found
+Waiting for "accessibility id" and "Contact" to be present with "Bob"
+Waiting for "accessibility id" and "Contact" to be present with "Bob"
+Waiting for "accessibility id" and "Contact" to be present with "Bob"
+Text found to include Bob
+'Contact' and 'Bob' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Text input box' }
+Waiting for "accessibility id" and "Text input box" to be present
+'Text input box' has been found
+Waiting for "accessibility id" and "Send button" to be present
+'Send button' has been found
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Loading animation not found
+Loading animation has finished
+Waiting for "accessibility id" and "Untrusted attachment message" to be present
+'Untrusted attachment message' has been found
+doesElementExist failed with accessibility id Modal heading
+Modal heading Doesn't exist but retrying
+doesElementExist failed with accessibility id Modal heading
+Modal heading Doesn't exist but retrying
+Waiting for "accessibility id" and "Modal heading" to be present
+'Modal heading' has been found
+Modal heading is correct
+Waiting for "accessibility id" and "Modal description" to be present
+'Modal description' has been found

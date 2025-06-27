@@ -1,0 +1,1480 @@
+
+
+==========> Running "Set nickname @ios @high-risk @2-devices"
+
+
+starting capabilitiesIndex 0 ios
+openiOSApp
+starting capabilitiesIndex 1 ios
+openiOSApp
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"0511bc0d83a09ba96360ced7e0f4ac1614e3540df01d9999db110ce70b94762309","seedPhrase":"budget sphere nexus candy twang cocoa doing regular afield gels cuffs coils cuffs"},
+SessionUser: {"name":"Bob","sessionId":"05919dc0fcf95ed47976a86e3d3644b2cbbdf1451eea163e6aa987b0c463da7918","seedPhrase":"oven pitched inundate honked jewels chrome dawn nudged neon unsafe wedge repent neon"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"0511bc0d83a09ba96360ced7e0f4ac1614e3540df01d9999db110ce70b94762309","seedPhrase":"budget sphere nexus candy twang cocoa doing regular afield gels cuffs coils cuffs"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"0511bc0d83a09ba96360ced7e0f4ac1614e3540df01d9999db110ce70b94762309","seedPhrase":"budget sphere nexus candy twang cocoa doing regular afield gels cuffs coils cuffs"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"05919dc0fcf95ed47976a86e3d3644b2cbbdf1451eea163e6aa987b0c463da7918","seedPhrase":"oven pitched inundate honked jewels chrome dawn nudged neon unsafe wedge repent neon"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"05919dc0fcf95ed47976a86e3d3644b2cbbdf1451eea163e6aa987b0c463da7918","seedPhrase":"oven pitched inundate honked jewels chrome dawn nudged neon unsafe wedge repent neon"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"0511bc0d83a09ba96360ced7e0f4ac1614e3540df01d9999db110ce70b94762309","seedPhrase":"budget sphere nexus candy twang cocoa doing regular afield gels cuffs coils cuffs"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"05919dc0fcf95ed47976a86e3d3644b2cbbdf1451eea163e6aa987b0c463da7918","seedPhrase":"oven pitched inundate honked jewels chrome dawn nudged neon unsafe wedge repent neon"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 354903,
+    [Symbol(trigger_async_id_symbol)]: 354421,
+    [Symbol(kResourceStore)]: undefined
+  }
+]
+random snode for user: 05919dc0fcf95ed47976a86e3d3644b2cbbdf1451eea163e6aa987b0c463da7918 is snode: 31889ce977ebce00683109b6253533b3a8f5cc53570242f608e74d7aa0c46bf0
+storing to snode https://38.242.220.75:22021/storage_rpc/v1
+storing to snode https://38.242.220.75:22021/storage_rpc/v1
+storing to snode https://38.242.220.75:22021/storage_rpc/v1
+random snode for user: 0511bc0d83a09ba96360ced7e0f4ac1614e3540df01d9999db110ce70b94762309 is snode: 917e700d6b0afd75d1df45c7250979489478cd3c2c30dfe6297ad3040ccee398
+storing to snode https://195.179.231.246:22021/storage_rpc/v1
+storing to snode https://195.179.231.246:22021/storage_rpc/v1
+storing to snode https://195.179.231.246:22021/storage_rpc/v1
+storeStatus for Bob: [ 200, 200, 200 ]
+storeStatus for Alice: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "budget sphere nexus candy twang cocoa doing regular afield gels cuffs coils cuffs"
+	"Bob": "oven pitched inundate honked jewels chrome dawn nudged neon unsafe wedge repent neon" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+running  xcrun simctl privacy 84884861-F8EF-4481-A001-B403F2649FCF reset all undefined
+was run:  xcrun simctl privacy 84884861-F8EF-4481-A001-B403F2649FCF reset all undefined { stdout: '', stderr: '' }
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+//XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+iosPermissions null
+No iosPermissions null
+running  xcrun simctl privacy C0EE6A21-044D-4B6E-B9A5-7AB977ADF305 reset all undefined
+was run:  xcrun simctl privacy C0EE6A21-044D-4B6E-B9A5-7AB977ADF305 reset all undefined { stdout: '', stderr: '' }
+Waiting for "accessibility id" and "Restore your session button" to be present
+Waiting for "accessibility id" and "Restore your session button" to be present
+'Restore your session button' has been found
+'Restore your session button' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+Waiting for "accessibility id" and "Recovery password input" to be present
+Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+Waiting for "accessibility id" and "Recovery password input" to be present
+'Recovery password input' has been found
+'Recovery password input' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+Waiting for "accessibility id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+'Slow mode notifications button' has been found
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+'Continue' has been found
+'Continue' has been found
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Waiting for "accessibility id" and "Loading animation" to be present
+Waiting for "accessibility id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+Loading animation not found
+Loading animation has finished
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow Doesn't exist but retrying
+doesElementExist failed with accessibility id Allow
+Allow doesn't exist, time expired
+doesElementExist failed with accessibility id Allow
+Allow doesn't exist, time expired
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Waiting for "accessibility id" and "Continue" to be present
+Waiting for "accessibility id" and "Continue" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+waitForTextElementToBePresent threw: "accessibility id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+'New conversation button' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Text found to include Bob
+'Conversation list item' and 'Bob' has been found
+Text found to include Alice
+'Conversation list item' and 'Alice' has been found
+Waiting for "accessibility id" and "More options" to be present
+'More options' has been found
+Waiting for "accessibility id" and "Username" to be present
+'Username' has been found
+Waiting for "accessibility id" and "Username input" to be present
+'Username input' has been found
+Waiting for "accessibility id" and "Modal heading" to be present
+'Modal heading' has been found
+Modal heading is correct
+Waiting for "accessibility id" and "Modal description" to be present
+'Modal description' has been found
+Modal description is correct
+Locator being used: { strategy: 'accessibility id', selector: 'Username input' }
+Waiting for "accessibility id" and "Username input" to be present
+'Username input' has been found
+Waiting for "accessibility id" and "Save" to be present
+'Save' has been found
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
+Waiting for "accessibility id" and "Back" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Back
