@@ -61,7 +61,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
       )
     )
   );
-  // Leave conversation 
+  // Leave conversation
   await unknown1.navigateBack();
   // Leave Message Requests screen (Android)
   await unknown1.onAndroid().navigateBack();

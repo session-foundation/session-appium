@@ -11,7 +11,7 @@ export interface ReportContext {
   risk: string;
   runNumber: number;
   runAttempt: number;
-  runID: number,
+  runID: number;
   reportFolder: string;
   reportUrl: string;
   githubRunUrl: string;
@@ -27,7 +27,7 @@ export function getReportContextFromEnv(): ReportContext {
   const risk = process.env.RISK?.trim() || 'full';
   const runNumber = Number(process.env.GITHUB_RUN_NUMBER);
   const runAttempt = Number(process.env.GITHUB_RUN_ATTEMPT);
-  const runID = Number(process.env.GITHUB_RUN_ID)
+  const runID = Number(process.env.GITHUB_RUN_ID);
   const reportFolder = `run-${runNumber}.${runAttempt}-${platform}-${build}-${risk}`;
   const reportUrl = `https://session-foundation.github.io/session-appium/${platform}/${reportFolder}/`;
   const githubRunUrl = `https://github.com/session-foundation/session-appium/actions/runs/${runID}`;
@@ -62,7 +62,7 @@ export async function writeEnvironmentProperties(ctx: ReportContext) {
 // The Executors block shows up in the report dashboard and links back to the CI run
 // It also allows us to access history through trend graphs and test results
 export async function writeExecutorJson(ctx: ReportContext) {
-  const buildOrder = ctx.runAttempt > 1 ? `${ctx.runNumber}.${ctx.runAttempt}` : `${ctx.runNumber}`; 
+  const buildOrder = ctx.runAttempt > 1 ? `${ctx.runNumber}.${ctx.runAttempt}` : `${ctx.runNumber}`;
   const executor = {
     name: 'GitHub Actions',
     type: 'github',
