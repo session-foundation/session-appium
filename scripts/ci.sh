@@ -55,8 +55,8 @@ function create_emulators() {
         # Path to the AVD's config.ini file
         CONFIG_FILE="$HOME/.android/avd/emulator$i.avd/config.ini"
 
-        # Set the RAM size to 6GB (6144MB)
-        sed -i 's/^hw\.ramSize=.*/hw.ramSize=6144/' "$CONFIG_FILE"
+        # Set the RAM size to GB (4192MB)
+        sed -i 's/^hw\.ramSize=.*/hw.ramSize=4192/' "$CONFIG_FILE"
 
     done
 
@@ -74,7 +74,7 @@ function start_for_snapshots() {
 # let the emulators start and be ready (check cpu usage) before calling this.
 # We want to take a snapshot woth emulators state as "done" as we can
 function force_save_snapshots() {
-    values=("5554" "5556" "5558" "5560" "5562" "5564" "5566" "5568")
+    values=("5554" "5556" "5558" "5560")
     for val in "${values[@]}"
     do
         adb -s emulator-$val emu avd snapshot save plop.snapshot
@@ -92,17 +92,12 @@ function start_with_snapshots() {
     # Set window position (optional in headless)
     sed -i "s/^window.x.*/window.x=$(( 100 + (i-1) * 400))/" "$EMU_CONFIG_FILE"
 
-    DISPLAY=:0 emulator @emulator$i \
-      -gpu host \
-      -accel on \
-      -no-snapshot-save \
-      -snapshot plop.snapshot \
-      -force-snapshot-load \
-      -no-window &
+    # DISPLAY=:0 emulator @emulator$i -gpu host -accel on -no-snapshot-save -snapshot plop.snapshot -force-snapshot-load -no-window &
+    DISPLAY=:0 emulator @emulator$i -gpu host -accel on -no-snapshot-save -snapshot plop.snapshot -force-snapshot-load &
 
     sleep 5
   done
-} 
+}
 
 function wait_for_emulators() {
     for port in 5554 5556 5558 5560
@@ -118,3 +113,6 @@ function wait_for_emulators() {
         done
     done
 }
+
+
+set +x
