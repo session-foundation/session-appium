@@ -13,19 +13,6 @@ if (process.env.CI !== '1' || process.env.ALLURE_ENABLED === 'false') {
   process.exit(0);
 }
 
-// // Create environment.properties file with platform and build info
-// async function createEnvProperties(
-//   platform: SupportedPlatformsType,
-//   build: string,
-//   artifact: string
-// ) {
-//   await fs.ensureDir(allureResultsDir);
-//   const envPropertiesFile = path.join(allureResultsDir, 'environment.properties');
-//   const content = `platform=${platform}\nbuild=${build}\nartifact=${artifact}`;
-//   await fs.writeFile(envPropertiesFile, content);
-//   console.log(`Created environment.properties:\n${content}`);
-// }
-
 // Generate Allure report from the results directory
 async function generateAllureReport() {
   return new Promise<void>((resolve, reject) => {
