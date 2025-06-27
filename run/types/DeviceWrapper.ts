@@ -1564,7 +1564,6 @@ export class DeviceWrapper {
       } else {
         throw new Error(`File "${testFile}" not found after attempting to reveal it.`);
       }
-      await this.clickOnTextElementById('android:id/title', testFile);
     }
     // Checking Sent status on both platforms
     await this.waitForTextElementToBePresent({
