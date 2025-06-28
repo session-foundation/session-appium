@@ -10,7 +10,7 @@ import {
 } from './locators/settings';
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Hide recovery password',

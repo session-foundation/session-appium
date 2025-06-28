@@ -6,7 +6,7 @@ import { LongPressBlockOption } from './locators/home';
 import { UserSettings } from './locators/settings';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 // Block option no longer available on iOS in conversation list
 androidIt({

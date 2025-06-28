@@ -7,7 +7,7 @@ import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 import { runOnlyOnIOS } from './utils/run_on';
 import { sleepFor } from './utils/sleep_for';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Create contact',

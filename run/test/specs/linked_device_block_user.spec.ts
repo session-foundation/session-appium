@@ -6,7 +6,7 @@ import { UserSettings } from './locators/settings';
 import { open_Alice2_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Block user linked device',
@@ -24,7 +24,6 @@ async function blockUserInConversationOptions(
     prebuilt: { bob },
   } = await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: true, testInfo });
   // Block contact
-
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   // Select Block option
   await sleepFor(500);

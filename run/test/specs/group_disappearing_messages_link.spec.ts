@@ -7,7 +7,7 @@ import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 import { OutgoingMessageStatusSent } from './locators/conversation';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Disappearing link to group',

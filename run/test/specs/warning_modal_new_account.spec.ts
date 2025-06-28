@@ -10,7 +10,7 @@ import {
   WarningModalQuitButton,
 } from './locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 // These modals no longer exist in groups rebuild for iOS
 androidIt({

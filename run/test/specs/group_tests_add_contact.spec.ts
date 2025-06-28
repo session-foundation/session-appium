@@ -10,7 +10,7 @@ import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Add contact to group',

@@ -15,7 +15,7 @@ import { runScriptAndLog } from './utils/utilities';
 import { getAdbFullPath } from './utils/binaries';
 import { closeApp } from './utils/open_app';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 // iOS implementation blocked by SES-3809
 androidIt({

@@ -4,7 +4,7 @@ import { open_Alice2 } from './state_builder';
 import { runOnlyOnAndroid, sleepFor } from './utils';
 import { parseDataImage } from './utils/check_colour';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Avatar restored',

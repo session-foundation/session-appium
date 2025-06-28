@@ -4,7 +4,7 @@ import { open_Alice1_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { sleepFor } from './utils';
 import { ConversationItem } from './locators/home';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Send long message 1:1',

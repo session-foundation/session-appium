@@ -4,7 +4,7 @@ import { ExitUserProfile } from './locators';
 import { open_Alice1_bob1_notfriends } from './state_builder';
 import { sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 // skipping tests because they are unreliable on virtual devices, see QA-478
 bothPlatformsItSeparate({

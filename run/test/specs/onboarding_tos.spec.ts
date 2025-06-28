@@ -4,7 +4,7 @@ import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from 
 import { handleChromeFirstTimeOpen } from './utils/chrome_first_time_open';
 import { URLInputField, SafariAddressBar } from './locators/browsers';
 import { ensureHttpsURL } from './utils/utilities';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Onboarding terms of service',

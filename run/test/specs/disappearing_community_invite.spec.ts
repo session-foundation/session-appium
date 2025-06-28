@@ -8,7 +8,7 @@ import { setDisappearingMessage } from './utils/set_disappearing_messages';
 import { testCommunityLink, testCommunityName } from './../../constants/community';
 import { ConversationSettings } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Disappearing community invite message 1:1',

@@ -3,7 +3,7 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME, type AccessibilityId } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Message requests clear all',

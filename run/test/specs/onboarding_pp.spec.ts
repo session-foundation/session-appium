@@ -4,7 +4,7 @@ import { PrivacyPolicyButton, SplashScreenLinks } from './locators/onboarding';
 import { handleChromeFirstTimeOpen } from './utils/chrome_first_time_open';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { ensureHttpsURL } from './utils/utilities';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Onboarding privacy policy',

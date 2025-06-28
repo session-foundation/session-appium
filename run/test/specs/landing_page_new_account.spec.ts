@@ -4,7 +4,7 @@ import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from 
 import { USERNAME } from '../../types/testing';
 import { verifyElementScreenshot } from './utils/verify_screenshots';
 import { EmptyLandingPageScreenshot } from './utils/screenshot_paths';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Landing page new account',

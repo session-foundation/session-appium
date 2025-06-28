@@ -5,7 +5,7 @@ import { CancelSearchButton, NoteToSelfOption } from './locators/global_search';
 import { SearchButton } from './locators/home';
 import { open_Alice2 } from './state_builder';
 import { SupportedPlatformsType } from './utils/open_app';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Hide note to self linked device',

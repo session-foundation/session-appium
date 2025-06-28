@@ -7,7 +7,7 @@ import { testCommunityLink, testCommunityName } from './../../constants/communit
 import { ConversationSettings } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Send community invitation',

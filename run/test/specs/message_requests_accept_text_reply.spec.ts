@@ -5,7 +5,7 @@ import { MessageInput } from './locators/conversation';
 import { EnterAccountID } from './locators/start_conversation';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Accept message request with text',

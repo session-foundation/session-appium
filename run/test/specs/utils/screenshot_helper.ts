@@ -1,6 +1,6 @@
 // run/test/specs/utils/screenshot-helper.ts
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 import * as fs from 'fs';
 import * as path from 'path';
 import sharp from 'sharp';
@@ -37,13 +37,13 @@ async function addDeviceLabel(screenshot: Buffer, device: DeviceWrapper): Promis
   const width = metadata.width;
   const deviceName = device.getDeviceIdentity();
 
-  // Create semi-transparent label overlay
+  // Create transparent label overlay
   const labelHeight = 60;
   const fontSize = 28;
   const label = Buffer.from(`
     <svg width="${width}" height="${labelHeight}">
-      <rect x="0" y="0" width="${width}" height="${labelHeight}" 
-            fill="black" fill-opacity="0.7"/>
+      <rect x="0" y="0" width="${width}" height="${labelHeight}"
+            fill="black" fill-opacity="0"/>
       <text x="${width / 2}" y="${labelHeight / 2 + fontSize / 3}" 
             font-family="-apple-system, Arial, sans-serif" 
             font-size="${fontSize}" 

@@ -1,4 +1,4 @@
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, DisappearModes } from '../../types/testing';
 import { open_Alice1_Bob1_friends } from './state_builder';

@@ -4,7 +4,7 @@ import { verifyElementScreenshot } from './utils/verify_screenshots';
 import { EmptyLandingPageScreenshot } from './utils/screenshot_paths';
 import { USERNAME } from '@session-foundation/qa-seeder';
 import { linkedDevice } from './utils/link_device';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Landing page restore account',

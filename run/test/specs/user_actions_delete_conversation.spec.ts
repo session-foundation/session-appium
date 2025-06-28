@@ -4,7 +4,7 @@ import { USERNAME } from '../../types/testing';
 import { DeleteContactModalConfirm } from './locators/global';
 import { open_Alice2_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType } from './utils/open_app';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Delete conversation',

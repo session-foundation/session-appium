@@ -8,7 +8,7 @@ import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppFourDevices } from './utils/open_app';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Leave group linked device',

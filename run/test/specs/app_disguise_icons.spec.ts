@@ -6,7 +6,7 @@ import { AppearanceMenuItem, SelectAppIcon, UserSettings } from './locators/sett
 import { verifyElementScreenshot } from './utils/verify_screenshots';
 import { AppDisguisePageScreenshot } from './utils/screenshot_paths';
 import { sleepFor } from './utils';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'App disguise icons',

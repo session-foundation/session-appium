@@ -5,7 +5,7 @@ import { SaveNameChangeButton, UserSettings } from './locators/settings';
 import { open_Alice2 } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Change username linked device',

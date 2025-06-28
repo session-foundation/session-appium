@@ -4,7 +4,7 @@ import { UsernameSettings } from './locators';
 import { UserSettings } from './locators/settings';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Link device',

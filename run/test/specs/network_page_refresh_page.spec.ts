@@ -4,7 +4,7 @@ import { LastUpdatedTimeStamp, SessionNetworkMenuItem } from './locators/network
 import { UserSettings } from './locators/settings';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, openAppOnPlatformSingleDevice } from './utils/open_app';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Refresh network page',

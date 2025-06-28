@@ -4,7 +4,7 @@ import { CreateGroupOption } from './locators/start_conversation';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { LatestReleaseBanner } from './locators/groups';
 import { open_Alice1_Bob1_friends } from './state_builder';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Create group banner',

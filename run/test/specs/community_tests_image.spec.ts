@@ -5,7 +5,7 @@ import { open_Alice1_Bob1_friends } from './state_builder';
 import { newUser } from './utils/create_account';
 import { joinCommunity } from './utils/join_community';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Send image to community',

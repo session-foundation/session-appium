@@ -2,7 +2,7 @@ import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Send GIF to group',
@@ -34,7 +34,6 @@ async function sendGifGroupiOS(platform: SupportedPlatformsType, testInfo: TestI
 
   await alice1.sendGIF(testMessage);
   await sleepFor(500);
-  throw new Error('Boom!');
   await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',

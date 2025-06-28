@@ -3,7 +3,7 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { open_Alice2 } from './state_builder';
 import { joinCommunity } from './utils/join_community';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Join community test',

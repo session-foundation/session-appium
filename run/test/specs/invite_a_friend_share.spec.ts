@@ -5,7 +5,7 @@ import { USERNAME } from '../../types/testing';
 import { PlusButton } from './locators/home';
 import { AccountIDField, InviteAFriendOption, ShareButton } from './locators/start_conversation';
 import { IOS_XPATHS } from '../../constants';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Invite a friend',
