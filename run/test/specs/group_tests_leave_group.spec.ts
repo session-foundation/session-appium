@@ -5,6 +5,7 @@ import { LeaveGroupButton } from './locators/groups';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Leave group',
@@ -13,7 +14,7 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function leaveGroup(platform: SupportedPlatformsType) {
+async function leaveGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Leave group';
 
   const {
@@ -22,8 +23,7 @@ async function leaveGroup(platform: SupportedPlatformsType) {
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true,
-  });
+    focusGroupConvo: true, testInfo });
   await charlie1.clickOnElementAll(new ConversationSettings(charlie1));
   await sleepFor(1000);
   await charlie1.clickOnElementAll(new LeaveGroupButton(charlie1));

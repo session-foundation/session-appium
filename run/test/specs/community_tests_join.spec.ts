@@ -3,6 +3,7 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { open_Alice2 } from './state_builder';
 import { joinCommunity } from './utils/join_community';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Join community test',
@@ -11,10 +12,10 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function joinCommunityTest(platform: SupportedPlatformsType) {
+async function joinCommunityTest(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, alice2 },
-  } = await open_Alice2({ platform });
+  } = await open_Alice2({ platform, testInfo });
   const testMessage = `Test message + ${new Date().getTime()}`;
 
   await joinCommunity(alice1, testCommunityLink, testCommunityName);

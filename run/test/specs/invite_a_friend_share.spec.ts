@@ -5,6 +5,7 @@ import { USERNAME } from '../../types/testing';
 import { PlusButton } from './locators/home';
 import { AccountIDField, InviteAFriendOption, ShareButton } from './locators/start_conversation';
 import { IOS_XPATHS } from '../../constants';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Invite a friend',
@@ -13,8 +14,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 1,
 });
 
-async function inviteAFriend(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function inviteAFriend(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   let messageElement;
   // This is a const so that the user.accountID can be used later on
   const user = await newUser(device, USERNAME.ALICE);

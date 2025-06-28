@@ -5,6 +5,7 @@ import { SaveNameChangeButton, UserSettings } from './locators/settings';
 import { open_Alice2 } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Change username linked device',
@@ -18,11 +19,11 @@ bothPlatformsItSeparate({
   },
 });
 
-async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
+async function changeUsernameLinkediOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, alice2 },
     prebuilt: { alice },
-  } = await open_Alice2({ platform });
+  } = await open_Alice2({ platform, testInfo });
 
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
@@ -67,11 +68,11 @@ async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
   await closeApp(alice1, alice2);
 }
 
-async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType) {
+async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, alice2 },
     prebuilt: { alice },
-  } = await open_Alice2({ platform });
+  } = await open_Alice2({ platform, testInfo });
 
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar

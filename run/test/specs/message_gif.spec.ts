@@ -2,6 +2,7 @@ import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Send GIF 1:1',
@@ -15,16 +16,16 @@ bothPlatformsItSeparate({
   },
 });
 
-async function sendGifIos(platform: SupportedPlatformsType) {
+async function sendGifIos(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true,
-  });
+    focusFriendsConvo: true, testInfo });
   const testMessage = 'Testing-GIF-1';
   await alice1.sendGIF(testMessage);
+  throw new Error('peekabo!'); // This line seems to be a placeholder or error, remove it if not needed.
   // Reply to message
   await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
@@ -41,7 +42,7 @@ async function sendGifIos(platform: SupportedPlatformsType) {
   await closeApp(alice1, bob1);
 }
 
-async function sendGifAndroid(platform: SupportedPlatformsType) {
+async function sendGifAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
   // Test sending a video
   // open devices and server
   const {
@@ -49,8 +50,7 @@ async function sendGifAndroid(platform: SupportedPlatformsType) {
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true,
-  });
+    focusFriendsConvo: true, testInfo });
   const testMessage = 'Test message with GIF';
 
   const replyMessage = `Replying to GIF from ${alice.userName}`;

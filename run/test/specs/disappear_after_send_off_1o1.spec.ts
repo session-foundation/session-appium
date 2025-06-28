@@ -14,6 +14,7 @@ import { sleepFor } from './utils';
 import { checkDisappearingControlMessage } from './utils/disappearing_control_messages';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Disappear after send off 1:1',
@@ -22,11 +23,11 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
+async function disappearAfterSendOff1o1(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, alice2, bob1 },
     prebuilt: { alice, bob },
-  } = await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: true });
+  } = await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: true, testInfo });
 
   const mode: DisappearModes = 'send';
   const controlMode: DisappearActions = 'sent';

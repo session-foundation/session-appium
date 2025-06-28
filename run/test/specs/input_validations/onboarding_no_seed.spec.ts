@@ -7,6 +7,7 @@ import {
   SeedPhraseInput,
 } from '../locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Onboarding no seed',
@@ -15,8 +16,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 1,
 });
 
-async function onboardingNoSeed(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function onboardingNoSeed(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   await device.clickOnElementAll(new AccountRestoreButton(device));
   const emptySeed = '';
   // the expected error is 'Recovery Password not long enough' which is represented by the following localized string

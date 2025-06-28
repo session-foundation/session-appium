@@ -10,6 +10,7 @@ import {
 } from './locators/settings';
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Hide recovery password',
@@ -18,8 +19,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function hideRecoveryPassword(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
+async function hideRecoveryPassword(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device1, device2 } = await openAppTwoDevices(platform, testInfo);
   await linkedDevice(device1, device2, USERNAME.ALICE);
   await device1.clickOnElementAll(new UserSettings(device1));
   await device1.scrollDown();

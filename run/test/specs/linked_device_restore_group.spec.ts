@@ -4,6 +4,7 @@ import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { closeApp, openAppFourDevices, SupportedPlatformsType } from './utils/open_app';
 import { restoreAccount } from './utils/restore_account';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Restore group',
@@ -11,9 +12,9 @@ bothPlatformsIt({
   testCb: restoreGroup,
   countOfDevicesNeeded: 4,
 });
-async function restoreGroup(platform: SupportedPlatformsType) {
+async function restoreGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Restore group';
-  const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
+  const { device1, device2, device3, device4 } = await openAppFourDevices(platform, testInfo);
   const [alice, bob, charlie] = await Promise.all([
     newUser(device1, USERNAME.ALICE),
     newUser(device2, USERNAME.BOB),

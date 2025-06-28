@@ -7,6 +7,7 @@ import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 import { OutgoingMessageStatusSent } from './locators/conversation';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Disappearing link message 1:1',
@@ -24,13 +25,12 @@ const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after read option';
 const testLink = `https://getsession.org/`;
 
-async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
+async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true,
-  });
+    focusFriendsConvo: true, testInfo });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   // Send a link
   await alice1.inputText(testLink, {
@@ -82,13 +82,12 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
   await closeApp(alice1, bob1);
 }
 
-async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsType) {
+async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true,
-  });
+    focusFriendsConvo: true, testInfo });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   // await alice1.navigateBack();
   // Send a link

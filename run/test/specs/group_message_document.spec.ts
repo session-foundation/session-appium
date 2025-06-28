@@ -2,6 +2,7 @@ import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Send document to group',
@@ -15,7 +16,7 @@ bothPlatformsItSeparate({
   },
 });
 
-async function sendDocumentGroupiOS(platform: SupportedPlatformsType) {
+async function sendDocumentGroupiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Message checks for groups';
   const {
     devices: { alice1, bob1, charlie1 },
@@ -23,8 +24,7 @@ async function sendDocumentGroupiOS(platform: SupportedPlatformsType) {
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true,
-  });
+    focusGroupConvo: true, testInfo });
   const testMessage = 'Testing-document-1';
   const replyMessage = `Replying to document from ${alice.userName}`;
 
@@ -52,7 +52,7 @@ async function sendDocumentGroupiOS(platform: SupportedPlatformsType) {
   await closeApp(alice1, bob1, charlie1);
 }
 
-async function sendDocumentGroupAndroid(platform: SupportedPlatformsType) {
+async function sendDocumentGroupAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Message checks for groups';
   const {
     devices: { alice1, bob1, charlie1 },
@@ -60,8 +60,7 @@ async function sendDocumentGroupAndroid(platform: SupportedPlatformsType) {
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true,
-  });
+    focusGroupConvo: true, testInfo });
 
   const replyMessage = `Replying to document from ${alice.userName} in ${testGroupName}`;
   await alice1.sendDocument();

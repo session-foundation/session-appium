@@ -4,6 +4,7 @@ import { open_Alice2 } from './state_builder';
 import { runOnlyOnAndroid, sleepFor } from './utils';
 import { parseDataImage } from './utils/check_colour';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Avatar restored',
@@ -12,10 +13,10 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function avatarRestored(platform: SupportedPlatformsType) {
+async function avatarRestored(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, alice2 },
-  } = await open_Alice2({ platform });
+  } = await open_Alice2({ platform, testInfo });
 
   let expectedPixelHexColour: string;
   if (platform === 'android') {

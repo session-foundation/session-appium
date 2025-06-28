@@ -4,6 +4,7 @@ import { BlockUser, BlockUserConfirmationModal } from './locators';
 import { ConversationSettings } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Unblock user',
@@ -12,14 +13,13 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function unblockUser(platform: SupportedPlatformsType) {
+async function unblockUser(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { alice, bob },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true,
-  });
+    focusFriendsConvo: true, testInfo });
   const blockedMessage = `Blocked message from ${bob.userName} to ${alice.userName}`;
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   await alice1.clickOnElementAll(new BlockUser(alice1));

@@ -2,6 +2,7 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Read status',
@@ -10,14 +11,13 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function readStatus(platform: SupportedPlatformsType) {
+async function readStatus(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { alice, bob },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true,
-  });
+    focusFriendsConvo: true, testInfo });
   const testMessage = 'Testing read status';
   // Go to settings to turn on read status
   // Device 1

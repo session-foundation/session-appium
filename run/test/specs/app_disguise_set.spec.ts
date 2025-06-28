@@ -15,6 +15,7 @@ import { runScriptAndLog } from './utils/utilities';
 import { getAdbFullPath } from './utils/binaries';
 import { closeApp } from './utils/open_app';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { TestInfo } from '@playwright/test';
 
 // iOS implementation blocked by SES-3809
 androidIt({
@@ -24,8 +25,8 @@ androidIt({
   testCb: appDisguiseSetIcon,
 });
 
-async function appDisguiseSetIcon(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function appDisguiseSetIcon(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   await newUser(device, USERNAME.ALICE);
   await device.clickOnElementAll(new UserSettings(device));
   // Must scroll down to reveal the Appearance menu item

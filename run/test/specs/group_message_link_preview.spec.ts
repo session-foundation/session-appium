@@ -5,6 +5,7 @@ import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { OutgoingMessageStatusSent } from './locators/conversation';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Send link to group',
@@ -18,7 +19,7 @@ bothPlatformsItSeparate({
   },
 });
 
-async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
+async function sendLinkGroupiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Message checks for groups';
   const testLink = `https://getsession.org/`;
 
@@ -28,8 +29,7 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true,
-  });
+    focusGroupConvo: true, testInfo });
   const replyMessage = `Replying to link from ${alice.userName} in group ${testGroupName}`;
   // Create contact between User A and User B
   await alice1.inputText(testLink, {
@@ -82,7 +82,7 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
   await closeApp(alice1, bob1, charlie1);
 }
 
-async function sendLinkGroupAndroid(platform: SupportedPlatformsType) {
+async function sendLinkGroupAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Message checks for groups';
 
   const {
@@ -91,8 +91,7 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType) {
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true,
-  });
+    focusGroupConvo: true, testInfo });
   const testLink = `https://getsession.org/`;
   // Send a link
   await alice1.inputText(testLink, {

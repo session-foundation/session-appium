@@ -4,6 +4,7 @@ import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Disappearing GIF message 1:1',
@@ -22,14 +23,13 @@ const time = DISAPPEARING_TIMES.ONE_MINUTE;
 const timerType = 'Disappear after send option';
 const testMessage = "Testing disappearing messages for GIF's";
 
-async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
+async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testMessage = "Testing disappearing messages for GIF's";
   const {
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true,
-  });
+    focusFriendsConvo: true, testInfo });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   // Click on attachments button
   await alice1.sendGIF(testMessage);
@@ -54,13 +54,12 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
   await closeApp(alice1, bob1);
 }
 
-async function disappearingGifMessage1o1Android(platform: SupportedPlatformsType) {
+async function disappearingGifMessage1o1Android(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true,
-  });
+    focusFriendsConvo: true, testInfo });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   // Wait for control messages to disappear before sending image
   // (to check if the control messages are interfering with finding the untrusted attachment message)

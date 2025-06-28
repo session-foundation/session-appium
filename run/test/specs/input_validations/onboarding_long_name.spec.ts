@@ -7,6 +7,7 @@ import {
   ErrorMessage,
 } from '../locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Onboarding long name',
@@ -15,8 +16,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 1,
 });
 
-async function onboardingLongName(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function onboardingLongName(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   // the libSession limit for display names is 100 bytes - this string is 101 chars (i.e. 101 bytes)
   const tooLongName =
     'One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed int';

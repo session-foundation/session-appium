@@ -4,6 +4,7 @@ import { USERNAME, type AccessibilityId } from '../../types/testing';
 import { DeleteMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Delete message request in list',
@@ -12,8 +13,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function deleteRequest(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
+async function deleteRequest(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device1, device2 } = await openAppTwoDevices(platform, testInfo);
   const [alice, bob] = await Promise.all([
     newUser(device1, USERNAME.ALICE),
     newUser(device2, USERNAME.BOB),

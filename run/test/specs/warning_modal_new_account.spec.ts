@@ -10,6 +10,7 @@ import {
   WarningModalQuitButton,
 } from './locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 // These modals no longer exist in groups rebuild for iOS
 androidIt({
@@ -19,8 +20,8 @@ androidIt({
   countOfDevicesNeeded: 1,
 });
 
-async function warningModalNewAccount(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function warningModalNewAccount(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   await device.clickOnElementAll(new CreateAccountButton(device));
   await device.inputText(USERNAME.ALICE, new DisplayNameInput(device));
   await device.clickOnElementAll(new ContinueButton(device));

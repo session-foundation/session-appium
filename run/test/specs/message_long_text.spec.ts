@@ -4,6 +4,7 @@ import { open_Alice1_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { sleepFor } from './utils';
 import { ConversationItem } from './locators/home';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Send long message 1:1',
@@ -17,7 +18,7 @@ bothPlatformsItSeparate({
   },
 });
 
-async function sendLongMessageIos(platform: SupportedPlatformsType) {
+async function sendLongMessageIos(platform: SupportedPlatformsType, testInfo: TestInfo) {
   // Sending a long text message
   // Open device and server
   const {
@@ -25,8 +26,7 @@ async function sendLongMessageIos(platform: SupportedPlatformsType) {
     prebuilt: { alice, bob },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true,
-  });
+    focusFriendsConvo: true, testInfo });
   // Send a long message from User A to User B
   await alice1.sendMessage(longText);
   // Reply to message (User B to User A)
@@ -40,7 +40,7 @@ async function sendLongMessageIos(platform: SupportedPlatformsType) {
   await closeApp(alice1, bob1);
 }
 
-async function sendLongMessageAndroid(platform: SupportedPlatformsType) {
+async function sendLongMessageAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
   // Sending a long text message
   // Open device and server
   const {
@@ -48,8 +48,7 @@ async function sendLongMessageAndroid(platform: SupportedPlatformsType) {
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true,
-  });
+    focusFriendsConvo: true, testInfo });
   // Send a long message from User A to User B
   await alice1.sendMessage(longText);
   // Reply to message (User B to User A)

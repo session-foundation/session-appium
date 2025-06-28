@@ -4,6 +4,7 @@ import { CreateGroupOption } from './locators/start_conversation';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { LatestReleaseBanner } from './locators/groups';
 import { open_Alice1_Bob1_friends } from './state_builder';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Create group banner',
@@ -11,13 +12,12 @@ bothPlatformsIt({
   testCb: createGroupBanner,
   countOfDevicesNeeded: 2,
 });
-async function createGroupBanner(platform: SupportedPlatformsType) {
+async function createGroupBanner(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true,
-  });
+    focusFriendsConvo: true, testInfo });
   await alice1.navigateBack();
   // Open the Create Group screen from home
   await alice1.clickOnElementAll(new PlusButton(alice1));

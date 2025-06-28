@@ -1,6 +1,7 @@
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Send voice message to group',
@@ -14,7 +15,7 @@ bothPlatformsItSeparate({
   },
 });
 
-async function sendVoiceMessageGroupiOS(platform: SupportedPlatformsType) {
+async function sendVoiceMessageGroupiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Message checks for groups';
   const {
     devices: { alice1, bob1, charlie1 },
@@ -22,8 +23,7 @@ async function sendVoiceMessageGroupiOS(platform: SupportedPlatformsType) {
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true,
-  });
+    focusGroupConvo: true, testInfo });
   const replyMessage = `Replying to voice message from ${alice.userName} in ${testGroupName}`;
   await alice1.sendVoiceMessage();
   await Promise.all(
@@ -50,7 +50,7 @@ async function sendVoiceMessageGroupiOS(platform: SupportedPlatformsType) {
   await closeApp(alice1, bob1, charlie1);
 }
 
-async function sendVoiceMessageGroupAndroid(platform: SupportedPlatformsType) {
+async function sendVoiceMessageGroupAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
   // open devices
   const testGroupName = 'Message checks for groups';
   const {
@@ -59,8 +59,7 @@ async function sendVoiceMessageGroupAndroid(platform: SupportedPlatformsType) {
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true,
-  });
+    focusGroupConvo: true, testInfo });
   const replyMessage = `Replying to voice message from ${alice.userName} in ${testGroupName}`;
   // Select voice message button to activate recording state
   await alice1.sendVoiceMessage();

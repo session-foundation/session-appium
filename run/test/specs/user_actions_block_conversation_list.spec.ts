@@ -6,6 +6,7 @@ import { LongPressBlockOption } from './locators/home';
 import { UserSettings } from './locators/settings';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 // Block option no longer available on iOS in conversation list
 androidIt({
@@ -15,14 +16,13 @@ androidIt({
   countOfDevicesNeeded: 2,
 });
 
-async function blockUserInConversationList(platform: SupportedPlatformsType) {
+async function blockUserInConversationList(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { bob },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true,
-  });
+    focusFriendsConvo: true, testInfo });
   // Navigate back to conversation list
   await alice1.navigateBack();
   await alice1.longPressConversation(bob.userName);

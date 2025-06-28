@@ -4,6 +4,7 @@ import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from 
 import { handleChromeFirstTimeOpen } from './utils/chrome_first_time_open';
 import { URLInputField, SafariAddressBar } from './locators/browsers';
 import { ensureHttpsURL } from './utils/utilities';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Onboarding terms of service',
@@ -11,8 +12,8 @@ bothPlatformsIt({
   testCb: onboardingTOS,
   countOfDevicesNeeded: 1,
 });
-async function onboardingTOS(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function onboardingTOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   const tosURL = 'https://getsession.org/terms-of-service';
   // Tap the text at the bottom of the splash screen to bring up the TOS/PP links modal
   await device.clickOnElementAll(new SplashScreenLinks(device));

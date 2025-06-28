@@ -5,6 +5,7 @@ import { UserSettings } from './locators/settings';
 import { ConversationAvatar, ConversationSettings } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { ConversationItem } from './locators/home';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Avatar color',
@@ -13,14 +14,13 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function avatarColor(platform: SupportedPlatformsType) {
+async function avatarColor(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: false,
-  });
+    focusFriendsConvo: false, testInfo });
 
   // Get Alice's avatar color on device 1 (Home Screen avatar) and turn it into a hex value
   const alice1PixelColor = await alice1.getElementPixelColor(new UserSettings(alice1));

@@ -4,6 +4,7 @@ import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './loca
 import { DeletedMessage } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Unsend message',
@@ -12,13 +13,12 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function unsendMessage(platform: SupportedPlatformsType) {
+async function unsendMessage(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true,
-  });
+    focusFriendsConvo: true, testInfo });
   const testMessage = 'Checking unsend functionality';
 
   // send message from User A to User B

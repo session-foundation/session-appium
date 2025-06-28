@@ -6,6 +6,7 @@ import { CancelSearchButton, NoteToSelfOption } from './locators/global_search';
 import { SearchButton } from './locators/home';
 import { newUser } from './utils/create_account';
 import { openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Hide note to self',
@@ -21,9 +22,9 @@ bothPlatformsItSeparate({
   },
 });
 
-async function hideNoteToSelf(platform: SupportedPlatformsType) {
+async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const noteToSelf = englishStrippedStr('noteToSelf').toString();
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   await newUser(device, USERNAME.ALICE);
   await device.clickOnElementAll(new SearchButton(device));
   await device.clickOnElementAll(new NoteToSelfOption(device));

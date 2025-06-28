@@ -5,6 +5,7 @@ import { CancelSearchButton, NoteToSelfOption } from './locators/global_search';
 import { SearchButton } from './locators/home';
 import { open_Alice2 } from './state_builder';
 import { SupportedPlatformsType } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Hide note to self linked device',
@@ -20,10 +21,10 @@ bothPlatformsItSeparate({
   },
 });
 
-async function hideNoteToSelf(platform: SupportedPlatformsType) {
+async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, alice2 },
-  } = await open_Alice2({ platform });
+  } = await open_Alice2({ platform, testInfo });
 
   const noteToSelf = englishStrippedStr('noteToSelf').toString();
   await alice1.clickOnElementAll(new SearchButton(alice1));

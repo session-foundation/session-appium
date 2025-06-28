@@ -7,6 +7,7 @@ import {
   ErrorMessage,
 } from '../locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Onboarding no name',
@@ -15,8 +16,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 1,
 });
 
-async function onboardingNoName(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function onboardingNoName(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   await device.clickOnElementAll(new CreateAccountButton(device));
   // the expected error is 'Please enter a display name' which is represented by the following localized string
   const expectedError = englishStrippedStr('displayNameErrorDescription').toString();

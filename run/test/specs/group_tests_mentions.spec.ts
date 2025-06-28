@@ -1,6 +1,7 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Mentions for groups',
@@ -9,7 +10,7 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function mentionsForGroups(platform: SupportedPlatformsType) {
+async function mentionsForGroups(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Mentions test group';
   const {
     devices: { alice1, bob1, charlie1 },
@@ -17,8 +18,7 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true,
-  });
+    focusGroupConvo: true, testInfo });
 
   await alice1.mentionContact(platform, bob);
   // Check format on User B's device

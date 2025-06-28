@@ -4,6 +4,7 @@ import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Disappearing image message 1:1',
@@ -16,13 +17,12 @@ const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 const testMessage = 'Testing disappearing messages for images';
 
-async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
+async function disappearingImageMessage1o1(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true,
-  });
+    focusFriendsConvo: true, testInfo });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   await sleepFor(500);
   await alice1.sendImage(testMessage);

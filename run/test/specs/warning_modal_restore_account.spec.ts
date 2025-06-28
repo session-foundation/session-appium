@@ -9,6 +9,7 @@ import {
   WarningModalQuitButton,
 } from './locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 // These modals no longer exist in groups rebuild for iOS
 androidIt({
   title: 'Warning modal on restore account',
@@ -17,8 +18,8 @@ androidIt({
   countOfDevicesNeeded: 1,
 });
 
-async function warningModalRestoreAccount(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function warningModalRestoreAccount(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   const seedPhrase =
     'eldest fazed hybrid buzzer nasty domestic digit pager unusual purged makeup assorted domestic';
   await device.clickOnElementAll(new AccountRestoreButton(device));

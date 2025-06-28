@@ -5,6 +5,7 @@ import { open_Alice1_Bob1_friends } from './state_builder';
 import { newUser } from './utils/create_account';
 import { joinCommunity } from './utils/join_community';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Send image to community',
@@ -23,14 +24,13 @@ bothPlatformsItSeparate({
 // Tests skipped due to both platforms having unique issues, have made a ticket
 // to investigate further https://optf.atlassian.net/browse/QA-486
 
-async function sendImageCommunityiOS(platform: SupportedPlatformsType) {
+async function sendImageCommunityiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: false,
-  });
+    focusFriendsConvo: false, testInfo });
   const testMessage = 'Testing sending images to communities';
   const testImageMessage = `Image message + ${new Date().getTime()} - ${platform}`;
 
@@ -43,8 +43,8 @@ async function sendImageCommunityiOS(platform: SupportedPlatformsType) {
   await closeApp(alice1, bob1);
 }
 
-async function sendImageCommunityAndroid(platform: SupportedPlatformsType) {
-  const { device1: alice1, device2: bob1 } = await openAppTwoDevices(platform);
+async function sendImageCommunityAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device1: alice1, device2: bob1 } = await openAppTwoDevices(platform, testInfo);
   const time = await alice1.getTimeFromDevice(platform);
   const testMessage = `Testing sending images to communities + ${time} - ${platform}`;
   // Create user A and user B

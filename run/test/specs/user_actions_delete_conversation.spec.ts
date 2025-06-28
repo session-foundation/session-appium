@@ -4,6 +4,7 @@ import { USERNAME } from '../../types/testing';
 import { DeleteContactModalConfirm } from './locators/global';
 import { open_Alice2_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Delete conversation',
@@ -12,11 +13,11 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function deleteConversation(platform: SupportedPlatformsType) {
+async function deleteConversation(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, alice2 },
     prebuilt: { bob },
-  } = await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: false });
+  } = await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: false, testInfo });
 
   // Check contact has loaded on linked device
   // await alice1.navigateBack();

@@ -7,6 +7,7 @@ import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 import { runOnlyOnIOS } from './utils/run_on';
 import { sleepFor } from './utils/sleep_for';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Create contact',
@@ -15,8 +16,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function createContact(platform: SupportedPlatformsType) {
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
+async function createContact(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device1, device2, device3 } = await openAppThreeDevices(platform, testInfo);
   const Alice = await linkedDevice(device1, device3, USERNAME.ALICE);
   const Bob = await newUser(device2, USERNAME.BOB);
 

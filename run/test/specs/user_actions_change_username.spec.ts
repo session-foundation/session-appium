@@ -6,6 +6,7 @@ import { SaveNameChangeButton, UserSettings } from './locators/settings';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppOnPlatformSingleDevice } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Change username',
@@ -19,8 +20,8 @@ bothPlatformsItSeparate({
   },
 });
 
-async function changeUsernameiOS(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function changeUsernameiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   const alice = await newUser(device, USERNAME.ALICE);
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
@@ -53,8 +54,8 @@ async function changeUsernameiOS(platform: SupportedPlatformsType) {
   await closeApp(device);
 }
 
-async function changeUsernameAndroid(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function changeUsernameAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   const alice = await newUser(device, USERNAME.ALICE);
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar

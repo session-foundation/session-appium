@@ -6,6 +6,7 @@ import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Disappear after send note to self',
@@ -14,8 +15,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 1,
 });
 
-async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   const testMessage = `Testing disappearing messages in Note to Self`;
   const alice = await newUser(device, USERNAME.ALICE);
   const controlMode: DisappearActions = 'sent';

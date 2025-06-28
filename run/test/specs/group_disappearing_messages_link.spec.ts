@@ -7,6 +7,7 @@ import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 import { OutgoingMessageStatusSent } from './locators/conversation';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Disappearing link to group',
@@ -17,7 +18,7 @@ bothPlatformsIt({
 const timerType = 'Disappear after send option';
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 
-async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
+async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Testing disappearing messages';
   const testLink = `https://getsession.org/`;
   const {
@@ -25,8 +26,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true,
-  });
+    focusGroupConvo: true, testInfo });
 
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   // Send a link

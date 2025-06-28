@@ -1,6 +1,7 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Send image 1:1',
@@ -9,14 +10,13 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function sendImage(platform: SupportedPlatformsType) {
+async function sendImage(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true,
-  });
+    focusFriendsConvo: true, testInfo });
   const testMessage = 'Sending image from Alice to Bob';
 
   // Send test image to bob from Alice (device 1)

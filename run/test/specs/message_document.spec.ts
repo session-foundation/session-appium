@@ -1,6 +1,7 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Send document 1:1',
@@ -8,14 +9,13 @@ bothPlatformsIt({
   testCb: sendDocument,
   countOfDevicesNeeded: 2,
 });
-async function sendDocument(platform: SupportedPlatformsType) {
+async function sendDocument(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true,
-  });
+    focusFriendsConvo: true, testInfo });
   const testMessage = 'Testing-document-1';
   const replyMessage = `Replying to document from ${alice.userName}`;
 

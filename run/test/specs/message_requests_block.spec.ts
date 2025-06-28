@@ -7,6 +7,7 @@ import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Block message request in conversation',
@@ -15,8 +16,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function blockedRequest(platform: SupportedPlatformsType) {
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
+async function blockedRequest(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device1, device2, device3 } = await openAppThreeDevices(platform, testInfo);
 
   const alice = await newUser(device1, USERNAME.ALICE);
   const bob = await linkedDevice(device2, device3, USERNAME.BOB);

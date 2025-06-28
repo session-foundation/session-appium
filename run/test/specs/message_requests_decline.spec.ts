@@ -6,6 +6,7 @@ import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Delete message request in conversation',
@@ -14,9 +15,9 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function declineRequest(platform: SupportedPlatformsType) {
+async function declineRequest(platform: SupportedPlatformsType, testInfo: TestInfo) {
   // Check 'decline' button
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
+  const { device1, device2, device3 } = await openAppThreeDevices(platform, testInfo);
   // Create two users
   const alice = await newUser(device1, USERNAME.ALICE);
   const bob = await linkedDevice(device2, device3, USERNAME.BOB);

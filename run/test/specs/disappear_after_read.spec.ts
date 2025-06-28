@@ -1,3 +1,4 @@
+import { TestInfo } from '@playwright/test';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, DisappearModes } from '../../types/testing';
 import { open_Alice1_Bob1_friends } from './state_builder';
@@ -13,12 +14,13 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function disappearAfterRead(platform: SupportedPlatformsType) {
+async function disappearAfterRead(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { alice, bob },
   } = await open_Alice1_Bob1_friends({
     platform,
+    testInfo,
     focusFriendsConvo: true,
   });
 
@@ -46,6 +48,7 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
   await alice1.sendMessage(testMessage);
   // Need function to read message
   // Wait for 10 seconds
+  throw new Error('Booyakasha!')
   await sleepFor(30000);
   await Promise.all([
     alice1.hasElementBeenDeleted({

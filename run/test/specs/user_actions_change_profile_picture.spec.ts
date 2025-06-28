@@ -5,6 +5,7 @@ import { sleepFor } from './utils';
 import { parseDataImage } from './utils/check_colour';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppOnPlatformSingleDevice } from './utils/open_app';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Change profile picture',
@@ -18,8 +19,8 @@ bothPlatformsItSeparate({
   },
 });
 
-async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function changeProfilePictureiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   const pixelHexColour = '04cbfe';
   // Create new user
   await newUser(device, USERNAME.ALICE);
@@ -39,8 +40,8 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   await closeApp(device);
 }
 
-async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function changeProfilePictureAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   let expectedPixelHexColour: string;
   if (platform === 'android') {
     expectedPixelHexColour = 'cbfeff';

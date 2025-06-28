@@ -6,6 +6,7 @@ import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType } from './utils/open_app';
 import { testImage } from '../../constants/testfiles';
+import { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Share to session',
@@ -14,13 +15,12 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function shareToSession(platform: SupportedPlatformsType) {
+async function shareToSession(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true,
-  });
+    focusFriendsConvo: true, testInfo });
   const testMessage = 'Testing sharing an image through photo gallery to Session';
 
   // Need to make sure contact is confirm before moving away from Session
