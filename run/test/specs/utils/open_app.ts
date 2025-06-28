@@ -18,7 +18,7 @@ import {
   getSdkManagerFullPath,
 } from './binaries';
 
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 import { registerDevicesForTest } from './screenshot_helper';
 
 const APPIUM_PORT = 4728;

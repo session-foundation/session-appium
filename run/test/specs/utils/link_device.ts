@@ -11,6 +11,7 @@ export const linkedDevice = async (
 ) => {
   const user = await newUser(device1, userName);
   // Log in with recovery seed on device 2
+  device2.setDeviceIdentity(`${userName.toLowerCase()}2`, 1);
 
   await device2.clickOnByAccessibilityID('Restore your session button');
   // Enter recovery phrase into input box

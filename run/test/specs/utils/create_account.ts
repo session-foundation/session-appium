@@ -7,8 +7,8 @@ import { DisplayNameInput } from '../locators/onboarding';
 import { UserSettings } from '../locators/settings';
 
 export const newUser = async (device: DeviceWrapper, userName: UserNameType): Promise<User> => {
+  device.setDeviceIdentity(`${userName.toLowerCase()}1`, 0);
   // Click create session ID
-
   await device.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Create account button',

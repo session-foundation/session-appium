@@ -8,7 +8,7 @@ import { openAppMultipleDevices, type SupportedPlatformsType } from '../utils/op
 import { restoreAccountNoFallback } from '../utils/restore_account';
 import { ConversationItem } from '../locators/home';
 import type { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { TestInfo } from '@playwright/test';
+import type { TestInfo } from '@playwright/test';
 
 const networkToTarget = 'mainnet';
 
