@@ -87,7 +87,7 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
   appsToOpen: A;
   stateToBuildKey: K;
   groupName: K extends WithGroupStateKey ? string : undefined;
-  testInfo?: TestInfo
+  testInfo?: TestInfo;
 }) {
   const [devices, prebuilt] = await Promise.all([
     openAppMultipleDevices(platform, appsToOpen, testInfo),
@@ -100,8 +100,9 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
 export async function open_Alice1_Bob1_friends({
   platform,
   focusFriendsConvo,
-  testInfo,  // ADD THIS
-}: WithPlatform & WithFocusFriendsConvo & { testInfo?: TestInfo }) {  // ADD TYPE
+  testInfo, // ADD THIS
+}: WithPlatform & WithFocusFriendsConvo & { testInfo?: TestInfo }) {
+  // ADD TYPE
   const stateToBuildKey = '2friends';
   const appsToOpen = 2;
   const result = await openAppsWithState({
@@ -109,7 +110,7 @@ export async function open_Alice1_Bob1_friends({
     appsToOpen,
     stateToBuildKey,
     groupName: undefined,
-    testInfo,  // ADD THIS
+    testInfo, // ADD THIS
   });
   result.devices[0].setDeviceIdentity('alice1', 0);
   result.devices[1].setDeviceIdentity('bob1', 1);
@@ -147,11 +148,11 @@ export async function open_Alice1_Bob1_Charlie1_friends_group({
   platform,
   groupName,
   focusGroupConvo,
-  testInfo,  // ADD THIS
+  testInfo, // ADD THIS
 }: WithPlatform &
   WithFocusGroupConvo & {
     groupName: string;
-    testInfo?: TestInfo;  // ADD THIS
+    testInfo?: TestInfo; // ADD THIS
   }) {
   const stateToBuildKey = '3friendsInGroup';
   const appsToOpen = 3;
@@ -160,7 +161,7 @@ export async function open_Alice1_Bob1_Charlie1_friends_group({
     appsToOpen,
     stateToBuildKey,
     groupName,
-    testInfo,  // ADD THIS
+    testInfo, // ADD THIS
   });
   result.devices[0].setDeviceIdentity('alice1', 0);
   result.devices[1].setDeviceIdentity('bob1', 1);
@@ -210,11 +211,11 @@ export async function open_Alice1_Bob1_Charlie1_Unknown1({
   platform,
   groupName,
   focusGroupConvo = true,
-  testInfo,  // ADD THIS
+  testInfo, // ADD THIS
 }: WithPlatform &
   WithFocusGroupConvo & {
     groupName: string;
-    testInfo?: TestInfo;  // ADD THIS
+    testInfo?: TestInfo; // ADD THIS
   }) {
   const stateToBuildKey = '3friendsInGroup';
   const appsToOpen = 4;
@@ -223,7 +224,7 @@ export async function open_Alice1_Bob1_Charlie1_Unknown1({
     appsToOpen,
     stateToBuildKey,
     groupName,
-    testInfo,  // ADD THIS
+    testInfo, // ADD THIS
   });
   result.devices[0].setDeviceIdentity('alice1', 0);
   result.devices[1].setDeviceIdentity('bob1', 1);
@@ -266,10 +267,11 @@ export async function open_Alice1_Bob1_Charlie1_Unknown1({
   };
 }
 
-export async function open_Alice2({ 
+export async function open_Alice2({
   platform,
-  testInfo,  // ADD
-}: WithPlatform & { testInfo?: TestInfo }) {  // ADD TYPE
+  testInfo, // ADD
+}: WithPlatform & { testInfo?: TestInfo }) {
+  // ADD TYPE
   const prebuiltStateKey = '1user';
   const appsToOpen = 2;
   const result = await openAppsWithState({
@@ -277,7 +279,7 @@ export async function open_Alice2({
     appsToOpen,
     stateToBuildKey: prebuiltStateKey,
     groupName: undefined,
-    testInfo,  // ADD
+    testInfo, // ADD
   });
   result.devices[0].setDeviceIdentity('alice1', 0);
   result.devices[1].setDeviceIdentity('alice2', 1);
@@ -306,17 +308,17 @@ export async function open_Alice2({
 /**
  * Open 2 devices, one for Alice, one for Bob, but they are not friends
  */
-export async function open_Alice1_bob1_notfriends({ 
+export async function open_Alice1_bob1_notfriends({
   platform,
-  testInfo,  // ADD
-}: WithPlatform & { testInfo?: TestInfo }) { 
+  testInfo, // ADD
+}: WithPlatform & { testInfo?: TestInfo }) {
   const appsToOpen = 2;
   const result = await openAppsWithState({
     platform,
     appsToOpen,
     stateToBuildKey: '2users',
     groupName: undefined,
-    testInfo, 
+    testInfo,
   });
   result.devices[0].setDeviceIdentity('alice1', 0);
   result.devices[1].setDeviceIdentity('bob1', 1);
@@ -346,8 +348,8 @@ export async function open_Alice1_bob1_notfriends({
 export async function open_Alice2_Bob1_friends({
   platform,
   focusFriendsConvo,
-  testInfo,  // ADD
-}: WithPlatform & WithFocusFriendsConvo & { testInfo?: TestInfo }) { 
+  testInfo, // ADD
+}: WithPlatform & WithFocusFriendsConvo & { testInfo?: TestInfo }) {
   const prebuiltStateKey = '2friends';
   const appsToOpen = 3;
   const result = await openAppsWithState({
@@ -355,7 +357,7 @@ export async function open_Alice2_Bob1_friends({
     appsToOpen,
     stateToBuildKey: prebuiltStateKey,
     groupName: undefined,
-    testInfo, 
+    testInfo,
   });
   result.devices[0].setDeviceIdentity('alice1', 0);
   result.devices[1].setDeviceIdentity('alice2', 1);

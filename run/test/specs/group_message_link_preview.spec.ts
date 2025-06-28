@@ -29,7 +29,9 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType, testInfo: Test
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
   const replyMessage = `Replying to link from ${alice.userName} in group ${testGroupName}`;
   // Create contact between User A and User B
   await alice1.inputText(testLink, {
@@ -91,7 +93,9 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType, testInfo: 
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
   const testLink = `https://getsession.org/`;
   // Send a link
   await alice1.inputText(testLink, {

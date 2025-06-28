@@ -25,7 +25,9 @@ async function sendLinkIos(platform: SupportedPlatformsType, testInfo: TestInfo)
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   const testLink = `https://getsession.org/`;
 
   const replyMessage = `Replying to link from ${alice.userName}`;
@@ -76,7 +78,9 @@ async function sendLinkAndroid(platform: SupportedPlatformsType, testInfo: TestI
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   const testLink = `https://getsession.org/`;
 
   // Send a link

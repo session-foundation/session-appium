@@ -27,7 +27,9 @@ async function sendImageGroupiOS(platform: SupportedPlatformsType, testInfo: Tes
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
   await alice1.sendImage(testMessage);
   await alice1.waitForTextElementToBePresent({
     ...new OutgoingMessageStatusSent(alice1).build(),
@@ -76,7 +78,9 @@ async function sendImageGroupAndroid(platform: SupportedPlatformsType, testInfo:
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
   const replyMessage = `Replying to image from ${alice.userName}`;
   await alice1.sendImage(testMessage);
   // Wait for image to appear in conversation screen

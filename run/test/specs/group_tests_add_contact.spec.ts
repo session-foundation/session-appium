@@ -12,7 +12,6 @@ import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { TestInfo } from '@playwright/test';
 
-
 bothPlatformsIt({
   title: 'Add contact to group',
   risk: 'high',
@@ -28,7 +27,7 @@ async function addContactToGroup(platform: SupportedPlatformsType, testInfo: Tes
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
-    testInfo: testInfo
+    testInfo: testInfo,
   });
   const userD = await newUser(unknown1, USERNAME.DRACULA);
   throw new Error('Smile for the camera');

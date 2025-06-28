@@ -15,7 +15,9 @@ async function sendDocument(platform: SupportedPlatformsType, testInfo: TestInfo
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   const testMessage = 'Testing-document-1';
   const replyMessage = `Replying to document from ${alice.userName}`;
 

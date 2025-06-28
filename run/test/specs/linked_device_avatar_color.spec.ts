@@ -20,8 +20,7 @@ async function avatarColorLinkedDevice(platform: SupportedPlatformsType, testInf
   // Get Alice's avatar color on device 1 (Home Screen avatar) and turn it into a hex value
   const alice1PixelColor = await alice1.getElementPixelColor(new UserSettings(alice1));
   // Get Alice's avatar color on the linked device (Home Screen avatar) and turn it into a hex value
-  // const alice2PixelColor = await alice2.getElementPixelColor(new UserSettings(alice2));
-  const alice2PixelColor = '#ffffff'; 
+  const alice2PixelColor = await alice2.getElementPixelColor(new UserSettings(alice2));
   // Color matching devices 1 and 2
   const colorMatch = isSameColor(alice1PixelColor, alice2PixelColor);
   if (!colorMatch) {

@@ -48,7 +48,6 @@ async function disappearAfterRead(platform: SupportedPlatformsType, testInfo: Te
   await alice1.sendMessage(testMessage);
   // Need function to read message
   // Wait for 10 seconds
-  throw new Error('Booyakasha!')
   await sleepFor(30000);
   await Promise.all([
     alice1.hasElementBeenDeleted({

@@ -20,7 +20,9 @@ async function shareToSession(platform: SupportedPlatformsType, testInfo: TestIn
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   const testMessage = 'Testing sharing an image through photo gallery to Session';
 
   // Need to make sure contact is confirm before moving away from Session

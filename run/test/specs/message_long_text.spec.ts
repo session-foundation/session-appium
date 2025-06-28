@@ -26,7 +26,9 @@ async function sendLongMessageIos(platform: SupportedPlatformsType, testInfo: Te
     prebuilt: { alice, bob },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   // Send a long message from User A to User B
   await alice1.sendMessage(longText);
   // Reply to message (User B to User A)
@@ -48,7 +50,9 @@ async function sendLongMessageAndroid(platform: SupportedPlatformsType, testInfo
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   // Send a long message from User A to User B
   await alice1.sendMessage(longText);
   // Reply to message (User B to User A)

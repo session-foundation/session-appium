@@ -24,7 +24,9 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType, tes
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   // Click on attachments button
   await alice1.sendGIF(testMessage);

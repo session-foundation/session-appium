@@ -23,7 +23,9 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
 
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   // await device1.navigateBack();

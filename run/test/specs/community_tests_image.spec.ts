@@ -30,7 +30,9 @@ async function sendImageCommunityiOS(platform: SupportedPlatformsType, testInfo:
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: false, testInfo });
+    focusFriendsConvo: false,
+    testInfo,
+  });
   const testMessage = 'Testing sending images to communities';
   const testImageMessage = `Image message + ${new Date().getTime()} - ${platform}`;
 

@@ -20,7 +20,9 @@ async function avatarColor(platform: SupportedPlatformsType, testInfo: TestInfo)
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: false, testInfo });
+    focusFriendsConvo: false,
+    testInfo,
+  });
 
   // Get Alice's avatar color on device 1 (Home Screen avatar) and turn it into a hex value
   const alice1PixelColor = await alice1.getElementPixelColor(new UserSettings(alice1));

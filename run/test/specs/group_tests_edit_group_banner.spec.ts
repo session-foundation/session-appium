@@ -21,7 +21,9 @@ async function editGroupBanner(platform: SupportedPlatformsType, testInfo: TestI
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
   // Navigate to Edit Group screen
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   await alice1.clickOnElementAll(new EditGroup(alice1));

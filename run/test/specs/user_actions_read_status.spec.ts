@@ -17,7 +17,9 @@ async function readStatus(platform: SupportedPlatformsType, testInfo: TestInfo) 
     prebuilt: { alice, bob },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   const testMessage = 'Testing read status';
   // Go to settings to turn on read status
   // Device 1

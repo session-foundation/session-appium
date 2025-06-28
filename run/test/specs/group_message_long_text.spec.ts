@@ -27,7 +27,9 @@ async function sendLongMessageGroupiOS(platform: SupportedPlatformsType, testInf
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
   await alice1.sendMessage(longText);
   await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
@@ -63,7 +65,9 @@ async function sendLongMessageGroupAndroid(platform: SupportedPlatformsType, tes
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
 
   // Sending a long text message
   await alice1.inputText(longText, {

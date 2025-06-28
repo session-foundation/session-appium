@@ -16,7 +16,9 @@ async function sendImage(platform: SupportedPlatformsType, testInfo: TestInfo) {
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   const testMessage = 'Sending image from Alice to Bob';
 
   // Send test image to bob from Alice (device 1)

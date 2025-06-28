@@ -30,7 +30,9 @@ async function changeGroupNameIos(platform: SupportedPlatformsType, testInfo: Te
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
   // Click on settings or three dots
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   // Click on Edit group option
@@ -76,7 +78,9 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType, testInfo
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
   // Click on settings or three dots
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   // Click on Edit group option

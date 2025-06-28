@@ -27,13 +27,18 @@ bothPlatformsItSeparate({
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 
-async function disappearingCommunityInviteMessageIos(platform: SupportedPlatformsType, testInfo: TestInfo) {
+async function disappearingCommunityInviteMessageIos(
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo
+) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { bob },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   // await alice1.navigateBack();
   await alice1.navigateBack();
@@ -75,13 +80,18 @@ async function disappearingCommunityInviteMessageIos(platform: SupportedPlatform
   await closeApp(alice1, bob1);
 }
 
-async function disappearingCommunityInviteMessageAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
+async function disappearingCommunityInviteMessageAndroid(
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo
+) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { bob },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
 
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
 

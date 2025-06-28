@@ -17,7 +17,9 @@ async function createGroupBanner(platform: SupportedPlatformsType, testInfo: Tes
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   await alice1.navigateBack();
   // Open the Create Group screen from home
   await alice1.clickOnElementAll(new PlusButton(alice1));

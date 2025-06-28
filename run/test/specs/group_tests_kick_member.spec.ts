@@ -28,7 +28,9 @@ async function kickMember(platform: SupportedPlatformsType, testInfo: TestInfo) 
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   await alice1.clickOnElementAll(new EditGroup(alice1));
   await alice1.clickOnElementAll({ ...new GroupMember(alice1).build(USERNAME.BOB) });

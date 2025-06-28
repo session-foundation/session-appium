@@ -17,7 +17,9 @@ async function sendVoiceMessage(platform: SupportedPlatformsType, testInfo: Test
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   const replyMessage = `Replying to voice message from ${alice.userName}`;
   // Select voice message button to activate recording state
   await alice1.sendVoiceMessage();

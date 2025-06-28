@@ -24,7 +24,9 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType, t
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   await alice1.onIOS().sendVideoiOS(testMessage);
   await alice1.onAndroid().sendVideoAndroid();

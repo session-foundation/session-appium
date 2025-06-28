@@ -17,7 +17,9 @@ async function deleteMessage(platform: SupportedPlatformsType, testInfo: TestInf
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   // send message from User A to User B
   const sentMessage = await alice1.sendMessage('Checking local deletetion functionality');
   await bob1.waitForTextElementToBePresent({

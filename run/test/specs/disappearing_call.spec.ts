@@ -29,7 +29,9 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType, t
     prebuilt: { alice, bob },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   // await alice1.navigateBack();
   await alice1.clickOnByAccessibilityID('Call');
@@ -88,14 +90,19 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType, t
   await closeApp(alice1, bob1);
 }
 
-async function disappearingCallMessage1o1Android(platform: SupportedPlatformsType, testInfo: TestInfo) {
+async function disappearingCallMessage1o1Android(
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo
+) {
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   const {
     devices: { alice1, bob1 },
     prebuilt: { alice, bob },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
 
   // await alice1.navigateBack();

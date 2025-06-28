@@ -24,7 +24,9 @@ async function sendVideoIos(platform: SupportedPlatformsType, testInfo: TestInfo
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   const testMessage = 'Testing-video-1';
 
   // Push image to device for selection
@@ -57,7 +59,9 @@ async function sendVideoAndroid(platform: SupportedPlatformsType, testInfo: Test
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   const replyMessage = `Replying to video from ${alice.userName}`;
   // Send video
   await alice1.sendVideoAndroid();

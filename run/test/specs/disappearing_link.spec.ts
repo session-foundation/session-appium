@@ -30,7 +30,9 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   // Send a link
   await alice1.inputText(testLink, {
@@ -82,12 +84,17 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
   await closeApp(alice1, bob1);
 }
 
-async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsType, testInfo: TestInfo) {
+async function disappearingLinkMessage1o1Android(
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo
+) {
   const {
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   // await alice1.navigateBack();
   // Send a link

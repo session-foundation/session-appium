@@ -29,7 +29,9 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType, te
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   // Click on attachments button
   await alice1.sendGIF(testMessage);
@@ -54,12 +56,17 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType, te
   await closeApp(alice1, bob1);
 }
 
-async function disappearingGifMessage1o1Android(platform: SupportedPlatformsType, testInfo: TestInfo) {
+async function disappearingGifMessage1o1Android(
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo
+) {
   const {
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   // Wait for control messages to disappear before sending image
   // (to check if the control messages are interfering with finding the untrusted attachment message)

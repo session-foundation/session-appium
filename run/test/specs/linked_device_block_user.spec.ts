@@ -15,7 +15,10 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function blockUserInConversationOptions(platform: SupportedPlatformsType, testInfo: TestInfo) {
+async function blockUserInConversationOptions(
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo
+) {
   const {
     devices: { alice1, alice2, bob1 },
     prebuilt: { bob },

@@ -58,7 +58,6 @@ export type ActionSequence = {
 
 type AppiumNextElementType = { ELEMENT: string };
 
-
 export class DeviceWrapper {
   // 1. PRIVATE FIELDS
   private readonly device: AndroidUiautomator2Driver | XCUITestDriver;
@@ -73,20 +72,20 @@ export class DeviceWrapper {
     // Set temporary identity immediately
     this.deviceIdentity = `device-${udid.slice(-4)}`;
   }
-  
+
   // 3. LOGGING METHODS (right after constructor)
   private log(...args: unknown[]): void {
     console.log(`[${this.deviceIdentity}]`, ...args);
   }
-  
+
   private info(...args: unknown[]): void {
     console.info(`[${this.deviceIdentity}]`, ...args);
   }
-  
+
   private warn(...args: unknown[]): void {
     console.warn(`[${this.deviceIdentity}]`, ...args);
   }
-  
+
   private error(...args: unknown[]): void {
     console.error(`[${this.deviceIdentity}]`, ...args);
   }
@@ -97,7 +96,7 @@ export class DeviceWrapper {
     const oldIdentity = this.deviceIdentity;
     this.deviceIdentity = identity;
     this.deviceIndex = index;
-  this.log(`Device identity changed from ${oldIdentity} to ${identity}`);
+    this.log(`Device identity changed from ${oldIdentity} to ${identity}`);
   }
 
   // Get device identity for labels and logging
@@ -811,9 +810,7 @@ export class DeviceWrapper {
         // Otherwise, keep track of the best match so far
         if (!bestMatch || score > bestMatch.score) {
           bestMatch = { center, score };
-          this.info(
-            `[matchAndTapImage] New best match: ${(score * 100).toFixed(2)}% confidence`
-          );
+          this.info(`[matchAndTapImage] New best match: ${(score * 100).toFixed(2)}% confidence`);
         }
       } catch (err) {
         // If matching fails for this element, log and continue to the next
@@ -858,9 +855,7 @@ export class DeviceWrapper {
           const els = await this.findElements(locator.strategy, locator.selector);
           element = await this.findMatchingTextInElementArray(els, text);
           if (element) {
-            this.log(
-              `${locator.strategy}: ${locator.selector} with matching text "${text}" found`
-            );
+            this.log(`${locator.strategy}: ${locator.selector} with matching text "${text}" found`);
           } else {
             this.log(
               `Couldn't find "${text}" with matching ${locator.strategy}: ${locator.selector}`

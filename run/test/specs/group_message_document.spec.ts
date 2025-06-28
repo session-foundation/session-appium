@@ -24,7 +24,9 @@ async function sendDocumentGroupiOS(platform: SupportedPlatformsType, testInfo: 
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
   const testMessage = 'Testing-document-1';
   const replyMessage = `Replying to document from ${alice.userName}`;
 
@@ -60,7 +62,9 @@ async function sendDocumentGroupAndroid(platform: SupportedPlatformsType, testIn
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
 
   const replyMessage = `Replying to document from ${alice.userName} in ${testGroupName}`;
   await alice1.sendDocument();

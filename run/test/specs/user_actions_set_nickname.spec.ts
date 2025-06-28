@@ -27,7 +27,9 @@ async function setNicknameIos(platform: SupportedPlatformsType, testInfo: TestIn
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   // Click on settings/more info
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   // Click on username to set nickname
@@ -67,7 +69,9 @@ async function setNicknameAndroid(platform: SupportedPlatformsType, testInfo: Te
     prebuilt: { bob },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   const nickName = 'New nickname';
   // Go back to conversation list
   await alice1.navigateBack();

@@ -15,7 +15,9 @@ async function checkPerformance(platform: SupportedPlatformsType, testInfo: Test
     devices: { alice1 },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   const timesArray: Array<number> = [];
 
   let i;

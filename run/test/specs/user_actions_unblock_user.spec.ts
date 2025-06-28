@@ -19,7 +19,9 @@ async function unblockUser(platform: SupportedPlatformsType, testInfo: TestInfo)
     prebuilt: { alice, bob },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   const blockedMessage = `Blocked message from ${bob.userName} to ${alice.userName}`;
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   await alice1.clickOnElementAll(new BlockUser(alice1));

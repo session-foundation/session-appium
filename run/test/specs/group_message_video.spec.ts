@@ -24,7 +24,9 @@ async function sendVideoGroupiOS(platform: SupportedPlatformsType, testInfo: Tes
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
   const testMessage = 'Testing-video-1';
   const replyMessage = `Replying to video from ${alice.userName} in ${testGroupName}`;
   await alice1.sendVideoiOS(testMessage);
@@ -72,7 +74,9 @@ async function sendVideoGroupAndroid(platform: SupportedPlatformsType, testInfo:
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
   const replyMessage = `Replying to video from ${alice.userName} in ${testGroupName}`;
   // Click on attachments button
   await alice1.sendVideoAndroid();

@@ -22,7 +22,9 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType, tes
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   await sleepFor(500);
   await alice1.sendImage(testMessage);

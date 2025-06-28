@@ -22,7 +22,9 @@ async function blockUserInConversationList(platform: SupportedPlatformsType, tes
     prebuilt: { bob },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   // Navigate back to conversation list
   await alice1.navigateBack();
   await alice1.longPressConversation(bob.userName);

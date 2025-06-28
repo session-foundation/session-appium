@@ -20,7 +20,9 @@ async function disappearAfterSend(platform: SupportedPlatformsType, testInfo: Te
     prebuilt: { alice, bob },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
 
   const mode: DisappearModes = 'send';
   const testMessage = `Checking disappear after ${mode} is working`;

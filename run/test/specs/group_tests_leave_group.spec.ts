@@ -23,7 +23,9 @@ async function leaveGroup(platform: SupportedPlatformsType, testInfo: TestInfo) 
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
   await charlie1.clickOnElementAll(new ConversationSettings(charlie1));
   await sleepFor(1000);
   await charlie1.clickOnElementAll(new LeaveGroupButton(charlie1));

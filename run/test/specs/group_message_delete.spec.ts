@@ -20,7 +20,9 @@ async function deleteMessageGroup(platform: SupportedPlatformsType, testInfo: Te
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
   const sentMessage = await alice1.sendMessage('Checking local delete functionality');
   await Promise.all([
     bob1.waitForTextElementToBePresent({

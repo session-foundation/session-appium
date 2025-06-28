@@ -25,7 +25,9 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType, testIn
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
 
   await setDisappearingMessage(platform, alice1, ['Group', `Disappear after send option`, time]);
   // Get correct control message for You setting disappearing messages

@@ -22,10 +22,11 @@ async function sendGifIos(platform: SupportedPlatformsType, testInfo: TestInfo) 
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   const testMessage = 'Testing-GIF-1';
   await alice1.sendGIF(testMessage);
-  throw new Error('peekabo!'); // This line seems to be a placeholder or error, remove it if not needed.
   // Reply to message
   await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
@@ -50,7 +51,9 @@ async function sendGifAndroid(platform: SupportedPlatformsType, testInfo: TestIn
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   const testMessage = 'Test message with GIF';
 
   const replyMessage = `Replying to GIF from ${alice.userName}`;

@@ -27,7 +27,9 @@ async function sendCommunityInvitationIos(platform: SupportedPlatformsType, test
     prebuilt: { bob },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   // Join community on device 1
   // Click on plus button
   await alice1.navigateBack();
@@ -70,13 +72,18 @@ async function sendCommunityInvitationIos(platform: SupportedPlatformsType, test
   await closeApp(alice1, bob1);
 }
 
-async function sendCommunityInviteMessageAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
+async function sendCommunityInviteMessageAndroid(
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo
+) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { bob },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   // Join community
   await sleepFor(100);
   await alice1.navigateBack();

@@ -20,13 +20,18 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function blockUserInConversationOptions(platform: SupportedPlatformsType, testInfo: TestInfo) {
+async function blockUserInConversationOptions(
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo
+) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { bob },
   } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true, testInfo });
+    focusFriendsConvo: true,
+    testInfo,
+  });
   const blockedMessage = 'Blocked message';
 
   await alice1.clickOnElementAll(new ConversationSettings(alice1));

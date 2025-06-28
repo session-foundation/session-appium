@@ -19,7 +19,7 @@ import {
 } from './binaries';
 
 import { TestInfo } from '@playwright/test';
-import { registerDevicesForTest } from '../../../types/sessionIt';
+import { registerDevicesForTest } from './screenshot_helper';
 
 const APPIUM_PORT = 4728;
 
@@ -32,7 +32,7 @@ export type SupportedPlatformsType = 'android' | 'ios';
 export const openAppMultipleDevices = async (
   platform: SupportedPlatformsType,
   numberOfDevices: number,
-  testInfo?: TestInfo 
+  testInfo?: TestInfo
 ): Promise<DeviceWrapper[]> => {
   // Create an array of promises for each device
   const devicePromises = Array.from({ length: numberOfDevices }, (_, index) =>
@@ -44,11 +44,11 @@ export const openAppMultipleDevices = async (
 
   //  Map the result to return only the device objects
   const devices = apps.map(app => app.device);
-  
+
   if (testInfo) {
     registerDevicesForTest(testInfo, devices, platform);
   }
-  
+
   return devices;
 };
 
@@ -64,22 +64,22 @@ const openAppOnPlatform = async (
 
 export const openAppOnPlatformSingleDevice = async (
   platform: SupportedPlatformsType,
-  testInfo?: TestInfo  // ADDED
+  testInfo?: TestInfo // ADDED
 ): Promise<{
   device: DeviceWrapper;
 }> => {
   const result = await openAppOnPlatform(platform, 0);
-  
+
   if (testInfo) {
     registerDevicesForTest(testInfo, [result.device], platform);
   }
-  
+
   return result;
 };
 
 export const openAppTwoDevices = async (
   platform: SupportedPlatformsType,
-  testInfo?: TestInfo  // ADDED
+  testInfo?: TestInfo // ADDED
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
@@ -90,17 +90,17 @@ export const openAppTwoDevices = async (
   ]);
 
   const result = { device1: app1.device, device2: app2.device };
-  
+
   if (testInfo) {
     registerDevicesForTest(testInfo, [result.device1, result.device2], platform);
   }
-  
+
   return result;
 };
 
 export const openAppThreeDevices = async (
   platform: SupportedPlatformsType,
-  testInfo?: TestInfo  // ADDED
+  testInfo?: TestInfo // ADDED
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
@@ -117,17 +117,17 @@ export const openAppThreeDevices = async (
     device2: app2.device,
     device3: app3.device,
   };
-  
+
   if (testInfo) {
     registerDevicesForTest(testInfo, [result.device1, result.device2, result.device3], platform);
   }
-  
+
   return result;
 };
 
 export const openAppFourDevices = async (
   platform: SupportedPlatformsType,
-  testInfo?: TestInfo  // ADDED
+  testInfo?: TestInfo // ADDED
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
@@ -147,11 +147,15 @@ export const openAppFourDevices = async (
     device3: app3.device,
     device4: app4.device,
   };
-  
+
   if (testInfo) {
-    registerDevicesForTest(testInfo, [result.device1, result.device2, result.device3, result.device4], platform);
+    registerDevicesForTest(
+      testInfo,
+      [result.device1, result.device2, result.device3, result.device4],
+      platform
+    );
   }
-  
+
   return result;
 };
 

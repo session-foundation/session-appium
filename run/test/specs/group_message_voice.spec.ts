@@ -23,7 +23,9 @@ async function sendVoiceMessageGroupiOS(platform: SupportedPlatformsType, testIn
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
   const replyMessage = `Replying to voice message from ${alice.userName} in ${testGroupName}`;
   await alice1.sendVoiceMessage();
   await Promise.all(
@@ -59,7 +61,9 @@ async function sendVoiceMessageGroupAndroid(platform: SupportedPlatformsType, te
   } = await open_Alice1_Bob1_Charlie1_friends_group({
     platform,
     groupName: testGroupName,
-    focusGroupConvo: true, testInfo });
+    focusGroupConvo: true,
+    testInfo,
+  });
   const replyMessage = `Replying to voice message from ${alice.userName} in ${testGroupName}`;
   // Select voice message button to activate recording state
   await alice1.sendVoiceMessage();

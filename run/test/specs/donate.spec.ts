@@ -38,7 +38,6 @@ async function donateLinkout(platform: SupportedPlatformsType, testInfo: TestInf
   const urlField = await device.waitForTextElementToBePresent(new URLInputField(device));
   const actualUrlField = await device.getTextFromElement(urlField);
   const fullRetrievedURL = ensureHttpsURL(actualUrlField);
-  throw new Error('Peekaboo!')
   // Verify that it's the correct URL
   if (fullRetrievedURL !== linkURL) {
     throw new Error(
