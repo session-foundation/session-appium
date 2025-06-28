@@ -32,7 +32,7 @@ export type SupportedPlatformsType = 'android' | 'ios';
 export const openAppMultipleDevices = async (
   platform: SupportedPlatformsType,
   numberOfDevices: number,
-  testInfo?: TestInfo
+  testInfo: TestInfo
 ): Promise<DeviceWrapper[]> => {
   // Create an array of promises for each device
   const devicePromises = Array.from({ length: numberOfDevices }, (_, index) =>
@@ -64,7 +64,7 @@ const openAppOnPlatform = async (
 
 export const openAppOnPlatformSingleDevice = async (
   platform: SupportedPlatformsType,
-  testInfo?: TestInfo // ADDED
+  testInfo: TestInfo
 ): Promise<{
   device: DeviceWrapper;
 }> => {
@@ -79,7 +79,7 @@ export const openAppOnPlatformSingleDevice = async (
 
 export const openAppTwoDevices = async (
   platform: SupportedPlatformsType,
-  testInfo?: TestInfo // ADDED
+  testInfo: TestInfo
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
@@ -100,7 +100,7 @@ export const openAppTwoDevices = async (
 
 export const openAppThreeDevices = async (
   platform: SupportedPlatformsType,
-  testInfo?: TestInfo // ADDED
+  testInfo: TestInfo
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
@@ -127,7 +127,7 @@ export const openAppThreeDevices = async (
 
 export const openAppFourDevices = async (
   platform: SupportedPlatformsType,
-  testInfo?: TestInfo // ADDED
+  testInfo: TestInfo
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
@@ -322,13 +322,3 @@ export const closeApp = async (...devices: Array<DeviceWrapper>) => {
 
   console.info('sessions closed');
 };
-
-// ADDED: Helper to manually register devices (for state builders)
-export function trackDevicesForScreenshot(
-  testInfo: TestInfo,
-  platform: SupportedPlatformsType,
-  devices: Record<string, DeviceWrapper>
-): void {
-  const deviceList = Object.values(devices).filter(d => d instanceof DeviceWrapper);
-  registerDevicesForTest(testInfo, deviceList, platform);
-}

@@ -61,7 +61,7 @@ async function sendGifGroupiOS(platform: SupportedPlatformsType, testInfo: TestI
   await closeApp(alice1, bob1, charlie1);
 }
 
-async function sendGifGroupAndroid(platform: SupportedPlatformsType) {
+async function sendGifGroupAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Message checks for groups';
 
   const {
@@ -71,6 +71,7 @@ async function sendGifGroupAndroid(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo: testInfo,
   });
   const testMessage = 'Testing-GIF-1';
   const replyMessage = `Replying to GIF from ${alice.userName}`;
