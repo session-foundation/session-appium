@@ -266,10 +266,7 @@ export async function open_Alice1_Bob1_Charlie1_Unknown1({
   };
 }
 
-export async function open_Alice2({
-  platform,
-  testInfo, 
-}: WithPlatform & { testInfo: TestInfo }) {
+export async function open_Alice2({ platform, testInfo }: WithPlatform & { testInfo: TestInfo }) {
   const prebuiltStateKey = '1user';
   const appsToOpen = 2;
   const result = await openAppsWithState({
@@ -277,7 +274,7 @@ export async function open_Alice2({
     appsToOpen,
     stateToBuildKey: prebuiltStateKey,
     groupName: undefined,
-    testInfo, 
+    testInfo,
   });
   result.devices[0].setDeviceIdentity('alice1', 0);
   result.devices[1].setDeviceIdentity('alice2', 1);
