@@ -58,13 +58,51 @@ export type ActionSequence = {
 
 type AppiumNextElementType = { ELEMENT: string };
 
+
 export class DeviceWrapper {
+  // 1. PRIVATE FIELDS
   private readonly device: AndroidUiautomator2Driver | XCUITestDriver;
   public readonly udid: string;
+  private deviceIdentity: string = '';
+  private deviceIndex: number = 0;
 
+  // 2. CONSTRUCTOR
   constructor(device: AndroidUiautomator2Driver | XCUITestDriver, udid: string) {
     this.device = device;
     this.udid = udid;
+    // Set temporary identity immediately
+    this.deviceIdentity = `device-${udid.slice(-4)}`;
+  }
+  
+  // 3. LOGGING METHODS (right after constructor)
+  private log(...args: unknown[]): void {
+    console.log(`[${this.deviceIdentity}]`, ...args);
+  }
+  
+  private info(...args: unknown[]): void {
+    console.info(`[${this.deviceIdentity}]`, ...args);
+  }
+  
+  private warn(...args: unknown[]): void {
+    console.warn(`[${this.deviceIdentity}]`, ...args);
+  }
+  
+  private error(...args: unknown[]): void {
+    console.error(`[${this.deviceIdentity}]`, ...args);
+  }
+
+  // 4. DEVICE IDENTITY METHODS (public methods for managing identity)
+  // Set device identity (e.g., "alice1", "bob1")
+  public setDeviceIdentity(identity: string, index: number = 0): void {
+    const oldIdentity = this.deviceIdentity;
+    this.deviceIdentity = identity;
+    this.deviceIndex = index;
+  this.log(`Device identity changed from ${oldIdentity} to ${identity}`);
+  }
+
+  // Get device identity for labels and logging
+  public getDeviceIdentity(): string {
+    return this.deviceIdentity; // Always has a value from constructor
   }
 
   public onIOS() {
@@ -204,7 +242,7 @@ export class DeviceWrapper {
   }
 
   public async pushFile(path: string, data: string): Promise<void> {
-    console.log('Did file get pushed', path);
+    this.log('Did file get pushed', path);
     await this.toShared().pushFile(path, data);
   }
 
@@ -286,7 +324,7 @@ export class DeviceWrapper {
       await this.click(el.ELEMENT);
     } catch (error: unknown) {
       if (error instanceof Error && error.name === 'StaleElementReferenceError') {
-        console.log('Element is stale, refinding element and attempting second click');
+        this.log('Element is stale, refinding element and attempting second click');
         await this.waitForTextElementToBePresent({
           strategy: 'accessibility id',
           selector: accessibilityId,
@@ -350,7 +388,7 @@ export class DeviceWrapper {
 
   public async clickOnCoordinates(xCoOrdinates: number, yCoOrdinates: number) {
     await this.pressCoordinates(xCoOrdinates, yCoOrdinates);
-    console.log(`Tapped coordinates ${xCoOrdinates}, ${yCoOrdinates}`);
+    this.log(`Tapped coordinates ${xCoOrdinates}, ${yCoOrdinates}`);
   }
 
   public async tapOnElement(accessibilityId: AccessibilityId) {
@@ -400,7 +438,7 @@ export class DeviceWrapper {
         });
 
         if (longPressSuccess) {
-          console.log('LongClick successful');
+          this.log('LongClick successful');
           success = true; // Exit the loop if successful
         } else {
           throw new Error(`longPress on message: ${textToLookFor} unsuccessful`);
@@ -412,7 +450,7 @@ export class DeviceWrapper {
             `Longpress on message: ${textToLookFor} unsuccessful after ${maxRetries} attempts, ${(error as Error).toString()}`
           );
         }
-        console.log(`Longpress attempt ${attempt} failed. Retrying...`);
+        this.log(`Longpress attempt ${attempt} failed. Retrying...`);
         await sleepFor(1000);
       }
     }
@@ -447,13 +485,13 @@ export class DeviceWrapper {
         });
 
         if (longPressSuccess) {
-          console.log('LongClick successful');
+          this.log('LongClick successful');
           success = true; // Exit the loop if successful
         } else {
           throw new Error(`longPress on conversation list: ${userName} unsuccessful`);
         }
       } catch (error) {
-        console.log(`Longpress attempt ${attempt} failed. Retrying...`);
+        this.log(`Longpress attempt ${attempt} failed. Retrying...`);
         attempt++;
         await sleepFor(1000);
         if (attempt >= maxRetries) {
@@ -526,7 +564,7 @@ export class DeviceWrapper {
           });
           success = true;
         } catch (error: any) {
-          console.info(`Retrying long press and select all, attempt ${retries + 1}`);
+          this.info(`Retrying long press and select all, attempt ${retries + 1}`);
         }
       } else {
         await this.longClick(el, 2000);
@@ -540,7 +578,7 @@ export class DeviceWrapper {
 
     await this.clear(el.ELEMENT);
 
-    console.info(`Text has been cleared `);
+    this.info(`Text has been cleared `);
     return;
   }
 
@@ -638,9 +676,9 @@ export class DeviceWrapper {
     if (elements && elements.length) {
       const matching = await this.findAsync(elements, async e => {
         const text = await this.getTextFromElement(e);
-        // console.info(`text ${text} looking for ${textToLookFor}`);
+        // this.info(`text ${text} looking for ${textToLookFor}`);
         if (text.toLowerCase().includes(textToLookFor.toLowerCase())) {
-          console.info(`Text found to include ${textToLookFor}`);
+          this.info(`Text found to include ${textToLookFor}`);
         }
         return Boolean(text && text.toLowerCase() === textToLookFor.toLowerCase());
       });
@@ -708,7 +746,7 @@ export class DeviceWrapper {
 
     // Find all candidate elements matching the locator
     const elements = await this.findElements(locator.strategy, locator.selector);
-    console.info(
+    this.info(
       `[matchAndTapImage] Found ${elements.length} elements for ${locator.strategy} "${locator.selector}"`
     );
 
@@ -723,7 +761,7 @@ export class DeviceWrapper {
 
     // Iterate over each candidate element
     for (const [i, el] of elements.entries()) {
-      console.info(`[matchAndTapImage] Processing element ${i + 1}/${elements.length}`);
+      this.info(`[matchAndTapImage] Processing element ${i + 1}/${elements.length}`);
 
       // Take a screenshot of the element
       const base64 = await this.getElementScreenshot(el.ELEMENT);
@@ -756,7 +794,7 @@ export class DeviceWrapper {
         const { rect: matchRect, score } = await getImageOccurrence(elementBuffer, resizedRef, {
           threshold,
         });
-        console.info(`[matchAndTapImage] Match score for element ${i + 1}: ${score.toFixed(4)}`);
+        this.info(`[matchAndTapImage] Match score for element ${i + 1}: ${score.toFixed(4)}`);
         const center = {
           x: rect.x + matchRect.x + Math.floor(matchRect.width / 2),
           y: rect.y + matchRect.y + Math.floor(matchRect.height / 2),
@@ -764,7 +802,7 @@ export class DeviceWrapper {
 
         // If earlyMatch is enabled and the score is high enough, tap immediately
         if (earlyMatch && score >= earlyMatchThreshold) {
-          console.info(
+          this.info(
             `[matchAndTapImage] Tapping first match with ${(score * 100).toFixed(2)}% confidence`
           );
           await clickOnCoordinates(this, center);
@@ -773,13 +811,13 @@ export class DeviceWrapper {
         // Otherwise, keep track of the best match so far
         if (!bestMatch || score > bestMatch.score) {
           bestMatch = { center, score };
-          console.info(
+          this.info(
             `[matchAndTapImage] New best match: ${(score * 100).toFixed(2)}% confidence`
           );
         }
       } catch (err) {
         // If matching fails for this element, log and continue to the next
-        console.warn(
+        this.warn(
           `[matchAndTapImage] Matching failed for element ${i + 1}:`,
           err instanceof Error ? err.message : err
         );
@@ -792,7 +830,7 @@ export class DeviceWrapper {
       );
     }
     // Tap the best match found
-    console.info(
+    this.info(
       `[matchAndTapImage] Tapping best match with ${(bestMatch.score * 100).toFixed(2)}% confidence`
     );
     await clickOnCoordinates(this, bestMatch.center);
@@ -820,17 +858,17 @@ export class DeviceWrapper {
           const els = await this.findElements(locator.strategy, locator.selector);
           element = await this.findMatchingTextInElementArray(els, text);
           if (element) {
-            console.log(
+            this.log(
               `${locator.strategy}: ${locator.selector} with matching text "${text}" found`
             );
           } else {
-            console.log(
+            this.log(
               `Couldn't find "${text}" with matching ${locator.strategy}: ${locator.selector}`
             );
           }
         }
       } catch (e: any) {
-        console.info(`doesElementExist failed with ${locator.strategy} ${locator.selector}`);
+        this.info(`doesElementExist failed with ${locator.strategy} ${locator.selector}`);
       }
       // Break immediately if we found the element
       if (element) {
@@ -839,10 +877,10 @@ export class DeviceWrapper {
 
       // Check for timeout before sleeping
       if (Date.now() >= beforeStart + maxWaitMSec) {
-        console.log(locator.selector, "doesn't exist, time expired");
+        this.log(locator.selector, "doesn't exist, time expired");
         break;
       } else {
-        console.log(locator.selector, "Doesn't exist but retrying");
+        this.log(locator.selector, "Doesn't exist but retrying");
       }
 
       // Sleep before trying again
@@ -869,20 +907,20 @@ export class DeviceWrapper {
           // Note: we need a `maxWait` here to make sure we don't wait for an element that we expect is deleted for too long
           element = await this.waitForTextElementToBePresent({ ...locator, maxWait });
           await sleepFor(100);
-          console.log(`Element has been found, waiting for deletion`);
+          this.log(`Element has been found, waiting for deletion`);
         } catch (e: any) {
           element = undefined;
-          console.log(`Element has been deleted, great success`);
+          this.log(`Element has been deleted, great success`);
         }
       } else {
         try {
           // Note: we need a `maxWait` here to make sure we don't wait for an element that we expect is deleted for too long
           element = await this.waitForTextElementToBePresent({ ...locator, maxWait });
           await sleepFor(100);
-          console.log(`Text element has been found, waiting for deletion`);
+          this.log(`Text element has been found, waiting for deletion`);
         } catch (e) {
           element = undefined;
-          console.log(`Text element has been deleted, great success`);
+          this.log(`Text element has been deleted, great success`);
         }
       }
     } while (Date.now() - start <= maxWait && element);
@@ -902,7 +940,7 @@ export class DeviceWrapper {
         throw e;
       }
     }
-    console.log(accessibilityId, ': ', text, 'is not visible, congratulations');
+    this.log(accessibilityId, ': ', text, 'is not visible, congratulations');
   }
   // WAIT FOR FUNCTIONS
 
@@ -924,15 +962,15 @@ export class DeviceWrapper {
       try {
         const waitingForStr = `Waiting for "${locator.strategy}" and "${locator.selector}" to be present`;
         if (text) {
-          console.log(`${waitingForStr} with "${text}"`);
+          this.log(`${waitingForStr} with "${text}"`);
           const els = await this.findElements(locator.strategy, locator.selector);
           el = await this.findMatchingTextInElementArray(els, text);
         } else {
-          console.log(waitingForStr);
+          this.log(waitingForStr);
           el = await this.findElement(locator.strategy, locator.selector);
         }
       } catch (e: any) {
-        console.info(
+        this.info(
           `waitForTextElementToBePresent threw: "${locator.strategy}": "${locator.selector}`
         );
       }
@@ -949,9 +987,9 @@ export class DeviceWrapper {
       }
       if (el) {
         if (text) {
-          console.log(`'${locator.selector}' and '${text}' has been found`);
+          this.log(`'${locator.selector}' and '${text}' has been found`);
         } else {
-          console.log(`'${locator.selector}' has been found`);
+          this.log(`'${locator.selector}' has been found`);
         }
       }
     }
@@ -969,24 +1007,24 @@ export class DeviceWrapper {
     const textWithQuotes = `"${text}"`;
     while (el === null) {
       try {
-        console.log(`Waiting for control message to be present with "${textWithQuotes}"`);
+        this.log(`Waiting for control message to be present with "${textWithQuotes}"`);
         const els = await this.findElements('accessibility id', 'Control message');
         el = await this.findMatchingTextInElementArray(els, text);
       } catch (e: any) {
-        console.info('waitForControlMessageToBePresent threw: ', e.message);
+        this.info('waitForControlMessageToBePresent threw: ', e.message);
       }
       if (!el) {
         await sleepFor(waitPerLoop);
       }
       currentWait += waitPerLoop;
       if (currentWait >= maxWaitMSec) {
-        console.log('Waited too long');
+        this.log('Waited too long');
         throw new Error(
           `Waited for too long (${maxWaitMSec}ms) looking for Control message "${textWithQuotes}"`
         );
       }
     }
-    console.log(`Control message "${textWithQuotes}" has been found`);
+    this.log(`Control message "${textWithQuotes}" has been found`);
     return el;
   }
 
@@ -1000,24 +1038,24 @@ export class DeviceWrapper {
     const waitPerLoop = 100;
     while (el === null) {
       try {
-        console.log(`Waiting for control message to be present with ${text}`);
+        this.log(`Waiting for control message to be present with ${text}`);
         const els = await this.findElements('accessibility id', 'Control message');
         el = await this.findMatchingTextInElementArray(els, text);
       } catch (e) {
-        console.info('disappearingControlMessage threw: ', e);
+        this.info('disappearingControlMessage threw: ', e);
       }
       if (!el) {
         await sleepFor(waitPerLoop);
       }
       currentWait += waitPerLoop;
       if (currentWait >= maxWaitMSec) {
-        console.log('Waited too long');
+        this.log('Waited too long');
         throw new Error(
           `Waited for too long (${maxWaitMSec}ms) looking for Control message ${text}`
         );
       }
     }
-    console.log(`Control message ${text} has been found`);
+    this.log(`Control message ${text} has been found`);
     return el;
   }
 
@@ -1034,15 +1072,15 @@ export class DeviceWrapper {
 
         if (loadingAnimation) {
           await sleepFor(100);
-          console.info('Loading animation was found, waiting for it to be gone');
+          this.info('Loading animation was found, waiting for it to be gone');
         }
       } catch (e: any) {
-        console.log('Loading animation not found');
+        this.log('Loading animation not found');
         loadingAnimation = null;
       }
     } while (loadingAnimation);
 
-    console.info('Loading animation has finished');
+    this.info('Loading animation has finished');
   }
 
   public async waitForLoadingOnboarding() {
@@ -1057,15 +1095,15 @@ export class DeviceWrapper {
 
         if (loadingAnimation) {
           await sleepFor(500);
-          console.info('Loading animation was found, waiting for it to be gone');
+          this.info('Loading animation was found, waiting for it to be gone');
         }
       } catch (e: any) {
-        console.log('Loading animation not found');
+        this.log('Loading animation not found');
         loadingAnimation = null;
       }
     } while (loadingAnimation);
 
-    console.info('Loading animation has finished');
+    this.info('Loading animation has finished');
   }
 
   // UTILITY FUNCTIONS
@@ -1153,9 +1191,9 @@ export class DeviceWrapper {
       selector: 'Conversation list item',
       text: receiver.userName,
     });
-    console.log(`${sender.userName} + " sent message to ${receiver.userName}`);
+    this.log(`${sender.userName} + " sent message to ${receiver.userName}`);
     await this.sendMessage(message);
-    console.log(`Message received by ${receiver.userName} from ${sender.userName}`);
+    this.log(`Message received by ${receiver.userName} from ${sender.userName}`);
     return message;
   }
 
@@ -1189,7 +1227,7 @@ export class DeviceWrapper {
     const timeEnd = Date.now();
     const timeMs = timeEnd - timeStart;
 
-    console.log(`Message ${messageNumber}: ${timeMs}`);
+    this.log(`Message ${messageNumber}: ${timeMs}`);
     return timeMs;
   }
 
@@ -1200,7 +1238,7 @@ export class DeviceWrapper {
     let el: null | AppiumNextElementType = null;
     const locator = args instanceof LocatorsInterface ? args.build() : args;
 
-    console.log('Locator being used:', locator);
+    this.log('Locator being used:', locator);
 
     el = await this.waitForTextElementToBePresent({ ...locator });
     if (!el) {
@@ -1225,7 +1263,7 @@ export class DeviceWrapper {
       });
       const attr = await this.getAttribute('value', radioButton.ELEMENT);
       if (attr === 'selected') {
-        console.log('Great success - default time is correct');
+        this.log('Great success - default time is correct');
       } else {
         throw new Error('Dammit - default time was not correct');
       }
@@ -1238,7 +1276,7 @@ export class DeviceWrapper {
       if (!attr) {
         throw new Error('Dammit - default time was not correct');
       }
-      console.log('Great success - default time is correct');
+      this.log('Great success - default time is correct');
     }
   }
 
@@ -1498,7 +1536,7 @@ export class DeviceWrapper {
         });
 
         if (longPressSuccess) {
-          console.log('LongClick successful'); // Exit the loop if successful
+          this.log('LongClick successful'); // Exit the loop if successful
         } else {
           throw new Error(`longPress on voice message unsuccessful`);
         }
@@ -1509,7 +1547,7 @@ export class DeviceWrapper {
             `Longpress on on voice message unsuccessful after ${maxRetries} attempts, ${error as string}`
           );
         }
-        console.log(`Longpress attempt ${attempt} failed. Retrying...`);
+        this.log(`Longpress attempt ${attempt} failed. Retrying...`);
         await sleepFor(1000);
       }
     } else if (this.isIOS()) {
@@ -1553,9 +1591,9 @@ export class DeviceWrapper {
     try {
       const time = await this.getDeviceTime(platform);
       timeString = time.toString();
-      console.log(`Device time: ${timeString}`);
+      this.log(`Device time: ${timeString}`);
     } catch (e) {
-      console.log(`Couldn't get time from device`);
+      this.log(`Couldn't get time from device`);
     }
     return timeString;
   }
@@ -1569,7 +1607,7 @@ export class DeviceWrapper {
       });
       return Boolean(spaceBar);
     }
-    console.log(`Not an iOS device: shouldn't use this function`);
+    this.log(`Not an iOS device: shouldn't use this function`);
   }
 
   public async mentionContact(platform: SupportedPlatformsType, contact: Pick<User, 'userName'>) {
@@ -1621,7 +1659,7 @@ export class DeviceWrapper {
     });
 
     const loc = await this.getElementRect(el.ELEMENT);
-    console.log(loc);
+    this.log(loc);
 
     if (!loc) {
       throw new Error('did not find element rectangle');
@@ -1632,7 +1670,7 @@ export class DeviceWrapper {
       1000
     );
 
-    console.info('Swiped left on ', selector);
+    this.info('Swiped left on ', selector);
   }
   public async swipeRightAny(selector: AccessibilityId) {
     const el = await this.waitForTextElementToBePresent({
@@ -1641,7 +1679,7 @@ export class DeviceWrapper {
     });
 
     const loc = await this.getElementRect(el.ELEMENT);
-    console.log(loc);
+    this.log(loc);
 
     if (!loc) {
       throw new Error('did not find element rectangle');
@@ -1652,13 +1690,13 @@ export class DeviceWrapper {
       500
     );
 
-    console.info('Swiped right on ', selector);
+    this.info('Swiped right on ', selector);
   }
   public async swipeLeft(accessibilityId: AccessibilityId, text: string) {
     const el = await this.findMatchingTextAndAccessibilityId(accessibilityId, text);
 
     const loc = await this.getElementRect(el.ELEMENT);
-    console.log(loc);
+    this.log(loc);
 
     if (!loc) {
       throw new Error('did not find element rectangle');
@@ -1669,7 +1707,7 @@ export class DeviceWrapper {
       1000
     );
 
-    console.info('Swiped left on ', el);
+    this.info('Swiped left on ', el);
     // let some time for swipe action to happen and UI to update
   }
 
@@ -1698,7 +1736,7 @@ export class DeviceWrapper {
           selector: 'network.loki.messenger:id/scrollToBottomButton',
         });
       } else {
-        console.info('Scroll button not visible');
+        this.info('Scroll button not visible');
       }
     } else {
       await this.clickOnElementAll({
@@ -1808,7 +1846,7 @@ export class DeviceWrapper {
           await this.clickOnByAccessibilityID(selector);
         }
       } catch (e) {
-        console.info('iosPermissions doesElementExist failed with: ', e);
+        this.info('iosPermissions doesElementExist failed with: ', e);
         // Ignore any exceptions during the action
       }
 
@@ -1849,14 +1887,14 @@ export class DeviceWrapper {
         ...args,
         maxWait: 500,
       });
-      console.info('iosPermissions', iosPermissions);
+      this.info('iosPermissions', iosPermissions);
       if (iosPermissions) {
         await this.clickOnElementAll({ ...args, maxWait });
       } else {
-        console.info('No iosPermissions', iosPermissions);
+        this.info('No iosPermissions', iosPermissions);
       }
     } catch (e) {
-      console.info('FAILED WITH', e);
+      this.info('FAILED WITH', e);
       // Ignore any exceptions during the action
     }
 
@@ -1889,7 +1927,7 @@ export class DeviceWrapper {
     }
     const actualHeading = await this.getTextFromElement(elHeading);
     if (expectedHeading === actualHeading) {
-      console.log('Modal heading is correct');
+      this.log('Modal heading is correct');
     } else {
       throw new Error(
         `Modal heading is incorrect. Expected heading: ${expectedHeading}, Actual heading: ${actualHeading}`
@@ -1913,7 +1951,7 @@ export class DeviceWrapper {
         `Modal description is incorrect. Expected description: ${expectedDescription}, Actual description: ${formattedDescription}`
       );
     } else {
-      console.log('Modal description is correct');
+      this.log('Modal description is correct');
     }
   }
 
