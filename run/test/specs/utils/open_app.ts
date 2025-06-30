@@ -45,9 +45,7 @@ export const openAppMultipleDevices = async (
   //  Map the result to return only the device objects
   const devices = apps.map(app => app.device);
 
-  if (testInfo) {
-    registerDevicesForTest(testInfo, devices, platform);
-  }
+  registerDevicesForTest(testInfo, devices, platform);
 
   return devices;
 };
@@ -70,9 +68,7 @@ export const openAppOnPlatformSingleDevice = async (
 }> => {
   const result = await openAppOnPlatform(platform, 0);
 
-  if (testInfo) {
-    registerDevicesForTest(testInfo, [result.device], platform);
-  }
+  registerDevicesForTest(testInfo, [result.device], platform);
 
   return result;
 };
@@ -91,9 +87,7 @@ export const openAppTwoDevices = async (
 
   const result = { device1: app1.device, device2: app2.device };
 
-  if (testInfo) {
-    registerDevicesForTest(testInfo, [result.device1, result.device2], platform);
-  }
+  registerDevicesForTest(testInfo, [result.device1, result.device2], platform);
 
   return result;
 };
@@ -118,9 +112,7 @@ export const openAppThreeDevices = async (
     device3: app3.device,
   };
 
-  if (testInfo) {
-    registerDevicesForTest(testInfo, [result.device1, result.device2, result.device3], platform);
-  }
+  registerDevicesForTest(testInfo, [result.device1, result.device2, result.device3], platform);
 
   return result;
 };
@@ -148,13 +140,11 @@ export const openAppFourDevices = async (
     device4: app4.device,
   };
 
-  if (testInfo) {
-    registerDevicesForTest(
-      testInfo,
-      [result.device1, result.device2, result.device3, result.device4],
-      platform
-    );
-  }
+  registerDevicesForTest(
+    testInfo,
+    [result.device1, result.device2, result.device3, result.device4],
+    platform
+  );
 
   return result;
 };

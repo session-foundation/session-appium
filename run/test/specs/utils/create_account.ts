@@ -9,7 +9,7 @@ import { ContinueButton } from '../locators/global';
 import { CopyButton } from '../locators/start_conversation';
 
 export const newUser = async (device: DeviceWrapper, userName: UserNameType): Promise<User> => {
-  device.setDeviceIdentity(`${userName.toLowerCase()}1`, 0);
+  device.setDeviceIdentity(`${userName.toLowerCase()}1`);
   // Click create session ID
   await device.clickOnElementAll(new CreateAccountButton(device));
   // Input username

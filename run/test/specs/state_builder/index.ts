@@ -111,8 +111,8 @@ export async function open_Alice1_Bob1_friends({
     groupName: undefined,
     testInfo,
   });
-  result.devices[0].setDeviceIdentity('alice1', 0);
-  result.devices[1].setDeviceIdentity('bob1', 1);
+  result.devices[0].setDeviceIdentity('alice1');
+  result.devices[1].setDeviceIdentity('bob1');
   const seedPhrases = result.prebuilt.users.map(m => m.seedPhrase);
   await linkDevices(result.devices, seedPhrases);
 
@@ -162,9 +162,9 @@ export async function open_Alice1_Bob1_Charlie1_friends_group({
     groupName,
     testInfo,
   });
-  result.devices[0].setDeviceIdentity('alice1', 0);
-  result.devices[1].setDeviceIdentity('bob1', 1);
-  result.devices[2].setDeviceIdentity('charlie1', 2);
+  result.devices[0].setDeviceIdentity('alice1');
+  result.devices[1].setDeviceIdentity('bob1');
+  result.devices[2].setDeviceIdentity('charlie1');
 
   const seedPhrases = result.prebuilt.users.map(m => m.seedPhrase);
   await linkDevices(result.devices, seedPhrases);
@@ -225,10 +225,10 @@ export async function open_Alice1_Bob1_Charlie1_Unknown1({
     groupName,
     testInfo,
   });
-  result.devices[0].setDeviceIdentity('alice1', 0);
-  result.devices[1].setDeviceIdentity('bob1', 1);
-  result.devices[2].setDeviceIdentity('charlie1', 2);
-  result.devices[3].setDeviceIdentity('unknown1', 3); // this device will be linked later
+  result.devices[0].setDeviceIdentity('alice1');
+  result.devices[1].setDeviceIdentity('bob1');
+  result.devices[2].setDeviceIdentity('charlie1');
+  result.devices[3].setDeviceIdentity('unknown1'); // this device will be linked later
   const seedPhrases = result.prebuilt.users.map(m => m.seedPhrase);
   await linkDevices(result.devices.slice(0, -1), seedPhrases);
 
@@ -276,8 +276,8 @@ export async function open_Alice2({ platform, testInfo }: WithPlatform & { testI
     groupName: undefined,
     testInfo,
   });
-  result.devices[0].setDeviceIdentity('alice1', 0);
-  result.devices[1].setDeviceIdentity('alice2', 1);
+  result.devices[0].setDeviceIdentity('alice1');
+  result.devices[1].setDeviceIdentity('alice2');
   // we want the first user to have the first 2 devices linked
   const alice = result.prebuilt.users[0];
   const alice1 = result.devices[0];
@@ -315,8 +315,8 @@ export async function open_Alice1_bob1_notfriends({
     groupName: undefined,
     testInfo,
   });
-  result.devices[0].setDeviceIdentity('alice1', 0);
-  result.devices[1].setDeviceIdentity('bob1', 1);
+  result.devices[0].setDeviceIdentity('alice1');
+  result.devices[1].setDeviceIdentity('bob1');
   const alice = result.prebuilt.users[0];
   const bob = result.prebuilt.users[1];
 
@@ -354,9 +354,9 @@ export async function open_Alice2_Bob1_friends({
     groupName: undefined,
     testInfo,
   });
-  result.devices[0].setDeviceIdentity('alice1', 0);
-  result.devices[1].setDeviceIdentity('alice2', 1);
-  result.devices[2].setDeviceIdentity('bob1', 2);
+  result.devices[0].setDeviceIdentity('alice1');
+  result.devices[1].setDeviceIdentity('alice2');
+  result.devices[2].setDeviceIdentity('bob1');
   const alice = result.prebuilt.users[0];
   const bob = result.prebuilt.users[1];
   // we want the first user to have the first 2 devices linked

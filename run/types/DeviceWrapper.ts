@@ -72,13 +72,10 @@ export type ActionSequence = {
 type AppiumNextElementType = { ELEMENT: string };
 
 export class DeviceWrapper {
-  // 1. PRIVATE FIELDS
   private readonly device: AndroidUiautomator2Driver | XCUITestDriver;
   public readonly udid: string;
   private deviceIdentity: string = '';
-  private deviceIndex: number = 0;
 
-  // 2. CONSTRUCTOR
   constructor(device: AndroidUiautomator2Driver | XCUITestDriver, udid: string) {
     this.device = device;
     this.udid = udid;
@@ -86,7 +83,7 @@ export class DeviceWrapper {
     this.deviceIdentity = `device-${udid.slice(-4)}`;
   }
 
-  // 3. LOGGING METHODS (right after constructor)
+  // LOGGING METHODS
   private log(...args: unknown[]): void {
     console.log(`[${this.deviceIdentity}]`, ...args);
   }
@@ -103,18 +100,16 @@ export class DeviceWrapper {
     console.error(`[${this.deviceIdentity}]`, ...args);
   }
 
-  // 4. DEVICE IDENTITY METHODS (public methods for managing identity)
-  // Set device identity (e.g., "alice1", "bob1")
-  public setDeviceIdentity(identity: string, index: number = 0): void {
+  // DEVICE IDENTITY METHODS
+  public setDeviceIdentity(identity: string): void {
     const oldIdentity = this.deviceIdentity;
     this.deviceIdentity = identity;
-    this.deviceIndex = index;
     this.log(`Device identity changed from ${oldIdentity} to ${identity}`);
   }
 
   // Get device identity for labels and logging
   public getDeviceIdentity(): string {
-    return this.deviceIdentity; // Always has a value from constructor
+    return this.deviceIdentity;
   }
 
   public onIOS() {

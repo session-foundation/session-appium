@@ -31,7 +31,7 @@ export function unregisterDevicesForTest(testInfo: TestInfo) {
   const testId = `${testInfo.testId}-${testInfo.repeatEachIndex}`;
   deviceRegistry.delete(testId);
 }
-
+// Add device labels to screenshots (e.g. "Device: alice1")
 async function addDeviceLabel(screenshot: Buffer, device: DeviceWrapper): Promise<Buffer> {
   const metadata = await sharp(screenshot).metadata();
   const width = metadata.width;
@@ -75,7 +75,7 @@ async function createSideBySideComposite(left: Buffer, right: Buffer): Promise<B
     const metadata = await sharp(left).metadata();
     const width = metadata.width;
 
-    // Simple approach: extend first image to the right and composite second
+    // Extend first image to the right and composite second
     const composite = await sharp(left)
       .extend({
         right: width + 2, // 2px gap
@@ -161,7 +161,7 @@ async function createGridComposite(screenshots: Buffer[]): Promise<Buffer> {
   }
 }
 
-// Main screenshot capture function (matching original pattern)
+// Main screenshot capture function
 export async function captureScreenshotsOnFailure(testInfo: TestInfo): Promise<void> {
   const testId = `${testInfo.testId}-${testInfo.repeatEachIndex}`;
   const context = deviceRegistry.get(testId);
@@ -217,15 +217,16 @@ export async function captureScreenshotsOnFailure(testInfo: TestInfo): Promise<v
         finalImage = await createGridComposite(screenshots);
         break;
       default:
-        // Fallback for > 4 devices (shouldn't happen based on your constraints)
+        // Fallback for > 4 devices
         console.log('More than 4 devices detected, using first device screenshot only');
         finalImage = screenshots[0];
     }
 
-    // Simple filename
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const testNameShort = testInfo.title.split(' ')[0].toLowerCase().substring(0, 20);
-    const fileName = `failure-${testNameShort}-${timestamp}.png`;
+    // Strip everything after @ for a clean filename
+    const testDesc = testInfo.title.split('@')[0].trim().toLowerCase();
+    const cleanName = testDesc.replace(/[:\s]+/g, '-').replace(/-+/g, '-');
+    const retry = testInfo.retry > 0 ? `-retry${testInfo.retry}` : '';
+    const fileName = `${cleanName}${retry}.png`;
 
     // Ensure output directory exists
     await fs.promises.mkdir(testInfo.outputDir, { recursive: true });
@@ -235,7 +236,7 @@ export async function captureScreenshotsOnFailure(testInfo: TestInfo): Promise<v
     await fs.promises.writeFile(screenshotPath, finalImage);
     console.log(`Screenshot saved: ${screenshotPath}`);
 
-    // Attach to Playwright report
+    // Attach to report
     const attachmentName =
       screenshots.length === 1
         ? 'Test Failure Screenshot'
