@@ -1,7 +1,7 @@
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { BlockUser, BlockUserConfirmationModal } from './locators';
-import { ConversationSettings } from './locators/conversation';
+import { BlockedBanner, ConversationSettings } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType } from './utils/open_app';
 
@@ -29,12 +29,11 @@ async function unblockUser(platform: SupportedPlatformsType) {
     true
   );
   await alice1.clickOnElementAll(new BlockUserConfirmationModal(alice1));
-  await alice1.onIOS().navigateBack();
+  await alice1.navigateBack();
   const blockedStatus = await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Blocked banner',
+    ...new BlockedBanner(alice1).build(),
+    maxWait: 5000,
   });
-
   if (blockedStatus) {
     console.info(`${bob.userName} has been blocked`);
   } else {
@@ -49,16 +48,12 @@ async function unblockUser(platform: SupportedPlatformsType) {
     maxWait: 5000,
   });
   // Now that user is blocked, unblock them
-  await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Blocked banner' });
+  await alice1.clickOnElementAll(new BlockedBanner(alice1));
   await alice1.checkModalStrings(
     englishStrippedStr('blockUnblock').toString(),
     englishStrippedStr('blockUnblockName').withArgs({ name: bob.userName }).toString(),
-    true
+    false
   );
   await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Unblock' });
-  await alice1.doesElementExist({
-    strategy: 'accessibility id',
-    selector: 'Blocked banner',
-    maxWait: 2000,
-  });
+  await alice1.doesElementExist({ ...new BlockedBanner(alice1).build(), maxWait: 2000 });
 }

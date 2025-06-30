@@ -3,10 +3,10 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { SafariAddressBar, URLInputField } from './locators/browsers';
 import { DonationsMenuItem, UserSettings } from './locators/settings';
-import { handleChromeFirstTimeOpen } from './utils/chrome_first_time_open';
+import { handleChromeFirstTimeOpen } from './utils/handle_first_open';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { ensureHttpsURL } from './utils/utilities';
+import { assertUrlIsReachable, ensureHttpsURL } from './utils/utilities';
 import { OpenLinkButton } from './locators/network_page';
 
 bothPlatformsIt({
@@ -45,6 +45,7 @@ async function donateLinkout(platform: SupportedPlatformsType) {
       `The retrieved URL does not match the expected. The retrieved URL is ${fullRetrievedURL}`
     );
   }
+  await assertUrlIsReachable(linkURL);
   // Close browser and app
   await device.backToSession();
   await closeApp(device);

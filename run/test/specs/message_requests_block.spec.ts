@@ -1,8 +1,9 @@
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME, type AccessibilityId } from '../../types/testing';
-import { BlockedContactsSettings, BlockUserConfirmationModal } from './locators';
-import { UserSettings } from './locators/settings';
+import { BlockedContactsSettings } from './locators';
+import { PlusButton } from './locators/home';
+import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
@@ -41,13 +42,12 @@ async function blockedRequest(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Block message request');
   // Confirm block on android
   await sleepFor(1000);
-  // TODO add check modal
   await device2.checkModalStrings(
     englishStrippedStr('block').toString(),
     englishStrippedStr('blockDescription').withArgs({ name: alice.userName }).toString(),
-    true
+    false
   );
-  await device2.clickOnElementAll(new BlockUserConfirmationModal(device1));
+  await device2.clickOnByAccessibilityID('Block'); // This is an old Android modal so can't use the modern locator class
   // "messageRequestsNonePending": "No pending message requests",
   const messageRequestsNonePending = englishStrippedStr('messageRequestsNonePending').toString();
   await Promise.all([
@@ -62,11 +62,8 @@ async function blockedRequest(platform: SupportedPlatformsType) {
   ]);
   const blockedMessage = `"${alice.userName} to ${bob.userName} - shouldn't get through"`;
   await device1.sendMessage(blockedMessage);
-  await device2.navigateBack();
-  await device2.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'New conversation button',
-  });
+  await device2.navigateBack(false);
+  await device2.waitForTextElementToBePresent(new PlusButton(device2));
   // Need to wait to see if message gets through
   await sleepFor(5000);
   await device2.hasTextElementBeenDeleted('Message body', blockedMessage);
@@ -79,8 +76,8 @@ async function blockedRequest(platform: SupportedPlatformsType) {
   // 'Conversations' might be hidden beyond the Settings view, gotta scroll down to find it
   await Promise.all([device2.scrollDown(), device3.scrollDown()]);
   await Promise.all([
-    device2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' }),
-    device3.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' }),
+    device2.clickOnElementAll(new ConversationsMenuItem(device2)),
+    device3.clickOnElementAll(new ConversationsMenuItem(device3)),
   ]);
   await Promise.all([
     device2.clickOnElementAll(new BlockedContactsSettings(device2)),

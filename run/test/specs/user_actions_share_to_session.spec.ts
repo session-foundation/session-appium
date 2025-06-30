@@ -1,4 +1,4 @@
-import { bothPlatformsIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ImageName, MediaMessageInput, SendMediaButton, ShareExtensionIcon } from './locators';
 import { PhotoLibrary } from './locators/external';
@@ -6,11 +6,19 @@ import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType } from './utils/open_app';
 import { testImage } from '../../constants/testfiles';
+import { handlePhotosFirstTimeOpen } from './utils/handle_first_open';
 
-bothPlatformsIt({
+// TODO investigate why the Android Photos app throws an unexpected error when sharing
+bothPlatformsItSeparate({
   title: 'Share to session',
   risk: 'low',
-  testCb: shareToSession,
+  ios: {
+    testCb: shareToSession,
+  },
+  android: {
+    testCb: shareToSession,
+    shouldSkip: true,
+  },
   countOfDevicesNeeded: 2,
 });
 
@@ -32,10 +40,15 @@ async function shareToSession(platform: SupportedPlatformsType) {
   await alice1.onIOS().swipeRightAny('Session');
   await alice1.clickOnElementAll(new PhotoLibrary(alice1));
   await sleepFor(2000);
-  await alice1.onIOS().clickOnByAccessibilityID('Select');
-  await alice1
-    .onIOS()
-    .matchAndTapImage({ strategy: 'xpath', selector: `//XCUIElementTypeImage` }, testImage);
+  if (platform === 'ios') {
+    // first launch of Photos app on iOS shows a 'What's New' screen
+    await handlePhotosFirstTimeOpen(alice1);
+    await alice1.clickOnByAccessibilityID('Select');
+    await alice1.matchAndTapImage(
+      { strategy: 'xpath', selector: `//XCUIElementTypeImage` },
+      testImage
+    );
+  }
   await alice1.onAndroid().clickOnElementAll(new ImageName(alice1));
   await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Share' });
   await alice1.clickOnElementAll(new ShareExtensionIcon(alice1));

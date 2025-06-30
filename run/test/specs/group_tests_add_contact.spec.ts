@@ -1,10 +1,11 @@
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { EditGroup, InviteContactsButton, InviteContactsMenuItem } from './locators';
+import { InviteContactsButton, InviteContactsMenuItem } from './locators';
 import { ConversationSettings } from './locators/conversation';
 import { Contact } from './locators/global';
-import { InviteContactConfirm } from './locators/groups';
+import { InviteContactConfirm, ManageMembersMenuItem } from './locators/groups';
+import { ConversationItem } from './locators/home';
 import { open_Alice1_Bob1_Charlie1_Unknown1 } from './state_builder';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -33,15 +34,11 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Exit to conversation list
   await alice1.navigateBack();
   // Select group conversation in list
-  await alice1.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Conversation list item',
-    text: group.groupName,
-  });
+  await alice1.clickOnElementAll(new ConversationItem(alice1, testGroupName));
   // Click more options
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   // Select edit group
-  await alice1.clickOnElementAll(new EditGroup(alice1));
+  await alice1.clickOnElementAll(new ManageMembersMenuItem(alice1));
   await sleepFor(1000);
   // Add contact to group
   await alice1.onIOS().clickOnElementAll(new InviteContactsMenuItem(alice1));
@@ -51,12 +48,11 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     ...new Contact(alice1).build(),
     text: USERNAME.DRACULA,
   });
-  // Click done/apply
   await alice1.clickOnElementAll(new InviteContactConfirm(alice1));
-  // Click done/apply again
-  await alice1.navigateBack(true);
-  // iOS doesn't automatically go back to conversation settings
-  await alice1.onIOS().navigateBack();
+  // Leave Manage Members
+  await alice1.navigateBack();
+  // Leave Conversation Settings
+  await alice1.navigateBack();
   // Check control messages
   await Promise.all(
     [alice1, bob1, charlie1].map(device =>
@@ -65,7 +61,10 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
       )
     )
   );
+  // Leave conversation
   await unknown1.navigateBack();
+  // Leave Message Requests screen (Android)
+  await unknown1.onAndroid().navigateBack();
   await unknown1.selectByText('Conversation list item', group.groupName);
   // Check for control message on device 4
   await unknown1.waitForControlMessageToBePresent(englishStrippedStr('groupInviteYou').toString());

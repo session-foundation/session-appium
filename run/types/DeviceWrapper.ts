@@ -10,13 +10,27 @@ import {
   ImageName,
   ImagePermissionsModalAllow,
   LocatorsInterface,
-  PrivacyButton,
   ReadReceiptsButton,
   SendMediaButton,
 } from '../../run/test/specs/locators';
+import { englishStrippedStr } from '../localizer/englishStrippedStr';
+import {
+  AttachmentsButton,
+  MessageInput,
+  OutgoingMessageStatusSent,
+} from '../test/specs/locators/conversation';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
-import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
-import { EnterAccountID } from '../test/specs/locators/start_conversation';
+import { LoadingAnimation } from '../test/specs/locators/onboarding';
+import {
+  PrivacyMenuItem,
+  SaveProfilePictureButton,
+  UserSettings,
+} from '../test/specs/locators/settings';
+import {
+  EnterAccountID,
+  NewMessageOption,
+  NextButton,
+} from '../test/specs/locators/start_conversation';
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
 import { getAdbFullPath } from '../test/specs/utils/binaries';
 import { parseDataImage } from '../test/specs/utils/check_colour';
@@ -33,6 +47,7 @@ import {
   User,
   XPath,
 } from './testing';
+import { PlusButton } from '../test/specs/locators/home';
 import {
   testFile,
   testImage,
@@ -40,8 +55,6 @@ import {
   profilePicture,
   testVideoThumbnail,
 } from '../constants/testfiles';
-import { AttachmentsButton, OutgoingMessageStatusSent } from '../test/specs/locators/conversation';
-import { englishStrippedStr } from '../localizer/englishStrippedStr';
 import * as path from 'path';
 import fs from 'fs/promises';
 import { getImageOccurrence } from '@appium/opencv';
@@ -253,6 +266,41 @@ export class DeviceWrapper {
     return this.toShared().findElements(strategy, selector) as Promise<
       Array<AppiumNextElementType>
     >;
+  }
+  /**
+   * Attempts to click an element using a primary locator, and if not found, falls back to a secondary locator.
+   * This is useful for supporting UI transitions (e.g., between legacy and Compose Android screens) where
+   * the same UI element may have different locators depending context.
+   *
+   * @param primaryLocator - The first locator to try (e.g., new Compose locator or legacy locator).
+   * @param fallbackLocator - The locator to try if the primary is not found.
+   * @param maxWait - Maximum wait time in milliseconds for each locator (default: 3000).
+   * @throws If neither locator is found.
+   */
+  public async findWithFallback(
+    primaryLocator: LocatorsInterface | StrategyExtractionObj,
+    fallbackLocator: LocatorsInterface | StrategyExtractionObj,
+    maxWait: number = 3000
+  ): Promise<AppiumNextElementType> {
+    const primary =
+      primaryLocator instanceof LocatorsInterface ? primaryLocator.build() : primaryLocator;
+    const fallback =
+      fallbackLocator instanceof LocatorsInterface ? fallbackLocator.build() : fallbackLocator;
+    let found = await this.doesElementExist({ ...primary, maxWait });
+    if (found) {
+      await this.clickOnElementAll(primary);
+      return found;
+    }
+
+    console.warn(
+      `[findWithFallback] Could not find primary locator with '${primary.strategy}', falling back on '${fallback.strategy}'`
+    );
+    found = await this.doesElementExist({ ...fallback, maxWait });
+    if (found) {
+      await this.clickOnElementAll(fallback);
+      return found;
+    }
+    throw new Error(`[findWithFallback] Could not find primary or fallback locator`);
   }
 
   public async longClick(element: AppiumNextElementType, durationMs: number) {
@@ -757,10 +805,34 @@ export class DeviceWrapper {
           threshold,
         });
         console.info(`[matchAndTapImage] Match score for element ${i + 1}: ${score.toFixed(4)}`);
-        const center = {
-          x: rect.x + matchRect.x + Math.floor(matchRect.width / 2),
-          y: rect.y + matchRect.y + Math.floor(matchRect.height / 2),
-        };
+
+        /**
+         * Matching is done on a resized reference image to account for device pixel density.
+         * However, the coordinates returned by getImageOccurrence are relative to the resized buffer,
+         * *not* the original screen element. This leads to incorrect tap positions unless we
+         * scale the match result back down to the actual dimensions of the element.
+         * The logic below handles this scaling correction, ensuring the tap lands at the correct
+         * screen coordinates — even when Retina displays and image resizing are involved.
+         */
+
+        // Calculate scale between resized image and element dimensions
+        const resizedMeta = await sharp(resizedRef).metadata();
+        const scaleX = rect.width / (resizedMeta.width ?? rect.width);
+        const scaleY = rect.height / (resizedMeta.height ?? rect.height);
+
+        // Calculate center of the match rectangle (in buffer space)
+        const matchCenterX = matchRect.x + Math.floor(matchRect.width / 2);
+        const matchCenterY = matchRect.y + Math.floor(matchRect.height / 2);
+
+        // Scale match center down to element space
+        const scaledCenterX = matchCenterX * scaleX;
+        const scaledCenterY = matchCenterY * scaleY;
+
+        // Final absolute coordinates
+        const tapX = Math.round(rect.x + scaledCenterX);
+        const tapY = Math.round(rect.y + scaledCenterY);
+
+        const center = { x: tapX, y: tapY };
 
         // If earlyMatch is enabled and the score is high enough, tap immediately
         if (earlyMatch && score >= earlyMatchThreshold) {
@@ -1050,8 +1122,7 @@ export class DeviceWrapper {
     do {
       try {
         loadingAnimation = await this.waitForTextElementToBePresent({
-          strategy: 'accessibility id',
-          selector: 'Loading animation',
+          ...new LoadingAnimation(this).build(),
           maxWait: 1000,
         });
 
@@ -1112,17 +1183,17 @@ export class DeviceWrapper {
   public async sendNewMessage(user: Pick<User, 'accountID'>, message: string) {
     // Sender workflow
     // Click on plus button
-    await this.clickOnByAccessibilityID('New conversation button');
+    await this.clickOnElementAll(new PlusButton(this));
     // Select direct message option
-    await this.clickOnByAccessibilityID('New direct message');
+    await this.clickOnElementAll(new NewMessageOption(this));
     // Enter User B's session ID into input box
     await this.inputText(user.accountID, new EnterAccountID(this));
     // Click next
     await this.scrollDown();
-    await this.clickOnByAccessibilityID('Next');
+    await this.clickOnElementAll(new NextButton(this));
     // Type message into message input box
 
-    await this.inputText(message, { strategy: 'accessibility id', selector: 'Message input box' });
+    await this.inputText(message, new MessageInput(this));
     // Click send
     const sendButton = await this.clickOnElementAll({
       strategy: 'accessibility id',
@@ -1231,7 +1302,7 @@ export class DeviceWrapper {
       }
     } else {
       const radioButton = await this.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
+        strategy: 'id',
         selector: timeOption,
       });
       const attr = await this.getAttribute('selected', radioButton.ELEMENT);
@@ -1283,7 +1354,7 @@ export class DeviceWrapper {
       }
       await sleepFor(1000);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      // await verifyElementScreenshot(this, new DummyScreenshot(this));
+      await sleepFor(2000); // Appium needs a moment, matchAndTapImage sometimes finds 0 elements otherwise
       await this.matchAndTapImage(
         { strategy: 'xpath', selector: `//XCUIElementTypeCell` },
         testImage
@@ -1343,8 +1414,10 @@ export class DeviceWrapper {
       selector: 'Allow Full Access',
       maxWait: 500,
     });
+    await sleepFor(2000); // Appium needs a moment, matchAndTapImage sometimes finds 0 elements otherwise
     // For some reason video gets added to the top of the Recents folder so it's best to scroll up
     await this.scrollUp();
+    await sleepFor(2000); // Appium needs a moment, matchAndTapImage sometimes finds 0 elements otherwise
     // A video can't be matched by its thumbnail so we use a video thumbnail file
     await this.matchAndTapImage(
       { strategy: 'xpath', selector: `//XCUIElementTypeCell` },
@@ -1374,7 +1447,36 @@ export class DeviceWrapper {
       text: 'Allow',
     });
     await sleepFor(2000);
-    await this.clickOnTextElementById('android:id/title', testVideo);
+    let videoElement = await this.doesElementExist({
+      strategy: 'id',
+      selector: 'android:id/title',
+      text: testVideo,
+      maxWait: 5000,
+    });
+    // This codepath is purely for the CI
+    if (!videoElement) {
+      // Try to reveal the video by selecting/filtering Videos in the native UI
+      await this.clickOnElementAll({
+        strategy: 'class name',
+        selector: 'android.widget.Button',
+        text: 'Videos',
+      });
+      // Try again to find the video file after filtering
+      videoElement = await this.doesElementExist({
+        strategy: 'id',
+        selector: 'android:id/title',
+        text: testVideo,
+      });
+    }
+    if (videoElement) {
+      await this.clickOnElementAll({
+        strategy: 'id',
+        selector: 'android:id/title',
+        text: testVideo,
+      });
+    } else {
+      throw new Error(`Video "${testVideo}" not found after attempting to reveal it.`);
+    }
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
@@ -1432,7 +1534,36 @@ export class DeviceWrapper {
         text: 'Allow',
       });
       await sleepFor(1000);
-      await this.clickOnTextElementById('android:id/title', testFile);
+      let documentElement = await this.doesElementExist({
+        strategy: 'id',
+        selector: 'android:id/title',
+        text: testFile,
+        maxWait: 5000,
+      });
+      // This codepath is purely for the CI
+      if (!documentElement) {
+        // Try to reveal the pdf by selecting/filtering Documents in the native UI
+        await this.clickOnElementAll({
+          strategy: 'class name',
+          selector: 'android.widget.Button',
+          text: 'Documents',
+        });
+        // Try again to find the pdf file after revealing
+        documentElement = await this.doesElementExist({
+          strategy: 'id',
+          selector: 'android:id/title',
+          text: testFile,
+        });
+      }
+      if (documentElement) {
+        await this.clickOnElementAll({
+          strategy: 'id',
+          selector: 'android:id/title',
+          text: testFile,
+        });
+      } else {
+        throw new Error(`File "${testFile}" not found after attempting to reveal it.`);
+      }
     }
     // Checking Sent status on both platforms
     await this.waitForTextElementToBePresent({
@@ -1527,6 +1658,7 @@ export class DeviceWrapper {
       // Push file first
       await this.pushMediaToDevice(profilePicture);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
+      await sleepFor(5000); // sometimes Appium doesn't recognize the XPATH immediately
       await this.matchAndTapImage(
         { strategy: 'xpath', selector: `//XCUIElementTypeImage` },
         profilePicture
@@ -1608,7 +1740,7 @@ export class DeviceWrapper {
       englishStrippedStr(`attachmentsAutoDownloadModalDescription`)
         .withArgs({ conversation_name: conversationName })
         .toString(),
-      true
+      false
     );
     await this.clickOnElementAll(new DownloadMediaButton(this));
   }
@@ -1724,27 +1856,49 @@ export class DeviceWrapper {
     }
   }
 
-  public async navigateBack(newAndroid?: boolean) {
+  public async navigateBack(newAndroid: boolean = true) {
     if (this.isIOS()) {
       await this.clickOnByAccessibilityID('Back');
-    } else {
-      if (newAndroid) {
-        await this.clickOnElementAll({ strategy: 'id', selector: 'Navigate back' });
-      } else {
-        await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Navigate up' });
-      }
+      return;
+    } else if (this.isAndroid()) {
+      const newLocator = {
+        strategy: 'id',
+        selector: 'Navigate back',
+      } as StrategyExtractionObj;
+      const legacyLocator = {
+        strategy: 'accessibility id',
+        selector: 'Navigate up',
+      } as StrategyExtractionObj;
+      // Prefer new locator if newAndroid is true, otherwise prefer legacy
+      const [primary, fallback] = newAndroid
+        ? [newLocator, legacyLocator]
+        : [legacyLocator, newLocator];
+      await this.findWithFallback(primary, fallback);
     }
   }
 
-  public async closeScreen(newAndroid?: boolean) {
-    if (this.isAndroid()) {
-      if (newAndroid) {
-        await this.clickOnElementAll({ strategy: 'id', selector: 'Close button' });
-      } else {
-        await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Navigate up' });
-      }
-    } else {
+  public async closeScreen(newAndroid: boolean = true) {
+    if (this.isIOS()) {
       await this.clickOnByAccessibilityID('Close button');
+      return;
+    }
+
+    if (this.isAndroid()) {
+      const newLocator = {
+        strategy: 'id',
+        selector: 'Close button',
+      } as StrategyExtractionObj;
+
+      const legacyLocator = {
+        strategy: 'accessibility id',
+        selector: 'Navigate up',
+      } as StrategyExtractionObj;
+
+      const [primary, fallback] = newAndroid
+        ? [newLocator, legacyLocator]
+        : [legacyLocator, newLocator];
+
+      await this.findWithFallback(primary, fallback);
     }
   }
 
@@ -1763,12 +1917,12 @@ export class DeviceWrapper {
     await sleepFor(100);
     await this.clickOnElementAll(new UserSettings(this));
     await sleepFor(500);
-    await this.clickOnElementAll(new PrivacyButton(this));
+    await this.clickOnElementAll(new PrivacyMenuItem(this));
     await sleepFor(2000);
     await this.clickOnElementAll(new ReadReceiptsButton(this));
-    await this.navigateBack();
+    await this.navigateBack(false);
     await sleepFor(100);
-    await this.closeScreen();
+    await this.closeScreen(false);
   }
 
   public async checkPermissions(
@@ -1870,50 +2024,56 @@ export class DeviceWrapper {
   public async checkModalStrings(
     expectedHeading: string,
     expectedDescription: string,
-    oldModalAndroid?: boolean
+    newAndroid: boolean = true
   ) {
-    // Check modal heading is correct
+    const useNewLocator = this.isIOS() || newAndroid;
+
+    // Sanitize
     function removeNewLines(input: string): string {
       return input.replace(/\n/gi, '');
     }
 
-    let elHeading;
-    // Some modals in Android haven't been updated to compose yet therefore need different locators
-    if (!oldModalAndroid) {
-      elHeading = await this.waitForTextElementToBePresent(new ModalHeading(this));
-    } else {
-      elHeading = await this.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Modal heading',
-      });
-    }
-    const actualHeading = await this.getTextFromElement(elHeading);
+    // Locators
+    const newHeading = new ModalHeading(this).build();
+    const legacyHeading = {
+      strategy: 'accessibility id',
+      selector: 'Modal heading',
+    } as StrategyExtractionObj;
+
+    const newDescription = new ModalDescription(this).build();
+    const legacyDescription = {
+      strategy: 'accessibility id',
+      selector: 'Modal description',
+    } as StrategyExtractionObj;
+
+    // Pick locator priority based on platform
+    const [headingPrimary, headingFallback] = useNewLocator
+      ? [newHeading, legacyHeading]
+      : [legacyHeading, newHeading];
+
+    const [descPrimary, descFallback] = useNewLocator
+      ? [newDescription, legacyDescription]
+      : [legacyDescription, newDescription];
+
+    // Modal Heading
+    const elHeading = await this.findWithFallback(headingPrimary, headingFallback);
+    const actualHeading = removeNewLines(await this.getTextFromElement(elHeading));
     if (expectedHeading === actualHeading) {
       console.log('Modal heading is correct');
     } else {
       throw new Error(
-        `Modal heading is incorrect. Expected heading: ${expectedHeading}, Actual heading: ${actualHeading}`
+        `Modal heading is incorrect.\nExpected: ${expectedHeading}\nActual: ${actualHeading}`
       );
     }
-    // Now check modal description
-    let elDescription;
-    if (!oldModalAndroid) {
-      elDescription = await this.waitForTextElementToBePresent(new ModalDescription(this));
-    } else {
-      elDescription = await this.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Modal description',
-      });
-    }
-    const actualDescription = await this.getTextFromElement(elDescription);
-    // Need to format the ACTUAL description that comes back from device to match
-    const formattedDescription = removeNewLines(actualDescription);
-    if (expectedDescription !== formattedDescription) {
-      throw new Error(
-        `Modal description is incorrect. Expected description: ${expectedDescription}, Actual description: ${formattedDescription}`
-      );
-    } else {
+    // Modal Description
+    const elDescription = await this.findWithFallback(descPrimary, descFallback);
+    const actualDescription = removeNewLines(await this.getTextFromElement(elDescription));
+    if (expectedDescription === actualDescription) {
       console.log('Modal description is correct');
+    } else {
+      throw new Error(
+        `Modal description is incorrect.\nExpected: ${expectedDescription}\nActual: ${actualDescription}`
+      );
     }
   }
 

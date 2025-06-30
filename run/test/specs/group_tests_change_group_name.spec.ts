@@ -1,10 +1,12 @@
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
-import { EditGroup, EditGroupName } from './locators';
-import { EditGroupNameInput } from './locators/groups';
+import {
+  UpdateGroupInformation,
+  EditGroupNameInput,
+  SaveGroupNameChangeButton,
+} from './locators/groups';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { ConversationSettings } from './locators/conversation';
-import { SaveNameChangeButton } from './locators/settings';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 
@@ -36,10 +38,10 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   // Click on Edit group option
   await sleepFor(1000);
   // Click on current group name
-  await alice1.clickOnElementAll(new EditGroupName(alice1));
+  await alice1.clickOnElementAll(new UpdateGroupInformation(alice1, testGroupName));
   await alice1.checkModalStrings(
-    englishStrippedStr(`groupInformationSet`).toString(),
-    englishStrippedStr(`groupNameVisible`).toString()
+    englishStrippedStr(`updateGroupInformation`).toString(),
+    englishStrippedStr(`updateGroupInformationDescription`).toString()
   );
   await alice1.deleteText(new EditGroupNameInput(alice1));
   await alice1.inputText('   ', new EditGroupNameInput(alice1));
@@ -55,11 +57,11 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   }
   await alice1.clickOnByAccessibilityID('Cancel');
   // Enter new group name
-  await alice1.clickOnElementAll(new EditGroupName(alice1));
+  await alice1.clickOnElementAll(new UpdateGroupInformation(alice1, testGroupName));
   await alice1.deleteText(new EditGroupNameInput(alice1));
   await alice1.inputText(newGroupName, new EditGroupNameInput(alice1));
   // Click done/apply
-  await alice1.clickOnElementAll(new SaveNameChangeButton(alice1));
+  await alice1.clickOnElementAll(new SaveGroupNameChangeButton(alice1));
   await alice1.navigateBack();
   await alice1.waitForControlMessageToBePresent(
     englishStrippedStr('groupNameNew').withArgs({ group_name: newGroupName }).toString()
@@ -82,15 +84,12 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   // Click on Edit group option
   await sleepFor(1000);
-  await alice1.clickOnElementAll(new EditGroup(alice1));
-  // Click on current group name
-  await alice1.clickOnElementAll(new EditGroupName(alice1));
-  // Enter new group name (same test tag for both name and input)
-  await alice1.clickOnElementAll(new EditGroupName(alice1));
-  await alice1.inputText(newGroupName, new EditGroupName(alice1));
+  await alice1.clickOnElementAll(new UpdateGroupInformation(alice1));
+  await alice1.clickOnElementAll(new EditGroupNameInput(alice1));
+  await alice1.inputText(newGroupName, new EditGroupNameInput(alice1));
   // Click done/apply
-  await alice1.clickOnByAccessibilityID('Confirm');
-  await alice1.navigateBack(true);
+  await alice1.clickOnElementAll(new SaveGroupNameChangeButton(alice1));
+  await alice1.navigateBack();
   // Check control message for changed name
   await alice1.waitForControlMessageToBePresent(
     englishStrippedStr('groupNameNew').withArgs({ group_name: newGroupName }).toString()

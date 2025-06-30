@@ -27,11 +27,20 @@ async function deleteRequest(platform: SupportedPlatformsType) {
   await device2.onIOS().swipeLeftAny('Message request');
   await device2.onAndroid().longPress('Message request');
   await device2.clickOnElementAll(new DeleteMessageRequestButton(device2));
-  await device2.checkModalStrings(
-    englishStrippedStr('delete').toString(),
-    englishStrippedStr('messageRequestsDelete').toString(),
-    true
-  );
+  // TODO remove onIOS/onAndroid once SES-3846 has been completed
+  await device2
+    .onIOS()
+    .checkModalStrings(
+      englishStrippedStr('delete').toString(),
+      englishStrippedStr('messageRequestsDelete').toString()
+    );
+  await device2
+    .onAndroid()
+    .checkModalStrings(
+      englishStrippedStr('delete').toString(),
+      englishStrippedStr('messageRequestsContactDelete').toString(),
+      false
+    );
   await device2.clickOnElementAll(new DeleteMesssageRequestConfirmation(device2));
   // "messageRequestsNonePending": "No pending message requests",
   const messageRequestsNonePending = englishStrippedStr('messageRequestsNonePending').toString();

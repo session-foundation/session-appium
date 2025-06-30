@@ -6,6 +6,7 @@ import { AppearanceMenuItem, SelectAppIcon, UserSettings } from './locators/sett
 import { verifyElementScreenshot } from './utils/verify_screenshots';
 import { AppDisguisePageScreenshot } from './utils/screenshot_paths';
 import { sleepFor } from './utils';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'App disguise icons',
@@ -14,7 +15,7 @@ bothPlatformsIt({
   testCb: appDisguiseIcons,
 });
 
-async function appDisguiseIcons(platform: SupportedPlatformsType) {
+async function appDisguiseIcons(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   await newUser(device, USERNAME.ALICE);
   await device.clickOnElementAll(new UserSettings(device));
@@ -25,6 +26,6 @@ async function appDisguiseIcons(platform: SupportedPlatformsType) {
   // Must scroll down to reveal the app disguise option
   await device.scrollDown();
   await device.clickOnElementAll(new SelectAppIcon(device));
-  await verifyElementScreenshot(device, new AppDisguisePageScreenshot(device));
+  await verifyElementScreenshot(device, new AppDisguisePageScreenshot(device), testInfo);
   await closeApp(device);
 }

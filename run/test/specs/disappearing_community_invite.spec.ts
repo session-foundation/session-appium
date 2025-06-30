@@ -8,6 +8,7 @@ import { setDisappearingMessage } from './utils/set_disappearing_messages';
 import { testCommunityLink, testCommunityName } from './../../constants/community';
 import { ConversationSettings } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
+import { GroupMember } from './locators/groups';
 
 bothPlatformsItSeparate({
   title: 'Disappearing community invite message 1:1',
@@ -41,11 +42,7 @@ async function disappearingCommunityInviteMessageIos(platform: SupportedPlatform
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   await sleepFor(1000);
   await alice1.clickOnElementAll(new InviteContactsMenuItem(alice1));
-  await alice1.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Contact',
-    text: bob.userName,
-  });
+  await alice1.clickOnElementAll(new GroupMember(alice1).build(bob.userName));
   await alice1.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Invite contacts button',
@@ -91,12 +88,11 @@ async function disappearingCommunityInviteMessageAndroid(platform: SupportedPlat
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   await sleepFor(1000);
   await alice1.clickOnElementAll(new InviteContactsMenuItem(alice1));
-  await alice1.clickOnElementByText({
-    strategy: 'accessibility id',
-    selector: 'Contact',
-    text: bob.userName,
+  await alice1.clickOnElementAll(new GroupMember(alice1).build(bob.userName));
+  await alice1.clickOnElementAll({
+    strategy: 'id',
+    selector: 'invite-contacts-button',
   });
-  await alice1.clickOnByAccessibilityID('Done');
   // Check device 2 for invitation from user A
   await bob1.waitForTextElementToBePresent({
     strategy: 'id',

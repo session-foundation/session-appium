@@ -3,10 +3,18 @@ import { LocatorsInterface } from './index';
 
 export class HideRecoveryPasswordButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Hide recovery password button',
-    } as const;
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Hide recovery password button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Hide recovery password button',
+        } as const;
+    }
   }
 }
 
@@ -41,13 +49,47 @@ export class RecoveryPasswordMenuItem extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
+          strategy: 'id',
           selector: 'Recovery password menu item',
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Recovery password menu item',
+        } as const;
+    }
+  }
+}
+
+export class RevealRecoveryPhraseButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Reveal recovery phrase button',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Continue',
+        };
+    }
+  }
+}
+
+export class RecoveryPhraseContainer extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Recovery password container',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Recovery password container',
         } as const;
     }
   }
@@ -104,11 +146,45 @@ export class BlockedContacts extends LocatorsInterface {
     }
   }
 }
+export class PrivacyMenuItem extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Privacy',
+        } as const;
+      case 'ios':
+        return { strategy: 'id', selector: 'Privacy' } as const;
+    }
+  }
+}
+
+export class ConversationsMenuItem extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Conversations',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Conversations',
+        } as const;
+    }
+  }
+}
 
 export class AppearanceMenuItem extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Appearance',
+        } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',

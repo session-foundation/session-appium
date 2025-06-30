@@ -43,7 +43,7 @@ async function deleteConversation(platform: SupportedPlatformsType) {
     englishStrippedStr('conversationsDeleteDescription')
       .withArgs({ name: USERNAME.BOB })
       .toString(),
-    true
+    false
   );
   await alice1.clickOnElementAll(new DeleteContactModalConfirm(alice1));
   await Promise.all([

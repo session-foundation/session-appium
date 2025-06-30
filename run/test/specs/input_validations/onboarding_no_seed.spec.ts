@@ -1,12 +1,8 @@
 import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import {
-  AccountRestoreButton,
-  ContinueButton,
-  ErrorMessage,
-  SeedPhraseInput,
-} from '../locators/onboarding';
+import { AccountRestoreButton, ErrorMessage, SeedPhraseInput } from '../locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
+import { ContinueButton } from '../locators/global';
 
 bothPlatformsIt({
   title: 'Onboarding no seed',

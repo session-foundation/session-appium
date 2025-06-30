@@ -1,5 +1,7 @@
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
+import { CallButton } from './locators/conversation';
+import { ContinueButton } from './locators/global';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
@@ -31,8 +33,7 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType) {
     focusFriendsConvo: true,
   });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
-  // await alice1.navigateBack();
-  await alice1.clickOnByAccessibilityID('Call');
+  await alice1.clickOnElementAll(new CallButton(alice1));
   // Enabled voice calls in privacy settings
   await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
@@ -46,7 +47,7 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Allow voice and video calls',
   });
-  await alice1.clickOnByAccessibilityID('Continue');
+  await alice1.clickOnElementAll(new ContinueButton(alice1));
   // Navigate back to conversation
   await sleepFor(500);
   await alice1.clickOnByAccessibilityID('Close button');
@@ -62,7 +63,7 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType) {
   await sleepFor(500, true);
   await bob1.clickOnByAccessibilityID('Close button');
   // Make call on device 1 (alice)
-  await alice1.clickOnByAccessibilityID('Call');
+  await alice1.clickOnElementAll(new CallButton(alice1));
   // Answer call on device 2
   await bob1.clickOnByAccessibilityID('Answer call');
   // Wait 30 seconds
@@ -98,15 +99,12 @@ async function disappearingCallMessage1o1Android(platform: SupportedPlatformsTyp
     focusFriendsConvo: true,
   });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
-
-  // await alice1.navigateBack();
-  await alice1.clickOnByAccessibilityID('Call');
+  await alice1.clickOnElementAll(new CallButton(alice1));
   // Enabled voice calls in privacy settings
   await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Settings',
   });
-
   // Scroll to bottom of page to voice and video calls
   await sleepFor(1000);
   await alice1.scrollDown();
@@ -115,7 +113,6 @@ async function disappearingCallMessage1o1Android(platform: SupportedPlatformsTyp
     selector: 'android:id/summary',
     text: 'Enables voice and video calls to and from other users.',
   });
-
   await alice1.click(voicePermissions.ELEMENT);
   // Toggle voice settings on
   // Click enable on exposure IP address warning
@@ -128,7 +125,6 @@ async function disappearingCallMessage1o1Android(platform: SupportedPlatformsTyp
   await alice1.clickOnElementById(
     'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   );
-
   await alice1.navigateBack();
   // Enable voice calls on device 2 for User B
   await bob1.clickOnByAccessibilityID('Call');
@@ -138,7 +134,6 @@ async function disappearingCallMessage1o1Android(platform: SupportedPlatformsTyp
     selector: 'Settings',
     text: 'Settings',
   });
-
   await bob1.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Settings',
@@ -151,7 +146,6 @@ async function disappearingCallMessage1o1Android(platform: SupportedPlatformsTyp
     selector: 'android:id/summary',
     text: 'Enables voice and video calls to and from other users.',
   });
-
   await bob1.click(voicePermissions2.ELEMENT);
   // Toggle voice settings on
   // Click enable on exposure IP address warning
@@ -166,7 +160,7 @@ async function disappearingCallMessage1o1Android(platform: SupportedPlatformsTyp
   );
   await bob1.navigateBack();
   // Make call on device 1 (alice)
-  await alice1.clickOnByAccessibilityID('Call');
+  await alice1.clickOnElementAll(new CallButton(alice1));
   // Answer call on device 2
   await bob1.clickOnByAccessibilityID('Answer call');
   // Wait 5 seconds

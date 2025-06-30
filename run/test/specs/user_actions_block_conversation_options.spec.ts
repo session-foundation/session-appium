@@ -6,8 +6,8 @@ import {
   BlockUserConfirmationModal,
   ExitUserProfile,
 } from './locators';
-import { ConversationSettings } from './locators/conversation';
-import { UserSettings } from './locators/settings';
+import { ConversationSettings, BlockedBanner } from './locators/conversation';
+import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -36,19 +36,18 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   // Check modal strings
   await alice1.checkModalStrings(
     englishStrippedStr('block').toString(),
-    englishStrippedStr('blockDescription').withArgs({ name: bob.userName }).toString(),
-    true
+    englishStrippedStr('blockDescription').withArgs({ name: bob.userName }).toString()
   );
   // Confirm block option
   await alice1.clickOnElementAll(new BlockUserConfirmationModal(alice1));
   await sleepFor(1000);
-  // On ios, you need to navigate back to conversation screen to confirm block
-  await alice1.onIOS().navigateBack();
+  // Navigate back to conversation screen to confirm block
+  await alice1.navigateBack();
   // Look for alert at top of screen (Bob is blocked. Unblock them?)
   // Check device 1 for blocked status
   const blockedStatus = await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Blocked banner',
+    ...new BlockedBanner(alice1).build(),
+    maxWait: 5000,
   });
   if (blockedStatus) {
     console.info(`${bob.userName} has been blocked`);
@@ -60,7 +59,7 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   await alice1.clickOnElementAll(new UserSettings(alice1));
   // 'Conversations' might be hidden beyond the Settings view, gotta scroll down to find it
   await alice1.scrollDown();
-  await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
+  await alice1.clickOnElementAll(new ConversationsMenuItem(alice1));
   await alice1.clickOnElementAll(new BlockedContactsSettings(alice1));
   // Accessibility ID for Blocked Contact not present on iOS
   await alice1.waitForTextElementToBePresent({
@@ -68,8 +67,8 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
     selector: 'Contact',
     text: bob.userName,
   });
-  await alice1.navigateBack();
-  await alice1.navigateBack();
+  await alice1.navigateBack(false);
+  await alice1.navigateBack(false);
   await alice1.clickOnElementAll(new ExitUserProfile(alice1));
   // Send message from Blocked User
   await bob1.sendMessage(blockedMessage);

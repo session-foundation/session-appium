@@ -8,11 +8,10 @@ import {
   SessionNetworkMenuItem,
 } from './locators/network_page';
 import { UserSettings } from './locators/settings';
-import { handleChromeFirstTimeOpen } from './utils/chrome_first_time_open';
+import { handleChromeFirstTimeOpen } from './utils/handle_first_open';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { ensureHttpsURL } from './utils/utilities';
-import { verifyPageScreenshot } from './utils/verify_screenshots';
+import { assertUrlIsReachable, ensureHttpsURL } from './utils/utilities';
 
 bothPlatformsIt({
   title: 'Network page learn more network link',
@@ -52,7 +51,7 @@ async function networkPageLearnMore(platform: SupportedPlatformsType) {
   } else {
     console.log('The URLs match.');
   }
-  await verifyPageScreenshot(platform, device, 'network_page');
+  await assertUrlIsReachable(linkURL);
   // Close browser and app
   await device.backToSession();
   await closeApp(device);

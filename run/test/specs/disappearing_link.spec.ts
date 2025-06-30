@@ -90,7 +90,6 @@ async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsTyp
     focusFriendsConvo: true,
   });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
-  // await alice1.navigateBack();
   // Send a link
   await alice1.inputText(testLink, {
     strategy: 'accessibility id',
@@ -100,18 +99,16 @@ async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsTyp
   await alice1.checkModalStrings(
     englishStrippedStr('linkPreviewsEnable').toString(),
     englishStrippedStr('linkPreviewsFirstDescription').toString(),
-    true
+    false
   );
   await alice1.clickOnByAccessibilityID('Enable');
-  // No preview on first send
-  // Wait for preview to load
-  await sleepFor(2000);
+  // Preview takes a while to load
+  await sleepFor(5000);
   await alice1.clickOnByAccessibilityID('Send message button');
   await alice1.waitForTextElementToBePresent({
     ...new OutgoingMessageStatusSent(alice1).build(),
     maxWait: 20000,
   });
-  // Send again for image
   // Make sure image preview is available in device 2
   await bob1.waitForTextElementToBePresent({
     strategy: 'id',
