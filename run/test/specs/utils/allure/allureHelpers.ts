@@ -1,7 +1,11 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { execSync } from 'child_process';
-import { allureResultsDir, allureCurrentReportDir } from '../../../../constants/allure';
+import {
+  allureResultsDir,
+  allureCurrentReportDir,
+  GH_PAGES_BASE_URL,
+} from '../../../../constants/allure';
 import { SupportedPlatformsType } from '../open_app';
 
 export interface ReportContext {
@@ -21,16 +25,35 @@ export interface ReportContext {
  * Derives consistent context values from CI env
  */
 export function getReportContextFromEnv(): ReportContext {
-  const platform = process.env.PLATFORM! as SupportedPlatformsType;
-  const build = process.env.BUILD_NUMBER!;
-  const artifact = process.env.APK_URL!;
+  const platform = process.env.PLATFORM as SupportedPlatformsType | undefined;
+  const build = process.env.BUILD_NUMBER;
+  const artifact = process.env.APK_URL;
   const risk = process.env.RISK?.trim() || 'full';
   const runNumber = Number(process.env.GITHUB_RUN_NUMBER);
   const runAttempt = Number(process.env.GITHUB_RUN_ATTEMPT);
   const runID = Number(process.env.GITHUB_RUN_ID);
   const reportFolder = `run-${runNumber}.${runAttempt}-${platform}-${build}-${risk}`;
-  const reportUrl = `https://session-foundation.github.io/session-appium/${platform}/${reportFolder}/`;
+  const reportUrl = `${GH_PAGES_BASE_URL}/${platform}/${reportFolder}/`;
   const githubRunUrl = `https://github.com/session-foundation/session-appium/actions/runs/${runID}`;
+
+  if (!platform) {
+    throw new Error('PLATFORM env variable is required');
+  }
+  if (!build) {
+    throw new Error('BUILD_NUMBER env variable is required');
+  }
+  if (!artifact) {
+    throw new Error('APK_URL env variable is required');
+  }
+  if (!runNumber) {
+    throw new Error('GITHUB_RUN_NUMBER env variable is required');
+  }
+  if (!runAttempt) {
+    throw new Error('GITHUB_RUN_ATTEMPT env variable is required');
+  }
+  if (!runID) {
+    throw new Error('GITHUB_RUN_ID env variable is required');
+  }
 
   return {
     platform,

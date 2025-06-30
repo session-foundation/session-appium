@@ -48,8 +48,8 @@ async function linkedGroupiOS(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new UpdateGroupInformation(device1, testGroupName));
   //  Check new dialog
   await device1.checkModalStrings(
-    englishStrippedStr(`updateGroupInformation`).toString(),
-    englishStrippedStr(`updateGroupInformationDescription`).toString()
+    englishStrippedStr('updateGroupInformation').toString(),
+    englishStrippedStr('updateGroupInformationDescription').toString()
   );
   // Delete old name first
   await device1.deleteText(new EditGroupNameInput(device1));
