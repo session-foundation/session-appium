@@ -2,7 +2,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import { allureCurrentReportDir } from '../../../../constants/allure';
 import ghpages from 'gh-pages';
-import { SupportedPlatformsType } from '../open_app';
+import { getReportContextFromEnv, patchStylesCss, writeMetadataJson } from './allureHelpers';
 
 // Bail out early if not on CI
 if (process.env.CI !== '1' || process.env.ALLURE_ENABLED === 'false') {
@@ -36,35 +36,21 @@ function publishToGhPages(dir: string, dest: string, repo: string, message: stri
     );
   });
 }
+
 async function publishReport() {
-  // Define and create metadata.json for the front-end to fetch data from
-  const platform = process.env.PLATFORM as SupportedPlatformsType;
-  const build = process.env.BUILD_NUMBER!;
-  const runNumber = Number(process.env.GITHUB_RUN_NUMBER);
-  const runAttempt = Number(process.env.GITHUB_RUN_ATTEMPT);
-  const risk = process.env.RISK?.trim() || 'full';
-
-  const metadata = {
-    platform,
-    build,
-    risk,
-    runNumber,
-    runAttempt,
-  };
-
-  fs.writeFileSync(
-    path.join(allureCurrentReportDir, 'metadata.json'),
-    JSON.stringify(metadata, null, 2)
-  );
+  const ctx = getReportContextFromEnv();
+  await writeMetadataJson(ctx);
 
   // Compose the published report directory name
-  const publishedReportName = `run-${runNumber}.${runAttempt}-${platform}-${build}-${risk}`;
-  const newReportDir = path.join(platform, publishedReportName);
+  const publishedReportName = ctx.reportFolder;
+  const newReportDir = path.join(ctx.platform, publishedReportName);
+
+  await patchStylesCss();
 
   // Copy the current report to newReportDir for publishing
   // By doing so, the gh-pages branch hosts /android and /ios subpages with the respective reports
   try {
-    await fs.ensureDir(platform);
+    await fs.ensureDir(ctx.platform);
     await fs.copy(allureCurrentReportDir, newReportDir, { overwrite: true });
     console.log(`Report copied to ${newReportDir}`);
   } catch (err) {
@@ -86,9 +72,9 @@ async function publishReport() {
   try {
     await publishToGhPages(
       newReportDir,
-      `${platform}/${publishedReportName}`,
+      `${ctx.platform}/${publishedReportName}`,
       repoWithToken,
-      `ci: publish Allure report for ${platform} ${build}`
+      `ci: publish Allure report for ${ctx.platform} ${ctx.build}`
     );
     console.log(`Report deployed successfully as: ${publishedReportName}`);
   } catch (err) {
@@ -96,15 +82,13 @@ async function publishReport() {
     process.exit(1);
   }
 
-  const reportUrl = `https://session-foundation.github.io/session-appium/${platform}/${publishedReportName}/`;
-
   // Write the report URL to GitHub Actions output for downstream steps
   const githubOutputPath = process.env.GITHUB_OUTPUT;
   if (githubOutputPath) {
-    fs.appendFileSync(githubOutputPath, `report_url=${reportUrl}\n`);
+    fs.appendFileSync(githubOutputPath, `report_url=${ctx.reportUrl}\n`);
     console.log('Wrote report URL to GITHUB_OUTPUT');
   } else {
-    console.log(`REPORT_URL=${reportUrl}`);
+    console.log(`REPORT_URL=${ctx.reportUrl}`);
   }
 }
 

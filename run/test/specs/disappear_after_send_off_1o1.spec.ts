@@ -56,7 +56,7 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType, testIn
   await alice1.clickOnElementAll(new DisappearingMessagesMenuOption(alice1));
   await alice1.clickOnElementAll(new DisableDisappearingMessages(alice1));
   await alice1.clickOnElementAll(new SetDisappearMessagesButton(alice1));
-  await alice1.onIOS().navigateBack();
+  await alice1.navigateBack();
   // Check control message for turning off disappearing messages
   // Check USER A'S CONTROL MESSAGE on device 1 and 3 (linked device)
   const disappearingMessagesTurnedOffYou = englishStrippedStr(
@@ -77,7 +77,7 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType, testIn
   await bob1.checkModalStrings(
     englishStrippedStr('disappearingMessagesFollowSetting').toString(),
     englishStrippedStr('disappearingMessagesFollowSettingOff').toString(),
-    true
+    false
   );
   await bob1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Confirm' });
   // Check conversation subtitle?

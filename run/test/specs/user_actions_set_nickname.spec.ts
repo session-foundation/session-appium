@@ -2,7 +2,7 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { UsernameInput } from './locators';
-import { ConversationSettings } from './locators/conversation';
+import { ConversationHeaderName, ConversationSettings } from './locators/conversation';
 import { SaveNameChangeButton } from './locators/settings';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
@@ -88,13 +88,13 @@ async function setNicknameAndroid(platform: SupportedPlatformsType, testInfo: Te
   // CLick out of pop up
   await alice1.clickOnByAccessibilityID('Message user');
   // Check name at top of conversation is nickname
-  await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Conversation header name',
-  });
+  await alice1.waitForTextElementToBePresent(new ConversationHeaderName(alice1));
   // Send a message so nickname is updated in conversation list
   await alice1.sendMessage('Message to test nickname change');
-  const actualNickname = await alice1.grabTextFromAccessibilityId('Conversation header name');
+  const conversationHeader = await alice1.waitForTextElementToBePresent(
+    new ConversationHeaderName(alice1)
+  );
+  const actualNickname = await alice1.getTextFromElement(conversationHeader);
   if (actualNickname !== nickName) {
     throw new Error('Nickname has not been changed in header');
   }

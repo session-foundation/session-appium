@@ -3,7 +3,7 @@ import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { BlockedContactsSettings, BlockUserConfirmationModal } from './locators';
 import { LongPressBlockOption } from './locators/home';
-import { UserSettings } from './locators/settings';
+import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import type { TestInfo } from '@playwright/test';
@@ -32,23 +32,21 @@ async function blockUserInConversationList(platform: SupportedPlatformsType, tes
   await alice1.checkModalStrings(
     englishStrippedStr('block').toString(),
     englishStrippedStr('blockDescription').withArgs({ name: USERNAME.BOB }).toString(),
-    true
+    false
   );
-  await alice1.clickOnElementAll(new BlockUserConfirmationModal(alice1));
-  await alice1.clickOnElementAll({
+  await alice1.onIOS().clickOnElementAll(new BlockUserConfirmationModal(alice1));
+  await alice1.onAndroid().clickOnByAccessibilityID('Block'); // This is an old modal so the locator class cannot be used
+  // Once you block the conversation disappears from the home screen
+  await alice1.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Conversation list item',
     text: bob.userName,
+    maxWait: 5000,
   });
-  await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Blocked banner',
-  });
-  await alice1.navigateBack();
   await alice1.clickOnElementAll(new UserSettings(alice1));
   // 'Conversations' might be hidden beyond the Settings view, gotta scroll down to find it
   await alice1.scrollDown();
-  await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
+  await alice1.clickOnElementAll(new ConversationsMenuItem(alice1));
   await alice1.clickOnElementAll(new BlockedContactsSettings(alice1));
   await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',

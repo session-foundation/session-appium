@@ -1,7 +1,6 @@
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { LeaveGroup } from './locators';
 import { ConversationSettings } from './locators/conversation';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -9,6 +8,7 @@ import { createGroup } from './utils/create_group';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppFourDevices } from './utils/open_app';
 import type { TestInfo } from '@playwright/test';
+import { LeaveGroupMenuItem, LeaveGroupConfirm } from './locators/groups';
 
 bothPlatformsIt({
   title: 'Leave group linked device',
@@ -31,8 +31,13 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType, testInfo
   await sleepFor(1000);
   await device3.clickOnElementAll(new ConversationSettings(device3));
   await sleepFor(1000);
-  await device3.clickOnElementAll(new LeaveGroup(device3));
-  await device3.clickOnByAccessibilityID('Leave');
+  await device3.clickOnElementAll(new LeaveGroupMenuItem(device3));
+  await device3.checkModalStrings(
+    englishStrippedStr('groupLeave').toString(),
+    englishStrippedStr('groupLeaveDescription').withArgs({ group_name: testGroupName }).toString()
+  );
+  // Modal with Leave/Cancel
+  await device3.clickOnElementAll(new LeaveGroupConfirm(device3));
   // Check for control message
   await sleepFor(5000);
   await device4.onIOS().hasTextElementBeenDeleted('Conversation list item', testGroupName);

@@ -24,10 +24,7 @@ async function hideRecoveryPassword(platform: SupportedPlatformsType, testInfo: 
   await linkedDevice(device1, device2, USERNAME.ALICE);
   await device1.clickOnElementAll(new UserSettings(device1));
   await device1.scrollDown();
-  await device1.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Recovery password menu item',
-  });
+  await device1.clickOnElementAll(new RecoveryPasswordMenuItem(device1));
   await device1.clickOnElementAll(new HideRecoveryPasswordButton(device1));
   // Wait for modal to appear
   // Check modal is correct

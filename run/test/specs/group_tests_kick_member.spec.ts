@@ -1,11 +1,11 @@
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { EditGroup } from './locators';
 import { ConversationSettings, MessageInput } from './locators/conversation';
 import {
   ConfirmRemovalButton,
   GroupMember,
+  ManageMembersMenuItem,
   MemberStatus,
   RemoveMemberButton,
 } from './locators/groups';
@@ -32,7 +32,7 @@ async function kickMember(platform: SupportedPlatformsType, testInfo: TestInfo) 
     testInfo,
   });
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
-  await alice1.clickOnElementAll(new EditGroup(alice1));
+  await alice1.clickOnElementAll(new ManageMembersMenuItem(alice1));
   await alice1.clickOnElementAll({ ...new GroupMember(alice1).build(USERNAME.BOB) });
   await alice1.clickOnElementAll(new RemoveMemberButton(alice1));
   await alice1.checkModalStrings(
@@ -47,8 +47,8 @@ async function kickMember(platform: SupportedPlatformsType, testInfo: TestInfo) 
     ...new GroupMember(alice1).build(USERNAME.BOB),
     maxWait: 10000,
   });
-  await alice1.navigateBack(true);
-  await alice1.onIOS().navigateBack();
+  await alice1.navigateBack();
+  await alice1.navigateBack();
   await Promise.all([
     alice1.waitForControlMessageToBePresent(
       englishStrippedStr('groupRemoved').withArgs({ name: USERNAME.BOB }).toString()

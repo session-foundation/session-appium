@@ -2,7 +2,8 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { MessageInput } from './locators/conversation';
-import { EnterAccountID } from './locators/start_conversation';
+import { PlusButton } from './locators/home';
+import { EnterAccountID, NewMessageOption, NextButton } from './locators/start_conversation';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 import type { TestInfo } from '@playwright/test';
@@ -24,14 +25,14 @@ async function acceptRequestWithText(platform: SupportedPlatformsType, testInfo:
   ]);
   const testMessage = `${alice.userName} to ${bob.userName}`;
   // Send message from Alice to Bob
-  await device1.clickOnByAccessibilityID('New conversation button');
+  await device1.clickOnElementAll(new PlusButton(device1));
   // Select direct message option
-  await device1.clickOnByAccessibilityID('New direct message');
+  await device1.clickOnElementAll(new NewMessageOption(device1));
   // Enter User B's session ID into input box
   await device1.inputText(bob.accountID, new EnterAccountID(device1));
   // Click next
   await device1.scrollDown();
-  await device1.clickOnByAccessibilityID('Next');
+  await device1.clickOnElementAll(new NextButton(device1));
   //messageRequestPendingDescription: "You will be able to send voice messages and attachments once the recipient has approved this message request."
   const messageRequestPendingDescription = englishStrippedStr(
     'messageRequestPendingDescription'

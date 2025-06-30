@@ -3,9 +3,12 @@ import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { Group, GROUPNAME, User } from '../../../types/testing';
 import { Contact } from '../locators/global';
 import { CreateGroupButton, GroupNameInput } from '../locators/groups';
+import { ConversationItem, PlusButton } from '../locators/home';
+import { CreateGroupOption } from '../locators/start_conversation';
 import { newContact } from './create_contact';
 import { sortByPubkey } from './get_account_id';
 import { SupportedPlatformsType } from './open_app';
+import { sleepFor } from './sleep_for';
 
 export const createGroup = async (
   platform: SupportedPlatformsType,
@@ -34,9 +37,9 @@ export const createGroup = async (
   // Exit conversation back to list
   await device3.navigateBack();
   // Click plus button
-  await device1.clickOnByAccessibilityID('New conversation button');
+  await device1.clickOnElementAll(new PlusButton(device1));
   // Select Closed Group option
-  await device1.clickOnByAccessibilityID('Create group');
+  await device1.clickOnElementAll(new CreateGroupOption(device1));
   // Type in group name
   await device1.inputText(userName, new GroupNameInput(device1));
   // Select User B and User C
@@ -44,18 +47,15 @@ export const createGroup = async (
   await device1.clickOnElementAll({ ...new Contact(device1).build(), text: userThree.userName });
   // Select tick
   await device1.clickOnElementAll(new CreateGroupButton(device1));
+  await sleepFor(3000);
   // Enter group chat on device 2 and 3
   await Promise.all([
-    device2.clickOnElementAll({
-      strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: group.userName,
-    }),
-    device3.clickOnElementAll({
-      strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: group.userName,
-    }),
+    device2.onAndroid().navigateBack(false),
+    device3.onAndroid().navigateBack(false),
+  ]);
+  await Promise.all([
+    device2.clickOnElementAll(new ConversationItem(device2, group.userName)),
+    device3.clickOnElementAll(new ConversationItem(device3, group.userName)),
   ]);
   if (checkControlMessage) {
     // Sort by account ID

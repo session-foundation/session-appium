@@ -1843,7 +1843,7 @@ export const simpleDictionary = {
     args: undefined,
   },
   groupNameEnterShorter: {
-    en: 'Please enter a shorter group name.',
+    en: 'Please enter a shorter group name',
     args: undefined,
   },
   groupNameNew: {
@@ -2222,6 +2222,10 @@ export const simpleDictionary = {
     en: 'Message',
     args: undefined,
   },
+  messageBubbleReadMore: {
+    en: 'Read more',
+    args: undefined,
+  },
   messageEmpty: {
     en: 'This message is empty.',
     args: undefined,
@@ -2386,12 +2390,24 @@ export const simpleDictionary = {
     en: 'Minimize',
     args: undefined,
   },
+  modalMessageCharacterDisplayTitle: {
+    en: 'Message Length',
+    args: undefined,
+  },
+  modalMessageCharacterTooLongDescription: {
+    en: 'You have exceeded the character limit for this message. Please shorten your message to {limit} characters or less.',
+    args: { limit: 'string' },
+  },
+  modalMessageCharacterTooLongTitle: {
+    en: 'Message Too Long',
+    args: undefined,
+  },
   modalMessageTooLongDescription: {
-    en: 'Please shorten your message to {count} characters or less.',
-    args: { count: 'number' },
+    en: 'Please shorten your message to {limit} characters or less.',
+    args: { limit: 'string' },
   },
   modalMessageTooLongTitle: {
-    en: 'Your message is too long',
+    en: 'Message Too Long',
     args: undefined,
   },
   next: {
@@ -3115,11 +3131,7 @@ export const simpleDictionary = {
     args: undefined,
   },
   remainingCharactersOverTooltip: {
-    en: 'Message is too long',
-    args: undefined,
-  },
-  remainingCharactersTooltip: {
-    en: '{count} characters remaining',
+    en: 'Reduce message length by {count}',
     args: { count: 'number' },
   },
   remove: {
@@ -3570,6 +3582,10 @@ export const simpleDictionary = {
     en: 'You',
     args: undefined,
   },
+  sessionNetworkDataPrice: {
+    en: 'Price data powered by CoinGecko<br/>Accurate at {date_time}',
+    args: { date_time: 'string' },
+  },
 } as const;
 
 export const pluralsDictionary = {
@@ -3720,6 +3736,14 @@ export const pluralsDictionary = {
     },
     args: { group_name: 'string', count: 'number' },
   },
+  modalMessageCharacterDisplayDescription: {
+    en: {
+      one: 'Messages have a character limit of {limit} characters. You have {count} character remaining',
+      other:
+        'Messages have a character limit of {limit} characters. You have {count} characters remaining',
+    },
+    args: { limit: 'string', count: 'number' },
+  },
   promotionFailed: {
     en: {
       one: 'Promotion Failed',
@@ -3731,6 +3755,13 @@ export const pluralsDictionary = {
     en: {
       one: 'The promotion could not be applied. Would you like to try again?',
       other: 'The promotions could not be applied. Would you like to try again?',
+    },
+    args: { count: 'number' },
+  },
+  remainingCharactersTooltip: {
+    en: {
+      one: '{count} character remaining',
+      other: '{count} characters remaining',
     },
     args: { count: 'number' },
   },

@@ -2,7 +2,10 @@ import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { ConversationType, DISAPPEARING_TIMES, MergedOptions } from '../../../types/testing';
 import { ConversationSettings } from '../locators/conversation';
 import {
+  DisappearingMessageRadial,
   DisappearingMessagesMenuOption,
+  DisappearingMessagesSubtitle,
+  DisappearingMessagesTimerType,
   FollowSettingsButton,
   SetDisappearMessagesButton,
   SetModalButton,
@@ -22,7 +25,7 @@ export const setDisappearingMessage = async (
   await sleepFor(500);
   await device.clickOnElementAll(new DisappearingMessagesMenuOption(device));
   if (enforcedType === '1:1') {
-    await device.clickOnByAccessibilityID(timerType);
+    await device.clickOnElementAll(new DisappearingMessagesTimerType(device, timerType));
   }
   if (timerType === 'Disappear after read option') {
     if (enforcedType === '1:1') {
@@ -40,12 +43,9 @@ export const setDisappearingMessage = async (
     await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.ONE_DAY);
   }
 
-  await device.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: timerDuration,
-  });
+  await device.clickOnElementAll(new DisappearingMessageRadial(device, timerDuration));
   await device.clickOnElementAll(new SetDisappearMessagesButton(device));
-  await device.onIOS().navigateBack();
+  await device.navigateBack();
   // Extended the wait for the Follow settings button to settle in the UI, it was moving and confusing appium
   await sleepFor(2000);
   if (device2) {
@@ -53,5 +53,5 @@ export const setDisappearingMessage = async (
     await sleepFor(500);
     await device2.clickOnElementAll(new SetModalButton(device2));
   }
-  // await device.waitForTextElementToBePresent(new DisappearingMessagesSubtitle(device));
+  await device.waitForTextElementToBePresent(new DisappearingMessagesSubtitle(device));
 };

@@ -3,21 +3,22 @@ import { LocatorsInterface } from './index';
 
 // SHARED LOCATORS
 
-export class ContinueButton extends LocatorsInterface {
-  public build() {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Continue',
-    } as const;
-  }
-}
-
 export class ErrorMessage extends LocatorsInterface {
   public build() {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Error message',
-    } as const;
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'error-message',
+          maxWait: 5000,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Error message',
+          maxWait: 5000,
+        } as const;
+    }
   }
 }
 
@@ -50,31 +51,54 @@ export class WarningModalQuitButton extends LocatorsInterface {
 // SPLASH SCREEN
 export class CreateAccountButton extends LocatorsInterface {
   public build() {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Create account button',
-    } as const;
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Create account button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Create account button',
+        } as const;
+    }
   }
 }
 
 export class AccountRestoreButton extends LocatorsInterface {
   public build() {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Restore your session button',
-    } as const;
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Restore your session button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Restore your session button',
+        } as const;
+    }
   }
 }
 
 export class SplashScreenLinks extends LocatorsInterface {
   public build() {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Open URL',
-    } as const;
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Open URL',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Open URL',
+        } as const;
+    }
   }
 }
-
 export class TermsOfServiceButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -151,9 +175,34 @@ export class SeedPhraseInput extends LocatorsInterface {
 
 export class SlowModeRadio extends LocatorsInterface {
   public build() {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Slow mode notifications button',
-    } as const;
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Slow mode notifications button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Slow mode notifications button',
+        } as const;
+    }
+  }
+}
+
+export class LoadingAnimation extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Loading animation',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Loading animation',
+        } as const;
+    }
   }
 }

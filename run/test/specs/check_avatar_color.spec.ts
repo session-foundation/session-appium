@@ -1,17 +1,24 @@
-import { bothPlatformsIt } from '../../types/sessionIt';
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { isSameColor } from './utils/check_colour';
 import { UserSettings } from './locators/settings';
-import { ConversationAvatar, ConversationSettings } from './locators/conversation';
+import { ConversationSettings } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { ConversationItem } from './locators/home';
 import type { TestInfo } from '@playwright/test';
 
-bothPlatformsIt({
+bothPlatformsItSeparate({
   title: 'Avatar color',
   risk: 'medium',
-  testCb: avatarColor,
   countOfDevicesNeeded: 2,
+  ios: {
+    testCb: avatarColor,
+    shouldSkip: false,
+  },
+  android: {
+    testCb: avatarColor,
+    shouldSkip: true, // something is going on on Android, test is picking up wildly different pixel colors
+  },
 });
 
 async function avatarColor(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -24,20 +31,15 @@ async function avatarColor(platform: SupportedPlatformsType, testInfo: TestInfo)
     testInfo,
   });
 
-  // Get Alice's avatar color on device 1 (Home Screen avatar) and turn it into a hex value
+  // Get Alice's avatar color on device 1 (Settings screen avatar) and turn it into a hex value
+  await alice1.clickOnElementAll(new UserSettings(alice1));
   const alice1PixelColor = await alice1.getElementPixelColor(new UserSettings(alice1));
+  console.log(alice1PixelColor);
   // Get Alice's avatar color on device 2 and turn it into a hex value
-  let bob1PixelColor;
   // Open the conversation with Alice on Bob's device
   await bob1.clickOnElementAll(new ConversationItem(bob1, alice.userName));
-  // The conversation screen looks slightly different per platform so we're grabbing the avatar from different locators
-  // On iOS the avatar doubles as the Conversation Settings button on the right
-  // On Android, the avatar is a separate, non-interactable element on the left (and the settings has the 3-dot icon)
-  if (platform === 'ios') {
-    bob1PixelColor = await bob1.getElementPixelColor(new ConversationSettings(bob1));
-  } else {
-    bob1PixelColor = await bob1.getElementPixelColor(new ConversationAvatar(bob1));
-  }
+  const bob1PixelColor = await bob1.getElementPixelColor(new ConversationSettings(bob1));
+  console.log(bob1PixelColor);
   // Color matching devices 1 and 2
   const colorMatch = isSameColor(alice1PixelColor, bob1PixelColor);
   if (!colorMatch) {

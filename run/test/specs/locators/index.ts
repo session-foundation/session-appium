@@ -61,56 +61,6 @@ export class ApplyChanges extends LocatorsInterface {
   }
 }
 
-export class EditGroup extends LocatorsInterface {
-  public build() {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: 'network.loki.messenger:id/title',
-          text: 'Edit group',
-        } as const;
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Edit group',
-        } as const;
-    }
-  }
-}
-
-export class EditGroupName extends LocatorsInterface {
-  public build() {
-    switch (this.platform) {
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Username',
-        } as const;
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: 'Group name',
-        } as const;
-    }
-  }
-}
-
-export class PrivacyButton extends LocatorsInterface {
-  public build() {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'class name',
-          selector: 'android.widget.TextView',
-          text: 'Privacy',
-        } as const;
-      case 'ios':
-        return { strategy: 'id', selector: 'Privacy' } as const;
-    }
-  }
-}
-
 export class ReadReceiptsButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -219,13 +169,12 @@ export class BlockUser extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Block - Switch',
+          selector: 'Block',
         };
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger:id/title',
-          text: 'Block',
+          selector: 'block-user-menu-option',
         };
     }
   }
@@ -319,8 +268,7 @@ export class InviteContactsMenuItem extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger:id/title',
-          text: 'Invite Contacts',
+          selector: 'invite-contacts-menu-option',
         };
       case 'ios':
         return {
@@ -336,8 +284,8 @@ export class DeleteMessageLocally extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
-          selector: 'Delete on this device only',
+          strategy: 'id',
+          selector: 'delete-only-on-this-device',
         };
       case 'ios':
         return {
@@ -353,8 +301,8 @@ export class DeleteMessageForEveryone extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
-          selector: 'Delete for everyone',
+          strategy: 'id',
+          selector: 'delete-for-everyone',
         };
       case 'ios':
         return {
@@ -382,30 +330,20 @@ export class DeleteMessageConfirmationModal extends LocatorsInterface {
   }
 }
 
-export class LeaveGroup extends LocatorsInterface {
+export class BlockUserConfirmationModal extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'id',
-          selector: `network.loki.messenger:id/title`,
-          text: 'Leave group',
-        };
+          selector: 'Block',
+        } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Leave group',
-        };
+          selector: 'Block',
+        } as const;
     }
-  }
-}
-
-export class BlockUserConfirmationModal extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Block',
-    } as const;
   }
 }
 
@@ -467,23 +405,6 @@ export class DeleteMesssageRequestConfirmation extends LocatorsInterface {
       strategy: 'accessibility id',
       selector: 'Delete',
     };
-  }
-}
-
-export class RevealRecoveryPhraseButton extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Reveal recovery phrase button',
-        };
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Continue',
-        };
-    }
   }
 }
 

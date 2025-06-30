@@ -1,10 +1,13 @@
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { EditGroup, EditGroupName } from './locators';
-import { ConversationSettings } from './locators/conversation';
-import { EditGroupNameInput } from './locators/groups';
-import { SaveNameChangeButton } from './locators/settings';
+import { ConversationHeaderName, ConversationSettings } from './locators/conversation';
+import {
+  EditGroupNameInput,
+  UpdateGroupInformation,
+  SaveGroupNameChangeButton,
+} from './locators/groups';
+import { ConversationItem } from './locators/home';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -36,29 +39,25 @@ async function linkedGroupiOS(platform: SupportedPlatformsType, testInfo: TestIn
   // Note we keep this createGroup here as we want it to **indeed** use the UI to create the group
   await createGroup(platform, device1, alice, device3, bob, device4, charlie, testGroupName);
   // Test that group has loaded on linked device
-  await device2.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Conversation list item',
-    text: testGroupName,
-  });
+  await device2.clickOnElementAll(new ConversationItem(device2, testGroupName));
   // Change group name in device 1
   // Click on settings/more info
   await device1.clickOnElementAll(new ConversationSettings(device1));
   // Edit group
   await sleepFor(100);
   // click on group name to change it
-  await device1.clickOnElementAll(new EditGroupName(device1));
+  await device1.clickOnElementAll(new UpdateGroupInformation(device1, testGroupName));
   //  Check new dialog
   await device1.checkModalStrings(
-    englishStrippedStr(`groupInformationSet`).toString(),
-    englishStrippedStr(`groupNameVisible`).toString()
+    englishStrippedStr('updateGroupInformation').toString(),
+    englishStrippedStr('updateGroupInformationDescription').toString()
   );
   // Delete old name first
   await device1.deleteText(new EditGroupNameInput(device1));
   // Type in new group name
   await device1.inputText(newGroupName, new EditGroupNameInput(device1));
   // Save changes
-  await device1.clickOnElementAll(new SaveNameChangeButton(device1));
+  await device1.clickOnElementAll(new SaveGroupNameChangeButton(device1));
   // Go back to conversation
   await device1.navigateBack();
   // Check control message for changed name
@@ -70,11 +69,9 @@ async function linkedGroupiOS(platform: SupportedPlatformsType, testInfo: TestIn
   // Wait 5 seconds for name to update
   await sleepFor(5000);
   // Check linked device for name change (conversation header name)
-  await device2.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Conversation header name',
-    text: newGroupName,
-  });
+  await device2.waitForTextElementToBePresent(
+    new ConversationHeaderName(device2).build(newGroupName)
+  );
   await Promise.all([
     device2.waitForControlMessageToBePresent(groupNameNew),
     device3.waitForControlMessageToBePresent(groupNameNew),
@@ -97,16 +94,12 @@ async function linkedGroupAndroid(platform: SupportedPlatformsType, testInfo: Te
   // Note we keep this createGroup here as we want it to **indeed** use the UI to create the group
   await createGroup(platform, device1, alice, device3, bob, device4, charlie, testGroupName);
   // Test that group has loaded on linked device
-  await device2.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Conversation list item',
-    text: testGroupName,
-  });
+  await device2.clickOnElementAll(new ConversationItem(device2, testGroupName));
   // Click on settings or three dots
   await device1.clickOnElementAll(new ConversationSettings(device1));
   // Click on Edit group option
   await sleepFor(1000);
-  await device1.clickOnElementAll(new EditGroup(device1));
+  await device1.clickOnElementAll(new UpdateGroupInformation(device1));
   // Click on current group name
   await device1.clickOnElementAll(new EditGroupNameInput(device1));
   // Remove current group name
@@ -115,8 +108,8 @@ async function linkedGroupAndroid(platform: SupportedPlatformsType, testInfo: Te
   await device1.clickOnElementAll(new EditGroupNameInput(device1));
   await device1.inputText(newGroupName, new EditGroupNameInput(device1));
   // Click done/apply
-  await device1.clickOnByAccessibilityID('Confirm');
-  await device1.navigateBack(true);
+  await device1.clickOnElementAll(new SaveGroupNameChangeButton(device1));
+  await device1.navigateBack();
   // Check control message for changed name
   const groupNameNew = englishStrippedStr('groupNameNew')
     .withArgs({ group_name: newGroupName })
@@ -124,11 +117,9 @@ async function linkedGroupAndroid(platform: SupportedPlatformsType, testInfo: Te
   // Config message is "Group name is now {group_name}"
   await device1.waitForControlMessageToBePresent(groupNameNew);
   // Check linked device for name change (conversation header name)
-  await device2.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Conversation header name',
-    text: newGroupName,
-  });
+  await device2.waitForTextElementToBePresent(
+    new ConversationHeaderName(device2).build(newGroupName)
+  );
   await Promise.all([
     device2.waitForControlMessageToBePresent(groupNameNew),
     device3.waitForControlMessageToBePresent(groupNameNew),

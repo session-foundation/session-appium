@@ -1,8 +1,8 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { ConversationSettings } from './locators/conversation';
-import { EditGroup, InviteContactsButton } from './locators';
-import { LatestReleaseBanner } from './locators/groups';
+import { InviteContactsButton } from './locators';
+import { LatestReleaseBanner, ManageMembersMenuItem } from './locators/groups';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import type { TestInfo } from '@playwright/test';
 
@@ -26,7 +26,7 @@ async function inviteContactGroupBanner(platform: SupportedPlatformsType, testIn
   });
   // Navigate to Invite Contacts screen
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
-  await alice1.clickOnElementAll(new EditGroup(alice1));
+  await alice1.clickOnElementAll(new ManageMembersMenuItem(alice1));
   await alice1.clickOnElementAll(new InviteContactsButton(alice1));
   const groupsBanner = await alice1.doesElementExist(new LatestReleaseBanner(alice1));
   if (!groupsBanner) {

@@ -2,7 +2,7 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { EmptyConversation, Hide } from './locators/conversation';
 import { CancelSearchButton, NoteToSelfOption } from './locators/global_search';
-import { SearchButton } from './locators/home';
+import { ConversationItem, SearchButton } from './locators/home';
 import { open_Alice2 } from './state_builder';
 import { SupportedPlatformsType } from './utils/open_app';
 import type { TestInfo } from '@playwright/test';
@@ -35,11 +35,7 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
   await alice1.sendMessage('Creating note to self');
   await alice1.navigateBack();
   // Does note to self appear on linked device
-  await alice2.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Conversation list item',
-    text: noteToSelf,
-  });
+  await alice2.waitForTextElementToBePresent(new ConversationItem(alice2, noteToSelf));
   await alice1.clickOnElementAll(new CancelSearchButton(alice1));
   await alice1.onIOS().swipeLeft('Conversation list item', noteToSelf);
   await alice1.onAndroid().longPressConversation(noteToSelf);
@@ -52,9 +48,7 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
   await Promise.all(
     [alice1, alice2].map(device =>
       device.doesElementExist({
-        strategy: 'accessibility id',
-        selector: 'Conversation list item',
-        text: noteToSelf,
+        ...new ConversationItem(alice2, noteToSelf).build(),
         maxWait: 5000,
       })
     )

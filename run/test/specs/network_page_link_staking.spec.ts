@@ -1,4 +1,3 @@
-import { verifyPageScreenshot } from './utils/verify_screenshots';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -9,10 +8,10 @@ import {
   SessionNetworkMenuItem,
 } from './locators/network_page';
 import { UserSettings } from './locators/settings';
-import { handleChromeFirstTimeOpen } from './utils/chrome_first_time_open';
+import { handleChromeFirstTimeOpen } from './utils/handle_first_open';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { ensureHttpsURL } from './utils/utilities';
+import { assertUrlIsReachable, ensureHttpsURL } from './utils/utilities';
 import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
@@ -54,7 +53,7 @@ async function networkPageLearnMore(platform: SupportedPlatformsType, testInfo: 
   } else {
     console.log('The URLs match.');
   }
-  await verifyPageScreenshot(platform, device, 'staking_page');
+  await assertUrlIsReachable(linkURL);
   // Close browser and app
   await device.backToSession();
   await closeApp(device);

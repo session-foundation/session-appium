@@ -2,6 +2,7 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME, type AccessibilityId } from '../../types/testing';
 import { DeclineMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
+import { PlusButton } from './locators/home';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
@@ -38,11 +39,20 @@ async function declineRequest(platform: SupportedPlatformsType, testInfo: TestIn
   await device2.clickOnElementAll(new DeclineMessageRequestButton(device2));
   // Are you sure you want to delete message request only for ios
   await sleepFor(3000);
-  await device2.checkModalStrings(
-    englishStrippedStr('delete').toString(),
-    englishStrippedStr('messageRequestsDelete').toString(),
-    true
-  );
+  // TODO remove onIOS/onAndroid once SES-3846 has been completed
+  await device2
+    .onIOS()
+    .checkModalStrings(
+      englishStrippedStr('delete').toString(),
+      englishStrippedStr('messageRequestsDelete').toString()
+    );
+  await device2
+    .onAndroid()
+    .checkModalStrings(
+      englishStrippedStr('delete').toString(),
+      englishStrippedStr('messageRequestsContactDelete').toString(),
+      false
+    );
   await device2.clickOnElementAll(new DeleteMesssageRequestConfirmation(device2));
   // "messageRequestsNonePending": "No pending message requests",
   const messageRequestsNonePending = englishStrippedStr('messageRequestsNonePending').toString();
@@ -58,12 +68,9 @@ async function declineRequest(platform: SupportedPlatformsType, testInfo: TestIn
   ]);
   // Navigate back to home page
   await sleepFor(100);
-  await device2.navigateBack();
+  await device2.navigateBack(false);
   // Look for new conversation button to make sure it all worked
-  await device2.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'New conversation button',
-  });
+  await device2.waitForTextElementToBePresent(new PlusButton(device2));
   // Close app
   await closeApp(device1, device2, device3);
 }

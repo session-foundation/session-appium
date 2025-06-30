@@ -2,6 +2,8 @@ import { LocatorsInterface } from '.';
 import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
 import { StrategyExtractionObj } from '../../../types/testing';
 import type { UserNameType } from '@session-foundation/qa-seeder';
+import { GROUPNAME } from '../../../types/testing';
+import { DeviceWrapper } from '../../../types/DeviceWrapper';
 
 export class GroupNameInput extends LocatorsInterface {
   public build(): StrategyExtractionObj {
@@ -43,7 +45,7 @@ export class InviteContactConfirm extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Confirm invite button',
+          selector: 'invite-contacts-button',
         } as const;
       case 'ios':
         return {
@@ -54,19 +56,32 @@ export class InviteContactConfirm extends LocatorsInterface {
   }
 }
 
-export class EditGroupName extends LocatorsInterface {
+export class UpdateGroupInformation extends LocatorsInterface {
+  private groupName?: GROUPNAME;
+
+  // Receives a group name argument so that one locator can handle all possible group names
+  constructor(device: DeviceWrapper, groupName?: GROUPNAME) {
+    super(device);
+    this.groupName = groupName;
+  }
+
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
-          selector: 'Edit',
-        } as const;
-      case 'ios':
+          strategy: 'id',
+          selector: 'group-name',
+        };
+      case 'ios': {
+        const groupName = this.groupName;
+        if (!groupName) {
+          throw new Error('groupName must be provided for iOS');
+        }
         return {
           strategy: 'accessibility id',
-          selector: 'Edit group name',
-        } as const;
+          selector: groupName,
+        };
+      }
     }
   }
 }
@@ -77,7 +92,7 @@ export class EditGroupNameInput extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Group name',
+          selector: 'update-group-info-name-input',
         } as const;
       case 'ios':
         return {
@@ -88,14 +103,30 @@ export class EditGroupNameInput extends LocatorsInterface {
   }
 }
 
-export class LeaveGroupButton extends LocatorsInterface {
+export class SaveGroupNameChangeButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'id',
-          selector: `network.loki.messenger:id/title`,
-          text: 'Leave group',
+          selector: 'update-group-info-confirm-button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Save',
+        } as const;
+    }
+  }
+}
+
+export class LeaveGroupMenuItem extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'leave-group-menu-option',
         } as const;
       case 'ios':
         return {
@@ -105,13 +136,20 @@ export class LeaveGroupButton extends LocatorsInterface {
     }
   }
 }
-
 export class LeaveGroupConfirm extends LocatorsInterface {
   public build(): StrategyExtractionObj {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Leave',
-    } as const;
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Leave', // SES-4022
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Leave',
+        } as const;
+    }
   }
 }
 export class LatestReleaseBanner extends LocatorsInterface {
@@ -239,6 +277,22 @@ export class MemberStatus extends LocatorsInterface {
           selector: 'Contact status',
           text,
         } as const;
+    }
+  }
+}
+export class ManageMembersMenuItem extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'manage-members-menu-option',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Manage Members',
+        };
     }
   }
 }

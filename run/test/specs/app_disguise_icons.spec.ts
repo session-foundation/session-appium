@@ -26,6 +26,6 @@ async function appDisguiseIcons(platform: SupportedPlatformsType, testInfo: Test
   // Must scroll down to reveal the app disguise option
   await device.scrollDown();
   await device.clickOnElementAll(new SelectAppIcon(device));
-  await verifyElementScreenshot(device, new AppDisguisePageScreenshot(device));
+  await verifyElementScreenshot(device, new AppDisguisePageScreenshot(device), testInfo);
   await closeApp(device);
 }

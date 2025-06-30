@@ -2,6 +2,7 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
 import { DeletedMessage } from './locators/conversation';
+import { ConversationItem } from './locators/home';
 import { open_Alice2_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import type { TestInfo } from '@playwright/test';
@@ -23,15 +24,8 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType, testI
   const sentMessage = await alice1.sendMessage('Howdy');
   // Check message came through on linked device(3)
   // Enter conversation with user B on device 3
-  await alice2.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Conversation list item',
-  });
-  await alice2.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Conversation list item',
-    text: bob.userName,
-  });
+  await alice2.waitForTextElementToBePresent(new ConversationItem(alice2));
+  await alice2.clickOnElementAll(new ConversationItem(alice2, bob.userName));
   // Find message
   await alice2.findMessageWithBody(sentMessage);
   // Select message on device 1, long press

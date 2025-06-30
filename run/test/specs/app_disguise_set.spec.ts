@@ -44,7 +44,7 @@ async function appDisguiseSetIcon(platform: SupportedPlatformsType, testInfo: Te
     );
     await device.clickOnElementAll(new CloseAppButton(device));
     await sleepFor(2000);
-    // // Open app library and check for disguised app
+    // Open app library and check for disguised app
     await device.swipeFromBottom();
     await device.waitForTextElementToBePresent(new DisguisedApp(device));
   } finally {

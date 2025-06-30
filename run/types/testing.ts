@@ -80,6 +80,8 @@ export enum DISAPPEARING_TIMES {
   OFF_ANDROID = 'Disable disappearing messages',
 }
 
+export type DisappearingOptions = `Disappear after ${DisappearModes} option`;
+
 export type DisappearOpts1o1 = [
   '1:1',
   `Disappear after ${DisappearModes} option`,
@@ -139,7 +141,8 @@ export type XPath =
   | `//*[starts-with(@content-desc, "Photo taken on")]`
   | `//XCUIElementTypeImage`
   | '//XCUIElementTypeCell'
-  | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`;
+  | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`
+  | `//XCUIElementTypeButton[@name="Continue"]`;
 
 export type AccessibilityId =
   | 'Create account button'
@@ -233,7 +236,6 @@ export type AccessibilityId =
   | 'Confirm delete'
   | 'Delete'
   | 'Block'
-  | 'Block - Switch'
   | 'Unblock'
   | 'Confirm block'
   | 'Blocked contacts'
@@ -344,12 +346,14 @@ export type AccessibilityId =
   | 'Legacy group banner'
   | 'Legacy Groups Recreate Button'
   | 'Confirm leave'
+  | 'Albums'
+  | `Disappear after ${DisappearActions} option`
+  | 'Call button'
   | 'Session Network'
   | 'Learn more link'
   | 'Open'
   | 'Learn about staking link'
   | 'Last updated timestamp'
-  | 'Albums'
   | 'Save to Files'
   | 'Replace'
   | 'ShareButton'
@@ -359,7 +363,10 @@ export type AccessibilityId =
   | 'Appearance'
   | 'Select alternate app icon'
   | 'MeetingSE'
-  | 'Donate';
+  | 'Donate'
+  | 'blocked-banner'
+  | 'Manage Members'
+  | `${GROUPNAME}`;
 
 export type Id =
   | 'Modal heading'
@@ -395,7 +402,6 @@ export type Id =
   | 'Delete'
   | 'android:id/content_preview_text'
   | 'network.loki.messenger:id/search_result_title'
-  | 'Error message'
   | 'Enter display name'
   | 'Session id input box'
   | 'com.android.chrome:id/url_bar'
@@ -433,7 +439,53 @@ export type Id =
   | 'Image button'
   | 'network.loki.messenger:id/system_settings_app_icon'
   | 'MeetingSE option'
-  | 'donate-menu-item';
+  | 'donate-menu-item'
+  | 'android.widget.TextView'
+  | 'Create account button'
+  | 'Restore your session button'
+  | 'Open URL'
+  | 'Loading animation'
+  | 'Slow mode notifications button'
+  | 'Reveal recovery phrase button'
+  | 'Recovery password container'
+  | 'Copy button'
+  | 'New direct message'
+  | 'Join community button'
+  | 'Invite friend button'
+  | 'Conversations'
+  | 'Hide recovery password button'
+  | 'error-message'
+  | 'Next'
+  | 'Set button'
+  | 'disappearing-messages-menu-option'
+  | 'Disable disappearing messages'
+  | DISAPPEARING_TIMES
+  | 'conversation-options-avatar'
+  | `Disappear after ${DisappearModes} option`
+  | 'Disappearing messages type and time'
+  | 'Account ID'
+  | 'Share button'
+  | 'Call'
+  | 'Conversation header name'
+  | 'block-user-menu-option'
+  | 'block-user-confirm-button'
+  | 'Notifications'
+  | 'All Session notifications'
+  | 'com.android.settings:id/switch_text'
+  | 'Block'
+  | 'invite-contacts-menu-option'
+  | 'invite-contacts-button'
+  | 'Recovery password menu item'
+  | 'manage-members-menu-option'
+  | 'delete-only-on-this-device'
+  | 'delete-for-everyone'
+  | 'edit-profile-icon'
+  | 'update-group-info-confirm-button'
+  | 'update-group-info-name-input'
+  | 'group-name'
+  | 'leave-group-menu-option'
+  | 'Leave'
+  | 'Appearance';
 
 export type TestRisk = 'high' | 'medium' | 'low';
 

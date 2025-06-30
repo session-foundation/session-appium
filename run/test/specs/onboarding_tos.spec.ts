@@ -1,9 +1,9 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { TermsOfServiceButton, SplashScreenLinks } from './locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { handleChromeFirstTimeOpen } from './utils/chrome_first_time_open';
+import { handleChromeFirstTimeOpen } from './utils/handle_first_open';
 import { URLInputField, SafariAddressBar } from './locators/browsers';
-import { ensureHttpsURL } from './utils/utilities';
+import { assertUrlIsReachable, ensureHttpsURL } from './utils/utilities';
 import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
@@ -37,6 +37,7 @@ async function onboardingTOS(platform: SupportedPlatformsType, testInfo: TestInf
       `The retrieved URL does not match the expected. The retrieved URL is ${fullRetrievedURL}`
     );
   }
+  await assertUrlIsReachable(tosURL);
   // Close browser and app
   await device.backToSession();
   await closeApp(device);
