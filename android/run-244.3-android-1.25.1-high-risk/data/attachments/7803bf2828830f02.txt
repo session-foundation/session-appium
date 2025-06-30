@@ -1,0 +1,319 @@
+
+
+==========> Running "Delete message locally @android @high-risk @2-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5556 true
+emulatorAlreadyRunning emulator-5554 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"05780486774c698c85453016a98cae8408a7be1688988a92e9c06deae7be3b8b10","seedPhrase":"wanted northern fading okay ointment toaster input puppy domestic envy yearbook cynical northern"},
+SessionUser: {"name":"Bob","sessionId":"05a7fd525fa09cc0db39c2f4edaab901150e5ce72fa90a90f8615cbd0e3346523d","seedPhrase":"august joyous quick foxes polar semifinal bobsled baffles venomous also ability irony polar"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"05780486774c698c85453016a98cae8408a7be1688988a92e9c06deae7be3b8b10","seedPhrase":"wanted northern fading okay ointment toaster input puppy domestic envy yearbook cynical northern"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05780486774c698c85453016a98cae8408a7be1688988a92e9c06deae7be3b8b10","seedPhrase":"wanted northern fading okay ointment toaster input puppy domestic envy yearbook cynical northern"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"05a7fd525fa09cc0db39c2f4edaab901150e5ce72fa90a90f8615cbd0e3346523d","seedPhrase":"august joyous quick foxes polar semifinal bobsled baffles venomous also ability irony polar"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"05a7fd525fa09cc0db39c2f4edaab901150e5ce72fa90a90f8615cbd0e3346523d","seedPhrase":"august joyous quick foxes polar semifinal bobsled baffles venomous also ability irony polar"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05780486774c698c85453016a98cae8408a7be1688988a92e9c06deae7be3b8b10","seedPhrase":"wanted northern fading okay ointment toaster input puppy domestic envy yearbook cynical northern"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"05a7fd525fa09cc0db39c2f4edaab901150e5ce72fa90a90f8615cbd0e3346523d","seedPhrase":"august joyous quick foxes polar semifinal bobsled baffles venomous also ability irony polar"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 88361,
+    [Symbol(trigger_async_id_symbol)]: 88196,
+    [Symbol(kResourceStore)]: undefined
+  }
+]
+random snode for user: 05780486774c698c85453016a98cae8408a7be1688988a92e9c06deae7be3b8b10 is snode: 135f3fc6d653d316e68f7c164b2fc4e577b8dbca2cfb2be570403a6688978c03
+storing to snode https://35.236.80.3:22021/storage_rpc/v1
+storing to snode https://35.236.80.3:22021/storage_rpc/v1
+storing to snode https://35.236.80.3:22021/storage_rpc/v1
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+random snode for user: 05a7fd525fa09cc0db39c2f4edaab901150e5ce72fa90a90f8615cbd0e3346523d is snode: 1b5155a89bd01a6422c51cbeeb1fd83bec28829e75a9241e9dab7dac72dc0571
+storing to snode https://62.171.145.139:22021/storage_rpc/v1
+storing to snode https://62.171.145.139:22021/storage_rpc/v1
+storing to snode https://62.171.145.139:22021/storage_rpc/v1
+storeStatus for Alice: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "wanted northern fading okay ointment toaster input puppy domestic envy yearbook cynical northern"
+	"Bob": "august joyous quick foxes polar semifinal bobsled baffles venomous also ability irony polar" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+Waiting for "id" and "Restore your session button" to be present
+Waiting for "id" and "Restore your session button" to be present
+'Restore your session button' has been found
+'Restore your session button' has been found
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+Waiting for "id" and "Recovery phrase input" to be present
+'Recovery phrase input' has been found
+'Recovery phrase input' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+'Continue' has been found
+Waiting for "id" and "Slow mode notifications button" to be present
+Waiting for "id" and "Slow mode notifications button" to be present
+waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+Waiting for "id" and "Slow mode notifications button" to be present
+'Slow mode notifications button' has been found
+'Slow mode notifications button' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Continue" to be present
+'Continue' has been found
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+'Loading animation' has been found
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+'Loading animation' has been found
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Loading animation was found, waiting for it to be gone
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Waiting for "id" and "Loading animation" to be present
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+waitForTextElementToBePresent threw: "id": "Loading animation
+Loading animation not found
+Loading animation has finished
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Waiting for "id" and "Loading animation" to be present
+waitForTextElementToBePresent threw: "id": "Loading animation
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+Loading animation not found
+Loading animation has finished
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name Doesn't exist but retrying
+doesElementExist failed with accessibility id Enter display name
+Enter display name doesn't exist, time expired
+Display name found: Loading account
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+'com.android.permissioncontroller:id/permission_deny_button' has been found
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Waiting for "id" and "Continue" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+waitForTextElementToBePresent threw: "id": "Continue
+Waiting for "id" and "Continue" to be present
+'New conversation button' has been found
+waitForTextElementToBePresent threw: "id": "Continue
+Element has been deleted, great success
+Waiting for "accessibility id" and "New conversation button" to be present
+'New conversation button' has been found
+Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+Text found to include Bob
+'Conversation list item' and 'Bob' has been found
+Text found to include Alice
+'Conversation list item' and 'Alice' has been found
+Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+Waiting for "accessibility id" and "Message input box" to be present
+'Message input box' has been found
+Waiting for "accessibility id" and "Send message button" to be present
+'Send message button' has been found
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+Waiting for "accessibility id" and "Message sent status: Sent" to be present
+'Message sent status: Sent' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Text found to include Checking local deletetion functionality
+'Message body' and 'Checking local deletetion functionality' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Text found to include Checking local deletetion functionality
+'Message body' and 'Checking local deletetion functionality' has been found
+Waiting for "accessibility id" and "Reply to message" to be present
+'Reply to message' has been found
+LongClick successful
+Waiting for "accessibility id" and "Delete message" to be present
+'Delete message' has been found
+Waiting for "id" and "Modal heading" to be present
+'Modal heading' has been found
+Modal heading is correct
+Waiting for "id" and "Modal description" to be present
+'Modal description' has been found
+Modal description is correct
+Waiting for "id" and "delete-only-on-this-device" to be present
+'delete-only-on-this-device' has been found
+Waiting for "id" and "Delete" to be present
+'Delete' has been found
+Waiting for "accessibility id" and "Deleted message" to be present
+'Deleted message' has been found
+Waiting for "accessibility id" and "Message body" to be present with "Checking local deletetion functionality"
+Text found to include Checking local deletetion functionality
+'Message body' and 'Checking local deletetion functionality' has been found
+sessions closed
