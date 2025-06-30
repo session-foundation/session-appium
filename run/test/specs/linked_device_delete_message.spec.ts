@@ -5,6 +5,7 @@ import { DeletedMessage } from './locators/conversation';
 import { ConversationItem } from './locators/home';
 import { open_Alice2_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Delete message linked device',
@@ -12,11 +13,11 @@ bothPlatformsIt({
   testCb: deletedMessageLinkedDevice,
   countOfDevicesNeeded: 3,
 });
-async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
+async function deletedMessageLinkedDevice(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1, alice2 },
     prebuilt: { bob },
-  } = await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: true });
+  } = await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: true, testInfo });
 
   const testMessage = 'Howdy';
   // Send message from user a to user b

@@ -11,6 +11,7 @@ import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Add contact to group',
@@ -18,7 +19,7 @@ bothPlatformsIt({
   testCb: addContactToGroup,
   countOfDevicesNeeded: 4,
 });
-async function addContactToGroup(platform: SupportedPlatformsType) {
+async function addContactToGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Group to test adding contact';
   const {
     devices: { alice1, bob1, charlie1, unknown1 },
@@ -27,6 +28,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo: testInfo,
   });
   const userD = await newUser(unknown1, USERNAME.DRACULA);
   await alice1.navigateBack();

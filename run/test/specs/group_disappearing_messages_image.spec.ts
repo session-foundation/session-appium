@@ -4,6 +4,7 @@ import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Disappearing image message to group',
@@ -12,7 +13,7 @@ bothPlatformsIt({
   testCb: disappearingImageMessageGroup,
 });
 
-async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
+async function disappearingImageMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testMessage = 'Testing disappearing messages for images';
   const testGroupName = 'Testing disappearing messages';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
@@ -23,6 +24,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
 
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);

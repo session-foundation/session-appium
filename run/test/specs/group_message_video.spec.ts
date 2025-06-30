@@ -1,6 +1,7 @@
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Send video to group',
@@ -14,7 +15,7 @@ bothPlatformsItSeparate({
   },
 });
 
-async function sendVideoGroupiOS(platform: SupportedPlatformsType) {
+async function sendVideoGroupiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Message checks for groups';
 
   const {
@@ -24,6 +25,7 @@ async function sendVideoGroupiOS(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
   const testMessage = 'Testing-video-1';
   const replyMessage = `Replying to video from ${alice.userName} in ${testGroupName}`;
@@ -61,7 +63,7 @@ async function sendVideoGroupiOS(platform: SupportedPlatformsType) {
   await closeApp(alice1, bob1, charlie1);
 }
 
-async function sendVideoGroupAndroid(platform: SupportedPlatformsType) {
+async function sendVideoGroupAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
   // Test sending a video
   // open devices
   const testGroupName = 'Message checks for groups';
@@ -73,6 +75,7 @@ async function sendVideoGroupAndroid(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
   const replyMessage = `Replying to video from ${alice.userName} in ${testGroupName}`;
   // Click on attachments button

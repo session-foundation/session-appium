@@ -5,6 +5,7 @@ import { DeletedMessage } from './locators/conversation';
 import { ConversationItem } from './locators/home';
 import { open_Alice2_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Unsent message syncs',
@@ -13,11 +14,11 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
+async function unSendMessageLinkedDevice(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, alice2, bob1 },
     prebuilt: { bob },
-  } = await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: true });
+  } = await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: true, testInfo });
 
   // Send message from user a to user b
   const sentMessage = await alice1.sendMessage('Howdy');

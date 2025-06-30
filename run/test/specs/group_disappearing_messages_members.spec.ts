@@ -8,6 +8,7 @@ import {
   SetDisappearMessagesButton,
 } from './locators/disappearing_messages';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Group member disappearing messages',
@@ -16,7 +17,10 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function membersCantSetDisappearingMessages(platform: SupportedPlatformsType) {
+async function membersCantSetDisappearingMessages(
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo
+) {
   const testGroupName = 'Testing disappearing messages';
   const {
     devices: { alice1, bob1, charlie1 },
@@ -24,6 +28,7 @@ async function membersCantSetDisappearingMessages(platform: SupportedPlatformsTy
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
 
   // Member B navigates to DM settings

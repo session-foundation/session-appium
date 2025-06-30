@@ -5,6 +5,7 @@ import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Disappear after send groups',
@@ -13,7 +14,7 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
+async function disappearAfterSendGroups(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Disappear after send test';
   const testMessage = 'Testing disappear after sent in groups';
   const controlMode: DisappearActions = 'sent';
@@ -25,6 +26,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
 
   await setDisappearingMessage(platform, alice1, ['Group', `Disappear after send option`, time]);

@@ -5,6 +5,7 @@ import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { OutgoingMessageStatusSent } from './locators/conversation';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Send link 1:1',
@@ -18,13 +19,14 @@ bothPlatformsItSeparate({
   },
 });
 
-async function sendLinkIos(platform: SupportedPlatformsType) {
+async function sendLinkIos(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
+    testInfo,
   });
   const testLink = `https://getsession.org/`;
 
@@ -71,12 +73,13 @@ async function sendLinkIos(platform: SupportedPlatformsType) {
   await closeApp(alice1, bob1);
 }
 
-async function sendLinkAndroid(platform: SupportedPlatformsType) {
+async function sendLinkAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
+    testInfo,
   });
   const testLink = `https://getsession.org/`;
 

@@ -3,6 +3,7 @@ import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { isSameColor } from './utils/check_colour';
 import { UserSettings } from './locators/settings';
 import { open_Alice2 } from './state_builder';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Avatar color linked device',
@@ -10,11 +11,11 @@ bothPlatformsIt({
   testCb: avatarColorLinkedDevice,
   countOfDevicesNeeded: 2,
 });
-async function avatarColorLinkedDevice(platform: SupportedPlatformsType) {
+async function avatarColorLinkedDevice(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, alice2 },
     prebuilt: { alice },
-  } = await open_Alice2({ platform });
+  } = await open_Alice2({ platform, testInfo });
 
   // Get Alice's avatar color on device 1 (Home Screen avatar) and turn it into a hex value
   const alice1PixelColor = await alice1.getElementPixelColor(new UserSettings(alice1));

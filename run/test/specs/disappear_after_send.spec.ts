@@ -5,6 +5,7 @@ import { checkDisappearingControlMessage } from './utils/disappearing_control_me
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 import { open_Alice1_Bob1_friends } from './state_builder';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Disappear after send',
@@ -13,15 +14,15 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function disappearAfterSend(platform: SupportedPlatformsType) {
+async function disappearAfterSend(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { alice, bob },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
+    testInfo,
   });
-
   const mode: DisappearModes = 'send';
   const testMessage = `Checking disappear after ${mode} is working`;
   const controlMode: DisappearActions = 'sent';

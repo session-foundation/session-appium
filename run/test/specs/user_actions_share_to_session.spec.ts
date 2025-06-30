@@ -7,6 +7,7 @@ import { sleepFor } from './utils';
 import { SupportedPlatformsType } from './utils/open_app';
 import { testImage } from '../../constants/testfiles';
 import { handlePhotosFirstTimeOpen } from './utils/handle_first_open';
+import type { TestInfo } from '@playwright/test';
 
 // TODO investigate why the Android Photos app throws an unexpected error when sharing
 bothPlatformsItSeparate({
@@ -22,12 +23,13 @@ bothPlatformsItSeparate({
   countOfDevicesNeeded: 2,
 });
 
-async function shareToSession(platform: SupportedPlatformsType) {
+async function shareToSession(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
+    testInfo,
   });
   const testMessage = 'Testing sharing an image through photo gallery to Session';
 

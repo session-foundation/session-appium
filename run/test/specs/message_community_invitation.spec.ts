@@ -9,6 +9,7 @@ import { open_Alice1_Bob1_friends } from './state_builder';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { ConversationItem } from './locators/home';
 import { GroupMember } from './locators/groups';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Send community invitation',
@@ -22,13 +23,14 @@ bothPlatformsItSeparate({
   },
 });
 
-async function sendCommunityInvitationIos(platform: SupportedPlatformsType) {
+async function sendCommunityInvitationIos(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { bob },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
+    testInfo,
   });
   // Join community on device 1
   // Click on plus button
@@ -68,13 +70,17 @@ async function sendCommunityInvitationIos(platform: SupportedPlatformsType) {
   await closeApp(alice1, bob1);
 }
 
-async function sendCommunityInviteMessageAndroid(platform: SupportedPlatformsType) {
+async function sendCommunityInviteMessageAndroid(
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo
+) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { bob },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
+    testInfo,
   });
   // Join community
   await sleepFor(100);

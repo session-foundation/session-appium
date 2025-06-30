@@ -8,6 +8,7 @@ import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { assertUrlIsReachable, ensureHttpsURL } from './utils/utilities';
 import { OpenLinkButton } from './locators/network_page';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Donate linkout',
@@ -16,10 +17,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 1,
 });
 
-// TODO add in screenshot verification
-
-async function donateLinkout(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function donateLinkout(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   const linkURL = 'https://session.foundation/donate#app';
   await newUser(device, USERNAME.ALICE);
   await device.clickOnElementAll(new UserSettings(device));

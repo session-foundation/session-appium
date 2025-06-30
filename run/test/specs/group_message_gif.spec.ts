@@ -2,6 +2,7 @@ import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Send GIF to group',
@@ -15,7 +16,7 @@ bothPlatformsItSeparate({
   },
 });
 
-async function sendGifGroupiOS(platform: SupportedPlatformsType) {
+async function sendGifGroupiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Message checks for groups';
 
   const {
@@ -25,6 +26,7 @@ async function sendGifGroupiOS(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo: testInfo,
   });
 
   const testMessage = 'Testing-GIF-1';
@@ -59,7 +61,7 @@ async function sendGifGroupiOS(platform: SupportedPlatformsType) {
   await closeApp(alice1, bob1, charlie1);
 }
 
-async function sendGifGroupAndroid(platform: SupportedPlatformsType) {
+async function sendGifGroupAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Message checks for groups';
 
   const {
@@ -69,6 +71,7 @@ async function sendGifGroupAndroid(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo: testInfo,
   });
   const testMessage = 'Testing-GIF-1';
   const replyMessage = `Replying to GIF from ${alice.userName}`;

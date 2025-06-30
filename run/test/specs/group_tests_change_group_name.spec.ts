@@ -9,6 +9,7 @@ import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { ConversationSettings } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Change group name',
@@ -22,7 +23,7 @@ bothPlatformsItSeparate({
   },
 });
 
-async function changeGroupNameIos(platform: SupportedPlatformsType) {
+async function changeGroupNameIos(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Test group';
   const newGroupName = 'Changed group name';
 
@@ -32,6 +33,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
   // Click on settings or three dots
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
@@ -69,7 +71,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   await closeApp(alice1, bob1, charlie1);
 }
 
-async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
+async function changeGroupNameAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Test group';
   const newGroupName = 'Changed group name';
 
@@ -79,6 +81,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
   // Click on settings or three dots
   await alice1.clickOnElementAll(new ConversationSettings(alice1));

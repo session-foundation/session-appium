@@ -2,6 +2,7 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Send voice message 1:1',
@@ -10,13 +11,14 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function sendVoiceMessage(platform: SupportedPlatformsType) {
+async function sendVoiceMessage(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
+    testInfo,
   });
   const replyMessage = `Replying to voice message from ${alice.userName}`;
   // Select voice message button to activate recording state

@@ -11,6 +11,7 @@ import {
 } from './locators/groups';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { SupportedPlatformsType } from './utils/open_app';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Kick member',
@@ -19,7 +20,7 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function kickMember(platform: SupportedPlatformsType) {
+async function kickMember(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Kick member';
 
   const {
@@ -28,6 +29,7 @@ async function kickMember(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   await alice1.clickOnElementAll(new ManageMembersMenuItem(alice1));

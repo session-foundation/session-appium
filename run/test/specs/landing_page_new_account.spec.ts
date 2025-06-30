@@ -12,8 +12,9 @@ bothPlatformsIt({
   testCb: landingPageNewAccount,
   countOfDevicesNeeded: 1,
 });
+
 async function landingPageNewAccount(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   await newUser(device, USERNAME.ALICE);
   // Verify that the party popper is shown on the landing page
   await verifyElementScreenshot(

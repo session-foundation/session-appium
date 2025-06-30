@@ -4,6 +4,7 @@ import { PrivacyPolicyButton, SplashScreenLinks } from './locators/onboarding';
 import { handleChromeFirstTimeOpen } from './utils/handle_first_open';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { assertUrlIsReachable, ensureHttpsURL } from './utils/utilities';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Onboarding privacy policy',
@@ -12,8 +13,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 1,
 });
 
-async function onboardingPP(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function onboardingPP(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   const ppURL = 'https://getsession.org/privacy-policy';
   // Tap the text at the bottom of the splash screen to bring up the TOS/PP links modal
   await device.clickOnElementAll(new SplashScreenLinks(device));

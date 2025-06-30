@@ -3,6 +3,7 @@ import { bothPlatformsIt } from '../../../types/sessionIt';
 import { AccountRestoreButton, ErrorMessage, SeedPhraseInput } from '../locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 import { ContinueButton } from '../locators/global';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Onboarding incorrect seed',
@@ -11,8 +12,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 1,
 });
 
-async function onboardingIncorrectSeed(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function onboardingIncorrectSeed(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   await device.clickOnElementAll(new AccountRestoreButton(device));
   // the word 'zork' is not on the mnemonic word list which triggers the expected error
   const incorrectSeed =

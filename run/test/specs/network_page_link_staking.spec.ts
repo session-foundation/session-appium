@@ -12,6 +12,7 @@ import { handleChromeFirstTimeOpen } from './utils/handle_first_open';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { assertUrlIsReachable, ensureHttpsURL } from './utils/utilities';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Network page learn more staking link',
@@ -20,8 +21,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 1,
 });
 
-async function networkPageLearnMore(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function networkPageLearnMore(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   const linkURL = 'https://docs.getsession.org/session-network/staking';
   await newUser(device, USERNAME.ALICE);
   await device.clickOnElementAll(new UserSettings(device));

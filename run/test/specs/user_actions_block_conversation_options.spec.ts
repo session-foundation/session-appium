@@ -11,6 +11,7 @@ import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Block user in conversation options',
@@ -19,13 +20,17 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function blockUserInConversationOptions(platform: SupportedPlatformsType) {
+async function blockUserInConversationOptions(
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo
+) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { bob },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
+    testInfo,
   });
   const blockedMessage = 'Blocked message';
 

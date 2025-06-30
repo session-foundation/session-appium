@@ -18,6 +18,9 @@ import {
   getSdkManagerFullPath,
 } from './binaries';
 
+import type { TestInfo } from '@playwright/test';
+import { registerDevicesForTest } from './screenshot_helper';
+
 const APPIUM_PORT = 4728;
 
 export type SupportedPlatformsType = 'android' | 'ios';
@@ -28,7 +31,8 @@ export type SupportedPlatformsType = 'android' | 'ios';
 
 export const openAppMultipleDevices = async (
   platform: SupportedPlatformsType,
-  numberOfDevices: number
+  numberOfDevices: number,
+  testInfo: TestInfo
 ): Promise<DeviceWrapper[]> => {
   // Create an array of promises for each device
   const devicePromises = Array.from({ length: numberOfDevices }, (_, index) =>
@@ -39,7 +43,11 @@ export const openAppMultipleDevices = async (
   const apps = await Promise.all(devicePromises);
 
   //  Map the result to return only the device objects
-  return apps.map(app => app.device);
+  const devices = apps.map(app => app.device);
+
+  registerDevicesForTest(testInfo, devices, platform);
+
+  return devices;
 };
 
 const openAppOnPlatform = async (
@@ -53,15 +61,21 @@ const openAppOnPlatform = async (
 };
 
 export const openAppOnPlatformSingleDevice = async (
-  platform: SupportedPlatformsType
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo
 ): Promise<{
   device: DeviceWrapper;
 }> => {
-  return openAppOnPlatform(platform, 0);
+  const result = await openAppOnPlatform(platform, 0);
+
+  registerDevicesForTest(testInfo, [result.device], platform);
+
+  return result;
 };
 
 export const openAppTwoDevices = async (
-  platform: SupportedPlatformsType
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
@@ -71,11 +85,16 @@ export const openAppTwoDevices = async (
     openAppOnPlatform(platform, 1),
   ]);
 
-  return { device1: app1.device, device2: app2.device };
+  const result = { device1: app1.device, device2: app2.device };
+
+  registerDevicesForTest(testInfo, [result.device1, result.device2], platform);
+
+  return result;
 };
 
 export const openAppThreeDevices = async (
-  platform: SupportedPlatformsType
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
@@ -87,15 +106,20 @@ export const openAppThreeDevices = async (
     openAppOnPlatform(platform, 2),
   ]);
 
-  return {
+  const result = {
     device1: app1.device,
     device2: app2.device,
     device3: app3.device,
   };
+
+  registerDevicesForTest(testInfo, [result.device1, result.device2, result.device3], platform);
+
+  return result;
 };
 
 export const openAppFourDevices = async (
-  platform: SupportedPlatformsType
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
@@ -109,12 +133,20 @@ export const openAppFourDevices = async (
     openAppOnPlatform(platform, 3),
   ]);
 
-  return {
+  const result = {
     device1: app1.device,
     device2: app2.device,
     device3: app3.device,
     device4: app4.device,
   };
+
+  registerDevicesForTest(
+    testInfo,
+    [result.device1, result.device2, result.device3, result.device4],
+    platform
+  );
+
+  return result;
 };
 
 async function createAndroidEmulator(emulatorName: string) {
