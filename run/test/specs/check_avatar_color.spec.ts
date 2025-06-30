@@ -1,11 +1,12 @@
-import { bothPlatformsItSeparate } from '../../types/sessionIt';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
-import { isSameColor } from './utils/check_colour';
-import { UserSettings } from './locators/settings';
-import { ConversationSettings } from './locators/conversation';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { ConversationItem } from './locators/home';
 import type { TestInfo } from '@playwright/test';
+
+import { bothPlatformsItSeparate } from '../../types/sessionIt';
+import { ConversationSettings } from './locators/conversation';
+import { ConversationItem } from './locators/home';
+import { UserSettings } from './locators/settings';
+import { open_Alice1_Bob1_friends } from './state_builder';
+import { isSameColor } from './utils/check_colour';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Avatar color',

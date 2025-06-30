@@ -1,9 +1,10 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
-import { isSameColor } from './utils/check_colour';
 import { UserSettings } from './locators/settings';
 import { open_Alice2 } from './state_builder';
-import type { TestInfo } from '@playwright/test';
+import { isSameColor } from './utils/check_colour';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Avatar color linked device',

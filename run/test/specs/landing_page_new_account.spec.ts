@@ -1,10 +1,11 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsIt } from '../../types/sessionIt';
+import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { USERNAME } from '../../types/testing';
-import { verifyElementScreenshot } from './utils/verify_screenshots';
 import { EmptyLandingPageScreenshot } from './utils/screenshot_paths';
-import type { TestInfo } from '@playwright/test';
+import { verifyElementScreenshot } from './utils/verify_screenshots';
 
 bothPlatformsIt({
   title: 'Landing page new account',

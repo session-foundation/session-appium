@@ -1,6 +1,7 @@
+import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import { execSync } from 'child_process';
+
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 
 const TARGET_GROUP_ID = 'group.com.apple.FileProvider.LocalStorage';

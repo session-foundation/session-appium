@@ -1,7 +1,9 @@
+import type { TestInfo } from '@playwright/test';
+
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { androidIt } from '../../types/sessionIt';
-import { SupportedPlatformsType, openAppOnPlatformSingleDevice } from './utils/open_app';
-import { newUser } from './utils/create_account';
 import { USERNAME } from '../../types/testing';
+import { DisguisedApp } from './locators/external';
 import {
   AppDisguiseMeetingIcon,
   AppearanceMenuItem,
@@ -9,13 +11,12 @@ import {
   SelectAppIcon,
   UserSettings,
 } from './locators/settings';
-import { DisguisedApp } from './locators/external';
 import { sleepFor } from './utils';
-import { runScriptAndLog } from './utils/utilities';
 import { getAdbFullPath } from './utils/binaries';
+import { newUser } from './utils/create_account';
+import { openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { closeApp } from './utils/open_app';
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
-import type { TestInfo } from '@playwright/test';
+import { runScriptAndLog } from './utils/utilities';
 
 // iOS implementation blocked by SES-3809
 androidIt({

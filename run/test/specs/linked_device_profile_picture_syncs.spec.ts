@@ -1,10 +1,11 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { UserSettings } from './locators/settings';
 import { open_Alice2 } from './state_builder';
 import { runOnlyOnAndroid, sleepFor } from './utils';
 import { parseDataImage } from './utils/check_colour';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
-import type { TestInfo } from '@playwright/test';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Avatar restored',

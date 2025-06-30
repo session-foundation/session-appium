@@ -1,12 +1,13 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { CallButton } from './locators/conversation';
 import { ContinueButton } from './locators/global';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
-import type { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Disappearing call message 1o1',

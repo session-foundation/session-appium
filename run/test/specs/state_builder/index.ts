@@ -1,14 +1,17 @@
+import type { TestInfo } from '@playwright/test';
+
 import {
   buildStateForTest,
   type PrebuiltStateKey,
   type StateUser,
   type WithGroupStateKey,
 } from '@session-foundation/qa-seeder';
+
+import type { DeviceWrapper } from '../../../types/DeviceWrapper';
+
+import { ConversationItem } from '../locators/home';
 import { openAppMultipleDevices, type SupportedPlatformsType } from '../utils/open_app';
 import { restoreAccountNoFallback } from '../utils/restore_account';
-import { ConversationItem } from '../locators/home';
-import type { DeviceWrapper } from '../../../types/DeviceWrapper';
-import type { TestInfo } from '@playwright/test';
 
 const networkToTarget = 'mainnet';
 

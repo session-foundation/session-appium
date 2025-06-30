@@ -1,10 +1,11 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteContactModalConfirm } from './locators/global';
 import { open_Alice2_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType } from './utils/open_app';
-import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Delete conversation',

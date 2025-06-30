@@ -1,10 +1,12 @@
-import { bothPlatformsIt } from '../../types/sessionIt';
-import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
-import { verifyElementScreenshot } from './utils/verify_screenshots';
-import { EmptyLandingPageScreenshot } from './utils/screenshot_paths';
-import { USERNAME } from '@session-foundation/qa-seeder';
-import { linkedDevice } from './utils/link_device';
 import type { TestInfo } from '@playwright/test';
+
+import { USERNAME } from '@session-foundation/qa-seeder';
+
+import { bothPlatformsIt } from '../../types/sessionIt';
+import { linkedDevice } from './utils/link_device';
+import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
+import { EmptyLandingPageScreenshot } from './utils/screenshot_paths';
+import { verifyElementScreenshot } from './utils/verify_screenshots';
 
 bothPlatformsIt({
   title: 'Landing page restore account',

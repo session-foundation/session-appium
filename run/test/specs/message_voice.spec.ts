@@ -1,8 +1,9 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
-import type { TestInfo } from '@playwright/test';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Send voice message 1:1',

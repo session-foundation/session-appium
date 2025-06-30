@@ -1,10 +1,11 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, GROUPNAME } from '../../types/testing';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
-import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Disappearing voice message to group',

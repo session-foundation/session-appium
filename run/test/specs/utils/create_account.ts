@@ -1,11 +1,12 @@
 import type { UserNameType } from '@session-foundation/qa-seeder';
+
 import { sleepFor } from '.';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
-import { RecoveryPhraseContainer, RevealRecoveryPhraseButton } from '../locators/settings';
-import { CreateAccountButton, DisplayNameInput, SlowModeRadio } from '../locators/onboarding';
-import { UserSettings } from '../locators/settings';
 import { ContinueButton } from '../locators/global';
+import { CreateAccountButton, DisplayNameInput, SlowModeRadio } from '../locators/onboarding';
+import { RecoveryPhraseContainer, RevealRecoveryPhraseButton } from '../locators/settings';
+import { UserSettings } from '../locators/settings';
 import { CopyButton } from '../locators/start_conversation';
 
 export const newUser = async (device: DeviceWrapper, userName: UserNameType): Promise<User> => {

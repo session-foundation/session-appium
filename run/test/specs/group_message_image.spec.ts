@@ -1,9 +1,10 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
+import { OutgoingMessageStatusSent } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
-import { OutgoingMessageStatusSent } from './locators/conversation';
-import type { TestInfo } from '@playwright/test';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Send image to group',

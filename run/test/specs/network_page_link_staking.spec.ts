@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -8,11 +10,10 @@ import {
   SessionNetworkMenuItem,
 } from './locators/network_page';
 import { UserSettings } from './locators/settings';
-import { handleChromeFirstTimeOpen } from './utils/handle_first_open';
 import { newUser } from './utils/create_account';
+import { handleChromeFirstTimeOpen } from './utils/handle_first_open';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { assertUrlIsReachable, ensureHttpsURL } from './utils/utilities';
-import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Network page learn more staking link',

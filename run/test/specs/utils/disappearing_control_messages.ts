@@ -1,8 +1,9 @@
 import type { UserNameType } from '@session-foundation/qa-seeder';
+
+import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { DisappearActions, DISAPPEARING_TIMES } from '../../../types/testing';
 import { SupportedPlatformsType } from './open_app';
-import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
 
 export const checkDisappearingControlMessage = async (
   platform: SupportedPlatformsType,

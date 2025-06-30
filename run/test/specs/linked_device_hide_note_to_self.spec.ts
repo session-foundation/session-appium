@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { EmptyConversation, Hide } from './locators/conversation';
@@ -5,7 +7,6 @@ import { CancelSearchButton, NoteToSelfOption } from './locators/global_search';
 import { ConversationItem, SearchButton } from './locators/home';
 import { open_Alice2 } from './state_builder';
 import { SupportedPlatformsType } from './utils/open_app';
-import type { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Hide note to self linked device',

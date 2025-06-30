@@ -1,11 +1,12 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { TickButton, UsernameInput, UsernameSettings } from './locators';
 import { SaveNameChangeButton, UserSettings } from './locators/settings';
 import { open_Alice2 } from './state_builder';
 import { sleepFor } from './utils';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
-import type { TestInfo } from '@playwright/test';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Change username linked device',

@@ -1,11 +1,12 @@
+import type { TestInfo } from '@playwright/test';
+
+import { IOS_XPATHS } from '../../constants';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { USERNAME } from '../../types/testing';
 import { PlusButton } from './locators/home';
 import { AccountIDField, InviteAFriendOption, ShareButton } from './locators/start_conversation';
-import { IOS_XPATHS } from '../../constants';
-import type { TestInfo } from '@playwright/test';
+import { newUser } from './utils/create_account';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Invite a friend',

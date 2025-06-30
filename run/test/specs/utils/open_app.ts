@@ -1,15 +1,11 @@
-import { getAndroidCapabilities, getAndroidUdid } from './capabilities_android';
-import { CapabilitiesIndexType, capabilityIsValid, getIosCapabilities } from './capabilities_ios';
-import { isCI, runScriptAndLog } from './utilities';
+import type { TestInfo } from '@playwright/test';
 
-import { XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
 import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
-
+import { XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
 import { DriverOpts } from 'appium/build/lib/appium';
 import { compact } from 'lodash';
+
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { cleanPermissions } from './permissions';
-import { sleepFor } from './sleep_for';
 import {
   getAdbFullPath,
   getAndroidSystemImageToUse,
@@ -17,9 +13,12 @@ import {
   getEmulatorFullPath,
   getSdkManagerFullPath,
 } from './binaries';
-
-import type { TestInfo } from '@playwright/test';
+import { getAndroidCapabilities, getAndroidUdid } from './capabilities_android';
+import { CapabilitiesIndexType, capabilityIsValid, getIosCapabilities } from './capabilities_ios';
+import { cleanPermissions } from './permissions';
 import { registerDevicesForTest } from './screenshot_helper';
+import { sleepFor } from './sleep_for';
+import { isCI, runScriptAndLog } from './utilities';
 
 const APPIUM_PORT = 4728;
 

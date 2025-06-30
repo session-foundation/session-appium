@@ -1,11 +1,12 @@
+import type { TestInfo } from '@playwright/test';
+
 import { testCommunityLink, testCommunityName } from '../../constants/community';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { ConversationItem } from './locators/home';
 import { open_Alice2 } from './state_builder';
 import { sleepFor } from './utils';
 import { joinCommunity } from './utils/join_community';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
-import type { TestInfo } from '@playwright/test';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Join community test',

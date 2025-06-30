@@ -1,11 +1,12 @@
+import type { TestInfo } from '@playwright/test';
+
 import { testCommunityLink, testCommunityName } from '../../constants/community';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { newUser } from './utils/create_account';
 import { joinCommunity } from './utils/join_community';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
-import type { TestInfo } from '@playwright/test';
+import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Send image to community',

@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -11,7 +13,6 @@ import {
 } from './locators/groups';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { SupportedPlatformsType } from './utils/open_app';
-import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Kick member',

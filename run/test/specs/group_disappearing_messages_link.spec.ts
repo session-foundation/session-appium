@@ -1,13 +1,14 @@
+import type { TestInfo } from '@playwright/test';
+
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { LinkPreview, LinkPreviewMessage } from './locators';
+import { OutgoingMessageStatusSent } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
-import { OutgoingMessageStatusSent } from './locators/conversation';
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
-import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Disappearing link to group',

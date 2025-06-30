@@ -1,15 +1,16 @@
+import type { TestInfo } from '@playwright/test';
+
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
+import { testCommunityLink, testCommunityName } from './../../constants/community';
 import { InviteContactsMenuItem } from './locators';
+import { ConversationSettings } from './locators/conversation';
+import { GroupMember } from './locators/groups';
+import { ConversationItem } from './locators/home';
+import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { joinCommunity } from './utils/join_community';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
-import { testCommunityLink, testCommunityName } from './../../constants/community';
-import { ConversationSettings } from './locators/conversation';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
-import { ConversationItem } from './locators/home';
-import { GroupMember } from './locators/groups';
-import type { TestInfo } from '@playwright/test';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Send community invitation',

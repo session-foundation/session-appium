@@ -1,10 +1,11 @@
+import test from '@playwright/test';
+
 import { sleepFor } from '.';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
-import { AccountRestoreButton, SeedPhraseInput, SlowModeRadio } from '../locators/onboarding';
 import { ContinueButton } from '../../specs/locators/global';
 import { PlusButton } from '../locators/home';
-import test from '@playwright/test';
+import { AccountRestoreButton, SeedPhraseInput, SlowModeRadio } from '../locators/onboarding';
 
 export const restoreAccount = async (device: DeviceWrapper, user: User) => {
   await device.clickOnElementAll(new AccountRestoreButton(device));

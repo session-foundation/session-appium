@@ -1,13 +1,14 @@
+import type { TestInfo } from '@playwright/test';
+
+import { testImage } from '../../constants/testfiles';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ImageName, MediaMessageInput, SendMediaButton, ShareExtensionIcon } from './locators';
 import { PhotoLibrary } from './locators/external';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
-import { SupportedPlatformsType } from './utils/open_app';
-import { testImage } from '../../constants/testfiles';
 import { handlePhotosFirstTimeOpen } from './utils/handle_first_open';
-import type { TestInfo } from '@playwright/test';
+import { SupportedPlatformsType } from './utils/open_app';
 
 // TODO investigate why the Android Photos app throws an unexpected error when sharing
 bothPlatformsItSeparate({

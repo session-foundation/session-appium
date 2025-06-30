@@ -1,10 +1,11 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { BlockUser, BlockUserConfirmationModal } from './locators';
 import { BlockedBanner, ConversationSettings } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType } from './utils/open_app';
-import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Unblock user',

@@ -1,10 +1,16 @@
 import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
+import perfectionist from 'eslint-plugin-perfectionist';
 import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
     files: ['**/*.{ts,tsx,cts,mts,js,cjs,mjs}'],
+  },
+  {
+    plugins: {
+      perfectionist,
+    },
   },
   {
     ignores: [
@@ -51,6 +57,8 @@ export default tseslint.config(
           caughtErrorsIgnorePattern: '^_',
         },
       ],
+      'perfectionist/sort-imports': 'error',
+      'perfectionist/sort-named-imports': 'error',
     },
   }
 );

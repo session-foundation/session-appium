@@ -1,10 +1,11 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
-import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
-import type { TestInfo } from '@playwright/test';
+import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Accept message request',

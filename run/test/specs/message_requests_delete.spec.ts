@@ -1,10 +1,11 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME, type AccessibilityId } from '../../types/testing';
+import { type AccessibilityId, USERNAME } from '../../types/testing';
 import { DeleteMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
 import { newUser } from './utils/create_account';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
-import type { TestInfo } from '@playwright/test';
+import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Delete message request in list',

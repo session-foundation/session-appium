@@ -1,15 +1,16 @@
+import type { TestInfo } from '@playwright/test';
+
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
+import { ConversationSettings } from './locators/conversation';
 import {
-  UpdateGroupInformation,
   EditGroupNameInput,
   SaveGroupNameChangeButton,
+  UpdateGroupInformation,
 } from './locators/groups';
-import { sleepFor } from './utils';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
-import { ConversationSettings } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
-import type { TestInfo } from '@playwright/test';
+import { sleepFor } from './utils';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Change group name',

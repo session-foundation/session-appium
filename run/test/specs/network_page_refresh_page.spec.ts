@@ -1,10 +1,11 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { LastUpdatedTimeStamp, SessionNetworkMenuItem } from './locators/network_page';
 import { UserSettings } from './locators/settings';
 import { newUser } from './utils/create_account';
-import { SupportedPlatformsType, openAppOnPlatformSingleDevice } from './utils/open_app';
-import type { TestInfo } from '@playwright/test';
+import { openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Refresh network page',

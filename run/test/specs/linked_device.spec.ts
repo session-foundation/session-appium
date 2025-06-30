@@ -1,10 +1,12 @@
+import type { TestInfo } from '@playwright/test';
+
 import { USERNAME } from '@session-foundation/qa-seeder';
+
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { UsernameSettings } from './locators';
 import { UserSettings } from './locators/settings';
 import { linkedDevice } from './utils/link_device';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
-import type { TestInfo } from '@playwright/test';
+import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Link device',

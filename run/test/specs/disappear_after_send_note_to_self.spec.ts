@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { PlusButton } from './locators/home';
@@ -6,7 +8,6 @@ import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
-import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Disappear after send note to self',

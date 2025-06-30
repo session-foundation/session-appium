@@ -1,13 +1,14 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { retryMsgSentForBanner } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
-import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 import { runOnlyOnIOS } from './utils/run_on';
 import { sleepFor } from './utils/sleep_for';
-import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Create contact',

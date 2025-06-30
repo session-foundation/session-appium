@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -6,7 +8,6 @@ import { CancelSearchButton, NoteToSelfOption } from './locators/global_search';
 import { SearchButton } from './locators/home';
 import { newUser } from './utils/create_account';
 import { openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import type { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Hide note to self',

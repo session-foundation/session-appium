@@ -1,14 +1,15 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { SafariAddressBar, URLInputField } from './locators/browsers';
+import { OpenLinkButton } from './locators/network_page';
 import { DonationsMenuItem, UserSettings } from './locators/settings';
-import { handleChromeFirstTimeOpen } from './utils/handle_first_open';
 import { newUser } from './utils/create_account';
+import { handleChromeFirstTimeOpen } from './utils/handle_first_open';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { assertUrlIsReachable, ensureHttpsURL } from './utils/utilities';
-import { OpenLinkButton } from './locators/network_page';
-import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Donate linkout',

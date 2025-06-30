@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ConversationHeaderName } from './locators/conversation';
@@ -6,7 +8,6 @@ import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { closeApp, openAppFourDevices, SupportedPlatformsType } from './utils/open_app';
 import { restoreAccount } from './utils/restore_account';
-import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Restore group',

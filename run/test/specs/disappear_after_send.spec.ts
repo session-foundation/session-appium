@@ -1,11 +1,12 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES, DisappearModes } from '../../types/testing';
+import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { checkDisappearingControlMessage } from './utils/disappearing_control_messages';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Disappear after send',

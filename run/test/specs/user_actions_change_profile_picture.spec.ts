@@ -1,11 +1,12 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { UserSettings } from './locators/settings';
 import { sleepFor } from './utils';
 import { parseDataImage } from './utils/check_colour';
 import { newUser } from './utils/create_account';
-import { SupportedPlatformsType, closeApp, openAppOnPlatformSingleDevice } from './utils/open_app';
-import type { TestInfo } from '@playwright/test';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Change profile picture',

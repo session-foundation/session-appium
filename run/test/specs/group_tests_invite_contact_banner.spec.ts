@@ -1,10 +1,11 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
-import { ConversationSettings } from './locators/conversation';
 import { InviteContactsButton } from './locators';
+import { ConversationSettings } from './locators/conversation';
 import { LatestReleaseBanner, ManageMembersMenuItem } from './locators/groups';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import type { TestInfo } from '@playwright/test';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Invite contacts banner',

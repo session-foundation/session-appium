@@ -1,9 +1,10 @@
+import { execSync } from 'child_process';
 import fs from 'fs-extra';
 import path from 'path';
-import { execSync } from 'child_process';
+
 import {
-  allureResultsDir,
   allureCurrentReportDir,
+  allureResultsDir,
   GH_PAGES_BASE_URL,
 } from '../../../../constants/allure';
 import { SupportedPlatformsType } from '../open_app';

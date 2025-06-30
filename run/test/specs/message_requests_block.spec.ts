@@ -1,6 +1,8 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME, type AccessibilityId } from '../../types/testing';
+import { type AccessibilityId, USERNAME } from '../../types/testing';
 import { BlockedContactsSettings } from './locators';
 import { PlusButton } from './locators/home';
 import { ConversationsMenuItem, UserSettings } from './locators/settings';
@@ -8,7 +10,6 @@ import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
-import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Block message request in conversation',

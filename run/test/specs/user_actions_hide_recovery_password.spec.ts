@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -10,7 +12,6 @@ import {
 } from './locators/settings';
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
-import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Hide recovery password',

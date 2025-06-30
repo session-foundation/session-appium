@@ -1,11 +1,12 @@
+import type { TestInfo } from '@playwright/test';
+
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { LinkPreview, LinkPreviewMessage } from './locators';
+import { OutgoingMessageStatusSent } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
-import { OutgoingMessageStatusSent } from './locators/conversation';
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
-import type { TestInfo } from '@playwright/test';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Send link 1:1',

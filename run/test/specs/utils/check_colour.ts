@@ -1,5 +1,6 @@
-import PNG from 'png-js';
 import { colors } from 'looks-same';
+import PNG from 'png-js';
+
 import { hexToRgbObject } from './utilities';
 
 export async function parseDataImage(base64: string) {

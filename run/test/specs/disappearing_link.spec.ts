@@ -1,13 +1,14 @@
+import type { TestInfo } from '@playwright/test';
+
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { LinkPreview } from './locators';
+import { OutgoingMessageStatusSent } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
-import { OutgoingMessageStatusSent } from './locators/conversation';
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
-import type { TestInfo } from '@playwright/test';
 
 bothPlatformsItSeparate({
   title: 'Disappearing link message 1:1',

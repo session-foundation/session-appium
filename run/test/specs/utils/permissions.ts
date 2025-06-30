@@ -1,5 +1,6 @@
 import { W3CCapabilities } from '@wdio/types/build/Capabilities';
 import { XCUITestDriver, XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
+
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { runScriptAndLog } from './utilities';
 

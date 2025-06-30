@@ -1,13 +1,15 @@
 // run/types/sessionIt.ts - Clean version matching original pattern
 import { test, type TestInfo } from '@playwright/test';
-import { SupportedPlatformsType } from '../test/specs/utils/open_app';
-import { TestRisk } from './testing';
-import type { AppCountPerTest } from '../test/specs/state_builder';
 import { omit } from 'lodash';
+
+import type { AppCountPerTest } from '../test/specs/state_builder';
+
+import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 import {
   captureScreenshotsOnFailure,
   unregisterDevicesForTest,
 } from '../test/specs/utils/screenshot_helper';
+import { TestRisk } from './testing';
 
 // Test wrapper configuration
 type MobileItArgs = {

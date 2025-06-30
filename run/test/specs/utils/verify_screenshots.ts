@@ -1,14 +1,15 @@
+import { TestInfo } from '@playwright/test';
 import * as fs from 'fs';
 import looksSame from 'looks-same';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { PageName } from '../../../types/testing';
 import { LocatorsInterfaceScreenshot } from '../locators';
 import { SupportedPlatformsType } from './open_app';
 import { BrowserPageScreenshot } from './screenshot_paths';
 import { cropScreenshot, getDiffDirectory, saveImage } from './utilities';
-import { TestInfo } from '@playwright/test';
 
 type Attachment = {
   name: string;

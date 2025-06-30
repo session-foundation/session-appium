@@ -1,12 +1,13 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { SupportedPlatformsType, closeApp, openAppOnPlatformSingleDevice } from './utils/open_app';
-import { newUser } from './utils/create_account';
 import { USERNAME } from '../../types/testing';
 import { AppearanceMenuItem, SelectAppIcon, UserSettings } from './locators/settings';
-import { verifyElementScreenshot } from './utils/verify_screenshots';
-import { AppDisguisePageScreenshot } from './utils/screenshot_paths';
 import { sleepFor } from './utils';
-import type { TestInfo } from '@playwright/test';
+import { newUser } from './utils/create_account';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+import { AppDisguisePageScreenshot } from './utils/screenshot_paths';
+import { verifyElementScreenshot } from './utils/verify_screenshots';
 
 bothPlatformsIt({
   title: 'App disguise icons',

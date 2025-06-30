@@ -1,8 +1,13 @@
+import { getImageOccurrence } from '@appium/opencv';
 import { W3CCapabilities } from '@wdio/types/build/Capabilities';
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
 import { XCUITestDriver } from 'appium-xcuitest-driver/build/lib/driver';
+import fs from 'fs/promises';
 import { isArray, isEmpty } from 'lodash';
+import * as path from 'path';
+import sharp from 'sharp';
 import * as sinon from 'sinon';
+
 import {
   ChangeProfilePictureButton,
   DownloadMediaButton,
@@ -13,6 +18,13 @@ import {
   ReadReceiptsButton,
   SendMediaButton,
 } from '../../run/test/specs/locators';
+import {
+  profilePicture,
+  testFile,
+  testImage,
+  testVideo,
+  testVideoThumbnail,
+} from '../constants/testfiles';
 import { englishStrippedStr } from '../localizer/englishStrippedStr';
 import {
   AttachmentsButton,
@@ -20,6 +32,7 @@ import {
   OutgoingMessageStatusSent,
 } from '../test/specs/locators/conversation';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
+import { PlusButton } from '../test/specs/locators/home';
 import { LoadingAnimation } from '../test/specs/locators/onboarding';
 import {
   PrivacyMenuItem,
@@ -34,6 +47,7 @@ import {
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
 import { getAdbFullPath } from '../test/specs/utils/binaries';
 import { parseDataImage } from '../test/specs/utils/check_colour';
+import { copyFileToSimulator } from '../test/specs/utils/copy_file_to_simulator';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/specs/utils/utilities';
 import {
@@ -47,19 +61,6 @@ import {
   User,
   XPath,
 } from './testing';
-import { PlusButton } from '../test/specs/locators/home';
-import {
-  testFile,
-  testImage,
-  testVideo,
-  profilePicture,
-  testVideoThumbnail,
-} from '../constants/testfiles';
-import * as path from 'path';
-import fs from 'fs/promises';
-import { getImageOccurrence } from '@appium/opencv';
-import { copyFileToSimulator } from '../test/specs/utils/copy_file_to_simulator';
-import sharp from 'sharp';
 
 export type Coordinates = {
   x: number;

@@ -1,10 +1,11 @@
+import type { TestInfo } from '@playwright/test';
+
 import { longText } from '../../constants';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
-import { sleepFor } from './utils';
 import { ConversationItem } from './locators/home';
-import type { TestInfo } from '@playwright/test';
+import { open_Alice1_Bob1_friends } from './state_builder';
+import { sleepFor } from './utils';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Send long message 1:1',

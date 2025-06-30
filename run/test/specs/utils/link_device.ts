@@ -1,15 +1,16 @@
+import type { UserNameType } from '@session-foundation/qa-seeder';
+
 import { sleepFor } from '.';
-import { newUser } from './create_account';
+import { DeviceWrapper } from '../../../types/DeviceWrapper';
+import { ContinueButton } from '../locators/global';
+import { PlusButton } from '../locators/home';
 import {
   AccountRestoreButton,
   DisplayNameInput,
   SeedPhraseInput,
   SlowModeRadio,
 } from '../locators/onboarding';
-import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import type { UserNameType } from '@session-foundation/qa-seeder';
-import { ContinueButton } from '../locators/global';
-import { PlusButton } from '../locators/home';
+import { newUser } from './create_account';
 
 export const linkedDevice = async (
   device1: DeviceWrapper,

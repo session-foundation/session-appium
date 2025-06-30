@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import {
@@ -6,12 +8,11 @@ import {
   BlockUserConfirmationModal,
   ExitUserProfile,
 } from './locators';
-import { ConversationSettings, BlockedBanner } from './locators/conversation';
+import { BlockedBanner, ConversationSettings } from './locators/conversation';
 import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
-import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Block user in conversation options',

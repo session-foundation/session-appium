@@ -1,4 +1,5 @@
 import type { DeviceWrapper } from '../../../types/DeviceWrapper';
+
 import { StrategyExtractionObj } from '../../../types/testing';
 import { LocatorsInterface } from './index';
 

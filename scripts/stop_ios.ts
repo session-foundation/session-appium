@@ -1,4 +1,5 @@
 import { execSync } from 'child_process';
+
 import { isAnySimulatorBooted } from './ios_shared';
 
 function stopSimulatorsFromEnvIOS() {

@@ -1,6 +1,9 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { ContinueButton } from '../specs/locators/global';
 import {
   BackButton,
   CreateAccountButton,
@@ -9,8 +12,6 @@ import {
   WarningModalQuitButton,
 } from './locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { ContinueButton } from '../specs/locators/global';
-import type { TestInfo } from '@playwright/test';
 
 // These modals no longer exist in groups rebuild for iOS
 androidIt({

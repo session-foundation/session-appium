@@ -1,9 +1,10 @@
-// run/test/specs/utils/screenshot-helper.ts
-import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import type { TestInfo } from '@playwright/test';
+
 import * as fs from 'fs';
 import * as path from 'path';
 import sharp from 'sharp';
+
+import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { SupportedPlatformsType } from './open_app';
 
 // Screenshot context type

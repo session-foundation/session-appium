@@ -1,9 +1,10 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../../types/sessionIt';
+import { ContinueButton } from '../locators/global';
 import { AccountRestoreButton, ErrorMessage, SeedPhraseInput } from '../locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
-import { ContinueButton } from '../locators/global';
-import type { TestInfo } from '@playwright/test';
 
 bothPlatformsIt({
   title: 'Onboarding incorrect seed',
