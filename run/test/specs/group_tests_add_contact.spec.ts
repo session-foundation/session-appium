@@ -31,7 +31,6 @@ async function addContactToGroup(platform: SupportedPlatformsType, testInfo: Tes
     testInfo: testInfo,
   });
   const userD = await newUser(unknown1, USERNAME.DRACULA);
-  throw new Error('Smile for the camera');
   await alice1.navigateBack();
   await newContact(platform, alice1, alice, unknown1, userD);
   // Exit to conversation list
