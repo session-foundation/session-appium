@@ -1,0 +1,98 @@
+
+
+==========> Running "Hide note to self @ios @low-risk @1-devices"
+
+
+starting capabilitiesIndex 0 ios
+openiOSApp
+[device-9FCF] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-9FCF] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-9FCF] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-9FCF] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-9FCF] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-9FCF] //XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+[device-9FCF] iosPermissions null
+[device-9FCF] No iosPermissions null
+running  xcrun simctl privacy 84884861-F8EF-4481-A001-B403F2649FCF reset all undefined
+was run:  xcrun simctl privacy 84884861-F8EF-4481-A001-B403F2649FCF reset all undefined { stdout: '', stderr: '' }
+[alice1] Device identity changed from device-9FCF to alice1
+[alice1] Waiting for "accessibility id" and "Create account button" to be present
+[alice1] 'Create account button' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Enter display name' }
+[alice1] Waiting for "accessibility id" and "Enter display name" to be present
+[alice1] 'Enter display name' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "accessibility id" and "Slow mode notifications button" to be present
+[alice1] 'Slow mode notifications button' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+Sleeping for 5000 milliseconds
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow doesn't exist, time expired
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "accessibility id" and "Recovery password container" to be present
+[alice1] 'Recovery password container' has been found
+Alices recovery phrase is "hockey having gnaw gleeful surfer issued wolf onslaught gown woozy fatal agnostic onslaught"
+[alice1] Waiting for "accessibility id" and "Back" to be present
+[alice1] 'Back' has been found
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'User settings' has been found
+[alice1] Waiting for "accessibility id" and "Account ID" to be present
+[alice1] 'Account ID' has been found
+[alice1] Waiting for "accessibility id" and "Close button" to be present
+[alice1] 'Close button' has been found
+[alice1] Waiting for "accessibility id" and "Search button" to be present
+[alice1] 'Search button' has been found
+[alice1] Waiting for "accessibility id" and "Note to Self" to be present
+[alice1] 'Note to Self' has been found
+[alice1] Waiting for "accessibility id" and "Empty list" to be present
+[alice1] 'Empty list' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+[alice1] Waiting for "accessibility id" and "Message input box" to be present
+[alice1] 'Message input box' has been found
+[alice1] Waiting for "accessibility id" and "Send message button" to be present
+[alice1] 'Send message button' has been found
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] 'Message sent status: Sent' has been found
+[alice1] Waiting for "accessibility id" and "Back" to be present
+[alice1] 'Back' has been found
+[alice1] Waiting for "accessibility id" and "Cancel" to be present
+[alice1] 'Cancel' has been found
+[alice1] Text found to include Note to Self
+[alice1] { y: 114, x: 0, width: 440, height: 68 }
+[alice1] Swiped left on  {
+  ELEMENT: '47010000-0000-0000-3977-010000000000',
+  'element-6066-11e4-a52e-4f735466cecf': '47010000-0000-0000-3977-010000000000'
+}
+[alice1] Waiting for "accessibility id" and "Hide" to be present
+[alice1] 'Hide' has been found
+[alice1] Waiting for "accessibility id" and "Modal heading" to be present
+[alice1] 'Modal heading' has been found
+[alice1] Modal heading is correct
+[alice1] Waiting for "accessibility id" and "Modal description" to be present
+[alice1] 'Modal description' has been found
+[alice1] Modal description is correct
+[alice1] Waiting for "accessibility id" and "Hide" to be present
+[alice1] 'Hide' has been found
+[alice1] Text found to include Note to Self
+[alice1] accessibility id: Conversation list item with matching text "Note to Self" found

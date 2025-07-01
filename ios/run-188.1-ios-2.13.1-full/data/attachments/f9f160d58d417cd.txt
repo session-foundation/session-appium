@@ -1,0 +1,401 @@
+
+
+==========> Running "Join community test @ios @high-risk @2-devices"
+
+
+starting capabilitiesIndex 0 ios
+openiOSApp
+starting capabilitiesIndex 1 ios
+openiOSApp
+[buildStateForTest] stateToBuild:"1user". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [ Promise { <pending> } ]
+random snode for user: 0545019df7b231d787b428f85bf372fadea7aac21d26e9f42adf3d47a5a0dbdd49 is snode: b898b214ad6ad5276b51a700be33d1d04d838f65bb71aa8bcac0ab9ffd20fea0
+storing to snode https://177.67.81.83:22021/storage_rpc/v1
+storing to snode https://177.67.81.83:22021/storage_rpc/v1
+storing to snode https://177.67.81.83:22021/storage_rpc/v1
+storeStatus for Alice: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "blip items voyage thaw foiled urchins poaching bygones jittery acoustic washing desk jittery" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+Error opening iOS app: Error: Unable to launch WebDriverAgent. Original error: xcodebuild failed with code 65. This usually indicates an issue with the local Xcode setup or WebDriverAgent project configuration or the driver-to-platform version mismatch. Consider setting 'showXcodeLog' capability to true in order to check the Appium server log for build-related error messages.
+    at quitAndUninstall (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/appium-xcuitest-driver/lib/driver.js:800:15)
+    at /Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/appium-xcuitest-driver/lib/driver.js:870:13
+    at wrapped (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/asyncbox/lib/asyncbox.js:93:13)
+    at retry (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/asyncbox/lib/asyncbox.js:66:13)
+    at retryInterval (/Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/asyncbox/lib/asyncbox.js:103:10)
+    at /Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/node_modules/appium-xcuitest-driver/lib/driver.js:835:7
+[device-9FCF] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-9FCF] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-9FCF] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-9FCF] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-9FCF] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-9FCF] //XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+[device-9FCF] iosPermissions null
+[device-9FCF] No iosPermissions null
+running  xcrun simctl privacy 84884861-F8EF-4481-A001-B403F2649FCF reset all undefined
+was run:  xcrun simctl privacy 84884861-F8EF-4481-A001-B403F2649FCF reset all undefined { stdout: '', stderr: '' }
+[device-F305] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-F305] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-F305] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-F305] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-F305] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-F305] //XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+[device-F305] iosPermissions null
+[device-F305] No iosPermissions null
+running  xcrun simctl privacy C0EE6A21-044D-4B6E-B9A5-7AB977ADF305 reset all undefined
+was run:  xcrun simctl privacy C0EE6A21-044D-4B6E-B9A5-7AB977ADF305 reset all undefined { stdout: '', stderr: '' }
+[alice1] Device identity changed from device-9FCF to alice1
+[alice2] Device identity changed from device-F305 to alice2
+[alice1] Waiting for "accessibility id" and "Restore your session button" to be present
+[alice2] Waiting for "accessibility id" and "Restore your session button" to be present
+[alice2] 'Restore your session button' has been found
+[alice1] 'Restore your session button' has been found
+[alice2] Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+[alice2] Waiting for "accessibility id" and "Recovery password input" to be present
+[alice2] 'Recovery password input' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+[alice1] Waiting for "accessibility id" and "Recovery password input" to be present
+[alice1] 'Recovery password input' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice2] Waiting for "accessibility id" and "Continue" to be present
+[alice2] 'Continue' has been found
+[alice1] Waiting for "accessibility id" and "Slow mode notifications button" to be present
+[alice1] 'Slow mode notifications button' has been found
+[alice2] Waiting for "accessibility id" and "Slow mode notifications button" to be present
+[alice2] 'Slow mode notifications button' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice2] Waiting for "accessibility id" and "Continue" to be present
+[alice2] 'Continue' has been found
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] 'Loading animation' has been found
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice2] Loading animation was found, waiting for it to be gone
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] 'Loading animation' has been found
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice2] Loading animation was found, waiting for it to be gone
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] 'Loading animation' has been found
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] Loading animation not found
+[alice1] Loading animation has finished
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] Loading animation was found, waiting for it to be gone
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] 'Loading animation' has been found
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] Loading animation was found, waiting for it to be gone
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name doesn't exist, time expired
+Display name found: Loading account
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice2] Loading animation not found
+[alice2] Loading animation has finished
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow doesn't exist, time expired
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name doesn't exist, time expired
+Display name found: Loading account
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice2] doesElementExist failed with accessibility id Allow
+[alice2] Allow Doesn't exist but retrying
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice2] doesElementExist failed with accessibility id Allow
+[alice2] Allow Doesn't exist but retrying
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice2] doesElementExist failed with accessibility id Allow
+[alice2] Allow Doesn't exist but retrying
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice2] doesElementExist failed with accessibility id Allow
+[alice2] Allow Doesn't exist but retrying
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice2] doesElementExist failed with accessibility id Allow
+[alice2] Allow doesn't exist, time expired
+[alice1] Element has been deleted, great success
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] 'New conversation button' has been found
+[alice2] Waiting for "accessibility id" and "Continue" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice2] Waiting for "accessibility id" and "Continue" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice2] Waiting for "accessibility id" and "Continue" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice2] Waiting for "accessibility id" and "Continue" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice2] Waiting for "accessibility id" and "Continue" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice2] Waiting for "accessibility id" and "Continue" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice2] Waiting for "accessibility id" and "Continue" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice2] Waiting for "accessibility id" and "Continue" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice2] Waiting for "accessibility id" and "Continue" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice2] Waiting for "accessibility id" and "Continue" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice2] Element has been deleted, great success
+[alice2] Waiting for "accessibility id" and "New conversation button" to be present
+[alice2] 'New conversation button' has been found
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] 'New conversation button' has been found
+[alice1] Waiting for "accessibility id" and "Join Community" to be present
+[alice1] 'Join Community' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Enter Community URL' }
+[alice1] Waiting for "accessibility id" and "Enter Community URL" to be present
+[alice1] 'Enter Community URL' has been found
+[alice1] Waiting for "accessibility id" and "Join" to be present
+[alice1] 'Join' has been found
+[alice1] Waiting for "accessibility id" and "Conversation header name" to be present with "Testing All The Things!"
+[alice1] Waiting for "accessibility id" and "Conversation header name" to be present with "Testing All The Things!"
+[alice1] Waiting for "accessibility id" and "Conversation header name" to be present with "Testing All The Things!"
+[alice1] Waiting for "accessibility id" and "Conversation header name" to be present with "Testing All The Things!"
+[alice1] Waiting for "accessibility id" and "Conversation header name" to be present with "Testing All The Things!"
+[alice1] Text found to include Testing All The Things!
+[alice1] 'Conversation header name' and 'Testing All The Things!' has been found
+Sleeping for 5000 milliseconds
+[alice1] Waiting for "accessibility id" and "Scroll button" to be present
+[alice1] 'Scroll button' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+[alice1] Waiting for "accessibility id" and "Message input box" to be present
+[alice1] 'Message input box' has been found
+[alice1] Waiting for "accessibility id" and "Send message button" to be present
+[alice1] 'Send message button' has been found
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] 'Message sent status: Sent' has been found
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Conversation list item
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Testing All The Things!"
+[alice2] Text found to include Testing All The Things!
+[alice2] 'Conversation list item' and 'Testing All The Things!' has been found
+sessions closed

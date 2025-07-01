@@ -1,0 +1,943 @@
+
+
+==========> Running "Disappearing community invite message 1:1 @ios @low-risk @2-devices"
+
+
+starting capabilitiesIndex 0 ios
+openiOSApp
+starting capabilitiesIndex 1 ios
+openiOSApp
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"0551cdb1d0c32fa6f7d2e96e1fb075d09a0196bdd0c75f345ede329d169a205542","seedPhrase":"furnished verification family neutral ravine psychic pivot evenings vastness daytime smog abnormal abnormal"},
+SessionUser: {"name":"Bob","sessionId":"0596a3e344a2cdbc4a6375ed20df90bb6c25e25db9192e2eaf80e2c76c678d4917","seedPhrase":"beyond lied sensible berries rugged fall edited candy tugs syringe bimonthly potato candy"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"0551cdb1d0c32fa6f7d2e96e1fb075d09a0196bdd0c75f345ede329d169a205542","seedPhrase":"furnished verification family neutral ravine psychic pivot evenings vastness daytime smog abnormal abnormal"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"0551cdb1d0c32fa6f7d2e96e1fb075d09a0196bdd0c75f345ede329d169a205542","seedPhrase":"furnished verification family neutral ravine psychic pivot evenings vastness daytime smog abnormal abnormal"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"0596a3e344a2cdbc4a6375ed20df90bb6c25e25db9192e2eaf80e2c76c678d4917","seedPhrase":"beyond lied sensible berries rugged fall edited candy tugs syringe bimonthly potato candy"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"0596a3e344a2cdbc4a6375ed20df90bb6c25e25db9192e2eaf80e2c76c678d4917","seedPhrase":"beyond lied sensible berries rugged fall edited candy tugs syringe bimonthly potato candy"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"0551cdb1d0c32fa6f7d2e96e1fb075d09a0196bdd0c75f345ede329d169a205542","seedPhrase":"furnished verification family neutral ravine psychic pivot evenings vastness daytime smog abnormal abnormal"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"0596a3e344a2cdbc4a6375ed20df90bb6c25e25db9192e2eaf80e2c76c678d4917","seedPhrase":"beyond lied sensible berries rugged fall edited candy tugs syringe bimonthly potato candy"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 232196,
+    [Symbol(trigger_async_id_symbol)]: 231724,
+    [Symbol(kResourceStore)]: undefined
+  }
+]
+random snode for user: 0596a3e344a2cdbc4a6375ed20df90bb6c25e25db9192e2eaf80e2c76c678d4917 is snode: b5e2dc4cdaf738e5077df1cfa8175bbcbcbaa40fa6d4bc2f9f1afc12a50f7f1f
+storing to snode https://148.113.46.186:22021/storage_rpc/v1
+storing to snode https://148.113.46.186:22021/storage_rpc/v1
+storing to snode https://148.113.46.186:22021/storage_rpc/v1
+random snode for user: 0551cdb1d0c32fa6f7d2e96e1fb075d09a0196bdd0c75f345ede329d169a205542 is snode: 1f010f01f6d2a9e18268d77b25662de6f86800aa6c4f29057c97bda0c908daf1
+storing to snode https://144.76.164.202:22110/storage_rpc/v1
+storing to snode https://144.76.164.202:22110/storage_rpc/v1
+storing to snode https://144.76.164.202:22110/storage_rpc/v1
+storeStatus for Bob: [ 200, 200, 200 ]
+storeStatus for Alice: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "furnished verification family neutral ravine psychic pivot evenings vastness daytime smog abnormal abnormal"
+	"Bob": "beyond lied sensible berries rugged fall edited candy tugs syringe bimonthly potato candy" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+[device-664F] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-664F] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-664F] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-664F] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-664F] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-664F] //XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+[device-664F] iosPermissions null
+[device-664F] No iosPermissions null
+running  xcrun simctl privacy 4A75A0E1-9EDE-4169-93C3-DCE0F0C7664F reset all undefined
+was run:  xcrun simctl privacy 4A75A0E1-9EDE-4169-93C3-DCE0F0C7664F reset all undefined { stdout: '', stderr: '' }
+[device-2051] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-2051] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-2051] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-2051] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-2051] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-2051] //XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+[device-2051] iosPermissions null
+[device-2051] No iosPermissions null
+running  xcrun simctl privacy ACB6A587-8556-4EA0-87CF-4326A9A22051 reset all undefined
+was run:  xcrun simctl privacy ACB6A587-8556-4EA0-87CF-4326A9A22051 reset all undefined { stdout: '', stderr: '' }
+[alice1] Device identity changed from device-664F to alice1
+[bob1] Device identity changed from device-2051 to bob1
+[alice1] Waiting for "accessibility id" and "Restore your session button" to be present
+[bob1] Waiting for "accessibility id" and "Restore your session button" to be present
+[alice1] 'Restore your session button' has been found
+[bob1] 'Restore your session button' has been found
+[bob1] Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+[bob1] Waiting for "accessibility id" and "Recovery password input" to be present
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+[alice1] Waiting for "accessibility id" and "Recovery password input" to be present
+[alice1] 'Recovery password input' has been found
+[bob1] 'Recovery password input' has been found
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] 'Continue' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[bob1] Waiting for "accessibility id" and "Slow mode notifications button" to be present
+[bob1] 'Slow mode notifications button' has been found
+[alice1] Waiting for "accessibility id" and "Slow mode notifications button" to be present
+[alice1] 'Slow mode notifications button' has been found
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] 'Continue' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] 'Loading animation' has been found
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] 'Loading animation' has been found
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] 'Loading animation' has been found
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] 'Loading animation' has been found
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] Loading animation not found
+[bob1] Loading animation has finished
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Loading animation not found
+[alice1] Loading animation has finished
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name doesn't exist, time expired
+Display name found: Loading account
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Allow
+[bob1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Allow
+[bob1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Allow
+[bob1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name doesn't exist, time expired
+Display name found: Loading account
+[bob1] doesElementExist failed with accessibility id Allow
+[bob1] Allow Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Allow
+[bob1] Allow doesn't exist, time expired
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow doesn't exist, time expired
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[bob1] Element has been deleted, great success
+[bob1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[bob1] 'New conversation button' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Element has been deleted, great success
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] 'New conversation button' has been found
+[bob1] Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+[alice1] Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+[alice1] Text found to include Bob
+[alice1] 'Conversation list item' and 'Bob' has been found
+[bob1] Text found to include Alice
+[bob1] 'Conversation list item' and 'Alice' has been found
+[alice1] Waiting for "accessibility id" and "More options" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "More options
+[alice1] Waiting for "accessibility id" and "More options" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "More options
+[alice1] Waiting for "accessibility id" and "More options" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "More options
+[alice1] Waiting for "accessibility id" and "More options" to be present
+[alice1] 'More options' has been found
+[alice1] Waiting for "accessibility id" and "Disappearing Messages" to be present
+[alice1] 'Disappearing Messages' has been found
+[alice1] Waiting for "accessibility id" and "Disappear after send option" to be present
+[alice1] 'Disappear after send option' has been found
+[alice1] Waiting for "accessibility id" and "1 day - Radio" to be present
+[alice1] '1 day - Radio' has been found
+[alice1] Great success - default time is correct
+[alice1] Waiting for "accessibility id" and "30 seconds - Radio" to be present
+[alice1] '30 seconds - Radio' has been found
+[alice1] Waiting for "accessibility id" and "Set button" to be present
+[alice1] 'Set button' has been found
+[alice1] Waiting for "accessibility id" and "Back" to be present
+[alice1] 'Back' has been found
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] 'Follow setting' has been found
+[bob1] Waiting for "accessibility id" and "Set" to be present
+[bob1] 'Set' has been found
+[alice1] Waiting for "accessibility id" and "Disappearing messages type and time" to be present
+[alice1] 'Disappearing messages type and time' has been found
+[alice1] Waiting for "accessibility id" and "Back" to be present
+[alice1] 'Back' has been found
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] 'New conversation button' has been found
+[alice1] Waiting for "accessibility id" and "Join Community" to be present
+[alice1] 'Join Community' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Enter Community URL' }
+[alice1] Waiting for "accessibility id" and "Enter Community URL" to be present
+[alice1] 'Enter Community URL' has been found
+[alice1] Waiting for "accessibility id" and "Join" to be present
+[alice1] 'Join' has been found
+[alice1] Waiting for "accessibility id" and "Conversation header name" to be present with "Testing All The Things!"
+[alice1] Waiting for "accessibility id" and "Conversation header name" to be present with "Testing All The Things!"
+[alice1] Waiting for "accessibility id" and "Conversation header name" to be present with "Testing All The Things!"
+[alice1] Waiting for "accessibility id" and "Conversation header name" to be present with "Testing All The Things!"
+[alice1] Waiting for "accessibility id" and "Conversation header name" to be present with "Testing All The Things!"
+[alice1] Text found to include Testing All The Things!
+[alice1] 'Conversation header name' and 'Testing All The Things!' has been found
+[alice1] Waiting for "accessibility id" and "More options" to be present
+[alice1] 'More options' has been found
+[alice1] Waiting for "accessibility id" and "Invite Contacts" to be present
+[alice1] 'Invite Contacts' has been found
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+Test failed, capturing screenshots from 2 device(s)...
+Captured and labeled screenshot from device alice1
+Captured and labeled screenshot from device bob1
+Screenshot saved: /Users/thedebuggernaut/actions-runner/_work/session-appium/session-appium/test-results/disappearing_community_inv-dbb36--1-1-ios-low-risk-2-devices/disappearing-community-invite-message-1-1.png

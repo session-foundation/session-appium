@@ -1,0 +1,440 @@
+
+
+==========> Running "Delete message request in conversation @ios @high-risk @3-devices"
+
+
+starting capabilitiesIndex 0 ios
+openiOSApp
+starting capabilitiesIndex 1 ios
+openiOSApp
+starting capabilitiesIndex 2 ios
+openiOSApp
+[device-D3BB] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-D3BB] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-D3BB] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-D3BB] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-D3BB] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-D3BB] //XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+[device-D3BB] iosPermissions null
+[device-D3BB] No iosPermissions null
+running  xcrun simctl privacy D90B2AE2-FF30-49BE-9370-B789BAEED3BB reset all undefined
+was run:  xcrun simctl privacy D90B2AE2-FF30-49BE-9370-B789BAEED3BB reset all undefined { stdout: '', stderr: '' }
+[device-2051] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-2051] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-2051] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-2051] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-2051] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-2051] //XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+[device-2051] iosPermissions null
+[device-2051] No iosPermissions null
+running  xcrun simctl privacy ACB6A587-8556-4EA0-87CF-4326A9A22051 reset all undefined
+was run:  xcrun simctl privacy ACB6A587-8556-4EA0-87CF-4326A9A22051 reset all undefined { stdout: '', stderr: '' }
+[device-664F] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-664F] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-664F] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-664F] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-664F] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-664F] //XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+[device-664F] iosPermissions null
+[device-664F] No iosPermissions null
+running  xcrun simctl privacy 4A75A0E1-9EDE-4169-93C3-DCE0F0C7664F reset all undefined
+was run:  xcrun simctl privacy 4A75A0E1-9EDE-4169-93C3-DCE0F0C7664F reset all undefined { stdout: '', stderr: '' }
+[alice1] Device identity changed from device-664F to alice1
+[alice1] Waiting for "accessibility id" and "Create account button" to be present
+[alice1] 'Create account button' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Enter display name' }
+[alice1] Waiting for "accessibility id" and "Enter display name" to be present
+[alice1] 'Enter display name' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "accessibility id" and "Slow mode notifications button" to be present
+[alice1] 'Slow mode notifications button' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+Sleeping for 5000 milliseconds
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow doesn't exist, time expired
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "accessibility id" and "Recovery password container" to be present
+[alice1] 'Recovery password container' has been found
+Alices recovery phrase is "hurried batch sample mundane ghetto lullaby stunning soggy apex negative violin dagger apex"
+[alice1] Waiting for "accessibility id" and "Back" to be present
+[alice1] 'Back' has been found
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'User settings' has been found
+[alice1] Waiting for "accessibility id" and "Account ID" to be present
+[alice1] 'Account ID' has been found
+[alice1] Waiting for "accessibility id" and "Close button" to be present
+[alice1] 'Close button' has been found
+[bob1] Device identity changed from device-2051 to bob1
+[bob1] Waiting for "accessibility id" and "Create account button" to be present
+[bob1] 'Create account button' has been found
+[bob1] Locator being used: { strategy: 'accessibility id', selector: 'Enter display name' }
+[bob1] Waiting for "accessibility id" and "Enter display name" to be present
+[bob1] 'Enter display name' has been found
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] 'Continue' has been found
+[bob1] Waiting for "accessibility id" and "Slow mode notifications button" to be present
+[bob1] 'Slow mode notifications button' has been found
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] 'Continue' has been found
+Sleeping for 5000 milliseconds
+[bob1] doesElementExist failed with accessibility id Allow
+[bob1] Allow Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Allow
+[bob1] Allow Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Allow
+[bob1] Allow Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Allow
+[bob1] Allow Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Allow
+[bob1] Allow doesn't exist, time expired
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] 'Continue' has been found
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] 'Continue' has been found
+[bob1] Waiting for "accessibility id" and "Recovery password container" to be present
+[bob1] 'Recovery password container' has been found
+Bobs recovery phrase is "having wrist utopia iris pivot tutor stockpile kitchens mobile occur opposite sake tutor"
+[bob1] Waiting for "accessibility id" and "Back" to be present
+[bob1] 'Back' has been found
+[bob1] Waiting for "accessibility id" and "User settings" to be present
+[bob1] 'User settings' has been found
+[bob1] Waiting for "accessibility id" and "Account ID" to be present
+[bob1] 'Account ID' has been found
+[bob1] Waiting for "accessibility id" and "Close button" to be present
+[bob1] 'Close button' has been found
+[bob2] Device identity changed from device-D3BB to bob2
+[bob2] Waiting for "accessibility id" and "Restore your session button" to be present
+[bob2] 'Restore your session button' has been found
+[bob2] Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+[bob2] Waiting for "accessibility id" and "Recovery password input" to be present
+[bob2] 'Recovery password input' has been found
+[bob2] Waiting for "accessibility id" and "Continue" to be present
+[bob2] 'Continue' has been found
+[bob2] Waiting for "accessibility id" and "Slow mode notifications button" to be present
+[bob2] 'Slow mode notifications button' has been found
+[bob2] Waiting for "accessibility id" and "Continue" to be present
+[bob2] 'Continue' has been found
+[bob2] Waiting for "accessibility id" and "Loading animation" to be present
+[bob2] 'Loading animation' has been found
+[bob2] Loading animation was found, waiting for it to be gone
+[bob2] Waiting for "accessibility id" and "Loading animation" to be present
+[bob2] 'Loading animation' has been found
+[bob2] Loading animation was found, waiting for it to be gone
+[bob2] Waiting for "accessibility id" and "Loading animation" to be present
+[bob2] 'Loading animation' has been found
+[bob2] Loading animation was found, waiting for it to be gone
+[bob2] Waiting for "accessibility id" and "Loading animation" to be present
+[bob2] 'Loading animation' has been found
+[bob2] Loading animation was found, waiting for it to be gone
+[bob2] Waiting for "accessibility id" and "Loading animation" to be present
+[bob2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob2] Waiting for "accessibility id" and "Loading animation" to be present
+[bob2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob2] Waiting for "accessibility id" and "Loading animation" to be present
+[bob2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob2] Waiting for "accessibility id" and "Loading animation" to be present
+[bob2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob2] Waiting for "accessibility id" and "Loading animation" to be present
+[bob2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob2] Waiting for "accessibility id" and "Loading animation" to be present
+[bob2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob2] Waiting for "accessibility id" and "Loading animation" to be present
+[bob2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob2] Waiting for "accessibility id" and "Loading animation" to be present
+[bob2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob2] Waiting for "accessibility id" and "Loading animation" to be present
+[bob2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob2] Waiting for "accessibility id" and "Loading animation" to be present
+[bob2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob2] Loading animation not found
+[bob2] Loading animation has finished
+[bob2] doesElementExist failed with accessibility id Enter display name
+[bob2] Enter display name Doesn't exist but retrying
+[bob2] doesElementExist failed with accessibility id Enter display name
+[bob2] Enter display name Doesn't exist but retrying
+[bob2] doesElementExist failed with accessibility id Enter display name
+[bob2] Enter display name Doesn't exist but retrying
+[bob2] doesElementExist failed with accessibility id Enter display name
+[bob2] Enter display name Doesn't exist but retrying
+[bob2] doesElementExist failed with accessibility id Enter display name
+[bob2] Enter display name doesn't exist, time expired
+Display name found: Loading account
+[bob2] doesElementExist failed with accessibility id Allow
+[bob2] Allow Doesn't exist but retrying
+[bob2] doesElementExist failed with accessibility id Allow
+[bob2] Allow Doesn't exist but retrying
+[bob2] doesElementExist failed with accessibility id Allow
+[bob2] Allow Doesn't exist but retrying
+[bob2] doesElementExist failed with accessibility id Allow
+[bob2] Allow Doesn't exist but retrying
+[bob2] doesElementExist failed with accessibility id Allow
+[bob2] Allow doesn't exist, time expired
+[bob2] Waiting for "accessibility id" and "New conversation button" to be present
+[bob2] 'New conversation button' has been found
+Device 2 linked
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] 'New conversation button' has been found
+[alice1] Waiting for "accessibility id" and "New direct message" to be present
+[alice1] 'New direct message' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Session id input box' }
+[alice1] Waiting for "accessibility id" and "Session id input box" to be present
+[alice1] 'Session id input box' has been found
+[alice1] Waiting for "accessibility id" and "Next" to be present
+[alice1] 'Next' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+[alice1] Waiting for "accessibility id" and "Message input box" to be present
+[alice1] 'Message input box' has been found
+[alice1] Waiting for "accessibility id" and "Send message button" to be present
+[alice1] 'Send message button' has been found
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] 'Message sent status: Sent' has been found
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] 'Message requests banner' has been found
+[bob1] Waiting for "accessibility id" and "Message request" to be present
+[bob1] 'Message request' has been found
+[bob2] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob2] 'Message requests banner' has been found
+[bob2] Waiting for "accessibility id" and "Message request" to be present
+[bob2] 'Message request' has been found
+[bob1] Waiting for "accessibility id" and "Delete message request" to be present
+[bob1] 'Delete message request' has been found
+[bob1] Waiting for "accessibility id" and "Modal heading" to be present
+[bob1] 'Modal heading' has been found
+[bob1] Modal heading is correct
+[bob1] Waiting for "accessibility id" and "Modal description" to be present
+[bob1] 'Modal description' has been found
+[bob1] Modal description is correct
+[bob1] Waiting for "accessibility id" and "Delete" to be present
+[bob1] 'Delete' has been found
+[bob1] Waiting for "accessibility id" and "No pending message requests" to be present
+[bob2] Waiting for "accessibility id" and "No pending message requests" to be present
+[bob2] waitForTextElementToBePresent threw: "accessibility id": "No pending message requests
+[bob1] 'No pending message requests' has been found
+[bob2] Waiting for "accessibility id" and "No pending message requests" to be present
+[bob2] waitForTextElementToBePresent threw: "accessibility id": "No pending message requests
+[bob2] Waiting for "accessibility id" and "No pending message requests" to be present
+[bob2] waitForTextElementToBePresent threw: "accessibility id": "No pending message requests
+[bob2] Waiting for "accessibility id" and "No pending message requests" to be present
+[bob2] waitForTextElementToBePresent threw: "accessibility id": "No pending message requests
+[bob2] Waiting for "accessibility id" and "No pending message requests" to be present
+[bob2] waitForTextElementToBePresent threw: "accessibility id": "No pending message requests
+[bob2] Waiting for "accessibility id" and "No pending message requests" to be present
+[bob2] waitForTextElementToBePresent threw: "accessibility id": "No pending message requests
+[bob2] Waiting for "accessibility id" and "No pending message requests" to be present
+[bob2] waitForTextElementToBePresent threw: "accessibility id": "No pending message requests
+[bob2] Waiting for "accessibility id" and "No pending message requests" to be present
+[bob2] waitForTextElementToBePresent threw: "accessibility id": "No pending message requests
+[bob2] Waiting for "accessibility id" and "No pending message requests" to be present
+[bob2] waitForTextElementToBePresent threw: "accessibility id": "No pending message requests
+[bob2] Waiting for "accessibility id" and "No pending message requests" to be present
+[bob2] waitForTextElementToBePresent threw: "accessibility id": "No pending message requests
+[bob2] Waiting for "accessibility id" and "No pending message requests" to be present
+[bob2] 'No pending message requests' has been found
+[bob1] Waiting for "accessibility id" and "Back" to be present
+[bob1] 'Back' has been found
+[bob1] Waiting for "accessibility id" and "New conversation button" to be present
+[bob1] 'New conversation button' has been found
+sessions closed

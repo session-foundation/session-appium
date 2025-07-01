@@ -1,0 +1,87 @@
+
+
+==========> Running "Change profile picture @ios @medium-risk @1-devices"
+
+
+starting capabilitiesIndex 0 ios
+openiOSApp
+[device-9FCF] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-9FCF] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-9FCF] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-9FCF] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-9FCF] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-9FCF] //XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+[device-9FCF] iosPermissions null
+[device-9FCF] No iosPermissions null
+running  xcrun simctl privacy 84884861-F8EF-4481-A001-B403F2649FCF reset all undefined
+was run:  xcrun simctl privacy 84884861-F8EF-4481-A001-B403F2649FCF reset all undefined { stdout: '', stderr: '' }
+[alice1] Device identity changed from device-9FCF to alice1
+[alice1] Waiting for "accessibility id" and "Create account button" to be present
+[alice1] 'Create account button' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Enter display name' }
+[alice1] Waiting for "accessibility id" and "Enter display name" to be present
+[alice1] 'Enter display name' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "accessibility id" and "Slow mode notifications button" to be present
+[alice1] 'Slow mode notifications button' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+Sleeping for 5000 milliseconds
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow doesn't exist, time expired
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "accessibility id" and "Recovery password container" to be present
+[alice1] 'Recovery password container' has been found
+Alices recovery phrase is "nanny sniff farming bacon fever cool batch ivory bays nexus eluded agnostic bays"
+[alice1] Waiting for "accessibility id" and "Back" to be present
+[alice1] 'Back' has been found
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'User settings' has been found
+[alice1] Waiting for "accessibility id" and "Account ID" to be present
+[alice1] 'Account ID' has been found
+[alice1] Waiting for "accessibility id" and "Close button" to be present
+[alice1] 'Close button' has been found
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'User settings' has been found
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'User settings' has been found
+[alice1] Waiting for "accessibility id" and "Upload" to be present
+[alice1] 'Upload' has been found
+running  xcrun simctl addmedia 84884861-F8EF-4481-A001-B403F2649FCF run/test/specs/media/profile_picture.jpg
+was run:  xcrun simctl addmedia 84884861-F8EF-4481-A001-B403F2649FCF run/test/specs/media/profile_picture.jpg { stdout: '', stderr: '' }
+[alice1] iosPermissions {
+  ELEMENT: '7D030000-0000-0000-1440-000000000000',
+  'element-6066-11e4-a52e-4f735466cecf': '7D030000-0000-0000-1440-000000000000'
+}
+[alice1] Waiting for "accessibility id" and "Allow Full Access" to be present
+[alice1] 'Allow Full Access' has been found
+Sleeping for 5000 milliseconds
+[alice1] [matchAndTapImage] Found 22 elements for xpath "//XCUIElementTypeImage"
+[alice1] [matchAndTapImage] Processing element 1/22
+[alice1] [matchAndTapImage] Processing element 2/22
+[alice1] [matchAndTapImage] Processing element 3/22
+[alice1] [matchAndTapImage] Processing element 4/22
+[alice1] [matchAndTapImage] Processing element 5/22
+[alice1] [matchAndTapImage] Match score for element 5: 0.9968
+[alice1] [matchAndTapImage] Tapping first match with 99.68% confidence
+Tapped coordinates 72, 254
+[alice1] Waiting for "accessibility id" and "Done" to be present
+[alice1] 'Done' has been found
+[alice1] Waiting for "accessibility id" and "Save" to be present
+[alice1] 'Save' has been found
+Sleeping for 4000 milliseconds
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'User settings' has been found
+RGB Value of pixel is: 05c8fa
+Colour isn't 04cbfe, it is:  05c8fa
+sessions closed

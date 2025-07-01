@@ -1,0 +1,585 @@
+
+
+==========> Running "Create group and change name syncs @ios @high-risk @4-devices"
+
+
+starting capabilitiesIndex 0 ios
+openiOSApp
+starting capabilitiesIndex 1 ios
+openiOSApp
+starting capabilitiesIndex 2 ios
+openiOSApp
+starting capabilitiesIndex 3 ios
+openiOSApp
+[device-9FCF] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-9FCF] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-9FCF] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-9FCF] //XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+[device-9FCF] iosPermissions null
+[device-9FCF] No iosPermissions null
+running  xcrun simctl privacy 84884861-F8EF-4481-A001-B403F2649FCF reset all undefined
+was run:  xcrun simctl privacy 84884861-F8EF-4481-A001-B403F2649FCF reset all undefined { stdout: '', stderr: '' }
+[device-BCFA] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-BCFA] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-BCFA] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-BCFA] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-BCFA] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-BCFA] //XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+[device-BCFA] iosPermissions null
+[device-BCFA] No iosPermissions null
+running  xcrun simctl privacy 8214A3A2-D4E1-4AA8-BB0F-394E3A49BCFA reset all undefined
+was run:  xcrun simctl privacy 8214A3A2-D4E1-4AA8-BB0F-394E3A49BCFA reset all undefined { stdout: '', stderr: '' }
+[device-9DED] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-9DED] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-9DED] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-9DED] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-9DED] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-9DED] //XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+[device-9DED] iosPermissions null
+[device-9DED] No iosPermissions null
+running  xcrun simctl privacy B8E78B21-1432-41F3-A398-DE4FF8CF9DED reset all undefined
+was run:  xcrun simctl privacy B8E78B21-1432-41F3-A398-DE4FF8CF9DED reset all undefined { stdout: '', stderr: '' }
+[device-F305] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-F305] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-F305] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-F305] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-F305] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-F305] //XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+[device-F305] iosPermissions null
+[device-F305] No iosPermissions null
+running  xcrun simctl privacy C0EE6A21-044D-4B6E-B9A5-7AB977ADF305 reset all undefined
+was run:  xcrun simctl privacy C0EE6A21-044D-4B6E-B9A5-7AB977ADF305 reset all undefined { stdout: '', stderr: '' }
+[alice1] Device identity changed from device-9FCF to alice1
+[alice1] Waiting for "accessibility id" and "Create account button" to be present
+[alice1] 'Create account button' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Enter display name' }
+[alice1] Waiting for "accessibility id" and "Enter display name" to be present
+[alice1] 'Enter display name' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "accessibility id" and "Slow mode notifications button" to be present
+[alice1] 'Slow mode notifications button' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+Sleeping for 5000 milliseconds
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow doesn't exist, time expired
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "accessibility id" and "Recovery password container" to be present
+[alice1] 'Recovery password container' has been found
+Alices recovery phrase is "husband mirror mocked bunch nouns mocked dolphin never arises saga album dodge mocked"
+[alice1] Waiting for "accessibility id" and "Back" to be present
+[alice1] 'Back' has been found
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'User settings' has been found
+[alice1] Waiting for "accessibility id" and "Account ID" to be present
+[alice1] 'Account ID' has been found
+[alice1] Waiting for "accessibility id" and "Close button" to be present
+[alice1] 'Close button' has been found
+[alice2] Device identity changed from device-F305 to alice2
+[alice2] Waiting for "accessibility id" and "Restore your session button" to be present
+[alice2] 'Restore your session button' has been found
+[alice2] Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+[alice2] Waiting for "accessibility id" and "Recovery password input" to be present
+[alice2] 'Recovery password input' has been found
+[alice2] Waiting for "accessibility id" and "Continue" to be present
+[alice2] 'Continue' has been found
+[alice2] Waiting for "accessibility id" and "Slow mode notifications button" to be present
+[alice2] 'Slow mode notifications button' has been found
+[alice2] Waiting for "accessibility id" and "Continue" to be present
+[alice2] 'Continue' has been found
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice2] Waiting for "accessibility id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice2] Loading animation not found
+[alice2] Loading animation has finished
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name doesn't exist, time expired
+Display name found: Loading account
+[alice2] doesElementExist failed with accessibility id Allow
+[alice2] Allow Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Allow
+[alice2] Allow Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Allow
+[alice2] Allow Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Allow
+[alice2] Allow Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Allow
+[alice2] Allow doesn't exist, time expired
+[alice2] Waiting for "accessibility id" and "New conversation button" to be present
+[alice2] 'New conversation button' has been found
+Device 2 linked
+[bob1] Device identity changed from device-9DED to bob1
+[bob1] Waiting for "accessibility id" and "Create account button" to be present
+[charlie1] Device identity changed from device-BCFA to charlie1
+[charlie1] Waiting for "accessibility id" and "Create account button" to be present
+[charlie1] 'Create account button' has been found
+[bob1] 'Create account button' has been found
+[charlie1] Locator being used: { strategy: 'accessibility id', selector: 'Enter display name' }
+[charlie1] Waiting for "accessibility id" and "Enter display name" to be present
+[bob1] Locator being used: { strategy: 'accessibility id', selector: 'Enter display name' }
+[bob1] Waiting for "accessibility id" and "Enter display name" to be present
+[charlie1] 'Enter display name' has been found
+[bob1] 'Enter display name' has been found
+[charlie1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[charlie1] 'Continue' has been found
+[bob1] 'Continue' has been found
+[charlie1] Waiting for "accessibility id" and "Slow mode notifications button" to be present
+[charlie1] 'Slow mode notifications button' has been found
+[bob1] Waiting for "accessibility id" and "Slow mode notifications button" to be present
+[bob1] 'Slow mode notifications button' has been found
+[charlie1] Waiting for "accessibility id" and "Continue" to be present
+[charlie1] 'Continue' has been found
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] 'Continue' has been found
+Sleeping for 5000 milliseconds
+Sleeping for 5000 milliseconds
+[charlie1] doesElementExist failed with accessibility id Allow
+[charlie1] Allow Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Allow
+[bob1] Allow Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Allow
+[charlie1] Allow Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Allow
+[bob1] Allow Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Allow
+[charlie1] Allow Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Allow
+[bob1] Allow Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Allow
+[charlie1] Allow Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Allow
+[bob1] Allow Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Allow
+[charlie1] Allow doesn't exist, time expired
+[bob1] doesElementExist failed with accessibility id Allow
+[bob1] Allow doesn't exist, time expired
+[charlie1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[charlie1] 'Continue' has been found
+[charlie1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] 'Continue' has been found
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[charlie1] 'Continue' has been found
+[bob1] 'Continue' has been found
+[charlie1] Waiting for "accessibility id" and "Recovery password container" to be present
+[bob1] Waiting for "accessibility id" and "Recovery password container" to be present
+[charlie1] 'Recovery password container' has been found
+[bob1] 'Recovery password container' has been found
+Charlies recovery phrase is "oval stockpile long cousin fences fuel segments theatrics lilac ungainly fainted maximum maximum"
+[charlie1] Waiting for "accessibility id" and "Back" to be present
+Bobs recovery phrase is "otter brunt atlas enforce inroads worry wickets inmate shyness unknown oozed unjustly enforce"
+[bob1] Waiting for "accessibility id" and "Back" to be present
+[charlie1] 'Back' has been found
+[bob1] 'Back' has been found
+[bob1] Waiting for "accessibility id" and "User settings" to be present
+[bob1] 'User settings' has been found
+[charlie1] Waiting for "accessibility id" and "User settings" to be present
+[charlie1] 'User settings' has been found
+[bob1] Waiting for "accessibility id" and "Account ID" to be present
+[bob1] 'Account ID' has been found
+[charlie1] Waiting for "accessibility id" and "Account ID" to be present
+[bob1] Waiting for "accessibility id" and "Close button" to be present
+[bob1] 'Close button' has been found
+[charlie1] 'Account ID' has been found
+[charlie1] Waiting for "accessibility id" and "Close button" to be present
+[charlie1] 'Close button' has been found
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] 'New conversation button' has been found
+[alice1] Waiting for "accessibility id" and "New direct message" to be present
+[alice1] 'New direct message' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Session id input box' }
+[alice1] Waiting for "accessibility id" and "Session id input box" to be present
+[alice1] 'Session id input box' has been found
+[alice1] Waiting for "accessibility id" and "Next" to be present
+[alice1] 'Next' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+[alice1] Waiting for "accessibility id" and "Message input box" to be present
+[alice1] 'Message input box' has been found
+[alice1] Waiting for "accessibility id" and "Send message button" to be present
+[alice1] 'Send message button' has been found
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] 'Message sent status: Sent' has been found
+[bob1] doesElementExist failed with accessibility id Message requests banner
+[bob1] Message requests banner Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Message requests banner
+[bob1] Message requests banner Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Message requests banner
+[bob1] Message requests banner Doesn't exist but retrying
+Found message request: No need for retry
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] 'Message requests banner' has been found
+[bob1] Waiting for "accessibility id" and "Message request" to be present
+[bob1] 'Message request' has been found
+[bob1] Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+[bob1] Waiting for "accessibility id" and "Message input box" to be present
+[bob1] 'Message input box' has been found
+[bob1] Waiting for "accessibility id" and "Send message button" to be present
+[bob1] 'Send message button' has been found
+[bob1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[bob1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[bob1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[bob1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[bob1] 'Message sent status: Sent' has been found
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Bob-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Bob-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Bob-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Bob-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Bob-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Bob-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Bob-to-Alice"
+[alice1] Text found to include Reply-message-Bob-to-Alice
+[alice1] 'Message body' and 'Reply-message-Bob-to-Alice' has been found
+Alice and Bob are now contacts
+[alice1] Waiting for "accessibility id" and "Back" to be present
+[alice1] 'Back' has been found
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] 'New conversation button' has been found
+[alice1] Waiting for "accessibility id" and "New direct message" to be present
+[alice1] 'New direct message' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Session id input box' }
+[alice1] Waiting for "accessibility id" and "Session id input box" to be present
+[alice1] 'Session id input box' has been found
+[alice1] Waiting for "accessibility id" and "Next" to be present
+[alice1] 'Next' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+[alice1] Waiting for "accessibility id" and "Message input box" to be present
+[alice1] 'Message input box' has been found
+[alice1] Waiting for "accessibility id" and "Send message button" to be present
+[alice1] 'Send message button' has been found
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] 'Message sent status: Sent' has been found
+[charlie1] doesElementExist failed with accessibility id Message requests banner
+[charlie1] Message requests banner Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Message requests banner
+[charlie1] Message requests banner Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Message requests banner
+[charlie1] Message requests banner Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Message requests banner
+[charlie1] Message requests banner Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Message requests banner
+[charlie1] Message requests banner Doesn't exist but retrying
+Found message request: No need for retry
+[charlie1] Waiting for "accessibility id" and "Message requests banner" to be present
+[charlie1] 'Message requests banner' has been found
+[charlie1] Waiting for "accessibility id" and "Message request" to be present
+[charlie1] 'Message request' has been found
+[charlie1] Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+[charlie1] Waiting for "accessibility id" and "Message input box" to be present
+[charlie1] 'Message input box' has been found
+[charlie1] Waiting for "accessibility id" and "Send message button" to be present
+[charlie1] 'Send message button' has been found
+[charlie1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[charlie1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[charlie1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[charlie1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[charlie1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[charlie1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[charlie1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[charlie1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[charlie1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[charlie1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[charlie1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[charlie1] 'Message sent status: Sent' has been found
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Charlie-to-Alice"
+[alice1] Text found to include Reply-message-Charlie-to-Alice
+[alice1] 'Message body' and 'Reply-message-Charlie-to-Alice' has been found
+Alice and Charlie are now contacts
+[bob1] Waiting for "accessibility id" and "Back" to be present
+[bob1] 'Back' has been found
+[alice1] Waiting for "accessibility id" and "Back" to be present
+[alice1] 'Back' has been found
+[charlie1] Waiting for "accessibility id" and "Back" to be present
+[charlie1] 'Back' has been found
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] 'New conversation button' has been found
+[alice1] Waiting for "accessibility id" and "Create group" to be present
+[alice1] 'Create group' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Group name input' }
+[alice1] Waiting for "accessibility id" and "Group name input" to be present
+[alice1] 'Group name input' has been found
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Bob"
+[alice1] Text found to include Bob
+[alice1] 'Contact' and 'Bob' has been found
+[alice1] Waiting for "accessibility id" and "Contact" to be present with "Charlie"
+[alice1] Text found to include Charlie
+[alice1] 'Contact' and 'Charlie' has been found
+[alice1] Waiting for "accessibility id" and "Create group" to be present
+[alice1] 'Create group' has been found
+[bob1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[bob1] Text found to include Linked device group
+[bob1] 'Conversation list item' and 'Linked device group' has been found
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[charlie1] Text found to include Linked device group
+[charlie1] 'Conversation list item' and 'Linked device group' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+[alice1] Waiting for "accessibility id" and "Message input box" to be present
+[alice1] 'Message input box' has been found
+[alice1] Waiting for "accessibility id" and "Send message button" to be present
+[alice1] 'Send message button' has been found
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] 'Message sent status: Sent' has been found
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[bob1] Text found to include Alice to Linked device group
+[bob1] 'Message body' and 'Alice to Linked device group' has been found
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Alice to Linked device group"
+[charlie1] Text found to include Alice to Linked device group
+[charlie1] 'Message body' and 'Alice to Linked device group' has been found
+[bob1] Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+[bob1] Waiting for "accessibility id" and "Message input box" to be present
+[bob1] 'Message input box' has been found
+[bob1] Waiting for "accessibility id" and "Send message button" to be present
+[bob1] 'Send message button' has been found
+[bob1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[bob1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[bob1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[bob1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[bob1] 'Message sent status: Sent' has been found
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Bob to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Bob to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Bob to Linked device group"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Bob to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Bob to Linked device group"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Bob to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Bob to Linked device group"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Bob to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Bob to Linked device group"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Bob to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Bob to Linked device group"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Bob to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Bob to Linked device group"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Bob to Linked device group"
+[charlie1] Waiting for "accessibility id" and "Message body" to be present with "Bob to Linked device group"
+[charlie1] Text found to include Bob to Linked device group
+[charlie1] 'Message body' and 'Bob to Linked device group' has been found
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Bob to Linked device group"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Bob to Linked device group"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Bob to Linked device group"
+[alice1] Text found to include Bob to Linked device group
+[alice1] 'Message body' and 'Bob to Linked device group' has been found
+[charlie1] Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+[charlie1] Waiting for "accessibility id" and "Message input box" to be present
+[charlie1] 'Message input box' has been found
+[charlie1] Waiting for "accessibility id" and "Send message button" to be present
+[charlie1] 'Send message button' has been found
+[charlie1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[charlie1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[charlie1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[charlie1] waitForTextElementToBePresent threw: "accessibility id": "Message sent status: Sent
+[charlie1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[charlie1] 'Message sent status: Sent' has been found
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Charlie to Linked device group"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Charlie to Linked device group"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Charlie to Linked device group"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Charlie to Linked device group"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Charlie to Linked device group"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Charlie to Linked device group"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Charlie to Linked device group"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Charlie to Linked device group"
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message body
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Charlie to Linked device group"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Charlie to Linked device group"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Charlie to Linked device group"
+[alice1] Text found to include Charlie to Linked device group
+[alice1] 'Message body' and 'Charlie to Linked device group' has been found
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Charlie to Linked device group"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Charlie to Linked device group"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Charlie to Linked device group"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Charlie to Linked device group"
+[bob1] Text found to include Charlie to Linked device group
+[bob1] 'Message body' and 'Charlie to Linked device group' has been found
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Linked device group"
+[alice2] Text found to include Linked device group
+[alice2] 'Conversation list item' and 'Linked device group' has been found
+[alice1] Waiting for "accessibility id" and "More options" to be present
+[alice1] 'More options' has been found
+[alice1] Waiting for "accessibility id" and "Linked device group" to be present
+[alice1] 'Linked device group' has been found
+[alice1] Waiting for "accessibility id" and "Modal heading" to be present
+[alice1] 'Modal heading' has been found
+[alice1] Modal heading is correct
+[alice1] Waiting for "accessibility id" and "Modal description" to be present
+[alice1] 'Modal description' has been found
+[alice1] Modal description is correct
+[alice1] Waiting for "accessibility id" and "Group name text field" to be present
+[alice1] 'Group name text field' has been found
+[alice1] Waiting for "id" and "Select All" to be present with "Select All"
+[alice1] Text found to include Select All
+[alice1] Text found to include Select All
+[alice1] 'Select All' and 'Select All' has been found
+[alice1] Text has been cleared 
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Group name text field' }
+[alice1] Waiting for "accessibility id" and "Group name text field" to be present
+[alice1] 'Group name text field' has been found
+[alice1] Waiting for "accessibility id" and "Save" to be present
+[alice1] 'Save' has been found
+[alice1] Waiting for "accessibility id" and "Back" to be present
+[alice1] 'Back' has been found
+[alice1] Waiting for control message to be present with ""Group name is now New group name.""
+[alice1] waitForControlMessageToBePresent threw:  The previously found element ""Control message" Cell" is not present in the current view anymore. Make sure the application UI has the expected state. You could also try to switch the binding strategy using the 'boundElementsByIndex' setting for the element lookup. Original error: No matches found for Identity Binding from input {(
+    Cell, {{0.0, 128.0}, {440.0, 54.3}}, identifier: 'Control message', label: 'Charlie and Bob were invited to join the group.',
+    Cell, {{0.0, 403.3}, {440.0, 54.3}}, identifier: 'Control message', label: 'Group name is now New group name.'
+)}
+[alice1] Waiting for control message to be present with ""Group name is now New group name.""
+[alice1] Text found to include Group name is now New group name.
+[alice1] Control message ""Group name is now New group name."" has been found
+Sleeping for 5000 milliseconds
+[alice2] Waiting for "accessibility id" and "Conversation header name" to be present with "New group name"
+[alice2] Text found to include New group name
+[alice2] 'Conversation header name' and 'New group name' has been found
+[alice2] Waiting for control message to be present with ""Group name is now New group name.""
+[bob1] Waiting for control message to be present with ""Group name is now New group name.""
+[charlie1] Waiting for control message to be present with ""Group name is now New group name.""
+[alice2] Text found to include Group name is now New group name.
+[alice2] Control message ""Group name is now New group name."" has been found
+[charlie1] Text found to include Group name is now New group name.
+[charlie1] Control message ""Group name is now New group name."" has been found
+[bob1] Text found to include Group name is now New group name.
+[bob1] Control message ""Group name is now New group name."" has been found
+sessions closed

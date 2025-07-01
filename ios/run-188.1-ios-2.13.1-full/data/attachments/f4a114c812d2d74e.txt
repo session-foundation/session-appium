@@ -1,0 +1,474 @@
+
+
+==========> Running "Disappearing GIF message 1:1 @ios @low-risk @2-devices"
+
+
+starting capabilitiesIndex 0 ios
+openiOSApp
+starting capabilitiesIndex 1 ios
+openiOSApp
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"05a3037633e126095c858d0f16a40adac2baf429b2427b76d433d5db1c5415ca23","seedPhrase":"grunt soya seismic enjoy itinerary dove poaching older distance soprano vary playful playful"},
+SessionUser: {"name":"Bob","sessionId":"05a1080bd98c655227679c145a1581cdb9984cb35672d54e9409cb69a7b86a3a56","seedPhrase":"dove emails audio puffin ourselves emerge roared diode cunning testing urgent vulture diode"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"05a3037633e126095c858d0f16a40adac2baf429b2427b76d433d5db1c5415ca23","seedPhrase":"grunt soya seismic enjoy itinerary dove poaching older distance soprano vary playful playful"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05a3037633e126095c858d0f16a40adac2baf429b2427b76d433d5db1c5415ca23","seedPhrase":"grunt soya seismic enjoy itinerary dove poaching older distance soprano vary playful playful"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"05a1080bd98c655227679c145a1581cdb9984cb35672d54e9409cb69a7b86a3a56","seedPhrase":"dove emails audio puffin ourselves emerge roared diode cunning testing urgent vulture diode"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"05a1080bd98c655227679c145a1581cdb9984cb35672d54e9409cb69a7b86a3a56","seedPhrase":"dove emails audio puffin ourselves emerge roared diode cunning testing urgent vulture diode"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05a3037633e126095c858d0f16a40adac2baf429b2427b76d433d5db1c5415ca23","seedPhrase":"grunt soya seismic enjoy itinerary dove poaching older distance soprano vary playful playful"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"05a1080bd98c655227679c145a1581cdb9984cb35672d54e9409cb69a7b86a3a56","seedPhrase":"dove emails audio puffin ourselves emerge roared diode cunning testing urgent vulture diode"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [ Promise { <pending> } ]
+random snode for user: 05a3037633e126095c858d0f16a40adac2baf429b2427b76d433d5db1c5415ca23 is snode: a85683262f56cba38cd1b66c3c719686eb407d3d112e76491a9614aeaa87a159
+storing to snode https://107.189.4.249:22021/storage_rpc/v1
+storing to snode https://107.189.4.249:22021/storage_rpc/v1
+storing to snode https://107.189.4.249:22021/storage_rpc/v1
+random snode for user: 05a1080bd98c655227679c145a1581cdb9984cb35672d54e9409cb69a7b86a3a56 is snode: b52ee4fe875702d5a83c280aeaf32fdbcfff4922a6c2e8cf1243d4921043005a
+storing to snode https://172.93.167.59:22021/storage_rpc/v1
+storing to snode https://172.93.167.59:22021/storage_rpc/v1
+storing to snode https://172.93.167.59:22021/storage_rpc/v1
+storeStatus for Alice: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "grunt soya seismic enjoy itinerary dove poaching older distance soprano vary playful playful"
+	"Bob": "dove emails audio puffin ourselves emerge roared diode cunning testing urgent vulture diode" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+[device-9FCF] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-9FCF] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-9FCF] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-9FCF] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-9FCF] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-9FCF] //XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+[device-9FCF] iosPermissions null
+[device-9FCF] No iosPermissions null
+running  xcrun simctl privacy 84884861-F8EF-4481-A001-B403F2649FCF reset all undefined
+was run:  xcrun simctl privacy 84884861-F8EF-4481-A001-B403F2649FCF reset all undefined { stdout: '', stderr: '' }
+[device-F305] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-F305] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-F305] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-F305] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-F305] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-F305] //XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+[device-F305] iosPermissions null
+[device-F305] No iosPermissions null
+running  xcrun simctl privacy C0EE6A21-044D-4B6E-B9A5-7AB977ADF305 reset all undefined
+was run:  xcrun simctl privacy C0EE6A21-044D-4B6E-B9A5-7AB977ADF305 reset all undefined { stdout: '', stderr: '' }
+[alice1] Device identity changed from device-9FCF to alice1
+[bob1] Device identity changed from device-F305 to bob1
+[alice1] Waiting for "accessibility id" and "Restore your session button" to be present
+[bob1] Waiting for "accessibility id" and "Restore your session button" to be present
+[bob1] 'Restore your session button' has been found
+[alice1] 'Restore your session button' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+[alice1] Waiting for "accessibility id" and "Recovery password input" to be present
+[bob1] Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+[bob1] Waiting for "accessibility id" and "Recovery password input" to be present
+[alice1] 'Recovery password input' has been found
+[bob1] 'Recovery password input' has been found
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] 'Continue' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[bob1] Waiting for "accessibility id" and "Slow mode notifications button" to be present
+[bob1] 'Slow mode notifications button' has been found
+[alice1] Waiting for "accessibility id" and "Slow mode notifications button" to be present
+[alice1] 'Slow mode notifications button' has been found
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] 'Continue' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] Loading animation not found
+[bob1] Loading animation has finished
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] 'Loading animation' has been found
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name doesn't exist, time expired
+Display name found: Loading account
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] doesElementExist failed with accessibility id Allow
+[bob1] Allow Doesn't exist but retrying
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] doesElementExist failed with accessibility id Allow
+[bob1] Allow Doesn't exist but retrying
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] doesElementExist failed with accessibility id Allow
+[bob1] Allow Doesn't exist but retrying
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[bob1] doesElementExist failed with accessibility id Allow
+[bob1] Allow Doesn't exist but retrying
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[bob1] doesElementExist failed with accessibility id Allow
+[bob1] Allow doesn't exist, time expired
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] Waiting for "accessibility id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Loading animation
+[alice1] Loading animation not found
+[alice1] Loading animation has finished
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[bob1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[bob1] Element has been deleted, great success
+[bob1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] 'New conversation button' has been found
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name doesn't exist, time expired
+Display name found: Loading account
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Allow
+[alice1] Allow doesn't exist, time expired
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Element has been deleted, great success
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] 'New conversation button' has been found
+[bob1] Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+[alice1] Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+[alice1] Text found to include Bob
+[alice1] 'Conversation list item' and 'Bob' has been found
+[bob1] Text found to include Alice
+[bob1] 'Conversation list item' and 'Alice' has been found
+[alice1] Waiting for "accessibility id" and "More options" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "More options
+[alice1] Waiting for "accessibility id" and "More options" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "More options
+[alice1] Waiting for "accessibility id" and "More options" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "More options
+[alice1] Waiting for "accessibility id" and "More options" to be present
+[alice1] 'More options' has been found
+[alice1] Waiting for "accessibility id" and "Disappearing Messages" to be present
+[alice1] 'Disappearing Messages' has been found
+[alice1] Waiting for "accessibility id" and "Disappear after send option" to be present
+[alice1] 'Disappear after send option' has been found
+[alice1] Waiting for "accessibility id" and "1 day - Radio" to be present
+[alice1] '1 day - Radio' has been found
+[alice1] Great success - default time is correct
+[alice1] Waiting for "accessibility id" and "1 minute - Radio" to be present
+[alice1] '1 minute - Radio' has been found
+[alice1] Waiting for "accessibility id" and "Set button" to be present
+[alice1] 'Set button' has been found
+[alice1] Waiting for "accessibility id" and "Back" to be present
+[alice1] 'Back' has been found
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] 'Follow setting' has been found
+[bob1] Waiting for "accessibility id" and "Set" to be present
+[bob1] 'Set' has been found
+[alice1] Waiting for "accessibility id" and "Disappearing messages type and time" to be present
+[alice1] 'Disappearing messages type and time' has been found
+[alice1] Waiting for "accessibility id" and "Attachments button" to be present
+[alice1] 'Attachments button' has been found
+[alice1] doesElementExist failed with accessibility id space
+[alice1] space Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id space
+[alice1] space Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id space
+[alice1] space Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id space
+[alice1] space doesn't exist, time expired
+Tapped coordinates 36, 689
+[alice1] Waiting for "accessibility id" and "Modal heading" to be present
+[alice1] 'Modal heading' has been found
+[alice1] Modal heading is correct
+[alice1] Waiting for "accessibility id" and "Modal description" to be present
+[alice1] 'Modal description' has been found
+[alice1] Modal description is correct
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "xpath" and "(//XCUIElementTypeImage[@name="gif cell"])[1]" to be present
+[alice1] waitForTextElementToBePresent threw: "xpath": "(//XCUIElementTypeImage[@name="gif cell"])[1]
+[alice1] Waiting for "xpath" and "(//XCUIElementTypeImage[@name="gif cell"])[1]" to be present
+[alice1] waitForTextElementToBePresent threw: "xpath": "(//XCUIElementTypeImage[@name="gif cell"])[1]
+[alice1] Waiting for "xpath" and "(//XCUIElementTypeImage[@name="gif cell"])[1]" to be present
+[alice1] waitForTextElementToBePresent threw: "xpath": "(//XCUIElementTypeImage[@name="gif cell"])[1]
+[alice1] Waiting for "xpath" and "(//XCUIElementTypeImage[@name="gif cell"])[1]" to be present
+[alice1] waitForTextElementToBePresent threw: "xpath": "(//XCUIElementTypeImage[@name="gif cell"])[1]
+[alice1] Waiting for "xpath" and "(//XCUIElementTypeImage[@name="gif cell"])[1]" to be present
+[alice1] waitForTextElementToBePresent threw: "xpath": "(//XCUIElementTypeImage[@name="gif cell"])[1]
+[alice1] Waiting for "xpath" and "(//XCUIElementTypeImage[@name="gif cell"])[1]" to be present
+[alice1] waitForTextElementToBePresent threw: "xpath": "(//XCUIElementTypeImage[@name="gif cell"])[1]
+[alice1] Waiting for "xpath" and "(//XCUIElementTypeImage[@name="gif cell"])[1]" to be present
+[alice1] '(//XCUIElementTypeImage[@name="gif cell"])[1]' has been found
+[alice1] Waiting for "accessibility id" and "Text input box" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Text input box
+[alice1] Waiting for "accessibility id" and "Text input box" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Text input box
+[alice1] Waiting for "accessibility id" and "Text input box" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Text input box
+[alice1] Waiting for "accessibility id" and "Text input box" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Text input box
+[alice1] Waiting for "accessibility id" and "Text input box" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Text input box
+[alice1] Waiting for "accessibility id" and "Text input box" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Text input box
+[alice1] Waiting for "accessibility id" and "Text input box" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Text input box
+[alice1] Waiting for "accessibility id" and "Text input box" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Text input box
+[alice1] Waiting for "accessibility id" and "Text input box" to be present
+[alice1] 'Text input box' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Text input box' }
+[alice1] Waiting for "accessibility id" and "Text input box" to be present
+[alice1] 'Text input box' has been found
+[alice1] Waiting for "accessibility id" and "Send button" to be present
+[alice1] 'Send button' has been found
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Untrusted attachment message
+[bob1] Waiting for "accessibility id" and "Untrusted attachment message" to be present
+[bob1] 'Untrusted attachment message' has been found
+[bob1] doesElementExist failed with accessibility id Modal heading
+[bob1] Modal heading Doesn't exist but retrying
+[bob1] Waiting for "accessibility id" and "Modal heading" to be present
+[bob1] 'Modal heading' has been found
+[bob1] Modal heading is correct
+[bob1] Waiting for "accessibility id" and "Modal description" to be present
+[bob1] 'Modal description' has been found
+[bob1] Modal description is correct
+[bob1] Waiting for "accessibility id" and "Download" to be present
+[bob1] 'Download' has been found
+Sleeping for 60000 milliseconds
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Testing disappearing messages for GIF's"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Testing disappearing messages for GIF's"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Testing disappearing messages for GIF's"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Testing disappearing messages for GIF's"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Testing disappearing messages for GIF's"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Testing disappearing messages for GIF's"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Testing disappearing messages for GIF's"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Testing disappearing messages for GIF's"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Testing disappearing messages for GIF's"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Testing disappearing messages for GIF's"
+[alice1] Text element has been deleted, great success
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Testing disappearing messages for GIF's"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Testing disappearing messages for GIF's"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Testing disappearing messages for GIF's"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Testing disappearing messages for GIF's"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Testing disappearing messages for GIF's"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Testing disappearing messages for GIF's"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Testing disappearing messages for GIF's"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Testing disappearing messages for GIF's"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Testing disappearing messages for GIF's"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Testing disappearing messages for GIF's"
+[bob1] Text element has been deleted, great success
+sessions closed

@@ -1,0 +1,27 @@
+
+
+==========> Running "Onboarding wrong seed @ios @low-risk @1-devices"
+
+
+starting capabilitiesIndex 0 ios
+openiOSApp
+[device-5139] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-5139] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-5139] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-5139] //XCUIElementTypeAlert//*//XCUIElementTypeButton Doesn't exist but retrying
+[device-5139] doesElementExist failed with xpath //XCUIElementTypeAlert//*//XCUIElementTypeButton
+[device-5139] //XCUIElementTypeAlert//*//XCUIElementTypeButton doesn't exist, time expired
+[device-5139] iosPermissions null
+[device-5139] No iosPermissions null
+running  xcrun simctl privacy 064F4F80-B81C-4B72-9715-43CD18975139 reset all undefined
+was run:  xcrun simctl privacy 064F4F80-B81C-4B72-9715-43CD18975139 reset all undefined { stdout: '', stderr: '' }
+[device-5139] Waiting for "accessibility id" and "Restore your session button" to be present
+[device-5139] 'Restore your session button' has been found
+[device-5139] Locator being used: { strategy: 'accessibility id', selector: 'Recovery password input' }
+[device-5139] Waiting for "accessibility id" and "Recovery password input" to be present
+[device-5139] 'Recovery password input' has been found
+[device-5139] Waiting for "accessibility id" and "Continue" to be present
+[device-5139] 'Continue' has been found
+[device-5139] Waiting for "accessibility id" and "Error message" to be present
+[device-5139] 'Error message' has been found
+sessions closed
