@@ -1,0 +1,348 @@
+
+
+==========> Running "Send link 1:1 @android @high-risk @2-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5556 true
+emulatorAlreadyRunning emulator-5554 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"05a93381a0dde249eda8e1c63e0332e3be0473ad5902bf966f119d13822b7dc738","seedPhrase":"major medicate catch noodles odds nexus mobile apology soil circle ringing dreams circle"},
+SessionUser: {"name":"Bob","sessionId":"05de41921812d3bec0de992d67cf0699a3a1bd46465a6df7bf68eccc87e2773935","seedPhrase":"rockets furnished buying physics gopher wrist pistons seeded stellar inroads behind dynamite wrist"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"05a93381a0dde249eda8e1c63e0332e3be0473ad5902bf966f119d13822b7dc738","seedPhrase":"major medicate catch noodles odds nexus mobile apology soil circle ringing dreams circle"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05a93381a0dde249eda8e1c63e0332e3be0473ad5902bf966f119d13822b7dc738","seedPhrase":"major medicate catch noodles odds nexus mobile apology soil circle ringing dreams circle"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"05de41921812d3bec0de992d67cf0699a3a1bd46465a6df7bf68eccc87e2773935","seedPhrase":"rockets furnished buying physics gopher wrist pistons seeded stellar inroads behind dynamite wrist"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"05de41921812d3bec0de992d67cf0699a3a1bd46465a6df7bf68eccc87e2773935","seedPhrase":"rockets furnished buying physics gopher wrist pistons seeded stellar inroads behind dynamite wrist"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05a93381a0dde249eda8e1c63e0332e3be0473ad5902bf966f119d13822b7dc738","seedPhrase":"major medicate catch noodles odds nexus mobile apology soil circle ringing dreams circle"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"05de41921812d3bec0de992d67cf0699a3a1bd46465a6df7bf68eccc87e2773935","seedPhrase":"rockets furnished buying physics gopher wrist pistons seeded stellar inroads behind dynamite wrist"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 199675,
+    [Symbol(trigger_async_id_symbol)]: 199528,
+    [Symbol(kResourceStore)]: undefined
+  }
+]
+random snode for user: 05de41921812d3bec0de992d67cf0699a3a1bd46465a6df7bf68eccc87e2773935 is snode: cafe25abef21cc6eebfa18e96524466350800eea03e8a0bb7066c79ce57a66ce
+storing to snode https://185.150.191.51:22125/storage_rpc/v1
+storing to snode https://185.150.191.51:22125/storage_rpc/v1
+storing to snode https://185.150.191.51:22125/storage_rpc/v1
+random snode for user: 05a93381a0dde249eda8e1c63e0332e3be0473ad5902bf966f119d13822b7dc738 is snode: 4edcdfb58c83cc289c90180776926cbc900d8a3ed139f97a901ad127f3915f76
+storing to snode https://37.120.189.87:22105/storage_rpc/v1
+storing to snode https://37.120.189.87:22105/storage_rpc/v1
+storing to snode https://37.120.189.87:22105/storage_rpc/v1
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+storeStatus for Bob: [ 200, 200, 200 ]
+storeStatus for Alice: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "major medicate catch noodles odds nexus mobile apology soil circle ringing dreams circle"
+	"Bob": "rockets furnished buying physics gopher wrist pistons seeded stellar inroads behind dynamite wrist" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+[alice1] Device identity changed from device-5554 to alice1
+[bob1] Device identity changed from device-5556 to bob1
+[alice1] Waiting for "id" and "Restore your session button" to be present
+[bob1] Waiting for "id" and "Restore your session button" to be present
+[bob1] 'Restore your session button' has been found
+[alice1] 'Restore your session button' has been found
+[bob1] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[bob1] Waiting for "id" and "Recovery phrase input" to be present
+[bob1] 'Recovery phrase input' has been found
+[alice1] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[alice1] Waiting for "id" and "Recovery phrase input" to be present
+[alice1] 'Recovery phrase input' has been found
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] 'Continue' has been found
+[bob1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[alice1] 'Continue' has been found
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[bob1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] 'Slow mode notifications button' has been found
+[bob1] 'Slow mode notifications button' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[bob1] 'Continue' has been found
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] 'Loading animation' has been found
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Loading animation not found
+[bob1] Loading animation has finished
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Loading animation not found
+[alice1] Loading animation has finished
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name doesn't exist, time expired
+Display name found: Loading account
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name doesn't exist, time expired
+Display name found: Loading account
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Element has been deleted, great success
+[bob1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] 'New conversation button' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Element has been deleted, great success
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] 'New conversation button' has been found
+[bob1] Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+[alice1] Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+[alice1] Text found to include Bob
+[alice1] 'Conversation list item' and 'Bob' has been found
+[bob1] Text found to include Alice
+[bob1] 'Conversation list item' and 'Alice' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+[alice1] Waiting for "accessibility id" and "Message input box" to be present
+[alice1] 'Message input box' has been found
+[alice1] doesElementExist failed with id Modal heading
+[alice1] Modal heading Doesn't exist but retrying
+[alice1] doesElementExist failed with id Modal heading
+[alice1] Modal heading Doesn't exist but retrying
+[alice1] doesElementExist failed with id Modal heading
+[alice1] Modal heading Doesn't exist but retrying
+[alice1] doesElementExist failed with id Modal heading
+[alice1] Modal heading Doesn't exist but retrying
+[alice1] doesElementExist failed with id Modal heading
+[alice1] Modal heading Doesn't exist but retrying
+[alice1] doesElementExist failed with id Modal heading
+[alice1] Modal heading Doesn't exist but retrying
+[alice1] doesElementExist failed with id Modal heading
+[alice1] Modal heading Doesn't exist but retrying
+[alice1] doesElementExist failed with id Modal heading
+[alice1] Modal heading Doesn't exist but retrying
+[alice1] doesElementExist failed with id Modal heading
+[alice1] Modal heading Doesn't exist but retrying
+[alice1] doesElementExist failed with id Modal heading
+[alice1] Modal heading doesn't exist, time expired
+[alice1] Waiting for "accessibility id" and "Modal heading" to be present
+[alice1] 'Modal heading' has been found
+[alice1] Modal heading is correct
+[alice1] doesElementExist failed with id Modal description
+[alice1] Modal description Doesn't exist but retrying
+[alice1] doesElementExist failed with id Modal description
+[alice1] Modal description Doesn't exist but retrying
+[alice1] doesElementExist failed with id Modal description
+[alice1] Modal description Doesn't exist but retrying
+[alice1] doesElementExist failed with id Modal description
+[alice1] Modal description Doesn't exist but retrying
+[alice1] doesElementExist failed with id Modal description
+[alice1] Modal description Doesn't exist but retrying
+[alice1] doesElementExist failed with id Modal description
+[alice1] Modal description Doesn't exist but retrying
+[alice1] doesElementExist failed with id Modal description
+[alice1] Modal description Doesn't exist but retrying
+[alice1] doesElementExist failed with id Modal description
+[alice1] Modal description Doesn't exist but retrying
+[alice1] doesElementExist failed with id Modal description
+[alice1] Modal description Doesn't exist but retrying
+[alice1] doesElementExist failed with id Modal description
+[alice1] Modal description Doesn't exist but retrying
+[alice1] doesElementExist failed with id Modal description
+[alice1] Modal description Doesn't exist but retrying
+[alice1] doesElementExist failed with id Modal description
+[alice1] Modal description doesn't exist, time expired
+[alice1] Waiting for "accessibility id" and "Modal description" to be present
+[alice1] 'Modal description' has been found
+[alice1] Modal description is correct
+[alice1] Waiting for "accessibility id" and "Enable" to be present
+[alice1] 'Enable' has been found
+Sleeping for 5000 milliseconds
+[alice1] Waiting for "accessibility id" and "Send message button" to be present
+[alice1] 'Send message button' has been found
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] 'Message sent status: Sent' has been found
+[bob1] Waiting for "id" and "network.loki.messenger:id/linkPreviewView" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "network.loki.messenger:id/linkPreviewView
+[bob1] Waiting for "id" and "network.loki.messenger:id/linkPreviewView" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "network.loki.messenger:id/linkPreviewView
+[bob1] Waiting for "id" and "network.loki.messenger:id/linkPreviewView" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "network.loki.messenger:id/linkPreviewView
+[bob1] Waiting for "id" and "network.loki.messenger:id/linkPreviewView" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "network.loki.messenger:id/linkPreviewView
+[bob1] Waiting for "id" and "network.loki.messenger:id/linkPreviewView" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "network.loki.messenger:id/linkPreviewView
+[bob1] Waiting for "id" and "network.loki.messenger:id/linkPreviewView" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "network.loki.messenger:id/linkPreviewView
+[bob1] Waiting for "id" and "network.loki.messenger:id/linkPreviewView" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "network.loki.messenger:id/linkPreviewView
+[bob1] Waiting for "id" and "network.loki.messenger:id/linkPreviewView" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "network.loki.messenger:id/linkPreviewView
+[bob1] Waiting for "id" and "network.loki.messenger:id/linkPreviewView" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "network.loki.messenger:id/linkPreviewView
+[bob1] Waiting for "id" and "network.loki.messenger:id/linkPreviewView" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "network.loki.messenger:id/linkPreviewView
+[bob1] Waiting for "id" and "network.loki.messenger:id/linkPreviewView" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "network.loki.messenger:id/linkPreviewView
+[bob1] Waiting for "id" and "network.loki.messenger:id/linkPreviewView" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "network.loki.messenger:id/linkPreviewView
+[bob1] Waiting for "id" and "network.loki.messenger:id/linkPreviewView" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "network.loki.messenger:id/linkPreviewView
+[bob1] Waiting for "id" and "network.loki.messenger:id/linkPreviewView" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "network.loki.messenger:id/linkPreviewView
+[bob1] Waiting for "id" and "network.loki.messenger:id/linkPreviewView" to be present
+[bob1] 'network.loki.messenger:id/linkPreviewView' has been found
+sessions closed

@@ -1,0 +1,38 @@
+
+
+==========> Running "Onboarding terms of service @android @high-risk @1-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 2 2
+actualCapabilities worker 2
+emulatorAlreadyRunning emulator-5558 true
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+[device-5558] Waiting for "id" and "Open URL" to be present
+[device-5558] 'Open URL' has been found
+[device-5558] Waiting for "id" and "Terms of Service" to be present
+[device-5558] 'Terms of Service' has been found
+Chrome has been opened for the first time, dismissing account use and notifications
+[device-5558] Waiting for "id" and "com.android.chrome:id/signin_fre_dismiss_button" to be present
+[device-5558] 'com.android.chrome:id/signin_fre_dismiss_button' has been found
+[device-5558] Waiting for "id" and "com.android.chrome:id/negative_button" to be present
+[device-5558] 'com.android.chrome:id/negative_button' has been found
+[device-5558] Waiting for "id" and "com.android.chrome:id/url_bar" to be present
+[device-5558] 'com.android.chrome:id/url_bar' has been found
+sessions closed

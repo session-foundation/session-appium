@@ -1,0 +1,440 @@
+
+
+==========> Running "Disappear after send @android @high-risk @2-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5556 true
+emulatorAlreadyRunning emulator-5554 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"057bb111e98f66ba9b4d747f681964dd924e312c6baecda9fe3c4cb42fbad1b064","seedPhrase":"anybody family mumble software hitched aisle daily afraid digit stockpile sack optical daily"},
+SessionUser: {"name":"Bob","sessionId":"05850106cad8d1ca02e12da8e7b51713a9fadfa8135784e531ca065f3cb8eb5227","seedPhrase":"summon alley folding wives godfather dented vastness glass adventure camp koala tell adventure"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"057bb111e98f66ba9b4d747f681964dd924e312c6baecda9fe3c4cb42fbad1b064","seedPhrase":"anybody family mumble software hitched aisle daily afraid digit stockpile sack optical daily"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"057bb111e98f66ba9b4d747f681964dd924e312c6baecda9fe3c4cb42fbad1b064","seedPhrase":"anybody family mumble software hitched aisle daily afraid digit stockpile sack optical daily"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"05850106cad8d1ca02e12da8e7b51713a9fadfa8135784e531ca065f3cb8eb5227","seedPhrase":"summon alley folding wives godfather dented vastness glass adventure camp koala tell adventure"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"05850106cad8d1ca02e12da8e7b51713a9fadfa8135784e531ca065f3cb8eb5227","seedPhrase":"summon alley folding wives godfather dented vastness glass adventure camp koala tell adventure"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"057bb111e98f66ba9b4d747f681964dd924e312c6baecda9fe3c4cb42fbad1b064","seedPhrase":"anybody family mumble software hitched aisle daily afraid digit stockpile sack optical daily"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"05850106cad8d1ca02e12da8e7b51713a9fadfa8135784e531ca065f3cb8eb5227","seedPhrase":"summon alley folding wives godfather dented vastness glass adventure camp koala tell adventure"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 38666,
+    [Symbol(trigger_async_id_symbol)]: 38518,
+    [Symbol(kResourceStore)]: undefined
+  }
+]
+random snode for user: 057bb111e98f66ba9b4d747f681964dd924e312c6baecda9fe3c4cb42fbad1b064 is snode: 52c16807e8b6ca6c10a6db5b34dab451c34df3d7e67cb8bd2fe68abab5f83eab
+storing to snode https://207.180.240.241:22021/storage_rpc/v1
+storing to snode https://207.180.240.241:22021/storage_rpc/v1
+storing to snode https://207.180.240.241:22021/storage_rpc/v1
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+random snode for user: 05850106cad8d1ca02e12da8e7b51713a9fadfa8135784e531ca065f3cb8eb5227 is snode: 44cb70fd4ba06ce14e9f60754a8afb916720f9044f0f7c3e1c27b5b08838f821
+storing to snode https://185.150.189.112:22101/storage_rpc/v1
+storing to snode https://185.150.189.112:22101/storage_rpc/v1
+storing to snode https://185.150.189.112:22101/storage_rpc/v1
+storeStatus for Alice: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "anybody family mumble software hitched aisle daily afraid digit stockpile sack optical daily"
+	"Bob": "summon alley folding wives godfather dented vastness glass adventure camp koala tell adventure" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+[alice1] Device identity changed from device-5554 to alice1
+[bob1] Device identity changed from device-5556 to bob1
+[alice1] Waiting for "id" and "Restore your session button" to be present
+[bob1] Waiting for "id" and "Restore your session button" to be present
+[alice1] 'Restore your session button' has been found
+[bob1] 'Restore your session button' has been found
+[alice1] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[alice1] Waiting for "id" and "Recovery phrase input" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Recovery phrase input
+[alice1] Waiting for "id" and "Recovery phrase input" to be present
+[alice1] 'Recovery phrase input' has been found
+[bob1] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[bob1] Waiting for "id" and "Recovery phrase input" to be present
+[bob1] 'Recovery phrase input' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[bob1] 'Continue' has been found
+[bob1] Waiting for "id" and "Slow mode notifications button" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[bob1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] 'Slow mode notifications button' has been found
+[bob1] 'Slow mode notifications button' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] 'Continue' has been found
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] 'Loading animation' has been found
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] 'Loading animation' has been found
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] 'Loading animation' has been found
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] 'Loading animation' has been found
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] 'Loading animation' has been found
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Loading animation not found
+[alice1] Loading animation has finished
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name doesn't exist, time expired
+Display name found: Loading account
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[bob1] Loading animation not found
+[bob1] Loading animation has finished
+[alice1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name doesn't exist, time expired
+Display name found: Loading account
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Element has been deleted, great success
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] 'New conversation button' has been found
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Element has been deleted, great success
+[bob1] Waiting for "accessibility id" and "New conversation button" to be present
+[bob1] 'New conversation button' has been found
+[bob1] Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+[alice1] Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+[bob1] Text found to include Alice
+[bob1] 'Conversation list item' and 'Alice' has been found
+[alice1] Text found to include Bob
+[alice1] 'Conversation list item' and 'Bob' has been found
+[alice1] Waiting for "id" and "conversation-options-avatar" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "conversation-options-avatar
+[alice1] Waiting for "id" and "conversation-options-avatar" to be present
+[alice1] 'conversation-options-avatar' has been found
+[alice1] Waiting for "id" and "disappearing-messages-menu-option" to be present
+[alice1] 'disappearing-messages-menu-option' has been found
+[alice1] Waiting for "id" and "Disappear after send option" to be present
+[alice1] 'Disappear after send option' has been found
+[alice1] Waiting for "id" and "1 day" to be present
+[alice1] '1 day' has been found
+[alice1] Great success - default time is correct
+[alice1] Waiting for "id" and "30 seconds" to be present
+[alice1] '30 seconds' has been found
+[alice1] Waiting for "id" and "Set button" to be present
+[alice1] 'Set button' has been found
+[alice1] Waiting for "id" and "Navigate back" to be present
+[alice1] 'Navigate back' has been found
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] 'Follow setting' has been found
+[bob1] Waiting for "accessibility id" and "Set" to be present
+[bob1] 'Set' has been found
+[alice1] Waiting for "id" and "Disappearing messages type and time" to be present
+[alice1] 'Disappearing messages type and time' has been found
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Text found to include You set messages to disappear 30 seconds after they have been sent.
+[alice1] Control message You set messages to disappear 30 seconds after they have been sent. has been found
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Text found to include Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Control message Bob has set messages to disappear 30 seconds after they have been sent. has been found
+[bob1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[bob1] Waiting for control message to be present with Alice has set messages to disappear 30 seconds after they have been sent.
+[bob1] Text found to include Alice has set messages to disappear 30 seconds after they have been sent.
+[bob1] Control message Alice has set messages to disappear 30 seconds after they have been sent. has been found
+[bob1] Text found to include You set messages to disappear 30 seconds after they have been sent.
+[bob1] Control message You set messages to disappear 30 seconds after they have been sent. has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+[alice1] Waiting for "accessibility id" and "Message input box" to be present
+[alice1] 'Message input box' has been found
+[alice1] Waiting for "accessibility id" and "Send message button" to be present
+[alice1] 'Send message button' has been found
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] 'Message sent status: Sent' has been found
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Text found to include Checking disappear after send is working
+[bob1] 'Message body' and 'Checking disappear after send is working' has been found
+Sleeping for 30000 milliseconds
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[bob1] Waiting for "accessibility id" and "Message body" to be present with "Checking disappear after send is working"
+[alice1] Text element has been deleted, great success
+[bob1] Text element has been deleted, great success
+sessions closed

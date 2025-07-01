@@ -1,0 +1,642 @@
+
+
+==========> Running "Disappear after read @android @high-risk @2-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 1 1
+actualCapabilities worker 2
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 1 1
+actualCapabilities worker 3
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5560 true
+emulatorAlreadyRunning emulator-5558 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"05991f8af793b4a1fab45eba3835b420c9715f13ffc6f1a196617d3c2fe1a29034","seedPhrase":"picked vague boyfriend wickets weird acquire evicted layout future extra haunted eccentric boyfriend"},
+SessionUser: {"name":"Bob","sessionId":"05befbd48b1d003f30b557a7a17f9f538626381e196476ea4cecd3b3751bed537b","seedPhrase":"extra acumen zero army viewpoint bimonthly tomorrow highway auburn jukebox giant anxiety zero"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"05991f8af793b4a1fab45eba3835b420c9715f13ffc6f1a196617d3c2fe1a29034","seedPhrase":"picked vague boyfriend wickets weird acquire evicted layout future extra haunted eccentric boyfriend"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05991f8af793b4a1fab45eba3835b420c9715f13ffc6f1a196617d3c2fe1a29034","seedPhrase":"picked vague boyfriend wickets weird acquire evicted layout future extra haunted eccentric boyfriend"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"05befbd48b1d003f30b557a7a17f9f538626381e196476ea4cecd3b3751bed537b","seedPhrase":"extra acumen zero army viewpoint bimonthly tomorrow highway auburn jukebox giant anxiety zero"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"05befbd48b1d003f30b557a7a17f9f538626381e196476ea4cecd3b3751bed537b","seedPhrase":"extra acumen zero army viewpoint bimonthly tomorrow highway auburn jukebox giant anxiety zero"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05991f8af793b4a1fab45eba3835b420c9715f13ffc6f1a196617d3c2fe1a29034","seedPhrase":"picked vague boyfriend wickets weird acquire evicted layout future extra haunted eccentric boyfriend"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"05befbd48b1d003f30b557a7a17f9f538626381e196476ea4cecd3b3751bed537b","seedPhrase":"extra acumen zero army viewpoint bimonthly tomorrow highway auburn jukebox giant anxiety zero"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [ Promise { <pending> } ]
+emulator-5560  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5560'
+  }
+}
+udid: emulator-5560
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+random snode for user: 05991f8af793b4a1fab45eba3835b420c9715f13ffc6f1a196617d3c2fe1a29034 is snode: 1f100f1a23bf3a2de81487cc07dfff5b28027541c2903f53c55a2d138104fc7b
+storing to snode https://88.99.102.229:22100/storage_rpc/v1
+storing to snode https://88.99.102.229:22100/storage_rpc/v1
+storing to snode https://88.99.102.229:22100/storage_rpc/v1
+random snode for user: 05befbd48b1d003f30b557a7a17f9f538626381e196476ea4cecd3b3751bed537b is snode: 6c95e36743812dbd50dd970fa0cedc6420c37186e998c9769a18ce1664f387ec
+storing to snode https://104.243.41.194:22104/storage_rpc/v1
+storing to snode https://104.243.41.194:22104/storage_rpc/v1
+storing to snode https://104.243.41.194:22104/storage_rpc/v1
+storeStatus for Alice: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "picked vague boyfriend wickets weird acquire evicted layout future extra haunted eccentric boyfriend"
+	"Bob": "extra acumen zero army viewpoint bimonthly tomorrow highway auburn jukebox giant anxiety zero" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+[alice1] Device identity changed from device-5558 to alice1
+[bob1] Device identity changed from device-5560 to bob1
+[alice1] Waiting for "id" and "Restore your session button" to be present
+[bob1] Waiting for "id" and "Restore your session button" to be present
+[bob1] 'Restore your session button' has been found
+[alice1] 'Restore your session button' has been found
+[bob1] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[bob1] Waiting for "id" and "Recovery phrase input" to be present
+[bob1] 'Recovery phrase input' has been found
+[alice1] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[alice1] Waiting for "id" and "Recovery phrase input" to be present
+[alice1] 'Recovery phrase input' has been found
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] 'Continue' has been found
+[bob1] Waiting for "id" and "Slow mode notifications button" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[bob1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[bob1] 'Slow mode notifications button' has been found
+[alice1] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] 'Slow mode notifications button' has been found
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] 'Continue' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Continue' has been found
+[bob1] 'Loading animation' has been found
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] 'Loading animation' has been found
+[alice1] 'Loading animation' has been found
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Loading animation not found
+[bob1] Loading animation has finished
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Loading animation not found
+[alice1] Loading animation has finished
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name doesn't exist, time expired
+Display name found: Loading account
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name doesn't exist, time expired
+Display name found: Loading account
+[bob1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[alice1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[bob1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Element has been deleted, great success
+[bob1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] 'New conversation button' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Element has been deleted, great success
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] 'New conversation button' has been found
+[bob1] Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+[alice1] Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+[bob1] Text found to include Alice
+[bob1] 'Conversation list item' and 'Alice' has been found
+[alice1] Text found to include Bob
+[alice1] 'Conversation list item' and 'Bob' has been found
+[alice1] Waiting for "id" and "conversation-options-avatar" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "conversation-options-avatar
+[alice1] Waiting for "id" and "conversation-options-avatar" to be present
+[alice1] 'conversation-options-avatar' has been found
+[alice1] Waiting for "id" and "disappearing-messages-menu-option" to be present
+[alice1] 'disappearing-messages-menu-option' has been found
+[alice1] Waiting for "id" and "Disappear after read option" to be present
+[alice1] 'Disappear after read option' has been found
+[alice1] Waiting for "id" and "12 hours" to be present
+[alice1] '12 hours' has been found
+[alice1] Great success - default time is correct
+[alice1] Waiting for "id" and "30 seconds" to be present
+[alice1] '30 seconds' has been found
+[alice1] Waiting for "id" and "Set button" to be present
+[alice1] 'Set button' has been found
+[alice1] Waiting for "id" and "Navigate back" to be present
+[alice1] 'Navigate back' has been found
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Follow setting
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] 'Follow setting' has been found
+[bob1] Waiting for "accessibility id" and "Set" to be present
+[bob1] 'Set' has been found
+[alice1] Waiting for "id" and "Disappearing messages type and time" to be present
+[alice1] 'Disappearing messages type and time' has been found
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Text found to include Bob has set messages to disappear 30 seconds after they have been read.
+[alice1] Control message Bob has set messages to disappear 30 seconds after they have been read. has been found
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been read.
+[alice1] Waited too long
+Test failed, capturing screenshots from 2 device(s)...
+Captured and labeled screenshot from device alice1
+Captured and labeled screenshot from device bob1
+Screenshot saved: /home/runner/actions-runner/_work/session-appium/session-appium/test-results/disappear_after_read-Disap-debd1-android-high-risk-2-devices/disappear-after-read.png
