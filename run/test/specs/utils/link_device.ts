@@ -42,7 +42,7 @@ export const linkedDevice = async (
     await device2.inputText(userName, new DisplayNameInput(device2));
     await device2.clickOnElementAll(new ContinueButton(device2));
   } else {
-    console.info('Display name found: Loading account');
+    device2.info('Display name found: Loading account');
   }
   // Wait for permissions modal to pop up
   await sleepFor(500);
@@ -50,7 +50,7 @@ export const linkedDevice = async (
   // Check that button was clicked
   await device2.waitForTextElementToBePresent(new PlusButton(device2));
 
-  console.info('Device 2 linked');
+  device2.info('Device linked');
 
   return user;
 };

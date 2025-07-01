@@ -52,7 +52,7 @@ async function networkPageLearnMore(platform: SupportedPlatformsType, testInfo: 
       `The retrieved URL does not match the expected. The retrieved URL is ${fullRetrievedURL}`
     );
   } else {
-    console.log('The URLs match.');
+    device.log('The URLs match.');
   }
   await assertUrlIsReachable(linkURL);
   // Close browser and app

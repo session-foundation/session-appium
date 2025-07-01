@@ -43,7 +43,7 @@ async function inviteAFriend(platform: SupportedPlatformsType, testInfo: TestInf
   // Retrieve the Share message and validate that it contains the user's Account ID
   const retrievedShareMessage = await device.getTextFromElement(messageElement);
   if (retrievedShareMessage.includes(user.accountID)) {
-    console.log("The Invite a Friend message snippet contains the user's Account ID");
+    device.log("The Invite a Friend message snippet contains the user's Account ID");
   } else {
     throw new Error(
       `The Invite a Friend message snippet does not contain the user's Account ID\nThe message goes ${retrievedShareMessage}`

@@ -44,9 +44,9 @@ async function changeUsernameiOS(platform: SupportedPlatformsType, testInfo: Tes
     selector: 'Username',
   });
   const changedUsername = await device.getTextFromElement(username);
-  console.log('Changed username', changedUsername);
+  device.log('Changed username', changedUsername);
   if (changedUsername === newUsername) {
-    console.log('Username change successful');
+    device.log('Username change successful');
   }
   if (changedUsername === alice.userName) {
     throw new Error('Username change unsuccessful');
@@ -74,9 +74,9 @@ async function changeUsernameAndroid(platform: SupportedPlatformsType, testInfo:
     text: newUsername,
   });
   const changedUsername = await device.getTextFromElement(username);
-  console.log('Changed username', changedUsername);
+  device.log('Changed username', changedUsername);
   if (changedUsername === newUsername) {
-    console.log('Username change successful');
+    device.log('Username change successful');
   }
   if (changedUsername === alice.userName) {
     throw new Error('Username change unsuccessful');

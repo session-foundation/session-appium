@@ -113,7 +113,7 @@ async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType, tes
     currentLinkedUsername = await alice2.getTextFromElement(linkedUsernameEl);
   } while (currentLinkedUsername === alice.userName && currentWait < maxWait);
   {
-    console.log('Username not changed yet');
+    alice2.log('Username not changed yet');
   }
   await closeApp(alice1, alice2);
 }

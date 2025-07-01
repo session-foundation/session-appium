@@ -51,20 +51,31 @@ function mobileIt({
     console.info(`\n\n==========> Running "${testName}"\n\n`);
 
     try {
-      // Run the actual test
+      // Run the test
       await testCb(platform, testInfo);
-    } catch (error) {
-      // Capture screenshots before re-throwing
-      await captureScreenshotsOnFailure(testInfo);
-      throw error;
     } finally {
-      // Always cleanup
-      unregisterDevicesForTest(testInfo);
-    }
-
-    // Also check if test is marked as failed after completion
-    if (testInfo.status === 'failed' || testInfo.status === 'timedOut') {
-      await captureScreenshotsOnFailure(testInfo);
+      try { 
+       // Check all possible failure conditions
+        const shouldCaptureScreenshot = 
+          testInfo.errors.length > 0 ||                    
+          testInfo.status === 'failed' ||
+          testInfo.status === 'timedOut' ||       
+          testInfo.status === 'interrupted';  
+        
+        if (shouldCaptureScreenshot) {
+          await captureScreenshotsOnFailure(testInfo);
+        }
+      } catch (screenshotError) {
+        // Don't let screenshot errors mask the original test failure
+        console.error('Failed to capture screenshot:', screenshotError);
+      }
+      
+      // Devices must always be unregistered
+      try {
+        unregisterDevicesForTest(testInfo);
+      } catch (cleanupError) {
+        console.error('Failed to unregister devices:', cleanupError);
+      }
     }
   });
 }

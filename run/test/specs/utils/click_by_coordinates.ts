@@ -6,5 +6,5 @@ export const clickOnCoordinates = async (device: DeviceWrapper, coordinates: Coo
   const { x, y } = coordinates;
   await sleepFor(1000);
   await device.pressCoordinates(x, y);
-  console.log(`Tapped coordinates ${x}, ${y}`);
+  device.log(`Tapped coordinates ${x}, ${y}`);
 };

@@ -32,11 +32,11 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType, testInf
   const el = await device.waitForTextElementToBePresent(new UserSettings(device));
   const base64 = await device.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
-  console.log('RGB Value of pixel is:', pixelColor);
+  device.log('RGB Value of pixel is:', pixelColor);
   if (pixelColor === pixelHexColour) {
-    console.log('Colour is correct');
+    device.log('Colour is correct');
   } else {
-    console.log("Colour isn't 04cbfe, it is: ", pixelColor);
+    device.log("Colour isn't 04cbfe, it is: ", pixelColor);
   }
   await closeApp(device);
 }
@@ -60,9 +60,9 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType, tes
   await sleepFor(10000);
   const base64 = await device.getElementScreenshot(el.ELEMENT);
   const actualPixelColor = await parseDataImage(base64);
-  console.log('Hex value of pixel is:', actualPixelColor);
+  device.log('Hex value of pixel is:', actualPixelColor);
   if (actualPixelColor === expectedPixelHexColour) {
-    console.log('Colour is correct');
+    device.log('Colour is correct');
   } else {
     throw new Error(`Colour isn't ${expectedPixelHexColour}, it is: ` + actualPixelColor);
   }

@@ -40,11 +40,11 @@ async function avatarRestored(platform: SupportedPlatformsType, testInfo: TestIn
   const base64 = await alice1.getElementScreenshot(profilePicture.ELEMENT);
   const actualPixelColor = await parseDataImage(base64);
   if (actualPixelColor === expectedPixelHexColour) {
-    console.log('alice1: Colour is correct');
+    alice1.log('Colour is correct');
   } else {
-    throw new Error(`alice1: Colour isn't ${expectedPixelHexColour}, it is: ` + actualPixelColor);
+    throw new Error(`Colour isn't ${expectedPixelHexColour}, it is: ` + actualPixelColor);
   }
-  console.log('Now checking avatar on linked device');
+  alice2.log('Now checking avatar on linked device');
   // Check avatar on device 2
   await sleepFor(5000);
   await alice2.closeScreen();
@@ -57,7 +57,7 @@ async function avatarRestored(platform: SupportedPlatformsType, testInfo: TestIn
       `alice1: Colour isn't ${expectedPixelHexColour}, it is: ` + actualPixelColorLinked
     );
   }
-  console.log('Device 2: Colour is correct on linked device');
+  alice2.log('Colour is correct on linked device');
 
   await closeApp(alice1, alice2);
 }

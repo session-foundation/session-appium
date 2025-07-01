@@ -38,9 +38,9 @@ async function unblockUser(platform: SupportedPlatformsType, testInfo: TestInfo)
     maxWait: 5000,
   });
   if (blockedStatus) {
-    console.info(`${bob.userName} has been blocked`);
+    alice1.info(`${bob.userName} has been blocked`);
   } else {
-    console.info('Blocked banner not found');
+    alice1.info('Blocked banner not found');
   }
   // Send message from Blocked User
   await bob1.sendMessage(blockedMessage);

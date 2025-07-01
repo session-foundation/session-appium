@@ -23,10 +23,10 @@ export const newUser = async (device: DeviceWrapper, userName: UserNameType): Pr
   // Select Continue to save notification settings
   await device.clickOnElementAll(new ContinueButton(device));
   // TODO need to retry check every 1s for 5s
-  console.warn('about to look for Allow permission in 5s');
+  device.warn('about to look for Allow permission in 5s');
   await sleepFor(5000);
   await device.checkPermissions('Allow');
-  console.warn('looked for Allow permission');
+  device.warn('looked for Allow permission');
   await sleepFor(1000);
   // Click on 'continue' button to open recovery phrase modal
   await device.waitForTextElementToBePresent(new RevealRecoveryPhraseButton(device));
@@ -38,7 +38,7 @@ export const newUser = async (device: DeviceWrapper, userName: UserNameType): Pr
   await device.onAndroid().clickOnElementAll(new CopyButton(device));
   // Save recovery phrase as variable
   const recoveryPhrase = await device.getTextFromElement(recoveryPhraseContainer);
-  console.log(`${userName}s recovery phrase is "${recoveryPhrase}"`);
+  device.log(`${userName}s recovery phrase is "${recoveryPhrase}"`);
   // Exit Modal
   await device.navigateBack(false);
   await device.clickOnElementAll(new UserSettings(device));

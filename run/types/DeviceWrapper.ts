@@ -85,19 +85,19 @@ export class DeviceWrapper {
   }
 
   // LOGGING METHODS
-  private log(...args: unknown[]): void {
+  public log(...args: unknown[]): void {
     console.log(`[${this.deviceIdentity}]`, ...args);
   }
 
-  private info(...args: unknown[]): void {
+  public info(...args: unknown[]): void {
     console.info(`[${this.deviceIdentity}]`, ...args);
   }
 
-  private warn(...args: unknown[]): void {
+  public warn(...args: unknown[]): void {
     console.warn(`[${this.deviceIdentity}]`, ...args);
   }
 
-  private error(...args: unknown[]): void {
+  public error(...args: unknown[]): void {
     console.error(`[${this.deviceIdentity}]`, ...args);
   }
 

@@ -24,6 +24,12 @@ export function registerDevicesForTest(
   platform: SupportedPlatformsType
 ) {
   const testId = `${testInfo.testId}-${testInfo.repeatEachIndex}`;
+  // Throw if deviceRegistry already has an entry for this test
+  // Could indicate that previous test did not unregister properly
+  if (deviceRegistry.has(testId)) {
+    throw new Error(`Device registry already contains entry for test "${testInfo.title}"`);
+  }
+  
   deviceRegistry.set(testId, { devices, testInfo, platform });
 }
 
@@ -38,13 +44,13 @@ async function addDeviceLabel(screenshot: Buffer, device: DeviceWrapper): Promis
   const width = metadata.width;
   const deviceName = device.getDeviceIdentity();
 
-  // Create transparent label overlay
+  // Create semi-transparent label overlay
   const labelHeight = 60;
   const fontSize = 28;
   const label = Buffer.from(`
     <svg width="${width}" height="${labelHeight}">
       <rect x="0" y="0" width="${width}" height="${labelHeight}"
-            fill="black" fill-opacity="0"/>
+            fill="black" fill-opacity="0.5"/>
       <text x="${width / 2}" y="${labelHeight / 2 + fontSize / 3}" 
             font-family="-apple-system, Arial, sans-serif" 
             font-size="${fontSize}" 

@@ -35,12 +35,12 @@ async function avatarColor(platform: SupportedPlatformsType, testInfo: TestInfo)
   // Get Alice's avatar color on device 1 (Settings screen avatar) and turn it into a hex value
   await alice1.clickOnElementAll(new UserSettings(alice1));
   const alice1PixelColor = await alice1.getElementPixelColor(new UserSettings(alice1));
-  console.log(alice1PixelColor);
+  alice1.log(alice1PixelColor);
   // Get Alice's avatar color on device 2 and turn it into a hex value
   // Open the conversation with Alice on Bob's device
   await bob1.clickOnElementAll(new ConversationItem(bob1, alice.userName));
   const bob1PixelColor = await bob1.getElementPixelColor(new ConversationSettings(bob1));
-  console.log(bob1PixelColor);
+  bob1.log(bob1PixelColor);
   // Color matching devices 1 and 2
   const colorMatch = isSameColor(alice1PixelColor, bob1PixelColor);
   if (!colorMatch) {

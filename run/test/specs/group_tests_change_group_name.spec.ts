@@ -54,7 +54,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType, testInfo: Te
   });
   const attr = await alice1.getAttribute('value', saveButton.ELEMENT);
   if (attr !== 'enabled') {
-    console.log('Save button disabled - no text input');
+    alice1.log('Save button disabled - no text input');
   } else {
     throw new Error('Save button should be disabled');
   }

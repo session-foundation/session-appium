@@ -47,9 +47,9 @@ async function blockUserInConversationOptions(
     // Check linked device for blocked status (if shown on alice1)
     await alice2.onAndroid().clickOnElementAll(new ConversationItem(alice2, bob.userName));
     await alice2.onAndroid().waitForTextElementToBePresent(new BlockedBanner(alice2));
-    console.info(`${bob.userName}` + ' has been blocked');
+    alice2.info(`${bob.userName}` + ' has been blocked');
   } else {
-    console.info('Blocked banner not found');
+    alice2.info('Blocked banner not found');
   }
   // Check settings for blocked user
   await Promise.all([alice1.navigateBack(), alice2.onAndroid().navigateBack()]);
