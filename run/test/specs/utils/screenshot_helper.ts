@@ -79,61 +79,60 @@ async function createComposite(screenshots: Buffer[]): Promise<Buffer> {
   if (screenshots.length === 0) {
     throw new Error('No screenshots provided');
   }
-  
+
   if (screenshots.length === 1) {
     return screenshots[0];
   }
-  
+
   if (screenshots.length > 4) {
-    throw new Error(`Screenshot composition not supported for ${screenshots.length} devices. Maximum supported is 4.`);
+    throw new Error(
+      `Screenshot composition not supported for ${screenshots.length} devices. Maximum supported is 4.`
+    );
   }
-  
+
   // Get dimensions from first screenshot
   const { width, height } = await sharp(screenshots[0]).metadata();
   const gap = 2;
-  
+
   // Calculate grid layout
-  const cols = 2
+  const cols = 2;
   const rows = Math.ceil(screenshots.length / cols);
-  
+
   // Calculate canvas size
-  const canvasWidth = (width * cols) + (gap * (cols - 1));
-  const canvasHeight = (height * rows) + (gap * (rows - 1));
-  
+  const canvasWidth = width * cols + gap * (cols - 1);
+  const canvasHeight = height * rows + gap * (rows - 1);
+
   // Create base canvas with white background
   const canvas = sharp({
     create: {
       width: canvasWidth,
       height: canvasHeight,
       channels: 4,
-      background: { r: 255, g: 255, b: 255, alpha: 1 }
-    }
+      background: { r: 255, g: 255, b: 255, alpha: 1 },
+    },
   });
-  
+
   // Calculate positions and create composite array
   const composites = screenshots.map((screenshot, index) => {
     const col = index % cols;
     const row = Math.floor(index / cols);
     const x = col * (width + gap);
     const y = row * (height + gap);
-    
+
     return {
       input: screenshot,
       left: x,
-      top: y
+      top: y,
     };
   });
-  
+
   // Apply all screenshots to canvas
-  return canvas
-    .composite(composites)
-    .png()
-    .toBuffer();
+  return canvas.composite(composites).png().toBuffer();
 }
 
 // Main screenshot capture function
 export async function captureScreenshotsOnFailure(testInfo: TestInfo): Promise<void> {
-  const testId = `${testInfo.testId}-${testInfo.parallelIndex}-${testInfo.repeatEachIndex}`; 
+  const testId = `${testInfo.testId}-${testInfo.parallelIndex}-${testInfo.repeatEachIndex}`;
   const context = deviceRegistry.get(testId);
 
   if (!context || context.devices.length === 0) {
@@ -173,7 +172,6 @@ export async function captureScreenshotsOnFailure(testInfo: TestInfo): Promise<v
   }
 
   try {
-
     const finalImage = await createComposite(screenshots);
 
     // Strip everything after @ for a clean filename

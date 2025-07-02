@@ -49,9 +49,9 @@ function mobileIt({
   // eslint-disable-next-line no-empty-pattern
   test(testName, async ({}, testInfo) => {
     console.info(`\n\n==========> Running "${testName}"\n\n`);
-    
+
     let testFailed = false;
-    
+
     try {
       await testCb(platform, testInfo);
     } catch (error) {
@@ -65,16 +65,18 @@ function mobileIt({
       // or racing against a custom timeout promise
       try {
         // Check for test failure - either our flag or Playwright's status
-        if (testFailed || 
-            testInfo.errors.length > 0 || 
-            testInfo.status === 'failed' || 
-            testInfo.status === 'timedOut') {
+        if (
+          testFailed ||
+          testInfo.errors.length > 0 ||
+          testInfo.status === 'failed' ||
+          testInfo.status === 'timedOut'
+        ) {
           await captureScreenshotsOnFailure(testInfo);
         }
       } catch (screenshotError) {
         console.error('Failed to capture screenshot:', screenshotError);
       }
-      
+
       try {
         unregisterDevicesForTest(testInfo);
       } catch (cleanupError) {
@@ -83,7 +85,6 @@ function mobileIt({
     }
   });
 }
-
 
 export function bothPlatformsIt(args: Omit<MobileItArgs, 'platform'>) {
   mobileIt({ platform: 'android', ...args });
