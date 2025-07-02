@@ -23,7 +23,7 @@ export function registerDevicesForTest(
   devices: DeviceWrapper[],
   platform: SupportedPlatformsType
 ) {
-  const testId = `${testInfo.testId}-${testInfo.repeatEachIndex}`;
+  const testId = `${testInfo.testId}-${testInfo.parallelIndex}-${testInfo.repeatEachIndex}`;
   // Throw if deviceRegistry already has an entry for this test
   // Could indicate that previous test did not unregister properly
   if (deviceRegistry.has(testId)) {
@@ -35,7 +35,7 @@ export function registerDevicesForTest(
 
 // Unregister devices after test
 export function unregisterDevicesForTest(testInfo: TestInfo) {
-  const testId = `${testInfo.testId}-${testInfo.repeatEachIndex}`;
+  const testId = `${testInfo.testId}-${testInfo.parallelIndex}-${testInfo.repeatEachIndex}`;
   deviceRegistry.delete(testId);
 }
 // Add device labels to screenshots (e.g. "Device: alice1")
@@ -133,7 +133,7 @@ async function createComposite(screenshots: Buffer[]): Promise<Buffer> {
 
 // Main screenshot capture function
 export async function captureScreenshotsOnFailure(testInfo: TestInfo): Promise<void> {
-  const testId = `${testInfo.testId}-${testInfo.repeatEachIndex}`;
+  const testId = `${testInfo.testId}-${testInfo.parallelIndex}-${testInfo.repeatEachIndex}`; 
   const context = deviceRegistry.get(testId);
 
   if (!context || context.devices.length === 0) {
