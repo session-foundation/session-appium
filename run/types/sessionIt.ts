@@ -49,28 +49,32 @@ function mobileIt({
   // eslint-disable-next-line no-empty-pattern
   test(testName, async ({}, testInfo) => {
     console.info(`\n\n==========> Running "${testName}"\n\n`);
-
+    
+    let testFailed = false;
+    
     try {
-      // Run the test
       await testCb(platform, testInfo);
+    } catch (error) {
+      testFailed = true; // Playwright hasn't updated testInfo.status yet, so track failure manually
+      throw error;
     } finally {
-      try { 
-       // Check all possible failure conditions
-        const shouldCaptureScreenshot = 
-          testInfo.errors.length > 0 ||                    
-          testInfo.status === 'failed' ||
-          testInfo.status === 'timedOut' ||       
-          testInfo.status === 'interrupted';  
-        
-        if (shouldCaptureScreenshot) {
+      // NOTE: This finally block runs for thrown errors but NOT for:
+      // - Test timeouts (Playwright kills execution before finally)
+      // - Interrupts/Ctrl+C (Process terminated before finally)
+      // If timeout screenshots become important, consider using test fixtures
+      // or racing against a custom timeout promise
+      try {
+        // Check for test failure - either our flag or Playwright's status
+        if (testFailed || 
+            testInfo.errors.length > 0 || 
+            testInfo.status === 'failed' || 
+            testInfo.status === 'timedOut') {
           await captureScreenshotsOnFailure(testInfo);
         }
       } catch (screenshotError) {
-        // Don't let screenshot errors mask the original test failure
         console.error('Failed to capture screenshot:', screenshotError);
       }
       
-      // Devices must always be unregistered
       try {
         unregisterDevicesForTest(testInfo);
       } catch (cleanupError) {
@@ -79,6 +83,7 @@ function mobileIt({
     }
   });
 }
+
 
 export function bothPlatformsIt(args: Omit<MobileItArgs, 'platform'>) {
   mobileIt({ platform: 'android', ...args });
