@@ -29,7 +29,7 @@ export function registerDevicesForTest(
   if (deviceRegistry.has(testId)) {
     throw new Error(`Device registry already contains entry for test "${testInfo.title}"`);
   }
-  
+
   deviceRegistry.set(testId, { devices, testInfo, platform });
 }
 
@@ -40,8 +40,7 @@ export function unregisterDevicesForTest(testInfo: TestInfo) {
 }
 // Add device labels to screenshots (e.g. "Device: alice1")
 async function addDeviceLabel(screenshot: Buffer, device: DeviceWrapper): Promise<Buffer> {
-  const metadata = await sharp(screenshot).metadata();
-  const width = metadata.width;
+  const { width } = await sharp(screenshot).metadata();
   const deviceName = device.getDeviceIdentity();
 
   // Create semi-transparent label overlay
@@ -76,96 +75,60 @@ async function addDeviceLabel(screenshot: Buffer, device: DeviceWrapper): Promis
     .toBuffer();
 }
 
-async function createSideBySideComposite(left: Buffer, right: Buffer): Promise<Buffer> {
-  try {
-    // Get dimensions of first image
-    const metadata = await sharp(left).metadata();
-    const width = metadata.width;
-
-    // Extend first image to the right and composite second
-    const composite = await sharp(left)
-      .extend({
-        right: width + 2, // 2px gap
-        background: { r: 255, g: 255, b: 255, alpha: 1 },
-      })
-      .composite([
-        {
-          input: right,
-          left: width + 2,
-          top: 0,
-        },
-      ])
-      .png()
-      .toBuffer();
-
-    return composite;
-  } catch (error) {
-    console.error('Failed to create side-by-side composite:', error);
-    throw error;
+async function createComposite(screenshots: Buffer[]): Promise<Buffer> {
+  if (screenshots.length === 0) {
+    throw new Error('No screenshots provided');
   }
-}
-
-// 2x2 grid composite for 3-4 devices
-// Layout:
-// [Device 1] [Device 2]
-// [Device 3] [Device 4]
-async function createGridComposite(screenshots: Buffer[]): Promise<Buffer> {
-  try {
-    // Get dimensions from first screenshot
-    const metadata = await sharp(screenshots[0]).metadata();
-    const width = metadata.width;
-    const height = metadata.height;
-    const gap = 2;
-
-    // Start with first screenshot and extend to create grid space
-    let composite = await sharp(screenshots[0])
-      .extend({
-        right: width + gap,
-        bottom: height + gap,
-        background: { r: 255, g: 255, b: 255, alpha: 1 },
-      })
-      .toBuffer();
-
-    // Position remaining screenshots
-    const overlays = [];
-
-    // Top right (device 2)
-    if (screenshots[1]) {
-      overlays.push({
-        input: screenshots[1],
-        left: width + gap,
-        top: 0,
-      });
-    }
-
-    // Bottom left (device 3)
-    if (screenshots[2]) {
-      overlays.push({
-        input: screenshots[2],
-        left: 0,
-        top: height + gap,
-      });
-    }
-
-    // Bottom right (device 4)
-    if (screenshots[3]) {
-      overlays.push({
-        input: screenshots[3],
-        left: width + gap,
-        top: height + gap,
-      });
-    }
-
-    // Apply all overlays
-    if (overlays.length > 0) {
-      composite = await sharp(composite).composite(overlays).png().toBuffer();
-    }
-
-    return composite;
-  } catch (error) {
-    console.error('Failed to create grid composite:', error);
-    throw error;
+  
+  if (screenshots.length === 1) {
+    return screenshots[0];
   }
+  
+  if (screenshots.length > 4) {
+    throw new Error(`Screenshot composition not supported for ${screenshots.length} devices. Maximum supported is 4.`);
+  }
+  
+  // Get dimensions from first screenshot
+  const { width, height } = await sharp(screenshots[0]).metadata();
+  const gap = 2;
+  
+  // Calculate grid layout
+  const cols = 2
+  const rows = Math.ceil(screenshots.length / cols);
+  
+  // Calculate canvas size
+  const canvasWidth = (width * cols) + (gap * (cols - 1));
+  const canvasHeight = (height * rows) + (gap * (rows - 1));
+  
+  // Create base canvas with white background
+  const canvas = sharp({
+    create: {
+      width: canvasWidth,
+      height: canvasHeight,
+      channels: 4,
+      background: { r: 255, g: 255, b: 255, alpha: 1 }
+    }
+  });
+  
+  // Calculate positions and create composite array
+  const composites = screenshots.map((screenshot, index) => {
+    const col = index % cols;
+    const row = Math.floor(index / cols);
+    const x = col * (width + gap);
+    const y = row * (height + gap);
+    
+    return {
+      input: screenshot,
+      left: x,
+      top: y
+    };
+  });
+  
+  // Apply all screenshots to canvas
+  return canvas
+    .composite(composites)
+    .png()
+    .toBuffer();
 }
 
 // Main screenshot capture function
@@ -210,24 +173,8 @@ export async function captureScreenshotsOnFailure(testInfo: TestInfo): Promise<v
   }
 
   try {
-    let finalImage: Buffer;
 
-    switch (screenshots.length) {
-      case 1:
-        finalImage = screenshots[0];
-        break;
-      case 2:
-        finalImage = await createSideBySideComposite(screenshots[0], screenshots[1]);
-        break;
-      case 3:
-      case 4:
-        finalImage = await createGridComposite(screenshots);
-        break;
-      default:
-        // Fallback for > 4 devices
-        console.log('More than 4 devices detected, using first device screenshot only');
-        finalImage = screenshots[0];
-    }
+    const finalImage = await createComposite(screenshots);
 
     // Strip everything after @ for a clean filename
     const testDesc = testInfo.title.split('@')[0].trim().toLowerCase();
