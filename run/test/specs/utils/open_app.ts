@@ -86,7 +86,7 @@ export const openAppTwoDevices = async (
 
   const result = { device1: app1.device, device2: app2.device };
 
-  registerDevicesForTest(testInfo, [result.device1, result.device2], platform);
+  registerDevicesForTest(testInfo, Object.values(result), platform);
 
   return result;
 };
@@ -111,7 +111,7 @@ export const openAppThreeDevices = async (
     device3: app3.device,
   };
 
-  registerDevicesForTest(testInfo, [result.device1, result.device2, result.device3], platform);
+  registerDevicesForTest(testInfo, Object.values(result), platform);
 
   return result;
 };
@@ -139,11 +139,7 @@ export const openAppFourDevices = async (
     device4: app4.device,
   };
 
-  registerDevicesForTest(
-    testInfo,
-    [result.device1, result.device2, result.device3, result.device4],
-    platform
-  );
+  registerDevicesForTest(testInfo, Object.values(result), platform);
 
   return result;
 };
