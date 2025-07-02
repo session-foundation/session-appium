@@ -1,10 +1,12 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { ExitUserProfile } from './locators';
 import { CallButton, NotificationSettings, NotificationSwitch } from './locators/conversation';
 import { open_Alice1_bob1_notfriends } from './state_builder';
 import { sleepFor } from './utils/index';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 // skipping tests because they are unreliable on virtual devices, see QA-478
 bothPlatformsItSeparate({
@@ -21,11 +23,11 @@ bothPlatformsItSeparate({
   },
 });
 
-async function voiceCallIos(platform: SupportedPlatformsType) {
+async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { alice, bob },
-  } = await open_Alice1_bob1_notfriends({ platform });
+  } = await open_Alice1_bob1_notfriends({ platform, testInfo });
 
   await alice1.sendNewMessage({ accountID: bob.sessionId }, 'Testing calls');
   // Look for phone icon (shouldnt be there)
@@ -144,11 +146,11 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await closeApp(alice1, bob1);
 }
 
-async function voiceCallAndroid(platform: SupportedPlatformsType) {
+async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { alice, bob },
-  } = await open_Alice1_bob1_notfriends({ platform });
+  } = await open_Alice1_bob1_notfriends({ platform, testInfo });
 
   await alice1.sendNewMessage({ accountID: bob.sessionId }, 'Testing calls');
   // Look for phone icon (should not be there)

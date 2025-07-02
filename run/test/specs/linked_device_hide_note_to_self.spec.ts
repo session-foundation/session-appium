@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { EmptyConversation, Hide } from './locators/conversation';
@@ -20,10 +22,10 @@ bothPlatformsItSeparate({
   },
 });
 
-async function hideNoteToSelf(platform: SupportedPlatformsType) {
+async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, alice2 },
-  } = await open_Alice2({ platform });
+  } = await open_Alice2({ platform, testInfo });
 
   const noteToSelf = englishStrippedStr('noteToSelf').toString();
   await alice1.clickOnElementAll(new SearchButton(alice1));

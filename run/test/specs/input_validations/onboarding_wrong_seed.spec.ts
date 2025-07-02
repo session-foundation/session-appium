@@ -1,8 +1,10 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../../types/sessionIt';
+import { ContinueButton } from '../locators/global';
 import { AccountRestoreButton, ErrorMessage, SeedPhraseInput } from '../locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
-import { ContinueButton } from '../locators/global';
 
 bothPlatformsIt({
   title: 'Onboarding wrong seed',
@@ -11,8 +13,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 1,
 });
 
-async function onboardingIncorrectSeed(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function onboardingIncorrectSeed(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   // the seed phrase is too long but contains only valid mnemonics which triggers the generic error
   const wrongSeed =
     'ruby bakery illness push rift reef nabbing bawled hope ruby silk lobster hope ruby ruby ruby';

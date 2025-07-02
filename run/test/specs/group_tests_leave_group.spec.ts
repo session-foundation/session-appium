@@ -1,11 +1,13 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { ConversationSettings } from './locators/conversation';
-import { LeaveGroupMenuItem, LeaveGroupConfirm } from './locators/groups';
+import { LeaveGroupConfirm, LeaveGroupMenuItem } from './locators/groups';
 import { ConversationItem } from './locators/home';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils/index';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Leave group',
@@ -14,7 +16,7 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function leaveGroup(platform: SupportedPlatformsType) {
+async function leaveGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Leave group';
 
   const {
@@ -24,6 +26,7 @@ async function leaveGroup(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
   await charlie1.clickOnElementAll(new ConversationSettings(charlie1));
   await sleepFor(1000);

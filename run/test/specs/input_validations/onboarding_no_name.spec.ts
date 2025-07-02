@@ -1,8 +1,10 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../../types/sessionIt';
+import { ContinueButton } from '../locators/global';
 import { CreateAccountButton, DisplayNameInput, ErrorMessage } from '../locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
-import { ContinueButton } from '../locators/global';
 
 bothPlatformsIt({
   title: 'Onboarding no name',
@@ -11,8 +13,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 1,
 });
 
-async function onboardingNoName(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function onboardingNoName(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   await device.clickOnElementAll(new CreateAccountButton(device));
   // the expected error is 'Please enter a display name' which is represented by the following localized string
   const expectedError = englishStrippedStr('displayNameErrorDescription').toString();

@@ -5,8 +5,9 @@ import {
 } from '@wdio/types/build/Capabilities';
 import dotenv from 'dotenv';
 import { isString } from 'lodash';
-import { CapabilitiesIndexType } from './capabilities_ios';
+
 import { getAndroidApk } from './binaries';
+import { CapabilitiesIndexType } from './capabilities_ios';
 dotenv.config();
 // Access the environment variable
 

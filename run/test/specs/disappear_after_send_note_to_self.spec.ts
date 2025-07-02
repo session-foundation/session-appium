@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { PlusButton } from './locators/home';
@@ -14,8 +16,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 1,
 });
 
-async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   const testMessage = `Testing disappearing messages in Note to Self`;
   const alice = await newUser(device, USERNAME.ALICE);
   const controlMode: DisappearActions = 'sent';

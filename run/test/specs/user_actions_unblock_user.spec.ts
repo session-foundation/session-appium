@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { BlockUser, BlockUserConfirmationModal } from './locators';
@@ -12,13 +14,14 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function unblockUser(platform: SupportedPlatformsType) {
+async function unblockUser(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { alice, bob },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
+    testInfo,
   });
   const blockedMessage = `Blocked message from ${bob.userName} to ${alice.userName}`;
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
@@ -35,9 +38,9 @@ async function unblockUser(platform: SupportedPlatformsType) {
     maxWait: 5000,
   });
   if (blockedStatus) {
-    console.info(`${bob.userName} has been blocked`);
+    alice1.info(`${bob.userName} has been blocked`);
   } else {
-    console.info('Blocked banner not found');
+    alice1.info('Blocked banner not found');
   }
   // Send message from Blocked User
   await bob1.sendMessage(blockedMessage);

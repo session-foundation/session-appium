@@ -1,9 +1,11 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DeleteMessageConfirmationModal, DeleteMessageLocally } from './locators';
 import { DeletedMessage } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Delete message locally',
@@ -11,12 +13,13 @@ bothPlatformsIt({
   testCb: deleteMessage,
   countOfDevicesNeeded: 2,
 });
-async function deleteMessage(platform: SupportedPlatformsType) {
+async function deleteMessage(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
+    testInfo,
   });
   // send message from User A to User B
   const sentMessage = await alice1.sendMessage('Checking local deletetion functionality');

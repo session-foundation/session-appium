@@ -1,9 +1,11 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { UserSettings } from './locators/settings';
 import { open_Alice2 } from './state_builder';
 import { runOnlyOnAndroid, sleepFor } from './utils';
 import { parseDataImage } from './utils/check_colour';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Avatar restored',
@@ -12,10 +14,10 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function avatarRestored(platform: SupportedPlatformsType) {
+async function avatarRestored(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, alice2 },
-  } = await open_Alice2({ platform });
+  } = await open_Alice2({ platform, testInfo });
 
   let expectedPixelHexColour: string;
   if (platform === 'android') {
@@ -38,11 +40,11 @@ async function avatarRestored(platform: SupportedPlatformsType) {
   const base64 = await alice1.getElementScreenshot(profilePicture.ELEMENT);
   const actualPixelColor = await parseDataImage(base64);
   if (actualPixelColor === expectedPixelHexColour) {
-    console.log('alice1: Colour is correct');
+    alice1.log('Colour is correct');
   } else {
-    throw new Error(`alice1: Colour isn't ${expectedPixelHexColour}, it is: ` + actualPixelColor);
+    throw new Error(`Colour isn't ${expectedPixelHexColour}, it is: ` + actualPixelColor);
   }
-  console.log('Now checking avatar on linked device');
+  alice2.log('Now checking avatar on linked device');
   // Check avatar on device 2
   await sleepFor(5000);
   await alice2.closeScreen();
@@ -55,7 +57,7 @@ async function avatarRestored(platform: SupportedPlatformsType) {
       `alice1: Colour isn't ${expectedPixelHexColour}, it is: ` + actualPixelColorLinked
     );
   }
-  console.log('Device 2: Colour is correct on linked device');
+  alice2.log('Colour is correct on linked device');
 
   await closeApp(alice1, alice2);
 }

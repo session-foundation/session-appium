@@ -1,7 +1,9 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Send video 1:1',
@@ -15,7 +17,7 @@ bothPlatformsItSeparate({
   },
 });
 
-async function sendVideoIos(platform: SupportedPlatformsType) {
+async function sendVideoIos(platform: SupportedPlatformsType, testInfo: TestInfo) {
   // Test sending a video
   // open devices
   const {
@@ -24,6 +26,7 @@ async function sendVideoIos(platform: SupportedPlatformsType) {
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
+    testInfo,
   });
   const testMessage = 'Testing-video-1';
 
@@ -49,7 +52,7 @@ async function sendVideoIos(platform: SupportedPlatformsType) {
   await closeApp(alice1, bob1);
 }
 
-async function sendVideoAndroid(platform: SupportedPlatformsType) {
+async function sendVideoAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
   // Test sending a video
   // open devices
   const {
@@ -58,6 +61,7 @@ async function sendVideoAndroid(platform: SupportedPlatformsType) {
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
+    testInfo,
   });
   const replyMessage = `Replying to video from ${alice.userName}`;
   // Send video

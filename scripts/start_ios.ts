@@ -1,4 +1,5 @@
 import { execSync, spawnSync } from 'child_process';
+
 import { getChunkedSimulators, isSimulatorBooted } from './ios_shared';
 import { sleepSync } from './shared';
 

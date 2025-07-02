@@ -1,8 +1,9 @@
 import path from 'path';
-import { EmptyLandingPage } from '../locators/home';
-import { SupportedPlatformsType } from './open_app';
+
 import { PageName } from '../../../types/testing';
+import { EmptyLandingPage } from '../locators/home';
 import { AppDisguisePage } from '../locators/settings';
+import { SupportedPlatformsType } from './open_app';
 
 // Extends locator classes with baseline screenshot paths for visual regression testing
 // If a locator appears in multiple states, a state argument must be provided to screenshotFileName()

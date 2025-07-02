@@ -1,7 +1,9 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { BlockedContactsSettings, BlockUser, BlockUserConfirmationModal } from './locators';
-import { ConversationSettings, BlockedBanner } from './locators/conversation';
+import { BlockedBanner, ConversationSettings } from './locators/conversation';
 import { ConversationItem } from './locators/home';
 import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { open_Alice2_Bob1_friends } from './state_builder';
@@ -15,13 +17,15 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function blockUserInConversationOptions(platform: SupportedPlatformsType) {
+async function blockUserInConversationOptions(
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo
+) {
   const {
     devices: { alice1, alice2, bob1 },
     prebuilt: { bob },
-  } = await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: true });
+  } = await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: true, testInfo });
   // Block contact
-
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   // Select Block option
   await sleepFor(500);
@@ -43,9 +47,9 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
     // Check linked device for blocked status (if shown on alice1)
     await alice2.onAndroid().clickOnElementAll(new ConversationItem(alice2, bob.userName));
     await alice2.onAndroid().waitForTextElementToBePresent(new BlockedBanner(alice2));
-    console.info(`${bob.userName}` + ' has been blocked');
+    alice2.info(`${bob.userName}` + ' has been blocked');
   } else {
-    console.info('Blocked banner not found');
+    alice2.info('Blocked banner not found');
   }
   // Check settings for blocked user
   await Promise.all([alice1.navigateBack(), alice2.onAndroid().navigateBack()]);

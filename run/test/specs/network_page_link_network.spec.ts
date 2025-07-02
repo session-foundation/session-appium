@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -8,8 +10,8 @@ import {
   SessionNetworkMenuItem,
 } from './locators/network_page';
 import { UserSettings } from './locators/settings';
-import { handleChromeFirstTimeOpen } from './utils/handle_first_open';
 import { newUser } from './utils/create_account';
+import { handleChromeFirstTimeOpen } from './utils/handle_first_open';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { assertUrlIsReachable, ensureHttpsURL } from './utils/utilities';
 
@@ -20,8 +22,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 1,
 });
 
-async function networkPageLearnMore(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function networkPageLearnMore(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   const linkURL = 'https://docs.getsession.org/session-network';
   await newUser(device, USERNAME.ALICE);
   await device.clickOnElementAll(new UserSettings(device));
@@ -49,7 +51,7 @@ async function networkPageLearnMore(platform: SupportedPlatformsType) {
       `The retrieved URL does not match the expected. The retrieved URL is ${fullRetrievedURL}`
     );
   } else {
-    console.log('The URLs match.');
+    device.log('The URLs match.');
   }
   await assertUrlIsReachable(linkURL);
   // Close browser and app

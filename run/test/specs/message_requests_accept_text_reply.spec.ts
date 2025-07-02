@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -5,7 +7,7 @@ import { MessageInput } from './locators/conversation';
 import { PlusButton } from './locators/home';
 import { EnterAccountID, NewMessageOption, NextButton } from './locators/start_conversation';
 import { newUser } from './utils/create_account';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Accept message request with text',
@@ -14,9 +16,9 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function acceptRequestWithText(platform: SupportedPlatformsType) {
+async function acceptRequestWithText(platform: SupportedPlatformsType, testInfo: TestInfo) {
   // Check accept request by sending text message
-  const { device1, device2 } = await openAppTwoDevices(platform);
+  const { device1, device2 } = await openAppTwoDevices(platform, testInfo);
   // Create two users
   const [alice, bob] = await Promise.all([
     newUser(device1, USERNAME.ALICE),

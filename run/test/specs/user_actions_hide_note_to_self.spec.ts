@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -21,9 +23,9 @@ bothPlatformsItSeparate({
   },
 });
 
-async function hideNoteToSelf(platform: SupportedPlatformsType) {
+async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const noteToSelf = englishStrippedStr('noteToSelf').toString();
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   await newUser(device, USERNAME.ALICE);
   await device.clickOnElementAll(new SearchButton(device));
   await device.clickOnElementAll(new NoteToSelfOption(device));

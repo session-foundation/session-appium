@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES, DisappearModes } from '../../types/testing';
@@ -22,11 +24,11 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
+async function disappearAfterSendOff1o1(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, alice2, bob1 },
     prebuilt: { alice, bob },
-  } = await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: true });
+  } = await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: true, testInfo });
 
   const mode: DisappearModes = 'send';
   const controlMode: DisappearActions = 'sent';

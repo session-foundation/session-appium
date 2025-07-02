@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -6,7 +8,7 @@ import { ConversationHeaderName, ConversationSettings } from './locators/convers
 import { SaveNameChangeButton } from './locators/settings';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Set nickname',
@@ -20,13 +22,14 @@ bothPlatformsItSeparate({
   },
 });
 
-async function setNicknameIos(platform: SupportedPlatformsType) {
+async function setNicknameIos(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const nickName = 'New nickname';
   const {
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
+    testInfo,
   });
   // Click on settings/more info
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
@@ -61,13 +64,14 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   await closeApp(alice1, bob1);
 }
 
-async function setNicknameAndroid(platform: SupportedPlatformsType) {
+async function setNicknameAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { bob },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
+    testInfo,
   });
   const nickName = 'New nickname';
   // Go back to conversation list

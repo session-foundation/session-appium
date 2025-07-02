@@ -1,10 +1,12 @@
+import type { TestInfo } from '@playwright/test';
+
+import { IOS_XPATHS } from '../../constants';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { USERNAME } from '../../types/testing';
 import { PlusButton } from './locators/home';
 import { AccountIDField, InviteAFriendOption, ShareButton } from './locators/start_conversation';
-import { IOS_XPATHS } from '../../constants';
+import { newUser } from './utils/create_account';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Invite a friend',
@@ -13,8 +15,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 1,
 });
 
-async function inviteAFriend(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function inviteAFriend(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   let messageElement;
   // This is a const so that the user.accountID can be used later on
   const user = await newUser(device, USERNAME.ALICE);
@@ -41,7 +43,7 @@ async function inviteAFriend(platform: SupportedPlatformsType) {
   // Retrieve the Share message and validate that it contains the user's Account ID
   const retrievedShareMessage = await device.getTextFromElement(messageElement);
   if (retrievedShareMessage.includes(user.accountID)) {
-    console.log("The Invite a Friend message snippet contains the user's Account ID");
+    device.log("The Invite a Friend message snippet contains the user's Account ID");
   } else {
     throw new Error(
       `The Invite a Friend message snippet does not contain the user's Account ID\nThe message goes ${retrievedShareMessage}`

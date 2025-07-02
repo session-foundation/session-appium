@@ -1,8 +1,10 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../../types/sessionIt';
+import { ContinueButton } from '../locators/global';
 import { CreateAccountButton, DisplayNameInput, ErrorMessage } from '../locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
-import { ContinueButton } from '../locators/global';
 
 bothPlatformsIt({
   title: 'Onboarding long name',
@@ -11,8 +13,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 1,
 });
 
-async function onboardingLongName(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function onboardingLongName(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   // the libSession limit for display names is 100 bytes - this string is 101 chars (i.e. 101 bytes)
   const tooLongName =
     'One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed int';

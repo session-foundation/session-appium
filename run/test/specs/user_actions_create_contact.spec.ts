@@ -1,10 +1,12 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { retryMsgSentForBanner } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
-import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 import { runOnlyOnIOS } from './utils/run_on';
 import { sleepFor } from './utils/sleep_for';
 
@@ -15,8 +17,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function createContact(platform: SupportedPlatformsType) {
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
+async function createContact(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device1, device2, device3 } = await openAppThreeDevices(platform, testInfo);
   const Alice = await linkedDevice(device1, device3, USERNAME.ALICE);
   const Bob = await newUser(device2, USERNAME.BOB);
 

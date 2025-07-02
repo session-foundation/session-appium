@@ -1,13 +1,15 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ConversationSettings } from './locators/conversation';
+import { LeaveGroupConfirm, LeaveGroupMenuItem } from './locators/groups';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { linkedDevice } from './utils/link_device';
-import { SupportedPlatformsType, closeApp, openAppFourDevices } from './utils/open_app';
-import { LeaveGroupMenuItem, LeaveGroupConfirm } from './locators/groups';
+import { closeApp, openAppFourDevices, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Leave group linked device',
@@ -16,9 +18,9 @@ bothPlatformsIt({
   countOfDevicesNeeded: 4,
 });
 
-async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
+async function leaveGroupLinkedDevice(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Leave group linked device';
-  const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
+  const { device1, device2, device3, device4 } = await openAppFourDevices(platform, testInfo);
   const charlie = await linkedDevice(device3, device4, USERNAME.CHARLIE);
   // Create users A, B and C
   const [alice, bob] = await Promise.all([

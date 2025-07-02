@@ -1,14 +1,16 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
+import { testCommunityLink, testCommunityName } from './../../constants/community';
 import { InviteContactsMenuItem } from './locators';
+import { ConversationSettings } from './locators/conversation';
+import { GroupMember } from './locators/groups';
+import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { joinCommunity } from './utils/join_community';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
-import { testCommunityLink, testCommunityName } from './../../constants/community';
-import { ConversationSettings } from './locators/conversation';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { GroupMember } from './locators/groups';
 
 bothPlatformsItSeparate({
   title: 'Disappearing community invite message 1:1',
@@ -27,13 +29,17 @@ bothPlatformsItSeparate({
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 
-async function disappearingCommunityInviteMessageIos(platform: SupportedPlatformsType) {
+async function disappearingCommunityInviteMessageIos(
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo
+) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { bob },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
+    testInfo,
   });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   // await alice1.navigateBack();
@@ -72,13 +78,17 @@ async function disappearingCommunityInviteMessageIos(platform: SupportedPlatform
   await closeApp(alice1, bob1);
 }
 
-async function disappearingCommunityInviteMessageAndroid(platform: SupportedPlatformsType) {
+async function disappearingCommunityInviteMessageAndroid(
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo
+) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { bob },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
+    testInfo,
   });
 
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);

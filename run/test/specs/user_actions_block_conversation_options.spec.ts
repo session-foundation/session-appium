@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import {
@@ -6,7 +8,7 @@ import {
   BlockUserConfirmationModal,
   ExitUserProfile,
 } from './locators';
-import { ConversationSettings, BlockedBanner } from './locators/conversation';
+import { BlockedBanner, ConversationSettings } from './locators/conversation';
 import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
@@ -19,13 +21,17 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function blockUserInConversationOptions(platform: SupportedPlatformsType) {
+async function blockUserInConversationOptions(
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo
+) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { bob },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
+    testInfo,
   });
   const blockedMessage = 'Blocked message';
 

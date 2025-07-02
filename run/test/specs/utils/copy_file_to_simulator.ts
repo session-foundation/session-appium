@@ -1,6 +1,7 @@
+import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import { execSync } from 'child_process';
+
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 
 const TARGET_GROUP_ID = 'group.com.apple.FileProvider.LocalStorage';
@@ -52,7 +53,7 @@ export function copyFileToSimulator(device: DeviceWrapper, fileName: string): vo
   );
 
   if (fs.existsSync(destinationPath)) {
-    console.log(`File already exists in simulator: ${destinationPath}`);
+    device.log(`File already exists in simulator: ${destinationPath}`);
     return;
   }
   if (!fs.existsSync(sourcePath)) {
@@ -60,5 +61,5 @@ export function copyFileToSimulator(device: DeviceWrapper, fileName: string): vo
   }
   fs.mkdirSync(downloadsPath, { recursive: true });
   fs.copyFileSync(sourcePath, destinationPath);
-  console.log(`Copied ${fileName} to simulator Downloads at: ${downloadsPath}`);
+  device.log(`Copied ${fileName} to simulator Downloads at: ${downloadsPath}`);
 }

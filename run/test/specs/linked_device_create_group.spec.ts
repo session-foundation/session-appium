@@ -1,18 +1,20 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ConversationHeaderName, ConversationSettings } from './locators/conversation';
 import {
   EditGroupNameInput,
-  UpdateGroupInformation,
   SaveGroupNameChangeButton,
+  UpdateGroupInformation,
 } from './locators/groups';
 import { ConversationItem } from './locators/home';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { linkedDevice } from './utils/link_device';
-import { SupportedPlatformsType, closeApp, openAppFourDevices } from './utils/open_app';
+import { closeApp, openAppFourDevices, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Create group and change name syncs',
@@ -26,8 +28,8 @@ bothPlatformsItSeparate({
   },
 });
 
-async function linkedGroupiOS(platform: SupportedPlatformsType) {
-  const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
+async function linkedGroupiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device1, device2, device3, device4 } = await openAppFourDevices(platform, testInfo);
   const alice = await linkedDevice(device1, device2, USERNAME.ALICE);
   const [bob, charlie] = await Promise.all([
     newUser(device3, USERNAME.BOB),
@@ -79,10 +81,10 @@ async function linkedGroupiOS(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3, device4);
 }
 
-async function linkedGroupAndroid(platform: SupportedPlatformsType) {
+async function linkedGroupAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Test group';
   const newGroupName = 'Changed group name';
-  const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
+  const { device1, device2, device3, device4 } = await openAppFourDevices(platform, testInfo);
   // Create users A, B and C
   const alice = await linkedDevice(device1, device2, USERNAME.ALICE);
   const [bob, charlie] = await Promise.all([

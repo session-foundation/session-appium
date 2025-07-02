@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -18,8 +20,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function hideRecoveryPassword(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
+async function hideRecoveryPassword(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device1, device2 } = await openAppTwoDevices(platform, testInfo);
   await linkedDevice(device1, device2, USERNAME.ALICE);
   await device1.clickOnElementAll(new UserSettings(device1));
   await device1.scrollDown();

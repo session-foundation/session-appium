@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES } from '../../types/testing';
@@ -13,7 +15,7 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
+async function disappearAfterSendGroups(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Disappear after send test';
   const testMessage = 'Testing disappear after sent in groups';
   const controlMode: DisappearActions = 'sent';
@@ -25,6 +27,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
 
   await setDisappearingMessage(platform, alice1, ['Group', `Disappear after send option`, time]);

@@ -1,8 +1,10 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { ConversationSettings } from './locators/conversation';
 import { LatestReleaseBanner, ManageMembersMenuItem } from './locators/groups';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Edit group banner',
@@ -11,7 +13,7 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function editGroupBanner(platform: SupportedPlatformsType) {
+async function editGroupBanner(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Test group';
 
   const {
@@ -20,6 +22,7 @@ async function editGroupBanner(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
   // Navigate to Edit Group screen
   await alice1.clickOnElementAll(new ConversationSettings(alice1));

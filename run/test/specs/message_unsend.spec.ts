@@ -1,9 +1,11 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
 import { DeletedMessage } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Unsend message',
@@ -12,12 +14,13 @@ bothPlatformsIt({
   countOfDevicesNeeded: 2,
 });
 
-async function unsendMessage(platform: SupportedPlatformsType) {
+async function unsendMessage(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
+    testInfo,
   });
   const testMessage = 'Checking unsend functionality';
 

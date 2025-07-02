@@ -1,8 +1,10 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
+import { OutgoingMessageStatusSent } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
-import { OutgoingMessageStatusSent } from './locators/conversation';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Send image to group',
@@ -16,7 +18,7 @@ bothPlatformsItSeparate({
   },
 });
 
-async function sendImageGroupiOS(platform: SupportedPlatformsType) {
+async function sendImageGroupiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Message checks for groups';
   const testMessage = 'Sending image to group';
 
@@ -27,6 +29,7 @@ async function sendImageGroupiOS(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
   await alice1.sendImage(testMessage);
   await alice1.waitForTextElementToBePresent({
@@ -66,7 +69,7 @@ async function sendImageGroupiOS(platform: SupportedPlatformsType) {
   await closeApp(alice1, bob1, charlie1);
 }
 
-async function sendImageGroupAndroid(platform: SupportedPlatformsType) {
+async function sendImageGroupAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Message checks for groups';
   const testMessage = 'Testing image sending to groups';
 
@@ -77,6 +80,7 @@ async function sendImageGroupAndroid(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
   const replyMessage = `Replying to image from ${alice.userName}`;
   await alice1.sendImage(testMessage);

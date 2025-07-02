@@ -1,6 +1,8 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Mentions for groups',
@@ -9,7 +11,7 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function mentionsForGroups(platform: SupportedPlatformsType) {
+async function mentionsForGroups(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Mentions test group';
   const {
     devices: { alice1, bob1, charlie1 },
@@ -18,6 +20,7 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
 
   await alice1.mentionContact(platform, bob);

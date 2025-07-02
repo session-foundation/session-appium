@@ -1,8 +1,10 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
 bothPlatformsIt({
@@ -15,7 +17,7 @@ bothPlatformsIt({
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 
-async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
+async function disappearingVideoMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testMessage = 'Testing disappearing messages for videos';
   const testGroupName = 'Testing disappearing messages';
   const {
@@ -24,6 +26,7 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   await alice1.onIOS().sendVideoiOS(testMessage);

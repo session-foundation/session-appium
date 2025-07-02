@@ -1,9 +1,10 @@
+import type { UserNameType } from '@session-foundation/qa-seeder';
+
 import { LocatorsInterface } from '.';
 import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
-import { StrategyExtractionObj } from '../../../types/testing';
-import type { UserNameType } from '@session-foundation/qa-seeder';
-import { GROUPNAME } from '../../../types/testing';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
+import { StrategyExtractionObj } from '../../../types/testing';
+import { GROUPNAME } from '../../../types/testing';
 
 export class GroupNameInput extends LocatorsInterface {
   public build(): StrategyExtractionObj {

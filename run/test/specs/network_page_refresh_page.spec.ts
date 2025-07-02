@@ -1,9 +1,11 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { LastUpdatedTimeStamp, SessionNetworkMenuItem } from './locators/network_page';
 import { UserSettings } from './locators/settings';
 import { newUser } from './utils/create_account';
-import { SupportedPlatformsType, openAppOnPlatformSingleDevice } from './utils/open_app';
+import { openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Refresh network page',
@@ -12,8 +14,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 1,
 });
 
-async function refreshNetworkPage(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function refreshNetworkPage(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
 
   const lastUpdatedExpected = 'Last updated 0m ago';
   await newUser(device, USERNAME.ALICE);

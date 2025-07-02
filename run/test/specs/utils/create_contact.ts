@@ -55,11 +55,11 @@ export const retryMsgSentForBanner = async (
     messageRequest = element !== null;
 
     if (!messageRequest) {
-      console.log(`Retrying message request`);
+      device1.log(`Retrying message request`);
       await device1.sendMessage('Retry');
       await sleepFor(5000);
     } else {
-      console.log('Found message request: No need for retry');
+      device2.log('Found message request: No need for retry');
     }
   }
 

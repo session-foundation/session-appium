@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -12,11 +14,11 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function deleteConversation(platform: SupportedPlatformsType) {
+async function deleteConversation(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, alice2 },
     prebuilt: { bob },
-  } = await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: false });
+  } = await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: false, testInfo });
 
   // Check contact has loaded on linked device
   // await alice1.navigateBack();

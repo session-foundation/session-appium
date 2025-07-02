@@ -1,10 +1,12 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { CallButton } from './locators/conversation';
 import { ContinueButton } from './locators/global';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
 bothPlatformsItSeparate({
@@ -24,13 +26,14 @@ bothPlatformsItSeparate({
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 
-async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType) {
+async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
     prebuilt: { alice, bob },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
+    testInfo,
   });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   await alice1.clickOnElementAll(new CallButton(alice1));
@@ -89,7 +92,10 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType) {
   await closeApp(alice1, bob1);
 }
 
-async function disappearingCallMessage1o1Android(platform: SupportedPlatformsType) {
+async function disappearingCallMessage1o1Android(
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo
+) {
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   const {
     devices: { alice1, bob1 },
@@ -97,6 +103,7 @@ async function disappearingCallMessage1o1Android(platform: SupportedPlatformsTyp
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
+    testInfo,
   });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   await alice1.clickOnElementAll(new CallButton(alice1));

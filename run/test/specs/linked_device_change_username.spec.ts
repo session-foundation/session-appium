@@ -1,10 +1,12 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { TickButton, UsernameInput, UsernameSettings } from './locators';
 import { SaveNameChangeButton, UserSettings } from './locators/settings';
 import { open_Alice2 } from './state_builder';
 import { sleepFor } from './utils';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Change username linked device',
@@ -18,11 +20,11 @@ bothPlatformsItSeparate({
   },
 });
 
-async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
+async function changeUsernameLinkediOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, alice2 },
     prebuilt: { alice },
-  } = await open_Alice2({ platform });
+  } = await open_Alice2({ platform, testInfo });
 
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
@@ -67,11 +69,11 @@ async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
   await closeApp(alice1, alice2);
 }
 
-async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType) {
+async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, alice2 },
     prebuilt: { alice },
-  } = await open_Alice2({ platform });
+  } = await open_Alice2({ platform, testInfo });
 
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
@@ -111,7 +113,7 @@ async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType) {
     currentLinkedUsername = await alice2.getTextFromElement(linkedUsernameEl);
   } while (currentLinkedUsername === alice.userName && currentWait < maxWait);
   {
-    console.log('Username not changed yet');
+    alice2.log('Username not changed yet');
   }
   await closeApp(alice1, alice2);
 }

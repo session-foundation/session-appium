@@ -8,9 +8,9 @@ export async function handleChromeFirstTimeOpen(device: DeviceWrapper) {
     new ChromeUseWithoutAnAccount(device)
   );
   if (!chromeUseWithoutAnAccount) {
-    console.log('Chrome opened without an account check, proceeding');
+    device.log('Chrome opened without an account check, proceeding');
   } else {
-    console.log(
+    device.log(
       'Chrome has been opened for the first time, dismissing account use and notifications'
     );
     await device.clickOnElementAll(new ChromeUseWithoutAnAccount(device));
@@ -22,9 +22,9 @@ export async function handleChromeFirstTimeOpen(device: DeviceWrapper) {
 export async function handlePhotosFirstTimeOpen(device: DeviceWrapper) {
   const continueButton = await device.doesElementExist(new iOSPhotosContinuebutton(device));
   if (!continueButton) {
-    console.log(`Photos app opened without a "What's New" screen, proceeding`);
+    device.log(`Photos app opened without a "What's New" screen, proceeding`);
   } else {
-    console.log(`Photos app has been opened for the first time, dismissing modals`);
+    device.log(`Photos app has been opened for the first time, dismissing modals`);
     await device.clickOnElementAll(new iOSPhotosContinuebutton(device));
     await device.clickOnByAccessibilityID('Don’t Allow');
   }

@@ -1,8 +1,10 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { TermsOfServiceButton, SplashScreenLinks } from './locators/onboarding';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+import { SafariAddressBar, URLInputField } from './locators/browsers';
+import { SplashScreenLinks, TermsOfServiceButton } from './locators/onboarding';
 import { handleChromeFirstTimeOpen } from './utils/handle_first_open';
-import { URLInputField, SafariAddressBar } from './locators/browsers';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { assertUrlIsReachable, ensureHttpsURL } from './utils/utilities';
 
 bothPlatformsIt({
@@ -11,8 +13,8 @@ bothPlatformsIt({
   testCb: onboardingTOS,
   countOfDevicesNeeded: 1,
 });
-async function onboardingTOS(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function onboardingTOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   const tosURL = 'https://getsession.org/terms-of-service';
   // Tap the text at the bottom of the splash screen to bring up the TOS/PP links modal
   await device.clickOnElementAll(new SplashScreenLinks(device));

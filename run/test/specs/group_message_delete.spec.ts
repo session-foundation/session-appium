@@ -1,9 +1,11 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DeleteMessageConfirmationModal, DeleteMessageLocally } from './locators';
 import { DeletedMessage } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Delete message in group',
@@ -12,7 +14,7 @@ bothPlatformsIt({
   testCb: deleteMessageGroup,
 });
 
-async function deleteMessageGroup(platform: SupportedPlatformsType) {
+async function deleteMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Message checks for groups';
   const {
     devices: { alice1, bob1, charlie1 },
@@ -20,6 +22,7 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
   const sentMessage = await alice1.sendMessage('Checking local delete functionality');
   await Promise.all([

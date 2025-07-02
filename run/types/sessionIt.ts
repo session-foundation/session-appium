@@ -1,10 +1,17 @@
-/* eslint-disable no-empty-pattern */
+// run/types/sessionIt.ts - Clean version matching original pattern
 import { test, type TestInfo } from '@playwright/test';
-import { SupportedPlatformsType } from '../test/specs/utils/open_app';
-import { TestRisk } from './testing';
-import type { AppCountPerTest } from '../test/specs/state_builder';
 import { omit } from 'lodash';
 
+import type { AppCountPerTest } from '../test/specs/state_builder';
+
+import { SupportedPlatformsType } from '../test/specs/utils/open_app';
+import {
+  captureScreenshotsOnFailure,
+  unregisterDevicesForTest,
+} from '../test/specs/utils/screenshot_helper';
+import { TestRisk } from './testing';
+
+// Test wrapper configuration
 type MobileItArgs = {
   platform: SupportedPlatformsType;
   countOfDevicesNeeded: AppCountPerTest;
@@ -31,23 +38,56 @@ function mobileIt({
   countOfDevicesNeeded,
 }: MobileItArgs) {
   const testName = `${title} @${platform} @${risk ?? 'default'}-risk @${countOfDevicesNeeded}-devices`;
+
   if (shouldSkip) {
     test.skip(testName, () => {
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);
     });
-  } else {
-    test(testName, async ({}, testInfo) => {
-      console.info(`\n\n==========> Running "${testName}"\n\n`);
-      await testCb(platform, testInfo);
-    });
+    return;
   }
+
+  // eslint-disable-next-line no-empty-pattern
+  test(testName, async ({}, testInfo) => {
+    console.info(`\n\n==========> Running "${testName}"\n\n`);
+
+    let testFailed = false;
+
+    try {
+      await testCb(platform, testInfo);
+    } catch (error) {
+      testFailed = true; // Playwright hasn't updated testInfo.status yet, so track failure manually
+      throw error;
+    } finally {
+      // NOTE: This finally block runs for thrown errors but NOT for:
+      // - Test timeouts (Playwright kills execution before finally)
+      // - Interrupts/Ctrl+C (Process terminated before finally)
+      // If timeout screenshots become important, consider using test fixtures
+      // or racing against a custom timeout promise
+      try {
+        // Check for test failure - either our flag or Playwright's status
+        if (
+          testFailed ||
+          testInfo.errors.length > 0 ||
+          testInfo.status === 'failed' ||
+          testInfo.status === 'timedOut'
+        ) {
+          await captureScreenshotsOnFailure(testInfo);
+        }
+      } catch (screenshotError) {
+        console.error('Failed to capture screenshot:', screenshotError);
+      }
+
+      try {
+        unregisterDevicesForTest(testInfo);
+      } catch (cleanupError) {
+        console.error('Failed to unregister devices:', cleanupError);
+      }
+    }
+  });
 }
 
 export function bothPlatformsIt(args: Omit<MobileItArgs, 'platform'>) {
-  // Define test for Android
   mobileIt({ platform: 'android', ...args });
-
-  // Define test for iOS
   mobileIt({ platform: 'ios', ...args });
 }
 
@@ -57,9 +97,6 @@ export function bothPlatformsItSeparate(
     android: Pick<MobileItArgs, 'shouldSkip' | 'testCb'>;
   }
 ) {
-  // Define test for Android
   mobileIt({ platform: 'android', ...omit(args, ['ios', 'android']), ...args.android });
-
-  // Define test for iOS
   mobileIt({ platform: 'ios', ...omit(args, ['ios', 'android']), ...args.ios });
 }

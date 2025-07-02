@@ -1,12 +1,13 @@
-import { pick } from 'lodash';
-import * as util from 'util';
-import sharp from 'sharp';
-import path from 'path';
-import * as fs from 'fs';
-import { v4 as uuidv4 } from 'uuid';
-import { Suffix } from '../../../types/testing';
 import { exec as execNotPromised } from 'child_process';
+import * as fs from 'fs';
+import { pick } from 'lodash';
+import path from 'path';
+import sharp from 'sharp';
+import * as util from 'util';
+import { v4 as uuidv4 } from 'uuid';
+
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
+import { Suffix } from '../../../types/testing';
 const exec = util.promisify(execNotPromised);
 
 export async function runScriptAndLog(toRun: string, verbose = false): Promise<string> {

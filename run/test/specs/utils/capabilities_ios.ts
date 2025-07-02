@@ -1,6 +1,7 @@
 import { AppiumXCUITestCapabilities } from '@wdio/types/build/Capabilities';
 import { W3CCapabilities } from '@wdio/types/build/Capabilities';
 import dotenv from 'dotenv';
+
 import { IntRange } from '../../../types/RangeType';
 dotenv.config();
 const iosPathPrefix = process.env.IOS_APP_PATH_PREFIX;

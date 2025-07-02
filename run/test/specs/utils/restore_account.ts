@@ -1,10 +1,11 @@
+import test from '@playwright/test';
+
 import { sleepFor } from '.';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
-import { AccountRestoreButton, SeedPhraseInput, SlowModeRadio } from '../locators/onboarding';
 import { ContinueButton } from '../../specs/locators/global';
 import { PlusButton } from '../locators/home';
-import test from '@playwright/test';
+import { AccountRestoreButton, SeedPhraseInput, SlowModeRadio } from '../locators/onboarding';
 
 export const restoreAccount = async (device: DeviceWrapper, user: User) => {
   await device.clickOnElementAll(new AccountRestoreButton(device));
@@ -31,7 +32,7 @@ export const restoreAccount = async (device: DeviceWrapper, user: User) => {
     });
     await device.clickOnElementAll(new ContinueButton(device));
   } else {
-    console.info('Display name found: Loading account');
+    device.info('Display name found: Loading account');
   }
   // Wait for permissions modal to pop up
   await sleepFor(500);
@@ -71,7 +72,7 @@ export const restoreAccountNoFallback = async (device: DeviceWrapper, recoveryPh
     if (displayName) {
       throw new Error('Account not found');
     }
-    console.info('Display name found: Loading account');
+    device.info('Display name found: Loading account');
 
     // Wait for permissions modal to pop up
     await sleepFor(500);

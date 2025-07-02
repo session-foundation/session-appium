@@ -1,6 +1,6 @@
-import { DeviceWrapper } from './DeviceWrapper';
+import { USERNAME as usernameFromSeeder, UserNameType } from '@session-foundation/qa-seeder';
 
-import { UserNameType, USERNAME as usernameFromSeeder } from '@session-foundation/qa-seeder';
+import { DeviceWrapper } from './DeviceWrapper';
 
 export type User = {
   userName: UserNameType;

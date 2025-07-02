@@ -1,8 +1,10 @@
+import type { TestInfo } from '@playwright/test';
+
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
-import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Create group',
@@ -11,9 +13,9 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function groupCreation(platform: SupportedPlatformsType) {
+async function groupCreation(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Test group';
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
+  const { device1, device2, device3 } = await openAppThreeDevices(platform, testInfo);
   // Create users A, B and C
   const [alice, bob, charlie] = await Promise.all([
     newUser(device1, USERNAME.ALICE),

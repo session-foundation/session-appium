@@ -1,14 +1,16 @@
+import type { TestInfo } from '@playwright/test';
+
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
+import { ConversationSettings } from './locators/conversation';
 import {
-  UpdateGroupInformation,
   EditGroupNameInput,
   SaveGroupNameChangeButton,
+  UpdateGroupInformation,
 } from './locators/groups';
-import { sleepFor } from './utils';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
-import { ConversationSettings } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { sleepFor } from './utils';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Change group name',
@@ -22,7 +24,7 @@ bothPlatformsItSeparate({
   },
 });
 
-async function changeGroupNameIos(platform: SupportedPlatformsType) {
+async function changeGroupNameIos(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Test group';
   const newGroupName = 'Changed group name';
 
@@ -32,6 +34,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
   // Click on settings or three dots
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
@@ -51,7 +54,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   });
   const attr = await alice1.getAttribute('value', saveButton.ELEMENT);
   if (attr !== 'enabled') {
-    console.log('Save button disabled - no text input');
+    alice1.log('Save button disabled - no text input');
   } else {
     throw new Error('Save button should be disabled');
   }
@@ -69,7 +72,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   await closeApp(alice1, bob1, charlie1);
 }
 
-async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
+async function changeGroupNameAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Test group';
   const newGroupName = 'Changed group name';
 
@@ -79,6 +82,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
   // Click on settings or three dots
   await alice1.clickOnElementAll(new ConversationSettings(alice1));

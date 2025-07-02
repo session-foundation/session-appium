@@ -1,9 +1,11 @@
+import type { TestInfo } from '@playwright/test';
+
 import { longText } from '../../constants';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
-import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { SupportedPlatformsType, closeApp } from './utils/open_app';
 import { OutgoingMessageStatusSent } from './locators/conversation';
 import { ConversationItem } from './locators/home';
+import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Send long message to group',
@@ -17,7 +19,7 @@ bothPlatformsItSeparate({
   },
 });
 
-async function sendLongMessageGroupiOS(platform: SupportedPlatformsType) {
+async function sendLongMessageGroupiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Message checks for groups';
   // Sending a long text message
 
@@ -28,6 +30,7 @@ async function sendLongMessageGroupiOS(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
   await alice1.sendMessage(longText);
   await bob1.waitForTextElementToBePresent({
@@ -55,7 +58,7 @@ async function sendLongMessageGroupiOS(platform: SupportedPlatformsType) {
   await closeApp(alice1, bob1, charlie1);
 }
 
-async function sendLongMessageGroupAndroid(platform: SupportedPlatformsType) {
+async function sendLongMessageGroupAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Message checks for groups';
 
   const {
@@ -65,6 +68,7 @@ async function sendLongMessageGroupAndroid(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
 
   // Sending a long text message

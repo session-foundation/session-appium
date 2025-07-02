@@ -1,6 +1,8 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME, type AccessibilityId } from '../../types/testing';
+import { type AccessibilityId, USERNAME } from '../../types/testing';
 import { BlockedContactsSettings } from './locators';
 import { PlusButton } from './locators/home';
 import { ConversationsMenuItem, UserSettings } from './locators/settings';
@@ -16,8 +18,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function blockedRequest(platform: SupportedPlatformsType) {
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
+async function blockedRequest(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device1, device2, device3 } = await openAppThreeDevices(platform, testInfo);
 
   const alice = await newUser(device1, USERNAME.ALICE);
   const bob = await linkedDevice(device2, device3, USERNAME.BOB);

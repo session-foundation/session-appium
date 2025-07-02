@@ -1,7 +1,8 @@
 import fs from 'fs-extra';
-import path from 'path';
-import { allureCurrentReportDir } from '../../../../constants/allure';
 import ghpages from 'gh-pages';
+import path from 'path';
+
+import { allureCurrentReportDir } from '../../../../constants/allure';
 import { getReportContextFromEnv, patchStylesCss, writeMetadataJson } from './allureHelpers';
 
 // Bail out early if not on CI

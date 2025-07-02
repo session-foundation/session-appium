@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -19,7 +21,7 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function kickMember(platform: SupportedPlatformsType) {
+async function kickMember(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Kick member';
 
   const {
@@ -28,6 +30,7 @@ async function kickMember(platform: SupportedPlatformsType) {
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
+    testInfo,
   });
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   await alice1.clickOnElementAll(new ManageMembersMenuItem(alice1));

@@ -1,5 +1,6 @@
-import fs from 'fs-extra';
 import { exec } from 'child_process';
+import fs from 'fs-extra';
+
 import { allureCurrentReportDir, allureResultsDir } from '../../../../constants/allure';
 import {
   getReportContextFromEnv,

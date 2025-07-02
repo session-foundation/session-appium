@@ -1,5 +1,6 @@
-import PNG from 'png-js';
 import { colors } from 'looks-same';
+import PNG from 'png-js';
+
 import { hexToRgbObject } from './utilities';
 
 export async function parseDataImage(base64: string) {
@@ -20,9 +21,7 @@ export async function parseDataImage(base64: string) {
   });
 
   const middlePx = px.buffer.slice(pxDataStart, pxDataEnd);
-  // console.info("middlePx RGB: ", Buffer.from(middlePx).toString("hex"));
   const pixelColor = Buffer.from(middlePx).toString('hex');
-  // console.info("Middle x:", middleX, "middleY:", middleY, "width:", width);
   return pixelColor;
 }
 

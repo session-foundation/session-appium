@@ -1,9 +1,11 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
-import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
   title: 'Accept message request',
@@ -12,10 +14,10 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
 });
 
-async function acceptRequest(platform: SupportedPlatformsType) {
+async function acceptRequest(platform: SupportedPlatformsType, testInfo: TestInfo) {
   // Check 'accept' button
   // Open app
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
+  const { device1, device2, device3 } = await openAppThreeDevices(platform, testInfo);
   // Create two users
   const alice = await newUser(device1, USERNAME.ALICE);
   const bob = await linkedDevice(device2, device3, USERNAME.BOB);

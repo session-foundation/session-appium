@@ -1,7 +1,9 @@
+import type { TestInfo } from '@playwright/test';
+
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { androidIt } from '../../types/sessionIt';
-import { SupportedPlatformsType, openAppOnPlatformSingleDevice } from './utils/open_app';
-import { newUser } from './utils/create_account';
 import { USERNAME } from '../../types/testing';
+import { DisguisedApp } from './locators/external';
 import {
   AppDisguiseMeetingIcon,
   AppearanceMenuItem,
@@ -9,12 +11,12 @@ import {
   SelectAppIcon,
   UserSettings,
 } from './locators/settings';
-import { DisguisedApp } from './locators/external';
 import { sleepFor } from './utils';
-import { runScriptAndLog } from './utils/utilities';
 import { getAdbFullPath } from './utils/binaries';
+import { newUser } from './utils/create_account';
+import { openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { closeApp } from './utils/open_app';
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { runScriptAndLog } from './utils/utilities';
 
 // iOS implementation blocked by SES-3809
 androidIt({
@@ -24,8 +26,8 @@ androidIt({
   testCb: appDisguiseSetIcon,
 });
 
-async function appDisguiseSetIcon(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function appDisguiseSetIcon(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   await newUser(device, USERNAME.ALICE);
   await device.clickOnElementAll(new UserSettings(device));
   // Must scroll down to reveal the Appearance menu item

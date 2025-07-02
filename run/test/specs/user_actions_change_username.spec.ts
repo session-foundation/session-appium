@@ -1,3 +1,5 @@
+import type { TestInfo } from '@playwright/test';
+
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -5,7 +7,7 @@ import { TickButton, UsernameInput, UsernameSettings } from './locators';
 import { SaveNameChangeButton, UserSettings } from './locators/settings';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
-import { SupportedPlatformsType, closeApp, openAppOnPlatformSingleDevice } from './utils/open_app';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Change username',
@@ -19,8 +21,8 @@ bothPlatformsItSeparate({
   },
 });
 
-async function changeUsernameiOS(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function changeUsernameiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   const alice = await newUser(device, USERNAME.ALICE);
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
@@ -42,9 +44,9 @@ async function changeUsernameiOS(platform: SupportedPlatformsType) {
     selector: 'Username',
   });
   const changedUsername = await device.getTextFromElement(username);
-  console.log('Changed username', changedUsername);
+  device.log('Changed username', changedUsername);
   if (changedUsername === newUsername) {
-    console.log('Username change successful');
+    device.log('Username change successful');
   }
   if (changedUsername === alice.userName) {
     throw new Error('Username change unsuccessful');
@@ -53,8 +55,8 @@ async function changeUsernameiOS(platform: SupportedPlatformsType) {
   await closeApp(device);
 }
 
-async function changeUsernameAndroid(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
+async function changeUsernameAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   const alice = await newUser(device, USERNAME.ALICE);
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
@@ -72,9 +74,9 @@ async function changeUsernameAndroid(platform: SupportedPlatformsType) {
     text: newUsername,
   });
   const changedUsername = await device.getTextFromElement(username);
-  console.log('Changed username', changedUsername);
+  device.log('Changed username', changedUsername);
   if (changedUsername === newUsername) {
-    console.log('Username change successful');
+    device.log('Username change successful');
   }
   if (changedUsername === alice.userName) {
     throw new Error('Username change unsuccessful');
