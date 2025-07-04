@@ -1,65 +1,84 @@
-import type { TestInfo } from '@playwright/test';
+import { test, type TestInfo } from '@playwright/test';
 
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteContactModalConfirm } from './locators/global';
+import { ConversationItem } from './locators/home';
 import { open_Alice2_Bob1_friends } from './state_builder';
-import { SupportedPlatformsType } from './utils/open_app';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
-  title: 'Delete conversation',
+  title: 'Delete conversation from conversation list',
   risk: 'high',
   testCb: deleteConversation,
   countOfDevicesNeeded: 3,
+  allureSuites: {
+    parent: 'User Actions',
+    suite: 'Delete Contact',
+  },
 });
 
 async function deleteConversation(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const {
-    devices: { alice1, alice2 },
-    prebuilt: { bob },
-  } = await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: false, testInfo });
+  const { devices, prebuilt } = await test.step('Restore pre-seeded accounts', async () => {
+    return await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: false, testInfo });
+  });
 
-  // Check contact has loaded on linked device
-  // await alice1.navigateBack();
-  // await bob1.navigateBack();
-  // Check username has changed from session id on both device 1 and 3
-  await Promise.all([
-    alice1.waitForTextElementToBePresent({
+  const { alice1, alice2, bob1 } = devices;
+  const { alice, bob } = prebuilt;
+
+  await test.step(`Verify conversation exists on alice1 and alice2`, async () => {
+    await Promise.all([
+      alice1.waitForTextElementToBePresent(new ConversationItem(alice1, bob.userName)),
+      alice2.waitForTextElementToBePresent(new ConversationItem(alice2, bob.userName)),
+    ]);
+  });
+
+  await test.step('Delete conversation from alice1', async () => {
+    await alice1.onIOS().swipeLeft('Conversation list item', bob.userName);
+    await alice1.onAndroid().longPressConversation(bob.userName);
+    await alice1.clickOnElementAll({
       strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: bob.userName,
-    }),
-    alice2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: bob.userName,
-    }),
-  ]);
-  // Delete conversation
-  await alice1.onIOS().swipeLeft('Conversation list item', bob.userName);
-  await alice1.onAndroid().longPressConversation(bob.userName);
-  await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Delete' });
-  await alice1.checkModalStrings(
-    englishStrippedStr('conversationsDelete').toString(),
-    englishStrippedStr('conversationsDeleteDescription')
-      .withArgs({ name: USERNAME.BOB })
-      .toString(),
-    false
-  );
-  await alice1.clickOnElementAll(new DeleteContactModalConfirm(alice1));
-  await Promise.all([
-    alice1.doesElementExist({
-      strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: bob.userName,
-      maxWait: 500,
-    }),
-    alice2.doesElementExist({
-      strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: bob.userName,
-      maxWait: 500,
-    }),
-  ]);
+      selector: 'Delete',
+    });
+    await test.step('Verify delete confirmation modal', async () => {
+      await alice1.checkModalStrings(
+        englishStrippedStr('conversationsDelete').toString(),
+        englishStrippedStr('conversationsDeleteDescription')
+          .withArgs({ name: USERNAME.BOB })
+          .toString(),
+        false
+      );
+    });
+    await alice1.clickOnElementAll(new DeleteContactModalConfirm(alice1));
+  });
+
+  await test.step('Verify conversation deleted on both alice devices', async () => {
+    await Promise.all([
+      alice1.hasElementBeenDeleted({
+        ...new ConversationItem(alice1, bob.userName).build(),
+        maxWait: 3000,
+      }),
+      alice2.hasElementBeenDeleted({
+        ...new ConversationItem(alice2, bob.userName).build(),
+        maxWait: 3000,
+      }),
+    ]);
+  });
+
+  await test.step('Send message from Bob to Alice', async () => {
+    await bob1.clickOnElementAll(new ConversationItem(bob1, alice.userName));
+    await bob1.sendMessage('This is a new message');
+  });
+
+  await test.step('Verify conversation reappears on both alice devices', async () => {
+    await Promise.all([
+      alice1.waitForTextElementToBePresent(new ConversationItem(alice1, bob.userName)),
+      alice2.waitForTextElementToBePresent(new ConversationItem(alice2, bob.userName)),
+    ]);
+  });
+
+  await test.step('Close all apps', async () => {
+    await closeApp(alice1, alice2, bob1);
+  });
 }
