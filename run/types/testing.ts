@@ -202,6 +202,7 @@ export type AccessibilityId =
   | 'Create group'
   | 'Decline message request'
   | 'Delete'
+  | 'Delete Conversation'
   | 'Deleted message'
   | 'Delete for everyone'
   | 'Delete for me'
@@ -494,3 +495,22 @@ export type ElementStates = 'new_account' | 'restore_account';
 export type PageName = 'network_page' | 'staking_page';
 
 export type Suffix = 'diff' | 'screenshot';
+
+export const AllureSuites = {
+  USER_ACTIONS: {
+    parent: 'User Actions' as const,
+    suites: {
+      DELETE_CONVERSATION: 'Delete Conversation',
+      DELETE_CONTACT: 'Delete Contact',
+      HIDE_NOTE_TO_SELF: 'Hide Note to Self',
+    } as const,
+  },
+} as const;
+
+// Extract valid combinations as a union type
+type SuiteConfig<T extends keyof typeof AllureSuites> = {
+  parent: (typeof AllureSuites)[T]['parent'];
+  suite: (typeof AllureSuites)[T]['suites'][keyof (typeof AllureSuites)[T]['suites']];
+};
+
+export type AllureSuiteConfig = SuiteConfig<'USER_ACTIONS'>;

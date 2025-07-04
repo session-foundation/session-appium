@@ -1,5 +1,6 @@
 // run/types/sessionIt.ts - Clean version matching original pattern
 import { test, type TestInfo } from '@playwright/test';
+import * as allure from 'allure-js-commons';
 import { omit } from 'lodash';
 
 import type { AppCountPerTest } from '../test/specs/state_builder';
@@ -9,7 +10,7 @@ import {
   captureScreenshotsOnFailure,
   unregisterDevicesForTest,
 } from '../test/specs/utils/screenshot_helper';
-import { TestRisk } from './testing';
+import { AllureSuiteConfig, TestRisk } from './testing';
 
 // Test wrapper configuration
 type MobileItArgs = {
@@ -19,6 +20,7 @@ type MobileItArgs = {
   risk: TestRisk;
   testCb: (platform: SupportedPlatformsType, testInfo: TestInfo) => Promise<void>;
   shouldSkip?: boolean;
+  allureSuites?: AllureSuiteConfig;
 };
 
 export function androidIt(args: Omit<MobileItArgs, 'platform'>) {
@@ -36,6 +38,7 @@ function mobileIt({
   title,
   shouldSkip = false,
   countOfDevicesNeeded,
+  allureSuites,
 }: MobileItArgs) {
   const testName = `${title} @${platform} @${risk ?? 'default'}-risk @${countOfDevicesNeeded}-devices`;
 
@@ -50,6 +53,10 @@ function mobileIt({
   test(testName, async ({}, testInfo) => {
     console.info(`\n\n==========> Running "${testName}"\n\n`);
 
+    if (allureSuites) {
+      await allure.parentSuite(allureSuites.parent);
+      await allure.suite(allureSuites.suite);
+    }
     let testFailed = false;
 
     try {
