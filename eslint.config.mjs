@@ -59,6 +59,26 @@ export default tseslint.config(
       ],
       'perfectionist/sort-imports': 'error',
       'perfectionist/sort-named-imports': 'error',
+      'perfectionist/sort-union-types': [
+        'error',
+        {
+          // This ensures null/undefined come after other types for better readability
+          groups: [
+            'named',
+            'keyword',
+            'operator',
+            'literal',
+            'function',
+            'import',
+            'conditional',
+            'object',
+            'tuple',
+            'intersection',
+            'union',
+            'nullish',
+          ],
+        },
+      ],
     },
   }
 );

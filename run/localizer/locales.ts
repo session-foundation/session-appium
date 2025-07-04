@@ -2958,6 +2958,38 @@ export const simpleDictionary = {
     en: 'Preview',
     args: undefined,
   },
+  proCallToActionLongerMessages: {
+    en: 'Want to send longer messages? Send more text and unlock premium features with Session Pro',
+    args: undefined,
+  },
+  proCallToActionPinnedConversations: {
+    en: 'Want more pins? Organize your chats and unlock premium features with Session Pro',
+    args: undefined,
+  },
+  proCallToActionPinnedConversationsMoreThan: {
+    en: 'Want more than 5 pins? Organize your chats and unlock premium features with Session Pro',
+    args: undefined,
+  },
+  proFeatureListLargerGroups: {
+    en: 'Larger group chats up to 300 members',
+    args: undefined,
+  },
+  proFeatureListLoadsMore: {
+    en: 'Plus loads more exclusive features',
+    args: undefined,
+  },
+  proFeatureListLongerMessages: {
+    en: 'Messages up to 10,000 characters',
+    args: undefined,
+  },
+  proFeatureListPinnedConversations: {
+    en: 'Pin unlimited conversations',
+    args: undefined,
+  },
+  proSendMore: {
+    en: 'Send more with',
+    args: undefined,
+  },
   profile: {
     en: 'Profile',
     args: undefined,
@@ -3513,6 +3545,10 @@ export const simpleDictionary = {
   updated: {
     en: 'Last updated {relative_time} ago',
     args: { relative_time: 'string' },
+  },
+  upgradeTo: {
+    en: 'Upgrade to',
+    args: undefined,
   },
   uploading: {
     en: 'Uploading',

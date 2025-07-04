@@ -162,7 +162,7 @@ export class DeviceWrapper {
 
   public async getElementRect(
     elementId: string
-  ): Promise<undefined | { height: number; width: number; x: number; y: number }> {
+  ): Promise<{ height: number; width: number; x: number; y: number } | undefined> {
     return this.toShared().getElementRect(elementId);
   }
 
@@ -379,9 +379,9 @@ export class DeviceWrapper {
   }
 
   public async clickOnElementAll(
-    args: { text?: string; maxWait?: number } & (StrategyExtractionObj | LocatorsInterface)
+    args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
   ) {
-    let el: null | AppiumNextElementType = null;
+    let el: AppiumNextElementType | null = null;
     const locator = args instanceof LocatorsInterface ? args.build() : args;
 
     el = await this.waitForTextElementToBePresent({ ...locator });
@@ -583,9 +583,9 @@ export class DeviceWrapper {
   }
 
   public async deleteText(
-    args: ({ text?: string; maxWait?: number } & StrategyExtractionObj) | LocatorsInterface
+    args: LocatorsInterface | ({ text?: string; maxWait?: number } & StrategyExtractionObj)
   ) {
-    let el: null | AppiumNextElementType = null;
+    let el: AppiumNextElementType | null = null;
     const locator = args instanceof LocatorsInterface ? args.build() : args;
 
     el = await this.waitForTextElementToBePresent({ ...locator });
@@ -902,7 +902,7 @@ export class DeviceWrapper {
   }
 
   public async doesElementExist(
-    args: { text?: string; maxWait?: number } & (StrategyExtractionObj | LocatorsInterface)
+    args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
   ) {
     const beforeStart = Date.now();
     const maxWaitMSec = args.maxWait || 30000;
@@ -957,7 +957,7 @@ export class DeviceWrapper {
     args: {
       text?: string;
       maxWait: number;
-    } & (StrategyExtractionObj | LocatorsInterface)
+    } & (LocatorsInterface | StrategyExtractionObj)
   ) {
     const start = Date.now();
     let element: AppiumNextElementType | undefined = undefined;
@@ -1011,9 +1011,9 @@ export class DeviceWrapper {
     args: {
       text?: string;
       maxWait?: number;
-    } & (StrategyExtractionObj | LocatorsInterface)
+    } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<AppiumNextElementType> {
-    let el: null | AppiumNextElementType = null;
+    let el: AppiumNextElementType | null = null;
     const locator = args instanceof LocatorsInterface ? args.build() : args;
 
     const { text, maxWait } = args;
@@ -1063,7 +1063,7 @@ export class DeviceWrapper {
     text: string,
     maxWait?: number
   ): Promise<AppiumNextElementType> {
-    let el: null | AppiumNextElementType = null;
+    let el: AppiumNextElementType | null = null;
     const maxWaitMSec: number = typeof maxWait === 'number' ? maxWait : 15000;
     let currentWait = 0;
     const waitPerLoop = 100;
@@ -1095,7 +1095,7 @@ export class DeviceWrapper {
     text: string,
     maxWait?: number
   ): Promise<AppiumNextElementType> {
-    let el: null | AppiumNextElementType = null;
+    let el: AppiumNextElementType | null = null;
     const maxWaitMSec: number = typeof maxWait === 'number' ? maxWait : 15000;
     let currentWait = 0;
     const waitPerLoop = 100;
@@ -1240,7 +1240,7 @@ export class DeviceWrapper {
     return message;
   }
 
-  public async sendMessageTo(sender: User, receiver: User | Group) {
+  public async sendMessageTo(sender: User, receiver: Group | User) {
     const message = `${sender.userName} to ${receiver.userName}`;
     await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',
@@ -1295,9 +1295,9 @@ export class DeviceWrapper {
 
   public async inputText(
     textToInput: string,
-    args: ({ maxWait?: number } & StrategyExtractionObj) | LocatorsInterface
+    args: LocatorsInterface | ({ maxWait?: number } & StrategyExtractionObj)
   ) {
-    let el: null | AppiumNextElementType = null;
+    let el: AppiumNextElementType | null = null;
     const locator = args instanceof LocatorsInterface ? args.build() : args;
 
     this.log('Locator being used:', locator);
@@ -1955,7 +1955,7 @@ export class DeviceWrapper {
   }
 
   public async checkPermissions(
-    selector: Extract<AccessibilityId, 'Allow Full Access' | 'Don’t Allow' | 'Allow'>
+    selector: Extract<AccessibilityId, 'Allow' | 'Allow Full Access' | 'Don’t Allow'>
   ) {
     if (this.isAndroid()) {
       const permissions = await this.doesElementExist({
@@ -2059,7 +2059,7 @@ export class DeviceWrapper {
 
     // Sanitize
     function removeNewLines(input: string): string {
-      return input.replace(/\n/gi, '');
+      return input.replace(/\n+/g, ' ').trim();
     }
 
     // Locators

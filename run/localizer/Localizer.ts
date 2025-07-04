@@ -7,7 +7,7 @@ type PluralDictionary = typeof pluralsDictionary;
 export type SimpleLocalizerTokens = keyof SimpleDictionary;
 export type PluralLocalizerTokens = keyof PluralDictionary;
 
-export type MergedLocalizerTokens = SimpleLocalizerTokens | PluralLocalizerTokens;
+export type MergedLocalizerTokens = PluralLocalizerTokens | SimpleLocalizerTokens;
 
 export function isSimpleToken(token: string): token is SimpleLocalizerTokens {
   return token in simpleDictionary;
@@ -17,7 +17,7 @@ export function isPluralToken(token: string): token is PluralLocalizerTokens {
   return token in pluralsDictionary;
 }
 
-type DynamicArgStr = 'string' | 'number';
+type DynamicArgStr = 'number' | 'string';
 
 type ArgsTypeStrToTypes<T extends DynamicArgStr> = T extends 'string'
   ? string
@@ -26,7 +26,7 @@ type ArgsTypeStrToTypes<T extends DynamicArgStr> = T extends 'string'
     : never;
 
 // those are still a string of the type "string" | "number" and not the typescript types themselves
-type ArgsFromTokenStr<T extends SimpleLocalizerTokens | PluralLocalizerTokens> =
+type ArgsFromTokenStr<T extends PluralLocalizerTokens | SimpleLocalizerTokens> =
   T extends SimpleLocalizerTokens
     ? SimpleDictionary[T] extends { args: infer A }
       ? A extends Record<string, any>
@@ -54,9 +54,9 @@ type MappedToTsTypes<T extends Record<string, DynamicArgStr>> = {
  * @returns The sanitized args
  */
 function sanitizeArgs(
-  args: Record<string, string | number>,
+  args: Record<string, number | string>,
   identifier?: string
-): Record<string, string | number> {
+): Record<string, number | string> {
   return Object.fromEntries(
     Object.entries(args).map(([key, value]) => [
       key,
@@ -171,7 +171,12 @@ class LocalizedStringBuilder<T extends MergedLocalizerTokens> extends String {
   }
 
   private postProcessStrippedString(str: string): string {
-    const strippedString = str.replaceAll(/<[^>]*>/g, '');
+    // Normalize whitespace around <br> tags:
+    // " <br/><br/>" and "<br/>" both become a single space
+    let strippedString = str.replace(/\s*(<br\s*\/?>[\s]*)+/gi, ' ');
+    // Then, remove all other HTML tags
+    strippedString = strippedString.replace(/<[^>]*>/g, '');
+
     return deSanitizeHtmlTags(strippedString, '\u200B');
   }
 

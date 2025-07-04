@@ -3,14 +3,19 @@ import { test, type TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import {
+  ConversationSettings,
+  DeleteConversationMenuItem,
+  DeleteModalConfirm,
+} from './locators/conversation';
 import { ConversationItem } from './locators/home';
 import { open_Alice2_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
-  title: 'Delete conversation from conversation list',
+  title: 'Delete conversation from conversation settings',
   risk: 'high',
-  testCb: deleteConversation,
+  testCb: deleteConversationUCS,
   countOfDevicesNeeded: 3,
   allureSuites: {
     parent: 'User Actions',
@@ -18,7 +23,7 @@ bothPlatformsIt({
   },
 });
 
-async function deleteConversation(platform: SupportedPlatformsType, testInfo: TestInfo) {
+async function deleteConversationUCS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { devices, prebuilt } = await test.step('Restore pre-seeded accounts', async () => {
     return await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: false, testInfo });
   });
@@ -34,23 +39,19 @@ async function deleteConversation(platform: SupportedPlatformsType, testInfo: Te
     );
   });
 
-  await test.step('Delete conversation from alice1', async () => {
-    await alice1.onIOS().swipeLeft('Conversation list item', bob.userName);
-    await alice1.onAndroid().longPressConversation(bob.userName);
-    await alice1.clickOnElementAll({
-      strategy: 'accessibility id',
-      selector: 'Delete',
-    });
+  await test.step('Delete conversation from UCS on alice1', async () => {
+    await alice1.clickOnElementAll(new ConversationItem(alice1, bob.userName));
+    await alice1.clickOnElementAll(new ConversationSettings(alice1));
+    await alice1.clickOnElementAll(new DeleteConversationMenuItem(alice1));
     await test.step('Verify delete confirmation modal', async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('conversationsDelete').toString(),
-        englishStrippedStr('deleteConversationDescription') // This is currently incorrect on both platforms, SES-4142 and 4143
+        englishStrippedStr('deleteConversationDescription')
           .withArgs({ name: USERNAME.BOB })
-          .toString(),
-        false
+          .toString()
       );
     });
-    await alice1.clickOnByAccessibilityID('Delete');
+    await alice1.clickOnElementAll(new DeleteModalConfirm(alice1));
   });
 
   await test.step('Verify conversation deleted on both alice devices', async () => {
@@ -58,7 +59,7 @@ async function deleteConversation(platform: SupportedPlatformsType, testInfo: Te
       [alice1, alice2].map(device =>
         device.hasElementBeenDeleted({
           ...new ConversationItem(device, bob.userName).build(),
-          maxWait: 3000,
+          maxWait: 5000,
         })
       )
     );

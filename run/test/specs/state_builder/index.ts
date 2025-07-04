@@ -42,8 +42,8 @@ type WithUsers<C extends AppCountPerTest> = C extends 4
  */
 async function focusConvoOnDevices(
   args:
-    | { devices: Array<DeviceWrapper>; convoName: string }
     | Array<{ device: DeviceWrapper; convoName: string }>
+    | { devices: Array<DeviceWrapper>; convoName: string }
 ) {
   // single array of devices was given. That means we want to focus a different convo for each device
   if (Array.isArray(args)) {
