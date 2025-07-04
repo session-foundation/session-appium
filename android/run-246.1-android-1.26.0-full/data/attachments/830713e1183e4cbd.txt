@@ -1,0 +1,289 @@
+
+
+==========> Running "Create group banner @android @high-risk @2-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 1 1
+actualCapabilities worker 2
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 1 1
+actualCapabilities worker 3
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5560 true
+emulatorAlreadyRunning emulator-5558 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"0525622f3d0ec940ad9b16a0ff53d1e7f2bdc2b909dbe3d297952dffcf30fdfb6a","seedPhrase":"shackles fixate loyal oneself reduce vary brunt dewdrop skirting gulp vapidly tyrant tyrant"},
+SessionUser: {"name":"Bob","sessionId":"056e0192c4ce2779d0ca36401f88e1c54ac6fa208311588d35426c8e288e6e7713","seedPhrase":"return eavesdrop uneven cynical aglow nephew rudely pram doing hoisting wayside avatar hoisting"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"0525622f3d0ec940ad9b16a0ff53d1e7f2bdc2b909dbe3d297952dffcf30fdfb6a","seedPhrase":"shackles fixate loyal oneself reduce vary brunt dewdrop skirting gulp vapidly tyrant tyrant"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"0525622f3d0ec940ad9b16a0ff53d1e7f2bdc2b909dbe3d297952dffcf30fdfb6a","seedPhrase":"shackles fixate loyal oneself reduce vary brunt dewdrop skirting gulp vapidly tyrant tyrant"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"056e0192c4ce2779d0ca36401f88e1c54ac6fa208311588d35426c8e288e6e7713","seedPhrase":"return eavesdrop uneven cynical aglow nephew rudely pram doing hoisting wayside avatar hoisting"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"056e0192c4ce2779d0ca36401f88e1c54ac6fa208311588d35426c8e288e6e7713","seedPhrase":"return eavesdrop uneven cynical aglow nephew rudely pram doing hoisting wayside avatar hoisting"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"0525622f3d0ec940ad9b16a0ff53d1e7f2bdc2b909dbe3d297952dffcf30fdfb6a","seedPhrase":"shackles fixate loyal oneself reduce vary brunt dewdrop skirting gulp vapidly tyrant tyrant"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"056e0192c4ce2779d0ca36401f88e1c54ac6fa208311588d35426c8e288e6e7713","seedPhrase":"return eavesdrop uneven cynical aglow nephew rudely pram doing hoisting wayside avatar hoisting"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [ Promise { <pending> } ]
+emulator-5560  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5560'
+  }
+}
+udid: emulator-5560
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+random snode for user: 056e0192c4ce2779d0ca36401f88e1c54ac6fa208311588d35426c8e288e6e7713 is snode: e2a753a85be493ddcb6d1cafd5e19fa6278a23f5ed9ac338320e5af9518ad8c0
+storing to snode https://91.134.216.101:22021/storage_rpc/v1
+storing to snode https://91.134.216.101:22021/storage_rpc/v1
+storing to snode https://91.134.216.101:22021/storage_rpc/v1
+random snode for user: 0525622f3d0ec940ad9b16a0ff53d1e7f2bdc2b909dbe3d297952dffcf30fdfb6a is snode: 26c523de6bf5c22fad57d7a2d60d8af8cce24b215b2d10cdf9479cc3df473d6e
+storing to snode https://195.154.91.140:22153/storage_rpc/v1
+storing to snode https://195.154.91.140:22153/storage_rpc/v1
+storing to snode https://195.154.91.140:22153/storage_rpc/v1
+storeStatus for Alice: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "shackles fixate loyal oneself reduce vary brunt dewdrop skirting gulp vapidly tyrant tyrant"
+	"Bob": "return eavesdrop uneven cynical aglow nephew rudely pram doing hoisting wayside avatar hoisting" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+[alice1] Device identity changed from device-5558 to alice1
+[bob1] Device identity changed from device-5560 to bob1
+[alice1] Waiting for "id" and "Restore your session button" to be present
+[bob1] Waiting for "id" and "Restore your session button" to be present
+[bob1] 'Restore your session button' has been found
+[alice1] 'Restore your session button' has been found
+[alice1] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[alice1] Waiting for "id" and "Recovery phrase input" to be present
+[bob1] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[bob1] Waiting for "id" and "Recovery phrase input" to be present
+[bob1] 'Recovery phrase input' has been found
+[alice1] waitForTextElementToBePresent threw: "id": "Recovery phrase input
+[alice1] Waiting for "id" and "Recovery phrase input" to be present
+[alice1] 'Recovery phrase input' has been found
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] 'Continue' has been found
+[bob1] Waiting for "id" and "Slow mode notifications button" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[bob1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[bob1] 'Slow mode notifications button' has been found
+[alice1] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] 'Slow mode notifications button' has been found
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] 'Continue' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Continue' has been found
+[bob1] 'Loading animation' has been found
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Loading animation not found
+[bob1] Loading animation has finished
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] 'Loading animation' has been found
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] 'Loading animation' has been found
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name doesn't exist, time expired
+[bob1] Display name found: Loading account
+[alice1] 'Loading animation' has been found
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[alice1] 'Loading animation' has been found
+[bob1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] 'Loading animation' has been found
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Element has been deleted, great success
+[bob1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] 'New conversation button' has been found
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Loading animation not found
+[alice1] Loading animation has finished
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name doesn't exist, time expired
+[alice1] Display name found: Loading account
+[alice1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[alice1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Element has been deleted, great success
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] 'New conversation button' has been found
+[bob1] Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+[alice1] Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+[bob1] Text found to include Alice
+[bob1] 'Conversation list item' and 'Alice' has been found
+[alice1] Text found to include Bob
+[alice1] 'Conversation list item' and 'Bob' has been found
+[alice1] doesElementExist failed with id Navigate back
+[alice1] Navigate back Doesn't exist but retrying
+[alice1] Waiting for "id" and "Navigate back" to be present
+[alice1] 'Navigate back' has been found
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "New conversation button
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] 'New conversation button' has been found
+[alice1] Waiting for "id" and "Create group" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Create group
+[alice1] Waiting for "id" and "Create group" to be present
+[alice1] 'Create group' has been found
+[alice1] Text found to include Users must have the latest release to receive invitations
+[alice1] id: Version warning banner with matching text "Users must have the latest release to receive invitations" found
+sessions closed

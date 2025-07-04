@@ -1,0 +1,94 @@
+
+
+==========> Running "Change profile picture @android @medium-risk @1-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 1 1
+actualCapabilities worker 1
+emulatorAlreadyRunning emulator-5556 true
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+[alice1] Device identity changed from device-5556 to alice1
+[alice1] Waiting for "id" and "Create account button" to be present
+[alice1] 'Create account button' has been found
+[alice1] Locator being used: { strategy: 'id', selector: 'Enter display name' }
+[alice1] Waiting for "id" and "Enter display name" to be present
+[alice1] 'Enter display name' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] 'Slow mode notifications button' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+Sleeping for 5000 milliseconds
+[alice1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[alice1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] Waiting for "id" and "Reveal recovery phrase button" to be present
+[alice1] 'Reveal recovery phrase button' has been found
+[alice1] Waiting for "id" and "Reveal recovery phrase button" to be present
+[alice1] 'Reveal recovery phrase button' has been found
+[alice1] Waiting for "id" and "Recovery password container" to be present
+[alice1] 'Recovery password container' has been found
+[alice1] Waiting for "id" and "Copy button" to be present
+[alice1] 'Copy button' has been found
+[alice1] Alices recovery phrase is "quick cistern sunken boss fixate napkin lively bypass truth ringing ponies upload quick"
+[alice1] Waiting for "accessibility id" and "Navigate up" to be present
+[alice1] 'Navigate up' has been found
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "User settings
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'User settings' has been found
+[alice1] Waiting for "accessibility id" and "Account ID" to be present
+[alice1] 'Account ID' has been found
+[alice1] Waiting for "accessibility id" and "Navigate up" to be present
+[alice1] 'Navigate up' has been found
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'User settings' has been found
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'User settings' has been found
+[alice1] Waiting for "id" and "Image picker" to be present
+[alice1] 'Image picker' has been found
+running  /opt/android/platform-tools/adb -s emulator-5556 shell rm -rf /storage/emulated/0/Download/*
+was run:  /opt/android/platform-tools/adb -s emulator-5556 shell rm -rf /storage/emulated/0/Download/* { stdout: '', stderr: '' }
+running  /opt/android/platform-tools/adb -s emulator-5556 push run/test/specs/media/profile_picture.jpg /storage/emulated/0/Download
+cmd which failed: "/opt/android/platform-tools/adb -s emulator-5556 push run/test/specs/media/profile_picture.jpg /storage/emulated/0/Download"
+result: "run/test/specs/media/profile_picture.jpg: 1 file pushed, 0 skipped. 72.5 MB/s (27755 bytes in 0.000s)
+"
+running  /opt/android/platform-tools/adb -s emulator-5556 shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage/emulated/0/Download/profile_picture.jpg
+was run:  /opt/android/platform-tools/adb -s emulator-5556 shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage/emulated/0/Download/profile_picture.jpg {
+  stdout: 'Broadcasting: Intent { act=android.intent.action.MEDIA_SCANNER_SCAN_FILE dat=file:///... flg=0x400000 }\n' +
+    'Broadcast completed: result=0\n',
+  stderr: ''
+}
+[alice1] Waiting for "id" and "com.android.permissioncontroller:id/permission_allow_foreground_only_button" to be present
+[alice1] 'com.android.permissioncontroller:id/permission_allow_foreground_only_button' has been found
+[alice1] Waiting for "id" and "Image button" to be present
+[alice1] 'Image button' has been found
+[alice1] Waiting for "xpath" and "//*[starts-with(@content-desc, "Photo taken on")]" to be present
+[alice1] '//*[starts-with(@content-desc, "Photo taken on")]' has been found
+[alice1] Waiting for "id" and "network.loki.messenger:id/crop_image_menu_crop" to be present
+[alice1] 'network.loki.messenger:id/crop_image_menu_crop' has been found
+[alice1] Waiting for "id" and "Save" to be present
+[alice1] 'Save' has been found
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'User settings' has been found
+Sleeping for 10000 milliseconds
+[alice1] Hex value of pixel is: cbfeff
+[alice1] Colour is correct
+sessions closed

@@ -1,0 +1,197 @@
+
+
+==========> Running "Delete message request in list @android @high-risk @2-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+emulatorAlreadyRunning emulator-5554 true
+emulatorAlreadyRunning emulator-5556 true
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+[alice1] Device identity changed from device-5554 to alice1
+[alice1] Waiting for "id" and "Create account button" to be present
+[bob1] Device identity changed from device-5556 to bob1
+[bob1] Waiting for "id" and "Create account button" to be present
+[alice1] 'Create account button' has been found
+[bob1] 'Create account button' has been found
+[alice1] Locator being used: { strategy: 'id', selector: 'Enter display name' }
+[alice1] Waiting for "id" and "Enter display name" to be present
+[bob1] Locator being used: { strategy: 'id', selector: 'Enter display name' }
+[bob1] Waiting for "id" and "Enter display name" to be present
+[alice1] 'Enter display name' has been found
+[bob1] 'Enter display name' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[bob1] 'Continue' has been found
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[bob1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] 'Slow mode notifications button' has been found
+[bob1] 'Slow mode notifications button' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[bob1] 'Continue' has been found
+Sleeping for 5000 milliseconds
+Sleeping for 5000 milliseconds
+[bob1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[bob1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[alice1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[bob1] Waiting for "id" and "Reveal recovery phrase button" to be present
+[bob1] 'Reveal recovery phrase button' has been found
+[bob1] Waiting for "id" and "Reveal recovery phrase button" to be present
+[alice1] Waiting for "id" and "Reveal recovery phrase button" to be present
+[alice1] 'Reveal recovery phrase button' has been found
+[alice1] Waiting for "id" and "Reveal recovery phrase button" to be present
+[bob1] 'Reveal recovery phrase button' has been found
+[alice1] 'Reveal recovery phrase button' has been found
+[bob1] Waiting for "id" and "Recovery password container" to be present
+[bob1] 'Recovery password container' has been found
+[alice1] Waiting for "id" and "Recovery password container" to be present
+[alice1] 'Recovery password container' has been found
+[bob1] Waiting for "id" and "Copy button" to be present
+[bob1] 'Copy button' has been found
+[alice1] Waiting for "id" and "Copy button" to be present
+[alice1] 'Copy button' has been found
+[bob1] Bobs recovery phrase is "roster clue altitude dual apex itself cedar enjoy anecdote tipsy moat jostle anecdote"
+[bob1] Waiting for "accessibility id" and "Navigate up" to be present
+[bob1] 'Navigate up' has been found
+[alice1] Alices recovery phrase is "hemlock snug sovereign javelin tugs lopped cent gather masterful needed puddle enigma masterful"
+[bob1] Waiting for "accessibility id" and "User settings" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "User settings
+[alice1] Waiting for "accessibility id" and "Navigate up" to be present
+[bob1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'Navigate up' has been found
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "User settings
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[bob1] 'User settings' has been found
+[alice1] 'User settings' has been found
+[alice1] Waiting for "accessibility id" and "Account ID" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Account ID
+[bob1] Waiting for "accessibility id" and "Account ID" to be present
+[alice1] Waiting for "accessibility id" and "Account ID" to be present
+[bob1] 'Account ID' has been found
+[alice1] 'Account ID' has been found
+[bob1] Waiting for "accessibility id" and "Navigate up" to be present
+[alice1] Waiting for "accessibility id" and "Navigate up" to be present
+[bob1] 'Navigate up' has been found
+[alice1] 'Navigate up' has been found
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "New conversation button
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] 'New conversation button' has been found
+[alice1] Waiting for "id" and "New direct message" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "New direct message
+[alice1] Waiting for "id" and "New direct message" to be present
+[alice1] 'New direct message' has been found
+[alice1] Locator being used: { strategy: 'id', selector: 'Session id input box' }
+[alice1] Waiting for "id" and "Session id input box" to be present
+[alice1] 'Session id input box' has been found
+[alice1] Waiting for "id" and "Next" to be present
+[alice1] 'Next' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+[alice1] Waiting for "accessibility id" and "Message input box" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message input box
+[alice1] Waiting for "accessibility id" and "Message input box" to be present
+[alice1] 'Message input box' has been found
+[alice1] Waiting for "accessibility id" and "Send message button" to be present
+[alice1] 'Send message button' has been found
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] 'Message sent status: Sent' has been found
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[bob1] Waiting for "accessibility id" and "Message requests banner" to be present
+[bob1] 'Message requests banner' has been found
+[bob1] Waiting for "accessibility id" and "Message request" to be present
+[bob1] 'Message request' has been found
+[bob1] Waiting for "id" and "android:id/title" to be present with "Delete"
+[bob1] Text found to include Delete
+[bob1] 'android:id/title' and 'Delete' has been found
+[bob1] Waiting for "accessibility id" and "Modal heading" to be present
+[bob1] 'Modal heading' has been found
+[bob1] Modal heading is correct
+[bob1] Waiting for "accessibility id" and "Modal description" to be present
+[bob1] 'Modal description' has been found
+[bob1] Modal description is correct
+[bob1] Waiting for "accessibility id" and "Delete" to be present
+[bob1] 'Delete' has been found
+[bob1] Waiting for "accessibility id" and "No pending message requests" to be present
+[bob1] 'No pending message requests' has been found
+sessions closed

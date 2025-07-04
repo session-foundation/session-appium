@@ -1,0 +1,686 @@
+
+
+==========> Running "Disappear after send off 1:1 @android @high-risk @3-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+starting capabilitiesIndex 2 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 2
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5558 true
+emulatorAlreadyRunning emulator-5556 true
+emulatorAlreadyRunning emulator-5554 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"055e882c3bed41ba22aef2af6d43b72ff491dac65b4b85ef5100b51a0b84cbef7f","seedPhrase":"unafraid prying topic oneself jargon saved dash salads desk tuxedo cuffs ladder jargon"},
+SessionUser: {"name":"Bob","sessionId":"056591bd0e7b8fdd0e669a3a9a25083a81e6ce26d1b4bd04d192e7cd6f0c192d0e","seedPhrase":"duets ghost exotic pirate mocked noises weird pierce candy major does pouch ghost"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"055e882c3bed41ba22aef2af6d43b72ff491dac65b4b85ef5100b51a0b84cbef7f","seedPhrase":"unafraid prying topic oneself jargon saved dash salads desk tuxedo cuffs ladder jargon"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"055e882c3bed41ba22aef2af6d43b72ff491dac65b4b85ef5100b51a0b84cbef7f","seedPhrase":"unafraid prying topic oneself jargon saved dash salads desk tuxedo cuffs ladder jargon"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"056591bd0e7b8fdd0e669a3a9a25083a81e6ce26d1b4bd04d192e7cd6f0c192d0e","seedPhrase":"duets ghost exotic pirate mocked noises weird pierce candy major does pouch ghost"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"056591bd0e7b8fdd0e669a3a9a25083a81e6ce26d1b4bd04d192e7cd6f0c192d0e","seedPhrase":"duets ghost exotic pirate mocked noises weird pierce candy major does pouch ghost"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"055e882c3bed41ba22aef2af6d43b72ff491dac65b4b85ef5100b51a0b84cbef7f","seedPhrase":"unafraid prying topic oneself jargon saved dash salads desk tuxedo cuffs ladder jargon"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"056591bd0e7b8fdd0e669a3a9a25083a81e6ce26d1b4bd04d192e7cd6f0c192d0e","seedPhrase":"duets ghost exotic pirate mocked noises weird pierce candy major does pouch ghost"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [ Promise { <pending> } ]
+random snode for user: 055e882c3bed41ba22aef2af6d43b72ff491dac65b4b85ef5100b51a0b84cbef7f is snode: 476d425a03de162bc2b3f69ebbc9a39b317c7a34ffca126e2cf719f9323f4f7a
+storing to snode https://194.99.23.252:22021/storage_rpc/v1
+storing to snode https://194.99.23.252:22021/storage_rpc/v1
+storing to snode https://194.99.23.252:22021/storage_rpc/v1
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+random snode for user: 056591bd0e7b8fdd0e669a3a9a25083a81e6ce26d1b4bd04d192e7cd6f0c192d0e is snode: 2902c053cbe47523017375a96b475d9c6725cf379dabbb1f203b286df30083a4
+storing to snode https://209.141.41.159:22021/storage_rpc/v1
+storing to snode https://209.141.41.159:22021/storage_rpc/v1
+storing to snode https://209.141.41.159:22021/storage_rpc/v1
+storeStatus for Alice: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "unafraid prying topic oneself jargon saved dash salads desk tuxedo cuffs ladder jargon"
+	"Bob": "duets ghost exotic pirate mocked noises weird pierce candy major does pouch ghost" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+[alice1] Device identity changed from device-5554 to alice1
+[alice2] Device identity changed from device-5556 to alice2
+[bob1] Device identity changed from device-5558 to bob1
+[alice1] Waiting for "id" and "Restore your session button" to be present
+[alice2] Waiting for "id" and "Restore your session button" to be present
+[bob1] Waiting for "id" and "Restore your session button" to be present
+[alice1] 'Restore your session button' has been found
+[alice2] 'Restore your session button' has been found
+[bob1] 'Restore your session button' has been found
+[alice1] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[alice1] Waiting for "id" and "Recovery phrase input" to be present
+[alice2] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[alice2] Waiting for "id" and "Recovery phrase input" to be present
+[bob1] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[bob1] Waiting for "id" and "Recovery phrase input" to be present
+[alice1] 'Recovery phrase input' has been found
+[alice2] 'Recovery phrase input' has been found
+[bob1] 'Recovery phrase input' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice2] Waiting for "id" and "Continue" to be present
+[alice2] 'Continue' has been found
+[alice2] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[bob1] 'Continue' has been found
+[bob1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice2] Waiting for "id" and "Slow mode notifications button" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[alice1] 'Slow mode notifications button' has been found
+[bob1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice2] 'Slow mode notifications button' has been found
+[bob1] 'Slow mode notifications button' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice2] Waiting for "id" and "Continue" to be present
+[alice2] 'Continue' has been found
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] 'Continue' has been found
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice2] 'Loading animation' has been found
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] 'Loading animation' has been found
+[alice2] Loading animation was found, waiting for it to be gone
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice2] 'Loading animation' has been found
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] 'Loading animation' has been found
+[alice2] Loading animation was found, waiting for it to be gone
+[alice2] Waiting for "id" and "Loading animation" to be present
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[bob1] 'Loading animation' has been found
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice1] Loading animation not found
+[alice1] Loading animation has finished
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Loading animation not found
+[alice2] Loading animation has finished
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[bob1] Loading animation not found
+[bob1] Loading animation has finished
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name doesn't exist, time expired
+[alice1] Display name found: Loading account
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[alice1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name doesn't exist, time expired
+[alice2] Display name found: Loading account
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice2] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name doesn't exist, time expired
+[bob1] Display name found: Loading account
+[alice2] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice2] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[alice2] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[alice2] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice2] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Element has been deleted, great success
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice2] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] 'New conversation button' has been found
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice2] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice2] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice2] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice2] Element has been deleted, great success
+[alice2] Waiting for "accessibility id" and "New conversation button" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] 'New conversation button' has been found
+[bob1] Element has been deleted, great success
+[bob1] Waiting for "accessibility id" and "New conversation button" to be present
+[bob1] 'New conversation button' has been found
+[bob1] Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+[alice1] Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+[alice1] Text found to include Bob
+[alice1] 'Conversation list item' and 'Bob' has been found
+[bob1] Text found to include Alice
+[bob1] 'Conversation list item' and 'Alice' has been found
+[alice1] Waiting for "id" and "conversation-options-avatar" to be present
+[alice1] 'conversation-options-avatar' has been found
+[alice1] Waiting for "id" and "disappearing-messages-menu-option" to be present
+[alice1] 'disappearing-messages-menu-option' has been found
+[alice1] Waiting for "id" and "Disappear after send option" to be present
+[alice1] 'Disappear after send option' has been found
+[alice1] Waiting for "id" and "1 day" to be present
+[alice1] '1 day' has been found
+[alice1] Great success - default time is correct
+[alice1] Waiting for "id" and "30 seconds" to be present
+[alice1] '30 seconds' has been found
+[alice1] Waiting for "id" and "Set button" to be present
+[alice1] 'Set button' has been found
+[alice1] Waiting for "id" and "Navigate back" to be present
+[alice1] 'Navigate back' has been found
+[bob1] Waiting for "accessibility id" and "Follow setting" to be present
+[bob1] 'Follow setting' has been found
+[bob1] Waiting for "accessibility id" and "Set" to be present
+[bob1] 'Set' has been found
+[alice1] Waiting for "id" and "Disappearing messages type and time" to be present
+[alice1] 'Disappearing messages type and time' has been found
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with Bob has set messages to disappear 30 seconds after they have been sent.
+[alice1] Waited too long
+Test failed, capturing screenshots from 3 device(s)...
+[alice1] Waited too long
+Captured and labeled screenshot from device alice1
+Captured and labeled screenshot from device alice2
+Captured and labeled screenshot from device bob1
+Screenshot saved: /home/runner/actions-runner/_work/session-appium/session-appium/test-results/disappear_after_send_off_1-0946d-android-high-risk-3-devices/disappear-after-send-off-1-1.png

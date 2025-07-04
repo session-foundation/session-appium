@@ -1,0 +1,630 @@
+
+
+==========> Running "Add contact to group @android @high-risk @4-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+starting capabilitiesIndex 2 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 2
+starting capabilitiesIndex 3 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 3
+[buildStateForTest] stateToBuild:"3friendsInGroup". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5560 true
+emulatorAlreadyRunning emulator-5558 true
+emulatorAlreadyRunning emulator-5556 true
+emulatorAlreadyRunning emulator-5554 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"056e626e7e303ff1e0eccbd9f99b0b32d9dfb22ec501841cc3daeaa466abacef64","seedPhrase":"ruined ember ammo birth blender omission agony jamming bounced orange double cafe bounced"},
+SessionUser: {"name":"Bob","sessionId":"0532066b41343de770c5a341b50b558f8487d6d0f9d017d0a529398b42f6825813","seedPhrase":"nowhere army jigsaw vegan vector ecstatic apart waking mice drying criminal makeup vegan"},
+SessionUser: {"name":"Charlie","sessionId":"05f03fcfbfcb996674a670829c1daf5921ed1874442aa2e81459c5f2734c748f69","seedPhrase":"mime sake lumber taboo software tidy maul wolf oven earth loudly vocal lumber"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"056e626e7e303ff1e0eccbd9f99b0b32d9dfb22ec501841cc3daeaa466abacef64","seedPhrase":"ruined ember ammo birth blender omission agony jamming bounced orange double cafe bounced"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"056e626e7e303ff1e0eccbd9f99b0b32d9dfb22ec501841cc3daeaa466abacef64","seedPhrase":"ruined ember ammo birth blender omission agony jamming bounced orange double cafe bounced"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"0532066b41343de770c5a341b50b558f8487d6d0f9d017d0a529398b42f6825813","seedPhrase":"nowhere army jigsaw vegan vector ecstatic apart waking mice drying criminal makeup vegan"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"056e626e7e303ff1e0eccbd9f99b0b32d9dfb22ec501841cc3daeaa466abacef64","seedPhrase":"ruined ember ammo birth blender omission agony jamming bounced orange double cafe bounced"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Charlie","sessionId":"05f03fcfbfcb996674a670829c1daf5921ed1874442aa2e81459c5f2734c748f69","seedPhrase":"mime sake lumber taboo software tidy maul wolf oven earth loudly vocal lumber"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"0532066b41343de770c5a341b50b558f8487d6d0f9d017d0a529398b42f6825813","seedPhrase":"nowhere army jigsaw vegan vector ecstatic apart waking mice drying criminal makeup vegan"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"056e626e7e303ff1e0eccbd9f99b0b32d9dfb22ec501841cc3daeaa466abacef64","seedPhrase":"ruined ember ammo birth blender omission agony jamming bounced orange double cafe bounced"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"0532066b41343de770c5a341b50b558f8487d6d0f9d017d0a529398b42f6825813","seedPhrase":"nowhere army jigsaw vegan vector ecstatic apart waking mice drying criminal makeup vegan"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"0532066b41343de770c5a341b50b558f8487d6d0f9d017d0a529398b42f6825813","seedPhrase":"nowhere army jigsaw vegan vector ecstatic apart waking mice drying criminal makeup vegan"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Charlie","sessionId":"05f03fcfbfcb996674a670829c1daf5921ed1874442aa2e81459c5f2734c748f69","seedPhrase":"mime sake lumber taboo software tidy maul wolf oven earth loudly vocal lumber"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Charlie","sessionId":"05f03fcfbfcb996674a670829c1daf5921ed1874442aa2e81459c5f2734c748f69","seedPhrase":"mime sake lumber taboo software tidy maul wolf oven earth loudly vocal lumber"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"056e626e7e303ff1e0eccbd9f99b0b32d9dfb22ec501841cc3daeaa466abacef64","seedPhrase":"ruined ember ammo birth blender omission agony jamming bounced orange double cafe bounced"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Charlie","sessionId":"05f03fcfbfcb996674a670829c1daf5921ed1874442aa2e81459c5f2734c748f69","seedPhrase":"mime sake lumber taboo software tidy maul wolf oven earth loudly vocal lumber"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"0532066b41343de770c5a341b50b558f8487d6d0f9d017d0a529398b42f6825813","seedPhrase":"nowhere army jigsaw vegan vector ecstatic apart waking mice drying criminal makeup vegan"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Charlie","sessionId":"05f03fcfbfcb996674a670829c1daf5921ed1874442aa2e81459c5f2734c748f69","seedPhrase":"mime sake lumber taboo software tidy maul wolf oven earth loudly vocal lumber"}
+creatorMetagroupW info: 64313a21693165313a243130343a64313a23693165313a2664313a6e32383a47726f757020746f207465737420616464696e6720636f6e7461637465313a3c6c6c69306533323aea173b57beca8af18c3519a7bbf69c3e7a05d1c049fa9558341d8ebb48b0c96564656565313a3d64313a6e303a6565313a28303a313a296c65313a2b646565
+creatorMetagroupW members: 64313a21693165313a243335393a64313a23693165313a2664313a6d6433333a0532066b41343de770c5a341b50b558f8487d6d0f9d017d0a529398b42f682581364313a6e333a426f626533333a056e626e7e303ff1e0eccbd9f99b0b32d9dfb22ec501841cc3daeaa466abacef6464313a41693165313a6e353a416c6963656533333a05f03fcfbfcb996674a670829c1daf5921ed1874442aa2e81459c5f2734c748f6964313a6e373a436861726c6965656565313a3c6c6c69306533323aea173b57beca8af18c3519a7bbf69c3e7a05d1c049fa9558341d8ebb48b0c96564656565313a3d64313a6d6433333a0532066b41343de770c5a341b50b558f8487d6d0f9d017d0a529398b42f682581364313a6e303a6533333a056e626e7e303ff1e0eccbd9f99b0b32d9dfb22ec501841cc3daeaa466abacef6464313a41303a313a6e303a6533333a05f03fcfbfcb996674a670829c1daf5921ed1874442aa2e81459c5f2734c748f6964313a6e303a65656565313a28303a313a296c65313a2b646565
+creatorMetagroupW keys: 64313a416c65313a4c6c65313a5064313a63323436323a64313a2332343a51def8fb78f28f8e3f1798da723f740b98c0e534c9e02665313a47693065313a4b34383ad6a2870049f6dc87f2b61e43f91e2709e23a626899a43b10a11ff5d4ed7207681d376ee402ff6ba114c4facbca250e53313a6b6c34383a76f805b5caaad0c85d02e9f807e97e843905df165a8aa0d444b5f63233128694800460c02ec2c548ffbaef509f3ee5ff34383a73f4f04b0a802716ea3c43c025522aec838a5af5ab2e18d223374f31bdf47c0c1dc2a65dc1d991a5aca54c44c689fda834383aa6469ca268664541b66cd0c8ef4b933c8c245667ef8ec9ffa3a57d2eccbc4075af364c72b23155af26c6b2a8d46b0fa534383ace6940b39c07991cc807ca9ea6bb900eb91a176d275267156392842bb668bf4be5b4f2627a11a7111517ac063a96b24534383ae75a3b1c12601149e5db10290df9721253b32787b2247c76c7b0d8a64f689764eb5ac9ecd170e858f9b3088cf741a13d34383a78318b9d8add2f0fdde9959322ad694243a74a5755c0a0a11d98628a521b23ffe23075b592bffadc8fa2990135119f5534383a3044fd7c3eca76c7d6b02cd22e3ff2d4f217f76df34d198b33a07c4fc39502b6d6256e13e57b9a26c7bb045a73540ac534383ab91fe819bc97cdd9ec272f52dfaae8f9df2563f98eb220f18aa7af5d554130235924ac70185e8809b05d9968fa3718db34383af71c5054b0606e1bd0ee8b6148a1b1cb56e27c293d1b32bffdb83db225d3abba39e9662280d1ef84cd879668e4ed8ee134383a68fde26cfcddadc0b83e772538dfb92217cf368873ec6540feaa7a816d328ec432bb9838658f0764cf5af85233d5ed9a34383a86746a2ef9a4e92cea4996ebc528c7c65c48237f704bbf0048a50b6939a77d356335a976e111672f703be9a11d98f54634383aeb12802adc30542ef23a6732bb235060e16be90cd1a0576b4a613baa55ca913c4a85c620e2c41da46173068289dc06b834383acab050cf770cdcc02e13fa73687ace638b937b0ca28a75c4f04374c5864f06c56b07a146819913acfff3a1b0bb6726bd34383a4fb2e9514375bd5f5f4888bc338f8d2af6405abf3868363c810231f173de523e3a91f25f108fde80fc78dbd5c787e73634383a80e56d45950ce12063c585aa7e0e69d64e4beefff8a69a36bbf6955e2cb071ddbfee4965d47ebbd103097a4a6c77ec6134383a75ba8e9be57cdc7924599cae55858e237088809ea89c0ef7e2147673a92bd15ccef0c9ec1f92f6a7d99cad0eb8df07fc34383a19854f4058a618201a45ae2747a48d41a7b9e3710224ea2252d73f0d424e6ed77ca76e8a14ca81068ba591affa8fa98634383abf938f933f231637cc9f559f775e036838fbdcdec71d00443f57a5d041959a254dee086e6dc444d9b2896c67f7cc7cb434383a93e8913243386e34f9d02deb95c6567dea543b4adabb8dde2fb1db2636014adcd09d135ca58c92d9fae953f97be6637434383a0eb1e5f6368d04c2db37a6c6f576c4f45b10240f4c8d38538ea2fadf0265d4de4c071db9ee7a6f2e3a930c3e3663d41634383acee523b3fe49bb75336122dc7235534bfcab732214e6b693553d97a797dc87076b0cfe80429795a9cd0df8fc07e6dcef34383a1325ea860a5946fe1216abcfb8a340cb3f6c96a52d39ef43906d5a52acc058022b3aa0163d21154ec70f8a67a20c49bb34383a30a2c6b94fe259fa9afb43a33737bc214e40816d1e85af2bf4bef6a898fdf46c7686f45305c589d437f9d1d2c731335134383ae193aabdbd41e0d4912dcc90ee812c29e6ae9f014377c4a05a7dd4f42b0b1067057340261f6e1eec29b9fdbb97a2363634383ad5f2ff483269956e311d89fbbc36814e972641595486c1a2485c3d58c1959b6b4445361c9e18e1c235e2e73fd7e6ba9f34383a7561d413f9765ec99439f4fd889eab39fe19826302eeb53416f2a2b09c99ecfbf2fbbe1ac73eefa581cf2672e48f330a34383ac1cdd0c2c1092afe6a2d2331b7416fb7d961764a874d18e7b8c06c1d970425501212dcaa38a63eb8fdb707dac652fd2f34383a0771af3e8f39d3d1f155b48b34c9949f271e7c0f2b86583f91b09b04e7837ed8dbccd0c9d6c559f68e44b44a7a27bb9f34383a4cc8bc6376aa40f1910bb14c18bc4abdc132f3f921cd834d0527bf3390167417e7a5f5b4888a232d8955c99da3df3acc34383afd8620267e81379bb506ffb02236763da57db9285dbe5a163600042eac44182fdf67cc916fa064b7989d2a9ff076890734383aab6da538d5276a243a9bc7c08edbb135ffcc080d9d442a71e8954910062a44070e7f133e8524e4242f1d44bbfcac076a34383ab4638b4fcbe1050b07c0e88dd7aa5d0e55c1f797efe2d52b7d504f2f24bc7ab678bcf59b9ea464c27a83658cb98362c634383a2c48b787f10cf2cf5b5b791bc0e86c12745dc61bbaf6c3e79ac02104b58bd7d18aa2ee5a4054d6ed0c9527f8e7e6d2d034383ae1a525f95f36d6b5b5b417a12c1bb276b5f5058e5f03f4901cf8f65f050b6c6339cd7808013a59b9549a6fc0918b5e1734383a7d5592472a074550a552ae4ab9a1fdcb7e69183c9081a13cc4d42d5a82bad6309752ecd781982cd578bf62a1c2c104a434383a5199de2f592e470b01fdb6ccd6e4991b3f58d290bea70b2f2d8cec506c082894e73bf36d3422b957794827d9ef3ae59134383ab651ff24d1d455f1749ec6e3a2d9a568526114886675f52ecad58dacfc1fdc721c2bf7cbb66012c398e103bfaa0af5f234383a7a47052d33bdc0df8696c6f92e0288098ac0b85d9daeb1860b5619bf3aea9ec9008aefb0b1f61121c132dc68ff936ef734383a980770d2e740bf7dfbb974aa8c44463a262b867d59125ee6fe5d4b19b4b799a855fac8618b67672363e7eee6971795eb34383a0cbd47532f8d4cd31917a60d7e46d5e5438f4b9fcd34f0ea708bbd8e46b27314be110e4394f425072ebea2796f62678c34383a05bfa584f22cadb7feed3f3907e0dc2746af32253e9e6084577c464bed9809c1d33f87be077c209214d5f832082e1caf34383a571df2c22b5d329c1c1b9a257339ffbd58d2e6476c32d19622802081a70cec45130d5f00fe7e03c664c7f9b6355def2c34383a92e9a686c17a10a125740be01de8835986231dfcfc47c28e26b95eeb6df3ac7988690bc6a20612066ca8911c57561fc234383adabfb93f5b7b7004cfd7ee6ff40df59fda8713ffd6248075ea6f157d2cc2b1e6d453e8746d42be002f7aad1397217cf034383a1367015b6f6c0623dc18b44b7df1049236dd2689baf988032b89037473f7d1ff55200aa18ba31ae0508a461afb1ec62565313a7e36343a11d67857be1c58cca5c0fb2cbb8cbc957b4d518c766150d459834730ccff3227924524061b9fe845dba3dd362788c51ea211daf2a6bfc7bb54ae134284232b0665313a67693065313a6b33323a1e2dc3fd075b239724d58f6507a9d30e15aa0e84faa17b7094c603d60d6fc3a66565
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+random snode for user: 05f03fcfbfcb996674a670829c1daf5921ed1874442aa2e81459c5f2734c748f69 is snode: 817542b448aa569d75b4a9dd03a153885b8018495337a1402f90312896bbaae1
+storing to snode https://104.243.32.47:22108/storage_rpc/v1
+storing to snode https://104.243.32.47:22108/storage_rpc/v1
+storing to snode https://104.243.32.47:22108/storage_rpc/v1
+random snode for user: 03d3959cc01e3e26971a692d69e37fa659496715f7126eb95bf0d00f1c65403c4d is snode: b6e3b1b7e7c8f7dd71d7ab3990f4f9f591640566077afec483fd82903096090e
+promises [ Promise { <pending> }, Promise { <pending> } ]
+storing to snode https://209.222.101.54:22101/storage_rpc/v1
+storing to snode https://209.222.101.54:22101/storage_rpc/v1
+storing to snode https://209.222.101.54:22101/storage_rpc/v1
+random snode for user: 0532066b41343de770c5a341b50b558f8487d6d0f9d017d0a529398b42f6825813 is snode: ce53f84316095e921e597fdd488489b543d42af48a35998d8ea10f8b1f935788
+storing to snode https://129.159.125.192:22102/storage_rpc/v1
+storing to snode https://129.159.125.192:22102/storage_rpc/v1
+storing to snode https://129.159.125.192:22102/storage_rpc/v1
+random snode for user: 056e626e7e303ff1e0eccbd9f99b0b32d9dfb22ec501841cc3daeaa466abacef64 is snode: 41f195c73bac469d2fa7a8751a404eaa4e3628eae458cfcb9d29389f7b8346b7
+storing to snode https://23.146.40.65:22021/storage_rpc/v1
+storing to snode https://23.146.40.65:22021/storage_rpc/v1
+storing to snode https://23.146.40.65:22021/storage_rpc/v1
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+emulator-5560  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5560'
+  }
+}
+udid: emulator-5560
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+storeStatus for Charlie: [ 200, 200, 200 ]
+storeStatus for (group) 03d3959cc01e3e26971a692d69e37fa659496715f7126eb95bf0d00f1c65403c4d: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+storeStatus for Alice: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "ruined ember ammo birth blender omission agony jamming bounced orange double cafe bounced"
+	"Bob": "nowhere army jigsaw vegan vector ecstatic apart waking mice drying criminal makeup vegan"
+	"Charlie": "mime sake lumber taboo software tidy maul wolf oven earth loudly vocal lumber" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+[alice1] Device identity changed from device-5554 to alice1
+[bob1] Device identity changed from device-5556 to bob1
+[charlie1] Device identity changed from device-5558 to charlie1
+[unknown1] Device identity changed from device-5560 to unknown1
+[alice1] Waiting for "id" and "Restore your session button" to be present
+[bob1] Waiting for "id" and "Restore your session button" to be present
+[charlie1] Waiting for "id" and "Restore your session button" to be present
+[charlie1] 'Restore your session button' has been found
+[bob1] 'Restore your session button' has been found
+[alice1] 'Restore your session button' has been found
+[bob1] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[bob1] Waiting for "id" and "Recovery phrase input" to be present
+[charlie1] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[charlie1] Waiting for "id" and "Recovery phrase input" to be present
+[bob1] 'Recovery phrase input' has been found
+[charlie1] 'Recovery phrase input' has been found
+[alice1] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[alice1] Waiting for "id" and "Recovery phrase input" to be present
+[alice1] 'Recovery phrase input' has been found
+[bob1] Waiting for "id" and "Continue" to be present
+[charlie1] Waiting for "id" and "Continue" to be present
+[bob1] 'Continue' has been found
+[bob1] Waiting for "id" and "Slow mode notifications button" to be present
+[charlie1] 'Continue' has been found
+[charlie1] Waiting for "id" and "Slow mode notifications button" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] 'Continue' has been found
+[charlie1] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[charlie1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[bob1] 'Slow mode notifications button' has been found
+[charlie1] 'Slow mode notifications button' has been found
+[alice1] 'Slow mode notifications button' has been found
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] 'Continue' has been found
+[charlie1] Waiting for "id" and "Continue" to be present
+[charlie1] 'Continue' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[bob1] Waiting for "id" and "Loading animation" to be present
+[bob1] 'Loading animation' has been found
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[charlie1] 'Loading animation' has been found
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[charlie1] Loading animation was found, waiting for it to be gone
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[bob1] 'Loading animation' has been found
+[charlie1] 'Loading animation' has been found
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[charlie1] Loading animation was found, waiting for it to be gone
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[bob1] 'Loading animation' has been found
+[charlie1] 'Loading animation' has been found
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[charlie1] Loading animation was found, waiting for it to be gone
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[charlie1] 'Loading animation' has been found
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] Loading animation was found, waiting for it to be gone
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Loading animation not found
+[bob1] Loading animation has finished
+[charlie1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[charlie1] Loading animation not found
+[charlie1] Loading animation has finished
+[alice1] Waiting for "id" and "Loading animation" to be present
+[charlie1] doesElementExist failed with accessibility id Enter display name
+[charlie1] Enter display name Doesn't exist but retrying
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Waiting for "id" and "Loading animation" to be present
+[charlie1] doesElementExist failed with accessibility id Enter display name
+[charlie1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Enter display name
+[charlie1] Enter display name Doesn't exist but retrying
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Enter display name
+[charlie1] Enter display name Doesn't exist but retrying
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Enter display name
+[charlie1] Enter display name Doesn't exist but retrying
+[alice1] Loading animation not found
+[alice1] Loading animation has finished
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Enter display name
+[charlie1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Enter display name
+[charlie1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Enter display name
+[charlie1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Enter display name
+[charlie1] Enter display name doesn't exist, time expired
+[charlie1] Display name found: Loading account
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name doesn't exist, time expired
+[bob1] Display name found: Loading account
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[charlie1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[charlie1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[bob1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name doesn't exist, time expired
+[alice1] Display name found: Loading account
+[alice1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[charlie1] Waiting for "id" and "Continue" to be present
+[alice1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[bob1] Waiting for "id" and "Continue" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Continue
+[charlie1] Waiting for "id" and "Continue" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Continue
+[charlie1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Continue
+[charlie1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Continue
+[charlie1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[charlie1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[charlie1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Continue
+[charlie1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[charlie1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[charlie1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[charlie1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[charlie1] Element has been deleted, great success
+[charlie1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[charlie1] 'New conversation button' has been found
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Element has been deleted, great success
+[bob1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] 'New conversation button' has been found
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Element has been deleted, great success
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] 'New conversation button' has been found
+[alice1] Waiting for "accessibility id" and "Conversation list item" to be present with "Group to test adding contact"
+[bob1] Waiting for "accessibility id" and "Conversation list item" to be present with "Group to test adding contact"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Group to test adding contact"
+[charlie1] Text found to include Group to test adding contact
+[charlie1] 'Conversation list item' and 'Group to test adding contact' has been found
+[bob1] Text found to include Group to test adding contact
+[bob1] 'Conversation list item' and 'Group to test adding contact' has been found
+[alice1] Text found to include Group to test adding contact
+[alice1] 'Conversation list item' and 'Group to test adding contact' has been found
+[dracula1] Device identity changed from unknown1 to dracula1
+[dracula1] Waiting for "id" and "Create account button" to be present
+[dracula1] 'Create account button' has been found
+[dracula1] Locator being used: { strategy: 'id', selector: 'Enter display name' }
+[dracula1] Waiting for "id" and "Enter display name" to be present
+[dracula1] 'Enter display name' has been found
+[dracula1] Waiting for "id" and "Continue" to be present
+[dracula1] 'Continue' has been found
+[dracula1] Waiting for "id" and "Slow mode notifications button" to be present
+[dracula1] 'Slow mode notifications button' has been found
+[dracula1] Waiting for "id" and "Continue" to be present
+[dracula1] 'Continue' has been found
+Sleeping for 5000 milliseconds
+[dracula1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[dracula1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[dracula1] Waiting for "id" and "Reveal recovery phrase button" to be present
+[dracula1] 'Reveal recovery phrase button' has been found
+[dracula1] Waiting for "id" and "Reveal recovery phrase button" to be present
+[dracula1] 'Reveal recovery phrase button' has been found
+[dracula1] Waiting for "id" and "Recovery password container" to be present
+[dracula1] 'Recovery password container' has been found
+[dracula1] Waiting for "id" and "Copy button" to be present
+[dracula1] 'Copy button' has been found
+[dracula1] Draculas recovery phrase is "dash honked sighting gusts having dinner feel hoisting tolerant hire dagger oaks dagger"
+[dracula1] Waiting for "accessibility id" and "Navigate up" to be present
+[dracula1] 'Navigate up' has been found
+[dracula1] Waiting for "accessibility id" and "User settings" to be present
+[dracula1] waitForTextElementToBePresent threw: "accessibility id": "User settings
+[dracula1] Waiting for "accessibility id" and "User settings" to be present
+[dracula1] 'User settings' has been found
+[dracula1] Waiting for "accessibility id" and "Account ID" to be present
+[dracula1] 'Account ID' has been found
+[dracula1] Waiting for "accessibility id" and "Navigate up" to be present
+[dracula1] 'Navigate up' has been found
+[alice1] Waiting for "id" and "Navigate back" to be present
+[alice1] 'Navigate back' has been found
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "New conversation button
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] 'New conversation button' has been found
+[alice1] Waiting for "id" and "New direct message" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "New direct message
+[alice1] Waiting for "id" and "New direct message" to be present
+[alice1] 'New direct message' has been found
+[alice1] Locator being used: { strategy: 'id', selector: 'Session id input box' }
+[alice1] Waiting for "id" and "Session id input box" to be present
+[alice1] 'Session id input box' has been found
+[alice1] Waiting for "id" and "Next" to be present
+[alice1] 'Next' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+[alice1] Waiting for "accessibility id" and "Message input box" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message input box
+[alice1] Waiting for "accessibility id" and "Message input box" to be present
+[alice1] 'Message input box' has been found
+[alice1] Waiting for "accessibility id" and "Send message button" to be present
+[alice1] 'Send message button' has been found
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] 'Message sent status: Sent' has been found
+[dracula1] Waiting for "accessibility id" and "Message requests banner" to be present
+[dracula1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[dracula1] Waiting for "accessibility id" and "Message requests banner" to be present
+[dracula1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[dracula1] Waiting for "accessibility id" and "Message requests banner" to be present
+[dracula1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[dracula1] Waiting for "accessibility id" and "Message requests banner" to be present
+[dracula1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[dracula1] Waiting for "accessibility id" and "Message requests banner" to be present
+[dracula1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[dracula1] Waiting for "accessibility id" and "Message requests banner" to be present
+[dracula1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[dracula1] Waiting for "accessibility id" and "Message requests banner" to be present
+[dracula1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[dracula1] Waiting for "accessibility id" and "Message requests banner" to be present
+[dracula1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[dracula1] Waiting for "accessibility id" and "Message requests banner" to be present
+[dracula1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[dracula1] Waiting for "accessibility id" and "Message requests banner" to be present
+[dracula1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[dracula1] Waiting for "accessibility id" and "Message requests banner" to be present
+[dracula1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[dracula1] Waiting for "accessibility id" and "Message requests banner" to be present
+[dracula1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[dracula1] Waiting for "accessibility id" and "Message requests banner" to be present
+[dracula1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[dracula1] Waiting for "accessibility id" and "Message requests banner" to be present
+[dracula1] waitForTextElementToBePresent threw: "accessibility id": "Message requests banner
+[dracula1] Waiting for "accessibility id" and "Message requests banner" to be present
+[dracula1] 'Message requests banner' has been found
+[dracula1] Waiting for "accessibility id" and "Message request" to be present
+[dracula1] 'Message request' has been found
+[dracula1] Waiting for "accessibility id" and "Accept message request" to be present
+[dracula1] 'Accept message request' has been found
+[dracula1] Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+[dracula1] Waiting for "accessibility id" and "Message input box" to be present
+[dracula1] 'Message input box' has been found
+[dracula1] Waiting for "accessibility id" and "Send message button" to be present
+[dracula1] 'Send message button' has been found
+[dracula1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[dracula1] 'Message sent status: Sent' has been found
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Dracula-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Dracula-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Dracula-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Dracula-to-Alice"
+[alice1] Waiting for "accessibility id" and "Message body" to be present with "Reply-message-Dracula-to-Alice"
+[alice1] Text found to include Reply-message-Dracula-to-Alice
+[alice1] 'Message body' and 'Reply-message-Dracula-to-Alice' has been found
+Alice and Dracula are now contacts
+[alice1] Waiting for "id" and "Navigate back" to be present
+[alice1] 'Navigate back' has been found
+[alice1] Waiting for "accessibility id" and "Conversation list item" to be present with "Group to test adding contact"
+[alice1] Text found to include Group to test adding contact
+[alice1] 'Conversation list item' and 'Group to test adding contact' has been found
+[alice1] Waiting for "id" and "conversation-options-avatar" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "conversation-options-avatar
+[alice1] Waiting for "id" and "conversation-options-avatar" to be present
+[alice1] 'conversation-options-avatar' has been found
+[alice1] Waiting for "id" and "manage-members-menu-option" to be present
+[alice1] 'manage-members-menu-option' has been found
+[alice1] Waiting for "id" and "Invite button" to be present
+[alice1] 'Invite button' has been found
+[alice1] Waiting for "id" and "Contact" to be present with "Dracula"
+[alice1] Waiting for "id" and "Contact" to be present with "Dracula"
+[alice1] Text found to include Dracula
+[alice1] 'Contact' and 'Dracula' has been found
+[alice1] Waiting for "id" and "invite-contacts-button" to be present
+[alice1] 'invite-contacts-button' has been found
+[alice1] Waiting for "id" and "Navigate back" to be present
+[alice1] 'Navigate back' has been found
+[alice1] Waiting for "id" and "Navigate back" to be present
+[alice1] 'Navigate back' has been found
+[alice1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[bob1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[charlie1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[alice1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[charlie1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[bob1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[alice1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[alice1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[charlie1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[bob1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[alice1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[charlie1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[bob1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[charlie1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[bob1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[alice1] Text found to include Dracula was invited to join the group.
+[alice1] Control message ""Dracula was invited to join the group."" has been found
+[charlie1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[bob1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[charlie1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[bob1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[charlie1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[bob1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[charlie1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[bob1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[charlie1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[bob1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[charlie1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[charlie1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[charlie1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[bob1] Text found to include Dracula was invited to join the group.
+[bob1] Control message ""Dracula was invited to join the group."" has been found
+[charlie1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[charlie1] Waiting for control message to be present with ""Dracula was invited to join the group.""
+[charlie1] Text found to include Dracula was invited to join the group.
+[charlie1] Control message ""Dracula was invited to join the group."" has been found
+[dracula1] Waiting for "id" and "Navigate back" to be present
+[dracula1] 'Navigate back' has been found
+[dracula1] doesElementExist failed with id Navigate back
+[dracula1] Navigate back Doesn't exist but retrying
+[dracula1] doesElementExist failed with id Navigate back
+[dracula1] Navigate back Doesn't exist but retrying
+[dracula1] doesElementExist failed with id Navigate back
+[dracula1] Navigate back Doesn't exist but retrying
+[dracula1] doesElementExist failed with id Navigate back
+[dracula1] Navigate back Doesn't exist but retrying
+[dracula1] doesElementExist failed with id Navigate back
+[dracula1] Navigate back Doesn't exist but retrying
+[dracula1] doesElementExist failed with id Navigate back
+[dracula1] Navigate back Doesn't exist but retrying
+[dracula1] doesElementExist failed with id Navigate back
+[dracula1] Navigate back Doesn't exist but retrying
+[dracula1] doesElementExist failed with id Navigate back
+[dracula1] Navigate back Doesn't exist but retrying
+[dracula1] doesElementExist failed with id Navigate back
+[dracula1] Navigate back Doesn't exist but retrying
+[dracula1] doesElementExist failed with id Navigate back
+[dracula1] Navigate back Doesn't exist but retrying
+[dracula1] doesElementExist failed with id Navigate back
+[dracula1] Navigate back doesn't exist, time expired
+[dracula1] Waiting for "accessibility id" and "Navigate up" to be present
+[dracula1] 'Navigate up' has been found
+[dracula1] Waiting for "accessibility id" and "Conversation list item" to be present with "Group to test adding contact"
+[dracula1] Waiting for "accessibility id" and "Conversation list item" to be present with "Group to test adding contact"
+[dracula1] Text found to include Group to test adding contact
+[dracula1] 'Conversation list item' and 'Group to test adding contact' has been found
+[dracula1] Text found to include Group to test adding contact
+[dracula1] Waiting for control message to be present with ""You were invited to join the group.""
+[dracula1] Waiting for control message to be present with ""You were invited to join the group.""
+[dracula1] Text found to include You were invited to join the group.
+[dracula1] Control message ""You were invited to join the group."" has been found
+sessions closed

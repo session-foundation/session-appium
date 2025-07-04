@@ -1,0 +1,1667 @@
+
+
+==========> Running "Send video to group @android @medium-risk @3-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+starting capabilitiesIndex 2 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 2
+[buildStateForTest] stateToBuild:"3friendsInGroup". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5558 true
+emulatorAlreadyRunning emulator-5556 true
+emulatorAlreadyRunning emulator-5554 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"05d3fc772cb60786b45b156bee064ea0d9cde1d56b70d4b09f30ae0148909a857e","seedPhrase":"obtains upon zapped girth solved sincerely bugs village dewdrop aided aside seeded solved"},
+SessionUser: {"name":"Bob","sessionId":"055efe7aaa00ab267863c2522ad8bbccd92a06fa35cc7b47d29a28af1ab1e1b04d","seedPhrase":"tirade jerseys owls daytime hesitate adhesive tepid beware beware awakened jump broken beware"},
+SessionUser: {"name":"Charlie","sessionId":"05ab8bcce43e882676139712e83f0e6c2a1a788b79ff294ac9150a43268609b654","seedPhrase":"badge injury tulips madness hickory hornet eclipse tubes jaded assorted ointment asylum asylum"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"05d3fc772cb60786b45b156bee064ea0d9cde1d56b70d4b09f30ae0148909a857e","seedPhrase":"obtains upon zapped girth solved sincerely bugs village dewdrop aided aside seeded solved"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05d3fc772cb60786b45b156bee064ea0d9cde1d56b70d4b09f30ae0148909a857e","seedPhrase":"obtains upon zapped girth solved sincerely bugs village dewdrop aided aside seeded solved"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"055efe7aaa00ab267863c2522ad8bbccd92a06fa35cc7b47d29a28af1ab1e1b04d","seedPhrase":"tirade jerseys owls daytime hesitate adhesive tepid beware beware awakened jump broken beware"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05d3fc772cb60786b45b156bee064ea0d9cde1d56b70d4b09f30ae0148909a857e","seedPhrase":"obtains upon zapped girth solved sincerely bugs village dewdrop aided aside seeded solved"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Charlie","sessionId":"05ab8bcce43e882676139712e83f0e6c2a1a788b79ff294ac9150a43268609b654","seedPhrase":"badge injury tulips madness hickory hornet eclipse tubes jaded assorted ointment asylum asylum"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"055efe7aaa00ab267863c2522ad8bbccd92a06fa35cc7b47d29a28af1ab1e1b04d","seedPhrase":"tirade jerseys owls daytime hesitate adhesive tepid beware beware awakened jump broken beware"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05d3fc772cb60786b45b156bee064ea0d9cde1d56b70d4b09f30ae0148909a857e","seedPhrase":"obtains upon zapped girth solved sincerely bugs village dewdrop aided aside seeded solved"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"055efe7aaa00ab267863c2522ad8bbccd92a06fa35cc7b47d29a28af1ab1e1b04d","seedPhrase":"tirade jerseys owls daytime hesitate adhesive tepid beware beware awakened jump broken beware"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"055efe7aaa00ab267863c2522ad8bbccd92a06fa35cc7b47d29a28af1ab1e1b04d","seedPhrase":"tirade jerseys owls daytime hesitate adhesive tepid beware beware awakened jump broken beware"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Charlie","sessionId":"05ab8bcce43e882676139712e83f0e6c2a1a788b79ff294ac9150a43268609b654","seedPhrase":"badge injury tulips madness hickory hornet eclipse tubes jaded assorted ointment asylum asylum"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Charlie","sessionId":"05ab8bcce43e882676139712e83f0e6c2a1a788b79ff294ac9150a43268609b654","seedPhrase":"badge injury tulips madness hickory hornet eclipse tubes jaded assorted ointment asylum asylum"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05d3fc772cb60786b45b156bee064ea0d9cde1d56b70d4b09f30ae0148909a857e","seedPhrase":"obtains upon zapped girth solved sincerely bugs village dewdrop aided aside seeded solved"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Charlie","sessionId":"05ab8bcce43e882676139712e83f0e6c2a1a788b79ff294ac9150a43268609b654","seedPhrase":"badge injury tulips madness hickory hornet eclipse tubes jaded assorted ointment asylum asylum"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"055efe7aaa00ab267863c2522ad8bbccd92a06fa35cc7b47d29a28af1ab1e1b04d","seedPhrase":"tirade jerseys owls daytime hesitate adhesive tepid beware beware awakened jump broken beware"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Charlie","sessionId":"05ab8bcce43e882676139712e83f0e6c2a1a788b79ff294ac9150a43268609b654","seedPhrase":"badge injury tulips madness hickory hornet eclipse tubes jaded assorted ointment asylum asylum"}
+creatorMetagroupW info: 64313a21693165313a243130313a64313a23693165313a2664313a6e32353a4d65737361676520636865636b7320666f722067726f75707365313a3c6c6c69306533323aea173b57beca8af18c3519a7bbf69c3e7a05d1c049fa9558341d8ebb48b0c96564656565313a3d64313a6e303a6565313a28303a313a296c65313a2b646565
+creatorMetagroupW members: 64313a21693165313a243335393a64313a23693165313a2664313a6d6433333a055efe7aaa00ab267863c2522ad8bbccd92a06fa35cc7b47d29a28af1ab1e1b04d64313a6e333a426f626533333a05ab8bcce43e882676139712e83f0e6c2a1a788b79ff294ac9150a43268609b65464313a6e373a436861726c69656533333a05d3fc772cb60786b45b156bee064ea0d9cde1d56b70d4b09f30ae0148909a857e64313a41693165313a6e353a416c696365656565313a3c6c6c69306533323aea173b57beca8af18c3519a7bbf69c3e7a05d1c049fa9558341d8ebb48b0c96564656565313a3d64313a6d6433333a055efe7aaa00ab267863c2522ad8bbccd92a06fa35cc7b47d29a28af1ab1e1b04d64313a6e303a6533333a05ab8bcce43e882676139712e83f0e6c2a1a788b79ff294ac9150a43268609b65464313a6e303a6533333a05d3fc772cb60786b45b156bee064ea0d9cde1d56b70d4b09f30ae0148909a857e64313a41303a313a6e303a65656565313a28303a313a296c65313a2b646565
+creatorMetagroupW keys: 64313a416c65313a4c6c65313a5064313a63323436323a64313a2332343aac9b7821d675231b6d8cd58885aabca5961638476c6b45a2313a47693065313a4b34383ac2644c610df0d90be5d78f99e340c44f6f159d899fd638d3e86364d848eed56bca9224ad356af92b5fd45e71e1b674a0313a6b6c34383a1ec384f104bf5d90d93b2ba5c0699d5c09f9cb27e1267cc6fc578a65bf8a5ca382da044f8ada4a6f7fd4af3de3ff754234383ad076f4987b54b5ac77a58f5e45be2b5512708fd487cc9176563c8d135bc4f7bf184e1a4990253d654b03a9e47635a15734383a688c919bf6d55a7320a6d3e06c2416dc00eccf1dd8163c4af176aaaf40452be183c95fc4c9d8c7eba25c33c0266ca61134383ab78493a1c8b49f2319fcdcbd0f3ec406e6944835f0de710fa03f3c3fd856bb199bdcde66d66777ad079189c2a84f5dd734383a659c5b3867a23c2d9b5ae1fb93b7c51aeaa8a3ff24c72b198db1e921082775c63ecd424aa37bcf150cf882a87716e4ce34383a98d3381de292bfd62e95d54f43152e6436cbc1d55509a17e2ec43c76d9e48d9c56e285661a2c2ae73de4cd68f469f96634383a66477e76fe02fbfef109989b6f2e6865297091a040ec901d8e7687e6d4049eb1e5b6d662facc42209753e92706b8bf4634383ad73dbddd7d7928db57af209771aeb43f87221df06b3ed3d3afc03ab995327b0597e4c5ba495c5f9b7ad5cb34a468f18634383ad977cc43a71b817de5c4efc5237ac31ba597375c3c794a37208cfdc0bc6ef2826567d7d7c715df50152b39ffcc083f9234383a153f976e3f78a7f495d4bc0111b3a5d780e75742c81c25b299cc66ffc28037f12b7368af065533f4bccea9327bb8ca7d34383a298393097b69e09bf562bd824c1d510fba57459bc57b80901052a8a08d66149b329acd6fdf8ecf4f2365ab23843e39f734383a26f79af4037c42ea1e31642cd29539c84f8a6b5d48f8f630712ffd062ce0dd090d5022c739a6bb638850ef5db2b87cd234383afbddd72b43b1eb90cdd5abaada69d21d23b640e7a5bd79b2e5b2ec4ae1b233045b31c761011275d9acb848404fdb5dac34383adced2c8d003d1b8f5b1664cb4a64e7192186d57773d56a2a807e1ef4ed874bdef0a631debf065181cba88bd38fd1dd0834383ae180a523341463a47e62e1d8a273804df90c1d4aba89b7d51cb6513d24e4b13b8ac7713411074ad7de87abdde7cfe0de34383ab593f1e940cf60182c1f15f883ef58a1a1c50e5d5c2c220fc0855605043181cfcf9f8db3f8ef08117d3624c58b18ee6234383a68e116ef953e27d6263fe857e8374af36b2cf376ba7e0e609624b6377ebcf109ee52312ca2b107cbae35bde05fb5bfbd34383ab9125a3f2e04f2962f80440d3a1d837656292177e8cd43102a668fdac4788888d529e6ebd8e6cc3487653d572037809434383a5d92382ddcf9dea4ab9740b61aa6cf18689991576922290acb0aa4f6d7a575b132517c3da70cea0450346189727f5a0b34383ab364728a89c880299c933cef966de17677f9701d0c76ad9f15679cbb45d032cd6eca60aaa3c8c88826fd0b96234bec6934383ac6683fa1454c5de05c05fcbb9891ec495c8a36fb1b6bb765b09a73333f0565cd92804f696fbc47c4b37f4329e6cfdf5b34383a924e206476bc2ce35ecef56d11970b1681687fb1f6299b12aa270a718d0dcfa0a47957926ae22cd49cd86fca3dec265734383a2d30ae228d85dd8634dc16911d303707bd2adf9d9cef25c751267bb2892aa0a29bdc7941c05b83ddd989c6dc983ba0a134383a29a33c79b8af7cd5a33df38baf7ccdee92c059770e899acacc8b19523d9012634a26851afd3ab0261b6134b767b631b934383ae3ea6e9d913acdb0a0f6d392ce46aa4eb25bbf7615f5da0eff4da37292ebf1f2fcd43f8f390b7cc9b77316a169e94e6334383ad136efdb45e76e202003445098f6a911b869b21df080dea8da6f6d42c4da638a48ab35e62cc76f1b9f819f5001f3de0c34383a0b4f52fc7300234e19f37351cd6e57be3e5c29d5e1c6d328caae95a0898dc703220e47ece8e68a7bf10b4fa6f7af512b34383a1b7ff40cb5b5b6ff45882fb684bfa1bbd44d53a23916151121b07acfd72e4b397b69d87dbc8484fcbb9640da4d214f1334383a138df34086589e078ed6b4763718d5c3033d43be85d0bf166c4ec52afd7c213e7242af868be1e043617f7c4c022a2e3d34383aad3b45bc51c03bd53625ea4919f329f81db20179e34b500a7a5c26b17aac3eef527dfa2ef34d6aa5f57e1fd74b2efa4234383aeedd36c937e43df369e6697b23e4f551fcac884c5cc4d79b0024d5c5e48bfdb8aefd0504ad0cc126c533fb8fba9f570e34383a3de8c4acb172494761c44bbe5ac6a3a5e715b0e8a171f380a83f438546ef1e9bec96e83a0bf05a05c33afe6faaf3287434383a899b192e5616939849effc2daed201e29344dc307c202ab728925a5e451398bb2e35dca5191092d93b3a89120889b03134383a90f2ba5b9f0bc645d276e808f988c48e7682b63bb841396541162bf7b091e67a4122c4cc9113a86482d2875cf2a555c734383ae76d1dbedf2d29e1ad8fef549bf34ff2af22a782536ea1bd56ba2c16794b4d86c63b810345a87fe0f2751b474cabd0e734383a597beae691cbe13a55a2dced643257471f9948927a580218efcb6e2b8a4d74b0c56c88b5166bff30e94a1e3809519c0334383af37778992f0b013ed07ac4c12b51c497156e3189ef4c019ee86077c6900a81f13678813d5da216c6e5d2cd798915df9c34383aaa950fcdb975362c87f1824fdaabac4fd09634b7d4ddb437a8d70531e9f5f31278f235b579907029ac4c15a7a0ad2e1034383a6ce403d83cf432635ff1f4c2b4474ba8753aad483301491bae5adf7cc0a2384c340d3f87a8fc3878981cc6850ec09d4734383a3ce7a0906a2ba281dbac1ba9c434508de575a9ef05d5b716c6df28cf3e325be971e58098ef8678f5ecdeac24b595d72e34383adf437fde3c433974d2cd65be001de06540e0fc9bb5ef12a29dcd9faca6d4c4b0646fe0d1e365c4cb07b30eb03af5838e34383a4a43375c1c4c8e2d1e24a243cf4a15c0c50ce8dd3594d43b01e0ea16d7768f5532b86e6a3e64b2d9a828b32c1fe32a8934383a91f33197dccc1b1a46a1bce061834c1a0d86ea70a94c881aad68c813de79652f0853e8318b921358748be5f9f9584c2934383af6c9e9fa91fd79e20c9d76adf9c6ec68101f46d2d9dcca8507fc9b6026cfcbcba838f72b8d81292431ffe71ea6974af534383a63ac16fe0a799cc29902148294c6b495721de053ac27726e9f7e475152ac58509823bed4a5fb279f29733d73cb40270d65313a7e36343a03907523d4d704ba2ff20de2bb04ee82739be584005c320cacb500d8222d34e5de0bd7add471b7810b73d7953e5bb91d11310d863846c95f87f046ce8830d10265313a67693065313a6b33323ab63f879f46eb12fdec0d4646248f371c9b1438091e5c667686914c74e74bc8376565
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+random snode for user: 03a4ae66addfe0d1208eaacaeeace9e2a5a799a524878bcd732ddf584c372541f3 is snode: f2c1bcee8f2e5b111235903fc782a7ded09d321eb09b721e4edd67099dcd7938
+promises [ Promise { <pending> }, Promise { <pending> } ]
+storing to snode https://198.98.61.136:22021/storage_rpc/v1
+storing to snode https://198.98.61.136:22021/storage_rpc/v1
+storing to snode https://198.98.61.136:22021/storage_rpc/v1
+random snode for user: 05ab8bcce43e882676139712e83f0e6c2a1a788b79ff294ac9150a43268609b654 is snode: cafe38ff5358d034cf2f7bd490bc27220b9b362aad92e6303e81837aaf56e01b
+storing to snode https://185.150.191.51:22138/storage_rpc/v1
+storing to snode https://185.150.191.51:22138/storage_rpc/v1
+storing to snode https://185.150.191.51:22138/storage_rpc/v1
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+random snode for user: 05d3fc772cb60786b45b156bee064ea0d9cde1d56b70d4b09f30ae0148909a857e is snode: 1bb80cd76c294d2d42c09d2012af0cb4857aa1cee1468eec87ec916eeb14c2d8
+storing to snode https://66.181.33.94:22183/storage_rpc/v1
+storing to snode https://66.181.33.94:22183/storage_rpc/v1
+storing to snode https://66.181.33.94:22183/storage_rpc/v1
+random snode for user: 055efe7aaa00ab267863c2522ad8bbccd92a06fa35cc7b47d29a28af1ab1e1b04d is snode: 47227a983bc149c1551b75e2b053eefc4ad3901880c529179e6e1531749eeecf
+storing to snode https://209.222.101.54:22107/storage_rpc/v1
+storing to snode https://209.222.101.54:22107/storage_rpc/v1
+storing to snode https://209.222.101.54:22107/storage_rpc/v1
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+storeStatus for (group) 03a4ae66addfe0d1208eaacaeeace9e2a5a799a524878bcd732ddf584c372541f3: [ 200, 200, 200 ]
+storeStatus for Charlie: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+storeStatus for Alice: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "obtains upon zapped girth solved sincerely bugs village dewdrop aided aside seeded solved"
+	"Bob": "tirade jerseys owls daytime hesitate adhesive tepid beware beware awakened jump broken beware"
+	"Charlie": "badge injury tulips madness hickory hornet eclipse tubes jaded assorted ointment asylum asylum" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+[alice1] Device identity changed from device-5554 to alice1
+[bob1] Device identity changed from device-5556 to bob1
+[charlie1] Device identity changed from device-5558 to charlie1
+[alice1] Waiting for "id" and "Restore your session button" to be present
+[bob1] Waiting for "id" and "Restore your session button" to be present
+[charlie1] Waiting for "id" and "Restore your session button" to be present
+[charlie1] 'Restore your session button' has been found
+[alice1] 'Restore your session button' has been found
+[bob1] 'Restore your session button' has been found
+[charlie1] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[charlie1] Waiting for "id" and "Recovery phrase input" to be present
+[alice1] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[alice1] Waiting for "id" and "Recovery phrase input" to be present
+[bob1] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[bob1] Waiting for "id" and "Recovery phrase input" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Recovery phrase input
+[bob1] Waiting for "id" and "Recovery phrase input" to be present
+[alice1] 'Recovery phrase input' has been found
+[charlie1] 'Recovery phrase input' has been found
+[bob1] 'Recovery phrase input' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[charlie1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[charlie1] 'Continue' has been found
+[charlie1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[bob1] 'Continue' has been found
+[bob1] Waiting for "id" and "Slow mode notifications button" to be present
+[charlie1] Waiting for "id" and "Slow mode notifications button" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[bob1] Waiting for "id" and "Slow mode notifications button" to be present
+[charlie1] 'Slow mode notifications button' has been found
+[alice1] 'Slow mode notifications button' has been found
+[bob1] 'Slow mode notifications button' has been found
+[bob1] Waiting for "id" and "Continue" to be present
+[charlie1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[charlie1] 'Continue' has been found
+[alice1] 'Continue' has been found
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] 'Continue' has been found
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[charlie1] 'Loading animation' has been found
+[alice1] 'Loading animation' has been found
+[bob1] Waiting for "id" and "Loading animation" to be present
+[bob1] 'Loading animation' has been found
+[charlie1] Loading animation was found, waiting for it to be gone
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[charlie1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[charlie1] Loading animation not found
+[charlie1] Loading animation has finished
+[alice1] Waiting for "id" and "Loading animation" to be present
+[charlie1] doesElementExist failed with accessibility id Enter display name
+[charlie1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Loading animation not found
+[alice1] Loading animation has finished
+[charlie1] doesElementExist failed with accessibility id Enter display name
+[charlie1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[charlie1] doesElementExist failed with accessibility id Enter display name
+[charlie1] Enter display name Doesn't exist but retrying
+[bob1] Loading animation not found
+[bob1] Loading animation has finished
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Enter display name
+[charlie1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Enter display name
+[charlie1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Enter display name
+[charlie1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Enter display name
+[charlie1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Enter display name
+[charlie1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Enter display name
+[charlie1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Enter display name
+[charlie1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[charlie1] doesElementExist failed with accessibility id Enter display name
+[charlie1] Enter display name doesn't exist, time expired
+[charlie1] Display name found: Loading account
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name doesn't exist, time expired
+[alice1] Display name found: Loading account
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name doesn't exist, time expired
+[bob1] Display name found: Loading account
+[charlie1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[charlie1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[alice1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[bob1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[bob1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[charlie1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Continue
+[charlie1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[charlie1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Continue
+[charlie1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[charlie1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[charlie1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[charlie1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[charlie1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[charlie1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[charlie1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[charlie1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[charlie1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[charlie1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[charlie1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[charlie1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[charlie1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[charlie1] Element has been deleted, great success
+[charlie1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[charlie1] 'New conversation button' has been found
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Element has been deleted, great success
+[bob1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] Element has been deleted, great success
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[bob1] 'New conversation button' has been found
+[alice1] 'New conversation button' has been found
+[alice1] Waiting for "accessibility id" and "Conversation list item" to be present with "Message checks for groups"
+[bob1] Waiting for "accessibility id" and "Conversation list item" to be present with "Message checks for groups"
+[charlie1] Waiting for "accessibility id" and "Conversation list item" to be present with "Message checks for groups"
+[charlie1] Text found to include Message checks for groups
+[charlie1] 'Conversation list item' and 'Message checks for groups' has been found
+[alice1] Text found to include Message checks for groups
+[alice1] 'Conversation list item' and 'Message checks for groups' has been found
+[bob1] Text found to include Message checks for groups
+[bob1] 'Conversation list item' and 'Message checks for groups' has been found
+running  /opt/android/platform-tools/adb -s emulator-5554 shell rm -rf /storage/emulated/0/Download/*
+was run:  /opt/android/platform-tools/adb -s emulator-5554 shell rm -rf /storage/emulated/0/Download/* { stdout: '', stderr: '' }
+running  /opt/android/platform-tools/adb -s emulator-5554 push run/test/specs/media/test_video.mp4 /storage/emulated/0/Download
+cmd which failed: "/opt/android/platform-tools/adb -s emulator-5554 push run/test/specs/media/test_video.mp4 /storage/emulated/0/Download"
+result: "run/test/specs/media/test_video.mp4: 1 file pushed, 0 skipped. 482.8 MB/s (1055736 bytes in 0.002s)
+"
+running  /opt/android/platform-tools/adb -s emulator-5554 shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage/emulated/0/Download/test_video.mp4
+was run:  /opt/android/platform-tools/adb -s emulator-5554 shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage/emulated/0/Download/test_video.mp4 {
+  stdout: 'Broadcasting: Intent { act=android.intent.action.MEDIA_SCANNER_SCAN_FILE dat=file:///... flg=0x400000 }\n' +
+    'Broadcast completed: result=0\n',
+  stderr: ''
+}
+[alice1] Waiting for "accessibility id" and "Attachments button" to be present
+[alice1] 'Attachments button' has been found
+[alice1] Waiting for "accessibility id" and "Documents folder" to be present
+[alice1] 'Documents folder' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "id" and "com.android.permissioncontroller:id/permission_allow_button" to be present with "Allow"
+[alice1] Waiting for "id" and "com.android.permissioncontroller:id/permission_allow_button" to be present with "Allow"
+[alice1] Text found to include Allow
+[alice1] 'com.android.permissioncontroller:id/permission_allow_button' and 'Allow' has been found
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_video.mp4" with matching id: android:id/title
+[alice1] android:id/title doesn't exist, time expired
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Videos"
+[alice1] Text found to include Videos
+Test failed, capturing screenshots from 3 device(s)...
+Captured and labeled screenshot from device alice1
+Captured and labeled screenshot from device bob1
+Captured and labeled screenshot from device charlie1
+Screenshot saved: /home/runner/actions-runner/_work/session-appium/session-appium/test-results/group_message_video-Send-v-41b16-droid-medium-risk-3-devices/send-video-to-group.png

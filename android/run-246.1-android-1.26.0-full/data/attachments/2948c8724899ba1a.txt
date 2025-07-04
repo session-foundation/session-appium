@@ -1,0 +1,393 @@
+dbug AndroidUiautomator2Driver@76ec 
+dbug AndroidUiautomator2Driver@76ec Creating session with W3C capabilities: {
+dbug AndroidUiautomator2Driver@76ec   "firstMatch": [
+dbug AndroidUiautomator2Driver@76ec     {},
+dbug AndroidUiautomator2Driver@76ec     {}
+dbug AndroidUiautomator2Driver@76ec   ],
+dbug AndroidUiautomator2Driver@76ec   "alwaysMatch": {
+dbug AndroidUiautomator2Driver@76ec     "appium:app": "./extracted/session-android.apk",
+dbug AndroidUiautomator2Driver@76ec     "appium:platformName": "Android",
+dbug AndroidUiautomator2Driver@76ec     "appium:platformVersion": "14",
+dbug AndroidUiautomator2Driver@76ec     "appium:appPackage": "network.loki.messenger",
+dbug AndroidUiautomator2Driver@76ec     "appium:appActivity": "network.loki.messenger.RoutingActivity",
+dbug AndroidUiautomator2Driver@76ec     "appium:automationName": "UiAutomator2",
+dbug AndroidUiautomator2Driver@76ec     "appium:newCommandTimeout": 300000,
+dbug AndroidUiautomator2Driver@76ec     "appium:eventTimings": false,
+dbug AndroidUiautomator2Driver@76ec     "appium:udid": "emulator-5560"
+dbug AndroidUiautomator2Driver@76ec   }
+dbug AndroidUiautomator2Driver@76ec }
+WARN BaseDriver The capabilities ["platformName"] are standard capabilities and do not require "appium:" prefix
+info AndroidUiautomator2Driver@76ec Session created with session id: 19f8be5b-2209-43c6-8d72-d23dc32e33d6
+info ADB Found 1 'build-tools' folders under '/opt/android' (newest first):
+info ADB     /opt/android/build-tools/34.0.0
+info ADB Using 'adb' from '/opt/android/platform-tools/adb'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 start-server'
+info AndroidUiautomator2Driver@76ec Retrieving device list
+dbug ADB Trying to find connected Android devices
+dbug ADB Getting connected devices
+dbug ADB Connected devices: [{"udid":"emulator-5554","state":"device"},{"udid":"emulator-5556","state":"device"},{"udid":"emulator-5558","state":"device"},{"udid":"emulator-5560","state":"device"}]
+info AndroidUiautomator2Driver@76ec Using device: emulator-5560
+info ADB Using 'adb' from '/opt/android/platform-tools/adb'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 start-server'
+dbug ADB Setting device id to emulator-5560
+WARN BaseDriver The current application path './extracted/session-android.apk' is not absolute and has been rewritten to '/home/runner/actions-runner/_work/session-appium/session-appium/extracted/session-android.apk'. Consider using absolute paths rather than relative
+info BaseDriver Using local app '/home/runner/actions-runner/_work/session-appium/session-appium/extracted/session-android.apk'
+dbug AndroidUiautomator2Driver@76ec Checking whether app is actually present
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell getprop ro.build.version.sdk'
+dbug ADB Current device property 'ro.build.version.sdk': 34
+info ADB Getting device platform version
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell getprop ro.build.version.release'
+dbug ADB Current device property 'ro.build.version.release': 14
+dbug ADB Device API level: 34
+info AndroidUiautomator2Driver@76ec Relaxing hidden api policy
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell 'settings put global hidden_api_policy_pre_p_apps 1;settings put global hidden_api_policy_p_apps 1;settings put global hidden_api_policy 1''
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 wait-for-device'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell echo ping'
+dbug AndroidUiautomator2Driver@76ec Pushing settings apk to the device...
+dbug ADB Getting package info for 'io.appium.settings'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell dumpsys package io.appium.settings'
+dbug ADB App '/home/runner/actions-runner/_work/session-appium/session-appium/node_modules/io.appium.settings/apks/settings_apk-debug.apk' is not installed
+dbug ADB Installing '/home/runner/actions-runner/_work/session-appium/session-appium/node_modules/io.appium.settings/apks/settings_apk-debug.apk'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 help'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 features'
+info ADB The application at '/home/runner/actions-runner/_work/session-appium/session-appium/node_modules/io.appium.settings/apks/settings_apk-debug.apk' will not be cached, because the device under test has confirmed the support of streamed installs
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 install -g /home/runner/actions-runner/_work/session-appium/session-appium/node_modules/io.appium.settings/apks/settings_apk-debug.apk'
+info ADB The installation of 'settings_apk-debug.apk' took 161ms
+dbug ADB Install command stdout: Performing Streamed Install
+dbug ADB Success
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell dumpsys activity services io.appium.settings'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell cmd notification allow_listener io.appium.settings/.NLService'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell appops set io.appium.settings PROJECT_MEDIA allow'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell dumpsys activity services io.appium.settings'
+dbug SettingsApp Starting Appium Settings app
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell am start-activity -n io.appium.settings/.Settings -a android.intent.action.MAIN -c android.intent.category.LAUNCHER'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell dumpsys activity services io.appium.settings'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell dumpsys activity services io.appium.settings'
+dbug Logcat Starting logs capture with command: /opt/android/platform-tools/adb -P 5037 -s emulator-5560 logcat -v threadtime
+dbug AndroidUiautomator2Driver@76ec Forwarding UiAutomator2 Server port 6790 to local port 8201
+dbug ADB Forwarding system: 8201 to device: 6790
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 forward tcp:8201 tcp:6790'
+dbug AndroidUiautomator2Driver@76ec UIA2Proxy options: {"server":"127.0.0.1","port":8201,"keepAlive":true,"scheme":"http","base":"","reqBasePath":"","sessionId":null,"timeout":240000}
+dbug ADB Getting package info for 'io.appium.uiautomator2.server'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell dumpsys package io.appium.uiautomator2.server'
+dbug ADB Getting install status for io.appium.uiautomator2.server.test
+dbug ADB Checking app cert for /home/runner/actions-runner/_work/session-appium/session-appium/extracted/session-android.apk
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell cmd package list packages'
+dbug ADB App '/home/runner/actions-runner/_work/session-appium/session-appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-v7.6.2.apk' is not installed
+dbug ADB 'io.appium.uiautomator2.server.test' is not installed
+dbug AndroidUiautomator2Driver@76ec Server packages status: [{"installState":"notInstalled","appPath":"/home/runner/actions-runner/_work/session-appium/session-appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-v7.6.2.apk","appId":"io.appium.uiautomator2.server"},{"installState":"notInstalled","appPath":"/home/runner/actions-runner/_work/session-appium/session-appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-debug-androidTest.apk","appId":"io.appium.uiautomator2.server.test"}]
+info AndroidUiautomator2Driver@76ec Server packages are going to be (re)installed
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 version'
+info ADB The application at '/home/runner/actions-runner/_work/session-appium/session-appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-v7.6.2.apk' will not be cached, because the device under test has confirmed the support of streamed installs
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 install -r --no-incremental /home/runner/actions-runner/_work/session-appium/session-appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-v7.6.2.apk'
+info ADB The application at '/home/runner/actions-runner/_work/session-appium/session-appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-debug-androidTest.apk' will not be cached, because the device under test has confirmed the support of streamed installs
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 install -r --no-incremental /home/runner/actions-runner/_work/session-appium/session-appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-debug-androidTest.apk'
+info ADB The installation of 'appium-uiautomator2-server-debug-androidTest.apk' took 565ms
+dbug ADB Install command stdout: Performing Streamed Install
+dbug ADB Success
+info ADB Using 'apksigner.jar' from '/opt/android/build-tools/34.0.0/lib/apksigner.jar'
+dbug ADB Starting apksigner: /usr/bin/java -Xmx1024M -Xss1m -jar /opt/android/build-tools/34.0.0/lib/apksigner.jar verify --print-certs /home/runner/actions-runner/_work/session-appium/session-appium/extracted/session-android.apk
+info ADB The installation of 'appium-uiautomator2-server-v7.6.2.apk' took 1123ms
+dbug ADB Install command stdout: Performing Streamed Install
+dbug ADB Success
+dbug AndroidUiautomator2Driver@76ec Waiting up to 30000ms for services to be available
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell pm list instrumentation'
+dbug AndroidUiautomator2Driver@76ec Instrumentation target 'io.appium.uiautomator2.server.test/androidx.test.runner.AndroidJUnitRunner' is available
+info ADB Adding packages ["io.appium.settings","io.appium.uiautomator2.server","io.appium.uiautomator2.server.test"] to Doze whitelist
+dbug ADB Got the following command chunks to execute: [["dumpsys","deviceidle","whitelist","+io.appium.settings",";","dumpsys","deviceidle","whitelist","+io.appium.uiautomator2.server",";","dumpsys","deviceidle","whitelist","+io.appium.uiautomator2.server.test",";"]]
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell dumpsys deviceidle whitelist +io.appium.settings ; dumpsys deviceidle whitelist +io.appium.uiautomator2.server ; dumpsys deviceidle whitelist +io.appium.uiautomator2.server.test ;'
+dbug ADB apksigner stdout: Signer #1 certificate DN: C=US, O=Android, CN=Android Debug
+dbug ADB Signer #1 certificate SHA-256 digest: c2031d32c7063a4db8646a30e18b480b899a3542b3a7e428d2afe787fa02b3c4
+dbug ADB Signer #1 certificate SHA-1 digest: c078225720b881894023ad426bebbf5cdbd2e364
+dbug ADB Signer #1 certificate MD5 digest: deb9d1fcffe63b571ae246e96386f197
+dbug ADB 
+info ADB '/home/runner/actions-runner/_work/session-appium/session-appium/extracted/session-android.apk' is signed with a non-default certificate
+dbug ADB Getting package info for 'network.loki.messenger'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell dumpsys package network.loki.messenger'
+dbug ADB App '/home/runner/actions-runner/_work/session-appium/session-appium/extracted/session-android.apk' is not installed
+dbug ADB Installing '/home/runner/actions-runner/_work/session-appium/session-appium/extracted/session-android.apk'
+info ADB The application at '/home/runner/actions-runner/_work/session-appium/session-appium/extracted/session-android.apk' will not be cached, because the device under test has confirmed the support of streamed installs
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 install /home/runner/actions-runner/_work/session-appium/session-appium/extracted/session-android.apk'
+info ADB The installation of 'session-android.apk' took 1955ms
+dbug ADB Install command stdout: Performing Streamed Install
+dbug ADB Success
+dbug AndroidUiautomator2Driver@76ec Performing shallow cleanup of automation leftovers
+dbug AndroidUiautomator2Driver@76ec No obsolete sessions have been detected (socket hang up)
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell am force-stop io.appium.uiautomator2.server'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell am force-stop io.appium.uiautomator2.server.test'
+info AndroidUiautomator2Driver@76ec Starting UIAutomator2 server 7.6.2
+info AndroidUiautomator2Driver@76ec Using UIAutomator2 server from '/home/runner/actions-runner/_work/session-appium/session-appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-v7.6.2.apk' and test from '/home/runner/actions-runner/_work/session-appium/session-appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-debug-androidTest.apk'
+info AndroidUiautomator2Driver@76ec Waiting up to 30000ms for UiAutomator2 to be online...
+dbug ADB Creating ADB subprocess with args: ["-P","5037","-s","emulator-5560","shell","am","instrument","-w","-e","disableAnalytics","true","io.appium.uiautomator2.server.test/androidx.test.runner.AndroidJUnitRunner"]
+dbug AndroidUiautomator2Driver@76ec Matched '/status' to command name 'getStatus'
+dbug AndroidUiautomator2Driver@76ec Proxying [GET /status] to [GET http://127.0.0.1:8201/status] with no body
+info AndroidUiautomator2Driver@76ec socket hang up
+dbug AndroidUiautomator2Driver@76ec [Instrumentation] 
+dbug AndroidUiautomator2Driver@76ec Matched '/status' to command name 'getStatus'
+dbug AndroidUiautomator2Driver@76ec Proxying [GET /status] to [GET http://127.0.0.1:8201/status] with no body
+info AndroidUiautomator2Driver@76ec socket hang up
+dbug AndroidUiautomator2Driver@76ec Matched '/status' to command name 'getStatus'
+dbug AndroidUiautomator2Driver@76ec Proxying [GET /status] to [GET http://127.0.0.1:8201/status] with no body
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"None","value":{"build":{"version":"7.6.2","versionCode":218},"message":"UiAutomator2 Server is ready to accept commands","ready":true}}
+dbug AndroidUiautomator2Driver@76ec The initialization of the instrumentation process took 2164ms
+dbug AndroidUiautomator2Driver@76ec Matched '/session' to command name 'createSession'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /session] to [POST http://127.0.0.1:8201/session] with body: {"capabilities":{"firstMatch":[{"app":"./extracted/session-android.apk","platformName":"Android","platformVersion":"14","appPackage":"network.loki.messenger","appActivity":"network.loki.messenger.RoutingActivity","automationName":"UiAutomator2","newCommandTimeout":300000,"eventTimings":false,"udid":"emulator-5560","platform":"LINUX","webStorageEnabled":false,"takesScreenshot":true,"javascriptEnabled":true,"databaseEnabled":false,"networkConnectionEnabled":true,"locationContextEnabled":false,"warnings":{},"desired":{"app":"./extracted/session-android.apk","platformName":"Android","platformVersion":"14","appPackage":"network.loki.messenger","appActivity":"network.loki.messenger.RoutingActivity","automationName":"UiAutomator2","newCommandTimeout":300000,"eventTimings":false,"udid":"emulator-5560"},"deviceName":"emulator-5560","deviceUDID":"emulator-5560"}],"alwaysMatch":{}}}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"capabilities":{"firstMatch":[{"app":"./extracted/session-android.apk","platformName":"Android","platformVersion":"14","appPackage":"network.loki.messenger","appActivity":"network.loki.messenger.RoutingActivity","automationName":"UiAutomator2","newCommandTimeout":300000,"eventTimings":false,"udid":"emulator-5560","platform":"LINUX","webStorageEnabled":false,"takesScreenshot":true,"javascriptEnabled":true,"databaseEnabled":false,"networkConnectionEnabled":true,"locationContextEnabled":false,"warnings":{},"desired":{"app":"./extracted/session-android.apk","platformName":"Android","platformVersion":"14","appPackage":"network.loki.messenger","appActivity":"network.loki.messenger.RoutingActivity","automationName":"UiAutomator2","newCommandTimeout":300000,"eventTimings":false,"udid":"emulator-5560"},"deviceName":"emulator-5560","deviceUDID":"emulator-5560"}],"alwaysMatch":{}},"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8"}}
+info AndroidUiautomator2Driver@76ec Determined the downstream protocol as 'W3C'
+dbug AndroidUiautomator2Driver@76ec Proxying [GET /appium/device/pixel_ratio] to [GET http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/appium/device/pixel_ratio] with no body
+dbug AndroidUiautomator2Driver@76ec Matched '/appium/device/system_bars' to command name 'getSystemBars'
+dbug AndroidUiautomator2Driver@76ec Proxying [GET /appium/device/system_bars] to [GET http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/appium/device/system_bars] with no body
+dbug AndroidUiautomator2Driver@76ec Matched '/window/current/size' to command name 'getWindowSize'
+dbug AndroidUiautomator2Driver@76ec Proxying [GET /window/current/size] to [GET http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/window/current/size] with no body
+dbug AndroidUiautomator2Driver@76ec Proxying [GET /appium/device/info] to [GET http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/appium/device/info] with no body
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell dumpsys window'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell dumpsys power'
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":2.625}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"statusBar":128}}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"height":2400,"width":1080}}
+info AndroidUiautomator2Driver@76ec Screen already unlocked, doing nothing
+info AndroidUiautomator2Driver@76ec Starting 'network.loki.messenger/network.loki.messenger.RoutingActivity and waiting for 'network.loki.messenger/network.loki.messenger.RoutingActivity'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell am start-activity -W -n network.loki.messenger/network.loki.messenger.RoutingActivity -S -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000'
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"androidId":"6e3dc092141c32e9","apiVersion":"34","bluetooth":{"state":"ON"},"brand":"google","carrierName":"T-Mobile","displayDensity":420,"locale":"en_US","manufacturer":"Google","model":"sdk_gphone64_x86_64","networks":[{"capabilities":{"SSID":null,"linkDownBandwidthKbps":30000,"linkUpstreamBandwidthKbps":15000,"networkCapabilities":"NET_CAPABILITY_MMS,NET_CAPABILITY_SUPL,NET_CAPABILITY_DUN,NET_CAPABILITY_FOTA,NET_CAPABILITY_IMS,NET_CAPABILITY_CBS,NET_CAPABILITY_INTERNET,NET_CAPABILITY_NOT_RESTRICTED,NET_CAPABILITY_TRUSTED,NET_CAPABILITY_NOT_VPN,NET_CAPABILITY_VALIDATED,NET_CAPABILITY_NOT_ROAMING,NET_CAPABILITY_FOREGROUND,NET_CAPABILITY_NOT_CONGESTED,NET_CAPABILITY_NOT_SUSPENDED","signalStrength":-2147483648,"transportTypes":"TRANSPORT_CELLULAR"},"detailedState":"CONNECTED","extraInfo":"epc.tmobile.com","isAvailable":true,"isConnected":true,"isFailover":false,"isRoaming":false,"state":"CONNECTED","subtype":13,"subtypeName":"LTE","type":0,"typeN...
+dbug BaseDriver The value of 'ignoreUnimportantViews' setting did not change. Skipping the update for it
+dbug AndroidUiautomator2Driver@76ec Matched '/appium/settings' to command name 'updateSettings'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /appium/settings] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/appium/settings] with body: {"settings":{"ignoreUnimportantViews":false,"allowInvisibleElements":true,"enableMultiWindows":true,"disableIdLocatorAutocompletion":true}}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"Create account button","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-000c-0000-000a00000007","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-000c-0000-000a00000007"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-000c-0000-000a00000007/click' to command name 'click'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element/00000000-0000-000c-0000-000a00000007/click] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-000c-0000-000a00000007/click] with body: {"element":"00000000-0000-000c-0000-000a00000007"}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"Enter display name","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-000d-0000-00270000001a","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-000d-0000-00270000001a"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-000d-0000-00270000001a/value' to command name 'setValue'
+dbug AndroidUiautomator2Driver@76ec Added 'value' property ["A","l","i","c","e"] to 'setValue' request body
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element/00000000-0000-000d-0000-00270000001a/value] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-000d-0000-00270000001a/value] with body: {"elementId":"00000000-0000-000d-0000-00270000001a","text":"Alice","replace":false,"value":["A","l","i","c","e"]}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"Continue","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-000d-0000-00340000001a","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-000d-0000-00340000001a"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-000d-0000-00340000001a/click' to command name 'click'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element/00000000-0000-000d-0000-00340000001a/click] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-000d-0000-00340000001a/click] with body: {"element":"00000000-0000-000d-0000-00340000001a"}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"Slow mode notifications button","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-000e-0000-004b0000002d","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-000e-0000-004b0000002d"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-000e-0000-004b0000002d/click' to command name 'click'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element/00000000-0000-000e-0000-004b0000002d/click] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-000e-0000-004b0000002d/click] with body: {"element":"00000000-0000-000e-0000-004b0000002d"}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"Continue","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-000e-0000-00550000002d","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-000e-0000-00550000002d"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-000e-0000-00550000002d/click' to command name 'click'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element/00000000-0000-000e-0000-00550000002d/click] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-000e-0000-00550000002d/click] with body: {"element":"00000000-0000-000e-0000-00550000002d"}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+[alice1] about to look for Allow permission in 5s
+dbug AndroidUiautomator2Driver@76ec [Instrumentation] s_glBindAttribLocation: bind attrib 0 name position
+dbug AndroidUiautomator2Driver@76ec [Instrumentation] s_glBindAttribLocation: bind attrib 1 name color
+dbug AndroidUiautomator2Driver@76ec [Instrumentation] s_glBindAttribLocation: bind attrib 2 name localCoord
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"com.android.permissioncontroller:id/permission_deny_button","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0011-ffff-ffff0000001b","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0011-ffff-ffff0000001b"}}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"com.android.permissioncontroller:id/permission_deny_button","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0011-ffff-ffff0000001b","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0011-ffff-ffff0000001b"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-0011-ffff-ffff0000001b/click' to command name 'click'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element/00000000-0000-0011-ffff-ffff0000001b/click] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-0011-ffff-ffff0000001b/click] with body: {"element":"00000000-0000-0011-ffff-ffff0000001b"}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+[alice1] looked for Allow permission
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"Reveal recovery phrase button","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0010-0000-006500000057","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0010-0000-006500000057"}}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"Reveal recovery phrase button","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0010-0000-006500000057","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0010-0000-006500000057"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-0010-0000-006500000057/click' to command name 'click'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element/00000000-0000-0010-0000-006500000057/click] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-0010-0000-006500000057/click] with body: {"element":"00000000-0000-0010-0000-006500000057"}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"Recovery password container","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0012-0000-007e00000073","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0012-0000-007e00000073"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-0012-0000-007e00000073/click' to command name 'click'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element/00000000-0000-0012-0000-007e00000073/click] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-0012-0000-007e00000073/click] with body: {"element":"00000000-0000-0012-0000-007e00000073"}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"Copy button","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0012-0000-008100000073","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0012-0000-008100000073"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-0012-0000-008100000073/click' to command name 'click'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element/00000000-0000-0012-0000-008100000073/click] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-0012-0000-008100000073/click] with body: {"element":"00000000-0000-0012-0000-008100000073"}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-0012-0000-007e00000073/text' to command name 'getText'
+dbug AndroidUiautomator2Driver@76ec Proxying [GET /element/00000000-0000-0012-0000-007e00000073/text] to [GET http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-0012-0000-007e00000073/text] with no body
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":"dunes toenail cistern vowels asked gecko biweekly luggage sober aztec petals rotate sober"}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"accessibility id","selector":"Navigate up","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0012-ffff-ffff00000077","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0012-ffff-ffff00000077"}}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"accessibility id","selector":"Navigate up","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0012-ffff-ffff00000077","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0012-ffff-ffff00000077"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-0012-ffff-ffff00000077/click' to command name 'click'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element/00000000-0000-0012-ffff-ffff00000077/click] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-0012-ffff-ffff00000077/click] with body: {"element":"00000000-0000-0012-ffff-ffff00000077"}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"accessibility id","selector":"User settings","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0010-ffff-ffff00000044","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0010-ffff-ffff00000044"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-0010-ffff-ffff00000044/click' to command name 'click'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element/00000000-0000-0010-ffff-ffff00000044/click] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-0010-ffff-ffff00000044/click] with body: {"element":"00000000-0000-0010-ffff-ffff00000044"}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"accessibility id","selector":"Account ID","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0014-ffff-ffff0000008f","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0014-ffff-ffff0000008f"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-0014-ffff-ffff0000008f/text' to command name 'getText'
+dbug AndroidUiautomator2Driver@76ec Proxying [GET /element/00000000-0000-0014-ffff-ffff0000008f/text] to [GET http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-0014-ffff-ffff0000008f/text] with no body
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":"053ff4878e2acc31145325cfcfbb895c0894c4f4ea6c4bcaa596f7bd8d27cd8106"}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"accessibility id","selector":"Navigate up","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0014-ffff-ffff0000009c","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0014-ffff-ffff0000009c"}}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"accessibility id","selector":"Navigate up","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0014-ffff-ffff0000009c","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0014-ffff-ffff0000009c"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-0014-ffff-ffff0000009c/click' to command name 'click'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element/00000000-0000-0014-ffff-ffff0000009c/click] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-0014-ffff-ffff0000009c/click] with body: {"element":"00000000-0000-0014-ffff-ffff0000009c"}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"accessibility id","selector":"User settings","context":"","multiple":false}
+info AndroidUiautomator2Driver@76ec Got response with status 404: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"error":"no such element","message":"An element could not be located on the page using the given search parameters","stacktrace":"io.appium.uiautomator2.common.exceptions.ElementNotFoundException: An element could not be located on the page using the given search parameters\n\tat io.appium.uiautomator2.handler.FindElement.safeHandle(FindElement.java:63)\n\tat io.appium.uiautomator2.handler.request.SafeRequestHandler.handle(SafeRequestHandler.java:59)\n\tat io.appium.uiautomator2.server.AppiumServlet.handleRequest(AppiumServlet.java:259)\n\tat io.appium.uiautomator2.server.AppiumServlet.handleHttpRequest(AppiumServlet.java:253)\n\tat io.appium.uiautomator2.http.ServerHandler.channelRead(ServerHandler.java:77)\n\tat io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:374)\n\tat io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:360)\n\tat io.netty.chann...
+dbug W3C Matched W3C error code 'no such element' to NoSuchElementError
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"accessibility id","selector":"User settings","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0010-ffff-ffff00000044","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0010-ffff-ffff00000044"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-0010-ffff-ffff00000044/click' to command name 'click'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element/00000000-0000-0010-ffff-ffff00000044/click] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-0010-ffff-ffff00000044/click] with body: {"element":"00000000-0000-0010-ffff-ffff00000044"}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"donate-menu-item","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0015-0000-0126000000b6","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0015-0000-0126000000b6"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-0015-0000-0126000000b6/click' to command name 'click'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element/00000000-0000-0015-0000-0126000000b6/click] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-0015-0000-0126000000b6/click] with body: {"element":"00000000-0000-0015-0000-0126000000b6"}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"Modal heading","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0016-0000-018a000000cc","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0016-0000-018a000000cc"}}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"Modal heading","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0016-0000-018a000000cc","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0016-0000-018a000000cc"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-0016-0000-018a000000cc/click' to command name 'click'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element/00000000-0000-0016-0000-018a000000cc/click] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-0016-0000-018a000000cc/click] with body: {"element":"00000000-0000-0016-0000-018a000000cc"}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-0016-0000-018a000000cc/text' to command name 'getText'
+dbug AndroidUiautomator2Driver@76ec Proxying [GET /element/00000000-0000-0016-0000-018a000000cc/text] to [GET http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-0016-0000-018a000000cc/text] with no body
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":"Open URL"}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"Modal description","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0016-0000-018b000000cc","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0016-0000-018b000000cc"}}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"Modal description","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0016-0000-018b000000cc","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0016-0000-018b000000cc"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-0016-0000-018b000000cc/click' to command name 'click'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element/00000000-0000-0016-0000-018b000000cc/click] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-0016-0000-018b000000cc/click] with body: {"element":"00000000-0000-0016-0000-018b000000cc"}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-0016-0000-018b000000cc/text' to command name 'getText'
+dbug AndroidUiautomator2Driver@76ec Proxying [GET /element/00000000-0000-0016-0000-018b000000cc/text] to [GET http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-0016-0000-018b000000cc/text] with no body
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":"Are you sure you want to open this URL in your browser?\n\nhttps://session.foundation/donate#app"}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"Open","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0016-0000-018d000000cc","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0016-0000-018d000000cc"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-0016-0000-018d000000cc/click' to command name 'click'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element/00000000-0000-0016-0000-018d000000cc/click] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-0016-0000-018d000000cc/click] with body: {"element":"00000000-0000-0016-0000-018d000000cc"}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"com.android.chrome:id/signin_fre_dismiss_button","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0017-ffff-ffff0000001e","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0017-ffff-ffff0000001e"}}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"com.android.chrome:id/signin_fre_dismiss_button","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0017-ffff-ffff0000001e","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0017-ffff-ffff0000001e"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-0017-ffff-ffff0000001e/click' to command name 'click'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element/00000000-0000-0017-ffff-ffff0000001e/click] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-0017-ffff-ffff0000001e/click] with body: {"element":"00000000-0000-0017-ffff-ffff0000001e"}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"com.android.chrome:id/negative_button","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-001a-ffff-ffff000000bd","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-001a-ffff-ffff000000bd"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-001a-ffff-ffff000000bd/click' to command name 'click'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element/00000000-0000-001a-ffff-ffff000000bd/click] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-001a-ffff-ffff000000bd/click] with body: {"element":"00000000-0000-001a-ffff-ffff000000bd"}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+dbug AndroidUiautomator2Driver@76ec Valid locator strategies for this request: xpath, id, class name, accessibility id, css selector, -android uiautomator
+dbug AndroidUiautomator2Driver@76ec Waiting up to 0 ms for condition
+dbug AndroidUiautomator2Driver@76ec Matched '/element' to command name 'findElement'
+dbug AndroidUiautomator2Driver@76ec Proxying [POST /element] to [POST http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element] with body: {"strategy":"id","selector":"com.android.chrome:id/url_bar","context":"","multiple":false}
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":{"ELEMENT":"00000000-0000-0019-ffff-ffff00000060","element-6066-11e4-a52e-4f735466cecf":"00000000-0000-0019-ffff-ffff00000060"}}
+dbug AndroidUiautomator2Driver@76ec Matched '/element/00000000-0000-0019-ffff-ffff00000060/text' to command name 'getText'
+dbug AndroidUiautomator2Driver@76ec Proxying [GET /element/00000000-0000-0019-ffff-ffff00000060/text] to [GET http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8/element/00000000-0000-0019-ffff-ffff00000060/text] with no body
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":"session.foundation/donate#app"}
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell input keyevent 4'
+dbug AndroidUiautomator2Driver@76ec Deleting UiAutomator2 session
+dbug AndroidUiautomator2Driver@76ec Deleting UiAutomator2 server session
+dbug AndroidUiautomator2Driver@76ec Proxying [DELETE /] to [DELETE http://127.0.0.1:8201/session/beb56c4c-9b27-49f5-aab7-bad4f30023c8] with no body
+dbug AndroidUiautomator2Driver@76ec Got response with status 200: {"sessionId":"beb56c4c-9b27-49f5-aab7-bad4f30023c8","value":null}
+dbug AndroidUiautomator2Driver@76ec [Instrumentation] io.appium.uiautomator2.server.test.AppiumUiAutomator2Server:
+dbug AndroidUiautomator2Driver@76ec [Instrumentation] The process has exited with code null, signal SIGTERM
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell dumpsys activity services io.appium.settings/.recorder.RecorderService'
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell am force-stop network.loki.messenger'
+dbug ADB Removing forwarded port socket connection: 8201 
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 forward --remove tcp:8201'
+info AndroidUiautomator2Driver@76ec Restoring hidden api policy to the device default configuration
+dbug ADB Running '/opt/android/platform-tools/adb -P 5037 -s emulator-5560 shell 'settings delete global hidden_api_policy_pre_p_apps;settings delete global hidden_api_policy_p_apps;settings delete global hidden_api_policy''
+dbug Logcat Stopping logcat capture

@@ -1,0 +1,69 @@
+
+
+==========> Running "App disguise icons @android @medium-risk @1-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+emulatorAlreadyRunning emulator-5554 true
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+[alice1] Device identity changed from device-5554 to alice1
+[alice1] Waiting for "id" and "Create account button" to be present
+[alice1] 'Create account button' has been found
+[alice1] Locator being used: { strategy: 'id', selector: 'Enter display name' }
+[alice1] Waiting for "id" and "Enter display name" to be present
+[alice1] 'Enter display name' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] 'Slow mode notifications button' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+Sleeping for 5000 milliseconds
+[alice1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[alice1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] Waiting for "id" and "Reveal recovery phrase button" to be present
+[alice1] 'Reveal recovery phrase button' has been found
+[alice1] Waiting for "id" and "Reveal recovery phrase button" to be present
+[alice1] 'Reveal recovery phrase button' has been found
+[alice1] Waiting for "id" and "Recovery password container" to be present
+[alice1] 'Recovery password container' has been found
+[alice1] Waiting for "id" and "Copy button" to be present
+[alice1] 'Copy button' has been found
+[alice1] Alices recovery phrase is "tepid upright selfish vogue unquoted niece school bounced tawny were jetting emerge bounced"
+[alice1] Waiting for "accessibility id" and "Navigate up" to be present
+[alice1] 'Navigate up' has been found
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'User settings' has been found
+[alice1] Waiting for "accessibility id" and "Account ID" to be present
+[alice1] 'Account ID' has been found
+[alice1] Waiting for "accessibility id" and "Navigate up" to be present
+[alice1] 'Navigate up' has been found
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "User settings
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'User settings' has been found
+[alice1] Waiting for "id" and "Appearance" to be present
+[alice1] 'Appearance' has been found
+[alice1] Waiting for "id" and "network.loki.messenger:id/system_settings_app_icon" to be present
+[alice1] 'network.loki.messenger:id/system_settings_app_icon' has been found
+[alice1] Waiting for "class name" and "android.widget.ScrollView" to be present
+[alice1] 'android.widget.ScrollView' has been found
+sessions closed

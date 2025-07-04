@@ -1,0 +1,938 @@
+
+
+==========> Running "Send document 1:1 @android @high-risk @2-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 1 1
+actualCapabilities worker 2
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 1 1
+actualCapabilities worker 3
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5560 true
+emulatorAlreadyRunning emulator-5558 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"05840d32df247f3c3ac110605d20111c07c8aa244c320c7c09ee13c1ab9c533516","seedPhrase":"ceiling dodge huddle calamity slackens typist kennel itches liquid erase puppy hiker itches"},
+SessionUser: {"name":"Bob","sessionId":"053d5936d56c7a572fe5b75339ab3af39bc954c3b1751fd9e6303987c73834cb07","seedPhrase":"nutshell framed renting below wise zesty exotic duets future ruthless idols mobile below"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"05840d32df247f3c3ac110605d20111c07c8aa244c320c7c09ee13c1ab9c533516","seedPhrase":"ceiling dodge huddle calamity slackens typist kennel itches liquid erase puppy hiker itches"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05840d32df247f3c3ac110605d20111c07c8aa244c320c7c09ee13c1ab9c533516","seedPhrase":"ceiling dodge huddle calamity slackens typist kennel itches liquid erase puppy hiker itches"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"053d5936d56c7a572fe5b75339ab3af39bc954c3b1751fd9e6303987c73834cb07","seedPhrase":"nutshell framed renting below wise zesty exotic duets future ruthless idols mobile below"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"053d5936d56c7a572fe5b75339ab3af39bc954c3b1751fd9e6303987c73834cb07","seedPhrase":"nutshell framed renting below wise zesty exotic duets future ruthless idols mobile below"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05840d32df247f3c3ac110605d20111c07c8aa244c320c7c09ee13c1ab9c533516","seedPhrase":"ceiling dodge huddle calamity slackens typist kennel itches liquid erase puppy hiker itches"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"053d5936d56c7a572fe5b75339ab3af39bc954c3b1751fd9e6303987c73834cb07","seedPhrase":"nutshell framed renting below wise zesty exotic duets future ruthless idols mobile below"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [ Promise { <pending> } ]
+emulator-5560  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5560'
+  }
+}
+udid: emulator-5560
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+random snode for user: 053d5936d56c7a572fe5b75339ab3af39bc954c3b1751fd9e6303987c73834cb07 is snode: 3a0e99d7a7ffcf1c00dfd61277b1461f8c06ade1a5b41f9bd116ba9f73d5e2ad
+storing to snode https://195.246.230.27:22105/storage_rpc/v1
+storing to snode https://195.246.230.27:22105/storage_rpc/v1
+storing to snode https://195.246.230.27:22105/storage_rpc/v1
+random snode for user: 05840d32df247f3c3ac110605d20111c07c8aa244c320c7c09ee13c1ab9c533516 is snode: 28d6b7ad3ef3cce8eb5b7cee523dc72cf4efc1967987a008903f99da9af26c11
+storing to snode https://209.141.32.170:22021/storage_rpc/v1
+storing to snode https://209.141.32.170:22021/storage_rpc/v1
+storing to snode https://209.141.32.170:22021/storage_rpc/v1
+storeStatus for Alice: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "ceiling dodge huddle calamity slackens typist kennel itches liquid erase puppy hiker itches"
+	"Bob": "nutshell framed renting below wise zesty exotic duets future ruthless idols mobile below" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+[alice1] Device identity changed from device-5558 to alice1
+[bob1] Device identity changed from device-5560 to bob1
+[alice1] Waiting for "id" and "Restore your session button" to be present
+[bob1] Waiting for "id" and "Restore your session button" to be present
+[bob1] 'Restore your session button' has been found
+[alice1] 'Restore your session button' has been found
+[bob1] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[bob1] Waiting for "id" and "Recovery phrase input" to be present
+[bob1] 'Recovery phrase input' has been found
+[alice1] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[alice1] Waiting for "id" and "Recovery phrase input" to be present
+[alice1] 'Recovery phrase input' has been found
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] 'Continue' has been found
+[bob1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[alice1] 'Continue' has been found
+[bob1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[bob1] 'Slow mode notifications button' has been found
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] 'Slow mode notifications button' has been found
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] 'Continue' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[bob1] Waiting for "id" and "Loading animation" to be present
+[bob1] 'Loading animation' has been found
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] 'Loading animation' has been found
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] 'Loading animation' has been found
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Loading animation not found
+[bob1] Loading animation has finished
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] 'Loading animation' has been found
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name doesn't exist, time expired
+[bob1] Display name found: Loading account
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Loading animation not found
+[alice1] Loading animation has finished
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name doesn't exist, time expired
+[alice1] Display name found: Loading account
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Element has been deleted, great success
+[bob1] Waiting for "accessibility id" and "New conversation button" to be present
+[bob1] 'New conversation button' has been found
+[alice1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[alice1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Element has been deleted, great success
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] 'New conversation button' has been found
+[bob1] Waiting for "accessibility id" and "Conversation list item" to be present with "Alice"
+[alice1] Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+[bob1] Text found to include Alice
+[bob1] 'Conversation list item' and 'Alice' has been found
+[alice1] Text found to include Bob
+[alice1] 'Conversation list item' and 'Bob' has been found
+running  /opt/android/platform-tools/adb -s emulator-5558 shell rm -rf /storage/emulated/0/Download/*
+was run:  /opt/android/platform-tools/adb -s emulator-5558 shell rm -rf /storage/emulated/0/Download/* { stdout: '', stderr: '' }
+running  /opt/android/platform-tools/adb -s emulator-5558 push run/test/specs/media/test_file.pdf /storage/emulated/0/Download
+cmd which failed: "/opt/android/platform-tools/adb -s emulator-5558 push run/test/specs/media/test_file.pdf /storage/emulated/0/Download"
+result: "run/test/specs/media/test_file.pdf: 1 file pushed, 0 skipped. 103.2 MB/s (113461 bytes in 0.001s)
+"
+running  /opt/android/platform-tools/adb -s emulator-5558 shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage/emulated/0/Download/test_file.pdf
+was run:  /opt/android/platform-tools/adb -s emulator-5558 shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage/emulated/0/Download/test_file.pdf {
+  stdout: 'Broadcasting: Intent { act=android.intent.action.MEDIA_SCANNER_SCAN_FILE dat=file:///... flg=0x400000 }\n' +
+    'Broadcast completed: result=0\n',
+  stderr: ''
+}
+[alice1] Waiting for "accessibility id" and "Attachments button" to be present
+[alice1] 'Attachments button' has been found
+[alice1] Waiting for "accessibility id" and "Documents folder" to be present
+[alice1] 'Documents folder' has been found
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Continue
+[alice1] Waiting for "accessibility id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "id" and "com.android.permissioncontroller:id/permission_allow_button" to be present with "Allow"
+[alice1] Text found to include Allow
+[alice1] 'com.android.permissioncontroller:id/permission_allow_button' and 'Allow' has been found
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title Doesn't exist but retrying
+[alice1] Couldn't find "test_file.pdf" with matching id: android:id/title
+[alice1] android:id/title doesn't exist, time expired
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+[alice1] Waiting for "class name" and "android.widget.Button" to be present with "Documents"
+Test failed, capturing screenshots from 2 device(s)...
+Captured and labeled screenshot from device alice1
+Captured and labeled screenshot from device bob1
+Screenshot saved: /home/runner/actions-runner/_work/session-appium/session-appium/test-results/message_document-Send-docu-9eebc-android-high-risk-2-devices-retry2/send-document-1-1-retry2.png

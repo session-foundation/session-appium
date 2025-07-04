@@ -1,0 +1,247 @@
+
+
+==========> Running "Disappear after send note to self @android @medium-risk @1-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 2 2
+actualCapabilities worker 2
+emulatorAlreadyRunning emulator-5558 true
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+[alice1] Device identity changed from device-5558 to alice1
+[alice1] Waiting for "id" and "Create account button" to be present
+[alice1] 'Create account button' has been found
+[alice1] Locator being used: { strategy: 'id', selector: 'Enter display name' }
+[alice1] Waiting for "id" and "Enter display name" to be present
+[alice1] 'Enter display name' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] 'Slow mode notifications button' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+Sleeping for 5000 milliseconds
+[alice1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[alice1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] Waiting for "id" and "Reveal recovery phrase button" to be present
+[alice1] 'Reveal recovery phrase button' has been found
+[alice1] Waiting for "id" and "Reveal recovery phrase button" to be present
+[alice1] 'Reveal recovery phrase button' has been found
+[alice1] Waiting for "id" and "Recovery password container" to be present
+[alice1] 'Recovery password container' has been found
+[alice1] Waiting for "id" and "Copy button" to be present
+[alice1] 'Copy button' has been found
+[alice1] Alices recovery phrase is "hectare adopt paradise biplane calamity aloof victim vials catch ocean faked point ocean"
+[alice1] Waiting for "accessibility id" and "Navigate up" to be present
+[alice1] 'Navigate up' has been found
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'User settings' has been found
+[alice1] Waiting for "accessibility id" and "Account ID" to be present
+[alice1] 'Account ID' has been found
+[alice1] Waiting for "accessibility id" and "Navigate up" to be present
+[alice1] 'Navigate up' has been found
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "New conversation button
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice1] 'New conversation button' has been found
+[alice1] Waiting for "id" and "New direct message" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "New direct message
+[alice1] Waiting for "id" and "New direct message" to be present
+[alice1] 'New direct message' has been found
+[alice1] Locator being used: { strategy: 'id', selector: 'Session id input box' }
+[alice1] Waiting for "id" and "Session id input box" to be present
+[alice1] 'Session id input box' has been found
+[alice1] Waiting for "id" and "Next" to be present
+[alice1] 'Next' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+[alice1] Waiting for "accessibility id" and "Message input box" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Message input box
+[alice1] Waiting for "accessibility id" and "Message input box" to be present
+[alice1] 'Message input box' has been found
+[alice1] Waiting for "accessibility id" and "Send message button" to be present
+[alice1] 'Send message button' has been found
+[alice1] Waiting for "id" and "conversation-options-avatar" to be present
+[alice1] 'conversation-options-avatar' has been found
+[alice1] Waiting for "id" and "disappearing-messages-menu-option" to be present
+[alice1] 'disappearing-messages-menu-option' has been found
+[alice1] Waiting for "id" and "Disable disappearing messages" to be present
+[alice1] 'Disable disappearing messages' has been found
+[alice1] Great success - default time is correct
+[alice1] Waiting for "id" and "30 seconds" to be present
+[alice1] '30 seconds' has been found
+[alice1] Waiting for "id" and "Set button" to be present
+[alice1] 'Set button' has been found
+[alice1] Waiting for "id" and "Navigate back" to be present
+[alice1] 'Navigate back' has been found
+[alice1] Waiting for "id" and "Disappearing messages type and time" to be present
+[alice1] 'Disappearing messages type and time' has been found
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waiting for control message to be present with You set messages to disappear 30 seconds after they have been sent.
+[alice1] Waited too long
+Test failed, capturing screenshots from 1 device(s)...
+Captured and labeled screenshot from device alice1
+Screenshot saved: /home/runner/actions-runner/_work/session-appium/session-appium/test-results/disappear_after_send_note_-ed602-droid-medium-risk-1-devices/disappear-after-send-note-to-self.png

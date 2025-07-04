@@ -1,0 +1,1600 @@
+
+
+==========> Running "Delete conversation from conversation settings @android @high-risk @3-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+starting capabilitiesIndex 2 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 2
+[buildStateForTest] stateToBuild:"2friends". seedNodeUrl: "https://seed2.getsession.org:4433" (mainnet)
+emulatorAlreadyRunning emulator-5558 true
+emulatorAlreadyRunning emulator-5556 true
+emulatorAlreadyRunning emulator-5554 true
+makeFriendsAndKnown: users: [SessionUser: {"name":"Alice","sessionId":"05cb44dab282f75e86d611e1a2ae78c2d74c945d815744513ac3039c023e533d76","seedPhrase":"berries template puddle rounded dialect uptight ceiling mowing general ginger tapestry tulips tulips"},
+SessionUser: {"name":"Bob","sessionId":"05e472ab28a589f8ff221962d32e6af429000cffcc8a8968e8e04d4c565dd7e945","seedPhrase":"remedy ozone dedicated push hoisting wipeout omnibus jubilee relic scamper duets suture wipeout"}]
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Alice","sessionId":"05cb44dab282f75e86d611e1a2ae78c2d74c945d815744513ac3039c023e533d76","seedPhrase":"berries template puddle rounded dialect uptight ceiling mowing general ginger tapestry tulips tulips"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Alice","sessionId":"05cb44dab282f75e86d611e1a2ae78c2d74c945d815744513ac3039c023e533d76","seedPhrase":"berries template puddle rounded dialect uptight ceiling mowing general ginger tapestry tulips tulips"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Bob","sessionId":"05e472ab28a589f8ff221962d32e6af429000cffcc8a8968e8e04d4c565dd7e945","seedPhrase":"remedy ozone dedicated push hoisting wipeout omnibus jubilee relic scamper duets suture wipeout"}
+makeFriendsAndKnown: user1 SessionUser: {"name":"Bob","sessionId":"05e472ab28a589f8ff221962d32e6af429000cffcc8a8968e8e04d4c565dd7e945","seedPhrase":"remedy ozone dedicated push hoisting wipeout omnibus jubilee relic scamper duets suture wipeout"}
+makeFriendsAndKnown: user2 SessionUser: {"name":"Alice","sessionId":"05cb44dab282f75e86d611e1a2ae78c2d74c945d815744513ac3039c023e533d76","seedPhrase":"berries template puddle rounded dialect uptight ceiling mowing general ginger tapestry tulips tulips"}
+makeFriendsAndKnown: user1 === user2. Skipping SessionUser: {"name":"Bob","sessionId":"05e472ab28a589f8ff221962d32e6af429000cffcc8a8968e8e04d4c565dd7e945","seedPhrase":"remedy ozone dedicated push hoisting wipeout omnibus jubilee relic scamper duets suture wipeout"}
+Pushing changes to swarms on network "https://seed2.getsession.org:4433"
+promises [
+  Promise {
+    <pending>,
+    [Symbol(async_id_symbol)]: 500,
+    [Symbol(trigger_async_id_symbol)]: 285,
+    [Symbol(kResourceStore)]: Zone { _asyncLocalStorage: [AsyncLocalStorage], _data: [Map] }
+  }
+]
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+emulator-5558  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5558'
+  }
+}
+udid: emulator-5558
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+random snode for user: 05cb44dab282f75e86d611e1a2ae78c2d74c945d815744513ac3039c023e533d76 is snode: 595403ce1481ab42909be67d564ae58bd5f4f7edfacd085de886626fc6fce355
+storing to snode https://66.181.33.94:22150/storage_rpc/v1
+storing to snode https://66.181.33.94:22150/storage_rpc/v1
+storing to snode https://66.181.33.94:22150/storage_rpc/v1
+random snode for user: 05e472ab28a589f8ff221962d32e6af429000cffcc8a8968e8e04d4c565dd7e945 is snode: 64bdd6e6d6f2d71763bb657277ac1817f2d72182eaf6ce9826afbb673cdd7060
+storing to snode https://135.181.110.139:22021/storage_rpc/v1
+storing to snode https://135.181.110.139:22021/storage_rpc/v1
+storing to snode https://135.181.110.139:22021/storage_rpc/v1
+storeStatus for Alice: [ 200, 200, 200 ]
+storeStatus for Bob: [ 200, 200, 200 ]
+seed of users:
+	"Alice": "berries template puddle rounded dialect uptight ceiling mowing general ginger tapestry tulips tulips"
+	"Bob": "remedy ozone dedicated push hoisting wipeout omnibus jubilee relic scamper duets suture wipeout" 
+Pushed changes to swarms on network "https://seed2.getsession.org:4433"
+[alice1] Device identity changed from device-5554 to alice1
+[alice2] Device identity changed from device-5556 to alice2
+[bob1] Device identity changed from device-5558 to bob1
+[alice1] Waiting for "id" and "Restore your session button" to be present
+[alice2] Waiting for "id" and "Restore your session button" to be present
+[bob1] Waiting for "id" and "Restore your session button" to be present
+[alice1] 'Restore your session button' has been found
+[bob1] 'Restore your session button' has been found
+[alice2] 'Restore your session button' has been found
+[alice1] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[alice1] Waiting for "id" and "Recovery phrase input" to be present
+[bob1] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[bob1] Waiting for "id" and "Recovery phrase input" to be present
+[alice1] 'Recovery phrase input' has been found
+[bob1] 'Recovery phrase input' has been found
+[alice2] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[alice2] Waiting for "id" and "Recovery phrase input" to be present
+[alice2] 'Recovery phrase input' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[bob1] 'Continue' has been found
+[bob1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice2] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[bob1] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[alice2] 'Continue' has been found
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice2] Waiting for "id" and "Slow mode notifications button" to be present
+[bob1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[alice2] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] 'Slow mode notifications button' has been found
+[bob1] 'Slow mode notifications button' has been found
+[alice2] 'Slow mode notifications button' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[bob1] 'Continue' has been found
+[alice2] Waiting for "id" and "Continue" to be present
+[alice2] 'Continue' has been found
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] 'Loading animation' has been found
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice2] 'Loading animation' has been found
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] 'Loading animation' has been found
+[alice2] Loading animation was found, waiting for it to be gone
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice2] 'Loading animation' has been found
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] 'Loading animation' has been found
+[bob1] 'Loading animation' has been found
+[alice2] Loading animation was found, waiting for it to be gone
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice1] Loading animation was found, waiting for it to be gone
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice2] 'Loading animation' has been found
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] 'Loading animation' has been found
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice2] Loading animation was found, waiting for it to be gone
+[alice2] Waiting for "id" and "Loading animation" to be present
+[bob1] Loading animation was found, waiting for it to be gone
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice2] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice1] Loading animation not found
+[alice1] Loading animation has finished
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] Waiting for "id" and "Loading animation" to be present
+[bob1] Waiting for "id" and "Loading animation" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[bob1] Loading animation not found
+[bob1] Loading animation has finished
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Loading animation not found
+[alice2] Loading animation has finished
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] doesElementExist failed with accessibility id Enter display name
+[alice1] Enter display name doesn't exist, time expired
+[alice1] Display name found: Loading account
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[bob1] doesElementExist failed with accessibility id Enter display name
+[bob1] Enter display name doesn't exist, time expired
+[bob1] Display name found: Loading account
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with accessibility id Enter display name
+[alice2] Enter display name doesn't exist, time expired
+[alice2] Display name found: Loading account
+[bob1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[bob1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice2] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice2] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[alice2] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[alice2] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[alice2] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[alice2] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Waiting for "id" and "Continue" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] Waiting for "id" and "Continue" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice1] Element has been deleted, great success
+[alice1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice1] 'New conversation button' has been found
+[alice2] Waiting for "id" and "Continue" to be present
+[bob1] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice2] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Waiting for "id" and "Continue" to be present
+[alice2] Waiting for "id" and "Continue" to be present
+[bob1] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] waitForTextElementToBePresent threw: "id": "Continue
+[bob1] Element has been deleted, great success
+[bob1] Waiting for "accessibility id" and "New conversation button" to be present
+[alice2] Waiting for "id" and "Continue" to be present
+[bob1] 'New conversation button' has been found
+[alice2] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] Waiting for "id" and "Continue" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Continue
+[alice2] Element has been deleted, great success
+[alice2] Waiting for "accessibility id" and "New conversation button" to be present
+[alice2] 'New conversation button' has been found
+[alice1] Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+[alice2] Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+[alice2] Text found to include Bob
+[alice2] 'Conversation list item' and 'Bob' has been found
+[alice1] Text found to include Bob
+[alice1] 'Conversation list item' and 'Bob' has been found
+[alice1] Waiting for "accessibility id" and "Conversation list item" to be present with "Bob"
+[alice1] Text found to include Bob
+[alice1] 'Conversation list item' and 'Bob' has been found
+[alice1] Waiting for "id" and "conversation-options-avatar" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "conversation-options-avatar
+[alice1] Waiting for "id" and "conversation-options-avatar" to be present
+[alice1] 'conversation-options-avatar' has been found
+[alice1] Waiting for "id" and "delete-conversation-menu-option" to be present
+[alice1] 'delete-conversation-menu-option' has been found
+[alice1] Waiting for "id" and "Modal heading" to be present
+[alice1] 'Modal heading' has been found
+[alice1] Modal heading is correct
+[alice1] Waiting for "id" and "Modal description" to be present
+[alice1] 'Modal description' has been found
+[alice1] Modal description is correct
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+[alice1] Waiting for "id" and "Delete" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Delete
+Test failed, capturing screenshots from 3 device(s)...
+Captured and labeled screenshot from device alice1
+Captured and labeled screenshot from device alice2
+Captured and labeled screenshot from device bob1
+Screenshot saved: /home/runner/actions-runner/_work/session-appium/session-appium/test-results/user_actions_delete_conver-fe582-android-high-risk-3-devices/delete-conversation-from-conversation-settings.png

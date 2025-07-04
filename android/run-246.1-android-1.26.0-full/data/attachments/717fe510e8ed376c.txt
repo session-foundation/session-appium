@@ -1,0 +1,103 @@
+
+
+==========> Running "Change username @android @medium-risk @1-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 3 3
+actualCapabilities worker 3
+emulatorAlreadyRunning emulator-5560 true
+emulator-5560  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5560'
+  }
+}
+udid: emulator-5560
+[alice1] Device identity changed from device-5560 to alice1
+[alice1] Waiting for "id" and "Create account button" to be present
+[alice1] 'Create account button' has been found
+[alice1] Locator being used: { strategy: 'id', selector: 'Enter display name' }
+[alice1] Waiting for "id" and "Enter display name" to be present
+[alice1] 'Enter display name' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] 'Slow mode notifications button' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+Sleeping for 5000 milliseconds
+[alice1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[alice1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] Waiting for "id" and "Reveal recovery phrase button" to be present
+[alice1] 'Reveal recovery phrase button' has been found
+[alice1] Waiting for "id" and "Reveal recovery phrase button" to be present
+[alice1] 'Reveal recovery phrase button' has been found
+[alice1] Waiting for "id" and "Recovery password container" to be present
+[alice1] 'Recovery password container' has been found
+[alice1] Waiting for "id" and "Copy button" to be present
+[alice1] 'Copy button' has been found
+[alice1] Alices recovery phrase is "azure anxiety fainted bogeys thirsty upgrade tuxedo exotic hazard satin dawn yawning anxiety"
+[alice1] Waiting for "accessibility id" and "Navigate up" to be present
+[alice1] 'Navigate up' has been found
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'User settings' has been found
+[alice1] Waiting for "accessibility id" and "Account ID" to be present
+[alice1] 'Account ID' has been found
+[alice1] Waiting for "accessibility id" and "Navigate up" to be present
+[alice1] 'Navigate up' has been found
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "User settings
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'User settings' has been found
+[alice1] Waiting for "accessibility id" and "Display name" to be present
+[alice1] 'Display name' has been found
+[alice1] Waiting for "accessibility id" and "Enter display name" to be present
+[alice1] 'Enter display name' has been found
+[alice1] Text has been cleared 
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Enter display name' }
+[alice1] Waiting for "accessibility id" and "Enter display name" to be present
+[alice1] 'Enter display name' has been found
+[alice1] Waiting for "accessibility id" and "Set" to be present
+[alice1] 'Set' has been found
+[alice1] Waiting for "accessibility id" and "Display name" to be present with "Alice in chains"
+[alice1] Text found to include Alice in chains
+[alice1] 'Display name' and 'Alice in chains' has been found
+[alice1] Changed username Alice in chains
+[alice1] Username change successful
+[alice1] doesElementExist failed with id Close button
+[alice1] Close button Doesn't exist but retrying
+[alice1] doesElementExist failed with id Close button
+[alice1] Close button Doesn't exist but retrying
+[alice1] doesElementExist failed with id Close button
+[alice1] Close button Doesn't exist but retrying
+[alice1] doesElementExist failed with id Close button
+[alice1] Close button Doesn't exist but retrying
+[alice1] doesElementExist failed with id Close button
+[alice1] Close button Doesn't exist but retrying
+[alice1] doesElementExist failed with id Close button
+[alice1] Close button Doesn't exist but retrying
+[alice1] doesElementExist failed with id Close button
+[alice1] Close button Doesn't exist but retrying
+[alice1] doesElementExist failed with id Close button
+[alice1] Close button doesn't exist, time expired
+[alice1] Waiting for "accessibility id" and "Navigate up" to be present
+[alice1] 'Navigate up' has been found
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "User settings
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'User settings' has been found
+[alice1] Waiting for "accessibility id" and "Display name" to be present with "Alice in chains"
+[alice1] Text found to include Alice in chains
+[alice1] 'Display name' and 'Alice in chains' has been found
+sessions closed

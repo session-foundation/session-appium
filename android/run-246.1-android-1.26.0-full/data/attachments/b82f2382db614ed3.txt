@@ -1,0 +1,1291 @@
+
+
+==========> Running "Hide note to self @android @low-risk @1-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 1 1
+actualCapabilities worker 1
+emulatorAlreadyRunning emulator-5556 true
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+[alice1] Device identity changed from device-5556 to alice1
+[alice1] Waiting for "id" and "Create account button" to be present
+[alice1] 'Create account button' has been found
+[alice1] Locator being used: { strategy: 'id', selector: 'Enter display name' }
+[alice1] Waiting for "id" and "Enter display name" to be present
+[alice1] 'Enter display name' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] 'Slow mode notifications button' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+Sleeping for 5000 milliseconds
+[alice1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[alice1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] Waiting for "id" and "Reveal recovery phrase button" to be present
+[alice1] 'Reveal recovery phrase button' has been found
+[alice1] Waiting for "id" and "Reveal recovery phrase button" to be present
+[alice1] 'Reveal recovery phrase button' has been found
+[alice1] Waiting for "id" and "Recovery password container" to be present
+[alice1] 'Recovery password container' has been found
+[alice1] Waiting for "id" and "Copy button" to be present
+[alice1] 'Copy button' has been found
+[alice1] Alices recovery phrase is "portents kiosk ponies fictional guru husband down velvet obedient cuisine enjoy duckling velvet"
+[alice1] Waiting for "accessibility id" and "Navigate up" to be present
+[alice1] 'Navigate up' has been found
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "User settings
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'User settings' has been found
+[alice1] Waiting for "accessibility id" and "Account ID" to be present
+[alice1] 'Account ID' has been found
+[alice1] Waiting for "accessibility id" and "Navigate up" to be present
+[alice1] 'Navigate up' has been found
+[alice1] Waiting for "accessibility id" and "Search icon" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Search icon
+[alice1] Waiting for "accessibility id" and "Search icon" to be present
+[alice1] 'Search icon' has been found
+[alice1] Waiting for "id" and "network.loki.messenger:id/search_result_title" to be present with "Note to Self"
+[alice1] Text found to include Note to Self
+[alice1] 'network.loki.messenger:id/search_result_title' and 'Note to Self' has been found
+[alice1] Waiting for "accessibility id" and "Empty list" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Empty list
+[alice1] Waiting for "accessibility id" and "Empty list" to be present
+[alice1] 'Empty list' has been found
+[alice1] Locator being used: { strategy: 'accessibility id', selector: 'Message input box' }
+[alice1] Waiting for "accessibility id" and "Message input box" to be present
+[alice1] 'Message input box' has been found
+[alice1] Waiting for "accessibility id" and "Send message button" to be present
+[alice1] 'Send message button' has been found
+[alice1] Waiting for "accessibility id" and "Message sent status: Sent" to be present
+[alice1] 'Message sent status: Sent' has been found
+[alice1] Waiting for "id" and "conversation-options-avatar" to be present
+[alice1] 'conversation-options-avatar' has been found
+[alice1] Waiting for "id" and "hide-nts-menu-option" to be present
+[alice1] 'hide-nts-menu-option' has been found
+[alice1] Waiting for "id" and "Modal heading" to be present
+[alice1] 'Modal heading' has been found
+[alice1] Modal heading is correct
+[alice1] Waiting for "id" and "Modal description" to be present
+[alice1] 'Modal description' has been found
+[alice1] Modal description is correct
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+[alice1] Waiting for "id" and "Hide" to be present
+[alice1] waitForTextElementToBePresent threw: "id": "Hide
+Test failed, capturing screenshots from 1 device(s)...
+Captured and labeled screenshot from device alice1
+Screenshot saved: /home/runner/actions-runner/_work/session-appium/session-appium/test-results/user_actions_hide_note_to_-4c2f8--android-low-risk-1-devices/hide-note-to-self.png

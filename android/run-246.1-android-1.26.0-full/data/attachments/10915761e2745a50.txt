@@ -1,0 +1,150 @@
+
+
+==========> Running "Hide recovery password @android @medium-risk @2-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+starting capabilitiesIndex 1 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 1
+emulatorAlreadyRunning emulator-5556 true
+emulatorAlreadyRunning emulator-5554 true
+emulator-5556  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5556'
+  }
+}
+udid: emulator-5556
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+[alice1] Device identity changed from device-5554 to alice1
+[alice1] Waiting for "id" and "Create account button" to be present
+[alice1] 'Create account button' has been found
+[alice1] Locator being used: { strategy: 'id', selector: 'Enter display name' }
+[alice1] Waiting for "id" and "Enter display name" to be present
+[alice1] 'Enter display name' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+[alice1] Waiting for "id" and "Slow mode notifications button" to be present
+[alice1] 'Slow mode notifications button' has been found
+[alice1] Waiting for "id" and "Continue" to be present
+[alice1] 'Continue' has been found
+Sleeping for 5000 milliseconds
+[alice1] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[alice1] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice1] Waiting for "id" and "Reveal recovery phrase button" to be present
+[alice1] 'Reveal recovery phrase button' has been found
+[alice1] Waiting for "id" and "Reveal recovery phrase button" to be present
+[alice1] 'Reveal recovery phrase button' has been found
+[alice1] Waiting for "id" and "Recovery password container" to be present
+[alice1] 'Recovery password container' has been found
+[alice1] Waiting for "id" and "Copy button" to be present
+[alice1] 'Copy button' has been found
+[alice1] Alices recovery phrase is "plotting colony colony otherwise unopened gasp axis laptop items doing cause abrasive unopened"
+[alice1] Waiting for "accessibility id" and "Navigate up" to be present
+[alice1] 'Navigate up' has been found
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'User settings' has been found
+[alice1] Waiting for "accessibility id" and "Account ID" to be present
+[alice1] waitForTextElementToBePresent threw: "accessibility id": "Account ID
+[alice1] Waiting for "accessibility id" and "Account ID" to be present
+[alice1] 'Account ID' has been found
+[alice1] Waiting for "accessibility id" and "Navigate up" to be present
+[alice1] 'Navigate up' has been found
+[alice2] Device identity changed from device-5556 to alice2
+[alice2] Waiting for "id" and "Restore your session button" to be present
+[alice2] 'Restore your session button' has been found
+[alice2] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[alice2] Waiting for "id" and "Recovery phrase input" to be present
+[alice2] 'Recovery phrase input' has been found
+[alice2] Waiting for "id" and "Continue" to be present
+[alice2] 'Continue' has been found
+[alice2] Waiting for "id" and "Slow mode notifications button" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Slow mode notifications button
+[alice2] Waiting for "id" and "Slow mode notifications button" to be present
+[alice2] 'Slow mode notifications button' has been found
+[alice2] Waiting for "id" and "Continue" to be present
+[alice2] 'Continue' has been found
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice2] 'Loading animation' has been found
+[alice2] Loading animation was found, waiting for it to be gone
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice2] 'Loading animation' has been found
+[alice2] Loading animation was found, waiting for it to be gone
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Waiting for "id" and "Loading animation" to be present
+[alice2] waitForTextElementToBePresent threw: "id": "Loading animation
+[alice2] Loading animation not found
+[alice2] Loading animation has finished
+[alice2] doesElementExist failed with id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with id Enter display name
+[alice2] Enter display name Doesn't exist but retrying
+[alice2] doesElementExist failed with id Enter display name
+[alice2] Enter display name doesn't exist, time expired
+[alice2] Display name found: Loading account
+[alice2] Waiting for "id" and "com.android.permissioncontroller:id/permission_deny_button" to be present
+[alice2] 'com.android.permissioncontroller:id/permission_deny_button' has been found
+[alice2] Waiting for "accessibility id" and "New conversation button" to be present
+[alice2] 'New conversation button' has been found
+[alice2] Device linked
+[alice1] Waiting for "accessibility id" and "User settings" to be present
+[alice1] 'User settings' has been found
+[alice1] Waiting for "id" and "Recovery password menu item" to be present
+[alice1] 'Recovery password menu item' has been found
+[alice1] Waiting for "id" and "Hide recovery password button" to be present
+[alice1] 'Hide recovery password button' has been found
+[alice1] Waiting for "id" and "Modal heading" to be present
+[alice1] 'Modal heading' has been found
+[alice1] Modal heading is correct
+[alice1] Waiting for "id" and "Modal description" to be present
+[alice1] 'Modal description' has been found
+Test failed, capturing screenshots from 2 device(s)...
+Captured and labeled screenshot from device alice1
+Captured and labeled screenshot from device alice2
+Screenshot saved: /home/runner/actions-runner/_work/session-appium/session-appium/test-results/user_actions_hide_recovery-58f86-droid-medium-risk-2-devices-retry2/hide-recovery-password-retry2.png

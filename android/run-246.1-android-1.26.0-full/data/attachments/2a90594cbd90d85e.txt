@@ -1,0 +1,48 @@
+
+
+==========> Running "Warning modal on restore account @android @medium-risk @1-devices"
+
+
+starting capabilitiesIndex 0 android
+process.env.TEST_PARALLEL_INDEX: 0 0
+actualCapabilities worker 0
+emulatorAlreadyRunning emulator-5554 true
+emulator-5554  emulator booted
+Android App Full Path: ./extracted/session-android.apk
+capabilities {
+  firstMatch: [ {}, {} ],
+  alwaysMatch: {
+    'appium:app': './extracted/session-android.apk',
+    'appium:platformName': 'Android',
+    'appium:platformVersion': '14',
+    'appium:appPackage': 'network.loki.messenger',
+    'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+    'appium:automationName': 'UiAutomator2',
+    'appium:newCommandTimeout': 300000,
+    'appium:eventTimings': false,
+    'appium:udid': 'emulator-5554'
+  }
+}
+udid: emulator-5554
+[device-5554] Waiting for "id" and "Restore your session button" to be present
+[device-5554] 'Restore your session button' has been found
+[device-5554] Locator being used: { strategy: 'id', selector: 'Recovery phrase input' }
+[device-5554] Waiting for "id" and "Recovery phrase input" to be present
+[device-5554] 'Recovery phrase input' has been found
+[device-5554] Waiting for "id" and "Continue" to be present
+[device-5554] 'Continue' has been found
+[device-5554] doesElementExist failed with id Slow mode notifications button
+[device-5554] Slow mode notifications button Doesn't exist but retrying
+[device-5554] Waiting for "id" and "network.loki.messenger:id/back_button" to be present
+[device-5554] 'network.loki.messenger:id/back_button' has been found
+[device-5554] doesElementExist failed with id Modal heading
+[device-5554] Modal heading Doesn't exist but retrying
+[device-5554] Waiting for "id" and "Modal heading" to be present
+[device-5554] 'Modal heading' has been found
+[device-5554] Modal heading is correct
+[device-5554] Waiting for "id" and "Modal description" to be present
+[device-5554] 'Modal description' has been found
+[device-5554] Modal description is correct
+[device-5554] Waiting for "id" and "Quit" to be present
+[device-5554] 'Quit' has been found
+sessions closed
