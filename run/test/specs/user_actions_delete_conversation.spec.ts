@@ -30,7 +30,7 @@ async function deleteConversation(platform: SupportedPlatformsType, testInfo: Te
     await Promise.all(
       [alice1, alice2].map(device =>
         device.waitForTextElementToBePresent(new ConversationItem(device, bob.userName))
-      ),
+      )
     );
   });
 
@@ -60,7 +60,7 @@ async function deleteConversation(platform: SupportedPlatformsType, testInfo: Te
           ...new ConversationItem(device, bob.userName).build(),
           maxWait: 3000,
         })
-      ),
+      )
     );
   });
 

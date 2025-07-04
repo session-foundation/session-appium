@@ -3,7 +3,11 @@ import { test, type TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ConversationSettings, DeleteContactModalConfirm, DeleteConversationMenuItem} from './locators/conversation';
+import {
+  ConversationSettings,
+  DeleteContactModalConfirm,
+  DeleteConversationMenuItem,
+} from './locators/conversation';
 import { ConversationItem } from './locators/home';
 import { open_Alice2_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -31,7 +35,7 @@ async function deleteConversationUCS(platform: SupportedPlatformsType, testInfo:
     await Promise.all(
       [alice1, alice2].map(device =>
         device.waitForTextElementToBePresent(new ConversationItem(device, bob.userName))
-      ),
+      )
     );
   });
 
@@ -44,7 +48,7 @@ async function deleteConversationUCS(platform: SupportedPlatformsType, testInfo:
         englishStrippedStr('conversationsDelete').toString(),
         englishStrippedStr('deleteConversationDescription')
           .withArgs({ name: USERNAME.BOB })
-          .toString(),
+          .toString()
       );
     });
     await alice1.clickOnElementAll(new DeleteContactModalConfirm(alice1));
@@ -57,7 +61,7 @@ async function deleteConversationUCS(platform: SupportedPlatformsType, testInfo:
           ...new ConversationItem(device, bob.userName).build(),
           maxWait: 5000,
         })
-      ),
+      )
     );
   });
 
