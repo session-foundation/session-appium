@@ -170,10 +170,15 @@ class LocalizedStringBuilder<T extends MergedLocalizerTokens> extends String {
     return this;
   }
 
-  private postProcessStrippedString(str: string): string {
-    const strippedString = str.replaceAll(/<[^>]*>/g, '');
-    return deSanitizeHtmlTags(strippedString, '\u200B');
-  }
+ private postProcessStrippedString(str: string): string {
+  // Normalize whitespace around <br> tags: 
+  // " <br/><br/>" and "<br/>" both become a single space
+  let strippedString = str.replace(/\s*(<br\s*\/?>[\s]*)+/gi, ' ');
+  // Then, remove all other HTML tags
+  strippedString = strippedString.replace(/<[^>]*>/g, '');
+
+  return deSanitizeHtmlTags(strippedString, '\u200B');
+}
 
   private localeToTarget(): CrowdinLocale {
     return this.isEnglishForced ? 'en' : this.crowdinLocale;

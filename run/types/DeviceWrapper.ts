@@ -2059,7 +2059,7 @@ export class DeviceWrapper {
 
     // Sanitize
     function removeNewLines(input: string): string {
-      return input.replace(/\n/gi, '');
+      return input.replace(/\n+/g, ' ').trim();
     }
 
     // Locators
