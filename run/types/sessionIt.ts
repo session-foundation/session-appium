@@ -92,7 +92,7 @@ export function bothPlatformsIt(args: Omit<MobileItArgs, 'platform'>) {
 }
 
 export function bothPlatformsItSeparate(
-  args: Omit<MobileItArgs, 'platform' | 'testCb' | 'shouldSkip'> & {
+  args: Omit<MobileItArgs, 'platform' | 'shouldSkip' | 'testCb'> & {
     ios: Pick<MobileItArgs, 'shouldSkip' | 'testCb'>;
     android: Pick<MobileItArgs, 'shouldSkip' | 'testCb'>;
   }

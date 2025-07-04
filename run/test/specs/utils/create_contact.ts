@@ -8,7 +8,7 @@ export const newContact = async (
   device1: DeviceWrapper,
   sender: Pick<User, 'userName'>,
   device2: DeviceWrapper,
-  receiver: Pick<User, 'userName' | 'accountID'>
+  receiver: Pick<User, 'accountID' | 'userName'>
 ) => {
   await device1.sendNewMessage(receiver, `${sender.userName} to ${receiver.userName}`);
   // Click on message request folder
