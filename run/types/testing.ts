@@ -202,6 +202,7 @@ export type AccessibilityId =
   | 'Create group'
   | 'Decline message request'
   | 'Delete'
+  | 'Delete Contact'
   | 'Delete Conversation'
   | 'Deleted message'
   | 'Delete for everyone'
@@ -404,6 +405,7 @@ export type Id =
   | 'Copy button'
   | 'Create account button'
   | 'Create group'
+  | 'delete-contact-menu-option'
   | 'delete-conversation-menu-option'
   | 'delete-for-everyone'
   | 'delete-only-on-this-device'
@@ -461,6 +463,7 @@ export type Id =
   | 'network.loki.messenger:id/system_settings_app_icon'
   | 'network.loki.messenger:id/textSendAfterApproval'
   | 'network.loki.messenger:id/thumbnail_load_indicator'
+  | 'network.loki.messenger:id/title'
   | 'New direct message'
   | 'Next'
   | 'Notifications'
@@ -488,8 +491,7 @@ export type Id =
   | 'update-group-info-name-input'
   | 'Version warning banner'
   | 'Yes'
-  | `Disappear after ${DisappearModes} option`
-  | `network.loki.messenger:id/title`;
+  | `Disappear after ${DisappearModes} option`;
 
 export type TestRisk = 'high' | 'low' | 'medium';
 

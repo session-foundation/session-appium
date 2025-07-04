@@ -175,7 +175,7 @@ export class DeleteConversationMenuItem extends LocatorsInterface {
     }
   }
 }
-export class DeleteContactModalConfirm extends LocatorsInterface {
+export class DeleteModalConfirm extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
@@ -221,6 +221,22 @@ export class HideNoteToSelfConfirmButton extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'Hide',
+        } as const;
+    }
+  }
+}
+export class DeleteContactMenuItem extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'delete-contact-menu-option',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Delete Contact',
         } as const;
     }
   }
