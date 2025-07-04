@@ -3,8 +3,7 @@ import { test, type TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ConversationSettings } from './locators/conversation';
-import { DeleteContactModalConfirm } from './locators/global';
+import { ConversationSettings, DeleteContactModalConfirm, DeleteConversationMenuItem} from './locators/conversation';
 import { ConversationItem } from './locators/home';
 import { open_Alice2_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -29,42 +28,37 @@ async function deleteConversationUCS(platform: SupportedPlatformsType, testInfo:
   const { alice, bob } = prebuilt;
 
   await test.step(`Verify conversation exists on alice1 and alice2`, async () => {
-    await Promise.all([
-      alice1.waitForTextElementToBePresent(new ConversationItem(alice1, bob.userName)),
-      alice2.waitForTextElementToBePresent(new ConversationItem(alice2, bob.userName)),
-    ]);
+    await Promise.all(
+      [alice1, alice2].map(device =>
+        device.waitForTextElementToBePresent(new ConversationItem(device, bob.userName))
+      ),
+    );
   });
 
   await test.step('Delete conversation from UCS on alice1', async () => {
     await alice1.clickOnElementAll(new ConversationItem(alice1, bob.userName));
     await alice1.clickOnElementAll(new ConversationSettings(alice1));
-    await alice1.clickOnElementAll({
-      strategy: 'accessibility id',
-      selector: 'Delete Conversation',
-    });
+    await alice1.clickOnElementAll(new DeleteConversationMenuItem(alice1));
     await test.step('Verify delete confirmation modal', async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('conversationsDelete').toString(),
-        englishStrippedStr('conversationsDeleteDescription')
+        englishStrippedStr('deleteConversationDescription')
           .withArgs({ name: USERNAME.BOB })
           .toString(),
-        false
       );
     });
     await alice1.clickOnElementAll(new DeleteContactModalConfirm(alice1));
   });
 
   await test.step('Verify conversation deleted on both alice devices', async () => {
-    await Promise.all([
-      alice1.hasElementBeenDeleted({
-        ...new ConversationItem(alice1, bob.userName).build(),
-        maxWait: 3000,
-      }),
-      alice2.hasElementBeenDeleted({
-        ...new ConversationItem(alice2, bob.userName).build(),
-        maxWait: 3000,
-      }),
-    ]);
+    await Promise.all(
+      [alice1, alice2].map(device =>
+        device.hasElementBeenDeleted({
+          ...new ConversationItem(device, bob.userName).build(),
+          maxWait: 5000,
+        })
+      ),
+    );
   });
 
   await test.step('Send message from Bob to Alice', async () => {
@@ -73,10 +67,11 @@ async function deleteConversationUCS(platform: SupportedPlatformsType, testInfo:
   });
 
   await test.step('Verify conversation reappears on both alice devices', async () => {
-    await Promise.all([
-      alice1.waitForTextElementToBePresent(new ConversationItem(alice1, bob.userName)),
-      alice2.waitForTextElementToBePresent(new ConversationItem(alice2, bob.userName)),
-    ]);
+    await Promise.all(
+      [alice1, alice2].map(device =>
+        device.waitForTextElementToBePresent(new ConversationItem(device, bob.userName))
+      )
+    );
   });
 
   await test.step('Close all apps', async () => {

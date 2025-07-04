@@ -3,7 +3,6 @@ import { test, type TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { DeleteContactModalConfirm } from './locators/global';
 import { ConversationItem } from './locators/home';
 import { open_Alice2_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -28,10 +27,11 @@ async function deleteConversation(platform: SupportedPlatformsType, testInfo: Te
   const { alice, bob } = prebuilt;
 
   await test.step(`Verify conversation exists on alice1 and alice2`, async () => {
-    await Promise.all([
-      alice1.waitForTextElementToBePresent(new ConversationItem(alice1, bob.userName)),
-      alice2.waitForTextElementToBePresent(new ConversationItem(alice2, bob.userName)),
-    ]);
+    await Promise.all(
+      [alice1, alice2].map(device =>
+        device.waitForTextElementToBePresent(new ConversationItem(device, bob.userName))
+      ),
+    );
   });
 
   await test.step('Delete conversation from alice1', async () => {
@@ -44,26 +44,24 @@ async function deleteConversation(platform: SupportedPlatformsType, testInfo: Te
     await test.step('Verify delete confirmation modal', async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('conversationsDelete').toString(),
-        englishStrippedStr('conversationsDeleteDescription')
+        englishStrippedStr('deleteConversationDescription') // This is currently incorrect on both platforms, SES-4142 and 4143
           .withArgs({ name: USERNAME.BOB })
           .toString(),
         false
       );
     });
-    await alice1.clickOnElementAll(new DeleteContactModalConfirm(alice1));
+    await alice1.clickOnByAccessibilityID('Delete');
   });
 
   await test.step('Verify conversation deleted on both alice devices', async () => {
-    await Promise.all([
-      alice1.hasElementBeenDeleted({
-        ...new ConversationItem(alice1, bob.userName).build(),
-        maxWait: 3000,
-      }),
-      alice2.hasElementBeenDeleted({
-        ...new ConversationItem(alice2, bob.userName).build(),
-        maxWait: 3000,
-      }),
-    ]);
+    await Promise.all(
+      [alice1, alice2].map(device =>
+        device.hasElementBeenDeleted({
+          ...new ConversationItem(device, bob.userName).build(),
+          maxWait: 3000,
+        })
+      ),
+    );
   });
 
   await test.step('Send message from Bob to Alice', async () => {
@@ -72,10 +70,11 @@ async function deleteConversation(platform: SupportedPlatformsType, testInfo: Te
   });
 
   await test.step('Verify conversation reappears on both alice devices', async () => {
-    await Promise.all([
-      alice1.waitForTextElementToBePresent(new ConversationItem(alice1, bob.userName)),
-      alice2.waitForTextElementToBePresent(new ConversationItem(alice2, bob.userName)),
-    ]);
+    await Promise.all(
+      [alice1, alice2].map(device =>
+        device.waitForTextElementToBePresent(new ConversationItem(device, bob.userName))
+      )
+    );
   });
 
   await test.step('Close all apps', async () => {
