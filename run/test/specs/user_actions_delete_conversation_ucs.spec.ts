@@ -19,7 +19,7 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
   allureSuites: {
     parent: 'User Actions',
-    suite: 'Delete Contact',
+    suite: 'Delete Conversation',
   },
 });
 

@@ -87,6 +87,32 @@ export class UpdateGroupInformation extends LocatorsInterface {
   }
 }
 
+export class GroupDescription extends LocatorsInterface {
+  private groupDescription?: string;
+  // Receives a group name argument so that one locator can handle all possible group names
+  constructor(device: DeviceWrapper, groupDescription?: string) {
+    super(device);
+    this.groupDescription = groupDescription;
+  }
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'group-description',
+        } as const;
+      case 'ios': {
+        const groupDescription = this.groupDescription;
+        return {
+          strategy: 'accessibility id',
+          selector: 'Description',
+          text: groupDescription,
+        } as const;
+      }
+    }
+  }
+}
+
 export class EditGroupNameInput extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -99,6 +125,23 @@ export class EditGroupNameInput extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'Group name text field',
+        } as const;
+    }
+  }
+}
+
+export class EditGroupDescriptionInput extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'update-group-info-description-input',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Group description text field',
         } as const;
     }
   }
