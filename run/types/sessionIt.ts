@@ -10,7 +10,8 @@ import {
   captureScreenshotsOnFailure,
   unregisterDevicesForTest,
 } from '../test/specs/utils/screenshot_helper';
-import { AllureSuiteConfig, TestRisk } from './testing';
+import { AllureSuiteConfig } from './allure';
+import { TestRisk } from './testing';
 
 // Test wrapper configuration
 type MobileItArgs = {

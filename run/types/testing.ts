@@ -124,10 +124,12 @@ export type StrategyExtractionObj =
 
 export type XPath =
   | '//XCUIElementTypeCell'
+  | `(//android.widget.ImageView[@content-desc="Clear"])[2]`
   | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
   | `//*[starts-with(@content-desc, "Photo taken on")]`
+  | `//android.widget.TextView[@text="${string}"]`
   | `//XCUIElementTypeAlert//*//XCUIElementTypeButton`
   | `//XCUIElementTypeButton[@name="Continue"]`
   | `//XCUIElementTypeCell[@name="${string}"]`
@@ -211,6 +213,7 @@ export type AccessibilityId =
   | 'Delete message'
   | 'Delete message request'
   | 'Delete on this device only'
+  | 'Description'
   | 'Details'
   | 'Disable disappearing messages'
   | 'Disappear after read option'
@@ -241,6 +244,7 @@ export type AccessibilityId =
   | 'Error message'
   | 'Follow setting'
   | 'GIF button'
+  | 'Group description text field'
   | 'Group name'
   | 'Group name input'
   | 'Group name text field'
@@ -308,6 +312,7 @@ export type AccessibilityId =
   | 'Photo library'
   | 'Photos'
   | 'Pin'
+  | 'Please enter a shorter group name'
   | 'Privacy Policy'
   | 'Read Receipts - Switch'
   | 'Recents'
@@ -419,6 +424,7 @@ export type Id =
   | 'Empty list'
   | 'Enter display name'
   | 'error-message'
+  | 'group-description'
   | 'group-name'
   | 'Group name'
   | 'Group name input'
@@ -488,6 +494,7 @@ export type Id =
   | 'Slow mode notifications button'
   | 'Terms of Service'
   | 'update-group-info-confirm-button'
+  | 'update-group-info-description-input'
   | 'update-group-info-name-input'
   | 'Version warning banner'
   | 'Yes'
@@ -500,22 +507,3 @@ export type ElementStates = 'new_account' | 'restore_account';
 export type PageName = 'network_page' | 'staking_page';
 
 export type Suffix = 'diff' | 'screenshot';
-
-export const AllureSuites = {
-  USER_ACTIONS: {
-    parent: 'User Actions' as const,
-    suites: {
-      DELETE_CONVERSATION: 'Delete Conversation',
-      DELETE_CONTACT: 'Delete Contact',
-      HIDE_NOTE_TO_SELF: 'Hide Note to Self',
-    } as const,
-  },
-} as const;
-
-// Extract valid combinations as a union type
-type SuiteConfig<T extends keyof typeof AllureSuites> = {
-  parent: (typeof AllureSuites)[T]['parent'];
-  suite: (typeof AllureSuites)[T]['suites'][keyof (typeof AllureSuites)[T]['suites']];
-};
-
-export type AllureSuiteConfig = SuiteConfig<'USER_ACTIONS'>;
