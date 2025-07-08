@@ -1,6 +1,7 @@
 import { test, type TestInfo } from '@playwright/test';
 
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { EmptyConversation, Hide } from './locators/conversation';
 import { CancelSearchButton, NoteToSelfOption } from './locators/global_search';
@@ -20,7 +21,7 @@ bothPlatformsIt({
 });
 
 async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const { devices } = await test.step('Restore pre-seeded accounts', async () => {
+  const { devices } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
     return await open_Alice2({ platform, testInfo });
   });
   const { alice1, alice2 } = devices;
@@ -43,7 +44,7 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
     await alice1.onIOS().swipeLeft('Conversation list item', noteToSelf);
     await alice1.onAndroid().longPressConversation(noteToSelf);
     await alice1.clickOnElementAll(new Hide(alice1));
-    await test.step('Verify modal strings', async () => {
+    await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('noteToSelfHide').toString(),
         englishStrippedStr('hideNoteToSelfDescription').toString(), // This one fails on iOS, see SES-4144
@@ -62,7 +63,7 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
       )
     );
   });
-  await test.step('Close app', async () => {
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, alice2);
   });
 }

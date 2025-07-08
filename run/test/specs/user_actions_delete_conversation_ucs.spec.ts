@@ -1,6 +1,7 @@
 import { test, type TestInfo } from '@playwright/test';
 
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import {
@@ -24,7 +25,7 @@ bothPlatformsIt({
 });
 
 async function deleteConversationUCS(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const { devices, prebuilt } = await test.step('Restore pre-seeded accounts', async () => {
+  const { devices, prebuilt } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
     return await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: false, testInfo });
   });
 
@@ -43,7 +44,7 @@ async function deleteConversationUCS(platform: SupportedPlatformsType, testInfo:
     await alice1.clickOnElementAll(new ConversationItem(alice1, bob.userName));
     await alice1.clickOnElementAll(new ConversationSettings(alice1));
     await alice1.clickOnElementAll(new DeleteConversationMenuItem(alice1));
-    await test.step('Verify delete confirmation modal', async () => {
+    await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('conversationsDelete').toString(),
         englishStrippedStr('deleteConversationDescription')
@@ -78,7 +79,7 @@ async function deleteConversationUCS(platform: SupportedPlatformsType, testInfo:
     );
   });
 
-  await test.step('Close all apps', async () => {
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, alice2, bob1);
   });
 }

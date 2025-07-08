@@ -3,6 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { test } from '@playwright/test';
 
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { AccessibilityId } from '../../types/testing';
 import { ConversationSettings } from './locators/conversation';
@@ -54,7 +55,7 @@ const trimmedGroupDescription = longGroupDescription.slice(0, 200);
 async function changeGroupDescriptionIOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1, charlie1 },
-  } = await test.step('Restore pre-seeded accounts', async () => {
+  } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
     return await open_Alice1_Bob1_Charlie1_friends_group({
       platform,
       groupName: testGroupName,
@@ -63,7 +64,7 @@ async function changeGroupDescriptionIOS(platform: SupportedPlatformsType, testI
     });
   });
 
-  await test.step('Navigate to group edit screen', async () => {
+  await test.step(TestSteps.OPEN.UPDATE_GROUP_INFO, async () => {
     await alice1.clickOnElementAll(new ConversationSettings(alice1));
     await sleepFor(1000);
     await alice1.clickOnElementAll(new UpdateGroupInformation(alice1, testGroupName));
@@ -88,14 +89,15 @@ async function changeGroupDescriptionIOS(platform: SupportedPlatformsType, testI
     await Promise.all(
       [bob1, charlie1].map(async device => {
         await device.clickOnElementAll(new ConversationSettings(device));
-        await device.waitForTextElementToBePresent(
-          {...new GroupDescription(device).build(), text: trimmedGroupDescription}
-        );
+        await device.waitForTextElementToBePresent({
+          ...new GroupDescription(device).build(),
+          text: trimmedGroupDescription,
+        });
       })
     );
   });
 
-  await test.step('Cleanup - Close apps', async () => {
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, bob1, charlie1);
   });
 }
@@ -103,7 +105,7 @@ async function changeGroupDescriptionIOS(platform: SupportedPlatformsType, testI
 async function changeGroupDescriptionAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1, charlie1 },
-  } = await test.step('Restore pre-seeded accounts', async () => {
+  } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
     return await open_Alice1_Bob1_Charlie1_friends_group({
       platform,
       groupName: testGroupName,
@@ -112,7 +114,7 @@ async function changeGroupDescriptionAndroid(platform: SupportedPlatformsType, t
     });
   });
 
-  await test.step('Navigate to group edit screen', async () => {
+  await test.step(TestSteps.OPEN.UPDATE_GROUP_INFO, async () => {
     await alice1.clickOnElementAll(new ConversationSettings(alice1));
     await sleepFor(1000);
     await alice1.clickOnElementAll(new UpdateGroupInformation(alice1, testGroupName));
@@ -153,7 +155,7 @@ async function changeGroupDescriptionAndroid(platform: SupportedPlatformsType, t
     );
   });
 
-  await test.step('Cleanup - Close apps', async () => {
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, bob1, charlie1);
   });
 }
