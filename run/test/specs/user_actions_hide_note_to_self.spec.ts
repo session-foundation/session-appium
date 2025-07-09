@@ -9,6 +9,8 @@ import {
   EmptyConversation,
   HideNoteToSelfConfirmButton,
   HideNoteToSelfMenuOption,
+  ShowNoteToSelfConfirmButton,
+  ShowNoteToSelfMenuOption,
 } from './locators/conversation';
 import { NoteToSelfOption } from './locators/global_search';
 import { CancelSearchButton } from './locators/global_search';
@@ -64,6 +66,30 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
     await device.hasElementBeenDeleted({
       ...new ConversationItem(device, noteToSelf).build(),
       maxWait: 2000,
+    });
+  });
+  await test.step('Show Note to Self from UCS', async () => {
+    await device.clickOnElementAll(new SearchButton(device));
+    await device.clickOnElementAll(new NoteToSelfOption(device));
+    await device.clickOnElementAll(new ConversationSettings(device));
+    await device.clickOnElementAll(new ShowNoteToSelfMenuOption(device));
+
+    await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
+      await device.checkModalStrings(
+        englishStrippedStr('showNoteToSelf').toString(),
+        englishStrippedStr('showNoteToSelfDescription').toString()
+      );
+    });
+    await device.clickOnElementAll(new ShowNoteToSelfConfirmButton(device));
+    // Leave UCS, conversation and search
+    await device.navigateBack();
+    await device.navigateBack();
+    await device.clickOnElementAll(new CancelSearchButton(device));
+    await test.step('Verify Note to Self shows again', async () => {
+      await device.waitForTextElementToBePresent({
+        ...new ConversationItem(device, noteToSelf).build(),
+        maxWait: 5000,
+      });
     });
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

@@ -225,6 +225,40 @@ export class HideNoteToSelfConfirmButton extends LocatorsInterface {
     }
   }
 }
+
+export class ShowNoteToSelfMenuOption extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'hide-nts-menu-option', // Yes this has the 'hide' ID
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Show Note to Self',
+        } as const;
+    }
+  }
+}
+
+export class ShowNoteToSelfConfirmButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Show',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Show',
+        } as const;
+    }
+  }
+}
 export class DeleteContactMenuItem extends LocatorsInterface {
   public build() {
     switch (this.platform) {
