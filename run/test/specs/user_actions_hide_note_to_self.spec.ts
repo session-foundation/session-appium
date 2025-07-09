@@ -68,7 +68,7 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
       maxWait: 2000,
     });
   });
-  
+
   await test.step('Show Note to Self from UCS', async () => {
     await device.clickOnElementAll(new SearchButton(device));
     await device.clickOnElementAll(new NoteToSelfOption(device));

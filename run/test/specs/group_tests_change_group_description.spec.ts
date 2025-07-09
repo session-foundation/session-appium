@@ -53,7 +53,6 @@ const expectedError = englishStrippedStr(
   'updateGroupInformationEnterShorterDescription'
 ).toString();
 
-
 async function changeGroupDescriptionIOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1, charlie1 },
