@@ -45,7 +45,7 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
     await device.sendMessage('Buy milk');
   });
 
-  await test.step('Hide Note to Self from UCS', async () => {
+  await test.step('Hide Note to Self from Conversation Settings', async () => {
     await device.clickOnElementAll(new ConversationSettings(device));
     await device.clickOnElementAll(new HideNoteToSelfMenuOption(device));
 
@@ -57,7 +57,7 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
     });
     await device.clickOnElementAll(new HideNoteToSelfConfirmButton(device));
   });
-  // Leave UCS, conversation and search
+  // Leave Conversation Settings, conversation and search
   await device.navigateBack();
   await device.navigateBack();
   await device.clickOnElementAll(new CancelSearchButton(device));
@@ -69,7 +69,7 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
     });
   });
 
-  await test.step('Show Note to Self from UCS', async () => {
+  await test.step('Show Note to Self from Conversation Settings', async () => {
     await device.clickOnElementAll(new SearchButton(device));
     await device.clickOnElementAll(new NoteToSelfOption(device));
     await device.clickOnElementAll(new ConversationSettings(device));
@@ -82,7 +82,7 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
       );
     });
     await device.clickOnElementAll(new ShowNoteToSelfConfirmButton(device));
-    // Leave UCS, conversation and search
+    // Leave Conversation Settings, conversation and search
     await device.navigateBack();
     await device.navigateBack();
     await device.clickOnElementAll(new CancelSearchButton(device));

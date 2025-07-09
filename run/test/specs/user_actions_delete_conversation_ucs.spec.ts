@@ -16,7 +16,7 @@ import { closeApp, SupportedPlatformsType } from './utils/open_app';
 bothPlatformsIt({
   title: 'Delete conversation from conversation settings',
   risk: 'high',
-  testCb: deleteConversationUCS,
+  testCb: deleteConversationCS,
   countOfDevicesNeeded: 3,
   allureSuites: {
     parent: 'User Actions',
@@ -24,7 +24,7 @@ bothPlatformsIt({
   },
 });
 
-async function deleteConversationUCS(platform: SupportedPlatformsType, testInfo: TestInfo) {
+async function deleteConversationCS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { devices, prebuilt } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
     return await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: false, testInfo });
   });
@@ -40,7 +40,7 @@ async function deleteConversationUCS(platform: SupportedPlatformsType, testInfo:
     );
   });
 
-  await test.step('Delete conversation from UCS on alice1', async () => {
+  await test.step('Delete conversation from Conversation Settings on alice1', async () => {
     await alice1.clickOnElementAll(new ConversationItem(alice1, bob.userName));
     await alice1.clickOnElementAll(new ConversationSettings(alice1));
     await alice1.clickOnElementAll(new DeleteConversationMenuItem(alice1));
