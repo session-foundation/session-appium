@@ -46,12 +46,13 @@ if (longGroupDescription.length <= 200) {
       characters long but needs to be >200. `
   );
 }
+const trimmedGroupDescription = longGroupDescription.slice(0, 200);
+
 // the expected error is 'Please enter a shorter group description' which is represented by the following localized string
 const expectedError = englishStrippedStr(
   'updateGroupInformationEnterShorterDescription'
 ).toString();
 
-const trimmedGroupDescription = longGroupDescription.slice(0, 200);
 
 async function changeGroupDescriptionIOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {

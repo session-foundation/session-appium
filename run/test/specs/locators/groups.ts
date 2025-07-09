@@ -89,7 +89,7 @@ export class UpdateGroupInformation extends LocatorsInterface {
 
 export class GroupDescription extends LocatorsInterface {
   private groupDescription?: string;
-  // Receives a group name argument so that one locator can handle all possible group names
+  // Receives a group description argument so that one locator can handle all possible group names
   constructor(device: DeviceWrapper, groupDescription?: string) {
     super(device);
     this.groupDescription = groupDescription;

@@ -34,7 +34,6 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
     await alice1.sendMessage('Buy milk');
   });
 
-  // Does note to self appear on linked device
   await test.step('Verify Note to Self appears on linked device', async () => {
     await alice2.waitForTextElementToBePresent(new ConversationItem(alice2, noteToSelf));
   });

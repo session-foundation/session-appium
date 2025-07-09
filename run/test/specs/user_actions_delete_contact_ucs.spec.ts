@@ -33,7 +33,7 @@ async function deleteContactUCS(platform: SupportedPlatformsType, testInfo: Test
   const { alice, bob } = prebuilt;
   const newMessage = `This is a message from ${bob.userName} to ${alice.userName} after deleting contact`;
 
-  await test.step(`Verify conversation exists on alice1 and alice2`, async () => {
+  await test.step('Verify conversation exists on alice1 and alice2', async () => {
     await Promise.all(
       [alice1, alice2].map(device =>
         device.waitForTextElementToBePresent(new ConversationItem(device, bob.userName))

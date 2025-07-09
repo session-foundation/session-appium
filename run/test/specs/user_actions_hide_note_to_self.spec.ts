@@ -61,13 +61,14 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
   await device.navigateBack();
   await device.navigateBack();
   await device.clickOnElementAll(new CancelSearchButton(device));
-  // Verify Note to Self is hidden
+
   await test.step('Verify Note to Self is hidden', async () => {
     await device.hasElementBeenDeleted({
       ...new ConversationItem(device, noteToSelf).build(),
       maxWait: 2000,
     });
   });
+  
   await test.step('Show Note to Self from UCS', async () => {
     await device.clickOnElementAll(new SearchButton(device));
     await device.clickOnElementAll(new NoteToSelfOption(device));

@@ -27,7 +27,7 @@ async function deleteConversation(platform: SupportedPlatformsType, testInfo: Te
   const { alice1, alice2, bob1 } = devices;
   const { alice, bob } = prebuilt;
 
-  await test.step(`Verify conversation exists on alice1 and alice2`, async () => {
+  await test.step('Verify conversation exists on alice1 and alice2', async () => {
     await Promise.all(
       [alice1, alice2].map(device =>
         device.waitForTextElementToBePresent(new ConversationItem(device, bob.userName))
