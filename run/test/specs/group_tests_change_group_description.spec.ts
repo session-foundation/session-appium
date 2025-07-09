@@ -34,6 +34,7 @@ bothPlatformsItSeparate({
   },
 });
 
+// Setup
 const testGroupName = 'Test group';
 const longGroupDescription =
   'One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see';
@@ -131,7 +132,7 @@ async function changeGroupDescriptionAndroid(platform: SupportedPlatformsType, t
 
   await test.step('Update group description', async () => {
     // Clear the long description
-    await alice1.clickOnElementXPath(`(//android.widget.ImageView[@content-desc="Clear"])[2]`);
+    await alice1.clickOnElementXPath(`(//android.widget.ImageView[@content-desc="Clear"])[2]`); // SES-4184
     await alice1.inputText(trimmedGroupDescription, new EditGroupDescriptionInput(alice1));
     await alice1.clickOnElementAll(new SaveGroupNameChangeButton(alice1));
   });
