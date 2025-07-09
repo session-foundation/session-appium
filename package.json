@@ -15,7 +15,9 @@
     "test-one-logs": "_TESTING=1  _FORCELOGS=1 npx playwright test --retries 0 ./run/test/**/*.spec.ts --grep",
     "test-high-risk-android": "_TESTING=1 npx playwright test --grep '@android @high-risk'",
     "test-high-risk-ios": "_TESTING=1 npx playwright test --grep '@ios @high-risk'",
-    "start-server": "./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --allow-cors"
+    "start-server": "./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --allow-cors",
+    "allure-generate": "allure generate allure/allure-results --clean",
+    "allure-open": "allure open"
   },
   "devDependencies": {
     "@appium/execute-driver-plugin": "^3.0.1",
@@ -59,7 +61,7 @@
   "dependencies": {
     "@playwright/test": "^1.45.1",
     "@session-foundation/playwright-reporter": "^0.0.7",
-    "@session-foundation/qa-seeder": "^0.1.17",
+    "@session-foundation/qa-seeder": "0.1.18",
     "appium": "^2.4.1",
     "appium-uiautomator2-driver": "patch:appium-uiautomator2-driver@npm%3A3.8.2#~/patches/appium-uiautomator2-driver-npm-3.8.2-1ce2a0f39e.patch",
     "appium-xcuitest-driver": "^7.26.0",

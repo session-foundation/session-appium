@@ -4,28 +4,34 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import {
+  ConversationSettings,
+  DeleteContactMenuItem,
+  DeleteModalConfirm,
+} from './locators/conversation';
 import { ConversationItem } from './locators/home';
 import { open_Alice2_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
-  title: 'Delete conversation from conversation list',
+  title: 'Delete contact from conversation settings',
   risk: 'high',
-  testCb: deleteConversation,
+  testCb: deleteContactUCS,
   countOfDevicesNeeded: 3,
   allureSuites: {
     parent: 'User Actions',
-    suite: 'Delete Conversation',
+    suite: 'Delete Contact',
   },
 });
 
-async function deleteConversation(platform: SupportedPlatformsType, testInfo: TestInfo) {
+async function deleteContactUCS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { devices, prebuilt } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
     return await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: false, testInfo });
   });
 
   const { alice1, alice2, bob1 } = devices;
   const { alice, bob } = prebuilt;
+  const newMessage = `This is a message from ${bob.userName} to ${alice.userName} after deleting contact`;
 
   await test.step('Verify conversation exists on alice1 and alice2', async () => {
     await Promise.all(
@@ -35,31 +41,26 @@ async function deleteConversation(platform: SupportedPlatformsType, testInfo: Te
     );
   });
 
-  await test.step('Delete conversation from alice1', async () => {
-    await alice1.onIOS().swipeLeft('Conversation list item', bob.userName);
-    await alice1.onAndroid().longPressConversation(bob.userName);
-    await alice1.clickOnElementAll({
-      strategy: 'accessibility id',
-      selector: 'Delete',
-    });
+  await test.step('Delete contact from UCS on alice1', async () => {
+    await alice1.clickOnElementAll(new ConversationItem(alice1, bob.userName));
+    await alice1.clickOnElementAll(new ConversationSettings(alice1));
+    await alice1.scrollDown(); // Ensure Delete Contact is visible
+    await alice1.clickOnElementAll(new DeleteContactMenuItem(alice1));
     await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('conversationsDelete').toString(),
-        englishStrippedStr('deleteConversationDescription') // This is currently incorrect on both platforms, SES-4142 and 4143
-          .withArgs({ name: USERNAME.BOB })
-          .toString(),
-        false
+        englishStrippedStr('contactDelete').toString(),
+        englishStrippedStr('deleteContactDescription').withArgs({ name: USERNAME.BOB }).toString()
       );
     });
-    await alice1.clickOnByAccessibilityID('Delete');
+    await alice1.clickOnElementAll(new DeleteModalConfirm(alice1));
   });
 
-  await test.step('Verify conversation deleted on both alice devices', async () => {
+  await test.step('Verify contact deleted on both alice devices', async () => {
     await Promise.all(
       [alice1, alice2].map(device =>
         device.hasElementBeenDeleted({
           ...new ConversationItem(device, bob.userName).build(),
-          maxWait: 3000,
+          maxWait: 5000,
         })
       )
     );
@@ -67,14 +68,20 @@ async function deleteConversation(platform: SupportedPlatformsType, testInfo: Te
 
   await test.step('Send message from Bob to Alice', async () => {
     await bob1.clickOnElementAll(new ConversationItem(bob1, alice.userName));
-    await bob1.sendMessage('This is a new message');
+    await bob1.sendMessage(newMessage);
   });
 
-  await test.step('Verify conversation reappears on both alice devices', async () => {
+  await test.step('Verify conversation reappears as a message request on both alice devices', async () => {
     await Promise.all(
-      [alice1, alice2].map(device =>
-        device.waitForTextElementToBePresent(new ConversationItem(device, bob.userName))
-      )
+      [alice1, alice2].map(async device => {
+        await device.clickOnByAccessibilityID('Message requests banner');
+        await device.clickOnByAccessibilityID('Message request');
+        await device.waitForTextElementToBePresent({
+          strategy: 'accessibility id',
+          selector: 'Message body',
+          text: newMessage,
+        });
+      })
     );
   });
 

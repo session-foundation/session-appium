@@ -36,14 +36,9 @@ export class DeletedMessage extends LocatorsInterface {
 }
 // Empty conversation state
 export class EmptyConversation extends LocatorsInterface {
-  public build(text?: string) {
+  public build() {
     switch (this.platform) {
       case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Control message',
-          text,
-        } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
@@ -58,8 +53,8 @@ export class Hide extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'Hide',
+          strategy: 'accessibility id',
+          selector: 'Clear', // I guess they changed the label to Hide but not the ax id
         } as const;
       case 'ios':
         return {
@@ -159,6 +154,123 @@ export class BlockedBanner extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'Blocked banner',
+        } as const;
+    }
+  }
+}
+
+export class DeleteConversationMenuItem extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'delete-conversation-menu-option',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Delete Conversation',
+        } as const;
+    }
+  }
+}
+export class DeleteModalConfirm extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Delete',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Delete',
+        } as const;
+    }
+  }
+}
+
+export class HideNoteToSelfMenuOption extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'hide-nts-menu-option',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Hide Note to Self',
+        } as const;
+    }
+  }
+}
+
+export class HideNoteToSelfConfirmButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Hide',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Hide',
+        } as const;
+    }
+  }
+}
+
+export class ShowNoteToSelfMenuOption extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'hide-nts-menu-option', // Yes this has the 'hide' ID
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Show Note to Self',
+        } as const;
+    }
+  }
+}
+
+export class ShowNoteToSelfConfirmButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Show',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Show',
+        } as const;
+    }
+  }
+}
+export class DeleteContactMenuItem extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'delete-contact-menu-option',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Delete Contact',
         } as const;
     }
   }

@@ -1,51 +1,99 @@
-import type { TestInfo } from '@playwright/test';
+import { test, type TestInfo } from '@playwright/test';
 
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
-import { bothPlatformsItSeparate } from '../../types/sessionIt';
+import { TestSteps } from '../../types/allure';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { EmptyConversation, Hide } from './locators/conversation';
-import { CancelSearchButton, NoteToSelfOption } from './locators/global_search';
-import { SearchButton } from './locators/home';
+import {
+  ConversationSettings,
+  EmptyConversation,
+  HideNoteToSelfConfirmButton,
+  HideNoteToSelfMenuOption,
+  ShowNoteToSelfConfirmButton,
+  ShowNoteToSelfMenuOption,
+} from './locators/conversation';
+import { NoteToSelfOption } from './locators/global_search';
+import { CancelSearchButton } from './locators/global_search';
+import { ConversationItem, SearchButton } from './locators/home';
 import { newUser } from './utils/create_account';
-import { openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsItSeparate({
+bothPlatformsIt({
   title: 'Hide note to self',
   risk: 'low',
   countOfDevicesNeeded: 1,
-  ios: {
-    testCb: hideNoteToSelf,
-  },
-  android: {
-    testCb: hideNoteToSelf,
-    // Android currently shows 'Clear' instead of 'Hide' for note to self
-    shouldSkip: true,
+  testCb: hideNoteToSelf,
+  allureSuites: {
+    parent: 'User Actions',
+    suite: 'Hide Note to Self',
   },
 });
 
 async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const noteToSelf = englishStrippedStr('noteToSelf').toString();
-  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
-  await newUser(device, USERNAME.ALICE);
-  await device.clickOnElementAll(new SearchButton(device));
-  await device.clickOnElementAll(new NoteToSelfOption(device));
-  await device.waitForTextElementToBePresent(
-    new EmptyConversation(device).build(englishStrippedStr('noteToSelfEmpty').toString())
-  );
-  await device.sendMessage('Creating note to self');
+
+  const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
+    await newUser(device, USERNAME.ALICE);
+    return { device };
+  });
+
+  await test.step('Open Note to Self and send a message', async () => {
+    await device.clickOnElementAll(new SearchButton(device));
+    await device.clickOnElementAll(new NoteToSelfOption(device));
+    await device.waitForTextElementToBePresent(new EmptyConversation(device));
+    await device.sendMessage('Buy milk');
+  });
+
+  await test.step('Hide Note to Self from Conversation Settings', async () => {
+    await device.clickOnElementAll(new ConversationSettings(device));
+    await device.clickOnElementAll(new HideNoteToSelfMenuOption(device));
+
+    await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
+      await device.checkModalStrings(
+        englishStrippedStr('noteToSelfHide').toString(),
+        englishStrippedStr('hideNoteToSelfDescription').toString()
+      );
+    });
+    await device.clickOnElementAll(new HideNoteToSelfConfirmButton(device));
+  });
+  // Leave Conversation Settings, conversation and search
+  await device.navigateBack();
   await device.navigateBack();
   await device.clickOnElementAll(new CancelSearchButton(device));
-  await device.onIOS().swipeLeft('Conversation list item', noteToSelf);
-  await device.onAndroid().longPressConversation(noteToSelf);
-  await device.clickOnElementAll(new Hide(device));
-  await device.checkModalStrings(
-    englishStrippedStr('noteToSelfHide').toString(),
-    englishStrippedStr('noteToSelfHideDescription').toString()
-  );
-  await device.clickOnElementAll(new Hide(device));
-  await device.doesElementExist({
-    strategy: 'accessibility id',
-    selector: 'Conversation list item',
-    text: noteToSelf,
+
+  await test.step('Verify Note to Self is hidden', async () => {
+    await device.hasElementBeenDeleted({
+      ...new ConversationItem(device, noteToSelf).build(),
+      maxWait: 2000,
+    });
+  });
+
+  await test.step('Show Note to Self from Conversation Settings', async () => {
+    await device.clickOnElementAll(new SearchButton(device));
+    await device.clickOnElementAll(new NoteToSelfOption(device));
+    await device.clickOnElementAll(new ConversationSettings(device));
+    await device.clickOnElementAll(new ShowNoteToSelfMenuOption(device));
+
+    await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
+      await device.checkModalStrings(
+        englishStrippedStr('showNoteToSelf').toString(),
+        englishStrippedStr('showNoteToSelfDescription').toString()
+      );
+    });
+    await device.clickOnElementAll(new ShowNoteToSelfConfirmButton(device));
+    // Leave Conversation Settings, conversation and search
+    await device.navigateBack();
+    await device.navigateBack();
+    await device.clickOnElementAll(new CancelSearchButton(device));
+    await test.step('Verify Note to Self shows again', async () => {
+      await device.waitForTextElementToBePresent({
+        ...new ConversationItem(device, noteToSelf).build(),
+        maxWait: 5000,
+      });
+    });
+  });
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(device);
   });
 }
