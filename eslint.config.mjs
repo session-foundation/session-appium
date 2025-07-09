@@ -80,5 +80,13 @@ export default tseslint.config(
         },
       ],
     },
+  },
+  {
+    files: ['run/localizer/locales.ts'],
+    rules: {
+      'perfectionist/sort-imports': 'off',
+      'perfectionist/sort-named-imports': 'off',
+      'perfectionist/sort-union-types': 'off',
+    },
   }
 );
