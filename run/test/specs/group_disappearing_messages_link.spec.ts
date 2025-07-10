@@ -5,7 +5,7 @@ import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { LinkPreviewMessage } from './locators';
-import { OutgoingMessageStatusSent } from './locators/conversation';
+import { MessageInput, OutgoingMessageStatusSent } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -43,10 +43,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
     await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   });
   await test.step(TestSteps.SEND.LINK, async () => {
-    await alice1.inputText(testLink, {
-      strategy: 'accessibility id',
-      selector: 'Message input box',
-    });
+    await alice1.inputText(testLink, new MessageInput(alice1));
     // Enable link preview modal appears as soon as link is typed on android but on iOS it appears after
     await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
       await alice1.checkModalStrings(
@@ -60,11 +57,8 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
     // On iOS, Appium types so the link preview modal interrupts typing the link, must be deleted and typed again
     await alice1
       .onIOS()
-      .deleteText({ strategy: 'accessibility id', selector: 'Message input box' });
-    await alice1.onIOS().inputText(testLink, {
-      strategy: 'accessibility id',
-      selector: 'Message input box',
-    });
+      .deleteText(new MessageInput(alice1));
+    await alice1.onIOS().inputText(testLink, new MessageInput(alice1));
     // Let preview load
     await sleepFor(5000);
     await alice1.clickOnByAccessibilityID('Send message button');

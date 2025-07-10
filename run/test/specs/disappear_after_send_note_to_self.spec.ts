@@ -28,11 +28,7 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, te
   await device.inputText(alice.accountID, new EnterAccountID(device));
   await device.scrollDown();
   await device.clickOnElementAll(new NextButton(device));
-  await device.inputText('Creating note to self', {
-    strategy: 'accessibility id',
-    selector: 'Message input box',
-  });
-  await device.clickOnByAccessibilityID('Send message button');
+  await device.sendMessage(('Buy milk'));
   // Enable disappearing messages
   await setDisappearingMessage(platform, device, [
     'Note to Self',

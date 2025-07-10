@@ -5,7 +5,7 @@ import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { LinkPreview, LinkPreviewMessage } from './locators';
-import { OutgoingMessageStatusSent } from './locators/conversation';
+import { MessageInput, OutgoingMessageStatusSent } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -47,10 +47,7 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
     await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   });
   await test.step(TestSteps.SEND.LINK, async () => {
-    await alice1.inputText(testLink, {
-      strategy: 'accessibility id',
-      selector: 'Message input box',
-    });
+    await alice1.inputText(testLink, new MessageInput(alice1));
     // Accept dialog for link preview
     await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
       await alice1.checkModalStrings(
@@ -60,11 +57,8 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
     });
     await alice1.clickOnByAccessibilityID('Enable');
     // On iOS, Appium types so the link preview modal interrupts typing the link, must be deleted and typed again
-    await alice1.deleteText({ strategy: 'accessibility id', selector: 'Message input box' });
-    await alice1.inputText(testLink, {
-      strategy: 'accessibility id',
-      selector: 'Message input box',
-    });
+    await alice1.deleteText(new MessageInput(alice1));
+    await alice1.inputText(testLink, new MessageInput(alice1));
     await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
 
     await alice1.clickOnByAccessibilityID('Send message button');
@@ -117,10 +111,7 @@ async function disappearingLinkMessage1o1Android(
     await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   });
   await test.step(TestSteps.SEND.LINK, async () => {
-    await alice1.inputText(testLink, {
-      strategy: 'accessibility id',
-      selector: 'Message input box',
-    });
+    await alice1.inputText(testLink, new MessageInput(alice1));
     // Accept dialog for link preview
     await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
       await alice1.checkModalStrings(

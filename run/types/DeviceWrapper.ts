@@ -1176,7 +1176,7 @@ export class DeviceWrapper {
   // UTILITY FUNCTIONS
 
   public async sendMessage(message: string) {
-    await this.inputText(message, { strategy: 'accessibility id', selector: 'Message input box' });
+    await this.inputText(message, new MessageInput(this));
 
     // Click send
 
@@ -1739,7 +1739,7 @@ export class DeviceWrapper {
   }
 
   public async mentionContact(platform: SupportedPlatformsType, contact: Pick<User, 'userName'>) {
-    await this.inputText(`@`, { strategy: 'accessibility id', selector: 'Message input box' });
+    await this.inputText(`@`, new MessageInput(this));
     // Check that all users are showing in mentions box
     await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',

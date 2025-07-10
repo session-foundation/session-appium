@@ -3,7 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { LinkPreview, LinkPreviewMessage } from './locators';
-import { OutgoingMessageStatusSent } from './locators/conversation';
+import { MessageInput, OutgoingMessageStatusSent } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -34,10 +34,7 @@ async function sendLinkIos(platform: SupportedPlatformsType, testInfo: TestInfo)
   const replyMessage = `Replying to link from ${alice.userName}`;
   // Send a link
 
-  await alice1.inputText(testLink, {
-    strategy: 'accessibility id',
-    selector: 'Message input box',
-  });
+  await alice1.inputText(testLink, new MessageInput(alice1));
   // Accept dialog for link preview
   await alice1.checkModalStrings(
     englishStrippedStr('linkPreviewsEnable').toString(),
@@ -49,10 +46,7 @@ async function sendLinkIos(platform: SupportedPlatformsType, testInfo: TestInfo)
     ...new OutgoingMessageStatusSent(alice1).build(),
     maxWait: 20000,
   });
-  await alice1.inputText(testLink, {
-    strategy: 'accessibility id',
-    selector: 'Message input box',
-  });
+  await alice1.inputText(testLink, new MessageInput(alice1));
   // Wait for link preview to load
   await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
   await alice1.clickOnByAccessibilityID('Send message button');
@@ -85,10 +79,7 @@ async function sendLinkAndroid(platform: SupportedPlatformsType, testInfo: TestI
   const testLink = `https://getsession.org/`;
 
   // Send a link
-  await alice1.inputText(testLink, {
-    strategy: 'accessibility id',
-    selector: 'Message input box',
-  });
+  await alice1.inputText(testLink, new MessageInput(alice1));
   // Accept dialog for link preview
   await alice1.checkModalStrings(
     englishStrippedStr('linkPreviewsEnable').toString(),
