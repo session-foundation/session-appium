@@ -58,7 +58,9 @@ function mobileIt({
 
     if (allureSuites) {
       await allure.parentSuite(allureSuites.parent);
-      await allure.suite(allureSuites.suite);
+      if ('suite' in allureSuites) {
+        await allure.suite(allureSuites.suite);
+      }
     }
     if (allureDescription) {
       await allure.description(allureDescription);

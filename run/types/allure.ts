@@ -18,11 +18,12 @@
  */
 
 export type AllureSuiteConfig =
+  | { parent: 'App Disguise'}
   | { parent: 'Disappearing Messages'; suite: 'Disappearing Attachments' }
   | { parent: 'Groups'; suite: 'Edit Group' }
   | {
       parent: 'User Actions';
-      suite: 'Delete Contact' | 'Delete Conversation' | 'Hide Note to Self';
+      suite: 'Block/Unblock' | 'Delete Contact' | 'Delete Conversation' | 'Hide Note to Self';
     };
 /**
  * Standardized Test Step Descriptions
