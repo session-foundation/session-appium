@@ -966,9 +966,7 @@ export class DeviceWrapper {
     const { text } = args;
 
     const baseDescription = `Element with strategy "${locator.strategy}" and selector "${locator.selector}"`;
-    const elementDescription = text ? 
-      `${baseDescription} and text "${text}` : 
-      baseDescription;
+    const elementDescription = text ? `${baseDescription} and text "${text}` : baseDescription;
     do {
       if (!text) {
         try {

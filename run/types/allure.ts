@@ -18,12 +18,12 @@
  */
 
 export type AllureSuiteConfig =
+  | { parent: 'Disappearing Messages'; suite: 'Disappearing Attachments' }
   | { parent: 'Groups'; suite: 'Edit Group' }
   | {
       parent: 'User Actions';
       suite: 'Delete Contact' | 'Delete Conversation' | 'Hide Note to Self';
     };
-
 /**
  * Standardized Test Step Descriptions
  *
@@ -44,12 +44,22 @@ export const TestSteps = {
     QA_SEEDER: 'Restore pre-seeded accounts',
     CLOSE_APP: 'Close app(s)',
   },
+  // Sending things
+  SEND: {
+    LINK: 'Send Link',
+  },
   // Open/Navigate steps
   OPEN: {
     UPDATE_GROUP_INFO: "Open 'Update Group Information' modal",
   },
+  // Disappearing Messages
+  DISAPPEARING_MESSAGES: {
+    SET_DISAPPEARING_MSG: 'Set Disappearing Messages',
+  },
   // Verify steps
   VERIFY: {
     MODAL_STRINGS: 'Verify modal strings',
+    MESSAGE_RECEIVED: 'Verify message has been received',
+    MESSAGE_DISAPPEARED: 'Verify message disappeared',
   },
 };

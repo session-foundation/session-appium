@@ -21,7 +21,7 @@ type MobileItArgs = {
   risk: TestRisk;
   testCb: (platform: SupportedPlatformsType, testInfo: TestInfo) => Promise<void>;
   shouldSkip?: boolean;
-  allureSuites?: AllureSuiteConfig
+  allureSuites?: AllureSuiteConfig;
   allureDescription?: string;
 };
 
