@@ -25,6 +25,7 @@ const sharedCapabilities: AppiumAndroidCapabilities & AppiumCapabilities = {
   'appium:automationName': 'UiAutomator2',
   'appium:newCommandTimeout': 300000,
   'appium:eventTimings': false,
+  'appium:autoGrantPermissions': true,
 };
 
 const emulator1Udid = 'emulator-5554';
