@@ -964,32 +964,39 @@ export class DeviceWrapper {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
     const maxWait = args.maxWait ?? 5000;
     const { text } = args;
+
+    const baseDescription = `Element with strategy "${locator.strategy}" and selector "${locator.selector}"`;
+    const elementDescription = text ? 
+      `${baseDescription} and text "${text}` : 
+      baseDescription;
     do {
       if (!text) {
         try {
           // Note: we need a `maxWait` here to make sure we don't wait for an element that we expect is deleted for too long
           element = await this.waitForTextElementToBePresent({ ...locator, maxWait });
           await sleepFor(100);
-          this.log(`Element has been found, waiting for deletion`);
+          this.log(`${elementDescription} has been found, waiting for deletion`);
         } catch (e: any) {
           element = undefined;
-          this.log(`Element has been deleted, great success`);
+          this.log(`${elementDescription} has been deleted, great success`);
         }
       } else {
         try {
           // Note: we need a `maxWait` here to make sure we don't wait for an element that we expect is deleted for too long
           element = await this.waitForTextElementToBePresent({ ...locator, maxWait });
           await sleepFor(100);
-          this.log(`Text element has been found, waiting for deletion`);
+          this.log(`${elementDescription} has been found, waiting for deletion`);
         } catch (e) {
           element = undefined;
-          this.log(`Text element has been deleted, great success`);
+          this.log(`${elementDescription} has been deleted, great success`);
         }
       }
     } while (Date.now() - start <= maxWait && element);
 
     if (element) {
-      throw new Error(`Element was still present after maximum wait time`);
+      throw new Error(
+        `${elementDescription} was still present after maximum wait time (${maxWait} ms)`
+      );
     }
   }
 
