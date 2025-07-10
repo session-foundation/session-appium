@@ -1,5 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
+import { testLink } from '../../constants';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { LinkPreview, LinkPreviewMessage } from './locators';
@@ -29,7 +30,6 @@ async function sendLinkIos(platform: SupportedPlatformsType, testInfo: TestInfo)
     focusFriendsConvo: true,
     testInfo,
   });
-  const testLink = `https://getsession.org/`;
 
   const replyMessage = `Replying to link from ${alice.userName}`;
   // Send a link
@@ -76,7 +76,6 @@ async function sendLinkAndroid(platform: SupportedPlatformsType, testInfo: TestI
     focusFriendsConvo: true,
     testInfo,
   });
-  const testLink = `https://getsession.org/`;
 
   // Send a link
   await alice1.inputText(testLink, new MessageInput(alice1));

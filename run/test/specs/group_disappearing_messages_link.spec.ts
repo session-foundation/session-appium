@@ -1,5 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
+import { testLink } from '../../constants';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
@@ -28,7 +29,6 @@ const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 
 async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Testing disappearing messages';
-  const testLink = `https://getsession.org/`;
   const {
     devices: { alice1, bob1, charlie1 },
   } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {

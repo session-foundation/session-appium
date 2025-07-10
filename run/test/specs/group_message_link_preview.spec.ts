@@ -1,5 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
+import { testLink } from '../../constants';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { LinkPreview, LinkPreviewMessage } from './locators';
@@ -22,7 +23,6 @@ bothPlatformsItSeparate({
 
 async function sendLinkGroupiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Message checks for groups';
-  const testLink = `https://getsession.org/`;
 
   const {
     devices: { alice1, bob1, charlie1 },
@@ -91,7 +91,6 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType, testInfo: 
     focusGroupConvo: true,
     testInfo,
   });
-  const testLink = `https://getsession.org/`;
   // Send a link
   await alice1.inputText(testLink, new MessageInput(alice1));
   // Accept dialog for link preview
