@@ -15,13 +15,20 @@ import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
-  title: 'Block user in conversation options',
+  title: 'Block user in conversation settings',
   risk: 'high',
-  testCb: blockUserInConversationOptions,
+  testCb: blockUserInConversationSettings,
   countOfDevicesNeeded: 2,
+    allureSuites: {
+    parent: 'User Actions', 
+    suite: 'Block/Unblock'
+  },
+  allureDescription: 
+  'Verifies that a user can be blocked from the conversation settings'
 });
 
-async function blockUserInConversationOptions(
+
+async function blockUserInConversationSettings(
   platform: SupportedPlatformsType,
   testInfo: TestInfo
 ) {

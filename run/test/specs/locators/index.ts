@@ -336,7 +336,7 @@ export class BlockUserConfirmationModal extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Block',
+          selector: 'block-user-confirm-button',
         } as const;
       case 'ios':
         return {

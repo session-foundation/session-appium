@@ -3,7 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { BlockedContactsSettings, BlockUserConfirmationModal } from './locators';
+import { BlockedContactsSettings } from './locators';
 import { LongPressBlockOption } from './locators/home';
 import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { open_Alice1_Bob1_friends } from './state_builder';
@@ -15,6 +15,12 @@ androidIt({
   risk: 'high',
   testCb: blockUserInConversationList,
   countOfDevicesNeeded: 2,
+  allureSuites: {
+    parent: 'User Actions', 
+    suite: 'Block/Unblock'
+  },
+  allureDescription: 
+  'Verifies that a user can be blocked from the home screen long press menu'
 });
 
 async function blockUserInConversationList(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -35,8 +41,7 @@ async function blockUserInConversationList(platform: SupportedPlatformsType, tes
     englishStrippedStr('blockDescription').withArgs({ name: USERNAME.BOB }).toString(),
     false
   );
-  await alice1.onIOS().clickOnElementAll(new BlockUserConfirmationModal(alice1));
-  await alice1.onAndroid().clickOnByAccessibilityID('Block'); // This is an old modal so the locator class cannot be used
+  await alice1.clickOnByAccessibilityID('Block'); 
   // Once you block the conversation disappears from the home screen
   await alice1.hasElementBeenDeleted({
     strategy: 'accessibility id',
