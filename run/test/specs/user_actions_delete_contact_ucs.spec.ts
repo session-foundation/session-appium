@@ -16,7 +16,7 @@ import { closeApp, SupportedPlatformsType } from './utils/open_app';
 bothPlatformsIt({
   title: 'Delete contact from conversation settings',
   risk: 'high',
-  testCb: deleteContactUCS,
+  testCb: deleteContactCS,
   countOfDevicesNeeded: 3,
   allureSuites: {
     parent: 'User Actions',
@@ -24,7 +24,7 @@ bothPlatformsIt({
   },
 });
 
-async function deleteContactUCS(platform: SupportedPlatformsType, testInfo: TestInfo) {
+async function deleteContactCS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { devices, prebuilt } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
     return await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: false, testInfo });
   });
@@ -41,7 +41,7 @@ async function deleteContactUCS(platform: SupportedPlatformsType, testInfo: Test
     );
   });
 
-  await test.step('Delete contact from UCS on alice1', async () => {
+  await test.step('Delete contact from Conversation Settings on alice1', async () => {
     await alice1.clickOnElementAll(new ConversationItem(alice1, bob.userName));
     await alice1.clickOnElementAll(new ConversationSettings(alice1));
     await alice1.scrollDown(); // Ensure Delete Contact is visible
