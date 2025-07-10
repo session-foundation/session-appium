@@ -215,7 +215,7 @@ export class HideNoteToSelfConfirmButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Hide',
+          selector: 'hide-nts-confirm-button',
         } as const;
       case 'ios':
         return {
@@ -249,7 +249,7 @@ export class ShowNoteToSelfConfirmButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Show',
+          selector: 'show-nts-confirm-button',
         } as const;
       case 'ios':
         return {

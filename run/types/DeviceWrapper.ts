@@ -1416,10 +1416,7 @@ export class DeviceWrapper {
         strategy: 'id',
         selector: 'network.loki.messenger:id/mediapicker_image_item_thumbnail',
       });
-      await this.inputText(message, {
-        strategy: 'accessibility id',
-        selector: 'New direct message',
-      });
+      await this.inputText(message, new MessageInput(this));
     }
     await this.clickOnElementAll(new SendMediaButton(this));
     if (community) {
@@ -2074,7 +2071,8 @@ export class DeviceWrapper {
 
     // Sanitize
     function removeNewLines(input: string): string {
-      return input.replace(/\n+/g, ' ').trim();
+      // Handle space + newlines as a unit
+      return input.replace(/\s*\n+/g, ' ').trim();
     }
 
     // Locators
