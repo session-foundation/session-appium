@@ -24,7 +24,13 @@ androidIt({
   risk: 'medium',
   countOfDevicesNeeded: 1,
   testCb: appDisguiseSetIcon,
+  allureSuites: {
+    parent: 'App Disguise'
+  },
+  allureDescription:
+  'Verifies the alternate icon set on the App Disguise page is applied',
 });
+
 
 async function appDisguiseSetIcon(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
