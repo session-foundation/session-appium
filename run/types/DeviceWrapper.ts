@@ -1475,10 +1475,15 @@ export class DeviceWrapper {
     // Select images button/tab
     await this.clickOnByAccessibilityID('Documents folder');
     await this.clickOnByAccessibilityID('Continue');
+    // First you allow access then you allow full access
     await this.clickOnElementAll({
       strategy: 'id',
       selector: 'com.android.permissioncontroller:id/permission_allow_button',
       text: 'Allow',
+    });
+    await this.clickOnElementAll({
+      strategy: 'id',
+      selector: 'com.android.permissioncontroller:id/permission_allow_all_button',
     });
     await sleepFor(2000);
     let videoElement = await this.doesElementExist({
@@ -1562,10 +1567,15 @@ export class DeviceWrapper {
       await this.clickOnElementAll(new AttachmentsButton(this));
       await this.clickOnByAccessibilityID('Documents folder');
       await this.clickOnByAccessibilityID('Continue');
+      // First you allow access then you allow full access
       await this.clickOnElementAll({
         strategy: 'id',
         selector: 'com.android.permissioncontroller:id/permission_allow_button',
         text: 'Allow',
+      });
+      await this.clickOnElementAll({
+        strategy: 'id',
+        selector: 'com.android.permissioncontroller:id/permission_allow_all_button',
       });
       await sleepFor(1000);
       let documentElement = await this.doesElementExist({
