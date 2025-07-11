@@ -20,6 +20,10 @@ bothPlatformsItSeparate({
     testCb: avatarColor,
     shouldSkip: true, // something is going on on Android, test is picking up wildly different pixel colors
   },
+  allureSuites: {
+    parent: 'Visual Checks',
+  },
+  allureDescription: `Verifies that a user's placeholder avatar color appears the same to a contact`,
 });
 
 async function avatarColor(platform: SupportedPlatformsType, testInfo: TestInfo) {

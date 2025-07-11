@@ -17,8 +17,7 @@ bothPlatformsItSeparate({
   android: {
     testCb: sendLongMessageGroupAndroid,
   },
-  allureDescription: 
-  'Verifies that a long message can be sent to a group'
+  allureDescription: 'Verifies that a long message can be sent to a group',
 });
 
 async function sendLongMessageGroupiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -74,7 +73,7 @@ async function sendLongMessageGroupAndroid(platform: SupportedPlatformsType, tes
   });
 
   // Sending a long text message
-  await alice1.sendMessage(longText)
+  await alice1.sendMessage(longText);
   await alice1.waitForTextElementToBePresent({
     ...new OutgoingMessageStatusSent(alice1).build(),
     maxWait: 50000,

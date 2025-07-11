@@ -13,6 +13,11 @@ bothPlatformsIt({
   risk: 'high',
   testCb: disappearAfterSendGroups,
   countOfDevicesNeeded: 3,
+  allureSuites: {
+    parent: 'Disappearing Messages',
+    suite: 'Conversation Types',
+  },
+  allureDescription: `Verifies that 'Disappear After Send' works as expected in a group conversation`,
 });
 
 async function disappearAfterSendGroups(platform: SupportedPlatformsType, testInfo: TestInfo) {

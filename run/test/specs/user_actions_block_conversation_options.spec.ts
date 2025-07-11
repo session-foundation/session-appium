@@ -19,14 +19,12 @@ bothPlatformsIt({
   risk: 'high',
   testCb: blockUserInConversationSettings,
   countOfDevicesNeeded: 2,
-    allureSuites: {
-    parent: 'User Actions', 
-    suite: 'Block/Unblock'
+  allureSuites: {
+    parent: 'User Actions',
+    suite: 'Block/Unblock',
   },
-  allureDescription: 
-  'Verifies that a user can be blocked from the conversation settings'
+  allureDescription: 'Verifies that a user can be blocked from the conversation settings',
 });
-
 
 async function blockUserInConversationSettings(
   platform: SupportedPlatformsType,

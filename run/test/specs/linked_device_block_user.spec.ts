@@ -15,12 +15,11 @@ bothPlatformsIt({
   risk: 'high',
   testCb: blockUserInConversationOptions,
   countOfDevicesNeeded: 3,
-    allureSuites: {
-    parent: 'User Actions', 
-    suite: 'Block/Unblock'
+  allureSuites: {
+    parent: 'User Actions',
+    suite: 'Block/Unblock',
   },
-  allureDescription: 
-  'Verifies that a blocked user syncs to a linked device'
+  allureDescription: 'Verifies that a blocked user syncs to a linked device',
 });
 
 async function blockUserInConversationOptions(

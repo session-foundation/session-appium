@@ -15,10 +15,10 @@ bothPlatformsIt({
   countOfDevicesNeeded: 1,
   testCb: appDisguiseIcons,
   allureSuites: {
-    parent: 'App Disguise'
+    parent: 'Settings',
+    suite: 'App Disguise',
   },
-  allureDescription:
-  'Verifies the alternate icons on the App Disguise page look as expected',
+  allureDescription: 'Verifies the alternate icons on the App Disguise page look as expected',
 });
 
 async function appDisguiseIcons(platform: SupportedPlatformsType, testInfo: TestInfo) {

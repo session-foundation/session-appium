@@ -16,11 +16,10 @@ androidIt({
   testCb: blockUserInConversationList,
   countOfDevicesNeeded: 2,
   allureSuites: {
-    parent: 'User Actions', 
-    suite: 'Block/Unblock'
+    parent: 'User Actions',
+    suite: 'Block/Unblock',
   },
-  allureDescription: 
-  'Verifies that a user can be blocked from the home screen long press menu'
+  allureDescription: 'Verifies that a user can be blocked from the home screen long press menu',
 });
 
 async function blockUserInConversationList(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -41,7 +40,7 @@ async function blockUserInConversationList(platform: SupportedPlatformsType, tes
     englishStrippedStr('blockDescription').withArgs({ name: USERNAME.BOB }).toString(),
     false
   );
-  await alice1.clickOnByAccessibilityID('Block'); 
+  await alice1.clickOnByAccessibilityID('Block');
   // Once you block the conversation disappears from the home screen
   await alice1.hasElementBeenDeleted({
     strategy: 'accessibility id',

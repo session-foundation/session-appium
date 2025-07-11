@@ -55,9 +55,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
     // Accept link preview modal
     await alice1.clickOnByAccessibilityID('Enable');
     // On iOS, Appium types so the link preview modal interrupts typing the link, must be deleted and typed again
-    await alice1
-      .onIOS()
-      .deleteText(new MessageInput(alice1));
+    await alice1.onIOS().deleteText(new MessageInput(alice1));
     await alice1.onIOS().inputText(testLink, new MessageInput(alice1));
     // Let preview load
     await sleepFor(5000);

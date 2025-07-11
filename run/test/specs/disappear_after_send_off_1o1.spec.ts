@@ -22,6 +22,11 @@ bothPlatformsIt({
   risk: 'high',
   testCb: disappearAfterSendOff1o1,
   countOfDevicesNeeded: 3,
+  allureSuites: {
+    parent: 'Disappearing Messages',
+    suite: 'Conversation Types',
+  },
+  allureDescription: `Verifies that turning off 'Disappear After Send' works as expected in a 1:1 conversation`,
 });
 
 async function disappearAfterSendOff1o1(platform: SupportedPlatformsType, testInfo: TestInfo) {

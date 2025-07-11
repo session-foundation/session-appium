@@ -14,6 +14,11 @@ bothPlatformsIt({
   risk: 'medium',
   testCb: disappearAfterSendNoteToSelf,
   countOfDevicesNeeded: 1,
+  allureSuites: {
+    parent: 'Disappearing Messages',
+    suite: 'Conversation Types',
+  },
+  allureDescription: `Verifies that 'Disappear After Send' works as expected in Note to Self`,
 });
 
 async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -28,7 +33,7 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, te
   await device.inputText(alice.accountID, new EnterAccountID(device));
   await device.scrollDown();
   await device.clickOnElementAll(new NextButton(device));
-  await device.sendMessage(('Buy milk'));
+  await device.sendMessage('Buy milk');
   // Enable disappearing messages
   await setDisappearingMessage(platform, device, [
     'Note to Self',

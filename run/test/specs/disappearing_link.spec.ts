@@ -108,7 +108,7 @@ async function disappearingLinkMessage1o1Android(
     });
   });
   await test.step(TestSteps.DISAPPEARING_MESSAGES.SET_DISAPPEARING_MSG, async () => {
-    await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
+    await setDisappearingMessage(platform, alice1, ['1:1', timerType, time]);
   });
   await test.step(TestSteps.SEND.LINK, async () => {
     await alice1.inputText(testLink, new MessageInput(alice1));
