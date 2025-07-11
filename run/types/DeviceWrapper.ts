@@ -30,6 +30,7 @@ import {
   AttachmentsButton,
   MessageInput,
   OutgoingMessageStatusSent,
+  ScrollToBottomButton,
 } from '../test/specs/locators/conversation';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { PlusButton } from '../test/specs/locators/home';
@@ -1860,24 +1861,11 @@ export class DeviceWrapper {
     await this.scroll({ x: width / 2, y: height * 0.95 }, { x: width / 2, y: height * 0.35 }, 100);
   }
   public async scrollToBottom() {
-    if (this.isAndroid()) {
-      const scrollButton = await this.doesElementExist({
-        strategy: 'id',
-        selector: 'network.loki.messenger:id/scrollToBottomButton',
-      });
-      if (scrollButton) {
-        await this.clickOnElementAll({
-          strategy: 'id',
-          selector: 'network.loki.messenger:id/scrollToBottomButton',
-        });
-      } else {
-        this.info('Scroll button not visible');
-      }
+    const scrollButton = await this.doesElementExist(new ScrollToBottomButton(this));
+    if (scrollButton) {
+      await this.clickOnElementAll(new ScrollToBottomButton(this));
     } else {
-      await this.clickOnElementAll({
-        strategy: 'accessibility id',
-        selector: 'Scroll button',
-      });
+      this.info('Scroll button not visible');
     }
   }
 

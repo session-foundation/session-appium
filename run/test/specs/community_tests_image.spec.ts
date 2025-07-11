@@ -1,73 +1,91 @@
-import type { TestInfo } from '@playwright/test';
+import { test, type TestInfo } from '@playwright/test';
 
 import { testCommunityLink, testCommunityName } from '../../constants/community';
-import { bothPlatformsItSeparate } from '../../types/sessionIt';
+import { TestSteps } from '../../types/allure';
+import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { open_Alice1_Bob1_friends } from './state_builder';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { joinCommunity } from './utils/join_community';
-import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsItSeparate({
+// NOTE For some reason Appium takes FOREVER to load the iOS page source on the recipients device (>50s on my machine)
+// and as such I haven't found an easy way to verify that they see the new image message
+// If this becomes a problem in the future then we can extract the unread count from page source
+// and see it increment after the image gets sent
+// But for now we have to trust that the sender seeing 'Sent' also delivers it to others on iOS
+// This is also why it's a 1-device test and has its own iosIt definition (and not bothPlatformsItSeparate)
+
+androidIt({
   title: 'Send image to community',
   risk: 'medium',
   countOfDevicesNeeded: 2,
-  ios: {
-    testCb: sendImageCommunityiOS,
-    shouldSkip: true,
-  },
-  android: {
-    testCb: sendImageCommunityAndroid,
-    shouldSkip: true,
-  },
+  testCb: sendImageCommunityAndroid,
+  allureSuites: { parent: 'Sending Messages', suite: 'Sending Attachments' },
+  allureDescription: 'Verifies that an image can be sent and received in a community',
 });
 
-// Tests skipped due to both platforms having unique issues, have made a ticket
-// to investigate further https://optf.atlassian.net/browse/QA-486
-
-async function sendImageCommunityiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const {
-    devices: { alice1, bob1 },
-    prebuilt: { alice },
-  } = await open_Alice1_Bob1_friends({
-    platform,
-    focusFriendsConvo: false,
-    testInfo,
-  });
-  const testMessage = 'Testing sending images to communities';
-  const testImageMessage = `Image message + ${new Date().getTime()} - ${platform}`;
-
-  await joinCommunity(alice1, testCommunityLink, testCommunityName);
-  await joinCommunity(bob1, testCommunityLink, testCommunityName);
-  await Promise.all([alice1.scrollToBottom(), bob1.scrollToBottom()]);
-  await alice1.sendMessage(testMessage);
-  await alice1.sendImage(testImageMessage, true);
-  await bob1.replyToMessage(alice, testImageMessage);
-  await closeApp(alice1, bob1);
-}
+iosIt({
+  title: 'Send image to community',
+  risk: 'medium',
+  countOfDevicesNeeded: 1,
+  testCb: sendImageCommunityIOS,
+  allureSuites: { parent: 'Sending Messages', suite: 'Sending Attachments' },
+  allureDescription: `Verifies that an image can be sent to a community. Note that due to Appium's limitations this test does not verify another device receiving the image.`,
+});
 
 async function sendImageCommunityAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const { device1: alice1, device2: bob1 } = await openAppTwoDevices(platform, testInfo);
-  const time = await alice1.getTimeFromDevice(platform);
-  const testMessage = `Testing sending images to communities + ${time} - ${platform}`;
-  // Create user A and user B
-  const [Alice] = await Promise.all([newUser(alice1, USERNAME.ALICE), newUser(bob1, USERNAME.BOB)]);
-  const replyMessage = `Replying to image from ${Alice.userName} in community ${testCommunityName} + ${time}`;
-  await Promise.all([
-    joinCommunity(alice1, testCommunityLink, testCommunityName),
-    joinCommunity(bob1, testCommunityLink, testCommunityName),
-  ]);
-
-  await alice1.sendImage(testMessage, true);
-  await bob1.scrollToBottom();
-  await bob1.longPressMessage(testMessage);
-  await bob1.clickOnByAccessibilityID('Reply to message');
-  await bob1.sendMessage(replyMessage);
-  await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: replyMessage,
+  const {
+    devices: { alice1, bob1 },
+  } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
+    return open_Alice1_Bob1_friends({
+      platform,
+      focusFriendsConvo: false,
+      testInfo,
+    });
+  });
+  const testImageMessage = `Image message + ${new Date().getTime()} - ${platform}`;
+  await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
+    await Promise.all(
+      [alice1, bob1].map(async device => {
+        await joinCommunity(device, testCommunityLink, testCommunityName);
+      })
+    );
+  });
+  await test.step(TestSteps.SEND.IMAGE, async () => {
+    await alice1.sendImage(testImageMessage, true);
+  });
+  await test.step(TestSteps.VERIFY.MESSAGE_RECEIVED, async () => {
+    await sleepFor(5000); // Give bob some time to receive the message so the test doesn't scroll down too early
+    await bob1.scrollToBottom();
+    await bob1.trustAttachments(testCommunityName);
+    await bob1.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: testImageMessage,
+    });
   });
 
-  await closeApp(alice1, bob1);
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(alice1, bob1);
+  });
+}
+async function sendImageCommunityIOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
+    await newUser(device, USERNAME.ALICE);
+    return { device };
+  });
+  const testImageMessage = `Image message + ${new Date().getTime()} - ${platform}`;
+  await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
+    await joinCommunity(device, testCommunityLink, testCommunityName);
+  });
+  await test.step(TestSteps.SEND.IMAGE, async () => {
+    await device.sendImage(testImageMessage, true);
+  });
+
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(device);
+  });
 }

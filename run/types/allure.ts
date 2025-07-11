@@ -18,13 +18,16 @@
  */
 
 export type AllureSuiteConfig =
-  | { parent: 'App Disguise'}
-  | { parent: 'Disappearing Messages'; suite: 'Disappearing Attachments' }
+  | { parent: 'Communities' }
+  | { parent: 'Disappearing Messages'; suite: 'Conversation Types' | 'Disappearing Attachments' }
   | { parent: 'Groups'; suite: 'Edit Group' }
+  | { parent: 'Sending Messages'; suite: 'Sending Attachments' }
+  | { parent: 'Settings'; suite: 'App Disguise' }
   | {
       parent: 'User Actions';
       suite: 'Block/Unblock' | 'Delete Contact' | 'Delete Conversation' | 'Hide Note to Self';
-    };
+    }
+  | { parent: 'Visual Checks' };
 /**
  * Standardized Test Step Descriptions
  *
@@ -45,9 +48,14 @@ export const TestSteps = {
     QA_SEEDER: 'Restore pre-seeded accounts',
     CLOSE_APP: 'Close app(s)',
   },
+  // Plus Button options
+  NEW_CONVERSATION: {
+    JOIN_COMMUNITY: 'Join Community',
+  },
   // Sending things
   SEND: {
     LINK: 'Send Link',
+    IMAGE: 'Send Image',
   },
   // Open/Navigate steps
   OPEN: {

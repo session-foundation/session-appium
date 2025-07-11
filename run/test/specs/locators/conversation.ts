@@ -9,6 +9,22 @@ export class MessageInput extends LocatorsInterface {
   }
 }
 
+export class ScrollToBottomButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/scrollToBottomButton',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Scroll button',
+        } as const;
+    }
+  }
+}
 export class ConversationSettings extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -175,13 +191,13 @@ export class DeleteConversationMenuItem extends LocatorsInterface {
     }
   }
 }
-export class DeleteModalConfirm extends LocatorsInterface {
+export class DeleteConversationModalConfirm extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Delete',
+          selector: 'delete-conversation-confirm-button',
         } as const;
       case 'ios':
         return {
@@ -271,6 +287,22 @@ export class DeleteContactMenuItem extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'Delete Contact',
+        } as const;
+    }
+  }
+}
+export class DeleteContactConfirmButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'delete-contact-confirm-button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Delete',
         } as const;
     }
   }
