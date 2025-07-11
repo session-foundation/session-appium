@@ -186,7 +186,7 @@ export class LeaveGroupConfirm extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'leave-group-confirm-button'
+          selector: 'leave-group-confirm-button',
         } as const;
       case 'ios':
         return {

@@ -27,8 +27,8 @@ bothPlatformsIt({
     parent: 'User Actions',
     suite: 'Hide Note to Self',
   },
-  allureDescription: 
-  'Verifies Note to Self can be hidden and then unhidden/shown again in the conversation settings'
+  allureDescription:
+    'Verifies Note to Self can be hidden and then unhidden/shown again in the conversation settings',
 });
 
 async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestInfo) {

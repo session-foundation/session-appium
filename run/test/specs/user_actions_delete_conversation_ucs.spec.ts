@@ -7,7 +7,7 @@ import { USERNAME } from '../../types/testing';
 import {
   ConversationSettings,
   DeleteConversationMenuItem,
-  DeleteModalConfirm,
+  DeleteConversationModalConfirm,
 } from './locators/conversation';
 import { ConversationItem } from './locators/home';
 import { open_Alice2_Bob1_friends } from './state_builder';
@@ -52,7 +52,7 @@ async function deleteConversationCS(platform: SupportedPlatformsType, testInfo: 
           .toString()
       );
     });
-    await alice1.clickOnElementAll(new DeleteModalConfirm(alice1));
+    await alice1.clickOnElementAll(new DeleteConversationModalConfirm(alice1));
   });
 
   await test.step('Verify conversation deleted on both alice devices', async () => {

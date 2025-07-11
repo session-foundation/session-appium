@@ -475,7 +475,7 @@ export class MediaMessageInput extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'accessibility id',
-          selector: 'New direct message',
+          selector: 'Message input box',
         };
       case 'ios':
         return {
@@ -492,7 +492,7 @@ export class SendMediaButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'accessibility id',
-          selector: 'Send',
+          selector: 'Send message button',
         };
       case 'ios':
         return {

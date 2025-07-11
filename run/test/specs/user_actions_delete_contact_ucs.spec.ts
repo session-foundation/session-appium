@@ -6,8 +6,8 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import {
   ConversationSettings,
+  DeleteContactConfirmButton,
   DeleteContactMenuItem,
-  DeleteModalConfirm,
 } from './locators/conversation';
 import { ConversationItem } from './locators/home';
 import { open_Alice2_Bob1_friends } from './state_builder';
@@ -52,7 +52,7 @@ async function deleteContactCS(platform: SupportedPlatformsType, testInfo: TestI
         englishStrippedStr('deleteContactDescription').withArgs({ name: USERNAME.BOB }).toString()
       );
     });
-    await alice1.clickOnElementAll(new DeleteModalConfirm(alice1));
+    await alice1.clickOnElementAll(new DeleteContactConfirmButton(alice1));
   });
 
   await test.step('Verify contact deleted on both alice devices', async () => {
