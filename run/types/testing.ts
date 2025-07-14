@@ -128,10 +128,12 @@ export type XPath =
   | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
+  | `//*[@resource-id='network.loki.messenger:id/callTitle' and contains(@text, ':')]`
   | `//*[starts-with(@content-desc, "Photo taken on")]`
   | `//android.widget.TextView[@text="${string}"]`
   | `//XCUIElementTypeAlert//*//XCUIElementTypeButton`
   | `//XCUIElementTypeButton[@name="Continue"]`
+  | `//XCUIElementTypeButton[@name="Settings"]`
   | `//XCUIElementTypeCell[@name="${string}"]`
   | `//XCUIElementTypeCell[@name="Session"]`
   | `//XCUIElementTypeImage`
@@ -165,6 +167,7 @@ export type AccessibilityId =
   | 'Apply'
   | 'Apply changes'
   | 'Attachments button'
+  | 'Awaiting Recipient Answer... 4/6'
   | 'Back'
   | 'Block'
   | 'blocked-banner'
@@ -274,6 +277,7 @@ export type AccessibilityId =
   | 'Link Device'
   | 'Link preview'
   | 'Loading animation'
+  | 'Local Network Permission - Switch'
   | 'Manage Members'
   | 'Media message'
   | 'MeetingSE'
@@ -328,6 +332,7 @@ export type AccessibilityId =
   | 'Reply to message'
   | 'Restore your session button'
   | 'Reveal recovery phrase button'
+  | 'Ringing...'
   | 'Save'
   | 'Save button'
   | 'Save to Files'
@@ -458,6 +463,10 @@ export type Id =
   | 'network.loki.messenger:id/acceptCallButton'
   | 'network.loki.messenger:id/action_apply'
   | 'network.loki.messenger:id/back_button'
+  | 'network.loki.messenger:id/call_text_view'
+  | 'network.loki.messenger:id/callInProgress'
+  | 'network.loki.messenger:id/callSubtitle'
+  | 'network.loki.messenger:id/callTitle'
   | 'network.loki.messenger:id/crop_image_menu_crop'
   | 'network.loki.messenger:id/emptyStateContainer'
   | 'network.loki.messenger:id/endCallButton'

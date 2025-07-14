@@ -27,7 +27,8 @@ export type AllureSuiteConfig =
       parent: 'User Actions';
       suite: 'Block/Unblock' | 'Delete Contact' | 'Delete Conversation' | 'Hide Note to Self';
     }
-  | { parent: 'Visual Checks' };
+  | { parent: 'Visual Checks' }
+  | { parent: 'Voice Calls'};
 /**
  * Standardized Test Step Descriptions
  *
