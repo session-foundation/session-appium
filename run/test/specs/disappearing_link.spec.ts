@@ -24,7 +24,7 @@ bothPlatformsItSeparate({
   },
   allureSuites: {
     parent: 'Disappearing Messages',
-    suite: 'Disappearing Attachments',
+    suite: 'Message Types',
   },
   allureDescription:
     'Verifies that link previews in 1:1s disappear after the configured expiration time',

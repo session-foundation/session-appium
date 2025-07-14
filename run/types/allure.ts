@@ -19,8 +19,9 @@
 
 export type AllureSuiteConfig =
   | { parent: 'Communities' }
-  | { parent: 'Disappearing Messages'; suite: 'Conversation Types' | 'Disappearing Attachments' }
+  | { parent: 'Disappearing Messages'; suite: 'Conversation Types' | 'Message Types' | 'Rules' }
   | { parent: 'Groups'; suite: 'Edit Group' }
+  | { parent: 'Linkouts'}
   | { parent: 'Sending Messages'; suite: 'Sending Attachments' }
   | { parent: 'Settings'; suite: 'App Disguise' }
   | {
@@ -28,7 +29,7 @@ export type AllureSuiteConfig =
       suite: 'Block/Unblock' | 'Delete Contact' | 'Delete Conversation' | 'Hide Note to Self';
     }
   | { parent: 'Visual Checks' }
-  | { parent: 'Voice Calls'};
+  | { parent: 'Voice Calls' };
 /**
  * Standardized Test Step Descriptions
  *

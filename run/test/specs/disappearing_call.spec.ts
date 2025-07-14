@@ -1,8 +1,9 @@
 import type { TestInfo } from '@playwright/test';
 
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
-import { CallButton } from './locators/conversation';
+import { CallButton, NotificationSettings, NotificationSwitch } from './locators/conversation';
 import { ContinueButton } from './locators/global';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
@@ -19,9 +20,15 @@ bothPlatformsItSeparate({
   },
   android: {
     testCb: disappearingCallMessage1o1Android,
-    shouldSkip: true,
+    shouldSkip: false,
   },
+    allureSuites: {
+    parent: 'Disappearing Messages',
+    suite: 'Message Types',
+  },
+  allureDescription: `Verifies that a call control message disappears as expected in a 1:1 conversation`,
 });
+
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
@@ -107,89 +114,64 @@ async function disappearingCallMessage1o1Android(
   });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   await alice1.clickOnElementAll(new CallButton(alice1));
-  // Enabled voice calls in privacy settings
-  await alice1.waitForTextElementToBePresent({
+  // Alice turns on all calls perms necessary
+  await alice1.checkModalStrings(
+    englishStrippedStr('callsPermissionsRequired').toString(),
+    englishStrippedStr('callsPermissionsRequiredDescription').toString(),
+    false
+  );
+  await alice1.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Settings',
   });
-  // Scroll to bottom of page to voice and video calls
-  await sleepFor(1000);
-  await alice1.scrollDown();
-  const voicePermissions = await alice1.waitForTextElementToBePresent({
-    strategy: 'id',
-    selector: 'android:id/summary',
-    text: 'Enables voice and video calls to and from other users.',
-  });
-  await alice1.click(voicePermissions.ELEMENT);
-  // Toggle voice settings on
-  // Click enable on exposure IP address warning
+  await alice1.checkModalStrings(
+    englishStrippedStr('callsVoiceAndVideoBeta').toString(),
+    englishStrippedStr('callsVoiceAndVideoModalDescription').toString(),
+    false
+  );
   await alice1.clickOnByAccessibilityID('Enable');
-  // Navigate back to conversation
-  await alice1.waitForTextElementToBePresent({
-    strategy: 'id',
-    selector: 'com.android.permissioncontroller:id/permission_allow_foreground_only_button',
-  });
   await alice1.clickOnElementById(
     'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   );
-  await alice1.navigateBack();
-  // Enable voice calls on device 2 for User B
-  await bob1.clickOnByAccessibilityID('Call');
-  // Enabled voice calls in privacy settings
-  await bob1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Settings',
-    text: 'Settings',
-  });
-  await bob1.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Settings',
-  });
-  // Scroll to bottom of page to voice and video calls
-  await sleepFor(1000);
-  await bob1.scrollDown();
-  const voicePermissions2 = await bob1.waitForTextElementToBePresent({
-    strategy: 'id',
-    selector: 'android:id/summary',
-    text: 'Enables voice and video calls to and from other users.',
-  });
-  await bob1.click(voicePermissions2.ELEMENT);
-  // Toggle voice settings on
-  // Click enable on exposure IP address warning
-  await bob1.clickOnByAccessibilityID('Enable');
-  // Navigate back to conversation
-  await bob1.waitForTextElementToBePresent({
-    strategy: 'id',
-    selector: 'com.android.permissioncontroller:id/permission_allow_foreground_only_button',
-  });
-  await bob1.clickOnElementById(
-    'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
+  await alice1.checkModalStrings(
+    englishStrippedStr('sessionNotifications').toString(),
+    englishStrippedStr('callsNotificationsRequired').toString(),
+    false
   );
-  await bob1.navigateBack();
-  // Make call on device 1 (alice)
+  await alice1.clickOnElementAll(new NotificationSettings(alice1));
+  await alice1.clickOnElementAll(new NotificationSwitch(alice1));
+  await alice1.navigateBack(false);
+  await alice1.navigateBack(false);
+  // Alice tries again, call is created but Bob still hasn't enabled their calls perms so this will fail
   await alice1.clickOnElementAll(new CallButton(alice1));
-  // Answer call on device 2
-  await bob1.clickOnByAccessibilityID('Answer call');
-  // Wait 5 seconds
-  await sleepFor(5000);
-  // Hang up
+  await alice1.doesElementExist({
+    strategy: 'id',
+    selector: 'network.loki.messenger:id/callTitle',
+    text: 'Ringing...',
+    maxWait: 5000,
+  });
+  await alice1.doesElementExist({
+    strategy: 'id',
+    selector: 'network.loki.messenger:id/callSubtitle',
+    text: 'Sending Call Offer 2/5',
+    maxWait: 5000,
+  });
   await alice1.clickOnElementById('network.loki.messenger:id/endCallButton');
-  // Check for config message 'Called User B' on device 1
   await alice1.waitForControlMessageToBePresent(`Called ${bob.userName}`);
   await bob1.waitForControlMessageToBePresent(`${alice.userName} called you`);
   // Wait 10 seconds for control message to be deleted
-  await sleepFor(10000);
+  await sleepFor(30000);
   await alice1.hasElementBeenDeleted({
-    strategy: 'accessibility id',
-    selector: 'Control message',
-    text: `You called ${bob.userName}`,
-    maxWait: 1000,
+      strategy: 'id',
+      selector: 'network.loki.messenger:id/call_text_view',
+      text: `${bob.userName} called you`,
+      maxWait: 1000,
   });
   await bob1.hasElementBeenDeleted({
-    strategy: 'accessibility id',
-    selector: 'Control message',
-    text: `${alice.userName} called you`,
-    maxWait: 1000,
+      strategy: 'id',
+      selector: 'network.loki.messenger:id/call_text_view',
+      text: `You called ${alice.userName}`,
+      maxWait: 1000,
   });
   await closeApp(alice1, bob1);
 }

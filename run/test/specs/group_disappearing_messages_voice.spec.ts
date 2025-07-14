@@ -12,6 +12,11 @@ bothPlatformsIt({
   risk: 'low',
   testCb: disappearingVoiceMessageGroup,
   countOfDevicesNeeded: 3,
+  allureSuites: {
+    parent: 'Disappearing Messages',
+    suite: 'Message Types',
+  },
+  allureDescription: `Verifies that a voice note disappears as expected in a group conversation`,
 });
 
 async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {

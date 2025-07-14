@@ -16,6 +16,11 @@ bothPlatformsIt({
   risk: 'medium',
   testCb: membersCantSetDisappearingMessages,
   countOfDevicesNeeded: 3,
+  allureSuites: {
+    parent: 'Disappearing Messages',
+    suite: 'Rules',
+  },
+  allureDescription: `Verifies that only admins can set Disappearing Message timers in a group`,
 });
 
 async function membersCantSetDisappearingMessages(

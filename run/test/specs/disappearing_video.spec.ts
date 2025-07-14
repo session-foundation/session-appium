@@ -12,7 +12,13 @@ bothPlatformsIt({
   risk: 'low',
   testCb: disappearingVideoMessage1o1,
   countOfDevicesNeeded: 2,
+  allureSuites: {
+    parent: 'Disappearing Messages',
+    suite: 'Message Types',
+  },
+  allureDescription: `Verifies that a video disappears as expected in a 1:1 conversation`,
 });
+
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';

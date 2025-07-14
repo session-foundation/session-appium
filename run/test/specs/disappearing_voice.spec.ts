@@ -17,6 +17,11 @@ bothPlatformsItSeparate({
   android: {
     testCb: disappearingVoiceMessage1o1Android,
   },
+  allureSuites: {
+    parent: 'Disappearing Messages',
+    suite: 'Message Types',
+  },
+  allureDescription: `Verifies that a voice note disappears as expected in a 1:1 conversation`,
 });
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;

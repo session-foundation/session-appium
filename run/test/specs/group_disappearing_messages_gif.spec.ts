@@ -12,6 +12,11 @@ bothPlatformsIt({
   risk: 'low',
   testCb: disappearingGifMessageGroup,
   countOfDevicesNeeded: 3,
+  allureSuites: {
+    parent: 'Disappearing Messages',
+    suite: 'Message Types',
+  },
+  allureDescription: `Verifies that a GIF disappears as expected in a group conversation`,
 });
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;

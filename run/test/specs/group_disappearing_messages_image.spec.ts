@@ -12,6 +12,11 @@ bothPlatformsIt({
   risk: 'low',
   countOfDevicesNeeded: 3,
   testCb: disappearingImageMessageGroup,
+  allureSuites: {
+    parent: 'Disappearing Messages',
+    suite: 'Message Types',
+  },
+  allureDescription: `Verifies that an image disappears as expected in a group conversation`,
 });
 
 async function disappearingImageMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {

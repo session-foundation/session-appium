@@ -16,6 +16,10 @@ bothPlatformsIt({
   risk: 'high',
   testCb: donateLinkout,
   countOfDevicesNeeded: 1,
+  allureSuites: {
+    parent: 'Linkouts'
+  }, 
+  allureDescription: 'Verifies that the STF donation link is correct and that the HTTP request is successful (200)'
 });
 
 async function donateLinkout(platform: SupportedPlatformsType, testInfo: TestInfo) {

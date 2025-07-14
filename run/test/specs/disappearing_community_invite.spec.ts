@@ -24,6 +24,11 @@ bothPlatformsItSeparate({
     testCb: disappearingCommunityInviteMessageAndroid,
     shouldSkip: false,
   },
+    allureSuites: {
+    parent: 'Disappearing Messages',
+    suite: 'Message Types',
+  },
+  allureDescription: `Verifies that a community invite disappears as expected in a 1:1 conversation`,
 });
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;

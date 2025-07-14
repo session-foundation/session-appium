@@ -19,10 +19,9 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
   allureSuites: {
     parent: 'Disappearing Messages',
-    suite: 'Disappearing Attachments',
+    suite: 'Message Types',
   },
-  allureDescription:
-    'Verifies that link previews in groups disappear after the configured expiration time (',
+  allureDescription: `Verifies that a GIF disappears as expected in a group conversation`,
 });
 const timerType = 'Disappear after send option';
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
