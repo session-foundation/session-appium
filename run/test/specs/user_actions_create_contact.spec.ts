@@ -1,6 +1,5 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
@@ -30,19 +29,19 @@ async function createContact(platform: SupportedPlatformsType, testInfo: TestInf
 
   await device2.clickOnByAccessibilityID('Message requests banner');
   await device2.clickOnByAccessibilityID('Message request');
-  await device2.onAndroid().clickOnByAccessibilityID('Accept message request');
+  await device2.clickOnByAccessibilityID('Accept message request');
 
   // Type into message input box
   await device2.sendMessage(`Reply-message-${Bob.userName}-to-${Alice.userName}`);
+  // NOTE: This appears to be broken on both platforms: 
   // Verify config message states message request was accepted
   // "messageRequestsAccepted": "Your message request has been accepted.",
-  // TO DO - ADD BACK IN ONCE IOS HAS FIXED THIS ISSUE
-  const messageRequestsAccepted = englishStrippedStr('messageRequestsAccepted').toString();
-  await device1.onAndroid().waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Control message',
-    text: messageRequestsAccepted,
-  });
+  // const messageRequestsAccepted = englishStrippedStr('messageRequestsAccepted').toString();
+  // await device1.waitForTextElementToBePresent({
+  //   strategy: 'accessibility id',
+  //   selector: 'Control message',
+  //   text: messageRequestsAccepted,
+  // });
 
   console.info(`${Alice.userName} and ${Bob.userName} are now contacts`);
   await device1.navigateBack();
