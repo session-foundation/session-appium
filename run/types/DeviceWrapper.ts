@@ -965,7 +965,7 @@ export class DeviceWrapper {
    * @throws Error if the element is found
    *
    */
-  public async ensureElementNotPresent(
+  public async verifyElementNotPresent(
     args: {
       text?: string;
       maxWait?: number;
@@ -978,19 +978,15 @@ export class DeviceWrapper {
       maxWait: args.maxWait || 1000,
     });
 
-    if (element) {
-      const baseDescription = `Element with ${locator.strategy} "${locator.selector}"`;
-      const description = args.text
-        ? `${baseDescription} and text "${args.text}"`
-        : baseDescription;
+    const baseDescription = `Element with ${locator.strategy} "${locator.selector}"`;
+    const description = args.text ? `${baseDescription} and text "${args.text}"` : baseDescription;
 
+    if (element) {
       throw new Error(`${description} is present when it should not be`);
     }
 
     // Element not found - success!
-    this.log(
-      `Verified no element with ${locator.strategy} "${locator.selector}"${args.text ? ` and text "${args.text}"` : ''} is present`
-    );
+    this.log(`Verified no element with ${description} is present`);
   }
 
   /**
@@ -1005,7 +1001,7 @@ export class DeviceWrapper {
    * - The element still exists after maxWait expires
    *
    * Note: For checks where you just need to ensure an element
-   * is not present (regardless of prior existence), use doesElementExist() instead.
+   * is not present (regardless of prior existence), use doesElementExist() or verifyElementNotPresent() instead.
    */
   public async hasElementBeenDeleted(
     args: {

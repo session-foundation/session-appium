@@ -65,7 +65,7 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
   await device.clickOnElementAll(new CancelSearchButton(device));
 
   await test.step('Verify Note to Self is hidden', async () => {
-    await device.ensureElementNotPresent({
+    await device.verifyElementNotPresent({
       ...new ConversationItem(device, noteToSelf).build(),
       maxWait: 2000,
     });

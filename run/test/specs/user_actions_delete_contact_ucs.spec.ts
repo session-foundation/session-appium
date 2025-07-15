@@ -58,7 +58,7 @@ async function deleteContactCS(platform: SupportedPlatformsType, testInfo: TestI
   await test.step('Verify contact deleted on both alice devices', async () => {
     await Promise.all(
       [alice1, alice2].map(device =>
-        device.hasElementBeenDeleted({
+        device.verifyElementNotPresent({
           ...new ConversationItem(device, bob.userName).build(),
           maxWait: 5000,
         })

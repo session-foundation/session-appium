@@ -21,7 +21,7 @@ async function linkDevice(platform: SupportedPlatformsType, testInfo: TestInfo) 
   // link device
   const alice = await linkedDevice(alice1, alice2, USERNAME.ALICE);
   // Check that 'Youre almost finished' reminder doesn't pop up on alice2
-  await alice2.hasElementBeenDeleted({
+  await alice2.verifyElementNotPresent({
     strategy: 'accessibility id',
     selector: 'Recovery phrase reminder',
     maxWait: 1000,
