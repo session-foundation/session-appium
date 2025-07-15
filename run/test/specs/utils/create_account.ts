@@ -9,7 +9,11 @@ import { RecoveryPhraseContainer, RevealRecoveryPhraseButton } from '../locators
 import { UserSettings } from '../locators/settings';
 import { CopyButton } from '../locators/start_conversation';
 
-export const newUser = async (device: DeviceWrapper, userName: UserNameType): Promise<User> => {
+export const newUser = async (
+  device: DeviceWrapper,
+  userName: UserNameType,
+  saveUserData: boolean = true
+): Promise<User> => {
   device.setDeviceIdentity(`${userName.toLowerCase()}1`);
   // Click create session ID
   await device.clickOnElementAll(new CreateAccountButton(device));
@@ -28,6 +32,12 @@ export const newUser = async (device: DeviceWrapper, userName: UserNameType): Pr
   await device.checkPermissions('Allow');
   device.warn('looked for Allow permission');
   await sleepFor(1000);
+
+  // Some tests don't need to save the Account ID and Recovery Password
+  if (!saveUserData) {
+    return { userName, accountID: 'not_needed', recoveryPhrase: 'not_needed' };
+  }
+
   // Click on 'continue' button to open recovery phrase modal
   await device.waitForTextElementToBePresent(new RevealRecoveryPhraseButton(device));
   await device.clickOnElementAll(new RevealRecoveryPhraseButton(device));

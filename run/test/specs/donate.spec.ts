@@ -17,15 +17,16 @@ bothPlatformsIt({
   testCb: donateLinkout,
   countOfDevicesNeeded: 1,
   allureSuites: {
-    parent: 'Linkouts'
-  }, 
-  allureDescription: 'Verifies that the STF donation link is correct and that the HTTP request is successful (200)'
+    parent: 'Linkouts',
+  },
+  allureDescription:
+    'Verifies that the STF donation link is correct and that the HTTP request is successful (200)',
 });
 
 async function donateLinkout(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   const linkURL = 'https://session.foundation/donate#app';
-  await newUser(device, USERNAME.ALICE);
+  await newUser(device, USERNAME.ALICE, false);
   await device.clickOnElementAll(new UserSettings(device));
   await device.clickOnElementAll(new DonationsMenuItem(device));
   await device.checkModalStrings(

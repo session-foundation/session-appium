@@ -74,7 +74,7 @@ async function sendImageCommunityAndroid(platform: SupportedPlatformsType, testI
 async function sendImageCommunityIOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
-    await newUser(device, USERNAME.ALICE);
+    await newUser(device, USERNAME.ALICE, false);
     return { device };
   });
   const testImageMessage = `Image message + ${new Date().getTime()} - ${platform}`;
