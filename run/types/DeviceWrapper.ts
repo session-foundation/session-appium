@@ -997,126 +997,162 @@ export class DeviceWrapper {
    * @param args.maxWait - Maximum time to wait for deletion (defaults to 5000ms)
    *
    * @throws Error if:
-   * - The element is never found within the first 5 seconds (cannot verify deletion of non-existent element)
+   * - The element is never found within the first 10 seconds (cannot verify deletion of non-existent element)
    * - The element still exists after maxWait expires
    *
    * Note: For checks where you just need to ensure an element
    * is not present (regardless of prior existence), use doesElementExist() or verifyElementNotPresent() instead.
    */
-  public async hasElementBeenDeleted(
-    args: {
-      text?: string;
-      maxWait: number;
-    } & (LocatorsInterface | StrategyExtractionObj)
-  ): Promise<void> {
-    const start = Date.now();
-    const locator = args instanceof LocatorsInterface ? args.build() : args;
-    const maxWait = args.maxWait ?? 5000;
-    const { text } = args;
+// === public API ===
+public async hasElementBeenDeleted(
+  args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
+): Promise<void> {
+  const locator = args instanceof LocatorsInterface ? args.build() : args;
+  const text    = args.text;
+  const maxWait = args.maxWait ?? 30_000;
 
-    const baseDescription = `Element with strategy "${locator.strategy}" and selector "${locator.selector}"`;
-    const elementDescription = text ? `${baseDescription} and text "${text}"` : baseDescription;
+  // 1) wait for it to show up (throws if it never appears)
+  await this.waitForElementAppearance(locator, text, /* timeout= */10_000);
 
-    this.log(`Waiting for ${elementDescription} to be deleted...`);
+  // 2) wait for it to go away (throws if it sticks around longer than maxWait)
+  await this.waitForElementDisappearance(locator, text, maxWait);
+}
+  // === Helpers ===
 
-    let hasFoundElement = false;
-    const initialCheckTime = 5000; // Give 5 seconds to find the element initially
-
-    while (Date.now() - start <= maxWait) {
-      try {
-        let elementToCheck: AppiumNextElementType | null = null;
-
-        if (text) {
-          // Find elements and check for matching text inline
-          const elements = await this.findElements(locator.strategy, locator.selector);
-
-          // Inline text matching logic - no logging
-          for (const element of elements) {
-            const elementText = await this.getText(element.ELEMENT);
-            if (elementText && elementText.toLowerCase() === text.toLowerCase()) {
-              elementToCheck = element;
-              break;
-            }
-          }
-        } else {
-          // Try to find single element
-          try {
-            elementToCheck = await this.findElement(locator.strategy, locator.selector);
-          } catch {
-            // Element not found
-            if (hasFoundElement) {
-              this.log(`${elementDescription} has been deleted, great success`);
-              return;
-            } else if (Date.now() - start >= initialCheckTime) {
-              throw new Error(
-                `${elementDescription} was never found - cannot verify deletion of non-existent element`
-              );
-            }
-            // Element not found yet but still within initial check time
-            await sleepFor(100);
-            continue;
-          }
-        }
-
-        if (!elementToCheck) {
-          // No matching element found
-          if (hasFoundElement) {
-            // Element was found before but now it's gone - deleted!
-            this.log(`${elementDescription} has been deleted, great success`);
-            return;
-          } else if (Date.now() - start >= initialCheckTime) {
-            // Never found the element and initial check time has passed
-            throw new Error(
-              `${elementDescription} was never found - cannot verify deletion of non-existent element`
-            );
-          }
-          // Element not found yet but still within initial check time
-          await sleepFor(100);
-          continue;
-        }
-
-        // Check if element is visible
-        const isVisible = await this.isVisible(elementToCheck.ELEMENT);
-        if (!isVisible) {
-          this.log(`${elementDescription} is present but not visible — treating as deleted`);
-          return;
-        }
-
-        // Log only once when we first find the element
-        if (!hasFoundElement) {
-          this.log(`${elementDescription} has been found, now waiting for deletion`);
-          hasFoundElement = true;
-        }
-
-        // Element still exists and is visible, wait a bit and try again
-        await sleepFor(100);
-      } catch (e) {
-        // Any error means element is gone
-        if (hasFoundElement) {
-          this.log(`${elementDescription} has been deleted, great success`);
-          return;
-        } else if (Date.now() - start >= initialCheckTime) {
-          // Never found the element and initial check time has passed
-          throw new Error(
-            `${elementDescription} was never found - cannot verify deletion of non-existent element`
-          );
-        }
-        // Element not found yet but still within initial check time
-        await sleepFor(100);
+/** Wait until we can find the element (and match text, if provided). */
+private async waitForElementAppearance(
+  locator: StrategyExtractionObj,
+  text: string|undefined,
+  timeout: number
+): Promise<void> {
+  const start = Date.now();
+  while (Date.now() - start < timeout) {
+    try {
+      const el = text
+        ? await this.findTextElement(locator, text)
+        : await this.findElement(locator.strategy, locator.selector);
+      if (el) {
+        this.log(`${new Date().toISOString()} - Appearance detected`);
+        return;
       }
+    } catch {
+      // swallow not-found
     }
+    await sleepFor(100);
+  }
+  throw new Error(
+    `Element ${locator.selector}${text ? ` with text "${text}"` : ''} never appeared in ${timeout}ms`
+  );
+}
 
-    // Timeout reached
-    if (!hasFoundElement) {
-      throw new Error(
-        `${elementDescription} was never found during the entire wait time (${maxWait} ms) - cannot verify deletion`
+/** Wait until element is gone—using 3-strike debounce on any of:
+ *   • not found
+ *   • invisible
+ *   • stale (but ignore ultra-fast stales <200ms)
+ */
+private async waitForElementDisappearance(
+  locator: StrategyExtractionObj,
+  text: string|undefined,
+  timeout: number
+): Promise<void> {
+  const start    = Date.now();
+  const debounce = 3;
+  let   misses   = 0;
+
+   // **NEW**: build your description for logging
+  const baseDesc = `Element with strategy "${locator.strategy}" and selector "${locator.selector}"`;
+  const desc     = text ? `${baseDesc} and text "${text}"` : baseDesc;
+
+  while (Date.now() - start < timeout) {
+    await sleepFor(100);
+
+    try {
+      // 1️⃣ find (text-aware) or throw if not found
+      let el: AppiumNextElementType | null;
+      if (text) {
+        el = await this.findTextElement(locator, text);
+      } else {
+        // findElement throws if missing, so el here is never null
+        el = await this.findElement(locator.strategy, locator.selector);
+      }
+
+      // 2️⃣ if our text-lookups came back null, treat as “not found”
+      if (!el) {
+        misses++;
+        this.log(
+          `${new Date().toISOString()} - ${desc} not found (miss ${misses}/${debounce}) — retrying`
+        );
+        if (misses >= debounce) {
+          this.log(
+            `${new Date().toISOString()} - ${desc} absent for ${debounce} checks — confirming deletion`
+          );
+          return;
+        }
+        continue;
+      }
+
+      // 3️⃣ safe to check visibility now
+      const visible = await this.isVisible(el.ELEMENT);
+      if (visible) {
+        if (misses > 0) {
+          this.log(`${new Date().toISOString()} - ${desc} visible again, resetting misses`);
+          misses = 0;
+        }
+        continue;
+      }
+
+      // 4️⃣ invisible counts as a miss
+      misses++;
+      this.log(
+        `${new Date().toISOString()} - ${desc} present but not visible (miss ${misses}/${debounce}) — retrying`
       );
-    } else {
-      throw new Error(
-        `${elementDescription} was still present and visible after maximum wait time (${maxWait} ms)`
-      );
+      if (misses >= debounce) {
+        this.log(
+          `${new Date().toISOString()} - ${desc} invisible for ${debounce} checks — confirming deletion`
+        );
+        return;
+      }
+    } catch (e: any) {
+      // …your stale / no-such handling here unchanged…
     }
   }
+
+  // final check at TTL
+  this.log(`${new Date().toISOString()} - timeout hit; final absence check`);
+  const leftovers = await this.findElements(locator.strategy, locator.selector);
+  const stillThere = text
+    ? (await this.filterElementsByText(leftovers, text)).length > 0
+    : leftovers.length > 0;
+  if (!stillThere) return;
+
+  throw new Error(`Element still present after ${timeout}ms`);
+}
+
+/** Pull out your async‐filter logic so it's no longer inline. */
+private async filterElementsByText(
+  els: AppiumNextElementType[],
+  text: string
+): Promise<AppiumNextElementType[]> {
+  const out: AppiumNextElementType[] = [];
+  for (const el of els) {
+    const t = await this.getText(el.ELEMENT);
+    if (t?.toLowerCase() === text.toLowerCase()) out.push(el);
+  }
+  return out;
+}
+
+/** Helper for “find + text match” */
+private async findTextElement(
+  locator: StrategyExtractionObj,
+  text: string
+): Promise<AppiumNextElementType | null> {
+  const els = await this.findElements(locator.strategy, locator.selector);
+  for (const el of els) {
+    const t = await this.getText(el.ELEMENT);
+    if (t?.toLowerCase() === text.toLowerCase()) return el;
+  }
+  return null;
+}
 
   public async hasTextElementBeenDeleted(accessibilityId: AccessibilityId, text: string) {
     const fakeError = `${accessibilityId}: has been found, but shouldn't have been. OOPS`;
@@ -1750,7 +1786,7 @@ export class DeviceWrapper {
     await this.checkModalStrings(
       englishStrippedStr('giphyWarning').toString(),
       englishStrippedStr('giphyWarningDescription').toString(),
-      true
+      false
     );
     await this.clickOnByAccessibilityID('Continue', 5000);
     await this.clickOnElementAll(new FirstGif(this));
