@@ -24,7 +24,7 @@ bothPlatformsIt({
 async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   const testMessage = `Testing disappearing messages in Note to Self`;
-  const alice = await newUser(device, USERNAME.ALICE, false);
+  const alice = await newUser(device, USERNAME.ALICE);
   const controlMode: DisappearActions = 'sent';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   // Send message to self to bring up Note to Self conversation
@@ -45,14 +45,11 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, te
     `You set messages to disappear ${time} after they have been ${controlMode}.`
   );
   await device.sendMessage(testMessage);
-  // Sleep time dependent on platform
-
-  await sleepFor(30000);
   await device.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: testMessage,
-    maxWait: 1000,
+    maxWait: 30000,
   });
   // Great success
   await closeApp(device);

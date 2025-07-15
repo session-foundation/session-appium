@@ -3,7 +3,6 @@ import type { TestInfo } from '@playwright/test';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
@@ -45,17 +44,16 @@ async function disappearingVoiceMessage1o1Ios(
     selector: 'Voice message',
   });
   await bob1.trustAttachments(USERNAME.ALICE);
-  await sleepFor(30000);
   await Promise.all([
     alice1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Voice message',
-      maxWait: 1000,
+      maxWait: 30000,
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Voice message',
-      maxWait: 1000,
+      maxWait: 30000,
     }),
   ]);
   await closeApp(alice1, bob1);
@@ -75,17 +73,16 @@ async function disappearingVoiceMessage1o1Android(
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   await alice1.sendVoiceMessage();
   await bob1.trustAttachments(USERNAME.ALICE);
-  await sleepFor(30000);
   await Promise.all([
     alice1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Voice message',
-      maxWait: 1000,
+      maxWait: 30000,
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Voice message',
-      maxWait: 1000,
+      maxWait: 30000,
     }),
   ]);
   await closeApp(alice1, bob1);

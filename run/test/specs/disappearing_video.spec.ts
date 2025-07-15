@@ -3,7 +3,6 @@ import type { TestInfo } from '@playwright/test';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
@@ -46,8 +45,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType, tes
   });
 
   // Wait for 30 seconds
-  await sleepFor(30000);
-  const maxWaitValidateMsgDisappeared = 1000;
+  const maxWaitValidateMsgDisappeared = 30000;
   if (platform === 'ios') {
     await Promise.all([
       alice1.hasElementBeenDeleted({

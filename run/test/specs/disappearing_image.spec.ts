@@ -35,19 +35,17 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType, tes
   await sleepFor(500);
   await alice1.sendImage(testMessage);
   await bob1.trustAttachments(USERNAME.ALICE);
-  // Wait for 30 seconds
-  await sleepFor(30000);
   await Promise.all([
     alice1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
-      maxWait: 1000,
+      maxWait: 30000,
       text: testMessage,
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
-      maxWait: 1000,
+      maxWait: 30000,
       text: testMessage,
     }),
   ]);

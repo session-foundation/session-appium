@@ -65,18 +65,17 @@ async function disappearingCommunityInviteMessageIos(
     text: testCommunityName,
   });
   // Wait for 30 seconds for message to disappear
-  await sleepFor(30000);
   await Promise.all([
     bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
-      maxWait: 1000,
+      maxWait: 30000,
       text: testCommunityName,
     }),
     alice1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
-      maxWait: 1000,
+      maxWait: 30000,
       text: testCommunityName,
     }),
   ]);
@@ -115,17 +114,16 @@ async function disappearingCommunityInviteMessageAndroid(
     text: testCommunityName,
   });
   // Wait for 30 seconds for message to disappear
-  await sleepFor(30000);
   await bob1.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Message body',
-    maxWait: 1000,
+    maxWait: 30000,
     text: testCommunityName,
   });
   await alice1.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Message body',
-    maxWait: 1000,
+    maxWait: 30000,
     text: testCommunityName,
   });
   await closeApp(alice1, bob1);
