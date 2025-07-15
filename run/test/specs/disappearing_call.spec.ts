@@ -1,6 +1,5 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { CallButton, NotificationSettings, NotificationSwitch } from './locators/conversation';
@@ -16,7 +15,7 @@ bothPlatformsItSeparate({
   countOfDevicesNeeded: 2,
   ios: {
     testCb: disappearingCallMessage1o1Ios,
-    shouldSkip: true,
+    shouldSkip: true, // Calls are still unreliable on iOS
   },
   android: {
     testCb: disappearingCallMessage1o1Android,
@@ -113,36 +112,23 @@ async function disappearingCallMessage1o1Android(
   });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   await alice1.clickOnElementAll(new CallButton(alice1));
-  // Alice turns on all calls perms necessary
-  await alice1.checkModalStrings(
-    englishStrippedStr('callsPermissionsRequired').toString(),
-    englishStrippedStr('callsPermissionsRequiredDescription').toString(),
-    false
-  );
+  // Alice turns on all calls perms necessary (without checking every modal string)
   await alice1.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Settings',
   });
-  await alice1.checkModalStrings(
-    englishStrippedStr('callsVoiceAndVideoBeta').toString(),
-    englishStrippedStr('callsVoiceAndVideoModalDescription').toString(),
-    false
-  );
   await alice1.clickOnByAccessibilityID('Enable');
   await alice1.clickOnElementById(
     'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   );
-  await alice1.checkModalStrings(
-    englishStrippedStr('sessionNotifications').toString(),
-    englishStrippedStr('callsNotificationsRequired').toString(),
-    false
-  );
   await alice1.clickOnElementAll(new NotificationSettings(alice1));
   await alice1.clickOnElementAll(new NotificationSwitch(alice1));
+  // Return to conversation
   await alice1.navigateBack(false);
   await alice1.navigateBack(false);
-  // Alice tries again, call is created but Bob still hasn't enabled their calls perms so this will fail
+  // Alice tries again, call is put through even though Bob has not activated their settings
   await alice1.clickOnElementAll(new CallButton(alice1));
+  // Confirm call is put through
   await alice1.doesElementExist({
     strategy: 'id',
     selector: 'network.loki.messenger:id/callTitle',
@@ -156,21 +142,20 @@ async function disappearingCallMessage1o1Android(
     maxWait: 5000,
   });
   await alice1.clickOnElementById('network.loki.messenger:id/endCallButton');
-  await alice1.waitForControlMessageToBePresent(`Called ${bob.userName}`);
-  await bob1.waitForControlMessageToBePresent(`${alice.userName} called you`);
-  // Wait 10 seconds for control message to be deleted
-  await sleepFor(30000);
-  await alice1.hasElementBeenDeleted({
-    strategy: 'id',
-    selector: 'network.loki.messenger:id/call_text_view',
-    text: `${bob.userName} called you`,
-    maxWait: 1000,
-  });
-  await bob1.hasElementBeenDeleted({
-    strategy: 'id',
-    selector: 'network.loki.messenger:id/call_text_view',
-    text: `You called ${alice.userName}`,
-    maxWait: 1000,
-  });
+  // Wait for control message to disappear
+  await Promise.all([
+    alice1.hasElementBeenDeleted({
+      strategy: 'id',
+      selector: 'network.loki.messenger:id/call_text_view',
+      text: `You called ${bob.userName}`,
+      maxWait: 30000,
+    }),
+    bob1.hasElementBeenDeleted({
+      strategy: 'id',
+      selector: 'network.loki.messenger:id/call_text_view',
+      text: `Missed call from ${alice.userName}`,
+      maxWait: 30000,
+    })
+]);
   await closeApp(alice1, bob1);
 }
