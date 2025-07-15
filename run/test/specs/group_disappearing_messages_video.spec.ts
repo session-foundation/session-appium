@@ -3,7 +3,6 @@ import type { TestInfo } from '@playwright/test';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
@@ -36,26 +35,15 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType, t
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   await alice1.onIOS().sendVideoiOS(testMessage);
   await alice1.onAndroid().sendVideoAndroid();
-  await sleepFor(30000);
-  await Promise.all([
-    alice1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      maxWait: 1000,
-      text: testMessage,
-    }),
-    bob1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      maxWait: 1000,
-      text: testMessage,
-    }),
-    charlie1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      maxWait: 1000,
-      text: testMessage,
-    }),
-  ]);
+  await Promise.all(
+    [alice1, bob1, charlie1].map(device =>
+      device.hasElementBeenDeleted({
+        strategy: 'accessibility id',
+        selector: 'Message body',
+        maxWait: 3000,
+        text: testMessage,
+      })
+    )
+  );
   await closeApp(alice1, bob1, charlie1);
 }

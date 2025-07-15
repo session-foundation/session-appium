@@ -38,22 +38,14 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType, t
     selector: 'Voice message',
   });
   await sleepFor(30000);
-  await Promise.all([
-    alice1.hasElementBeenDeleted({
+  await Promise.all(
+  [alice1, bob1, charlie1].map(device =>
+    device.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Voice message',
-      maxWait: 1000,
-    }),
-    bob1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Voice message',
-      maxWait: 1000,
-    }),
-    bob1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Voice message',
-      maxWait: 1000,
-    }),
-  ]);
+      maxWait: 30000,
+    })
+  )
+);
   await closeApp(alice1, bob1, charlie1);
 }

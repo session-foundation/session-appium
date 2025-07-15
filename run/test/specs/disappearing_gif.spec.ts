@@ -3,7 +3,6 @@ import type { TestInfo } from '@playwright/test';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
@@ -44,19 +43,17 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType, te
   // Check if the 'Tap to download media' config appears
   // Click on config
   await bob1.trustAttachments(USERNAME.ALICE);
-  // Wait for 60 seconds
-  await sleepFor(60000);
   // Check if GIF has been deleted on both devices
   await alice1.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Message body',
-    maxWait: 1000,
+    maxWait: 60000,
     text: testMessage,
   });
   await bob1.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Message body',
-    maxWait: 1000,
+    maxWait: 60000,
     text: testMessage,
   });
   await closeApp(alice1, bob1);
@@ -96,19 +93,17 @@ async function disappearingGifMessage1o1Android(
       maxWait: maxWaitForMediaMessage,
     }),
   ]);
-  // Wait for 60 seconds (time)
-  await sleepFor(60000);
   // Check if GIF has been deleted on both devices
   await Promise.all([
     alice1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Media message',
-      maxWait: 1000,
+      maxWait: 60000,
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Media message',
-      maxWait: 1000,
+      maxWait: 60000,
     }),
   ]);
   await closeApp(alice1, bob1);

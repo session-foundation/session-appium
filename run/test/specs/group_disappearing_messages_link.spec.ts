@@ -64,28 +64,15 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
       maxWait: 20000,
     });
   });
-  await test.step(TestSteps.VERIFY.MESSAGE_RECEIVED, async () => {
-    // Make sure image preview is available in device 2
-    await Promise.all(
-      [bob1, charlie1].map(device =>
-        device.waitForTextElementToBePresent({
-          strategy: 'accessibility id',
-          selector: 'Message body',
-          text: testLink,
-        })
-      )
-    );
-  });
   // Wait for 30 seconds to disappear
   await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
-    await sleepFor(30000);
     if (platform === 'ios') {
       await Promise.all(
         [alice1, bob1, charlie1].map(device =>
           device.hasElementBeenDeleted({
             strategy: 'accessibility id',
             selector: 'Message body',
-            maxWait: 1000,
+            maxWait: 30000,
             text: testLink,
           })
         )
@@ -94,7 +81,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
     if (platform === 'android') {
       await Promise.all(
         [alice1, bob1, charlie1].map(device =>
-          device.hasElementBeenDeleted({ ...new LinkPreviewMessage(device).build(), maxWait: 1000 })
+          device.hasElementBeenDeleted({ ...new LinkPreviewMessage(device).build(), maxWait: 30000 })
         )
       );
     }

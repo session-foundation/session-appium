@@ -77,13 +77,12 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
   });
   // Wait for 30 seconds to disappear
   await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
-    await sleepFor(30000);
     await Promise.all(
       [alice1, bob1].map(device =>
         device.hasElementBeenDeleted({
           strategy: 'accessibility id',
           selector: 'Message body',
-          maxWait: 1000,
+          maxWait: 30000,
           text: testLink,
         })
       )
@@ -135,10 +134,9 @@ async function disappearingLinkMessage1o1Android(
   });
   // Wait for 30 seconds to disappear
   await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
-    await sleepFor(30000);
     await Promise.all(
       [alice1, bob1].map(device =>
-        device.hasElementBeenDeleted({ ...new LinkPreviewMessage(device).build(), maxWait: 1000 })
+        device.hasElementBeenDeleted({ ...new LinkPreviewMessage(device).build(), maxWait: 30000 })
       )
     );
   });
