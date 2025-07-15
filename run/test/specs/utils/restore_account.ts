@@ -3,7 +3,7 @@ import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
 import { ContinueButton } from '../../specs/locators/global';
 import { PlusButton } from '../locators/home';
-import { AccountRestoreButton, SeedPhraseInput, SlowModeRadio } from '../locators/onboarding';
+import { AccountRestoreButton, DisplayNameInput, SeedPhraseInput, SlowModeRadio } from '../locators/onboarding';
 
 export const restoreAccount = async (device: DeviceWrapper, user: User) => {
   await device.clickOnElementAll(new AccountRestoreButton(device));
@@ -19,15 +19,12 @@ export const restoreAccount = async (device: DeviceWrapper, user: User) => {
   // Wait for loading animation to look for display name
   await device.waitForLoadingOnboarding();
   const displayName = await device.doesElementExist({
-    strategy: 'accessibility id',
-    selector: 'Enter display name',
-    maxWait: 2000,
+    ...new DisplayNameInput(device).build(), maxWait: 2000
   });
   if (displayName) {
-    await device.inputText(user.userName, {
-      strategy: 'accessibility id',
-      selector: 'Enter display name',
-    });
+    await device.inputText(user.userName, 
+      new DisplayNameInput(device)
+    );
     await device.clickOnElementAll(new ContinueButton(device));
   } else {
     device.info('Display name found: Loading account');
@@ -36,11 +33,7 @@ export const restoreAccount = async (device: DeviceWrapper, user: User) => {
   await sleepFor(500);
   await device.checkPermissions('Allow');
   await sleepFor(1000);
-  await device.hasElementBeenDeleted({
-    ...new ContinueButton(device).build(),
-    maxWait: 1000,
-  });
-  // Check that button was clicked
+  // Check that we're on the home screen
   await device.waitForTextElementToBePresent(new PlusButton(device));
 };
 
@@ -62,9 +55,7 @@ export const restoreAccountNoFallback = async (device: DeviceWrapper, recoveryPh
   // Wait for loading animation to look for display name
   await device.waitForLoadingOnboarding();
   const displayName = await device.doesElementExist({
-    strategy: 'accessibility id',
-    selector: 'Enter display name',
-    maxWait: 2000,
+    ...new DisplayNameInput(device).build(), maxWait: 2000
   });
   if (displayName) {
     throw new Error('Account not found');
@@ -75,10 +66,6 @@ export const restoreAccountNoFallback = async (device: DeviceWrapper, recoveryPh
   await sleepFor(500);
   await device.checkPermissions('Allow');
   await sleepFor(1000);
-  await device.hasElementBeenDeleted({
-    ...new ContinueButton(device).build(),
-    maxWait: 1000,
-  });
-  // Check that button was clicked
+  // Check that we're on the home screen
   await device.waitForTextElementToBePresent(new PlusButton(device));
 };
