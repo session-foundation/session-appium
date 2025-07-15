@@ -155,7 +155,7 @@ async function disappearingCallMessage1o1Android(
       selector: 'network.loki.messenger:id/call_text_view',
       text: `Missed call from ${alice.userName}`,
       maxWait: 30000,
-    })
-]);
+    }),
+  ]);
   await closeApp(alice1, bob1);
 }

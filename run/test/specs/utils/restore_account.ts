@@ -3,7 +3,12 @@ import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
 import { ContinueButton } from '../../specs/locators/global';
 import { PlusButton } from '../locators/home';
-import { AccountRestoreButton, DisplayNameInput, SeedPhraseInput, SlowModeRadio } from '../locators/onboarding';
+import {
+  AccountRestoreButton,
+  DisplayNameInput,
+  SeedPhraseInput,
+  SlowModeRadio,
+} from '../locators/onboarding';
 
 export const restoreAccount = async (device: DeviceWrapper, user: User) => {
   await device.clickOnElementAll(new AccountRestoreButton(device));
@@ -19,12 +24,11 @@ export const restoreAccount = async (device: DeviceWrapper, user: User) => {
   // Wait for loading animation to look for display name
   await device.waitForLoadingOnboarding();
   const displayName = await device.doesElementExist({
-    ...new DisplayNameInput(device).build(), maxWait: 2000
+    ...new DisplayNameInput(device).build(),
+    maxWait: 2000,
   });
   if (displayName) {
-    await device.inputText(user.userName, 
-      new DisplayNameInput(device)
-    );
+    await device.inputText(user.userName, new DisplayNameInput(device));
     await device.clickOnElementAll(new ContinueButton(device));
   } else {
     device.info('Display name found: Loading account');
@@ -55,7 +59,8 @@ export const restoreAccountNoFallback = async (device: DeviceWrapper, recoveryPh
   // Wait for loading animation to look for display name
   await device.waitForLoadingOnboarding();
   const displayName = await device.doesElementExist({
-    ...new DisplayNameInput(device).build(), maxWait: 2000
+    ...new DisplayNameInput(device).build(),
+    maxWait: 2000,
   });
   if (displayName) {
     throw new Error('Account not found');

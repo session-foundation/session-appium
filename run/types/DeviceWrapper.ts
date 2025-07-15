@@ -954,57 +954,59 @@ export class DeviceWrapper {
     return element;
   }
 
-/**
- * Ensures an element is not present on the screen.
- * Unlike hasElementBeenDeleted, this doesn't require the element to exist first.
- * 
- * @param args - Locator (LocatorsInterface or StrategyExtractionObj) with optional properties
- * @param args.text - Optional text content to match within elements
- * @param args.maxWait - Maximum time to wait before checking (defaults to 1000ms)
- * 
- * @throws Error if the element is found
- * 
- */
-public async ensureElementNotPresent(
-  args: {
-    text?: string;
-    maxWait?: number;
-  } & (LocatorsInterface | StrategyExtractionObj)
-): Promise<void> {
-  const locator = args instanceof LocatorsInterface ? args.build() : args;
-  const element = await this.doesElementExist({ 
-    ...locator,
-    text: args.text,
-    maxWait: args.maxWait || 1000 
-  });
-  
-  if (element) {
-    const baseDescription = `Element with ${locator.strategy} "${locator.selector}"`;
-    const description = args.text 
-      ? `${baseDescription} and text "${args.text}"`
-      : baseDescription;
-      
-    throw new Error(`${description} is present when it should not be`);
-  }
-  
-  // Element not found - success!
-  this.log(`Verified no element with ${locator.strategy} "${locator.selector}"${args.text ? ` and text "${args.text}"` : ''} is present`);
-}
+  /**
+   * Ensures an element is not present on the screen.
+   * Unlike hasElementBeenDeleted, this doesn't require the element to exist first.
+   *
+   * @param args - Locator (LocatorsInterface or StrategyExtractionObj) with optional properties
+   * @param args.text - Optional text content to match within elements
+   * @param args.maxWait - Maximum time to wait before checking (defaults to 1000ms)
+   *
+   * @throws Error if the element is found
+   *
+   */
+  public async ensureElementNotPresent(
+    args: {
+      text?: string;
+      maxWait?: number;
+    } & (LocatorsInterface | StrategyExtractionObj)
+  ): Promise<void> {
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const element = await this.doesElementExist({
+      ...locator,
+      text: args.text,
+      maxWait: args.maxWait || 1000,
+    });
 
-/**
- * Waits for an element to be deleted from the screen. The element must exist initially.
- * 
- * @param args - Locator (LocatorsInterface or StrategyExtractionObj) with optional properties
- * @param args.text - Optional text content to match within elements of the same type
- * @param args.maxWait - Maximum time to wait for deletion (defaults to 5000ms)
- * 
- * @throws Error if:
- * - The element is never found within the first 5 seconds (cannot verify deletion of non-existent element)
- * - The element still exists after maxWait expires
- * 
- * Note: For checks where you just need to ensure an element
- * is not present (regardless of prior existence), use doesElementExist() instead.
- */
+    if (element) {
+      const baseDescription = `Element with ${locator.strategy} "${locator.selector}"`;
+      const description = args.text
+        ? `${baseDescription} and text "${args.text}"`
+        : baseDescription;
+
+      throw new Error(`${description} is present when it should not be`);
+    }
+
+    // Element not found - success!
+    this.log(
+      `Verified no element with ${locator.strategy} "${locator.selector}"${args.text ? ` and text "${args.text}"` : ''} is present`
+    );
+  }
+
+  /**
+   * Waits for an element to be deleted from the screen. The element must exist initially.
+   *
+   * @param args - Locator (LocatorsInterface or StrategyExtractionObj) with optional properties
+   * @param args.text - Optional text content to match within elements of the same type
+   * @param args.maxWait - Maximum time to wait for deletion (defaults to 5000ms)
+   *
+   * @throws Error if:
+   * - The element is never found within the first 5 seconds (cannot verify deletion of non-existent element)
+   * - The element still exists after maxWait expires
+   *
+   * Note: For checks where you just need to ensure an element
+   * is not present (regardless of prior existence), use doesElementExist() instead.
+   */
   public async hasElementBeenDeleted(
     args: {
       text?: string;
@@ -1017,9 +1019,7 @@ public async ensureElementNotPresent(
     const { text } = args;
 
     const baseDescription = `Element with strategy "${locator.strategy}" and selector "${locator.selector}"`;
-    const elementDescription = text
-      ? `${baseDescription} and text "${text}"`
-      : baseDescription;
+    const elementDescription = text ? `${baseDescription} and text "${text}"` : baseDescription;
 
     this.log(`Waiting for ${elementDescription} to be deleted...`);
 
@@ -1029,11 +1029,11 @@ public async ensureElementNotPresent(
     while (Date.now() - start <= maxWait) {
       try {
         let elementToCheck: AppiumNextElementType | null = null;
-        
+
         if (text) {
           // Find elements and check for matching text inline
           const elements = await this.findElements(locator.strategy, locator.selector);
-          
+
           // Inline text matching logic - no logging
           for (const element of elements) {
             const elementText = await this.getText(element.ELEMENT);
