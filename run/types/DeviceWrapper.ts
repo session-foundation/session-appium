@@ -959,7 +959,7 @@ export class DeviceWrapper {
       text?: string;
       maxWait: number;
     } & (LocatorsInterface | StrategyExtractionObj)
-  ) {
+  ): Promise<void> {
     const start = Date.now();
     let element: AppiumNextElementType | undefined = undefined;
     const locator = args instanceof LocatorsInterface ? args.build() : args;
@@ -967,37 +967,57 @@ export class DeviceWrapper {
     const { text } = args;
 
     const baseDescription = `Element with strategy "${locator.strategy}" and selector "${locator.selector}"`;
-    const elementDescription = text ? `${baseDescription} and text "${text}` : baseDescription;
+    const elementDescription = text
+      ? `${baseDescription} and text "${text}"`
+      : baseDescription;
+
     do {
       if (!text) {
         try {
           // Note: we need a `maxWait` here to make sure we don't wait for an element that we expect is deleted for too long
           element = await this.waitForTextElementToBePresent({ ...locator, maxWait });
           await sleepFor(100);
+
+          const isVisible = await this.isVisible(element.ELEMENT);
+          if (!isVisible) {
+            this.log(`${elementDescription} is present but not visible — treating as deleted`);
+            return;
+          }
+
           this.log(`${elementDescription} has been found, waiting for deletion`);
         } catch (e: any) {
           element = undefined;
           this.log(`${elementDescription} has been deleted, great success`);
+          return;
         }
       } else {
         try {
           // Note: we need a `maxWait` here to make sure we don't wait for an element that we expect is deleted for too long
           element = await this.waitForTextElementToBePresent({ ...locator, maxWait });
           await sleepFor(100);
+
+          const isVisible = await this.isVisible(element.ELEMENT);
+          if (!isVisible) {
+            this.log(`${elementDescription} is present but not visible — treating as deleted`);
+            return;
+          }
+
           this.log(`${elementDescription} has been found, waiting for deletion`);
         } catch (e) {
           element = undefined;
           this.log(`${elementDescription} has been deleted, great success`);
+          return;
         }
       }
     } while (Date.now() - start <= maxWait && element);
 
     if (element) {
       throw new Error(
-        `${elementDescription} was still present after maximum wait time (${maxWait} ms)`
+        `${elementDescription} was still present and visible after maximum wait time (${maxWait} ms)`
       );
     }
   }
+
 
   public async hasTextElementBeenDeleted(accessibilityId: AccessibilityId, text: string) {
     const fakeError = `${accessibilityId}: has been found, but shouldn't have been. OOPS`;
@@ -2148,5 +2168,29 @@ export class DeviceWrapper {
 
   private toShared(): AndroidUiautomator2Driver & XCUITestDriver {
     return this.device as unknown as AndroidUiautomator2Driver & XCUITestDriver;
+  }
+
+  /**
+   * Checks if an element is visible on the screen.
+   * For Android, checks the 'displayed' attribute.
+   * For iOS, checks the 'visible' attribute.
+   */
+  public async isVisible(elementId: string): Promise<boolean> {
+    if (this.isAndroid()) {
+      try {
+        const displayed = await this.getAttribute('displayed', elementId);
+        return displayed === 'true';
+      } catch {
+        return false;
+      }
+    } else if (this.isIOS()) {
+      try {
+        const visible = await this.getAttribute('visible', elementId);
+        return visible === 'true';
+      } catch {
+        return false;
+      }
+    }
+    return false;
   }
 }
