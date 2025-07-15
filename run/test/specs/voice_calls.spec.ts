@@ -15,64 +15,62 @@ bothPlatformsItSeparate({
   countOfDevicesNeeded: 2,
   ios: {
     testCb: voiceCallIos,
-    shouldSkip: true,
+    shouldSkip: false,
   },
   android: {
     testCb: voiceCallAndroid,
     shouldSkip: false,
   },
   allureSuites: {
-    parent: 'Voice Calls'
+    parent: 'Voice Calls',
   },
-  allureDescription: 
-    `Verifies voice call functionality and permission flow on Android:
+  allureDescription: `Verifies voice call functionality and permission flow:
     - Verifies strings of all call permission prompts (microphone, notifications, etc.)
     - Verifies missed call notifications when recipient lacks permissions
     - Confirms successful call connection once both users enable permissions
     - Verifies control messages after call is finished
-
     Note that due to the nature of virtual devices, no actual "talking" takes place`,
 });
-// FIXME might need to manipulate host perms to have local network access always on 
+// FIXME might need to manipulate host perms to have local network access always on
 async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
-    // prebuilt: { alice, bob },
+    prebuilt: { alice, bob },
   } = await open_Alice1_Bob1_friends({ platform, testInfo, focusFriendsConvo: true });
   await alice1.clickOnElementAll(new CallButton(alice1));
   await alice1.checkModalStrings(
     englishStrippedStr('callsPermissionsRequired').toString(),
-    englishStrippedStr('callsPermissionsRequiredDescription').toString(),
+    englishStrippedStr('callsPermissionsRequiredDescription').toString()
   );
   await alice1.clickOnByAccessibilityID('Settings');
   await alice1.checkModalStrings(
     englishStrippedStr('callsVoiceAndVideoBeta').toString(),
-    englishStrippedStr('callsVoiceAndVideoModalDescription').toString(),
+    englishStrippedStr('callsVoiceAndVideoModalDescription').toString()
   );
   await alice1.clickOnByAccessibilityID('Continue');
   // Need to allow microphone access
   await alice1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
   await sleepFor(1000);
-    // Need to allow camera access
+  // Need to allow camera access
   await alice1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
-  await sleepFor(5000); // Wait a bit for the toggles to turn to TRUE 
-  const localNetworkSwitch = await alice1.waitForTextElementToBePresent({
+  await sleepFor(5000); // Wait a bit for the toggles to turn to TRUE
+  const aliceLocalNetworkSwitch = await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Local Network Permission - Switch',
   });
-  const attr = await alice1.getAttribute('value', localNetworkSwitch.ELEMENT);
-  if (attr !== '1') {
-    alice1.log('Local Network permission must be granted but normally it is auto-granted');
-    await alice1.clickOnElementAll({
-      strategy: 'accessibility id', 
-      selector: 'Local Network Permission - Switch'
-    })
+  const aliceAttr = await alice1.getAttribute('value', aliceLocalNetworkSwitch.ELEMENT);
+  if (aliceAttr !== '1') {
+    throw new Error(
+      `Local Network Permission was not enabled automatically.
+    This is a known issue on Simulators and cannot be fixed in this environment.
+    Please rerun this test on a real device where you can manually enable the permission.`
+    );
   }
   await alice1.closeScreen();
   // Alice tries again, call is created but Bob still hasn't enabled their calls perms so this will fail
   await alice1.clickOnElementAll(new CallButton(alice1));
-  // The Missed call modal is currently not exposed so the test just dismisses with a button press, see SES-4192   
-  await bob1.clickOnElementXPath(`//XCUIElementTypeButton[@name="Settings"]`)
+  // The Missed call modal is currently not exposed so the test just dismisses with a button press, see SES-4192
+  await bob1.clickOnElementXPath(`//XCUIElementTypeButton[@name="Settings"]`);
   await alice1.doesElementExist({
     strategy: 'accessibility id',
     selector: 'Ringing...',
@@ -84,82 +82,48 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
     maxWait: 5000,
   });
   await alice1.clickOnByAccessibilityID('End call button');
-
-  // // Navigate back to conversation
-  // await alice1.closeScreen();
-  // await alice1.clickOnElementAll(new CallButton(alice1));
-  // // Need to allow microphone access
-  // await alice1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
-  // // Call hasn't connected until microphone access is granted
-  // await alice1.clickOnElementAll(new CallButton(alice1));
-  // await bob1.checkModalStrings(
-  //   englishStrippedStr('callsMissedCallFrom').withArgs({ name: alice.userName }).toString(),
-  //   englishStrippedStr('callsYouMissedCallPermissions')
-  //     .withArgs({ name: alice.userName })
-  //     .toString()
-  // );
-  // await bob1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Okay' });
-  // // Hang up on device 1
-  // await alice1.clickOnByAccessibilityID('End call button');
-  // await bob1.navigateBack();
-  // await bob1.clickOnElementAll({
-  //   strategy: 'accessibility id',
-  //   selector: 'Conversation list item',
-  //   text: alice.userName,
-  // });
-  // await bob1.clickOnElementAll(new CallButton(bob1));
-  // await bob1.clickOnByAccessibilityID('Settings');
-  // await bob1.scrollDown();
-  // await bob1.modalPopup({
-  //   strategy: 'accessibility id',
-  //   selector: 'Allow voice and video calls',
-  // });
-  // await bob1.clickOnElementAll({
-  //   strategy: 'accessibility id',
-  //   selector: 'Voice and Video Calls - Switch',
-  // });
-  // await bob1.checkModalStrings(
-  //   englishStrippedStr('callsVoiceAndVideoBeta').toString(),
-  //   englishStrippedStr('callsVoiceAndVideoModalDescription').toString()
-  // );
-  // await bob1.clickOnByAccessibilityID('Continue');
-  // await bob1.checkModalStrings(
-  //   englishStrippedStr('sessionNotifications').toString(),
-  //   englishStrippedStr('callsNotificationsRequired').toString()
-  // );
-  // await sleepFor(100);
-  // await bob1.clickOnElementAll(new NotificationSettings(bob1));
-  // await bob1.clickOnElementAll({ ...new ExitUserProfile(bob1).build(), maxWait: 1000 });
-  // // Wait for change to take effect
-  // await sleepFor(1000);
-  // // Make call on device 1 (alice)
-  // await bob1.clickOnElementAll(new CallButton(bob1));
-  // await bob1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
-  // await alice1.clickOnElementAll(new CallButton(alice1));
-  // // Wait for call to come through
-  // await sleepFor(1000);
-  // // Answer call on device 2
-  // await bob1.clickOnByAccessibilityID('Answer call');
-  // // Have to press answer twice, once in drop down and once in full screen
-  // await sleepFor(500);
-  // await bob1.clickOnByAccessibilityID('Answer call');
-  // // Wait 10 seconds
-  // await sleepFor(10000);
-  // // Hang up
-  // await alice1.clickOnByAccessibilityID('End call button');
-  // // Check for control messages on both devices
-  // // "callsYouCalled": "You called {name}",
-  // const callsYouCalled = englishStrippedStr('callsYouCalled')
-  //   .withArgs({ name: bob.userName })
-  //   .toString();
-  // await alice1.waitForControlMessageToBePresent(callsYouCalled);
-  // // "callsYouCalled": "You called {name}",
-  // const callsCalledYou = englishStrippedStr('callsCalledYou')
-  //   .withArgs({ name: alice.userName })
-  //   .toString();
-  // await bob1.waitForControlMessageToBePresent(callsCalledYou);
-  // // Excellent
-  // await closeApp(alice1, bob1);
+  await bob1.checkModalStrings(
+    englishStrippedStr('callsVoiceAndVideoBeta').toString(),
+    englishStrippedStr('callsVoiceAndVideoModalDescription').toString()
+  );
+  await bob1.clickOnByAccessibilityID('Continue');
+  // Need to allow microphone access
+  await bob1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
+  await sleepFor(1000);
+  // Need to allow camera access
+  await bob1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
+  await sleepFor(5000); // Wait a bit for the toggles to turn to TRUE
+  const bobLocalNetworkSwitch = await bob1.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Local Network Permission - Switch',
+  });
+  const bobAttr = await bob1.getAttribute('value', bobLocalNetworkSwitch.ELEMENT);
+  if (bobAttr !== '1') {
+    throw new Error(
+      `Local Network Permission was not enabled automatically.
+      This is a known issue on Simulators and cannot be fixed (sometimes it just doesn't want to work).
+      Please rerun this test on a real device where you can manually enable the permission.`
+    );
+  }
+  await alice1.clickOnElementAll(new CallButton(alice1));
+  await bob1.clickOnByAccessibilityID('Answer call');
+  // Wait 10 seconds
+  await sleepFor(10000);
+  // Hang up
+  await alice1.clickOnByAccessibilityID('End call button');
+  // Check for control messages on both devices
+  // "callsYouCalled": "You called {name}",
+  const callsYouCalled = englishStrippedStr('callsYouCalled')
+    .withArgs({ name: bob.userName })
+    .toString();
+  await alice1.waitForControlMessageToBePresent(callsYouCalled);
+  // "callsYouCalled": "You called {name}",
+  const callsCalledYou = englishStrippedStr('callsCalledYou')
+    .withArgs({ name: alice.userName })
+    .toString();
+  await bob1.waitForControlMessageToBePresent(callsCalledYou);
+  // Excellent
+  await closeApp(alice1, bob1);
 }
 
 async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
