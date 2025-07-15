@@ -142,39 +142,65 @@ export async function captureScreenshotsOnFailure(testInfo: TestInfo): Promise<v
 
   console.log(`Test failed, capturing screenshots from ${context.devices.length} device(s)...`);
 
-  // Collect screenshots
-  const screenshots: Buffer[] = [];
+  // Capture all raw screenshots in parallel
 
-  for (let i = 0; i < context.devices.length; i++) {
-    const device = context.devices[i];
-    try {
-      const screenshotBase64 = await device.getScreenshot();
-      if (!screenshotBase64) continue;
+  const rawCaptures = await Promise.all(
+    context.devices.map(async device => {
+      try {
+        const base64 = await device.getScreenshot();
+        return {
+          device,
+          base64,
+          success: true,
+        };
+      } catch (error) {
+        console.error(`Failed to capture from ${device.getDeviceIdentity()}:`, error);
+        return {
+          device,
+          base64: null,
+          success: false,
+        };
+      }
+    })
+  );
 
-      const rawScreenshot = Buffer.from(screenshotBase64, 'base64');
+  // Filter out failed captures
+  const successfulCaptures = rawCaptures.filter(c => c.success && c.base64);
 
-      // Add label to each screenshot
-      const labeledScreenshot = await addDeviceLabel(rawScreenshot, device);
-      screenshots.push(labeledScreenshot);
-
-      console.log(`Captured and labeled screenshot from device ${device.getDeviceIdentity()}`);
-    } catch (error) {
-      console.error(
-        `Failed to capture screenshot from device ${device.getDeviceIdentity()}:`,
-        error
-      );
-    }
-  }
-
-  if (screenshots.length === 0) {
-    console.log('No screenshots captured');
+  if (successfulCaptures.length === 0) {
+    console.log('No screenshots captured successfully');
     return;
   }
+
+  // Process screenshots in parallel (labels + convert to Buffer)
+  const processedScreenshots = await Promise.all(
+    successfulCaptures.map(async ({ device, base64 }) => {
+      try {
+        const rawBuffer = Buffer.from(base64!, 'base64');
+        const labeledBuffer = await addDeviceLabel(rawBuffer, device);
+        console.log(`Processed screenshot from device ${device.getDeviceIdentity()}`);
+        return labeledBuffer;
+      } catch (error) {
+        console.error(`Failed to process screenshot from ${device.getDeviceIdentity()}:`, error);
+        return null;
+      }
+    })
+  );
+
+  // Filter out any processing failures
+  const screenshots = processedScreenshots.filter(s => s !== null);
+
+  if (screenshots.length === 0) {
+    console.log('No screenshots processed successfully');
+    return;
+  }
+
+  // Create composite and save
 
   try {
     const finalImage = await createComposite(screenshots);
 
-    // Strip everything after @ for a clean filename
+    // Generate filename
     const testDesc = testInfo.title.split('@')[0].trim().toLowerCase();
     const cleanName = testDesc.replace(/[:\s]+/g, '-').replace(/-+/g, '-');
     const retry = testInfo.retry > 0 ? `-retry${testInfo.retry}` : '';
@@ -199,13 +225,18 @@ export async function captureScreenshotsOnFailure(testInfo: TestInfo): Promise<v
       contentType: 'image/png',
     });
   } catch (error) {
-    console.error('Failed to create screenshot:', error);
+    console.error('Failed to create composite screenshot:', error);
+
     // Fallback: attach individual screenshots
     for (let i = 0; i < screenshots.length; i++) {
-      await testInfo.attach(`Device ${i + 1}`, {
-        body: screenshots[i],
-        contentType: 'image/png',
-      });
+      try {
+        await testInfo.attach(`Device ${i + 1}`, {
+          body: screenshots[i],
+          contentType: 'image/png',
+        });
+      } catch (attachError) {
+        console.error(`Failed to attach screenshot ${i + 1}:`, attachError);
+      }
     }
   }
 }
