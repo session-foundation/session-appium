@@ -953,7 +953,19 @@ export class DeviceWrapper {
 
     return element;
   }
-
+/**
+ * Waits for an element to be deleted from the screen. The element must exist initially.
+ * 
+ * @param args.text - Optional text content to match within elements of the same type
+ * @param args.maxWait - Maximum time to wait for deletion (defaults to 5000ms)
+ * 
+ * @throws Error if:
+ * - The element is never found within the first 5 seconds (cannot verify deletion of non-existent element)
+ * - The element still exists after maxWait expires
+ * 
+ * Note: For checks where you just need to ensure an element
+ * is not present (regardless of prior existence), use doesElementExist() instead.
+ */
   public async hasElementBeenDeleted(
     args: {
       text?: string;
@@ -961,7 +973,6 @@ export class DeviceWrapper {
     } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<void> {
     const start = Date.now();
-    let element: AppiumNextElementType | undefined = undefined;
     const locator = args instanceof LocatorsInterface ? args.build() : args;
     const maxWait = args.maxWait ?? 5000;
     const { text } = args;
@@ -971,53 +982,106 @@ export class DeviceWrapper {
       ? `${baseDescription} and text "${text}"`
       : baseDescription;
 
-    do {
-      if (!text) {
-        try {
-          // Note: we need a `maxWait` here to make sure we don't wait for an element that we expect is deleted for too long
-          element = await this.waitForTextElementToBePresent({ ...locator, maxWait });
-          await sleepFor(100);
+    this.log(`Waiting for ${elementDescription} to be deleted...`);
 
-          const isVisible = await this.isVisible(element.ELEMENT);
-          if (!isVisible) {
-            this.log(`${elementDescription} is present but not visible — treating as deleted`);
-            return;
+    let hasFoundElement = false;
+    const initialCheckTime = 5000; // Give 5 seconds to find the element initially
+
+    while (Date.now() - start <= maxWait) {
+      try {
+        let elementToCheck: AppiumNextElementType | null = null;
+        
+        if (text) {
+          // Find elements and check for matching text inline
+          const elements = await this.findElements(locator.strategy, locator.selector);
+          
+          // Inline text matching logic - no logging
+          for (const element of elements) {
+            const elementText = await this.getText(element.ELEMENT);
+            if (elementText && elementText.toLowerCase() === text.toLowerCase()) {
+              elementToCheck = element;
+              break;
+            }
           }
+        } else {
+          // Try to find single element
+          try {
+            elementToCheck = await this.findElement(locator.strategy, locator.selector);
+          } catch {
+            // Element not found
+            if (hasFoundElement) {
+              this.log(`${elementDescription} has been deleted, great success`);
+              return;
+            } else if (Date.now() - start >= initialCheckTime) {
+              throw new Error(
+                `${elementDescription} was never found - cannot verify deletion of non-existent element`
+              );
+            }
+            // Element not found yet but still within initial check time
+            await sleepFor(100);
+            continue;
+          }
+        }
 
-          this.log(`${elementDescription} has been found, waiting for deletion`);
-        } catch (e: any) {
-          element = undefined;
-          this.log(`${elementDescription} has been deleted, great success`);
+        if (!elementToCheck) {
+          // No matching element found
+          if (hasFoundElement) {
+            // Element was found before but now it's gone - deleted!
+            this.log(`${elementDescription} has been deleted, great success`);
+            return;
+          } else if (Date.now() - start >= initialCheckTime) {
+            // Never found the element and initial check time has passed
+            throw new Error(
+              `${elementDescription} was never found - cannot verify deletion of non-existent element`
+            );
+          }
+          // Element not found yet but still within initial check time
+          await sleepFor(100);
+          continue;
+        }
+
+        // Check if element is visible
+        const isVisible = await this.isVisible(elementToCheck.ELEMENT);
+        if (!isVisible) {
+          this.log(`${elementDescription} is present but not visible — treating as deleted`);
           return;
         }
-      } else {
-        try {
-          // Note: we need a `maxWait` here to make sure we don't wait for an element that we expect is deleted for too long
-          element = await this.waitForTextElementToBePresent({ ...locator, maxWait });
-          await sleepFor(100);
 
-          const isVisible = await this.isVisible(element.ELEMENT);
-          if (!isVisible) {
-            this.log(`${elementDescription} is present but not visible — treating as deleted`);
-            return;
-          }
+        // Log only once when we first find the element
+        if (!hasFoundElement) {
+          this.log(`${elementDescription} has been found, now waiting for deletion`);
+          hasFoundElement = true;
+        }
 
-          this.log(`${elementDescription} has been found, waiting for deletion`);
-        } catch (e) {
-          element = undefined;
+        // Element still exists and is visible, wait a bit and try again
+        await sleepFor(100);
+      } catch (e) {
+        // Any error means element is gone
+        if (hasFoundElement) {
           this.log(`${elementDescription} has been deleted, great success`);
           return;
+        } else if (Date.now() - start >= initialCheckTime) {
+          // Never found the element and initial check time has passed
+          throw new Error(
+            `${elementDescription} was never found - cannot verify deletion of non-existent element`
+          );
         }
+        // Element not found yet but still within initial check time
+        await sleepFor(100);
       }
-    } while (Date.now() - start <= maxWait && element);
+    }
 
-    if (element) {
+    // Timeout reached
+    if (!hasFoundElement) {
+      throw new Error(
+        `${elementDescription} was never found during the entire wait time (${maxWait} ms) - cannot verify deletion`
+      );
+    } else {
       throw new Error(
         `${elementDescription} was still present and visible after maximum wait time (${maxWait} ms)`
       );
     }
   }
-
 
   public async hasTextElementBeenDeleted(accessibilityId: AccessibilityId, text: string) {
     const fakeError = `${accessibilityId}: has been found, but shouldn't have been. OOPS`;
