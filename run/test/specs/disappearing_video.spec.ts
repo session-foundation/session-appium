@@ -19,7 +19,6 @@ bothPlatformsIt({
   allureDescription: `Verifies that a video disappears as expected in a 1:1 conversation`,
 });
 
-
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 const testMessage = 'Testing disappearing messages for videos';

@@ -22,13 +22,12 @@ bothPlatformsItSeparate({
     testCb: disappearingCallMessage1o1Android,
     shouldSkip: false,
   },
-    allureSuites: {
+  allureSuites: {
     parent: 'Disappearing Messages',
     suite: 'Message Types',
   },
   allureDescription: `Verifies that a call control message disappears as expected in a 1:1 conversation`,
 });
-
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
@@ -162,16 +161,16 @@ async function disappearingCallMessage1o1Android(
   // Wait 10 seconds for control message to be deleted
   await sleepFor(30000);
   await alice1.hasElementBeenDeleted({
-      strategy: 'id',
-      selector: 'network.loki.messenger:id/call_text_view',
-      text: `${bob.userName} called you`,
-      maxWait: 1000,
+    strategy: 'id',
+    selector: 'network.loki.messenger:id/call_text_view',
+    text: `${bob.userName} called you`,
+    maxWait: 1000,
   });
   await bob1.hasElementBeenDeleted({
-      strategy: 'id',
-      selector: 'network.loki.messenger:id/call_text_view',
-      text: `You called ${alice.userName}`,
-      maxWait: 1000,
+    strategy: 'id',
+    selector: 'network.loki.messenger:id/call_text_view',
+    text: `You called ${alice.userName}`,
+    maxWait: 1000,
   });
   await closeApp(alice1, bob1);
 }

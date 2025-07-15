@@ -24,7 +24,7 @@ bothPlatformsItSeparate({
     testCb: disappearingCommunityInviteMessageAndroid,
     shouldSkip: false,
   },
-    allureSuites: {
+  allureSuites: {
     parent: 'Disappearing Messages',
     suite: 'Message Types',
   },
