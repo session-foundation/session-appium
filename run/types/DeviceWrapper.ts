@@ -956,12 +956,12 @@ export class DeviceWrapper {
 
   /**
    * Ensures an element is not present on the screen at the end of the wait time.
-   * This allows any transitions to complete and allows for some UI flakiness.
+   * This allows any transitions to complete and tolerates for some UI flakiness.
    * Unlike hasElementBeenDeleted, this doesn't require the element to exist first.
    *
    * @param args - Locator (LocatorsInterface or StrategyExtractionObj) with optional properties
    * @param args.text - Optional text content to match within elements
-   * @param args.maxWait - Maximum time to wait before checking (defaults to 1000ms)
+   * @param args.maxWait - Maximum time to wait before checking (defaults to 2000ms)
    *
    * @throws Error if the element is found
    *
