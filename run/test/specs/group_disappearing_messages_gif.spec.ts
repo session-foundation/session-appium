@@ -37,9 +37,8 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType, tes
   // Click on attachments button
   await alice1.sendGIF(testMessage);
   await Promise.all(
-    [bob1,charlie1].map(device => 
-      device.onAndroid().trustAttachments(testGroupName)
-    ));
+    [bob1, charlie1].map(device => device.onAndroid().trustAttachments(testGroupName))
+  );
   if (platform === 'ios') {
     await Promise.all(
       [alice1, bob1, charlie1].map(device =>

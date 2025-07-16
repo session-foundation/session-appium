@@ -955,7 +955,8 @@ export class DeviceWrapper {
   }
 
   /**
-   * Ensures an element is not present on the screen.
+   * Ensures an element is not present on the screen at the end of the wait time.
+   * This allows any transitions to complete and allows for some UI flakiness.
    * Unlike hasElementBeenDeleted, this doesn't require the element to exist first.
    *
    * @param args - Locator (LocatorsInterface or StrategyExtractionObj) with optional properties
@@ -972,11 +973,12 @@ export class DeviceWrapper {
     } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<void> {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
-    const element = await this.doesElementExist({
-      ...locator,
-      text: args.text,
-      maxWait: args.maxWait || 5_000,
-    });
+    const maxWait = args.maxWait || 2_000;
+
+    // Wait for any transitions to complete
+    await sleepFor(maxWait);
+
+    const element = await this.findElementQuietly(locator, args.text);
 
     const baseDescription = `Element with ${locator.strategy} "${locator.selector}"`;
     const description = args.text ? `${baseDescription} and text "${args.text}"` : baseDescription;

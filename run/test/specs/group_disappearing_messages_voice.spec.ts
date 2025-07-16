@@ -34,9 +34,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType, t
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   await alice1.sendVoiceMessage();
   await Promise.all(
-    [bob1, charlie1].map(device => 
-      device.onAndroid().trustAttachments(testGroupName)
-    )
+    [bob1, charlie1].map(device => device.onAndroid().trustAttachments(testGroupName))
   );
   await Promise.all(
     [alice1, bob1, charlie1].map(device =>
