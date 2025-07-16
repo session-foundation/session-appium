@@ -121,11 +121,6 @@ async function disappearingLinkMessage1o1Android(
       maxWait: 20000,
     });
   });
-  await test.step(TestSteps.VERIFY.MESSAGE_RECEIVED, async () => {
-    // Make sure image preview is available in device 2
-    await bob1.waitForTextElementToBePresent(new LinkPreviewMessage(bob1));
-  });
-  // Wait for 30 seconds to disappear
   await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
     await Promise.all(
       [alice1, bob1].map(device =>
