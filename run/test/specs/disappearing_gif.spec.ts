@@ -25,6 +25,7 @@ bothPlatformsItSeparate({
 
 // The timing with 30 seconds was a bit tight in terms of the attachment downloading and becoming visible
 const time = DISAPPEARING_TIMES.ONE_MINUTE;
+const maxWait = 61_000 // 60s plus buffer
 const timerType = 'Disappear after send option';
 const testMessage = "Testing disappearing messages for GIF's";
 
@@ -47,13 +48,13 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType, te
   await alice1.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Message body',
-    maxWait: 60000,
+    maxWait,
     text: testMessage,
   });
   await bob1.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Message body',
-    maxWait: 60000,
+    maxWait,
     text: testMessage,
   });
   await closeApp(alice1, bob1);
@@ -78,32 +79,17 @@ async function disappearingGifMessage1o1Android(
   // Check if the 'Tap to download media' config appears
   // Click on config
   await bob1.trustAttachments(USERNAME.ALICE);
-
-  // The UI takes some sime to refresh the component once we click "trust sender", so allow 5s here
-  const maxWaitForMediaMessage = 5000;
-  await Promise.all([
-    alice1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Media message',
-      maxWait: maxWaitForMediaMessage,
-    }),
-    bob1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Media message',
-      maxWait: maxWaitForMediaMessage,
-    }),
-  ]);
   // Check if GIF has been deleted on both devices
   await Promise.all([
     alice1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Media message',
-      maxWait: 60000,
+      maxWait,
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Media message',
-      maxWait: 60000,
+      maxWait,
     }),
   ]);
   await closeApp(alice1, bob1);

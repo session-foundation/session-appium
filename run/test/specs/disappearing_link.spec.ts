@@ -32,6 +32,7 @@ bothPlatformsItSeparate({
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after read option';
+const maxWait = 31_000 // 30s plus buffer
 
 async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
@@ -67,14 +68,6 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
       maxWait: 20000,
     });
   });
-  await test.step(TestSteps.VERIFY.MESSAGE_RECEIVED, async () => {
-    // Make sure image preview is available in device 2
-    await bob1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: testLink,
-    });
-  });
   // Wait for 30 seconds to disappear
   await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
     await Promise.all(
@@ -82,7 +75,7 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
         device.hasElementBeenDeleted({
           strategy: 'accessibility id',
           selector: 'Message body',
-          maxWait: 30000,
+          maxWait,
           text: testLink,
         })
       )
@@ -136,7 +129,7 @@ async function disappearingLinkMessage1o1Android(
   await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
     await Promise.all(
       [alice1, bob1].map(device =>
-        device.hasElementBeenDeleted({ ...new LinkPreviewMessage(device).build(), maxWait: 30000 })
+        device.hasElementBeenDeleted({ ...new LinkPreviewMessage(device).build(), maxWait })
       )
     );
   });

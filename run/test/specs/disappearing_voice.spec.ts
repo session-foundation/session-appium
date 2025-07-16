@@ -1,21 +1,16 @@
 import type { TestInfo } from '@playwright/test';
 
-import { bothPlatformsItSeparate } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-bothPlatformsItSeparate({
+bothPlatformsIt({
   title: 'Disappearing voice message 1:1',
   risk: 'low',
   countOfDevicesNeeded: 2,
-  ios: {
-    testCb: disappearingVoiceMessage1o1Ios,
-  },
-  android: {
-    testCb: disappearingVoiceMessage1o1Android,
-  },
+  testCb: disappearingVoiceMessage1o1,
   allureSuites: {
     parent: 'Disappearing Messages',
     suite: 'Message Types',
@@ -25,8 +20,9 @@ bothPlatformsItSeparate({
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
+const maxWait = 31_000 // 30s plus buffer
 
-async function disappearingVoiceMessage1o1Ios(
+async function disappearingVoiceMessage1o1(
   platform: SupportedPlatformsType,
   testInfo: TestInfo
 ) {
@@ -48,41 +44,12 @@ async function disappearingVoiceMessage1o1Ios(
     alice1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Voice message',
-      maxWait: 30000,
+      maxWait
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Voice message',
-      maxWait: 30000,
-    }),
-  ]);
-  await closeApp(alice1, bob1);
-}
-
-async function disappearingVoiceMessage1o1Android(
-  platform: SupportedPlatformsType,
-  testInfo: TestInfo
-) {
-  const {
-    devices: { alice1, bob1 },
-  } = await open_Alice1_Bob1_friends({
-    platform,
-    focusFriendsConvo: true,
-    testInfo,
-  });
-  await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
-  await alice1.sendVoiceMessage();
-  await bob1.trustAttachments(USERNAME.ALICE);
-  await Promise.all([
-    alice1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Voice message',
-      maxWait: 30000,
-    }),
-    bob1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Voice message',
-      maxWait: 30000,
+      maxWait
     }),
   ]);
   await closeApp(alice1, bob1);

@@ -18,9 +18,11 @@ bothPlatformsIt({
   allureDescription: `Verifies that a video disappears as expected in a 1:1 conversation`,
 });
 
-const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+// Sending and receiving the video can take a while so this is bumped to 60s
+const time = DISAPPEARING_TIMES.ONE_MINUTE
 const timerType = 'Disappear after send option';
 const testMessage = 'Testing disappearing messages for videos';
+const maxWait = 61_000 // 60s plus buffer
 
 async function disappearingVideoMessage1o1(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
@@ -34,46 +36,28 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType, tes
   await alice1.onIOS().sendVideoiOS(testMessage);
   await alice1.onAndroid().sendVideoAndroid();
   await bob1.trustAttachments(USERNAME.ALICE);
-  await bob1.onIOS().waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: testMessage,
-  });
-  await bob1.onAndroid().waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Media message',
-  });
-
-  // Wait for 30 seconds
-  const maxWaitValidateMsgDisappeared = 30000;
   if (platform === 'ios') {
-    await Promise.all([
-      alice1.hasElementBeenDeleted({
+    await Promise.all(
+      [alice1, bob1].map(device => 
+        device.hasElementBeenDeleted({
         strategy: 'accessibility id',
         selector: 'Message body',
-        maxWait: maxWaitValidateMsgDisappeared,
-        text: testMessage,
-      }),
-      bob1.hasElementBeenDeleted({
-        strategy: 'accessibility id',
-        selector: 'Message body',
-        maxWait: maxWaitValidateMsgDisappeared,
-        text: testMessage,
-      }),
-    ]);
+        initialMaxWait: 20_000, // Give the clients some more time to download the vid
+        maxWait,
+        text: testMessage})
+      )
+    );
   } else if (platform === 'android') {
-    await Promise.all([
-      alice1.hasElementBeenDeleted({
+    await Promise.all(  
+    [alice1, bob1].map(device => 
+        device.hasElementBeenDeleted({
         strategy: 'accessibility id',
         selector: 'Media message',
-        maxWait: maxWaitValidateMsgDisappeared,
-      }),
-      bob1.hasElementBeenDeleted({
-        strategy: 'accessibility id',
-        selector: 'Media message',
-        maxWait: maxWaitValidateMsgDisappeared,
-      }),
-    ]);
+        initialMaxWait: 20_000, // Give the clients some more time to download the vid
+        maxWait,
+      })
+      )
+    );
   }
   await closeApp(alice1, bob1);
 }

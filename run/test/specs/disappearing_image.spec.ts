@@ -22,6 +22,7 @@ bothPlatformsIt({
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 const testMessage = 'Testing disappearing messages for images';
+const maxWait = 31_000 // 30s plus buffer
 
 async function disappearingImageMessage1o1(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
@@ -39,13 +40,13 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType, tes
     alice1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
-      maxWait: 30000,
+      maxWait,
       text: testMessage,
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
-      maxWait: 30000,
+      maxWait,
       text: testMessage,
     }),
   ]);

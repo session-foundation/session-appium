@@ -32,6 +32,7 @@ async function disappearAfterSend(platform: SupportedPlatformsType, testInfo: Te
   const testMessage = `Checking disappear after ${mode} is working`;
   const controlMode: DisappearActions = 'sent';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+  const maxWait = 31_000 // 30s plus buffer 
   // Select disappearing messages option
   await setDisappearingMessage(
     platform,
@@ -62,13 +63,13 @@ async function disappearAfterSend(platform: SupportedPlatformsType, testInfo: Te
       strategy: 'accessibility id',
       selector: 'Message body',
       text: testMessage,
-      maxWait: 30000,
+      maxWait
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: testMessage,
-      maxWait: 30000,
+      maxWait
     }),
   ]);
 

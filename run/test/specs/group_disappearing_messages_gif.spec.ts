@@ -20,6 +20,7 @@ bothPlatformsIt({
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
+const maxWait = 31_000 // 30s plus buffer
 
 async function disappearingGifMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Disappear after sent test';
@@ -48,7 +49,7 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType, tes
         device.hasElementBeenDeleted({
           strategy: 'accessibility id',
           selector: 'Message body',
-          maxWait: 30000,
+          maxWait,
           text: testMessage,
         })
       )
@@ -60,7 +61,7 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType, tes
         device.hasElementBeenDeleted({
           strategy: 'accessibility id',
           selector: 'Media message',
-          maxWait: 30000,
+          maxWait,
         })
       )
     );

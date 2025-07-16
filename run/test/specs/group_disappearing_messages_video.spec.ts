@@ -18,8 +18,10 @@ bothPlatformsIt({
   allureDescription: `Verifies that a video disappears as expected in a group conversation`,
 });
 
-const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+// Sending and receiving the video can take a while so this is bumped to 60s
+const time = DISAPPEARING_TIMES.ONE_MINUTE
 const timerType = 'Disappear after send option';
+const maxWait = 61_000 // 60s plus buffer
 
 async function disappearingVideoMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testMessage = 'Testing disappearing messages for videos';
@@ -36,14 +38,31 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType, t
   await alice1.onIOS().sendVideoiOS(testMessage);
   await alice1.onAndroid().sendVideoAndroid();
   await Promise.all(
-    [alice1, bob1, charlie1].map(device =>
-      device.hasElementBeenDeleted({
+    [bob1, charlie1].map(device => 
+      device.onAndroid().trustAttachments(testGroupName)
+  ));
+  if (platform === 'ios') {
+    await Promise.all(
+      [alice1, bob1, charlie1].map(device => 
+        device.hasElementBeenDeleted({
         strategy: 'accessibility id',
         selector: 'Message body',
-        maxWait: 30000,
-        text: testMessage,
+        initialMaxWait: 20_000, // Give the clients some more time to download the vid
+        maxWait,
+        text: testMessage})
+      )
+    );
+  } else if (platform === 'android') {
+    await Promise.all(  
+    [alice1, bob1, charlie1].map(device => 
+        device.hasElementBeenDeleted({
+        strategy: 'accessibility id',
+        selector: 'Media message',
+        initialMaxWait: 20_000, // Give the clients some more time to download the vid
+        maxWait,
       })
-    )
-  );
+      )
+    );
+  };
   await closeApp(alice1, bob1, charlie1);
 }

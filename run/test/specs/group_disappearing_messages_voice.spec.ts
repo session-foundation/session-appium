@@ -22,6 +22,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType, t
   const testGroupName: GROUPNAME = 'Testing voice';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   const timerType = 'Disappear after send option';
+  const maxWait = 31_000 // 30s plus buffer
   const {
     devices: { alice1, bob1, charlie1 },
   } = await open_Alice1_Bob1_Charlie1_friends_group({
@@ -37,7 +38,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType, t
       device.hasElementBeenDeleted({
         strategy: 'accessibility id',
         selector: 'Voice message',
-        maxWait: 30000,
+        maxWait,
       })
     )
   );

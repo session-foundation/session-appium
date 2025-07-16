@@ -30,6 +30,7 @@ bothPlatformsItSeparate({
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
+const maxWait = 31_000 // 30s plus buffer
 
 async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
@@ -148,13 +149,13 @@ async function disappearingCallMessage1o1Android(
       strategy: 'id',
       selector: 'network.loki.messenger:id/call_text_view',
       text: `You called ${bob.userName}`,
-      maxWait: 30_000,
+      maxWait
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'id',
       selector: 'network.loki.messenger:id/call_text_view',
       text: `Missed call from ${alice.userName}`,
-      maxWait: 30_000,
+      maxWait
     }),
   ]);
   await closeApp(alice1, bob1);

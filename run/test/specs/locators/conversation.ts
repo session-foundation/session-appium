@@ -1,3 +1,5 @@
+import { testCommunityName } from '../../../constants/community';
+import { StrategyExtractionObj } from '../../../types/testing';
 import { LocatorsInterface } from './index';
 
 export class MessageInput extends LocatorsInterface {
@@ -303,6 +305,42 @@ export class DeleteContactConfirmButton extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'Delete',
+        } as const;
+    }
+  }
+}
+
+export class CommunityInviteConfirmButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'invite-contacts-button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Invite contacts button',
+        } as const;
+    }
+  }
+}
+
+export class CommunityInvitation extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/openGroupTitleTextView',
+          text: testCommunityName,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Community invitation',
+          text: testCommunityName,
         } as const;
     }
   }

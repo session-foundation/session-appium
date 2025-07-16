@@ -25,6 +25,7 @@ bothPlatformsIt({
 });
 const timerType = 'Disappear after send option';
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+const maxWait = 31_000 // 30s plus buffer
 
 async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Testing disappearing messages';
@@ -72,7 +73,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
           device.hasElementBeenDeleted({
             strategy: 'accessibility id',
             selector: 'Message body',
-            maxWait: 30000,
+            maxWait,
             text: testLink,
           })
         )
@@ -83,7 +84,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
         [alice1, bob1, charlie1].map(device =>
           device.hasElementBeenDeleted({
             ...new LinkPreviewMessage(device).build(),
-            maxWait: 30000,
+            maxWait,
           })
         )
       );

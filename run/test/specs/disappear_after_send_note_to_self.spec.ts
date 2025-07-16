@@ -27,6 +27,8 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, te
   const alice = await newUser(device, USERNAME.ALICE);
   const controlMode: DisappearActions = 'sent';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+  const maxWait = 31_000 // 30s plus buffer
+  
   // Send message to self to bring up Note to Self conversation
   await device.clickOnElementAll(new PlusButton(device));
   await device.clickOnElementAll(new NewMessageOption(device));
@@ -49,7 +51,7 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, te
     strategy: 'accessibility id',
     selector: 'Message body',
     text: testMessage,
-    maxWait: 30000,
+    maxWait
   });
   // Great success
   await closeApp(device);
