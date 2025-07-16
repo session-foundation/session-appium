@@ -2,24 +2,20 @@ import type { TestInfo } from '@playwright/test';
 
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
-// import { ExitUserProfile } from './locators';
 import { CallButton, NotificationSettings, NotificationSwitch } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils/index';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
-// skipping tests because they are unreliable on virtual devices, see QA-478
 bothPlatformsItSeparate({
   title: 'Voice calls',
   risk: 'high',
   countOfDevicesNeeded: 2,
   ios: {
     testCb: voiceCallIos,
-    shouldSkip: false,
   },
   android: {
     testCb: voiceCallAndroid,
-    shouldSkip: false,
   },
   allureSuites: {
     parent: 'Voice Calls',
@@ -31,7 +27,7 @@ bothPlatformsItSeparate({
     - Verifies control messages after call is finished
     Note that due to the nature of virtual devices, no actual "talking" takes place`,
 });
-// FIXME might need to manipulate host perms to have local network access always on
+
 async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
@@ -62,8 +58,9 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
   if (aliceAttr !== '1') {
     throw new Error(
       `Local Network Permission was not enabled automatically.
-    This is a known issue on Simulators and cannot be fixed in this environment.
-    Please rerun this test on a real device where you can manually enable the permission.`
+      This is a known Simulator bug that fails randomly with no pattern or fix.
+      Retrying won't help - we've tried everything and have no idea why it sometimes works.
+      Use a real device where you can manually enable the permission.`
     );
   }
   await alice1.closeScreen();
@@ -101,23 +98,29 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
   if (bobAttr !== '1') {
     throw new Error(
       `Local Network Permission was not enabled automatically.
-      This is a known issue on Simulators and cannot be fixed (sometimes it just doesn't want to work).
-      Please rerun this test on a real device where you can manually enable the permission.`
+      This is a known Simulator bug that fails randomly with no pattern or fix.
+      Retrying won't help - we've tried everything and have no idea why it sometimes works.
+      Use a real device where you can manually enable the permission.`
     );
   }
   await alice1.clickOnElementAll(new CallButton(alice1));
-  await bob1.clickOnByAccessibilityID('Answer call');
-  // Wait 10 seconds
-  await sleepFor(10000);
-  // Hang up
+  await bob1.clickOnCoordinates(350, 77); // There's no accessibility ID on the Accept Call button
+  await Promise.all(
+    [alice1, bob1].map(device =>
+      // If the text contains a colon it means its showing the call duration (ergo the call connected)
+      device.doesElementExist({
+        strategy: 'xpath',
+        selector: `//XCUIElementTypeStaticText[contains(@name, ':')]`,
+        maxWait: 15000,
+      })
+    )
+  );
   await alice1.clickOnByAccessibilityID('End call button');
   // Check for control messages on both devices
-  // "callsYouCalled": "You called {name}",
   const callsYouCalled = englishStrippedStr('callsYouCalled')
     .withArgs({ name: bob.userName })
     .toString();
   await alice1.waitForControlMessageToBePresent(callsYouCalled);
-  // "callsYouCalled": "You called {name}",
   const callsCalledYou = englishStrippedStr('callsCalledYou')
     .withArgs({ name: alice.userName })
     .toString();
