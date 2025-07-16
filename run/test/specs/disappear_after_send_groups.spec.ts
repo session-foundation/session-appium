@@ -51,6 +51,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType, testIn
     charlie1.disappearingControlMessage(disappearingMessagesSetControl),
   ]);
   // Check for test messages (should be deleted)
+  await alice1.sendMessage(testMessage);
   await Promise.all(
     [alice1, bob1, charlie1].map(device =>
       device.hasElementBeenDeleted({
