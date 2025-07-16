@@ -20,7 +20,7 @@ bothPlatformsIt({
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
-const maxWait = 31_000 // 30s plus buffer
+const maxWait = 31_000; // 30s plus buffer
 
 async function disappearingGifMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Disappear after sent test';

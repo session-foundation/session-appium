@@ -20,12 +20,9 @@ bothPlatformsIt({
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
-const maxWait = 31_000 // 30s plus buffer
+const maxWait = 31_000; // 30s plus buffer
 
-async function disappearingVoiceMessage1o1(
-  platform: SupportedPlatformsType,
-  testInfo: TestInfo
-) {
+async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
   } = await open_Alice1_Bob1_friends({
@@ -44,12 +41,12 @@ async function disappearingVoiceMessage1o1(
     alice1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Voice message',
-      maxWait
+      maxWait,
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Voice message',
-      maxWait
+      maxWait,
     }),
   ]);
   await closeApp(alice1, bob1);

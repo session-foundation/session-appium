@@ -32,6 +32,7 @@ async function disappearAfterRead(platform: SupportedPlatformsType, testInfo: Te
   const testMessage = 'Checking disappear after read is working';
   const mode: DisappearModes = 'read';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+  const maxWait = 31_000; // 30s plus buffer
   // Click conversation options menu (three dots)
   await setDisappearingMessage(
     platform,
@@ -56,13 +57,13 @@ async function disappearAfterRead(platform: SupportedPlatformsType, testInfo: Te
       strategy: 'accessibility id',
       selector: 'Message body',
       text: testMessage,
-      maxWait: 30000,
+      maxWait,
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: testMessage,
-      maxWait: 30000,
+      maxWait,
     }),
   ]);
   // Great success

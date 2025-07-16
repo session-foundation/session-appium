@@ -4,7 +4,11 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { testCommunityLink, testCommunityName } from './../../constants/community';
 import { InviteContactsMenuItem } from './locators';
-import { CommunityInvitation, CommunityInviteConfirmButton, ConversationSettings } from './locators/conversation';
+import {
+  CommunityInvitation,
+  CommunityInviteConfirmButton,
+  ConversationSettings,
+} from './locators/conversation';
 import { GroupMember } from './locators/groups';
 import { ConversationItem } from './locators/home';
 import { open_Alice1_Bob1_friends } from './state_builder';
@@ -28,7 +32,7 @@ bothPlatformsIt({
 // Interacting with communities can be a bit fickle so we give this a bit more time
 const time = DISAPPEARING_TIMES.ONE_MINUTE;
 const timerType = 'Disappear after send option';
-const maxWait = 61_000 // 60s plus buffer
+const maxWait = 61_000; // 60s plus buffer
 
 async function disappearingCommunityInviteMessage(
   platform: SupportedPlatformsType,
@@ -57,13 +61,13 @@ async function disappearingCommunityInviteMessage(
   await alice1.navigateBack();
   await alice1.navigateBack();
   await alice1.navigateBack();
-  await alice1.clickOnElementAll(new ConversationItem(alice1, bob.userName))
+  await alice1.clickOnElementAll(new ConversationItem(alice1, bob.userName));
   // Wait for message to disappear
   await Promise.all(
     [alice1, bob1].map(device =>
       device.hasElementBeenDeleted({
         ...new CommunityInvitation(device).build(),
-        maxWait
+        maxWait,
       })
     )
   );

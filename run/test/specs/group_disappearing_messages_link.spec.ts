@@ -25,7 +25,7 @@ bothPlatformsIt({
 });
 const timerType = 'Disappear after send option';
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
-const maxWait = 31_000 // 30s plus buffer
+const maxWait = 31_000; // 30s plus buffer
 
 async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Testing disappearing messages';

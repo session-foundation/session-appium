@@ -4,7 +4,11 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { testCommunityLink, testCommunityName } from './../../constants/community';
 import { InviteContactsMenuItem } from './locators';
-import { CommunityInvitation, CommunityInviteConfirmButton, ConversationSettings } from './locators/conversation';
+import {
+  CommunityInvitation,
+  CommunityInviteConfirmButton,
+  ConversationSettings,
+} from './locators/conversation';
 import { GroupMember } from './locators/groups';
 import { ConversationItem } from './locators/home';
 import { open_Alice1_Bob1_friends } from './state_builder';
@@ -17,7 +21,6 @@ bothPlatformsIt({
   risk: 'medium',
   countOfDevicesNeeded: 2,
   testCb: sendCommunityInvitation,
-
 });
 
 async function sendCommunityInvitation(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -38,7 +41,7 @@ async function sendCommunityInvitation(platform: SupportedPlatformsType, testInf
   await alice1.clickOnElementAll(new InviteContactsMenuItem(alice1));
   await alice1.clickOnElementAll(new GroupMember(alice1).build(bob.userName));
   await alice1.clickOnElementAll(new CommunityInviteConfirmButton(alice1));
-  await bob1.waitForTextElementToBePresent(new CommunityInvitation(bob1))
+  await bob1.waitForTextElementToBePresent(new CommunityInvitation(bob1));
   await bob1.clickOnElementAll(new CommunityInvitation(bob1));
   await bob1.checkModalStrings(
     englishStrippedStr('communityJoin').toString(),
