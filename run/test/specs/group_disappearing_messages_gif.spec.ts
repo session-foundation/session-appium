@@ -36,13 +36,10 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType, tes
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   // Click on attachments button
   await alice1.sendGIF(testMessage);
-  // Cannot use isAndroid() here
-  if (platform === 'android') {
-    await Promise.all([
-      bob1.trustAttachments(testGroupName),
-      charlie1.trustAttachments(testGroupName),
-    ]);
-  }
+  await Promise.all(
+    [bob1,charlie1].map(device => 
+      device.onAndroid().trustAttachments(testGroupName)
+    ));
   if (platform === 'ios') {
     await Promise.all(
       [alice1, bob1, charlie1].map(device =>
@@ -61,6 +58,7 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType, tes
         device.hasElementBeenDeleted({
           strategy: 'accessibility id',
           selector: 'Media message',
+          initialMaxWait: 15_000, // Give the UI some time to download the GIF
           maxWait,
         })
       )
