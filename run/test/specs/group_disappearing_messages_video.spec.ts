@@ -40,7 +40,7 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType, t
       device.hasElementBeenDeleted({
         strategy: 'accessibility id',
         selector: 'Message body',
-        maxWait: 3000,
+        maxWait: 30000,
         text: testMessage,
       })
     )

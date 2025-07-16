@@ -977,7 +977,7 @@ export class DeviceWrapper {
       text: args.text,
       maxWait: args.maxWait || 5_000,
     });
-    
+
     const baseDescription = `Element with ${locator.strategy} "${locator.selector}"`;
     const description = args.text ? `${baseDescription} and text "${args.text}"` : baseDescription;
 

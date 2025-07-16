@@ -56,14 +56,16 @@ async function deleteConversationCS(platform: SupportedPlatformsType, testInfo: 
   });
 
   await test.step('Verify conversation deleted on both alice devices', async () => {
-    await Promise.all(
-      [alice1, alice2].map(device =>
-        device.verifyElementNotPresent({
-          ...new ConversationItem(device, bob.userName).build(),
-          maxWait: 5000,
-        })
-      )
-    );
+    await Promise.all([
+      alice1.verifyElementNotPresent({
+        ...new ConversationItem(alice1, bob.userName).build(),
+        maxWait: 5_000,
+      }),
+      alice2.hasElementBeenDeleted({
+        ...new ConversationItem(alice2, bob.userName).build(),
+        maxWait: 20_000,
+      }),
+    ]);
   });
 
   await test.step('Send message from Bob to Alice', async () => {

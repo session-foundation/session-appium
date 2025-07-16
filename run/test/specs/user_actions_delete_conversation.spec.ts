@@ -45,7 +45,7 @@ async function deleteConversation(platform: SupportedPlatformsType, testInfo: Te
     await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('conversationsDelete').toString(),
-        englishStrippedStr('deleteConversationDescription') // This is currently incorrect on both platforms, SES-4142 and 4143
+        englishStrippedStr('deleteConversationDescription') // This is currently incorrect on iOS, see SES-4142
           .withArgs({ name: USERNAME.BOB })
           .toString(),
         false
@@ -55,14 +55,30 @@ async function deleteConversation(platform: SupportedPlatformsType, testInfo: Te
   });
 
   await test.step('Verify conversation deleted on both alice devices', async () => {
-    await Promise.all(
-      [alice1, alice2].map(device =>
-        device.verifyElementNotPresent({
-          ...new ConversationItem(device, bob.userName).build(),
-          maxWait: 3000,
-        })
-      )
-    );
+    if (platform === 'android') {
+      await Promise.all([
+        alice1.hasElementBeenDeleted({
+          ...new ConversationItem(alice1, bob.userName).build(),
+          maxWait: 5_000,
+        }),
+        alice2.hasElementBeenDeleted({
+          ...new ConversationItem(alice2, bob.userName).build(),
+          maxWait: 20_000,
+        }),
+      ]);
+    } else {
+      // iOS page structure is more flaky and the element can still be present
+      await Promise.all([
+        alice1.verifyElementNotPresent({
+          ...new ConversationItem(alice1, bob.userName).build(),
+          maxWait: 5_000,
+        }),
+        alice2.hasElementBeenDeleted({
+          ...new ConversationItem(alice2, bob.userName).build(),
+          maxWait: 20_000,
+        }),
+      ]);
+    }
   });
 
   await test.step('Send message from Bob to Alice', async () => {

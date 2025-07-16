@@ -133,13 +133,13 @@ async function disappearingCallMessage1o1Android(
     strategy: 'id',
     selector: 'network.loki.messenger:id/callTitle',
     text: 'Ringing...',
-    maxWait: 5000,
+    maxWait: 5_000,
   });
   await alice1.doesElementExist({
     strategy: 'id',
     selector: 'network.loki.messenger:id/callSubtitle',
     text: 'Sending Call Offer 2/5',
-    maxWait: 5000,
+    maxWait: 5_000,
   });
   await alice1.clickOnElementById('network.loki.messenger:id/endCallButton');
   // Wait for control message to disappear
@@ -148,13 +148,13 @@ async function disappearingCallMessage1o1Android(
       strategy: 'id',
       selector: 'network.loki.messenger:id/call_text_view',
       text: `You called ${bob.userName}`,
-      maxWait: 30000,
+      maxWait: 30_000,
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'id',
       selector: 'network.loki.messenger:id/call_text_view',
       text: `Missed call from ${alice.userName}`,
-      maxWait: 30000,
+      maxWait: 30_000,
     }),
   ]);
   await closeApp(alice1, bob1);

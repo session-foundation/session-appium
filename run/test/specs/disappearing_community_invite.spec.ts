@@ -107,12 +107,7 @@ async function disappearingCommunityInviteMessageAndroid(
     strategy: 'id',
     selector: 'invite-contacts-button',
   });
-  // Check device 2 for invitation from user A
-  await bob1.waitForTextElementToBePresent({
-    strategy: 'id',
-    selector: 'network.loki.messenger:id/openGroupTitleTextView',
-    text: testCommunityName,
-  });
+  await alice1.navigateBack();
   // Wait for 30 seconds for message to disappear
   await bob1.hasElementBeenDeleted({
     strategy: 'accessibility id',

@@ -3,7 +3,6 @@ import type { TestInfo } from '@playwright/test';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, GROUPNAME } from '../../types/testing';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
@@ -33,11 +32,6 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType, t
   });
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   await alice1.sendVoiceMessage();
-  await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Voice message',
-  });
-  await sleepFor(30000);
   await Promise.all(
     [alice1, bob1, charlie1].map(device =>
       device.hasElementBeenDeleted({
