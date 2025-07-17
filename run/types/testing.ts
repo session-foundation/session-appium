@@ -126,6 +126,7 @@ export type XPath =
   | '//XCUIElementTypeCell'
   | `(//android.widget.ImageView[@content-desc="Clear"])[2]`
   | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`
+  | `(//XCUIElementTypeButton[@name="Close button"])[2]`
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
   | `//*[@resource-id='network.loki.messenger:id/callTitle' and contains(@text, ':')]`

@@ -59,8 +59,7 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
     throw new Error(
       `Local Network Permission was not enabled automatically.
       This is a known Simulator bug that fails randomly with no pattern or fix.
-      Retrying won't help - we've tried everything and have no idea why it sometimes works.
-      Use a real device where you can manually enable the permission.`
+      Retrying won't help - use a real device where you can manually enable the permission.`
     );
   }
   await alice1.closeScreen();
@@ -86,10 +85,10 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
   await bob1.clickOnByAccessibilityID('Continue');
   // Need to allow microphone access
   await bob1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
-  await sleepFor(1000);
+  await sleepFor(1_000);
   // Need to allow camera access
   await bob1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
-  await sleepFor(5000); // Wait a bit for the toggles to turn to TRUE
+  await sleepFor(5_000); // Wait a bit for the toggles to turn to TRUE
   const bobLocalNetworkSwitch = await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Local Network Permission - Switch',
@@ -99,20 +98,21 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
     throw new Error(
       `Local Network Permission was not enabled automatically.
       This is a known Simulator bug that fails randomly with no pattern or fix.
-      Retrying won't help - we've tried everything and have no idea why it sometimes works.
-      Use a real device where you can manually enable the permission.`
+      Retrying won't help - use a real device where you can manually enable the permission.`
     );
   }
   await bob1.closeScreen();
   await alice1.clickOnElementAll(new CallButton(alice1));
-  await bob1.clickOnCoordinates(350, 77); // There's no accessibility ID on the Accept Call button
+  await bob1.waitForTextElementToBePresent({strategy: 'xpath', selector: `(//XCUIElementTypeButton[@name="Close button"])[2]`}) 
+  await bob1.clickOnElementXPath(`(//XCUIElementTypeButton[@name="Close button"])[2]`)
+  await bob1.clickOnByAccessibilityID('Answer call')
   await Promise.all(
     [alice1, bob1].map(device =>
       // If the text contains a colon it means its showing the call duration (ergo the call connected)
       device.doesElementExist({
         strategy: 'xpath',
         selector: `//XCUIElementTypeStaticText[contains(@name, ':')]`,
-        maxWait: 15000,
+        maxWait: 15_000,
       })
     )
   );
@@ -172,13 +172,13 @@ async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: Test
     strategy: 'id',
     selector: 'network.loki.messenger:id/callTitle',
     text: 'Ringing...',
-    maxWait: 5000,
+    maxWait: 5_000,
   });
   await alice1.doesElementExist({
     strategy: 'id',
     selector: 'network.loki.messenger:id/callSubtitle',
     text: 'Sending Call Offer 2/5',
-    maxWait: 5000,
+    maxWait: 5_000,
   });
   await alice1.clickOnElementById('network.loki.messenger:id/endCallButton');
   // Bob sees the missed call and also jumps through all the hoops
@@ -214,7 +214,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: Test
       device.doesElementExist({
         strategy: 'xpath',
         selector: `//*[@resource-id='network.loki.messenger:id/callTitle' and contains(@text, ':')]`,
-        maxWait: 15000,
+        maxWait: 15_000,
       })
     )
   );
@@ -224,13 +224,13 @@ async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: Test
       strategy: 'id',
       selector: 'network.loki.messenger:id/call_text_view',
       text: `${bob.userName} called you`,
-      maxWait: 15000,
+      maxWait: 15_000,
     }),
     bob1.doesElementExist({
       strategy: 'id',
       selector: 'network.loki.messenger:id/call_text_view',
       text: `You called ${alice.userName}`,
-      maxWait: 15000,
+      maxWait: 15_000,
     }),
   ]);
   // Excellent
