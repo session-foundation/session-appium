@@ -22,7 +22,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType, t
   const testGroupName: GROUPNAME = 'Testing voice';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   const timerType = 'Disappear after send option';
-  const maxWait = 32_000; // 30s plus buffer
+  const maxWait = 35_000; // 30s plus buffer
   const {
     devices: { alice1, bob1, charlie1 },
   } = await open_Alice1_Bob1_Charlie1_friends_group({

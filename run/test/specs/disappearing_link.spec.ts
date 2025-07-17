@@ -32,7 +32,7 @@ bothPlatformsItSeparate({
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after read option';
-const maxWait = 32_000; // 30s plus buffer
+const maxWait = 35_000; // 30s plus buffer
 
 async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {

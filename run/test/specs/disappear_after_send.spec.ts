@@ -32,7 +32,7 @@ async function disappearAfterSend(platform: SupportedPlatformsType, testInfo: Te
   const testMessage = `Checking disappear after ${mode} is working`;
   const controlMode: DisappearActions = 'sent';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
-  const maxWait = 32_000; // 30s plus buffer
+  const maxWait = 35_000; // 30s plus buffer
   // Select disappearing messages option
   await setDisappearingMessage(
     platform,

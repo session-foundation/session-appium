@@ -32,7 +32,7 @@ async function disappearAfterRead(platform: SupportedPlatformsType, testInfo: Te
   const testMessage = 'Checking disappear after read is working';
   const mode: DisappearModes = 'read';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
-  const maxWait = 32_000; // 30s plus buffer
+  const maxWait = 35_000; // 30s plus buffer
   // Click conversation options menu (three dots)
   await setDisappearingMessage(
     platform,

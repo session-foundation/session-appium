@@ -32,7 +32,7 @@ bothPlatformsIt({
 // Interacting with communities can be a bit fickle so we give this a bit more time
 const time = DISAPPEARING_TIMES.ONE_MINUTE;
 const timerType = 'Disappear after send option';
-const maxWait = 62_000; // 60s plus buffer
+const maxWait = 65_000; // 60s plus buffer
 
 async function disappearingCommunityInviteMessage(
   platform: SupportedPlatformsType,

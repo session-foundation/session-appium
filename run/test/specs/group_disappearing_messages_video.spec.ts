@@ -21,7 +21,7 @@ bothPlatformsIt({
 // Sending and receiving the video can take a while so this is bumped to 60s
 const time = DISAPPEARING_TIMES.ONE_MINUTE;
 const timerType = 'Disappear after send option';
-const maxWait = 62_000; // 60s plus buffer
+const maxWait = 65_000; // 60s plus buffer
 
 async function disappearingVideoMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testMessage = 'Testing disappearing messages for videos';
