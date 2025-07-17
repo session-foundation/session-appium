@@ -1024,11 +1024,13 @@ export class DeviceWrapper {
     // Phase 1: Wait for element to appear
     this.log(`Waiting for ${elementDescription} to be deleted...`);
     await this.waitForElementToAppear(locator, text, initialMaxWait);
+    const foundTime = Date.now();
     this.log(`${elementDescription} has been found, now waiting for deletion`);
 
     // Phase 2: Wait for element to disappear (with debouncing)
     await this.waitForElementToDisappear(locator, text, maxWait);
-    this.log(`${elementDescription} has been deleted, great success`);
+    const deletionTime = Date.now() - foundTime;
+    this.log(`${elementDescription} has been deleted after ${(deletionTime / 1000).toFixed(1)}s, great success`);
   }
 
   /**
