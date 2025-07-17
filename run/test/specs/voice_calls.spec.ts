@@ -36,7 +36,7 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
   } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
     return open_Alice1_Bob1_friends({
       platform,
-      focusFriendsConvo: false,
+      focusFriendsConvo: true,
       testInfo,
     });
   });
@@ -120,7 +120,7 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
   await Promise.all(
     [alice1, bob1].map(device =>
       // If a text on screen contains the 00: assume it's the call duration (ergo the call connected)
-      // A simple : won't work, that picked up other elements in the conversation
+      // A simple : didn't work, that picked up other elements in the conversation
       device.doesElementExist({
         strategy: 'xpath',
         selector: `//XCUIElementTypeStaticText[contains(@name, '00:')]`,
@@ -150,7 +150,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: Test
   } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
     return open_Alice1_Bob1_friends({
       platform,
-      focusFriendsConvo: false,
+      focusFriendsConvo: true,
       testInfo,
     });
   });
