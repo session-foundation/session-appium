@@ -103,6 +103,7 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
       Use a real device where you can manually enable the permission.`
     );
   }
+  await bob1.closeScreen();
   await alice1.clickOnElementAll(new CallButton(alice1));
   await bob1.clickOnCoordinates(350, 77); // There's no accessibility ID on the Accept Call button
   await Promise.all(
