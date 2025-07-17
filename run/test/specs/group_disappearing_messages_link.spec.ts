@@ -45,7 +45,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
   await test.step(TestSteps.SEND.LINK, async () => {
     await alice1.inputText(testLink, new MessageInput(alice1));
     // Enable link preview modal appears as soon as link is typed on android but on iOS it appears after
-    await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
+    await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('linkPreviewsEnable').toString(),
         englishStrippedStr('linkPreviewsFirstDescription').toString(),

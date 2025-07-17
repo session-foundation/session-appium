@@ -44,7 +44,7 @@ async function deleteConversationCS(platform: SupportedPlatformsType, testInfo: 
     await alice1.clickOnElementAll(new ConversationItem(alice1, bob.userName));
     await alice1.clickOnElementAll(new ConversationSettings(alice1));
     await alice1.clickOnElementAll(new DeleteConversationMenuItem(alice1));
-    await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
+    await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('conversationsDelete').toString(),
         englishStrippedStr('deleteConversationDescription')

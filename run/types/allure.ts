@@ -1,3 +1,5 @@
+import { UserNameType } from '@session-foundation/qa-seeder';
+
 // Centralized Allure Reporter configuration for test organization and reporting consistency.
 
 /**
@@ -67,10 +69,18 @@ export const TestSteps = {
   DISAPPEARING_MESSAGES: {
     SET_DISAPPEARING_MSG: 'Set Disappearing Messages',
   },
+  CALLS: {
+    INITIATE_CALL: (userName: UserNameType) => `${userName} initiates voice call`,
+    ACCEPT_PERMS: (userName: UserNameType) => `${userName} accepts voice call permissions`
+  },
   // Verify steps
   VERIFY: {
-    MODAL_STRINGS: 'Verify modal strings',
+    GENERIC_MODAL: 'Verify modal strings',
+    SPECIFIC_MODAL: (modalDesc: string) =>  `Verify ${modalDesc} modal strings`,
     MESSAGE_RECEIVED: 'Verify message has been received',
     MESSAGE_DISAPPEARED: 'Verify message disappeared',
+    CALLING: 'Verify call has been started',
+    CALL_SUCCESSFUL: 'Verify call has been put through successfully',
+    MISSED_CALL: 'Verify missed call'
   },
 };

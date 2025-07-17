@@ -46,7 +46,7 @@ async function deleteContactCS(platform: SupportedPlatformsType, testInfo: TestI
     await alice1.clickOnElementAll(new ConversationSettings(alice1));
     await alice1.scrollDown(); // Ensure Delete Contact is visible
     await alice1.clickOnElementAll(new DeleteContactMenuItem(alice1));
-    await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
+    await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('contactDelete').toString(),
         englishStrippedStr('deleteContactDescription').withArgs({ name: USERNAME.BOB }).toString()

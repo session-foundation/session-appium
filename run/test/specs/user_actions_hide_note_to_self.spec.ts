@@ -51,7 +51,7 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
     await device.clickOnElementAll(new ConversationSettings(device));
     await device.clickOnElementAll(new HideNoteToSelfMenuOption(device));
 
-    await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
+    await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await device.checkModalStrings(
         englishStrippedStr('noteToSelfHide').toString(),
         englishStrippedStr('hideNoteToSelfDescription').toString()
@@ -77,7 +77,7 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
     await device.clickOnElementAll(new ConversationSettings(device));
     await device.clickOnElementAll(new ShowNoteToSelfMenuOption(device));
 
-    await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
+    await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await device.checkModalStrings(
         englishStrippedStr('showNoteToSelf').toString(),
         englishStrippedStr('showNoteToSelfDescription').toString()

@@ -126,7 +126,6 @@ export type XPath =
   | '//XCUIElementTypeCell'
   | `(//android.widget.ImageView[@content-desc="Clear"])[2]`
   | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`
-  | `(//XCUIElementTypeButton[@name="Close button"])[2]`
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
   | `//*[@resource-id='network.loki.messenger:id/callTitle' and contains(@text, ':')]`
@@ -141,7 +140,7 @@ export type XPath =
   | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`
   | `//XCUIElementTypeStaticText[@name="Paste"]`
   | `//XCUIElementTypeStaticText[@name="Videos"]`
-  | `//XCUIElementTypeStaticText[contains(@name, ':')]`
+  | `//XCUIElementTypeStaticText[contains(@name, '00:')]`
   | `//XCUIElementTypeSwitch[@name="Read Receipts, Send read receipts in one-to-one chats."]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`

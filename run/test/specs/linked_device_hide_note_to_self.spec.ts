@@ -43,7 +43,7 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
     await alice1.onIOS().swipeLeft('Conversation list item', noteToSelf);
     await alice1.onAndroid().longPressConversation(noteToSelf);
     await alice1.clickOnElementAll(new Hide(alice1));
-    await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
+    await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('noteToSelfHide').toString(),
         englishStrippedStr('hideNoteToSelfDescription').toString(), // This one fails on iOS, see SES-4144

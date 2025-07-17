@@ -42,7 +42,7 @@ async function deleteConversation(platform: SupportedPlatformsType, testInfo: Te
       strategy: 'accessibility id',
       selector: 'Delete',
     });
-    await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
+    await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('conversationsDelete').toString(),
         englishStrippedStr('deleteConversationDescription')

@@ -50,7 +50,7 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
   await test.step(TestSteps.SEND.LINK, async () => {
     await alice1.inputText(testLink, new MessageInput(alice1));
     // Accept dialog for link preview
-    await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
+    await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('linkPreviewsEnable').toString(),
         englishStrippedStr('linkPreviewsFirstDescription').toString()
@@ -105,7 +105,7 @@ async function disappearingLinkMessage1o1Android(
   await test.step(TestSteps.SEND.LINK, async () => {
     await alice1.inputText(testLink, new MessageInput(alice1));
     // Accept dialog for link preview
-    await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
+    await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('linkPreviewsEnable').toString(),
         englishStrippedStr('linkPreviewsFirstDescription').toString(),
