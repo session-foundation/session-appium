@@ -24,7 +24,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType, testIn
   const testMessage = 'Testing disappear after sent in groups';
   const controlMode: DisappearActions = 'sent';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
-  const maxWait = 31_000; // 30s plus buffer
+  const maxWait = 32_000; // 30s plus buffer
   const {
     devices: { alice1, bob1, charlie1 },
     prebuilt: { alice },

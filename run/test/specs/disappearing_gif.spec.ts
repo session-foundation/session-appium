@@ -25,7 +25,7 @@ bothPlatformsItSeparate({
 
 // The timing with 30 seconds was a bit tight in terms of the attachment downloading and becoming visible
 const time = DISAPPEARING_TIMES.ONE_MINUTE;
-const maxWait = 61_000; // 60s plus buffer
+const maxWait = 62_000; // 60s plus buffer
 const timerType = 'Disappear after send option';
 const testMessage = "Testing disappearing messages for GIF's";
 

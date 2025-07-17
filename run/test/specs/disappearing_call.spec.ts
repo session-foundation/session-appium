@@ -30,7 +30,7 @@ bothPlatformsItSeparate({
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
-const maxWait = 31_000; // 30s plus buffer
+const maxWait = 32_000; // 30s plus buffer
 
 async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {

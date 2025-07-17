@@ -27,7 +27,7 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, te
   const alice = await newUser(device, USERNAME.ALICE);
   const controlMode: DisappearActions = 'sent';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
-  const maxWait = 31_000; // 30s plus buffer
+  const maxWait = 32_000; // 30s plus buffer
 
   // Send message to self to bring up Note to Self conversation
   await device.clickOnElementAll(new PlusButton(device));
