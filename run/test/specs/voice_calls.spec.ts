@@ -44,15 +44,19 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
     await alice1.clickOnElementAll(new CallButton(alice1));
   });
   await test.step(TestSteps.CALLS.ACCEPT_PERMS(alice.userName), async () => {
-    await alice1.checkModalStrings(
-      englishStrippedStr('callsPermissionsRequired').toString(),
-      englishStrippedStr('callsPermissionsRequiredDescription').toString()
-    );
+    await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('enable calls permission'), async () => {
+      await alice1.checkModalStrings(
+        englishStrippedStr('callsPermissionsRequired').toString(),
+        englishStrippedStr('callsPermissionsRequiredDescription').toString()
+      );
+    });
     await alice1.clickOnByAccessibilityID('Settings');
-    await alice1.checkModalStrings(
-      englishStrippedStr('callsVoiceAndVideoBeta').toString(),
-      englishStrippedStr('callsVoiceAndVideoModalDescription').toString()
-    );
+    await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('beta calls'), async () => {
+      await alice1.checkModalStrings(
+        englishStrippedStr('callsVoiceAndVideoBeta').toString(),
+        englishStrippedStr('callsVoiceAndVideoModalDescription').toString()
+      );
+    });
     await alice1.clickOnByAccessibilityID('Continue');
     // Need to allow microphone access
     await alice1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
@@ -101,7 +105,7 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
   await sleepFor(1_000);
   // Need to allow camera access
   await bob1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
-  await sleepFor(5_000); // Wait a bit for the toggles to turn to TRUE
+  await sleepFor(10_000); // Wait a bit for the toggles to turn to TRUE
   const bobLocalNetworkSwitch = await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Local Network Permission - Switch',
@@ -159,31 +163,37 @@ async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: Test
   });
   await test.step(TestSteps.CALLS.ACCEPT_PERMS(alice.userName), async () => {
     // Alice turns on all calls perms necessary
-    await alice1.checkModalStrings(
-      englishStrippedStr('callsPermissionsRequired').toString(),
-      englishStrippedStr('callsPermissionsRequiredDescription').toString(),
-      false
-    );
-    await alice1.clickOnElementAll({
-      strategy: 'accessibility id',
-      selector: 'Settings',
+    await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('enable calls permission'), async () => {
+      await alice1.checkModalStrings(
+        englishStrippedStr('callsPermissionsRequired').toString(),
+        englishStrippedStr('callsPermissionsRequiredDescription').toString(),
+        false
+      );
+      await alice1.clickOnElementAll({
+        strategy: 'accessibility id',
+        selector: 'Settings',
+      });
     });
-    await alice1.checkModalStrings(
-      englishStrippedStr('callsVoiceAndVideoBeta').toString(),
-      englishStrippedStr('callsVoiceAndVideoModalDescription').toString(),
-      false
-    );
-    await alice1.clickOnByAccessibilityID('Enable');
+    await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('beta calls'), async () => {
+      await alice1.checkModalStrings(
+        englishStrippedStr('callsVoiceAndVideoBeta').toString(),
+        englishStrippedStr('callsVoiceAndVideoModalDescription').toString(),
+        false
+      );
+      await alice1.clickOnByAccessibilityID('Enable');
+    });
     await alice1.clickOnElementById(
       'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
     );
-    await alice1.checkModalStrings(
-      englishStrippedStr('sessionNotifications').toString(),
-      englishStrippedStr('callsNotificationsRequired').toString(),
-      false
-    );
-    await alice1.clickOnElementAll(new NotificationSettings(alice1));
-    await alice1.clickOnElementAll(new NotificationSwitch(alice1));
+    await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('notifications permission'), async () => {
+      await alice1.checkModalStrings(
+        englishStrippedStr('sessionNotifications').toString(),
+        englishStrippedStr('callsNotificationsRequired').toString(),
+        false
+      );
+      await alice1.clickOnElementAll(new NotificationSettings(alice1));
+      await alice1.clickOnElementAll(new NotificationSwitch(alice1));
+    });
     await alice1.navigateBack(false);
     await alice1.navigateBack(false);
   });

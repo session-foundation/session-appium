@@ -26,7 +26,8 @@ bothPlatformsIt({
     parent: 'Disappearing Messages',
     suite: 'Conversation Types',
   },
-  allureDescription: `Verifies that turning off 'Disappear After Send' works as expected in a 1:1 conversation`,
+  allureDescription:
+    'Verifies that turning off Disappearing Messages works as expected in a 1:1 conversation',
 });
 
 async function disappearAfterSendOff1o1(platform: SupportedPlatformsType, testInfo: TestInfo) {

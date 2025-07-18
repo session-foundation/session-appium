@@ -15,11 +15,12 @@ bothPlatformsIt({
     parent: 'Disappearing Messages',
     suite: 'Message Types',
   },
-  allureDescription: `Verifies that a GIF disappears as expected in a group conversation`,
+  allureDescription: 'Verifies that a GIF disappears as expected in a group conversation',
 });
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
+const initialMaxWait = 15_000; // Downloading the attachment can take a while
 const maxWait = 35_000; // 30s plus buffer
 
 async function disappearingGifMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -40,6 +41,7 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType, tes
     [bob1, charlie1].map(device => device.onAndroid().trustAttachments(testGroupName))
   );
   if (platform === 'ios') {
+    // Because the test looks for message body (not media) on iOS, it's not necessary to pass a longer initialMaxWait
     await Promise.all(
       [alice1, bob1, charlie1].map(device =>
         device.hasElementBeenDeleted({
@@ -57,7 +59,7 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType, tes
         device.hasElementBeenDeleted({
           strategy: 'accessibility id',
           selector: 'Media message',
-          initialMaxWait: 15_000, // Give the UI some time to download the GIF
+          initialMaxWait,
           maxWait,
         })
       )

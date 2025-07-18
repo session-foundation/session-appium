@@ -956,7 +956,7 @@ export class DeviceWrapper {
 
   /**
    * Ensures an element is not present on the screen at the end of the wait time.
-   * This allows any transitions to complete and tolerates for some UI flakiness.
+   * This allows any transitions to complete and tolerates some UI flakiness.
    * Unlike hasElementBeenDeleted, this doesn't require the element to exist first.
    *
    * @param args - Locator (LocatorsInterface or StrategyExtractionObj) with optional properties
@@ -996,15 +996,15 @@ export class DeviceWrapper {
    *
    * @param args - Locator (LocatorsInterface or StrategyExtractionObj) with optional properties
    * @param args.text - Optional text content to match within elements of the same type
-   * @param args.initialMaxWait - Time to wait for element to initially appear (defaults to 10000ms)
-   * @param args.maxWait - Time to wait for deletion AFTER element is found (defaults to 30000ms)
+   * @param args.initialMaxWait - Time to wait for element to initially appear (defaults to 10_000ms)
+   * @param args.maxWait - Time to wait for deletion AFTER element is found (defaults to 30_000ms)
    *
    * @throws Error if:
    * - The element is never found within initialMaxWait
-   * - The element still exists after maxWait (counted from when element was found)
+   * - The element still exists after maxWait
    *
    * Note: For checks where you just need to ensure an element
-   * is not present (regardless of prior existence), use ensureElementNotPresent() instead.
+   * is not present (regardless of prior existence), use verifyElementNotPresent() instead.
    */
   public async hasElementBeenDeleted(
     args: {
@@ -1027,10 +1027,12 @@ export class DeviceWrapper {
     const foundTime = Date.now();
     this.log(`${elementDescription} has been found, now waiting for deletion`);
 
-    // Phase 2: Wait for element to disappear (with debouncing)
+    // Phase 2: Wait for element to disappear
     await this.waitForElementToDisappear(locator, text, maxWait);
     const deletionTime = Date.now() - foundTime;
-    this.log(`${elementDescription} has been deleted after ${(deletionTime / 1000).toFixed(1)}s, great success`);
+    this.log(
+      `${elementDescription} has been deleted after ${(deletionTime / 1000).toFixed(1)}s, great success`
+    );
   }
 
   /**
@@ -1058,7 +1060,7 @@ export class DeviceWrapper {
   /**
    * Wait for an element to disappear with debouncing for flaky UI states.
    * Requires 3 consecutive checks where element is not found/invisible/stale
-   * to confirm deletion. This prevents false positives during animations.
+   * to confirm deletion. This prevents false positives during transitions.
    */
   private async waitForElementToDisappear(
     locator: StrategyExtractionObj,
@@ -1103,14 +1105,15 @@ export class DeviceWrapper {
       await sleepFor(100);
     }
 
+    const desc = text ? `${locator.selector} with text "${text}"` : locator.selector;
+
     throw new Error(
-      `Element ${locator.selector}${text ? ` with text "${text}"` : ''} was still present and visible after ${timeout}ms deletion timeout`
+      `Element ${desc} was still present and visible after ${timeout}ms deletion timeout`
     );
   }
 
   /**
    * Find an element without throwing errors or logging.
-   * Used internally for polling operations.
    */
   private async findElementQuietly(
     locator: StrategyExtractionObj,
@@ -1131,6 +1134,30 @@ export class DeviceWrapper {
     } catch {
       return null;
     }
+  }
+
+  /**
+   * Checks if an element is visible on the screen.
+   * For Android, checks the 'displayed' attribute.
+   * For iOS, checks the 'visible' attribute.
+   */
+  private async isVisible(elementId: string): Promise<boolean> {
+    if (this.isAndroid()) {
+      try {
+        const displayed = await this.getAttribute('displayed', elementId);
+        return displayed === 'true';
+      } catch {
+        return false;
+      }
+    } else if (this.isIOS()) {
+      try {
+        const visible = await this.getAttribute('visible', elementId);
+        return visible === 'true';
+      } catch {
+        return false;
+      }
+    }
+    return false;
   }
 
   public async hasTextElementBeenDeleted(accessibilityId: AccessibilityId, text: string) {
@@ -2282,29 +2309,5 @@ export class DeviceWrapper {
 
   private toShared(): AndroidUiautomator2Driver & XCUITestDriver {
     return this.device as unknown as AndroidUiautomator2Driver & XCUITestDriver;
-  }
-
-  /**
-   * Checks if an element is visible on the screen.
-   * For Android, checks the 'displayed' attribute.
-   * For iOS, checks the 'visible' attribute.
-   */
-  public async isVisible(elementId: string): Promise<boolean> {
-    if (this.isAndroid()) {
-      try {
-        const displayed = await this.getAttribute('displayed', elementId);
-        return displayed === 'true';
-      } catch {
-        return false;
-      }
-    } else if (this.isIOS()) {
-      try {
-        const visible = await this.getAttribute('visible', elementId);
-        return visible === 'true';
-      } catch {
-        return false;
-      }
-    }
-    return false;
   }
 }

@@ -16,7 +16,7 @@ bothPlatformsIt({
     parent: 'Disappearing Messages',
     suite: 'Conversation Types',
   },
-  allureDescription: `Verifies that 'Disappear After Read' works as expected in a 1:1 conversation.`,
+  allureDescription: `Verifies that 'Disappear After Read' can be set in a 1:1 conversation, and that a message disappears after the specified expiry time.`,
 });
 
 async function disappearAfterRead(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -31,6 +31,7 @@ async function disappearAfterRead(platform: SupportedPlatformsType, testInfo: Te
 
   const testMessage = 'Checking disappear after read is working';
   const mode: DisappearModes = 'read';
+  // TODO: Consider refactoring DISAPPEARING_TIMES to include ms values
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   const maxWait = 35_000; // 30s plus buffer
   // Click conversation options menu (three dots)

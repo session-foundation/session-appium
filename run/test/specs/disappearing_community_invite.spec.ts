@@ -26,7 +26,8 @@ bothPlatformsIt({
     parent: 'Disappearing Messages',
     suite: 'Message Types',
   },
-  allureDescription: `Verifies that a community invite disappears as expected in a 1:1 conversation`,
+  allureDescription:
+    'Verifies that a community invite disappears as expected in a 1:1 conversation',
 });
 
 // Interacting with communities can be a bit fickle so we give this a bit more time

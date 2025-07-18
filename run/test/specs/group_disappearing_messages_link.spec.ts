@@ -21,7 +21,7 @@ bothPlatformsIt({
     parent: 'Disappearing Messages',
     suite: 'Message Types',
   },
-  allureDescription: `Verifies that a GIF disappears as expected in a group conversation`,
+  allureDescription: 'Verifies that a link preview disappears as expected in a group conversation',
 });
 const timerType = 'Disappear after send option';
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;

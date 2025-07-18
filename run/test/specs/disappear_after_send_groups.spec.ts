@@ -16,7 +16,8 @@ bothPlatformsIt({
     parent: 'Disappearing Messages',
     suite: 'Conversation Types',
   },
-  allureDescription: `Verifies that 'Disappear After Send' works as expected in a group conversation`,
+  allureDescription:
+    'Verifies that Disappearing Messages can be set in a group conversation, and that a message disappears after the specified expiry time.',
 });
 
 async function disappearAfterSendGroups(platform: SupportedPlatformsType, testInfo: TestInfo) {

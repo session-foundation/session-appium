@@ -10,10 +10,9 @@ import { newUser } from './utils/create_account';
 import { joinCommunity } from './utils/join_community';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
-// NOTE For some reason Appium takes FOREVER to load the iOS page source on the recipients device (>50s on my machine)
-// and as such I haven't found an easy way to verify that they see the new image message
-// If this becomes a problem in the future then we can extract the unread count from page source
-// and see it increment after the image gets sent
+// NOTE For some reason Appium takes FOREVER to load the iOS page source of the community on the recipients device
+// and as such I haven't found a quick and easy way to verify that they see the new image message
+// If this becomes a problem in the future then we can extract the unread count from page source and see it increment after the image gets sent
 // But for now we have to trust that the sender seeing 'Sent' also delivers it to others on iOS
 // This is also why it's a 1-device test and has its own iosIt definition (and not bothPlatformsItSeparate)
 
@@ -32,7 +31,8 @@ iosIt({
   countOfDevicesNeeded: 1,
   testCb: sendImageCommunityIOS,
   allureSuites: { parent: 'Sending Messages', suite: 'Sending Attachments' },
-  allureDescription: `Verifies that an image can be sent to a community. Note that due to Appium's limitations this test does not verify another device receiving the image.`,
+  allureDescription: `Verifies that an image can be sent to a community. 
+  Note that due to Appium's limitations, this test does not verify another device receiving the image.`,
 });
 
 async function sendImageCommunityAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {

@@ -20,7 +20,7 @@ bothPlatformsIt({
     parent: 'Disappearing Messages',
     suite: 'Rules',
   },
-  allureDescription: `Verifies that only admins can set Disappearing Message timers in a group`,
+  allureDescription: 'Verifies that only admins can enable Disappearing Messages in a group',
 });
 
 async function membersCantSetDisappearingMessages(

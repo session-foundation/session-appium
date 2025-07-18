@@ -18,7 +18,8 @@ bothPlatformsIt({
     parent: 'Disappearing Messages',
     suite: 'Conversation Types',
   },
-  allureDescription: `Verifies that 'Disappear After Send' works as expected in Note to Self`,
+  allureDescription:
+    'Verifies that Disappearing Messages can be set in Note to Self, and that a message disappears after the specified expiry time.',
 });
 
 async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, testInfo: TestInfo) {

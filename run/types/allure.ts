@@ -71,16 +71,16 @@ export const TestSteps = {
   },
   CALLS: {
     INITIATE_CALL: (userName: UserNameType) => `${userName} initiates voice call`,
-    ACCEPT_PERMS: (userName: UserNameType) => `${userName} accepts voice call permissions`
+    ACCEPT_PERMS: (userName: UserNameType) => `${userName} accepts voice call permissions`,
   },
   // Verify steps
   VERIFY: {
     GENERIC_MODAL: 'Verify modal strings',
-    SPECIFIC_MODAL: (modalDesc: string) =>  `Verify ${modalDesc} modal strings`,
+    SPECIFIC_MODAL: (modalDesc: string) => `Verify ${modalDesc} modal strings`,
     MESSAGE_RECEIVED: 'Verify message has been received',
     MESSAGE_DISAPPEARED: 'Verify message disappeared',
     CALLING: 'Verify call has been started',
     CALL_SUCCESSFUL: 'Verify call has been put through successfully',
-    MISSED_CALL: 'Verify missed call'
+    MISSED_CALL: 'Verify missed call',
   },
 };

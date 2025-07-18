@@ -25,7 +25,8 @@ bothPlatformsItSeparate({
     parent: 'Disappearing Messages',
     suite: 'Message Types',
   },
-  allureDescription: `Verifies that a call control message disappears as expected in a 1:1 conversation`,
+  allureDescription:
+    'Verifies that a call control message disappears as expected in a 1:1 conversation',
 });
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;

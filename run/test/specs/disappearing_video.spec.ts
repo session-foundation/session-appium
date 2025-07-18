@@ -15,13 +15,14 @@ bothPlatformsIt({
     parent: 'Disappearing Messages',
     suite: 'Message Types',
   },
-  allureDescription: `Verifies that a video disappears as expected in a 1:1 conversation`,
+  allureDescription: 'Verifies that a video disappears as expected in a 1:1 conversation',
 });
 
 // Sending and receiving the video can take a while so this is bumped to 60s
 const time = DISAPPEARING_TIMES.ONE_MINUTE;
 const timerType = 'Disappear after send option';
 const testMessage = 'Testing disappearing messages for videos';
+const initialMaxWait = 20_000; // Downloading the attachment can take a while
 const maxWait = 65_000; // 60s plus buffer
 
 async function disappearingVideoMessage1o1(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -42,7 +43,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType, tes
         device.hasElementBeenDeleted({
           strategy: 'accessibility id',
           selector: 'Message body',
-          initialMaxWait: 20_000, // Give the clients some more time to download the vid
+          initialMaxWait,
           maxWait,
           text: testMessage,
         })
@@ -54,7 +55,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType, tes
         device.hasElementBeenDeleted({
           strategy: 'accessibility id',
           selector: 'Media message',
-          initialMaxWait: 20_000, // Give the clients some more time to download the vid
+          initialMaxWait,
           maxWait,
         })
       )

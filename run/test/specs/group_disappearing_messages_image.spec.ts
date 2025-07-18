@@ -15,7 +15,7 @@ bothPlatformsIt({
     parent: 'Disappearing Messages',
     suite: 'Message Types',
   },
-  allureDescription: `Verifies that an image disappears as expected in a group conversation`,
+  allureDescription: 'Verifies that an image disappears as expected in a group conversation',
 });
 
 async function disappearingImageMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {

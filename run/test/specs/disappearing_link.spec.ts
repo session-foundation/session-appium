@@ -26,8 +26,7 @@ bothPlatformsItSeparate({
     parent: 'Disappearing Messages',
     suite: 'Message Types',
   },
-  allureDescription:
-    'Verifies that link previews in 1:1s disappear after the configured expiration time',
+  allureDescription: 'Verifies that a link preview disappears as expected in a 1:1 conversation',
 });
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
@@ -57,7 +56,7 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
       );
     });
     await alice1.clickOnByAccessibilityID('Enable');
-    // On iOS, Appium types so the link preview modal interrupts typing the link, must be deleted and typed again
+    // On iOS, Appium doesn't paste but type, and the link preview modal interrupts typing the link, the text must be deleted and typed again
     await alice1.deleteText(new MessageInput(alice1));
     await alice1.inputText(testLink, new MessageInput(alice1));
     await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));

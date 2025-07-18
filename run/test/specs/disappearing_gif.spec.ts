@@ -20,7 +20,7 @@ bothPlatformsItSeparate({
     parent: 'Disappearing Messages',
     suite: 'Message Types',
   },
-  allureDescription: `Verifies that a GIF disappears as expected in a 1:1 conversation`,
+  allureDescription: 'Verifies that a GIF disappears as expected in a 1:1 conversation',
 });
 
 // The timing with 30 seconds was a bit tight in terms of the attachment downloading and becoming visible
