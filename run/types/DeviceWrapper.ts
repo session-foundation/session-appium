@@ -981,7 +981,7 @@ export class DeviceWrapper {
 
     const element = await this.findElementQuietly(locator, args.text);
 
-    const description = describeLocator({...locator, text: args.text})
+    const description = describeLocator({ ...locator, text: args.text });
 
     if (element) {
       throw new Error(`Element ${description} is present when it should not be`);
@@ -1018,7 +1018,7 @@ export class DeviceWrapper {
     const maxWait = args.maxWait ?? 30_000;
     const initialMaxWait = args.initialMaxWait ?? 10_000;
 
-    const description = describeLocator({...locator, text: args.text});
+    const description = describeLocator({ ...locator, text: args.text });
 
     // Phase 1: Wait for element to appear
     this.log(`Waiting for element ${description} to be deleted...`);
