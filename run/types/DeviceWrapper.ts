@@ -10,6 +10,7 @@ import * as sinon from 'sinon';
 
 import {
   ChangeProfilePictureButton,
+  describeLocator,
   DownloadMediaButton,
   FirstGif,
   ImageName,
@@ -980,15 +981,14 @@ export class DeviceWrapper {
 
     const element = await this.findElementQuietly(locator, args.text);
 
-    const baseDescription = `Element with ${locator.strategy} "${locator.selector}"`;
-    const description = args.text ? `${baseDescription} and text "${args.text}"` : baseDescription;
+    const description = describeLocator({...locator, text: args.text})
 
     if (element) {
-      throw new Error(`${description} is present when it should not be`);
+      throw new Error(`Element ${description} is present when it should not be`);
     }
 
     // Element not found - success!
-    this.log(`Verified no element with ${description} is present`);
+    this.log(`Verified no element ${description} is present`);
   }
 
   /**
@@ -1018,20 +1018,19 @@ export class DeviceWrapper {
     const maxWait = args.maxWait ?? 30_000;
     const initialMaxWait = args.initialMaxWait ?? 10_000;
 
-    const baseDescription = `Element with strategy "${locator.strategy}" and selector "${locator.selector}"`;
-    const elementDescription = text ? `${baseDescription} and text "${text}"` : baseDescription;
+    const description = describeLocator({...locator, text: args.text});
 
     // Phase 1: Wait for element to appear
-    this.log(`Waiting for ${elementDescription} to be deleted...`);
+    this.log(`Waiting for element ${description} to be deleted...`);
     await this.waitForElementToAppear(locator, text, initialMaxWait);
     const foundTime = Date.now();
-    this.log(`${elementDescription} has been found, now waiting for deletion`);
+    this.log(`Element ${description} has been found, now waiting for deletion`);
 
     // Phase 2: Wait for element to disappear
     await this.waitForElementToDisappear(locator, text, maxWait);
     const deletionTime = Date.now() - foundTime;
     this.log(
-      `${elementDescription} has been deleted after ${(deletionTime / 1000).toFixed(1)}s, great success`
+      `Element ${description} has been deleted after ${(deletionTime / 1000).toFixed(1)}s, great success`
     );
   }
 
@@ -1051,7 +1050,7 @@ export class DeviceWrapper {
       await sleepFor(100);
     }
 
-    const desc = text ? `${locator.selector} with text "${text}"` : locator.selector;
+    const desc = describeLocator({ ...locator, text });
     throw new Error(
       `Element ${desc} was never found within ${timeout}ms - cannot verify deletion of non-existent element`
     );
@@ -1105,7 +1104,7 @@ export class DeviceWrapper {
       await sleepFor(100);
     }
 
-    const desc = text ? `${locator.selector} with text "${text}"` : locator.selector;
+    const desc = describeLocator({ ...locator, text });
 
     throw new Error(
       `Element ${desc} was still present and visible after ${timeout}ms deletion timeout`

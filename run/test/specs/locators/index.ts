@@ -28,6 +28,12 @@ export abstract class LocatorsInterface {
   }
 }
 
+export function describeLocator(locator: StrategyExtractionObj & { text?: string }): string {
+  const { strategy, selector, text } = locator;
+  const base = `${strategy} "${selector}"`;
+  return text ? `${base} and text "${text}"` : base;
+}
+
 // Returns the expected screenshot path for a locator, optionally varying by state
 export abstract class LocatorsInterfaceScreenshot extends LocatorsInterface {
   abstract screenshotFileName(state?: ElementStates): string;
