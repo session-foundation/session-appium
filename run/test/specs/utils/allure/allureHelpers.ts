@@ -1,5 +1,6 @@
 import { execSync } from 'child_process';
 import fs from 'fs-extra';
+import { glob } from 'glob';
 import path from 'path';
 
 import {
@@ -118,6 +119,36 @@ export async function writeMetadataJson(ctx: ReportContext) {
     JSON.stringify(metadata, null, 2)
   );
   console.log('Created metadata.json');
+}
+
+/**
+ * Patches Allure files to use GitHub's LFS CDN URLs instead of relative paths.
+ * GitHub Pages serves LFS pointer files, not actual content, so we rewrite
+ * attachment URLs to use media.githubusercontent.com which serves the real files.
+ */
+export async function patchFilesForLFSCDN(ctx: ReportContext) {
+  console.log('Patching attachment URLs for LFS CDN...');
+
+  const cdnBase = `https://media.githubusercontent.com/media/session-foundation/session-appium/gh-pages/${ctx.platform}/${ctx.reportFolder}`;
+
+  // Get all files that need patching
+  const filesToPatch = [
+    path.join(allureCurrentReportDir, 'app.js'),
+    ...(await glob(`${allureCurrentReportDir}/plugin/*/index.js`)),
+  ];
+
+  // Patch them all
+  for (const file of filesToPatch) {
+    if (await fs.pathExists(file)) {
+      let content = await fs.readFile(file, 'utf-8');
+      content = content
+        .replace(/"data\/attachments\//g, `"${cdnBase}/data/attachments/`)
+        .replace(/'data\/attachments\//g, `'${cdnBase}/data/attachments/`);
+      await fs.writeFile(file, content);
+    }
+  }
+
+  console.log(`Patched ${filesToPatch.length} files for LFS CDN`);
 }
 
 // Custom css injection for neat diffing and media display
