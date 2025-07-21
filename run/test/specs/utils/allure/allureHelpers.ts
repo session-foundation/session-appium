@@ -128,15 +128,15 @@ export async function writeMetadataJson(ctx: ReportContext) {
  */
 export async function patchFilesForLFSCDN(ctx: ReportContext) {
   console.log('Patching attachment URLs for LFS CDN...');
-  
+
   const cdnBase = `https://media.githubusercontent.com/media/session-foundation/session-appium/gh-pages/${ctx.platform}/${ctx.reportFolder}`;
-  
+
   // Get all files that need patching
   const filesToPatch = [
     path.join(allureCurrentReportDir, 'app.js'),
-    ...(await glob(`${allureCurrentReportDir}/plugin/*/index.js`))
+    ...(await glob(`${allureCurrentReportDir}/plugin/*/index.js`)),
   ];
-  
+
   // Patch them all
   for (const file of filesToPatch) {
     if (await fs.pathExists(file)) {
@@ -147,7 +147,7 @@ export async function patchFilesForLFSCDN(ctx: ReportContext) {
       await fs.writeFile(file, content);
     }
   }
-  
+
   console.log(`Patched ${filesToPatch.length} files for LFS CDN`);
 }
 

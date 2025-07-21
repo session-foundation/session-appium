@@ -1,7 +1,7 @@
 name: Prune Old Allure Attachments
 on:
   schedule:
-    - cron: '0 16 * * 0'  # Weekly, 16:00 UTC Sunday
+    - cron: '0 16 * * 0' # Weekly, 16:00 UTC Sunday
 
 jobs:
   prune:
@@ -11,17 +11,17 @@ jobs:
         with:
           ref: gh-pages
           lfs: true
-        env: 
+        env:
           GIT_LFS_SKIP_SMUDGE: 1 # Don't actually download LFS content
-      
+
       - name: Prune Allure attachments older than 14 days
         run: |
           echo "## Pruning Report" >> $GITHUB_STEP_SUMMARY
           COUNT=$(find . -type f -path "*/data/attachments/*" \( -name "*.png" -o -name "*.txt" -o -name "*.imagediff" \) -mtime +14 | wc -l)
           echo "Deleting $COUNT files older than 14 days" >> $GITHUB_STEP_SUMMARY
-          
+
           find . -type f -path "*/data/attachments/*" \( -name "*.png" -o -name "*.txt" -o -name "*.imagediff" \) -mtime +14 -delete
-          
+
       - name: Commit changes
         run: |
           git config user.name "github-actions"
