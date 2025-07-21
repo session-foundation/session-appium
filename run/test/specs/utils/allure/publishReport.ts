@@ -3,7 +3,7 @@ import ghpages from 'gh-pages';
 import path from 'path';
 
 import { allureCurrentReportDir } from '../../../../constants/allure';
-import { getReportContextFromEnv, patchStylesCss, writeMetadataJson } from './allureHelpers';
+import { getReportContextFromEnv, patchFilesForLFSCDN, patchStylesCss, writeMetadataJson } from './allureHelpers';
 
 // Bail out early if not on CI
 if (process.env.CI !== '1' || process.env.ALLURE_ENABLED === 'false') {
@@ -46,7 +46,9 @@ async function publishReport() {
   const publishedReportName = ctx.reportFolder;
   const newReportDir = path.join(ctx.platform, publishedReportName);
 
+  // Allue manipulation
   await patchStylesCss();
+  await patchFilesForLFSCDN(ctx); 
 
   // Copy the current report to newReportDir for publishing
   // By doing so, the gh-pages branch hosts /android and /ios subpages with the respective reports
