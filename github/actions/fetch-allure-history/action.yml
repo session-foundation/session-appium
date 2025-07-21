@@ -19,7 +19,7 @@ runs:
         rm -rf "$CLONE_DIR"
 
         echo "Cloning gh-pages branch"
-        git clone --depth 1 --branch gh-pages "$GH_REPO" "$CLONE_DIR"
+        GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1 --branch gh-pages "$GH_REPO" "$CLONE_DIR"
 
         echo "Searching for latest report for $PLATFORM"
         LATEST_HISTORY=$(find "$REPORTS_DIR" -type d -name "run-*-${PLATFORM}-*" | sort | tail -n1)
