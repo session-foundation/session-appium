@@ -43,7 +43,7 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
     await alice1.onIOS().swipeLeft('Conversation list item', noteToSelf);
     await alice1.onAndroid().longPressConversation(noteToSelf);
     await alice1.clickOnElementAll(new Hide(alice1));
-    await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
+    await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('noteToSelfHide').toString(),
         englishStrippedStr('hideNoteToSelfDescription').toString(), // This one fails on iOS, see SES-4144
@@ -53,14 +53,30 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
     await alice1.clickOnByAccessibilityID('Hide');
   });
   await test.step('Verify Note to Self is hidden on both devices', async () => {
-    await Promise.all(
-      [alice1, alice2].map(device =>
-        device.hasElementBeenDeleted({
-          ...new ConversationItem(device, noteToSelf).build(),
-          maxWait: 10000, // This can take a while
-        })
-      )
-    );
+    if (platform === 'android') {
+      await Promise.all([
+        alice1.verifyElementNotPresent({
+          ...new ConversationItem(alice1, noteToSelf).build(),
+          maxWait: 5_000,
+        }),
+        alice2.hasElementBeenDeleted({
+          ...new ConversationItem(alice2, noteToSelf).build(),
+          maxWait: 20_000,
+        }),
+      ]);
+    } else {
+      // iOS page structure is more flaky and the element can still be present
+      await Promise.all([
+        alice1.hasElementBeenDeleted({
+          ...new ConversationItem(alice1, noteToSelf).build(),
+          maxWait: 5_000,
+        }),
+        alice2.hasElementBeenDeleted({
+          ...new ConversationItem(alice2, noteToSelf).build(),
+          maxWait: 20_000,
+        }),
+      ]);
+    }
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, alice2);

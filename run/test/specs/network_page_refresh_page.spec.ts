@@ -18,7 +18,7 @@ async function refreshNetworkPage(platform: SupportedPlatformsType, testInfo: Te
   const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
 
   const lastUpdatedExpected = 'Last updated 0m ago';
-  await newUser(device, USERNAME.ALICE);
+  await newUser(device, USERNAME.ALICE, false);
   await device.clickOnElementAll(new UserSettings(device));
   await device.onAndroid().scrollDown();
   await device.clickOnElementAll(new SessionNetworkMenuItem(device));

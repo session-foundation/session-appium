@@ -1,10 +1,12 @@
-import type { TestInfo } from '@playwright/test';
+import { test, type TestInfo } from '@playwright/test';
 
+import { testLink } from '../../constants';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
-import { LinkPreview } from './locators';
-import { OutgoingMessageStatusSent } from './locators/conversation';
+import { LinkPreview, LinkPreviewMessage } from './locators';
+import { MessageInput, OutgoingMessageStatusSent } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -20,69 +22,67 @@ bothPlatformsItSeparate({
   android: {
     testCb: disappearingLinkMessage1o1Android,
   },
+  allureSuites: {
+    parent: 'Disappearing Messages',
+    suite: 'Message Types',
+  },
+  allureDescription: 'Verifies that a link preview disappears as expected in a 1:1 conversation',
 });
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after read option';
-const testLink = `https://getsession.org/`;
+const maxWait = 35_000; // 30s plus buffer
 
 async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
-  } = await open_Alice1_Bob1_friends({
-    platform,
-    focusFriendsConvo: true,
-    testInfo,
+  } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
+    return await open_Alice1_Bob1_friends({
+      platform,
+      focusFriendsConvo: true,
+      testInfo,
+    });
   });
-  await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
-  // Send a link
-  await alice1.inputText(testLink, {
-    strategy: 'accessibility id',
-    selector: 'Message input box',
+  await test.step(TestSteps.DISAPPEARING_MESSAGES.SET_DISAPPEARING_MSG, async () => {
+    await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   });
-  // Accept dialog for link preview
-  await alice1.checkModalStrings(
-    englishStrippedStr('linkPreviewsEnable').toString(),
-    englishStrippedStr('linkPreviewsFirstDescription').toString()
-  );
-  await alice1.clickOnByAccessibilityID('Enable');
-  // No preview on first send
-  await alice1.clickOnByAccessibilityID('Send message button');
-  await alice1.waitForTextElementToBePresent({
-    ...new OutgoingMessageStatusSent(alice1).build(),
-    maxWait: 20000,
-  });
-  // Send again for image
-  await alice1.inputText(testLink, {
-    strategy: 'accessibility id',
-    selector: 'Message input box',
-  });
-  // Wait for link preview to load
-  await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
-  await alice1.clickOnByAccessibilityID('Send message button');
-  // Make sure image preview is available in device 2
-  await bob1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: testLink,
+  await test.step(TestSteps.SEND.LINK, async () => {
+    await alice1.inputText(testLink, new MessageInput(alice1));
+    // Accept dialog for link preview
+    await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
+      await alice1.checkModalStrings(
+        englishStrippedStr('linkPreviewsEnable').toString(),
+        englishStrippedStr('linkPreviewsFirstDescription').toString()
+      );
+    });
+    await alice1.clickOnByAccessibilityID('Enable');
+    // On iOS, Appium doesn't paste but type, and the link preview modal interrupts typing the link, the text must be deleted and typed again
+    await alice1.deleteText(new MessageInput(alice1));
+    await alice1.inputText(testLink, new MessageInput(alice1));
+    await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
+
+    await alice1.clickOnByAccessibilityID('Send message button');
+    await alice1.waitForTextElementToBePresent({
+      ...new OutgoingMessageStatusSent(alice1).build(),
+      maxWait: 20000,
+    });
   });
   // Wait for 30 seconds to disappear
-  await sleepFor(30000);
-  await Promise.all([
-    alice1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      maxWait: 1000,
-      text: testLink,
-    }),
-    bob1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      maxWait: 1000,
-      text: testLink,
-    }),
-  ]);
-  await closeApp(alice1, bob1);
+  await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
+    await Promise.all(
+      [alice1, bob1].map(device =>
+        device.hasElementBeenDeleted({
+          strategy: 'accessibility id',
+          selector: 'Message body',
+          maxWait,
+          text: testLink,
+        })
+      )
+    );
+  });
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(alice1, bob1);
+  });
 }
 
 async function disappearingLinkMessage1o1Android(
@@ -91,49 +91,43 @@ async function disappearingLinkMessage1o1Android(
 ) {
   const {
     devices: { alice1, bob1 },
-  } = await open_Alice1_Bob1_friends({
-    platform,
-    focusFriendsConvo: true,
-    testInfo,
+  } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
+    return await open_Alice1_Bob1_friends({
+      platform,
+      focusFriendsConvo: true,
+      testInfo,
+    });
   });
-  await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
-  // Send a link
-  await alice1.inputText(testLink, {
-    strategy: 'accessibility id',
-    selector: 'Message input box',
+  await test.step(TestSteps.DISAPPEARING_MESSAGES.SET_DISAPPEARING_MSG, async () => {
+    await setDisappearingMessage(platform, alice1, ['1:1', timerType, time]);
   });
-  // Accept dialog for link preview
-  await alice1.checkModalStrings(
-    englishStrippedStr('linkPreviewsEnable').toString(),
-    englishStrippedStr('linkPreviewsFirstDescription').toString(),
-    false
-  );
-  await alice1.clickOnByAccessibilityID('Enable');
-  // Preview takes a while to load
-  await sleepFor(5000);
-  await alice1.clickOnByAccessibilityID('Send message button');
-  await alice1.waitForTextElementToBePresent({
-    ...new OutgoingMessageStatusSent(alice1).build(),
-    maxWait: 20000,
+  await test.step(TestSteps.SEND.LINK, async () => {
+    await alice1.inputText(testLink, new MessageInput(alice1));
+    // Accept dialog for link preview
+    await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
+      await alice1.checkModalStrings(
+        englishStrippedStr('linkPreviewsEnable').toString(),
+        englishStrippedStr('linkPreviewsFirstDescription').toString(),
+        false
+      );
+    });
+    await alice1.clickOnByAccessibilityID('Enable');
+    // Preview takes a while to load
+    await sleepFor(5000);
+    await alice1.clickOnByAccessibilityID('Send message button');
+    await alice1.waitForTextElementToBePresent({
+      ...new OutgoingMessageStatusSent(alice1).build(),
+      maxWait: 20000,
+    });
   });
-  // Make sure image preview is available in device 2
-  await bob1.waitForTextElementToBePresent({
-    strategy: 'id',
-    selector: 'network.loki.messenger:id/linkPreviewView',
+  await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
+    await Promise.all(
+      [alice1, bob1].map(device =>
+        device.hasElementBeenDeleted({ ...new LinkPreviewMessage(device).build(), maxWait })
+      )
+    );
   });
-  // Wait for 30 seconds to disappear
-  await sleepFor(30000);
-  await Promise.all([
-    alice1.hasElementBeenDeleted({
-      strategy: 'id',
-      selector: 'network.loki.messenger:id/linkPreviewView',
-      maxWait: 1000,
-    }),
-    bob1.hasElementBeenDeleted({
-      strategy: 'id',
-      selector: 'network.loki.messenger:id/linkPreviewView',
-      maxWait: 1000,
-    }),
-  ]);
-  await closeApp(alice1, bob1);
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(alice1, bob1);
+  });
 }

@@ -10,6 +10,7 @@ import * as sinon from 'sinon';
 
 import {
   ChangeProfilePictureButton,
+  describeLocator,
   DownloadMediaButton,
   FirstGif,
   ImageName,
@@ -30,6 +31,7 @@ import {
   AttachmentsButton,
   MessageInput,
   OutgoingMessageStatusSent,
+  ScrollToBottomButton,
 } from '../test/specs/locators/conversation';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { PlusButton } from '../test/specs/locators/home';
@@ -953,44 +955,209 @@ export class DeviceWrapper {
     return element;
   }
 
+  /**
+   * Ensures an element is not present on the screen at the end of the wait time.
+   * This allows any transitions to complete and tolerates some UI flakiness.
+   * Unlike hasElementBeenDeleted, this doesn't require the element to exist first.
+   *
+   * @param args - Locator (LocatorsInterface or StrategyExtractionObj) with optional properties
+   * @param args.text - Optional text content to match within elements
+   * @param args.maxWait - Maximum time to wait before checking (defaults to 2000ms)
+   *
+   * @throws Error if the element is found
+   *
+   */
+  public async verifyElementNotPresent(
+    args: {
+      text?: string;
+      maxWait?: number;
+    } & (LocatorsInterface | StrategyExtractionObj)
+  ): Promise<void> {
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const maxWait = args.maxWait || 2_000;
+
+    // Wait for any transitions to complete
+    await sleepFor(maxWait);
+
+    const element = await this.findElementQuietly(locator, args.text);
+
+    const description = describeLocator({ ...locator, text: args.text });
+
+    if (element) {
+      throw new Error(`Element ${description} is present when it should not be`);
+    }
+
+    // Element not found - success!
+    this.log(`Verified no element ${description} is present`);
+  }
+
+  /**
+   * Waits for an element to be deleted from the screen. The element must exist initially.
+   *
+   * @param args - Locator (LocatorsInterface or StrategyExtractionObj) with optional properties
+   * @param args.text - Optional text content to match within elements of the same type
+   * @param args.initialMaxWait - Time to wait for element to initially appear (defaults to 10_000ms)
+   * @param args.maxWait - Time to wait for deletion AFTER element is found (defaults to 30_000ms)
+   *
+   * @throws Error if:
+   * - The element is never found within initialMaxWait
+   * - The element still exists after maxWait
+   *
+   * Note: For checks where you just need to ensure an element
+   * is not present (regardless of prior existence), use verifyElementNotPresent() instead.
+   */
   public async hasElementBeenDeleted(
     args: {
       text?: string;
-      maxWait: number;
+      initialMaxWait?: number;
+      maxWait?: number;
     } & (LocatorsInterface | StrategyExtractionObj)
-  ) {
-    const start = Date.now();
-    let element: AppiumNextElementType | undefined = undefined;
+  ): Promise<void> {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
-    const maxWait = args.maxWait ?? 5000;
-    const { text } = args;
-    do {
-      if (!text) {
-        try {
-          // Note: we need a `maxWait` here to make sure we don't wait for an element that we expect is deleted for too long
-          element = await this.waitForTextElementToBePresent({ ...locator, maxWait });
-          await sleepFor(100);
-          this.log(`Element has been found, waiting for deletion`);
-        } catch (e: any) {
-          element = undefined;
-          this.log(`Element has been deleted, great success`);
+    const text = args.text;
+    const maxWait = args.maxWait ?? 30_000;
+    const initialMaxWait = args.initialMaxWait ?? 10_000;
+
+    const description = describeLocator({ ...locator, text: args.text });
+
+    // Phase 1: Wait for element to appear
+    this.log(`Waiting for element ${description} to be deleted...`);
+    await this.waitForElementToAppear(locator, text, initialMaxWait);
+    const foundTime = Date.now();
+    this.log(`Element ${description} has been found, now waiting for deletion`);
+
+    // Phase 2: Wait for element to disappear
+    await this.waitForElementToDisappear(locator, text, maxWait);
+    const deletionTime = Date.now() - foundTime;
+    this.log(
+      `Element ${description} has been deleted after ${(deletionTime / 1000).toFixed(1)}s, great success`
+    );
+  }
+
+  /**
+   * Wait for an element to appear on screen
+   */
+  private async waitForElementToAppear(
+    locator: StrategyExtractionObj,
+    text: string | undefined,
+    timeout: number
+  ): Promise<void> {
+    const start = Date.now();
+
+    while (Date.now() - start < timeout) {
+      const element = await this.findElementQuietly(locator, text);
+      if (element) return;
+      await sleepFor(100);
+    }
+
+    const desc = describeLocator({ ...locator, text });
+    throw new Error(
+      `Element ${desc} was never found within ${timeout}ms - cannot verify deletion of non-existent element`
+    );
+  }
+
+  /**
+   * Wait for an element to disappear with debouncing for flaky UI states.
+   * Requires 3 consecutive checks where element is not found/invisible/stale
+   * to confirm deletion. This prevents false positives during transitions.
+   */
+  private async waitForElementToDisappear(
+    locator: StrategyExtractionObj,
+    text: string | undefined,
+    timeout: number
+  ): Promise<void> {
+    const start = Date.now();
+    const requiredConsecutiveMisses = 3;
+    let consecutiveMisses = 0;
+
+    while (Date.now() - start < timeout) {
+      const element = await this.findElementQuietly(locator, text);
+
+      if (!element) {
+        // Element not found
+        consecutiveMisses++;
+        if (consecutiveMisses >= requiredConsecutiveMisses) {
+          return; // Confirmed deleted
         }
       } else {
+        // Element found - check visibility
         try {
-          // Note: we need a `maxWait` here to make sure we don't wait for an element that we expect is deleted for too long
-          element = await this.waitForTextElementToBePresent({ ...locator, maxWait });
-          await sleepFor(100);
-          this.log(`Text element has been found, waiting for deletion`);
+          const isVisible = await this.isVisible(element.ELEMENT);
+          if (!isVisible) {
+            consecutiveMisses++;
+            if (consecutiveMisses >= requiredConsecutiveMisses) {
+              return; // Confirmed invisible
+            }
+          } else {
+            // Element is visible - reset counter
+            consecutiveMisses = 0;
+          }
         } catch (e) {
-          element = undefined;
-          this.log(`Text element has been deleted, great success`);
+          // Stale element reference or other error
+          consecutiveMisses++;
+          if (consecutiveMisses >= requiredConsecutiveMisses) {
+            return; // Confirmed stale/gone
+          }
         }
       }
-    } while (Date.now() - start <= maxWait && element);
 
-    if (element) {
-      throw new Error(`Element was still present after maximum wait time`);
+      await sleepFor(100);
     }
+
+    const desc = describeLocator({ ...locator, text });
+
+    throw new Error(
+      `Element ${desc} was still present and visible after ${timeout}ms deletion timeout`
+    );
+  }
+
+  /**
+   * Find an element without throwing errors or logging.
+   */
+  private async findElementQuietly(
+    locator: StrategyExtractionObj,
+    text: string | undefined
+  ): Promise<AppiumNextElementType | null> {
+    try {
+      if (text) {
+        const elements = await this.findElements(locator.strategy, locator.selector);
+        for (const element of elements) {
+          const elementText = await this.getText(element.ELEMENT);
+          if (elementText && elementText.toLowerCase() === text.toLowerCase()) {
+            return element;
+          }
+        }
+        return null;
+      }
+      return await this.findElement(locator.strategy, locator.selector);
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Checks if an element is visible on the screen.
+   * For Android, checks the 'displayed' attribute.
+   * For iOS, checks the 'visible' attribute.
+   */
+  private async isVisible(elementId: string): Promise<boolean> {
+    if (this.isAndroid()) {
+      try {
+        const displayed = await this.getAttribute('displayed', elementId);
+        return displayed === 'true';
+      } catch {
+        return false;
+      }
+    }
+    if (this.isIOS()) {
+      try {
+        const visible = await this.getAttribute('visible', elementId);
+        return visible === 'true';
+      } catch {
+        return false;
+      }
+    }
+    throw new Error('Unsupported platform');
   }
 
   public async hasTextElementBeenDeleted(accessibilityId: AccessibilityId, text: string) {
@@ -1171,7 +1338,7 @@ export class DeviceWrapper {
   // UTILITY FUNCTIONS
 
   public async sendMessage(message: string) {
-    await this.inputText(message, { strategy: 'accessibility id', selector: 'Message input box' });
+    await this.inputText(message, new MessageInput(this));
 
     // Click send
 
@@ -1411,10 +1578,7 @@ export class DeviceWrapper {
         strategy: 'id',
         selector: 'network.loki.messenger:id/mediapicker_image_item_thumbnail',
       });
-      await this.inputText(message, {
-        strategy: 'accessibility id',
-        selector: 'New direct message',
-      });
+      await this.inputText(message, new MessageInput(this));
     }
     await this.clickOnElementAll(new SendMediaButton(this));
     if (community) {
@@ -1470,10 +1634,15 @@ export class DeviceWrapper {
     // Select images button/tab
     await this.clickOnByAccessibilityID('Documents folder');
     await this.clickOnByAccessibilityID('Continue');
+    // First you allow access then you allow full access
     await this.clickOnElementAll({
       strategy: 'id',
       selector: 'com.android.permissioncontroller:id/permission_allow_button',
       text: 'Allow',
+    });
+    await this.clickOnElementAll({
+      strategy: 'id',
+      selector: 'com.android.permissioncontroller:id/permission_allow_all_button',
     });
     await sleepFor(2000);
     let videoElement = await this.doesElementExist({
@@ -1557,10 +1726,15 @@ export class DeviceWrapper {
       await this.clickOnElementAll(new AttachmentsButton(this));
       await this.clickOnByAccessibilityID('Documents folder');
       await this.clickOnByAccessibilityID('Continue');
+      // First you allow access then you allow full access
       await this.clickOnElementAll({
         strategy: 'id',
         selector: 'com.android.permissioncontroller:id/permission_allow_button',
         text: 'Allow',
+      });
+      await this.clickOnElementAll({
+        strategy: 'id',
+        selector: 'com.android.permissioncontroller:id/permission_allow_all_button',
       });
       await sleepFor(1000);
       let documentElement = await this.doesElementExist({
@@ -1618,7 +1792,7 @@ export class DeviceWrapper {
     await this.checkModalStrings(
       englishStrippedStr('giphyWarning').toString(),
       englishStrippedStr('giphyWarningDescription').toString(),
-      true
+      false
     );
     await this.clickOnByAccessibilityID('Continue', 5000);
     await this.clickOnElementAll(new FirstGif(this));
@@ -1734,7 +1908,7 @@ export class DeviceWrapper {
   }
 
   public async mentionContact(platform: SupportedPlatformsType, contact: Pick<User, 'userName'>) {
-    await this.inputText(`@`, { strategy: 'accessibility id', selector: 'Message input box' });
+    await this.inputText(`@`, new MessageInput(this));
     // Check that all users are showing in mentions box
     await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',
@@ -1848,24 +2022,11 @@ export class DeviceWrapper {
     await this.scroll({ x: width / 2, y: height * 0.95 }, { x: width / 2, y: height * 0.35 }, 100);
   }
   public async scrollToBottom() {
-    if (this.isAndroid()) {
-      const scrollButton = await this.doesElementExist({
-        strategy: 'id',
-        selector: 'network.loki.messenger:id/scrollToBottomButton',
-      });
-      if (scrollButton) {
-        await this.clickOnElementAll({
-          strategy: 'id',
-          selector: 'network.loki.messenger:id/scrollToBottomButton',
-        });
-      } else {
-        this.info('Scroll button not visible');
-      }
+    const scrollButton = await this.doesElementExist(new ScrollToBottomButton(this));
+    if (scrollButton) {
+      await this.clickOnElementAll(new ScrollToBottomButton(this));
     } else {
-      await this.clickOnElementAll({
-        strategy: 'accessibility id',
-        selector: 'Scroll button',
-      });
+      this.info('Scroll button not visible');
     }
   }
 
@@ -2059,7 +2220,8 @@ export class DeviceWrapper {
 
     // Sanitize
     function removeNewLines(input: string): string {
-      return input.replace(/\n+/g, ' ').trim();
+      // Handle space + newlines as a unit
+      return input.replace(/\s*\n+/g, ' ').trim();
     }
 
     // Locators

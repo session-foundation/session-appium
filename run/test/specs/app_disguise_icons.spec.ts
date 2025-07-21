@@ -14,11 +14,16 @@ bothPlatformsIt({
   risk: 'medium',
   countOfDevicesNeeded: 1,
   testCb: appDisguiseIcons,
+  allureSuites: {
+    parent: 'Settings',
+    suite: 'App Disguise',
+  },
+  allureDescription: 'Verifies the alternate icons on the App Disguise page look as expected',
 });
 
 async function appDisguiseIcons(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
-  await newUser(device, USERNAME.ALICE);
+  await newUser(device, USERNAME.ALICE, false);
   await device.clickOnElementAll(new UserSettings(device));
   // Must scroll down to reveal the Appearance menu item
   await device.scrollDown();

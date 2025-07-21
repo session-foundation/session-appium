@@ -12,6 +12,11 @@ bothPlatformsIt({
   risk: 'low',
   testCb: unblockUser,
   countOfDevicesNeeded: 2,
+  allureSuites: {
+    parent: 'User Actions',
+    suite: 'Block/Unblock',
+  },
+  allureDescription: 'Verifies that a user can be unblocked after being blocked',
 });
 
 async function unblockUser(platform: SupportedPlatformsType, testInfo: TestInfo) {

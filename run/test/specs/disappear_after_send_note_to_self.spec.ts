@@ -14,6 +14,12 @@ bothPlatformsIt({
   risk: 'medium',
   testCb: disappearAfterSendNoteToSelf,
   countOfDevicesNeeded: 1,
+  allureSuites: {
+    parent: 'Disappearing Messages',
+    suite: 'Conversation Types',
+  },
+  allureDescription:
+    'Verifies that Disappearing Messages can be set in Note to Self, and that a message disappears after the specified expiry time.',
 });
 
 async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -22,17 +28,15 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, te
   const alice = await newUser(device, USERNAME.ALICE);
   const controlMode: DisappearActions = 'sent';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+  const maxWait = 35_000; // 30s plus buffer
+
   // Send message to self to bring up Note to Self conversation
   await device.clickOnElementAll(new PlusButton(device));
   await device.clickOnElementAll(new NewMessageOption(device));
   await device.inputText(alice.accountID, new EnterAccountID(device));
   await device.scrollDown();
   await device.clickOnElementAll(new NextButton(device));
-  await device.inputText('Creating note to self', {
-    strategy: 'accessibility id',
-    selector: 'Message input box',
-  });
-  await device.clickOnByAccessibilityID('Send message button');
+  await device.sendMessage('Buy milk');
   // Enable disappearing messages
   await setDisappearingMessage(platform, device, [
     'Note to Self',
@@ -44,14 +48,11 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, te
     `You set messages to disappear ${time} after they have been ${controlMode}.`
   );
   await device.sendMessage(testMessage);
-  // Sleep time dependent on platform
-
-  await sleepFor(30000);
   await device.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: testMessage,
-    maxWait: 1000,
+    maxWait,
   });
   // Great success
   await closeApp(device);

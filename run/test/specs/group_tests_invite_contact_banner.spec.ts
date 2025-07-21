@@ -1,13 +1,14 @@
 import type { TestInfo } from '@playwright/test';
 
-import { bothPlatformsIt } from '../../types/sessionIt';
+import { androidIt } from '../../types/sessionIt';
 import { InviteContactsButton } from './locators';
 import { ConversationSettings } from './locators/conversation';
 import { LatestReleaseBanner, ManageMembersMenuItem } from './locators/groups';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsIt({
+// This banner no longer exists on iOS
+androidIt({
   title: 'Invite contacts banner',
   risk: 'medium',
   testCb: inviteContactGroupBanner,

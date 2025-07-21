@@ -28,6 +28,12 @@ export abstract class LocatorsInterface {
   }
 }
 
+export function describeLocator(locator: StrategyExtractionObj & { text?: string }): string {
+  const { strategy, selector, text } = locator;
+  const base = `${strategy} "${selector}"`;
+  return text ? `${base} and text "${text}"` : base;
+}
+
 // Returns the expected screenshot path for a locator, optionally varying by state
 export abstract class LocatorsInterfaceScreenshot extends LocatorsInterface {
   abstract screenshotFileName(state?: ElementStates): string;
@@ -336,7 +342,7 @@ export class BlockUserConfirmationModal extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Block',
+          selector: 'block-user-confirm-button',
         } as const;
       case 'ios':
         return {
@@ -475,7 +481,7 @@ export class MediaMessageInput extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'accessibility id',
-          selector: 'New direct message',
+          selector: 'Message input box',
         };
       case 'ios':
         return {
@@ -492,7 +498,7 @@ export class SendMediaButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'accessibility id',
-          selector: 'Send',
+          selector: 'Send message button',
         };
       case 'ios':
         return {

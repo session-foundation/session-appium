@@ -15,6 +15,11 @@ bothPlatformsIt({
   risk: 'high',
   testCb: blockUserInConversationOptions,
   countOfDevicesNeeded: 3,
+  allureSuites: {
+    parent: 'User Actions',
+    suite: 'Block/Unblock',
+  },
+  allureDescription: 'Verifies that a blocked user syncs to a linked device',
 });
 
 async function blockUserInConversationOptions(
@@ -82,5 +87,3 @@ async function blockUserInConversationOptions(
   // Close app
   await closeApp(alice1, bob1, alice2);
 }
-
-// TODO unblock user

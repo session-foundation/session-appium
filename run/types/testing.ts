@@ -128,16 +128,19 @@ export type XPath =
   | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
+  | `//*[@resource-id='network.loki.messenger:id/callTitle' and contains(@text, ':')]`
   | `//*[starts-with(@content-desc, "Photo taken on")]`
   | `//android.widget.TextView[@text="${string}"]`
   | `//XCUIElementTypeAlert//*//XCUIElementTypeButton`
   | `//XCUIElementTypeButton[@name="Continue"]`
+  | `//XCUIElementTypeButton[@name="Settings"]`
   | `//XCUIElementTypeCell[@name="${string}"]`
   | `//XCUIElementTypeCell[@name="Session"]`
   | `//XCUIElementTypeImage`
   | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`
   | `//XCUIElementTypeStaticText[@name="Paste"]`
   | `//XCUIElementTypeStaticText[@name="Videos"]`
+  | `//XCUIElementTypeStaticText[contains(@name, '00:')]`
   | `//XCUIElementTypeSwitch[@name="Read Receipts, Send read receipts in one-to-one chats."]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`
@@ -165,6 +168,7 @@ export type AccessibilityId =
   | 'Apply'
   | 'Apply changes'
   | 'Attachments button'
+  | 'Awaiting Recipient Answer... 4/6'
   | 'Back'
   | 'Block'
   | 'blocked-banner'
@@ -274,6 +278,7 @@ export type AccessibilityId =
   | 'Link Device'
   | 'Link preview'
   | 'Loading animation'
+  | 'Local Network Permission - Switch'
   | 'Manage Members'
   | 'Media message'
   | 'MeetingSE'
@@ -328,6 +333,7 @@ export type AccessibilityId =
   | 'Reply to message'
   | 'Restore your session button'
   | 'Reveal recovery phrase button'
+  | 'Ringing...'
   | 'Save'
   | 'Save button'
   | 'Save to Files'
@@ -412,7 +418,9 @@ export type Id =
   | 'Copy button'
   | 'Create account button'
   | 'Create group'
+  | 'delete-contact-confirm-button'
   | 'delete-contact-menu-option'
+  | 'delete-conversation-confirm-button'
   | 'delete-conversation-menu-option'
   | 'delete-for-everyone'
   | 'delete-only-on-this-device'
@@ -430,6 +438,7 @@ export type Id =
   | 'group-name'
   | 'Group name'
   | 'Group name input'
+  | 'hide-nts-confirm-button'
   | 'hide-nts-menu-option'
   | 'Hide'
   | 'Hide recovery password button'
@@ -443,6 +452,7 @@ export type Id =
   | 'Last updated timestamp'
   | 'Learn about staking link'
   | 'Learn more link'
+  | 'leave-group-confirm-button'
   | 'leave-group-menu-option'
   | 'Leave'
   | 'Loading animation'
@@ -454,6 +464,10 @@ export type Id =
   | 'network.loki.messenger:id/acceptCallButton'
   | 'network.loki.messenger:id/action_apply'
   | 'network.loki.messenger:id/back_button'
+  | 'network.loki.messenger:id/call_text_view'
+  | 'network.loki.messenger:id/callInProgress'
+  | 'network.loki.messenger:id/callSubtitle'
+  | 'network.loki.messenger:id/callTitle'
   | 'network.loki.messenger:id/crop_image_menu_crop'
   | 'network.loki.messenger:id/emptyStateContainer'
   | 'network.loki.messenger:id/endCallButton'
@@ -493,6 +507,7 @@ export type Id =
   | 'Session id input box'
   | 'Set button'
   | 'Share button'
+  | 'show-nts-confirm-button'
   | 'Show'
   | 'Slow mode notifications button'
   | 'Terms of Service'

@@ -1,3 +1,5 @@
+import { UserNameType } from '@session-foundation/qa-seeder';
+
 // Centralized Allure Reporter configuration for test organization and reporting consistency.
 
 /**
@@ -18,12 +20,18 @@
  */
 
 export type AllureSuiteConfig =
+  | { parent: 'Communities' }
+  | { parent: 'Disappearing Messages'; suite: 'Conversation Types' | 'Message Types' | 'Rules' }
   | { parent: 'Groups'; suite: 'Edit Group' }
+  | { parent: 'Linkouts' }
+  | { parent: 'Sending Messages'; suite: 'Sending Attachments' }
+  | { parent: 'Settings'; suite: 'App Disguise' }
   | {
       parent: 'User Actions';
-      suite: 'Delete Contact' | 'Delete Conversation' | 'Hide Note to Self';
-    };
-
+      suite: 'Block/Unblock' | 'Delete Contact' | 'Delete Conversation' | 'Hide Note to Self';
+    }
+  | { parent: 'Visual Checks' }
+  | { parent: 'Voice Calls' };
 /**
  * Standardized Test Step Descriptions
  *
@@ -44,12 +52,35 @@ export const TestSteps = {
     QA_SEEDER: 'Restore pre-seeded accounts',
     CLOSE_APP: 'Close app(s)',
   },
+  // Plus Button options
+  NEW_CONVERSATION: {
+    JOIN_COMMUNITY: 'Join Community',
+  },
+  // Sending things
+  SEND: {
+    LINK: 'Send Link',
+    IMAGE: 'Send Image',
+  },
   // Open/Navigate steps
   OPEN: {
     UPDATE_GROUP_INFO: "Open 'Update Group Information' modal",
   },
+  // Disappearing Messages
+  DISAPPEARING_MESSAGES: {
+    SET_DISAPPEARING_MSG: 'Set Disappearing Messages',
+  },
+  CALLS: {
+    INITIATE_CALL: (userName: UserNameType) => `${userName} initiates voice call`,
+    ACCEPT_PERMS: (userName: UserNameType) => `${userName} accepts voice call permissions`,
+  },
   // Verify steps
   VERIFY: {
-    MODAL_STRINGS: 'Verify modal strings',
+    GENERIC_MODAL: 'Verify modal strings',
+    SPECIFIC_MODAL: (modalDesc: string) => `Verify ${modalDesc} modal strings`,
+    MESSAGE_RECEIVED: 'Verify message has been received',
+    MESSAGE_DISAPPEARED: 'Verify message disappeared',
+    CALLING: 'Verify call has been started',
+    CALL_SUCCESSFUL: 'Verify call has been put through successfully',
+    MISSED_CALL: 'Verify missed call',
   },
 };

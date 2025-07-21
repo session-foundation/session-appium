@@ -13,6 +13,11 @@ bothPlatformsIt({
   risk: 'high',
   testCb: joinCommunityTest,
   countOfDevicesNeeded: 2,
+  allureSuites: {
+    parent: 'Communities',
+  },
+  allureDescription:
+    'Verifies that joining a community works and the conversation syncs to a linked device',
 });
 
 async function joinCommunityTest(platform: SupportedPlatformsType, testInfo: TestInfo) {

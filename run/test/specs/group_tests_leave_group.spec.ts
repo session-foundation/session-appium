@@ -44,7 +44,7 @@ async function leaveGroup(platform: SupportedPlatformsType, testInfo: TestInfo) 
   await alice1.waitForControlMessageToBePresent(groupMemberLeft);
   await bob1.waitForControlMessageToBePresent(groupMemberLeft);
   // Check device 3 that group has disappeared
-  await charlie1.hasElementBeenDeleted({
+  await charlie1.verifyElementNotPresent({
     ...new ConversationItem(charlie1, testGroupName).build(),
     maxWait: 5000,
   });

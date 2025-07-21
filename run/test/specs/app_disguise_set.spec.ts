@@ -24,11 +24,16 @@ androidIt({
   risk: 'medium',
   countOfDevicesNeeded: 1,
   testCb: appDisguiseSetIcon,
+  allureSuites: {
+    parent: 'Settings',
+    suite: 'App Disguise',
+  },
+  allureDescription: 'Verifies the alternate icon set on the App Disguise page is applied',
 });
 
 async function appDisguiseSetIcon(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
-  await newUser(device, USERNAME.ALICE);
+  await newUser(device, USERNAME.ALICE, false);
   await device.clickOnElementAll(new UserSettings(device));
   // Must scroll down to reveal the Appearance menu item
   await device.scrollDown();

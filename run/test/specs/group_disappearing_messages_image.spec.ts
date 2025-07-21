@@ -3,7 +3,6 @@ import type { TestInfo } from '@playwright/test';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
@@ -12,6 +11,11 @@ bothPlatformsIt({
   risk: 'low',
   countOfDevicesNeeded: 3,
   testCb: disappearingImageMessageGroup,
+  allureSuites: {
+    parent: 'Disappearing Messages',
+    suite: 'Message Types',
+  },
+  allureDescription: 'Verifies that an image disappears as expected in a group conversation',
 });
 
 async function disappearingImageMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -19,6 +23,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
   const testGroupName = 'Testing disappearing messages';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   const timerType = 'Disappear after send option';
+  const maxWait = 35_000; // 30s plus buffer
   const {
     devices: { alice1, bob1, charlie1 },
   } = await open_Alice1_Bob1_Charlie1_friends_group({
@@ -37,36 +42,11 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
   ]);
   if (platform === 'ios') {
     await Promise.all(
-      [bob1, charlie1].map(device =>
-        device.waitForTextElementToBePresent({
-          strategy: 'accessibility id',
-          selector: 'Message body',
-          text: testMessage,
-          maxWait: 4000,
-        })
-      )
-    );
-  }
-  if (platform === 'android') {
-    await Promise.all(
-      [bob1, charlie1].map(device =>
-        device.waitForTextElementToBePresent({
-          strategy: 'accessibility id',
-          selector: 'Media message',
-          maxWait: 1000,
-        })
-      )
-    );
-  }
-  // Wait for 30 seconds
-  await sleepFor(30000);
-  if (platform === 'ios') {
-    await Promise.all(
       [alice1, bob1, charlie1].map(device =>
         device.hasElementBeenDeleted({
           strategy: 'accessibility id',
           selector: 'Message body',
-          maxWait: 1000,
+          maxWait,
           text: testMessage,
         })
       )
@@ -78,7 +58,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
         device.hasElementBeenDeleted({
           strategy: 'accessibility id',
           selector: 'Media message',
-          maxWait: 1000,
+          maxWait,
         })
       )
     );

@@ -1,18 +1,20 @@
 import type { TestInfo } from '@playwright/test';
 
-import { bothPlatformsIt } from '../../types/sessionIt';
+import { androidIt } from '../../types/sessionIt';
 import { LatestReleaseBanner } from './locators/groups';
 import { PlusButton } from './locators/home';
 import { CreateGroupOption } from './locators/start_conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsIt({
+// This banner no longer exists on iOS
+androidIt({
   title: 'Create group banner',
   risk: 'high',
   testCb: createGroupBanner,
   countOfDevicesNeeded: 2,
 });
+
 async function createGroupBanner(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },

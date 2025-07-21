@@ -3,7 +3,6 @@ import type { TestInfo } from '@playwright/test';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
@@ -17,10 +16,16 @@ bothPlatformsItSeparate({
   android: {
     testCb: disappearingGifMessage1o1Android,
   },
+  allureSuites: {
+    parent: 'Disappearing Messages',
+    suite: 'Message Types',
+  },
+  allureDescription: 'Verifies that a GIF disappears as expected in a 1:1 conversation',
 });
 
 // The timing with 30 seconds was a bit tight in terms of the attachment downloading and becoming visible
 const time = DISAPPEARING_TIMES.ONE_MINUTE;
+const maxWait = 65_000; // 60s plus buffer
 const timerType = 'Disappear after send option';
 const testMessage = "Testing disappearing messages for GIF's";
 
@@ -39,19 +44,17 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType, te
   // Check if the 'Tap to download media' config appears
   // Click on config
   await bob1.trustAttachments(USERNAME.ALICE);
-  // Wait for 60 seconds
-  await sleepFor(60000);
   // Check if GIF has been deleted on both devices
   await alice1.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Message body',
-    maxWait: 1000,
+    maxWait,
     text: testMessage,
   });
   await bob1.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Message body',
-    maxWait: 1000,
+    maxWait,
     text: testMessage,
   });
   await closeApp(alice1, bob1);
@@ -76,34 +79,17 @@ async function disappearingGifMessage1o1Android(
   // Check if the 'Tap to download media' config appears
   // Click on config
   await bob1.trustAttachments(USERNAME.ALICE);
-
-  // The UI takes some sime to refresh the component once we click "trust sender", so allow 5s here
-  const maxWaitForMediaMessage = 5000;
-  await Promise.all([
-    alice1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Media message',
-      maxWait: maxWaitForMediaMessage,
-    }),
-    bob1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Media message',
-      maxWait: maxWaitForMediaMessage,
-    }),
-  ]);
-  // Wait for 60 seconds (time)
-  await sleepFor(60000);
   // Check if GIF has been deleted on both devices
   await Promise.all([
     alice1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Media message',
-      maxWait: 1000,
+      maxWait,
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Media message',
-      maxWait: 1000,
+      maxWait,
     }),
   ]);
   await closeApp(alice1, bob1);

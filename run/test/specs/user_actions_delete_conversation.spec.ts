@@ -42,10 +42,10 @@ async function deleteConversation(platform: SupportedPlatformsType, testInfo: Te
       strategy: 'accessibility id',
       selector: 'Delete',
     });
-    await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
+    await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('conversationsDelete').toString(),
-        englishStrippedStr('deleteConversationDescription') // This is currently incorrect on both platforms, SES-4142 and 4143
+        englishStrippedStr('deleteConversationDescription')
           .withArgs({ name: USERNAME.BOB })
           .toString(),
         false
@@ -55,14 +55,16 @@ async function deleteConversation(platform: SupportedPlatformsType, testInfo: Te
   });
 
   await test.step('Verify conversation deleted on both alice devices', async () => {
-    await Promise.all(
-      [alice1, alice2].map(device =>
-        device.hasElementBeenDeleted({
-          ...new ConversationItem(device, bob.userName).build(),
-          maxWait: 3000,
-        })
-      )
-    );
+    await Promise.all([
+      alice1.verifyElementNotPresent({
+        ...new ConversationItem(alice1, bob.userName).build(),
+        maxWait: 5_000,
+      }),
+      alice2.hasElementBeenDeleted({
+        ...new ConversationItem(alice2, bob.userName).build(),
+        maxWait: 20_000,
+      }),
+    ]);
   });
 
   await test.step('Send message from Bob to Alice', async () => {

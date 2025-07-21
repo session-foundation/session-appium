@@ -3,7 +3,6 @@ import type { TestInfo } from '@playwright/test';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES, DisappearModes } from '../../types/testing';
 import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
 import { checkDisappearingControlMessage } from './utils/disappearing_control_messages';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
@@ -13,6 +12,11 @@ bothPlatformsIt({
   risk: 'high',
   testCb: disappearAfterSend,
   countOfDevicesNeeded: 2,
+  allureSuites: {
+    parent: 'Disappearing Messages',
+    suite: 'Conversation Types',
+  },
+  allureDescription: `Verifies that 'Disappear After Send' works as expected in a 1:1 conversation`,
 });
 
 async function disappearAfterSend(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -28,6 +32,7 @@ async function disappearAfterSend(platform: SupportedPlatformsType, testInfo: Te
   const testMessage = `Checking disappear after ${mode} is working`;
   const controlMode: DisappearActions = 'sent';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+  const maxWait = 35_000; // 30s plus buffer
   // Select disappearing messages option
   await setDisappearingMessage(
     platform,
@@ -53,19 +58,18 @@ async function disappearAfterSend(platform: SupportedPlatformsType, testInfo: Te
     text: testMessage,
   });
   // Wait for message to disappear
-  await sleepFor(30000);
   await Promise.all([
     alice1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: testMessage,
-      maxWait: 5000,
+      maxWait,
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: testMessage,
-      maxWait: 5000,
+      maxWait,
     }),
   ]);
 

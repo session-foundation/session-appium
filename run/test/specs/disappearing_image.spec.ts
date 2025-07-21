@@ -12,11 +12,17 @@ bothPlatformsIt({
   risk: 'low',
   testCb: disappearingImageMessage1o1,
   countOfDevicesNeeded: 2,
+  allureSuites: {
+    parent: 'Disappearing Messages',
+    suite: 'Message Types',
+  },
+  allureDescription: 'Verifies that an image disappears as expected in a 1:1 conversation',
 });
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 const testMessage = 'Testing disappearing messages for images';
+const maxWait = 35_000; // 30s plus buffer
 
 async function disappearingImageMessage1o1(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
@@ -30,19 +36,17 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType, tes
   await sleepFor(500);
   await alice1.sendImage(testMessage);
   await bob1.trustAttachments(USERNAME.ALICE);
-  // Wait for 30 seconds
-  await sleepFor(30000);
   await Promise.all([
     alice1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
-      maxWait: 1000,
+      maxWait,
       text: testMessage,
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
-      maxWait: 1000,
+      maxWait,
       text: testMessage,
     }),
   ]);

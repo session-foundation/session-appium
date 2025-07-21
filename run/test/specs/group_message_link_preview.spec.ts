@@ -1,9 +1,10 @@
 import type { TestInfo } from '@playwright/test';
 
+import { testLink } from '../../constants';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { LinkPreview, LinkPreviewMessage } from './locators';
-import { OutgoingMessageStatusSent } from './locators/conversation';
+import { MessageInput, OutgoingMessageStatusSent } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -22,7 +23,6 @@ bothPlatformsItSeparate({
 
 async function sendLinkGroupiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Message checks for groups';
-  const testLink = `https://getsession.org/`;
 
   const {
     devices: { alice1, bob1, charlie1 },
@@ -35,10 +35,7 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType, testInfo: Test
   });
   const replyMessage = `Replying to link from ${alice.userName} in group ${testGroupName}`;
   // Create contact between User A and User B
-  await alice1.inputText(testLink, {
-    strategy: 'accessibility id',
-    selector: 'Message input box',
-  });
+  await alice1.inputText(testLink, new MessageInput(alice1));
   // Accept dialog for link preview
   await alice1.checkModalStrings(
     englishStrippedStr('linkPreviewsEnable').toString(),
@@ -52,10 +49,7 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType, testInfo: Test
     maxWait: 20000,
   });
   // Send again for image
-  await alice1.inputText(testLink, {
-    strategy: 'accessibility id',
-    selector: 'Message input box',
-  });
+  await alice1.inputText(testLink, new MessageInput(alice1));
   await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
   await alice1.clickOnByAccessibilityID('Send message button');
   await bob1.waitForTextElementToBePresent({
@@ -97,12 +91,8 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType, testInfo: 
     focusGroupConvo: true,
     testInfo,
   });
-  const testLink = `https://getsession.org/`;
   // Send a link
-  await alice1.inputText(testLink, {
-    strategy: 'accessibility id',
-    selector: 'Message input box',
-  });
+  await alice1.inputText(testLink, new MessageInput(alice1));
   // Accept dialog for link preview
   await alice1.checkModalStrings(
     englishStrippedStr('linkPreviewsEnable').toString(),

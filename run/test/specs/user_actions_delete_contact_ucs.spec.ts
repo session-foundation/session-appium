@@ -6,8 +6,8 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import {
   ConversationSettings,
+  DeleteContactConfirmButton,
   DeleteContactMenuItem,
-  DeleteModalConfirm,
 } from './locators/conversation';
 import { ConversationItem } from './locators/home';
 import { open_Alice2_Bob1_friends } from './state_builder';
@@ -16,7 +16,7 @@ import { closeApp, SupportedPlatformsType } from './utils/open_app';
 bothPlatformsIt({
   title: 'Delete contact from conversation settings',
   risk: 'high',
-  testCb: deleteContactUCS,
+  testCb: deleteContactCS,
   countOfDevicesNeeded: 3,
   allureSuites: {
     parent: 'User Actions',
@@ -24,7 +24,7 @@ bothPlatformsIt({
   },
 });
 
-async function deleteContactUCS(platform: SupportedPlatformsType, testInfo: TestInfo) {
+async function deleteContactCS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { devices, prebuilt } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
     return await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: false, testInfo });
   });
@@ -41,29 +41,31 @@ async function deleteContactUCS(platform: SupportedPlatformsType, testInfo: Test
     );
   });
 
-  await test.step('Delete contact from UCS on alice1', async () => {
+  await test.step('Delete contact from Conversation Settings on alice1', async () => {
     await alice1.clickOnElementAll(new ConversationItem(alice1, bob.userName));
     await alice1.clickOnElementAll(new ConversationSettings(alice1));
     await alice1.scrollDown(); // Ensure Delete Contact is visible
     await alice1.clickOnElementAll(new DeleteContactMenuItem(alice1));
-    await test.step(TestSteps.VERIFY.MODAL_STRINGS, async () => {
+    await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('contactDelete').toString(),
         englishStrippedStr('deleteContactDescription').withArgs({ name: USERNAME.BOB }).toString()
       );
     });
-    await alice1.clickOnElementAll(new DeleteModalConfirm(alice1));
+    await alice1.clickOnElementAll(new DeleteContactConfirmButton(alice1));
   });
 
   await test.step('Verify contact deleted on both alice devices', async () => {
-    await Promise.all(
-      [alice1, alice2].map(device =>
-        device.hasElementBeenDeleted({
-          ...new ConversationItem(device, bob.userName).build(),
-          maxWait: 5000,
-        })
-      )
-    );
+    await Promise.all([
+      alice1.verifyElementNotPresent({
+        ...new ConversationItem(alice1, bob.userName).build(),
+        maxWait: 5_000,
+      }),
+      alice2.hasElementBeenDeleted({
+        ...new ConversationItem(alice2, bob.userName).build(),
+        maxWait: 20_000,
+      }),
+    ]);
   });
 
   await test.step('Send message from Bob to Alice', async () => {
