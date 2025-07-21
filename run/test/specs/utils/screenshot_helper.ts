@@ -171,24 +171,26 @@ export async function captureScreenshotsOnFailure(testInfo: TestInfo): Promise<v
     console.log('No screenshots captured successfully');
     return;
   }
-
   // Process screenshots in parallel (labels + convert to Buffer)
-  const processedScreenshots = await Promise.all(
+  const processedResults = await Promise.allSettled(
     successfulCaptures.map(async ({ device, base64 }) => {
-      try {
-        const rawBuffer = Buffer.from(base64!, 'base64');
-        const labeledBuffer = await addDeviceLabel(rawBuffer, device);
-        console.log(`Processed screenshot from device ${device.getDeviceIdentity()}`);
-        return labeledBuffer;
-      } catch (error) {
-        console.error(`Failed to process screenshot from ${device.getDeviceIdentity()}:`, error);
-        return null;
-      }
+      const rawBuffer = Buffer.from(base64!, 'base64');
+      const labeledBuffer = await addDeviceLabel(rawBuffer, device);
+      console.log(`Processed screenshot from device ${device.getDeviceIdentity()}`);
+      return { device, labeledBuffer };
     })
   );
 
-  // Filter out any processing failures
-  const screenshots = processedScreenshots.filter(s => s !== null);
+  // Extract successful results and log failures
+  const screenshots = processedResults
+    .filter((result): result is PromiseFulfilledResult<{ device: any; labeledBuffer: Buffer }> => {
+      if (result.status === 'rejected') {
+        console.error(`Failed to process screenshot:`, result.reason);
+        return false;
+      }
+      return true;
+    })
+    .map(result => result.value.labeledBuffer);
 
   if (screenshots.length === 0) {
     console.log('No screenshots processed successfully');
