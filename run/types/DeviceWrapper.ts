@@ -1149,7 +1149,8 @@ export class DeviceWrapper {
       } catch {
         return false;
       }
-    } else if (this.isIOS()) {
+    }
+    if (this.isIOS()) {
       try {
         const visible = await this.getAttribute('visible', elementId);
         return visible === 'true';
@@ -1157,7 +1158,7 @@ export class DeviceWrapper {
         return false;
       }
     }
-    return false;
+    throw new Error('Unsupported platform');
   }
 
   public async hasTextElementBeenDeleted(accessibilityId: AccessibilityId, text: string) {
