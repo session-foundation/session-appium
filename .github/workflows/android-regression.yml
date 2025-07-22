@@ -122,13 +122,25 @@ jobs:
         run: |
           pwd
           wget -q -O session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
-          ls
           tar xf session-android.apk.tar.xz
-          ls
           mv session-android-*universal extracted
-          ls extracted
-          mv extracted/*.apk extracted/session-android.apk
-          ls extracted
+          
+          # Try to get the AQA APK first
+          if ls extracted/*automaticQa.apk 1> /dev/null 2>&1; then
+            mv extracted/*automaticQa.apk extracted/session-android.apk
+            echo "Found AQA APK, proceeding"
+          else
+            # Fallback to any APK if no automaticQa exists
+            APK_COUNT=$(ls extracted/*.apk 2>/dev/null | wc -l)
+            if [ "$APK_COUNT" -eq 1 ]; then
+              mv extracted/*.apk extracted/session-android.apk
+              echo "No AQA APK found, using the single APK in archive"
+            else
+              echo "Error: Expected 1 APK or an AQA APK, found $APK_COUNT APKs"
+              ls extracted/
+              exit 1
+            fi
+          fi
 
       - name: Setup for both platforms
         uses: ./github/actions/setup

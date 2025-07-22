@@ -9,11 +9,13 @@ import {
 
 import type { DeviceWrapper } from '../../../types/DeviceWrapper';
 
+import { DEVNET_URL } from '../../../constants';
 import { ConversationItem } from '../locators/home';
 import { openAppMultipleDevices, type SupportedPlatformsType } from '../utils/open_app';
 import { restoreAccountNoFallback } from '../utils/restore_account';
 
-const networkToTarget = 'mainnet';
+// const networkToTarget = 'mainnet';
+const networkToTarget = DEVNET_URL;
 
 type WithAlice = { alice: StateUser };
 type WithBob = { bob: StateUser };

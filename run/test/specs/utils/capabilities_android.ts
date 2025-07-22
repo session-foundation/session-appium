@@ -8,11 +8,15 @@ import { isString } from 'lodash';
 
 import { getAndroidApk } from './binaries';
 import { CapabilitiesIndexType } from './capabilities_ios';
+import { detectCapabilities } from './extract_capabilities';
 dotenv.config();
 // Access the environment variable
 
 // Concatenate the environment variable with the fixed part of the path
 const androidAppFullPath = getAndroidApk();
+const appInfo = detectCapabilities(androidAppFullPath, 'android');
+const appPackage = appInfo.packageName
+
 
 console.log(`Android app full path: ${androidAppFullPath}`);
 
@@ -20,7 +24,7 @@ const sharedCapabilities: AppiumAndroidCapabilities & AppiumCapabilities = {
   'appium:app': androidAppFullPath,
   'appium:platformName': 'Android',
   'appium:platformVersion': '14',
-  'appium:appPackage': 'network.loki.messenger',
+  'appium:appPackage': appPackage,
   'appium:appActivity': 'network.loki.messenger.RoutingActivity',
   'appium:automationName': 'UiAutomator2',
   'appium:newCommandTimeout': 300000,
