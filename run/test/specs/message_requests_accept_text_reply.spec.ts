@@ -45,7 +45,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType, testInfo:
   });
   await device1.onAndroid().waitForTextElementToBePresent({
     strategy: 'id',
-    selector: 'network.loki.messenger:id/textSendAfterApproval',
+    selector: 'network.loki.messenger.qa:id/textSendAfterApproval',
     text: messageRequestPendingDescription,
   });
 
@@ -75,7 +75,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType, testInfo:
 
   await device2.onAndroid().waitForTextElementToBePresent({
     strategy: 'id',
-    selector: 'network.loki.messenger:id/sendAcceptsTextView',
+    selector: 'network.loki.messenger.qa:id/sendAcceptsTextView',
     text: messageRequestsAcceptDescription,
   });
 

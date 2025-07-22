@@ -17,7 +17,7 @@ export class ScrollToBottomButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger:id/scrollToBottomButton',
+          selector: 'network.loki.messenger.qa:id/scrollToBottomButton',
         } as const;
       case 'ios':
         return {
@@ -333,7 +333,7 @@ export class CommunityInvitation extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger:id/openGroupTitleTextView',
+          selector: 'network.loki.messenger.qa:id/openGroupTitleTextView',
           text: testCommunityName,
         } as const;
       case 'ios':

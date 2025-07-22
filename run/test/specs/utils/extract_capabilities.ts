@@ -2,13 +2,6 @@ import { execSync } from 'child_process';
 
 import { DEVNET_URL } from '../../../constants';
 
-
-export interface AppInfo {
-  packageName: string; // Android package name or (later) iOS bundle ID
-  isAQABuild: boolean;
-  platform: 'android' | 'ios';
-}
-
 /**
  * Check if we can reach the internal development network
  */
@@ -36,11 +29,10 @@ export function canReachInternalNetwork(): boolean {
 // extract_capabilities.ts
 export function isAQABuildAndroid(apkPath: string): boolean {
   // Check env var first (for CI), then filename (for local)
-  const isAutomaticQA = process.env.IS_AUTOMATIC_QA === 'true' || 
-                        apkPath.includes('automaticQa');
-  
+  const isAutomaticQA = process.env.IS_AUTOMATIC_QA === 'true' || apkPath.includes('automaticQa');
+
   console.log(`📦 ${isAutomaticQA ? 'AutomaticQA' : 'Regular'} build detected`);
-  
+
   return isAutomaticQA;
 }
 // TODO add in iOS bundle detection once we have the opportunity to do so

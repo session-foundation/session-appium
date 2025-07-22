@@ -55,14 +55,12 @@ export function getNetworkTarget(platform: SupportedPlatformsType): NetworkType 
         console.warn('⚠️  On internal network but using regular build');
       }
 
-      DETECTED_NETWORK_TARGET = (isAQA && canAccessDevnet) 
-        ? DEVNET_URL as NetworkType
-        : 'mainnet';
-        
+      DETECTED_NETWORK_TARGET = isAQA && canAccessDevnet ? (DEVNET_URL as NetworkType) : 'mainnet';
+
       console.log(`🎯 Network target: ${DETECTED_NETWORK_TARGET}`);
     }
   }
-  
+
   return DETECTED_NETWORK_TARGET;
 }
 

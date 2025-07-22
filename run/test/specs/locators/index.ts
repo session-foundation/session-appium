@@ -56,7 +56,7 @@ export class ApplyChanges extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger:id/action_apply',
+          selector: 'network.loki.messenger.qa:id/action_apply',
         } as const;
       case 'ios':
         return {
@@ -468,7 +468,7 @@ export class LinkPreviewMessage extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger:id/linkPreviewView',
+          selector: 'network.loki.messenger.qa:id/linkPreviewView',
         };
       case 'ios':
         throw new Error(`No such element on iOS`);
@@ -531,7 +531,7 @@ export class ImageName extends LocatorsInterface {
 //       case 'android':
 //         return {
 //           strategy: 'id',
-//           selector: 'network.loki.messenger:id/textSendAfterApproval',
+//           selector: 'network.loki.messenger.qa:id/textSendAfterApproval',
 //           text: 'You will be able to send voice messages and attachments once the recipient has approved this message request.',
 //         };
 //       case 'ios':
@@ -556,7 +556,7 @@ export class ImageName extends LocatorsInterface {
 //       case 'android':
 //         return {
 //           strategy: 'id',
-//           selector: 'network.loki.messenger:id/sendAcceptsTextView',
+//           selector: 'network.loki.messenger.qa:id/sendAcceptsTextView',
 //           text: 'Sending a message to this user will automatically accept their message request and reveal your Account ID.',
 //         };
 //     }
@@ -569,7 +569,7 @@ export class ImageName extends LocatorsInterface {
 //       case 'android':
 //         return {
 //           strategy: 'id',
-//           selector: 'network.loki.messenger:id/messageStatusTextView',
+//           selector: 'network.loki.messenger.qa:id/messageStatusTextView',
 //           text: 'Read',
 //         };
 //       case 'ios':
