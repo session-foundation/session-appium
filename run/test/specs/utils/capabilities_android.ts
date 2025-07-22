@@ -15,8 +15,7 @@ dotenv.config();
 // Concatenate the environment variable with the fixed part of the path
 const androidAppFullPath = getAndroidApk();
 const appInfo = detectCapabilities(androidAppFullPath, 'android');
-const appPackage = appInfo.packageName
-
+const appPackage = appInfo.packageName;
 
 console.log(`Android app full path: ${androidAppFullPath}`);
 

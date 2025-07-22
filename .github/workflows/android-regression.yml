@@ -124,7 +124,7 @@ jobs:
           wget -q -O session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
           tar xf session-android.apk.tar.xz
           mv session-android-*universal extracted
-          
+
           # Try to get the AQA APK first
           if ls extracted/*automaticQa.apk 1> /dev/null 2>&1; then
             mv extracted/*automaticQa.apk extracted/session-android.apk

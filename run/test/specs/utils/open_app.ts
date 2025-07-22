@@ -1,10 +1,12 @@
 import type { TestInfo } from '@playwright/test';
 
+import { buildStateForTest } from '@session-foundation/qa-seeder';
 import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
 import { XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
 import { DriverOpts } from 'appium/build/lib/appium';
 import { compact } from 'lodash';
 
+import { DEVNET_URL } from '../../../constants';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import {
   getAdbFullPath,
@@ -13,8 +15,10 @@ import {
   getEmulatorFullPath,
   getSdkManagerFullPath,
 } from './binaries';
+import { getAndroidApk } from './binaries';
 import { getAndroidCapabilities, getAndroidUdid } from './capabilities_android';
 import { CapabilitiesIndexType, capabilityIsValid, getIosCapabilities } from './capabilities_ios';
+import { canReachInternalNetwork, detectAndroidPackage } from './extract_capabilities';
 import { cleanPermissions } from './permissions';
 import { registerDevicesForTest } from './screenshot_helper';
 import { sleepFor } from './sleep_for';
@@ -22,11 +26,35 @@ import { isCI, runScriptAndLog } from './utilities';
 
 const APPIUM_PORT = 4728;
 
+type NetworkType = Parameters<typeof buildStateForTest>[2];
+
 export type SupportedPlatformsType = 'android' | 'ios';
 
 /* ******************Command to run Appium Server: *************************************
 ./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --use-plugins=execute-driver --allow-cors
 */
+
+let DETECTED_NETWORK_TARGET: NetworkType | null = null;
+
+export function getNetworkTarget(platform: SupportedPlatformsType): NetworkType {
+  // Only detect once per module load
+  if (!DETECTED_NETWORK_TARGET) {
+    if (platform === 'ios') {
+      DETECTED_NETWORK_TARGET = 'mainnet';
+    } else {
+      const apkPath = getAndroidApk();
+      const appInfo = detectAndroidPackage(apkPath);
+      const canReachDevnet = canReachInternalNetwork();
+
+      DETECTED_NETWORK_TARGET =
+        appInfo.isAQABuild && canReachDevnet ? (DEVNET_URL as NetworkType) : 'mainnet';
+    }
+
+    console.log(`🎯 Network target detected: ${DETECTED_NETWORK_TARGET}`);
+  }
+
+  return DETECTED_NETWORK_TARGET;
+}
 
 export const openAppMultipleDevices = async (
   platform: SupportedPlatformsType,
@@ -55,6 +83,7 @@ const openAppOnPlatform = async (
 ): Promise<{
   device: DeviceWrapper;
 }> => {
+  getNetworkTarget(platform);
   console.info('starting capabilitiesIndex', capabilitiesIndex, platform);
   return platform === 'ios' ? openiOSApp(capabilitiesIndex) : openAndroidApp(capabilitiesIndex);
 };
