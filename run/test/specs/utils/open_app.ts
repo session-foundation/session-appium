@@ -18,7 +18,7 @@ import {
 import { getAndroidApk } from './binaries';
 import { getAndroidCapabilities, getAndroidUdid } from './capabilities_android';
 import { CapabilitiesIndexType, capabilityIsValid, getIosCapabilities } from './capabilities_ios';
-import { canReachInternalNetwork, detectAndroidPackage } from './extract_capabilities';
+import { canReachInternalNetwork, isAQABuildAndroid } from './extract_capabilities';
 import { cleanPermissions } from './permissions';
 import { registerDevicesForTest } from './screenshot_helper';
 import { sleepFor } from './sleep_for';
@@ -37,22 +37,32 @@ export type SupportedPlatformsType = 'android' | 'ios';
 let DETECTED_NETWORK_TARGET: NetworkType | null = null;
 
 export function getNetworkTarget(platform: SupportedPlatformsType): NetworkType {
-  // Only detect once per module load
   if (!DETECTED_NETWORK_TARGET) {
     if (platform === 'ios') {
       DETECTED_NETWORK_TARGET = 'mainnet';
     } else {
       const apkPath = getAndroidApk();
-      const appInfo = detectAndroidPackage(apkPath);
-      const canReachDevnet = canReachInternalNetwork();
+      const isAQA = isAQABuildAndroid(apkPath);
+      const canAccessDevnet = canReachInternalNetwork();
 
-      DETECTED_NETWORK_TARGET =
-        appInfo.isAQABuild && canReachDevnet ? (DEVNET_URL as NetworkType) : 'mainnet';
+      // Inline validation - simple and clear
+      if (isAQA && !canAccessDevnet) {
+        console.error('❌ Cannot use AQA build without internal network access!');
+        throw new Error('Cannot use AQA build without internal network access');
+      }
+
+      if (!isAQA && canAccessDevnet) {
+        console.warn('⚠️  On internal network but using regular build');
+      }
+
+      DETECTED_NETWORK_TARGET = (isAQA && canAccessDevnet) 
+        ? DEVNET_URL as NetworkType
+        : 'mainnet';
+        
+      console.log(`🎯 Network target: ${DETECTED_NETWORK_TARGET}`);
     }
-
-    console.log(`🎯 Network target detected: ${DETECTED_NETWORK_TARGET}`);
   }
-
+  
   return DETECTED_NETWORK_TARGET;
 }
 

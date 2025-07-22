@@ -128,6 +128,7 @@ jobs:
           # Try to get the AQA APK first
           if ls extracted/*automaticQa.apk 1> /dev/null 2>&1; then
             mv extracted/*automaticQa.apk extracted/session-android.apk
+            echo "IS_AUTOMATIC_QA=true" >> $GITHUB_ENV
             echo "Found AQA APK, proceeding"
           else
             # Fallback to any APK if no automaticQa exists
