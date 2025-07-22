@@ -18,7 +18,7 @@ import {
 import { getAndroidApk } from './binaries';
 import { getAndroidCapabilities, getAndroidUdid } from './capabilities_android';
 import { CapabilitiesIndexType, capabilityIsValid, getIosCapabilities } from './capabilities_ios';
-import { canReachInternalNetwork, isAQABuildAndroid } from './extract_capabilities';
+import { canReachDevnet, isAutomaticQABuildAndroid } from './devnet';
 import { cleanPermissions } from './permissions';
 import { registerDevicesForTest } from './screenshot_helper';
 import { sleepFor } from './sleep_for';
@@ -30,34 +30,30 @@ type NetworkType = Parameters<typeof buildStateForTest>[2];
 
 export type SupportedPlatformsType = 'android' | 'ios';
 
-/* ******************Command to run Appium Server: *************************************
-./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --use-plugins=execute-driver --allow-cors
-*/
-
 let DETECTED_NETWORK_TARGET: NetworkType | null = null;
 
 export function getNetworkTarget(platform: SupportedPlatformsType): NetworkType {
   if (!DETECTED_NETWORK_TARGET) {
     if (platform === 'ios') {
-      DETECTED_NETWORK_TARGET = 'mainnet';
+      DETECTED_NETWORK_TARGET = 'mainnet'; // iOS doesn't supply devnet builds yet
     } else {
       const apkPath = getAndroidApk();
-      const isAQA = isAQABuildAndroid(apkPath);
-      const canAccessDevnet = canReachInternalNetwork();
+      const isAQA = isAutomaticQABuildAndroid(apkPath);
+      const canAccessDevnet = canReachDevnet();
 
-      // Inline validation - simple and clear
+      // If you pass an AQA build in the .env but can't access devnet, tests will fail
       if (isAQA && !canAccessDevnet) {
-        console.error('❌ Cannot use AQA build without internal network access!');
         throw new Error('Cannot use AQA build without internal network access');
       }
 
+      // If the devnet is available, mainnet is still an option but you *could* switch to an AQA build
       if (!isAQA && canAccessDevnet) {
-        console.warn('⚠️  On internal network but using regular build');
+        console.warn('The internal devnet is available, but using regular build');
       }
 
       DETECTED_NETWORK_TARGET = isAQA && canAccessDevnet ? (DEVNET_URL as NetworkType) : 'mainnet';
 
-      console.log(`🎯 Network target: ${DETECTED_NETWORK_TARGET}`);
+      console.log(`Network target: ${DETECTED_NETWORK_TARGET}`);
     }
   }
 
