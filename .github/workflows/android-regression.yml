@@ -131,14 +131,17 @@ jobs:
             echo "IS_AUTOMATIC_QA=true" >> $GITHUB_ENV
             echo "Found AQA APK, proceeding"
           else
-            # Fallback to any APK if no automaticQa exists
-            APK_COUNT=$(ls extracted/*.apk 2>/dev/null | wc -l)
+            # No automaticQa.apk - check how many APKs we have
+            APK_COUNT=$(ls extracted/*.apk | wc -l)
+            
             if [ "$APK_COUNT" -eq 1 ]; then
               mv extracted/*.apk extracted/session-android.apk
-              echo "No AQA APK found, using the single APK in archive"
+              echo "IS_AUTOMATIC_QA=false" >> $GITHUB_ENV
+              echo "Using single non-AQA APK"
             else
-              echo "Error: Expected 1 APK or an AQA APK, found $APK_COUNT APKs"
-              ls extracted/
+              echo "Error: Found $APK_COUNT APKs but no automaticQa.apk"
+              echo "Available APKs:"
+              ls extracted/*.apk
               exit 1
             fi
           fi
