@@ -1,5 +1,6 @@
 import { testCommunityName } from '../../../constants/community';
 import { StrategyExtractionObj } from '../../../types/testing';
+import { getAppDisplayName } from '../utils/devnet';
 import { LocatorsInterface } from './index';
 
 export class MessageInput extends LocatorsInterface {
@@ -152,7 +153,7 @@ export class NotificationSwitch extends LocatorsInterface {
         return {
           strategy: 'id',
           selector: 'com.android.settings:id/switch_text',
-          text: 'All Session notifications',
+          text: `All ${getAppDisplayName()} notifications`,
         } as const;
       case 'ios':
         throw new Error('Platform not supported');

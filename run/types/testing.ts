@@ -387,7 +387,6 @@ export type AccessibilityId =
 export type Id =
   | DISAPPEARING_TIMES
   | 'Account ID'
-  | 'All Session notifications'
   | 'android:id/content_preview_text'
   | 'android:id/summary'
   | 'android:id/text1'
@@ -516,6 +515,7 @@ export type Id =
   | 'update-group-info-name-input'
   | 'Version warning banner'
   | 'Yes'
+  | `All ${AppName} notifications`
   | `Disappear after ${DisappearModes} option`;
 
 export type TestRisk = 'high' | 'low' | 'medium';
@@ -525,3 +525,5 @@ export type ElementStates = 'new_account' | 'restore_account';
 export type PageName = 'network_page' | 'staking_page';
 
 export type Suffix = 'diff' | 'screenshot';
+
+export type AppName = 'Session AQA' | 'Session QA';

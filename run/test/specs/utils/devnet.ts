@@ -4,6 +4,7 @@ import { execSync } from 'child_process';
 import type { SupportedPlatformsType } from './open_app';
 
 import { DEVNET_URL } from '../../../constants';
+import { AppName } from '../../../types/testing';
 import { getAndroidApk } from './binaries';
 
 // NOTE this currently only applies to Android as iOS doesn't supply AQA builds yet
@@ -69,4 +70,9 @@ export function getNetworkTarget(platform: SupportedPlatformsType): NetworkType 
   }
 
   return DETECTED_NETWORK_TARGET;
+}
+
+export function getAppDisplayName(): AppName {
+  const apkPath = getAndroidApk();
+  return isAutomaticQABuildAndroid(apkPath) ? 'Session AQA' : 'Session QA';
 }
