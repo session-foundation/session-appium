@@ -1,5 +1,5 @@
 import { buildStateForTest } from '@session-foundation/qa-seeder';
-import { execSync } from 'child_process';
+import request from 'sync-request-curl';
 
 import type { SupportedPlatformsType } from './open_app';
 
@@ -13,22 +13,16 @@ type NetworkType = Parameters<typeof buildStateForTest>[2];
 
 let DETECTED_NETWORK_TARGET: NetworkType | null = null;
 
-// Check if tests can reach the internal devnet
+// Using sync HTTP here to avoid cascading async changes through test init
+// This runs at test startup, so blocking is acceptable
 export function canReachDevnet(): boolean {
+  // Check if devnet is available
   try {
-    // Check if devnet is available using curl
-    const httpCode = execSync(
-      `curl -s -o /dev/null -w "%{http_code}" --connect-timeout 2 ${DEVNET_URL}`,
-      { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }
-    ).trim();
-
-    // 000 means connection failed, anything else means devnet is available
-    if (httpCode !== '000') {
-      console.log(`Internal devnet is accessible (HTTP ${httpCode})`);
-      return true;
-    }
-    console.log('Internal devnet is not accessible');
-    return false;
+    const response = request('GET', DEVNET_URL, {
+      timeout: 2000,
+    });
+    console.log(`Internal devnet is accessible (HTTP ${response.statusCode})`);
+    return true;
   } catch {
     console.log('Internal devnet is not accessible');
     return false;
@@ -43,31 +37,32 @@ export function isAutomaticQABuildAndroid(apkPath: string): boolean {
 
   return isAutomaticQA;
 }
-// Determine the network used by the qa-seeder
 export function getNetworkTarget(platform: SupportedPlatformsType): NetworkType {
-  if (!DETECTED_NETWORK_TARGET) {
-    if (platform === 'ios') {
-      DETECTED_NETWORK_TARGET = 'mainnet'; // iOS doesn't supply devnet builds yet
-    } else {
-      const apkPath = getAndroidApk();
-      const isAQA = isAutomaticQABuildAndroid(apkPath);
-      const canAccessDevnet = canReachDevnet();
-
-      // If you pass an AQA build in the .env but can't access devnet, tests will fail
-      if (isAQA && !canAccessDevnet) {
-        throw new Error('Cannot use AQA build without internal network access');
-      }
-
-      // If the devnet is available, mainnet is still an option but you *could* switch to an AQA build
-      if (!isAQA && canAccessDevnet) {
-        console.warn('The internal devnet is available, but using regular build');
-      }
-
-      DETECTED_NETWORK_TARGET = isAQA && canAccessDevnet ? (DEVNET_URL as NetworkType) : 'mainnet';
-
-      console.log(`Network target: ${DETECTED_NETWORK_TARGET}`);
-    }
+  if (DETECTED_NETWORK_TARGET) {
+    return DETECTED_NETWORK_TARGET;
   }
+  if (platform === 'ios') {
+    DETECTED_NETWORK_TARGET = 'mainnet'; // iOS doesn't supply devnet builds yet
+    return DETECTED_NETWORK_TARGET;
+  }
+  if (platform !== 'android') {
+    throw new Error('getNetworkTarget: unsupported platform');
+  }
+
+  const apkPath = getAndroidApk();
+  const isAQA = isAutomaticQABuildAndroid(apkPath);
+  const canAccessDevnet = canReachDevnet();
+  // If you pass an AQA build in the .env but can't access devnet, tests will fail
+  if (isAQA && !canAccessDevnet) {
+    throw new Error('Cannot use AQA build without internal network access');
+  }
+  // If the devnet is available, mainnet is still an option but you *could* switch to an AQA build
+  if (!isAQA && canAccessDevnet) {
+    console.warn('The internal devnet is available, but using regular build');
+  }
+
+  DETECTED_NETWORK_TARGET = isAQA && canAccessDevnet ? DEVNET_URL : 'mainnet';
+  console.log(`Network target: ${DETECTED_NETWORK_TARGET}`);
 
   return DETECTED_NETWORK_TARGET;
 }

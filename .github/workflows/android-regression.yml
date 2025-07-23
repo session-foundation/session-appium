@@ -125,25 +125,15 @@ jobs:
           tar xf session-android.apk.tar.xz
           mv session-android-*universal extracted
 
-          # Try to get the AQA APK first
-          if ls extracted/*automaticQa.apk 1> /dev/null 2>&1; then
+          if ls extracted/*automaticQa.apk; then
             mv extracted/*automaticQa.apk extracted/session-android.apk
             echo "IS_AUTOMATIC_QA=true" >> $GITHUB_ENV
-            echo "Found AQA APK, proceeding"
+          elif ls extracted/*qa.apk; then
+            mv extracted/*qa.apk extracted/session-android.apk
+            echo "IS_AUTOMATIC_QA=false" >> $GITHUB_ENV
           else
-            # No automaticQa.apk - check how many APKs we have
-            APK_COUNT=$(ls extracted/*.apk | wc -l)
-            
-            if [ "$APK_COUNT" -eq 1 ]; then
-              mv extracted/*.apk extracted/session-android.apk
-              echo "IS_AUTOMATIC_QA=false" >> $GITHUB_ENV
-              echo "Using single non-AQA APK"
-            else
-              echo "Error: Found $APK_COUNT APKs but no automaticQa.apk"
-              echo "Available APKs:"
-              ls extracted/*.apk
-              exit 1
-            fi
+            echo "Error: No .qa APK found (only .qa builds are supported)"
+            exit 1
           fi
 
       - name: Setup for both platforms
