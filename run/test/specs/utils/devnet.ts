@@ -42,7 +42,7 @@ export function isAutomaticQABuildAndroid(apkPath: string): boolean {
 
   return isAutomaticQA;
 }
-// Determine the network used by the qa-seeder 
+// Determine the network used by the qa-seeder
 export function getNetworkTarget(platform: SupportedPlatformsType): NetworkType {
   if (!DETECTED_NETWORK_TARGET) {
     if (platform === 'ios') {

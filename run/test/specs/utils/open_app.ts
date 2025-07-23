@@ -15,7 +15,7 @@ import {
 } from './binaries';
 import { getAndroidCapabilities, getAndroidUdid } from './capabilities_android';
 import { CapabilitiesIndexType, capabilityIsValid, getIosCapabilities } from './capabilities_ios';
-import { getNetworkTarget  } from './devnet';
+import { getNetworkTarget } from './devnet';
 import { cleanPermissions } from './permissions';
 import { registerDevicesForTest } from './screenshot_helper';
 import { sleepFor } from './sleep_for';
