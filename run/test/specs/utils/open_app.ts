@@ -1,12 +1,10 @@
 import type { TestInfo } from '@playwright/test';
 
-import { buildStateForTest } from '@session-foundation/qa-seeder';
 import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
 import { XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
 import { DriverOpts } from 'appium/build/lib/appium';
 import { compact } from 'lodash';
 
-import { DEVNET_URL } from '../../../constants';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import {
   getAdbFullPath,
@@ -15,10 +13,9 @@ import {
   getEmulatorFullPath,
   getSdkManagerFullPath,
 } from './binaries';
-import { getAndroidApk } from './binaries';
 import { getAndroidCapabilities, getAndroidUdid } from './capabilities_android';
 import { CapabilitiesIndexType, capabilityIsValid, getIosCapabilities } from './capabilities_ios';
-import { canReachDevnet, isAutomaticQABuildAndroid } from './devnet';
+import { getNetworkTarget  } from './devnet';
 import { cleanPermissions } from './permissions';
 import { registerDevicesForTest } from './screenshot_helper';
 import { sleepFor } from './sleep_for';
@@ -26,39 +23,7 @@ import { isCI, runScriptAndLog } from './utilities';
 
 const APPIUM_PORT = 4728;
 
-type NetworkType = Parameters<typeof buildStateForTest>[2];
-
 export type SupportedPlatformsType = 'android' | 'ios';
-
-let DETECTED_NETWORK_TARGET: NetworkType | null = null;
-
-export function getNetworkTarget(platform: SupportedPlatformsType): NetworkType {
-  if (!DETECTED_NETWORK_TARGET) {
-    if (platform === 'ios') {
-      DETECTED_NETWORK_TARGET = 'mainnet'; // iOS doesn't supply devnet builds yet
-    } else {
-      const apkPath = getAndroidApk();
-      const isAQA = isAutomaticQABuildAndroid(apkPath);
-      const canAccessDevnet = canReachDevnet();
-
-      // If you pass an AQA build in the .env but can't access devnet, tests will fail
-      if (isAQA && !canAccessDevnet) {
-        throw new Error('Cannot use AQA build without internal network access');
-      }
-
-      // If the devnet is available, mainnet is still an option but you *could* switch to an AQA build
-      if (!isAQA && canAccessDevnet) {
-        console.warn('The internal devnet is available, but using regular build');
-      }
-
-      DETECTED_NETWORK_TARGET = isAQA && canAccessDevnet ? (DEVNET_URL as NetworkType) : 'mainnet';
-
-      console.log(`Network target: ${DETECTED_NETWORK_TARGET}`);
-    }
-  }
-
-  return DETECTED_NETWORK_TARGET;
-}
 
 export const openAppMultipleDevices = async (
   platform: SupportedPlatformsType,

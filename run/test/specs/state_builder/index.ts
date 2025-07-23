@@ -10,8 +10,8 @@ import {
 import type { DeviceWrapper } from '../../../types/DeviceWrapper';
 
 import { ConversationItem } from '../locators/home';
+import { getNetworkTarget } from '../utils/devnet';
 import { openAppMultipleDevices, type SupportedPlatformsType } from '../utils/open_app';
-import { getNetworkTarget } from '../utils/open_app';
 import { restoreAccountNoFallback } from '../utils/restore_account';
 
 type WithAlice = { alice: StateUser };
