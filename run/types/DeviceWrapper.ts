@@ -1775,7 +1775,7 @@ export class DeviceWrapper {
     });
   }
 
-  public async sendGIF(message: string) {
+  public async sendGIF() {
     await sleepFor(1000);
     await this.clickOnByAccessibilityID('Attachments button');
     if (this.isAndroid()) {
@@ -1796,14 +1796,7 @@ export class DeviceWrapper {
     );
     await this.clickOnByAccessibilityID('Continue', 5000);
     await this.clickOnElementAll(new FirstGif(this));
-    if (this.isIOS()) {
-      await this.clickOnByAccessibilityID('Text input box');
-      await this.inputText(message, {
-        strategy: 'accessibility id',
-        selector: 'Text input box',
-      });
-      await this.clickOnByAccessibilityID('Send button');
-    }
+    await this.clickOnByAccessibilityID('Send button');
   }
 
   public async sendVoiceMessage() {
