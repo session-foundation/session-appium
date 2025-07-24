@@ -42,6 +42,7 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType, testI
         selector: 'Media message',
         initialMaxWait,
         maxWait,
+        preventEarlyDeletion: true,
       })
     )
   );

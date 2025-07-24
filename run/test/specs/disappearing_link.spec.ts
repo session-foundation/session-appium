@@ -76,6 +76,7 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
           selector: 'Message body',
           maxWait,
           text: testLink,
+          preventEarlyDeletion: true,
         })
       )
     );

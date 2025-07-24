@@ -49,6 +49,7 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType, t
           selector: 'Message body',
           maxWait,
           text: testMessage,
+          preventEarlyDeletion: true,
         })
       )
     );
@@ -60,6 +61,7 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType, t
           selector: 'Media message',
           initialMaxWait,
           maxWait,
+          preventEarlyDeletion: true,
         })
       )
     );

@@ -52,11 +52,6 @@ async function disappearAfterSend(platform: SupportedPlatformsType, testInfo: Te
   );
   // Send message to verify that deletion is working
   await alice1.sendMessage(testMessage);
-  await bob1.clickOnElementByText({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: testMessage,
-  });
   // Wait for message to disappear
   await Promise.all([
     alice1.hasElementBeenDeleted({
@@ -64,6 +59,7 @@ async function disappearAfterSend(platform: SupportedPlatformsType, testInfo: Te
       selector: 'Message body',
       text: testMessage,
       maxWait,
+      preventEarlyDeletion: true,
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',

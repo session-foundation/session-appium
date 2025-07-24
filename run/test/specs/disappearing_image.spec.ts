@@ -42,12 +42,14 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType, tes
       selector: 'Message body',
       maxWait,
       text: testMessage,
+      preventEarlyDeletion: true,
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
       maxWait,
       text: testMessage,
+      preventEarlyDeletion: true,
     }),
   ]);
   await closeApp(alice1, bob1);

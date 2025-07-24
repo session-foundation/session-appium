@@ -46,6 +46,7 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType, tes
         selector: 'Media message',
         initialMaxWait,
         maxWait,
+        preventEarlyDeletion: true,
       })
     )
   );

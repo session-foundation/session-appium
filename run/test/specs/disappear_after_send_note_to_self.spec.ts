@@ -53,6 +53,7 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, te
     selector: 'Message body',
     text: testMessage,
     maxWait,
+    preventEarlyDeletion: true,
   });
   // Great success
   await closeApp(device);

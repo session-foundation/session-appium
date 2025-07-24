@@ -59,12 +59,14 @@ async function disappearAfterRead(platform: SupportedPlatformsType, testInfo: Te
       selector: 'Message body',
       text: testMessage,
       maxWait,
+      preventEarlyDeletion: true,
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
       text: testMessage,
       maxWait,
+      preventEarlyDeletion: true,
     }),
   ]);
   // Great success

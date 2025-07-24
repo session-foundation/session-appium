@@ -75,6 +75,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
             selector: 'Message body',
             maxWait,
             text: testLink,
+            preventEarlyDeletion: true,
           })
         )
       );

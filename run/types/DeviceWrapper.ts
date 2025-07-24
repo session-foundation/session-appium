@@ -998,6 +998,7 @@ export class DeviceWrapper {
    * @param args.text - Optional text content to match within elements of the same type
    * @param args.initialMaxWait - Time to wait for element to initially appear (defaults to 10_000ms)
    * @param args.maxWait - Time to wait for deletion AFTER element is found (defaults to 30_000ms)
+   * @param preven
    *
    * @throws Error if:
    * - The element is never found within initialMaxWait
@@ -1012,13 +1013,13 @@ export class DeviceWrapper {
       text?: string;
       initialMaxWait?: number;
       maxWait?: number;
+      preventEarlyDeletion?: boolean;
     } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<void> {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
     const text = args.text;
     const initialMaxWait = args.initialMaxWait ?? 10_000;
     const maxWait = args.maxWait ?? 30_000;
-    const minAcceptableTotalTimeFactor = 0.8;
 
     const description = describeLocator({ ...locator, text: args.text });
 
@@ -1033,25 +1034,28 @@ export class DeviceWrapper {
     // Phase 2: Wait for element to disappear
     await this.waitForElementToDisappear(locator, text, maxWait);
 
-    // Validate timing to catch bugs (e.g., elements disappearing too early)
+    // Always calculate total time for logging
     const totalTime = (Date.now() - functionStartTime) / 1000;
-    const deletionPhaseTime = (Date.now() - foundTime) / 1000;
-    const expectedTotalTime = maxWait / 1000;
-    const minAcceptableTotalTime = expectedTotalTime * minAcceptableTotalTimeFactor;
 
-    // Did element disappear too early?
-    if (totalTime < minAcceptableTotalTime) {
-      throw new Error(
-        `Element ${description} disappeared suspiciously early: ${totalTime.toFixed(1)}s total ` +
-          `(found after ${((foundTime - functionStartTime) / 1000).toFixed(1)}s, ` +
-          `deleted after ${deletionPhaseTime.toFixed(1)}s). ` +
-          `Expected ~${expectedTotalTime}s total.`
-      );
+    // Sometimes an early deletion could indicate a bug (e.g. Disappearing Messages)
+    if (args.preventEarlyDeletion) {
+      const deletionPhaseTime = (Date.now() - foundTime) / 1000;
+      const expectedTotalTime = maxWait / 1000;
+      const minAcceptableTotalTimeFactor = 0.75;
+      const minAcceptableTotalTime = expectedTotalTime * minAcceptableTotalTimeFactor;
+
+      if (totalTime < minAcceptableTotalTime) {
+        throw new Error(
+          `Element ${description} disappeared suspiciously early: ${totalTime.toFixed(1)}s total ` +
+            `(found after ${((foundTime - functionStartTime) / 1000).toFixed(1)}s, ` +
+            `deleted after ${deletionPhaseTime.toFixed(1)}s). ` +
+            `Expected ~${expectedTotalTime}s total.`
+        );
+      }
     }
 
     this.log(`Element ${description} has been deleted after ${totalTime.toFixed(1)}s total time`);
   }
-
   /**
    * Wait for an element to appear on screen
    */

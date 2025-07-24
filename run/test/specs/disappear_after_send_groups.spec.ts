@@ -60,6 +60,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType, testIn
         selector: 'Message body',
         maxWait,
         text: testMessage,
+        preventEarlyDeletion: true,
       })
     )
   );

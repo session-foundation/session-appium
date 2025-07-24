@@ -151,12 +151,14 @@ async function disappearingCallMessage1o1Android(
       selector: 'network.loki.messenger:id/call_text_view',
       text: `You called ${bob.userName}`,
       maxWait,
+      preventEarlyDeletion: true,
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'id',
       selector: 'network.loki.messenger:id/call_text_view',
       text: `Missed call from ${alice.userName}`,
       maxWait,
+      preventEarlyDeletion: true,
     }),
   ]);
   await closeApp(alice1, bob1);

@@ -69,6 +69,7 @@ async function disappearingCommunityInviteMessage(
       device.hasElementBeenDeleted({
         ...new CommunityInvitation(device).build(),
         maxWait,
+        preventEarlyDeletion: true,
       })
     )
   );
