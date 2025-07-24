@@ -1002,6 +1002,7 @@ export class DeviceWrapper {
    * @throws Error if:
    * - The element is never found within initialMaxWait
    * - The element still exists after maxWait
+   * - The element disappears suspiciously early (less than 80% of maxWait)
    *
    * Note: For checks where you just need to ensure an element
    * is not present (regardless of prior existence), use verifyElementNotPresent() instead.
@@ -1015,11 +1016,14 @@ export class DeviceWrapper {
   ): Promise<void> {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
     const text = args.text;
-    const maxWait = args.maxWait ?? 30_000;
     const initialMaxWait = args.initialMaxWait ?? 10_000;
+    const maxWait = args.maxWait ?? 30_000;
+    const minAcceptableTotalTimeFactor = 0.8;
 
     const description = describeLocator({ ...locator, text: args.text });
 
+    // Track total time from start - disappearing timers begin on send, not on display
+    const functionStartTime = Date.now();
     // Phase 1: Wait for element to appear
     this.log(`Waiting for element ${description} to be deleted...`);
     await this.waitForElementToAppear(locator, text, initialMaxWait);
@@ -1028,10 +1032,24 @@ export class DeviceWrapper {
 
     // Phase 2: Wait for element to disappear
     await this.waitForElementToDisappear(locator, text, maxWait);
-    const deletionTime = Date.now() - foundTime;
-    this.log(
-      `Element ${description} has been deleted after ${(deletionTime / 1000).toFixed(1)}s, great success`
-    );
+
+    // Validate timing to catch bugs (e.g., elements disappearing too early)
+    const totalTime = (Date.now() - functionStartTime) / 1000;
+    const deletionPhaseTime = (Date.now() - foundTime) / 1000;
+    const expectedTotalTime = maxWait / 1000;
+    const minAcceptableTotalTime = expectedTotalTime * minAcceptableTotalTimeFactor;
+
+    // Did element disappear too early?
+    if (totalTime < minAcceptableTotalTime) {
+      throw new Error(
+        `Element ${description} disappeared suspiciously early: ${totalTime.toFixed(1)}s total ` +
+          `(found after ${((foundTime - functionStartTime) / 1000).toFixed(1)}s, ` +
+          `deleted after ${deletionPhaseTime.toFixed(1)}s). ` +
+          `Expected ~${expectedTotalTime}s total.`
+      );
+    }
+
+    this.log(`Element ${description} has been deleted after ${totalTime.toFixed(1)}s total time`);
   }
 
   /**
