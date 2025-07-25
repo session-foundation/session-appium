@@ -11,16 +11,15 @@ import { getAndroidApk } from './binaries';
 
 type NetworkType = Parameters<typeof buildStateForTest>[2];
 
-let DETECTED_NETWORK_TARGET: NetworkType | null = null;
-
 // Using sync HTTP here to avoid cascading async changes through test init
 // This runs at test startup, so blocking is acceptable
-export function canReachDevnet(): boolean {
+function canReachDevnet(): boolean {
   // Check if devnet is available
   try {
     const response = request('GET', DEVNET_URL, {
       timeout: 2000,
     });
+
     console.log(`Internal devnet is accessible (HTTP ${response.statusCode})`);
     return true;
   } catch {
@@ -28,8 +27,7 @@ export function canReachDevnet(): boolean {
     return false;
   }
 }
-
-export function isAutomaticQABuildAndroid(apkPath: string): boolean {
+function isAutomaticQABuildAndroid(apkPath: string): boolean {
   // Check env var first (for CI), then filename (for local)
   const isAutomaticQA = process.env.IS_AUTOMATIC_QA === 'true' || apkPath.includes('automaticQa');
 
@@ -38,12 +36,12 @@ export function isAutomaticQABuildAndroid(apkPath: string): boolean {
   return isAutomaticQA;
 }
 export function getNetworkTarget(platform: SupportedPlatformsType): NetworkType {
-  if (DETECTED_NETWORK_TARGET) {
-    return DETECTED_NETWORK_TARGET;
+  if (process.env.DETECTED_NETWORK_TARGET) {
+    return process.env.DETECTED_NETWORK_TARGET as NetworkType;
   }
   if (platform === 'ios') {
-    DETECTED_NETWORK_TARGET = 'mainnet'; // iOS doesn't supply devnet builds yet
-    return DETECTED_NETWORK_TARGET;
+    process.env.DETECTED_NETWORK_TARGET = 'mainnet'; // iOS doesn't supply devnet builds yet
+    return 'mainnet';
   }
   if (platform !== 'android') {
     throw new Error('getNetworkTarget: unsupported platform');
@@ -58,13 +56,14 @@ export function getNetworkTarget(platform: SupportedPlatformsType): NetworkType 
   }
   // If the devnet is available, mainnet is still an option but you *could* switch to an AQA build
   if (!isAQA && canAccessDevnet) {
-    console.warn('The internal devnet is available, but using regular build');
+    console.log('The internal devnet is available, but using regular build');
   }
 
-  DETECTED_NETWORK_TARGET = isAQA && canAccessDevnet ? DEVNET_URL : 'mainnet';
-  console.log(`Network target: ${DETECTED_NETWORK_TARGET}`);
+  const resolvedTarget = isAQA && canAccessDevnet ? DEVNET_URL : 'mainnet';
+  process.env.DETECTED_NETWORK_TARGET = resolvedTarget;
+  console.log(`Network target: ${resolvedTarget}`);
 
-  return DETECTED_NETWORK_TARGET;
+  return resolvedTarget;
 }
 
 export function getAppDisplayName(): AppName {
