@@ -21,4 +21,3 @@ export const longText =
 export const testLink = `https://getsession.org/`;
 
 export const DEVNET_URL = 'http://sesh-net.local:1280';
-// export const DEVNET_URL = 'http://192.168.1.223:1280';
