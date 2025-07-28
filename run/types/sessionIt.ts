@@ -5,6 +5,7 @@ import { omit } from 'lodash';
 
 import type { AppCountPerTest } from '../test/specs/state_builder';
 
+import { getNetworkTarget } from '../test/specs/utils/devnet';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 import {
   captureScreenshotsOnFailure,
@@ -54,6 +55,7 @@ function mobileIt({
 
   // eslint-disable-next-line no-empty-pattern
   test(testName, async ({}, testInfo) => {
+    getNetworkTarget(platform);
     console.info(`\n\n==========> Running "${testName}"\n\n`);
 
     if (allureSuites) {

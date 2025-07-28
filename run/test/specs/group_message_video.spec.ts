@@ -92,7 +92,7 @@ async function sendVideoGroupAndroid(platform: SupportedPlatformsType, testInfo:
     bob1.waitForLoadingMedia(),
     bob1.waitForTextElementToBePresent({
       strategy: 'id',
-      selector: 'network.loki.messenger:id/play_overlay',
+      selector: 'network.loki.messenger.qa:id/play_overlay',
       maxWait: 8000,
     }),
   ]);
@@ -101,7 +101,7 @@ async function sendVideoGroupAndroid(platform: SupportedPlatformsType, testInfo:
     charlie1.waitForLoadingMedia(),
     charlie1.waitForTextElementToBePresent({
       strategy: 'id',
-      selector: 'network.loki.messenger:id/play_overlay',
+      selector: 'network.loki.messenger.qa:id/play_overlay',
       maxWait: 8000,
     }),
   ]);

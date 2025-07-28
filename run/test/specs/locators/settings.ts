@@ -200,7 +200,7 @@ export class SelectAppIcon extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger:id/system_settings_app_icon',
+          selector: 'network.loki.messenger.qa:id/system_settings_app_icon',
         } as const;
       case 'ios':
         return {
