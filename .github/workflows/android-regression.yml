@@ -122,13 +122,19 @@ jobs:
         run: |
           pwd
           wget -q -O session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
-          ls
           tar xf session-android.apk.tar.xz
-          ls
           mv session-android-*universal extracted
-          ls extracted
-          mv extracted/*.apk extracted/session-android.apk
-          ls extracted
+
+          if ls extracted/*automaticQa.apk; then
+            mv extracted/*automaticQa.apk extracted/session-android.apk
+            echo "IS_AUTOMATIC_QA=true" >> $GITHUB_ENV
+          elif ls extracted/*qa.apk; then
+            mv extracted/*qa.apk extracted/session-android.apk
+            echo "IS_AUTOMATIC_QA=false" >> $GITHUB_ENV
+          else
+            echo "Error: No .qa APK found (only .qa builds are supported)"
+            exit 1
+          fi
 
       - name: Setup for both platforms
         uses: ./github/actions/setup

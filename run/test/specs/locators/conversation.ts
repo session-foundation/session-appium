@@ -1,5 +1,6 @@
 import { testCommunityName } from '../../../constants/community';
 import { StrategyExtractionObj } from '../../../types/testing';
+import { getAppDisplayName } from '../utils/devnet';
 import { LocatorsInterface } from './index';
 
 export class MessageInput extends LocatorsInterface {
@@ -17,7 +18,7 @@ export class ScrollToBottomButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger:id/scrollToBottomButton',
+          selector: 'network.loki.messenger.qa:id/scrollToBottomButton',
         } as const;
       case 'ios':
         return {
@@ -152,7 +153,7 @@ export class NotificationSwitch extends LocatorsInterface {
         return {
           strategy: 'id',
           selector: 'com.android.settings:id/switch_text',
-          text: 'All Session notifications',
+          text: `All ${getAppDisplayName()} notifications`,
         } as const;
       case 'ios':
         throw new Error('Platform not supported');
@@ -333,7 +334,7 @@ export class CommunityInvitation extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger:id/openGroupTitleTextView',
+          selector: 'network.loki.messenger.qa:id/openGroupTitleTextView',
           text: testCommunityName,
         } as const;
       case 'ios':

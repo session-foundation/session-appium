@@ -1318,7 +1318,7 @@ export class DeviceWrapper {
       try {
         loadingAnimation = await this.waitForTextElementToBePresent({
           strategy: 'id',
-          selector: 'network.loki.messenger:id/thumbnail_load_indicator',
+          selector: 'network.loki.messenger.qa:id/thumbnail_load_indicator',
           maxWait: 1000,
         });
 
@@ -1593,12 +1593,12 @@ export class DeviceWrapper {
       await sleepFor(500);
       await this.clickOnElementAll({
         strategy: 'id',
-        selector: 'network.loki.messenger:id/mediapicker_folder_item_thumbnail',
+        selector: 'network.loki.messenger.qa:id/mediapicker_folder_item_thumbnail',
       });
       await sleepFor(100);
       await this.clickOnElementAll({
         strategy: 'id',
-        selector: 'network.loki.messenger:id/mediapicker_image_item_thumbnail',
+        selector: 'network.loki.messenger.qa:id/mediapicker_image_item_thumbnail',
       });
       await this.inputText(message, new MessageInput(this));
     }
@@ -1893,7 +1893,7 @@ export class DeviceWrapper {
       });
       await sleepFor(500);
       await this.clickOnElementAll(new ImageName(this));
-      await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
+      await this.clickOnElementById('network.loki.messenger.qa:id/crop_image_menu_crop');
     }
     await this.clickOnElementAll(new SaveProfilePictureButton(this));
   }

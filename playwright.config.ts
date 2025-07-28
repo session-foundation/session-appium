@@ -24,6 +24,7 @@ export default defineConfig({
   timeout: 480000,
   globalTimeout: 18000000, // extends timeout to 5 hours run full suite with 3 retries
   reporter: useAllure ? [baseReporter, allureReporter] : [baseReporter],
+  globalSetup: require.resolve('./global-setup'),
   testDir: './run/test/specs',
   testIgnore: '*.js',
   // outputDir: './tests/automation/test-results',
