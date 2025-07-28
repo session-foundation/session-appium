@@ -1041,7 +1041,7 @@ export class DeviceWrapper {
     if (args.preventEarlyDeletion) {
       const deletionPhaseTime = (Date.now() - foundTime) / 1000;
       const expectedTotalTime = maxWait / 1000;
-      const minAcceptableTotalTimeFactor = 0.75;
+      const minAcceptableTotalTimeFactor = 0.65; // Catches egregiously early deletions but still enough leeway for sending/trusting/receiving
       const minAcceptableTotalTime = expectedTotalTime * minAcceptableTotalTimeFactor;
 
       if (totalTime < minAcceptableTotalTime) {

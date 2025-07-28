@@ -1,7 +1,7 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { DISAPPEARING_TIMES } from '../../types/testing';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -35,7 +35,6 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType, tes
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   await sleepFor(500);
   await alice1.sendImage(testMessage);
-  await bob1.trustAttachments(USERNAME.ALICE);
   await Promise.all([
     alice1.hasElementBeenDeleted({
       strategy: 'accessibility id',
@@ -46,9 +45,8 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType, tes
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
-      selector: 'Message body',
+      selector: 'Untrusted attachment message',
       maxWait,
-      text: testMessage,
       preventEarlyDeletion: true,
     }),
   ]);
