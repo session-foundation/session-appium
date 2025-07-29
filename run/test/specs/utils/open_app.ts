@@ -20,6 +20,7 @@ import { registerDevicesForTest } from './screenshot_helper';
 import { sleepFor } from './sleep_for';
 import { isCI, runScriptAndLog } from './utilities';
 
+
 const APPIUM_PORT = 4728;
 
 export type SupportedPlatformsType = 'android' | 'ios';
@@ -227,7 +228,7 @@ const openAndroidApp = async (
   } else {
     console.info('actualCapabilities worker', actualCapabilitiesIndex);
   }
-  const targetName = getAndroidUdid(actualCapabilitiesIndex);
+  const targetName = getAndroidUdid(actualCapabilitiesIndex as CapabilitiesIndexType);
 
   const emulatorAlreadyRunning = await isEmulatorRunning(targetName);
   console.info('emulatorAlreadyRunning', targetName, emulatorAlreadyRunning);
@@ -243,10 +244,10 @@ const openAndroidApp = async (
   await waitForEmulatorToBeRunning(targetName);
   console.log(targetName, ' emulator booted');
 
-  const capabilities = getAndroidCapabilities(actualCapabilitiesIndex);
+  const capabilities = getAndroidCapabilities(actualCapabilitiesIndex as CapabilitiesIndexType);
   console.log(
     `Android App Full Path: ${
-      getAndroidCapabilities(actualCapabilitiesIndex)['alwaysMatch']['appium:app'] as any
+      getAndroidCapabilities(actualCapabilitiesIndex as CapabilitiesIndexType)['alwaysMatch']['appium:app'] as any
     }`
   );
   console.info('capabilities', capabilities);
@@ -256,7 +257,7 @@ const openAndroidApp = async (
   } as DriverOpts;
 
   const device = new AndroidUiautomator2Driver(opts);
-  const udid = getAndroidUdid(actualCapabilitiesIndex);
+  const udid = getAndroidUdid(actualCapabilitiesIndex as CapabilitiesIndexType);
   console.log(`udid: ${udid}`);
   const wrappedDevice = new DeviceWrapper(device, udid);
 
@@ -287,21 +288,64 @@ const openiOSApp = async (
 }> => {
   console.info('openiOSApp');
 
-  // Calculate the actual capabilities index for the current worker
-  const actualCapabilitiesIndex =
-    capabilitiesIndex + getDevicesPerTestCount() * parseInt(process.env.TEST_PARALLEL_INDEX || '0');
+  let actualCapabilitiesIndex: CapabilitiesIndexType;
+  
+  // Check if Playwright allocated specific devices
+  if (process.env.ALLOCATED_DEVICES) {
+    try {
+      const allocatedDevices = JSON.parse(process.env.ALLOCATED_DEVICES);
+      
+      // Validate that we have enough allocated devices
+      if (!Array.isArray(allocatedDevices)) {
+        throw new Error('ALLOCATED_DEVICES must be an array');
+      }
+      
+      if (capabilitiesIndex >= allocatedDevices.length) {
+        throw new Error(
+          `Test requested device index ${capabilitiesIndex} but only ${allocatedDevices.length} devices were allocated. ` +
+          `Allocated devices: ${JSON.stringify(allocatedDevices)}`
+        );
+      }
+      
+      // capabilitiesIndex is the nth device this test wants (0, 1, etc)
+      // map it to the actual device index allocated by Playwright
+      actualCapabilitiesIndex = allocatedDevices[capabilitiesIndex] as CapabilitiesIndexType;
+      
+      console.info(
+        `✅ [DEVICE_ALLOCATION] Using Playwright-allocated device ${actualCapabilitiesIndex} for test device ${capabilitiesIndex}`,
+        `(Allocated devices: ${JSON.stringify(allocatedDevices)})`
+      );
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error('❌ [DEVICE_ALLOCATION] Failed to parse ALLOCATED_DEVICES:', error);
+      throw new Error(
+        `Failed to parse ALLOCATED_DEVICES environment variable: ${errorMessage}. ` +
+        `Value was: ${process.env.ALLOCATED_DEVICES}`
+      );
+    }
+  } else {
+    // Fallback to old calculation for backward compatibility
+    const parallelIndex = parseInt(process.env.TEST_PARALLEL_INDEX || '0');
+    actualCapabilitiesIndex = (capabilitiesIndex + getDevicesPerTestCount() * parallelIndex) as CapabilitiesIndexType;
+    
+    console.warn(
+      `⚠️  [DEVICE_ALLOCATION] Using legacy device calculation. ` +
+      `Device ${capabilitiesIndex} -> ${actualCapabilitiesIndex} (parallel index: ${parallelIndex})`
+    );
+  }
 
   const opts: XCUITestDriverOpts = {
     address: `http://localhost:${APPIUM_PORT}`,
   } as XCUITestDriverOpts;
 
-  const capabilities = getIosCapabilities(actualCapabilitiesIndex as CapabilitiesIndexType);
+  const capabilities = getIosCapabilities(actualCapabilitiesIndex);
   const udid = capabilities.alwaysMatch['appium:udid'] as string;
+  
+  console.info(`📱 [iOS] Opening app on device ${actualCapabilitiesIndex} (UDID: ${udid})`);
 
   const { device: wrappedDevice } = await cleanPermissions(opts, udid, capabilities);
   return { device: wrappedDevice };
 };
-
 export const closeApp = async (...devices: Array<DeviceWrapper>) => {
   await Promise.all(compact(devices).map(d => d.deleteSession()));
 

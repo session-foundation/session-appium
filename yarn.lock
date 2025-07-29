@@ -6163,6 +6163,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"playwright@patch:playwright@npm%3A1.53.1#~/patches/playwright-npm-1.53.1-bde348af3e.patch":
+  version: 1.53.1
+  resolution: "playwright@patch:playwright@npm%3A1.53.1#~/patches/playwright-npm-1.53.1-bde348af3e.patch::version=1.53.1&hash=a569cb"
+  dependencies:
+    fsevents: "npm:2.3.2"
+    playwright-core: "npm:1.53.1"
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  bin:
+    playwright: cli.js
+  checksum: 10c0/d662421d271cf1e8bc6f3ca576880e721bf76f66764d85fbcecf4ff283e349ddd90f0b6877aa13aca478763b30cc47732e3270ca92237f884a73130e2f8f158e
+  languageName: node
+  linkType: hard
+
 "plist@npm:3.1.0, plist@npm:^3.0.1":
   version: 3.1.0
   resolution: "plist@npm:3.1.0"

@@ -62,13 +62,13 @@ const MAX_CAPABILITIES_INDEX = envVars.length;
 
 export type CapabilitiesIndexType = IntRange<0, typeof MAX_CAPABILITIES_INDEX>;
 
-export function capabilityIsValid(
-  capabilitiesIndex: number
-): capabilitiesIndex is CapabilitiesIndexType {
-  if (capabilitiesIndex < 0 || capabilitiesIndex > MAX_CAPABILITIES_INDEX) {
-    return false;
-  }
-  return true;
+// Update your existing capabilityIsValid to check actual device count
+// If your current signature is (index: CapabilitiesIndexType), you can overload it:
+export function capabilityIsValid(index: number): boolean;
+export function capabilityIsValid(index: CapabilitiesIndexType): boolean;
+export function capabilityIsValid(index: CapabilitiesIndexType | number): boolean {
+  const actualCount = getActualDeviceCount();
+  return index >= 0 && index < actualCount;
 }
 
 interface CustomW3CCapabilities extends W3CCapabilities {
@@ -109,3 +109,31 @@ export function getCapabilitiesForWorker(workerId: number): CustomW3CCapabilitie
     'appium:wdaLocalPort': emulator['appium:wdaLocalPort'],
   } as CustomW3CCapabilities;
 }
+export const getActualDeviceCount = (): number => {
+  let actualCount = 0;
+  
+  // Check each simulator environment variable
+  for (let i = 1; i <= 12; i++) {
+    const simEnvVar = `IOS_${i}_SIMULATOR`;
+    const udid = process.env[simEnvVar];
+    
+    // Check if it's a valid UDID (not just a placeholder)
+    if (udid && isValidUdid(udid)) {
+      actualCount++;
+    } else if (udid) {
+      console.log(`🔍 [DEVICE_POOL] ${simEnvVar}="${udid}" is not a valid UDID, skipping`);
+    }
+  }
+  
+  return actualCount;
+};
+
+export const isValidUdid = (udid: string): boolean => {
+  // Check if it's a valid UUID format (iOS simulator)
+  const uuidRegex = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i;
+  
+  // Also check it's not a placeholder
+  const placeholders = ['just_not_empty', 'placeholder', 'dummy', 'not_set', 'n/a'];
+  
+  return uuidRegex.test(udid) && !placeholders.includes(udid.toLowerCase());
+};
