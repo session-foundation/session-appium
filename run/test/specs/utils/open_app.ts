@@ -293,8 +293,15 @@ const openiOSApp = async (
   // Check if Playwright allocated specific devices
   if (process.env.ALLOCATED_DEVICES) {
     try {
-      const allocatedDevices = JSON.parse(process.env.ALLOCATED_DEVICES);
-      
+      const allocatedDevicesStr = process.env.ALLOCATED_DEVICES || '[]';
+      let allocatedDevices;
+      try {
+        // Try parsing as JSON first (old format)
+        allocatedDevices = JSON.parse(allocatedDevicesStr);
+      } catch {
+        // Fall back to comma-separated format
+        allocatedDevices = allocatedDevicesStr.split(',').map(Number);
+      }      
       // Validate that we have enough allocated devices
       if (!Array.isArray(allocatedDevices)) {
         throw new Error('ALLOCATED_DEVICES must be an array');
