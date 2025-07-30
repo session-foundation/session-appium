@@ -379,7 +379,7 @@ _tryScheduleJob(job, devices) {
     }
     
     this._globalStagger.isChecking = true;
-          const now = Date.now();
+    const now = Date.now();
 
     try {
       const timeSinceLastAllocation = now - this._globalStagger.lastAllocationTime;
