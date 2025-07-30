@@ -219,9 +219,26 @@ class Dispatcher {
   
   console.log(`🔍 [QUEUE] Processing wait queue with ${this._devicePool.waitQueue.length} jobs`);
   
-  // Sort wait queue by device count (ascending) and timestamp (FIFO)
+  // Smart sorting: prioritize jobs that best utilize available devices
+  const availableDevices = this._devicePool.available;
+  
   this._devicePool.waitQueue.sort((a, b) => {
-    if (a.devices !== b.devices) return a.devices - b.devices;
+    // First priority: jobs that exactly match available devices
+    const aExactMatch = a.devices === availableDevices ? 0 : 1;
+    const bExactMatch = b.devices === availableDevices ? 0 : 1;
+    if (aExactMatch !== bExactMatch) return aExactMatch - bExactMatch;
+    
+    // Second priority: jobs that use the most devices (without exceeding)
+    if (a.devices <= availableDevices && b.devices <= availableDevices) {
+      return b.devices - a.devices; // Larger first
+    }
+    
+    // Third priority: smaller jobs if both exceed available
+    if (a.devices > availableDevices && b.devices > availableDevices) {
+      return a.devices - b.devices; // Smaller first
+    }
+    
+    // Finally: by timestamp (FIFO)
     return a.timestamp - b.timestamp;
   });
   
