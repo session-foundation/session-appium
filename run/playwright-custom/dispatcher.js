@@ -985,9 +985,8 @@ _calculateWorkersToAdd() {
       removed++;
     }
   }
-  
-  // Update any cached indices
-  this._updateWorkerIndices();
+  console.log(`✅ [WORKERS] Removed ${removed} idle workers, now have ${this._workerSlots.length} total`);
+
 }
 
 
