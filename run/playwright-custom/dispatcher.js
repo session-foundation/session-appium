@@ -370,19 +370,24 @@ class Dispatcher {
   }
 
   _tryScheduleJob(job, devices) {
-        // At the TOP of _tryScheduleJob, BEFORE allocating devices:
-    if (devices >= 1 && this._devicePool.stats.totalAllocated <= 30) {
-      const now = Date.now();
-      const timeSinceLastAllocation = now - this._globalStagger.lastAllocationTime;
-      const requiredInterval = devices * 5000; // 5s per device
-      
-      if (timeSinceLastAllocation < requiredInterval) {
-        // Too soon! Don't allocate yet
-        console.log(`⏳ [STAGGER] Need to wait ${(requiredInterval - timeSinceLastAllocation)/1000}s more before starting ${devices}-device test`);
-        return false; // This returns false so the job stays in queue
+  if (devices >= 1 && this._devicePool.stats.totalAllocated <= 30) {
+    const now = Date.now();
+    const timeSinceLastAllocation = now - this._globalStagger.lastAllocationTime;
+    const requiredInterval = devices * 5000;
+    
+    if (timeSinceLastAllocation < requiredInterval) {
+      // CHECK IF WE HAVE IDLE WORKERS FIRST!
+      const idleWorkers = this._workerSlots.filter(w => !w.busy).length;
+      if (idleWorkers > 0) {
+        // We have idle workers - let them work! Don't block on stagger
+        console.log(`📢 [STAGGER] Have ${idleWorkers} idle workers, proceeding despite stagger`);
+      } else {
+        // All workers busy - enforce stagger
+        console.log(`⏳ [STAGGER] Need to wait ${((requiredInterval - timeSinceLastAllocation)/1000).toFixed(1)}s more`);
+        return false;
       }
     }
-
+}
     console.log(`🔍 [TRY_SCHEDULE] Trying to schedule job needing ${devices} devices (${this._devicePool.available} available)`);
     
     // Validate device requirement against actual devices
@@ -934,15 +939,14 @@ _calculateWorkersToAdd() {
     }
   }
   
-  // Subtract current workers and respect max limit
+  // ADD THIS PART - Calculate actual workers to add
   const workersToAdd = Math.min(
-    possibleNewWorkers - currentWorkers,
-    this._maxWorkers - currentWorkers
+    possibleNewWorkers - currentWorkers,  // How many more we need
+    this._maxWorkers - currentWorkers      // Don't exceed max
   );
   
-  // Only add workers if we have queued work they can actually run
   if (workersToAdd > 0) {
-    console.log(`📊 [WORKERS] Can add ${workersToAdd} workers (${availableDevices} devices free, queue has work)`);
+    console.log(`📊 [WORKERS] Can add ${workersToAdd} workers (target: ${possibleNewWorkers}, current: ${currentWorkers})`);
   }
   
   return Math.max(0, workersToAdd);
