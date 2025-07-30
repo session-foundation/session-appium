@@ -97,7 +97,9 @@ class Dispatcher {
     this._globalStagger = {
       lastAllocationTime: 0,
       minimumInterval: 5000, // 5s base, will multiply by device count
+      isChecking: false
     };
+    this._completedTests = 0; 
   }
 
   _detectActualDeviceCount() {
@@ -371,20 +373,33 @@ class Dispatcher {
 
 _tryScheduleJob(job, devices) {
   if (devices === 4 && this._completedTests < 3) {
-    const now = Date.now();
-    const timeSinceLastAllocation = now - this._globalStagger.lastAllocationTime;
-    const requiredInterval = devices * 5000; // 20s for 4-device tests
+    // Prevent multiple workers from checking at the same time
+    if (this._globalStagger.isChecking) {
+      return false; // Another worker is checking, wait
+    }
     
-    if (timeSinceLastAllocation < requiredInterval) {
-      // Check for idle workers
-      const idleWorkers = this._workerSlots.filter(w => !w.busy).length;
-      if (idleWorkers > 0) {
-        console.log(`✅ [STAGGER] Skipping wait - ${idleWorkers} idle workers available`);
+    this._globalStagger.isChecking = true;
+    
+    try {
+      const now = Date.now();
+      const timeSinceLastAllocation = now - this._globalStagger.lastAllocationTime;
+      const requiredInterval = 20000; // 20s for 4-device tests
+      
+      if (this._globalStagger.lastAllocationTime === 0 || 
+          timeSinceLastAllocation >= requiredInterval) {
+        // Can proceed - update timestamp immediately
+        this._globalStagger.lastAllocationTime = now;
+        console.log(`🏃 [STAGGER] Starting 4-device test - next must wait 20s`);
+        // Continue with allocation
       } else {
-        console.log(`⏳ [STAGGER] Need to wait ${((requiredInterval - timeSinceLastAllocation)/1000).toFixed(1)}s more before starting 4-device test`);
+        // Must wait
+        console.log(`⏳ [STAGGER] Need to wait ${((requiredInterval - timeSinceLastAllocation)/1000).toFixed(1)}s more`);
         return false;
       }
+    } finally {
+      this._globalStagger.isChecking = false;
     }
+  
     
     // UPDATE TIMESTAMP HERE - IMMEDIATELY!
     this._globalStagger.lastAllocationTime = now;
@@ -1305,7 +1320,14 @@ class JobDispatcher {
       this._addNonretriableTestAndSerialModeParents(test);
     this._reportTestEnd(test, result);
     this._currentlyRunning = void 0;
+      // ADD THIS: Increment completed tests counter
+  this._completedTests++;
+  
+  // Optional: Log when we exit stagger phase
+  if (this._completedTests === 3) {
+    console.log('🎉 [STAGGER] First 3 tests complete - stagger disabled for remaining tests');
   }
+}
   _addNonretriableTestAndSerialModeParents(test) {
     this._failedWithNonRetriableError.add(test);
     for (let parent = test.parent; parent; parent = parent.parent) {
