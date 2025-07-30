@@ -449,47 +449,50 @@ class Dispatcher {
     this._workerSlots[workerIndex].jobDispatcher = jobDispatcher;
     console.log(`🔍 [DEBUG] About to run job with allocatedDevices:`, job.allocatedDevices);
 
-    void this._runJobInWorker(workerIndex, jobDispatcher).then(() => {
-      // Clear timeout first
-      this._clearTestTimeout(workerIndex);
-      
-      // Clean up worker IMMEDIATELY
-      if (workerIndex < this._workerSlots.length && this._workerSlots[workerIndex]) {
-        this._workerSlots[workerIndex].jobDispatcher = void 0;
-        this._workerSlots[workerIndex].busy = false;
-      }
-      
-      // Then deallocate devices
-      this._deallocateDevices(workerIndex);
-      
-      // NOW the worker is available - try to schedule work
-      this._scheduleJob();
-      
-      // Finally check if we're finished
-      this._checkFinished();
-    });
-    // Start timeout monitoring
-    this._startTestTimeout(workerIndex, job);
-
-    // ADD: Stagger simulator starts to prevent overload
-    if (devices >= 1) {
-      // Only stagger during initial ramp-up (first 30 allocations)
-      if (this._devicePool.stats.totalAllocated <= 30) {
-        const staggerDelay = Math.min(devices * 5000, 15000); // 5s per device, max 15s
+      // STAGGER HERE - BEFORE running the job
+      if (devices >= 1 && this._devicePool.stats.totalAllocated <= 30) {
+        const staggerDelay = Math.min(devices * 5000, 15000);
         console.log(`⏳ [STAGGER] Delaying ${staggerDelay/1000}s before starting ${devices}-device test (allocation #${this._devicePool.stats.totalAllocated})`);
         
-        // Delay the actual test start
         setTimeout(() => {
           console.log(`🏃 [STAGGER] Now starting "${job.tests?.[0]?.title}" after ${staggerDelay/1000}s delay`);
+          
+          // NOW run the actual job
+          void this._runJobInWorker(workerIndex, jobDispatcher).then(() => {
+            // Clear timeout first
+            this._clearTestTimeout(workerIndex);
+            
+            // Clean up worker IMMEDIATELY
+            if (workerIndex < this._workerSlots.length && this._workerSlots[workerIndex]) {
+              this._workerSlots[workerIndex].jobDispatcher = void 0;
+              this._workerSlots[workerIndex].busy = false;
+            }
+            
+            // Then deallocate devices
+            this._deallocateDevices(workerIndex);
+            
+            // NOW the worker is available - try to schedule work
+            this._scheduleJob();
+            
+            // Finally check if we're finished
+            this._checkFinished();
+          });
+          
+          // Start timeout monitoring AFTER the delay
+          this._startTestTimeout(workerIndex, job);
         }, staggerDelay);
+      } else {
+        // No stagger needed - run immediately
+        void this._runJobInWorker(workerIndex, jobDispatcher).then(() => {
+          // ... same cleanup code ...
+        });
         
-        // Return immediately so scheduler continues
-        return true;
+        // Start timeout monitoring
+        this._startTestTimeout(workerIndex, job);
       }
-    }
 
-    return true;
-  }
+      return true;
+    }
 
   // Add device index tracking
   _allocateDeviceIndices(count) {
