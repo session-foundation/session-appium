@@ -369,7 +369,7 @@ class Dispatcher {
     return runningWorkersWithSameProjectId < projectIdWorkerLimit;
   }
 
-  _tryScheduleJob(job, devices) {
+_tryScheduleJob(job, devices) {
   if (devices === 4 && this._completedTests < 3) {
     const now = Date.now();
     const timeSinceLastAllocation = now - this._globalStagger.lastAllocationTime;
@@ -385,6 +385,10 @@ class Dispatcher {
         return false;
       }
     }
+    
+    // UPDATE TIMESTAMP HERE - IMMEDIATELY!
+    this._globalStagger.lastAllocationTime = now;
+    console.log(`🏃 [STAGGER] Proceeding with 4-device test - next one must wait 20s`);
   }
     console.log(`🔍 [TRY_SCHEDULE] Trying to schedule job needing ${devices} devices (${this._devicePool.available} available)`);
     
@@ -470,12 +474,6 @@ class Dispatcher {
     this._workerSlots[workerIndex].busy = true;
     this._workerSlots[workerIndex].jobDispatcher = jobDispatcher;
     console.log(`🔍 [DEBUG] About to run job with allocatedDevices:`, job.allocatedDevices);
-
-      // 2. Update global stagger timestamp after allocation
-    if (devices >= 1 && this._devicePool.stats.totalAllocated <= 30) {
-      this._globalStagger.lastAllocationTime = Date.now();
-      console.log(`🏃 [STAGGER] Allocated devices for "${job.tests?.[0]?.title}" - next ${devices}-device test must wait ${devices * 5}s`);
-    }
 
     // 3. REMOVE the setTimeout stagger - just run the job normally
     void this._runJobInWorker(workerIndex, jobDispatcher).then(() => {
