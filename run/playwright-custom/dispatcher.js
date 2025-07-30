@@ -370,24 +370,22 @@ class Dispatcher {
   }
 
   _tryScheduleJob(job, devices) {
-  if (devices >= 1 && this._devicePool.stats.totalAllocated <= 30) {
+  if (devices === 4 && this._completedTests < 3) {
     const now = Date.now();
     const timeSinceLastAllocation = now - this._globalStagger.lastAllocationTime;
-    const requiredInterval = devices * 5000;
+    const requiredInterval = devices * 5000; // 20s for 4-device tests
     
     if (timeSinceLastAllocation < requiredInterval) {
-      // CHECK IF WE HAVE IDLE WORKERS FIRST!
+      // Check for idle workers
       const idleWorkers = this._workerSlots.filter(w => !w.busy).length;
       if (idleWorkers > 0) {
-        // We have idle workers - let them work! Don't block on stagger
-        console.log(`📢 [STAGGER] Have ${idleWorkers} idle workers, proceeding despite stagger`);
+        console.log(`✅ [STAGGER] Skipping wait - ${idleWorkers} idle workers available`);
       } else {
-        // All workers busy - enforce stagger
-        console.log(`⏳ [STAGGER] Need to wait ${((requiredInterval - timeSinceLastAllocation)/1000).toFixed(1)}s more`);
+        console.log(`⏳ [STAGGER] Need to wait ${((requiredInterval - timeSinceLastAllocation)/1000).toFixed(1)}s more before starting 4-device test`);
         return false;
       }
     }
-}
+  }
     console.log(`🔍 [TRY_SCHEDULE] Trying to schedule job needing ${devices} devices (${this._devicePool.available} available)`);
     
     // Validate device requirement against actual devices
@@ -978,20 +976,23 @@ _calculateWorkersToAdd() {
   }
 
   _removeIdleWorkers(count) {
-  let removed = 0;
-  
-  // Remove from the end to avoid index shifting issues
-  for (let i = this._workerSlots.length - 1; i >= 0 && removed < count; i--) {
-    if (!this._workerSlots[i].busy) {
-      // Clear any references that might be held elsewhere
-      this._workerSlots[i].worker?.stop();
-      this._workerSlots.splice(i, 1);
-      removed++;
+    let removed = 0;
+    
+    for (let i = this._workerSlots.length - 1; i >= 0 && removed < count; i--) {
+      if (!this._workerSlots[i].busy) {
+        const worker = this._workerSlots[i].worker;
+        if (worker) {
+          // Remove all listeners to prevent crashes
+          worker.removeAllListeners('exit');
+          worker.stop();
+        }
+        this._workerSlots.splice(i, 1);
+        removed++;
+      }
     }
+    
+    console.log(`✅ [WORKERS] Removed ${removed} idle workers, now have ${this._workerSlots.length} total`);
   }
-  console.log(`✅ [WORKERS] Removed ${removed} idle workers, now have ${this._workerSlots.length} total`);
-
-}
 
 
 _createWorker(testGroup, parallelIndex, loaderData) {
