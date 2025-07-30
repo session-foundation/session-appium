@@ -904,19 +904,35 @@ _calculateOptimalWorkerCount() {
     const activeWorkers = this._workerSlots.filter(w => w.busy).length;
     const idleWorkers = this._workerSlots.length - activeWorkers;
     const queuedJobs = this._queue.length + this._devicePool.waitQueue.length;
+
+    console.log(`🔍 [WORKER_POOL] Workers: ${activeWorkers} active, ${idleWorkers} idle | Queue: ${queuedJobs} | Devices: ${this._devicePool.available}/12 available`);
     
-    console.log(`\n⚙️  [WORKERS] Status: ${activeWorkers} active, ${idleWorkers} idle, ${queuedJobs} queued`);
+    // Replace the scale up section with more aggressive logic
+  if (queuedJobs > 0 && this._devicePool.available > 0 && this._workerSlots.length < this._maxWorkers) {
+    let workersToAdd = 0;
     
-    // Scale up if we have queued jobs and available devices
-    if (queuedJobs > 0 && this._devicePool.available > 0 && this._workerSlots.length < this._maxWorkers) {
-      const canAddWorkers = this._calculateWorkersToAdd();
-      if (canAddWorkers > 0) {
-        console.log(`📈 [WORKERS] Scaling up: adding ${canAddWorkers} workers`);
-        for (let i = 0; i < canAddWorkers; i++) {
-          this._addWorker();
-        }
+    // AGGRESSIVE SCALING: If queue is large, be more aggressive
+    if (queuedJobs > 20 && this._devicePool.available >= 3) {
+      // With 80 jobs and 6 devices free, we should add 2 workers!
+      workersToAdd = Math.min(
+        Math.floor(this._devicePool.available / 3),  // Assume average 3 devices per test
+        Math.ceil(queuedJobs / 10),                   // 1 worker per 10 queued jobs
+        this._maxWorkers - this._workerSlots.length   // Don't exceed max
+      );
+      console.log(`📈 [WORKERS] High queue pressure (${queuedJobs} jobs) - aggressively adding ${workersToAdd} workers`);
+    } else {
+      // Normal scaling
+      workersToAdd = this._calculateWorkersToAdd();
+    }
+    
+    if (workersToAdd > 0) {
+      console.log(`📈 [WORKERS] Scaling up: adding ${workersToAdd} workers`);
+      for (let i = 0; i < workersToAdd; i++) {
+        this._addWorker();
       }
     }
+  }
+  
     
     // Scale down if we have too many idle workers
     if (idleWorkers > 1 && this._workerSlots.length > this._minWorkers) {
@@ -933,8 +949,14 @@ _calculateWorkersToAdd() {
   const currentWorkers = this._workerSlots.length;
   const availableDevices = this._devicePool.available;
   
-  if (availableDevices === 0) return 0;
-  
+  // ADD THIS DEBUG LOGGING
+  console.log(`🔍 [CALC_ADD] Current workers: ${currentWorkers}/${this._maxWorkers}, Available devices: ${availableDevices}`);
+  console.log(`🔍 [CALC_ADD] Queue breakdown:`, deviceCounts);
+
+  if (availableDevices === 0) {
+    console.log(`🔍 [CALC_ADD] No devices available, returning 0`);
+    return 0;
+  }  
   // Calculate how many workers we could theoretically use
   let possibleNewWorkers = 0;
   
@@ -959,7 +981,7 @@ _calculateWorkersToAdd() {
   if (workersToAdd > 0) {
     console.log(`📊 [WORKERS] Can add ${workersToAdd} workers (target: ${possibleNewWorkers}, current: ${currentWorkers})`);
   }
-  
+  console.log(`🔍 [CALC_ADD] Calculated to add: ${workersToAdd} workers`);
   return Math.max(0, workersToAdd);
 }
 
