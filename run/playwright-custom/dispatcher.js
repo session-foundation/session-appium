@@ -92,6 +92,12 @@ class Dispatcher {
     
     console.log(`🎮 [DEVICE_POOL] Initialized with ${devicePoolSize} devices`);
     console.log(`    Configured: ${configuredPoolSize}, Actual available: ${actualDeviceCount}, Using: ${devicePoolSize}`);
+
+        // ADD THIS: Global stagger tracking
+    this._globalStagger = {
+      lastAllocationTime: 0,
+      minimumInterval: 5000, // 5s base, will multiply by device count
+    };
   }
 
   _detectActualDeviceCount() {
@@ -364,6 +370,19 @@ class Dispatcher {
   }
 
   _tryScheduleJob(job, devices) {
+        // At the TOP of _tryScheduleJob, BEFORE allocating devices:
+    if (devices >= 1 && this._devicePool.stats.totalAllocated <= 30) {
+      const now = Date.now();
+      const timeSinceLastAllocation = now - this._globalStagger.lastAllocationTime;
+      const requiredInterval = devices * 5000; // 5s per device
+      
+      if (timeSinceLastAllocation < requiredInterval) {
+        // Too soon! Don't allocate yet
+        console.log(`⏳ [STAGGER] Need to wait ${(requiredInterval - timeSinceLastAllocation)/1000}s more before starting ${devices}-device test`);
+        return false; // This returns false so the job stays in queue
+      }
+    }
+
     console.log(`🔍 [TRY_SCHEDULE] Trying to schedule job needing ${devices} devices (${this._devicePool.available} available)`);
     
     // Validate device requirement against actual devices
@@ -449,76 +468,77 @@ class Dispatcher {
     this._workerSlots[workerIndex].jobDispatcher = jobDispatcher;
     console.log(`🔍 [DEBUG] About to run job with allocatedDevices:`, job.allocatedDevices);
 
-      // STAGGER HERE - BEFORE running the job
-      if (devices >= 1 && this._devicePool.stats.totalAllocated <= 30) {
-        const staggerDelay = Math.min(devices * 5000, 15000);
-        console.log(`⏳ [STAGGER] Delaying ${staggerDelay/1000}s before starting ${devices}-device test (allocation #${this._devicePool.stats.totalAllocated})`);
-        
-        setTimeout(() => {
-          console.log(`🏃 [STAGGER] Now starting "${job.tests?.[0]?.title}" after ${staggerDelay/1000}s delay`);
-          
-          // NOW run the actual job
-          void this._runJobInWorker(workerIndex, jobDispatcher).then(() => {
-            // Clear timeout first
-            this._clearTestTimeout(workerIndex);
-            
-            // Clean up worker IMMEDIATELY
-            if (workerIndex < this._workerSlots.length && this._workerSlots[workerIndex]) {
-              this._workerSlots[workerIndex].jobDispatcher = void 0;
-              this._workerSlots[workerIndex].busy = false;
-            }
-            
-            // Then deallocate devices
-            this._deallocateDevices(workerIndex);
-            
-            // NOW the worker is available - try to schedule work
-            this._scheduleJob();
-            
-            // Finally check if we're finished
-            this._checkFinished();
-          });
-          
-          // Start timeout monitoring AFTER the delay
-          this._startTestTimeout(workerIndex, job);
-        }, staggerDelay);
-      } else {
-        // No stagger needed - run immediately
-        void this._runJobInWorker(workerIndex, jobDispatcher).then(() => {
-          // ... same cleanup code ...
-        });
-        
-        // Start timeout monitoring
-        this._startTestTimeout(workerIndex, job);
+      // 2. Update global stagger timestamp after allocation
+    if (devices >= 1 && this._devicePool.stats.totalAllocated <= 30) {
+      this._globalStagger.lastAllocationTime = Date.now();
+      console.log(`🏃 [STAGGER] Allocated devices for "${job.tests?.[0]?.title}" - next ${devices}-device test must wait ${devices * 5}s`);
+    }
+
+    // 3. REMOVE the setTimeout stagger - just run the job normally
+    void this._runJobInWorker(workerIndex, jobDispatcher).then(() => {
+      // Clear timeout first
+      this._clearTestTimeout(workerIndex);
+      
+      // Clean up worker IMMEDIATELY
+      if (workerIndex < this._workerSlots.length && this._workerSlots[workerIndex]) {
+        this._workerSlots[workerIndex].jobDispatcher = void 0;
+        this._workerSlots[workerIndex].busy = false;
       }
+      
+      // Then deallocate devices
+      this._deallocateDevices(workerIndex);
+      
+      // NOW the worker is available - try to schedule work
+      this._scheduleJob();
+      
+      // Finally check if we're finished
+      this._checkFinished();
+    });
+    
+    // Start timeout monitoring
+    this._startTestTimeout(workerIndex, job);
 
-      return true;
-    }
+    return true;
+  }
 
-  // Add device index tracking
   _allocateDeviceIndices(count) {
-    const available = [];
-    
-    // Track which device indices are in use
-    if (!this._devicePool.deviceStates) {
-      this._devicePool.deviceStates = new Array(this._devicePool.total).fill(false);
-    }
-    
-    // Find available AND healthy devices
-    for (let i = 0; i < this._devicePool.total && available.length < count; i++) {
-      if (!this._devicePool.deviceStates[i] && this._isDeviceHealthy(i)) {
+  const available = [];
+  
+  // Track which device indices are in use
+  if (!this._devicePool.deviceStates) {
+    this._devicePool.deviceStates = new Array(this._devicePool.total).fill(false);
+  }
+  
+  // Log current state for debugging
+  const inUseDevices = this._devicePool.deviceStates
+    .map((used, i) => used ? i : null)
+    .filter(i => i !== null);
+  console.log(`🔍 [ALLOC] Trying to allocate ${count} devices. In use: [${inUseDevices.join(', ')}]`);
+  
+  // Find available devices
+  for (let i = 0; i < this._devicePool.total && available.length < count; i++) {
+    if (!this._devicePool.deviceStates[i]) {
+      // Check health
+      const isHealthy = this._isDeviceHealthy(i);
+      if (isHealthy) {
         available.push(i);
         this._devicePool.deviceStates[i] = true;
+      } else {
+        console.log(`⚠️ [ALLOC] Device ${i} is unhealthy, skipping`);
       }
     }
-    
-    if (available.length < count) {
-      // Rollback
-      available.forEach(i => this._devicePool.deviceStates[i] = false);
-      return null;
-    }
-    
-    return available;
   }
+  
+  if (available.length < count) {
+    console.error(`❌ [ALLOC] Could only find ${available.length} healthy devices, but need ${count}`);
+    // Rollback
+    available.forEach(i => this._devicePool.deviceStates[i] = false);
+    return null;
+  }
+  
+  console.log(`✅ [ALLOC] Allocated devices: [${available.join(', ')}]`);
+  return available;
+}
 
   _deallocateDevices(workerIndex) {
     const allocation = this._devicePool.allocations.get(workerIndex);
