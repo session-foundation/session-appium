@@ -293,6 +293,7 @@ const openiOSApp = async (
   // Check if Playwright allocated specific devices
   if (process.env.ALLOCATED_DEVICES) {
     try {
+      console.log(`🔍 [DEBUG] Raw ALLOCATED_DEVICES from env: "${process.env.ALLOCATED_DEVICES}"`);
       const allocatedDevicesStr = process.env.ALLOCATED_DEVICES || '';
       let allocatedDevices: number[] = [];
 

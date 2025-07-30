@@ -430,6 +430,8 @@ class Dispatcher {
     
     this._workerSlots[workerIndex].busy = true;
     this._workerSlots[workerIndex].jobDispatcher = jobDispatcher;
+    console.log(`🔍 [DEBUG] About to run job with allocatedDevices:`, job.allocatedDevices);
+
     void this._runJobInWorker(workerIndex, jobDispatcher).then(() => {
       // Clear timeout first
       this._clearTestTimeout(workerIndex);
@@ -634,6 +636,7 @@ _handleTestTimeout(workerIndex) {
   }
 
   async _runJobInWorker(index, jobDispatcher) {
+    console.log(`🔍 [DEBUG] _runJobInWorker job.allocatedDevices:`, jobDispatcher.job.allocatedDevices);
     // Add this safety check
     if (index >= this._workerSlots.length || !this._workerSlots[index]) {
       console.error(`❌ [WORKER] Invalid worker index ${index}, slot doesn't exist`);
@@ -945,25 +948,30 @@ _calculateWorkersToAdd() {
   }
 
 
-  _createWorker(testGroup, parallelIndex, loaderData) {
-    const projectConfig = this._config.projects.find((p) => p.id === testGroup.projectId);
-    const outputDir = projectConfig.project.outputDir;
-    
-    // FIX: Get the allocated devices from the JOB, not from the worker's parallel index
-    // The job should have allocatedDevices set by _tryScheduleJob
-    const extraEnv = {
-      ...(this._extraEnvByProjectId.get(testGroup.projectId) || {}),
-      // Use the devices allocated to this specific job
-      ALLOCATED_DEVICES: testGroup.allocatedDevices ? testGroup.allocatedDevices.join(',') : ''
-    };
-    
-    const worker = new import_workerHost.WorkerHost(
-      testGroup, 
-      parallelIndex, 
-      loaderData, 
-      extraEnv,
-      outputDir
-    );
+_createWorker(testGroup, parallelIndex, loaderData) {
+  const projectConfig = this._config.projects.find((p) => p.id === testGroup.projectId);
+  const outputDir = projectConfig.project.outputDir;
+  
+  // ADD DEBUG LOGGING HERE
+  console.log(`🔍 [DEBUG] Creating worker ${parallelIndex} with allocatedDevices:`, testGroup.allocatedDevices);
+  
+  const allocatedDevicesStr = testGroup.allocatedDevices ? testGroup.allocatedDevices.join(',') : '';
+  console.log(`🔍 [DEBUG] ALLOCATED_DEVICES string will be: "${allocatedDevicesStr}"`);
+  
+  const extraEnv = {
+    ...(this._extraEnvByProjectId.get(testGroup.projectId) || {}),
+    ALLOCATED_DEVICES: allocatedDevicesStr
+  };
+  
+  console.log(`🔍 [DEBUG] extraEnv.ALLOCATED_DEVICES = "${extraEnv.ALLOCATED_DEVICES}"`);
+  
+  const worker = new import_workerHost.WorkerHost(
+    testGroup, 
+    parallelIndex, 
+    loaderData, 
+    extraEnv,
+    outputDir
+  );
     const handleOutput = (params) => {
       const chunk = chunkFromParams(params);
       if (worker.didFail()) {
