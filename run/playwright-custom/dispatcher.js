@@ -1446,6 +1446,14 @@ class JobDispatcher {
   runInWorker(worker) {
     this._parallelIndex = worker.parallelIndex;
     this._workerIndex = worker.workerIndex;
+
+      // ADD THIS: Update ALLOCATED_DEVICES for reused workers
+    if (this.job.allocatedDevices) {
+      const allocatedDevicesStr = this.job.allocatedDevices.join(',');
+      process.env.ALLOCATED_DEVICES = allocatedDevicesStr;
+      console.log(`🔄 [DEBUG] Updated ALLOCATED_DEVICES for reused worker ${worker.workerIndex}: "${allocatedDevicesStr}"`);
+    }
+
     const runPayload = {
       file: this.job.requireFile,
       entries: this.job.tests.map((test) => {
@@ -1462,17 +1470,7 @@ class JobDispatcher {
       import_utils.eventsHelper.addEventListener(worker, "done", this._onDone.bind(this)),
       import_utils.eventsHelper.addEventListener(worker, "exit", this.onExit.bind(this))
     ];
-        // ADD THIS: Update ALLOCATED_DEVICES for reused workers
-    if (worker && job.allocatedDevices) {
-      const allocatedDevicesStr = job.allocatedDevices.join(',');
-      process.env.ALLOCATED_DEVICES = allocatedDevicesStr;
-      console.log(`🔄 [DEBUG] Updated ALLOCATED_DEVICES for reused worker ${index}: "${allocatedDevicesStr}"`);
-    }
-    
-    if (startError)
-      jobDispatcher.onExit(startError);
-    else
-      jobDispatcher.runInWorker(worker);
+
   }
   skipWholeJob() {
     const allTestsSkipped = this.job.tests.every((test) => test.expectedStatus === "skipped");
