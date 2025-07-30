@@ -431,25 +431,44 @@ class Dispatcher {
     this._workerSlots[workerIndex].busy = true;
     this._workerSlots[workerIndex].jobDispatcher = jobDispatcher;
     void this._runJobInWorker(workerIndex, jobDispatcher).then(() => {
-      // Clear timeout on completion
+      // Clear timeout first
       this._clearTestTimeout(workerIndex);
       
-      // Deallocate devices properly
-      this._deallocateDevices(workerIndex);
-      
-      // Add safety check
+      // Clean up worker IMMEDIATELY
       if (workerIndex < this._workerSlots.length && this._workerSlots[workerIndex]) {
         this._workerSlots[workerIndex].jobDispatcher = void 0;
         this._workerSlots[workerIndex].busy = false;
       }
       
-      this._checkFinished();
+      // Then deallocate devices
+      this._deallocateDevices(workerIndex);
       
-      // Try to schedule more work
+      // NOW the worker is available - try to schedule work
       this._scheduleJob();
+      
+      // Finally check if we're finished
+      this._checkFinished();
     });
     // Start timeout monitoring
     this._startTestTimeout(workerIndex, job);
+
+    // ADD: Stagger simulator starts to prevent overload
+    if (devices >= 1) {
+      // Only stagger during initial ramp-up (first 30 allocations)
+      if (this._devicePool.stats.totalAllocated <= 30) {
+        const staggerDelay = Math.min(devices * 5000, 15000); // 5s per device, max 15s
+        console.log(`⏳ [STAGGER] Delaying ${staggerDelay/1000}s before starting ${devices}-device test (allocation #${this._devicePool.stats.totalAllocated})`);
+        
+        // Delay the actual test start
+        setTimeout(() => {
+          console.log(`🏃 [STAGGER] Now starting "${job.tests?.[0]?.title}" after ${staggerDelay/1000}s delay`);
+        }, staggerDelay);
+        
+        // Return immediately so scheduler continues
+        return true;
+      }
+    }
+
     return true;
   }
 
@@ -499,16 +518,18 @@ class Dispatcher {
   }
 
   _startTestTimeout(workerIndex, job) {
-  const TEST_TIMEOUT = 300000; // 5 minutes
-  const allocation = this._devicePool.allocations.get(workerIndex);
-  
-  if (allocation) {
-    allocation.timeoutId = setTimeout(() => {
-      console.error(`⏱️ [TIMEOUT] Test on worker ${workerIndex} exceeded ${TEST_TIMEOUT/1000}s`);
-      this._handleTestTimeout(workerIndex);
-    }, TEST_TIMEOUT);
+    // Longer timeout for CI and tests with multiple devices
+    const devices = this._getJobDeviceRequirement(job);
+    const baseTimeout = process.env.CI ? 600000 : 300000; // 10 min CI, 5 min local
+    const deviceMultiplier = devices > 2 ? 1.5 : 1; // 50% more time for 3+ device tests
+    const TEST_TIMEOUT = baseTimeout * deviceMultiplier;
+    if (allocation) {
+      allocation.timeoutId = setTimeout(() => {
+        console.error(`⏱️ [TIMEOUT] Test on worker ${workerIndex} exceeded ${TEST_TIMEOUT/1000}s`);
+        this._handleTestTimeout(workerIndex);
+      }, TEST_TIMEOUT);
+    }
   }
-}
 
 _clearTestTimeout(workerIndex) {
   const allocation = this._devicePool.allocations.get(workerIndex);
@@ -845,33 +866,41 @@ _calculateOptimalWorkerCount() {
     }
   }
 
-  _calculateWorkersToAdd() {
-    const { deviceCounts } = this._analyzeQueue();
-    const currentWorkers = this._workerSlots.length;
-    
-    // Check what we can run with available devices
-    let possibleNewWorkers = 0;
-    
-    // Can we run more 1-device tests?
-    if (deviceCounts[1] > 0 && this._devicePool.available >= 1) {
-      possibleNewWorkers = Math.min(
-        deviceCounts[1],
-        this._devicePool.available,
-        this._maxWorkers - currentWorkers
+_calculateWorkersToAdd() {
+  const { deviceCounts } = this._analyzeQueue();
+  const currentWorkers = this._workerSlots.length;
+  const availableDevices = this._devicePool.available;
+  
+  if (availableDevices === 0) return 0;
+  
+  // Calculate how many workers we could theoretically use
+  let possibleNewWorkers = 0;
+  
+  // Check each device requirement size
+  for (let deviceReq = 1; deviceReq <= availableDevices; deviceReq++) {
+    if (deviceCounts[deviceReq] > 0) {
+      const testsOfThisSize = deviceCounts[deviceReq];
+      const workersNeededForThisSize = Math.min(
+        testsOfThisSize,
+        Math.floor(availableDevices / deviceReq)
       );
+      possibleNewWorkers = Math.max(possibleNewWorkers, workersNeededForThisSize);
     }
-    
-    // Can we run more 2-device tests?
-    if (deviceCounts[2] > 0 && this._devicePool.available >= 2) {
-      const possible2Workers = Math.floor(this._devicePool.available / 2);
-      possibleNewWorkers = Math.max(
-        possibleNewWorkers,
-        Math.min(possible2Workers, this._maxWorkers - currentWorkers)
-      );
-    }
-    
-    return possibleNewWorkers;
   }
+  
+  // Subtract current workers and respect max limit
+  const workersToAdd = Math.min(
+    possibleNewWorkers - currentWorkers,
+    this._maxWorkers - currentWorkers
+  );
+  
+  // Only add workers if we have queued work they can actually run
+  if (workersToAdd > 0) {
+    console.log(`📊 [WORKERS] Can add ${workersToAdd} workers (${availableDevices} devices free, queue has work)`);
+  }
+  
+  return Math.max(0, workersToAdd);
+}
 
   _calculateWorkersToRemove() {
     const idleWorkers = this._workerSlots.filter((w, i) => {

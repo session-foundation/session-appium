@@ -293,15 +293,23 @@ const openiOSApp = async (
   // Check if Playwright allocated specific devices
   if (process.env.ALLOCATED_DEVICES) {
     try {
-      const allocatedDevicesStr = process.env.ALLOCATED_DEVICES || '[]';
-      let allocatedDevices;
-      try {
-        // Try parsing as JSON first (old format)
-        allocatedDevices = JSON.parse(allocatedDevicesStr);
-      } catch {
-        // Fall back to comma-separated format
-        allocatedDevices = allocatedDevicesStr.split(',').map(Number);
-      }      
+      const allocatedDevicesStr = process.env.ALLOCATED_DEVICES || '';
+      let allocatedDevices: number[] = [];
+
+      if (allocatedDevicesStr) {
+        // Handle both comma-separated and single values
+        if (allocatedDevicesStr.includes(',')) {
+          // Multiple devices: "0,1,2"
+          allocatedDevices = allocatedDevicesStr.split(',').map(Number);
+        } else if (allocatedDevicesStr.trim() !== '') {
+          // Single device: "1" -> [1]
+          allocatedDevices = [Number(allocatedDevicesStr)];
+        }
+      }
+      
+      // Debug log to verify parsing
+      console.log(`📋 [DEVICE_ALLOCATION] Parsed devices: [${allocatedDevices.join(',')}] from env value: "${allocatedDevicesStr}"`);
+
       // Validate that we have enough allocated devices
       if (!Array.isArray(allocatedDevices)) {
         throw new Error('ALLOCATED_DEVICES must be an array');
@@ -310,7 +318,7 @@ const openiOSApp = async (
       if (capabilitiesIndex >= allocatedDevices.length) {
         throw new Error(
           `Test requested device index ${capabilitiesIndex} but only ${allocatedDevices.length} devices were allocated. ` +
-          `Allocated devices: ${JSON.stringify(allocatedDevices)}`
+          `Allocated devices: [${allocatedDevices.join(', ')}]`
         );
       }
       
@@ -320,7 +328,7 @@ const openiOSApp = async (
       
       console.info(
         `✅ [DEVICE_ALLOCATION] Using Playwright-allocated device ${actualCapabilitiesIndex} for test device ${capabilitiesIndex}`,
-        `(Allocated devices: ${JSON.stringify(allocatedDevices)})`
+        `(Allocated devices: [${allocatedDevices.join(', ')}])`
       );
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
