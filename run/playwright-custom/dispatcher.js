@@ -974,18 +974,21 @@ _calculateWorkersToAdd() {
   }
 
   _removeIdleWorkers(count) {
-    let removed = 0;
-    
-    // Remove from the end, prefer removing workers that have been idle longest
-    for (let i = this._workerSlots.length - 1; i >= 0 && removed < count; i--) {
-      const slot = this._workerSlots[i];
-      if (!slot.busy && !slot.worker) {
-        this._workerSlots.splice(i, 1);
-        this._lastWorkerActivity.delete(i);
-        removed++;
-      }
+  let removed = 0;
+  
+  // Remove from the end to avoid index shifting issues
+  for (let i = this._workerSlots.length - 1; i >= 0 && removed < count; i--) {
+    if (!this._workerSlots[i].busy) {
+      // Clear any references that might be held elsewhere
+      this._workerSlots[i].worker?.stop();
+      this._workerSlots.splice(i, 1);
+      removed++;
     }
   }
+  
+  // Update any cached indices
+  this._updateWorkerIndices();
+}
 
 
 _createWorker(testGroup, parallelIndex, loaderData) {
@@ -1017,11 +1020,14 @@ _createWorker(testGroup, parallelIndex, loaderData) {
       if (worker.didFail()) {
         return { chunk };
       }
-      const currentlyRunning = this._workerSlots[parallelIndex].jobDispatcher?.currentlyRunning();
-      if (!currentlyRunning)
-        return { chunk };
-      return { chunk, test: currentlyRunning.test, result: currentlyRunning.result };
-    };
+    const workerSlot = this._workerSlots[parallelIndex];
+    const currentlyRunning = workerSlot?.jobDispatcher?.currentlyRunning();
+
+    if (!currentlyRunning)
+      return { chunk };
+      
+    return { chunk, test: currentlyRunning.test, result: currentlyRunning.result };
+        }
     worker.on("stdOut", (params) => {
       const { chunk, test, result } = handleOutput(params);
       result?.stdout.push(chunk);
