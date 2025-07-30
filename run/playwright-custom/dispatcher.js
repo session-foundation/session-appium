@@ -379,9 +379,9 @@ _tryScheduleJob(job, devices) {
     }
     
     this._globalStagger.isChecking = true;
-    
+          const now = Date.now();
+
     try {
-      const now = Date.now();
       const timeSinceLastAllocation = now - this._globalStagger.lastAllocationTime;
       const requiredInterval = 20000; // 20s for 4-device tests
       
