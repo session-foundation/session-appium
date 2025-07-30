@@ -517,19 +517,22 @@ class Dispatcher {
     }
   }
 
-  _startTestTimeout(workerIndex, job) {
-    // Longer timeout for CI and tests with multiple devices
-    const devices = this._getJobDeviceRequirement(job);
-    const baseTimeout = process.env.CI ? 600000 : 300000; // 10 min CI, 5 min local
-    const deviceMultiplier = devices > 2 ? 1.5 : 1; // 50% more time for 3+ device tests
-    const TEST_TIMEOUT = baseTimeout * deviceMultiplier;
-    if (allocation) {
-      allocation.timeoutId = setTimeout(() => {
-        console.error(`⏱️ [TIMEOUT] Test on worker ${workerIndex} exceeded ${TEST_TIMEOUT/1000}s`);
-        this._handleTestTimeout(workerIndex);
-      }, TEST_TIMEOUT);
-    }
+_startTestTimeout(workerIndex, job) {
+  // Longer timeout for CI and tests with multiple devices
+  const devices = this._getJobDeviceRequirement(job);
+  const baseTimeout = process.env.CI ? 600000 : 300000; // 10 min CI, 5 min local
+  const deviceMultiplier = devices > 2 ? 1.5 : 1; // 50% more time for 3+ device tests
+  const TEST_TIMEOUT = baseTimeout * deviceMultiplier;
+  
+  const allocation = this._devicePool.allocations.get(workerIndex);
+  
+  if (allocation) {
+    allocation.timeoutId = setTimeout(() => {
+      console.error(`⏱️ [TIMEOUT] Test "${job.tests?.[0]?.title}" on worker ${workerIndex} exceeded ${TEST_TIMEOUT/1000}s`);
+      this._handleTestTimeout(workerIndex);
+    }, TEST_TIMEOUT);
   }
+}
 
 _clearTestTimeout(workerIndex) {
   const allocation = this._devicePool.allocations.get(workerIndex);
