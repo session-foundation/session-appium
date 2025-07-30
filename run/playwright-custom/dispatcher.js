@@ -949,40 +949,40 @@ _calculateWorkersToAdd() {
   const currentWorkers = this._workerSlots.length;
   const availableDevices = this._devicePool.available;
   
-  // ADD THIS DEBUG LOGGING
-  console.log(`🔍 [CALC_ADD] Current workers: ${currentWorkers}/${this._maxWorkers}, Available devices: ${availableDevices}`);
+  console.log(`🔍 [CALC_ADD] Current: ${currentWorkers}/${this._maxWorkers}, Available devices: ${availableDevices}`);
   console.log(`🔍 [CALC_ADD] Queue breakdown:`, deviceCounts);
-
-  if (availableDevices === 0) {
-    console.log(`🔍 [CALC_ADD] No devices available, returning 0`);
-    return 0;
-  }  
-  // Calculate how many workers we could theoretically use
-  let possibleNewWorkers = 0;
   
-  // Check each device requirement size
-  for (let deviceReq = 1; deviceReq <= availableDevices; deviceReq++) {
-    if (deviceCounts[deviceReq] > 0) {
-      const testsOfThisSize = deviceCounts[deviceReq];
-      const workersNeededForThisSize = Math.min(
-        testsOfThisSize,
-        Math.floor(availableDevices / deviceReq)
-      );
-      possibleNewWorkers = Math.max(possibleNewWorkers, workersNeededForThisSize);
+  if (availableDevices === 0) return 0;
+  
+  // Calculate how many workers we could run based on queue composition
+  let potentialWorkers = 0;
+  let devicesNeeded = 0;
+  
+  // Try to pack workers efficiently based on what's in queue
+  // Start with largest device requirements first
+  for (let deviceReq = 4; deviceReq >= 1; deviceReq--) {
+    const testsOfThisSize = deviceCounts[deviceReq] || 0;
+    if (testsOfThisSize > 0 && devicesNeeded + deviceReq <= availableDevices) {
+      const workersForThisSize = Math.floor((availableDevices - devicesNeeded) / deviceReq);
+      const actualWorkers = Math.min(workersForThisSize, testsOfThisSize);
+      potentialWorkers += actualWorkers;
+      devicesNeeded += actualWorkers * deviceReq;
     }
   }
   
-  // ADD THIS PART - Calculate actual workers to add
-  const workersToAdd = Math.min(
-    possibleNewWorkers - currentWorkers,  // How many more we need
-    this._maxWorkers - currentWorkers      // Don't exceed max
+  // Don't add more workers than we have jobs for
+  const maxUsefulWorkers = Math.min(
+    potentialWorkers,
+    Object.values(deviceCounts).reduce((sum, count) => sum + count, 0)
   );
   
-  if (workersToAdd > 0) {
-    console.log(`📊 [WORKERS] Can add ${workersToAdd} workers (target: ${possibleNewWorkers}, current: ${currentWorkers})`);
-  }
-  console.log(`🔍 [CALC_ADD] Calculated to add: ${workersToAdd} workers`);
-  return Math.max(0, workersToAdd);
+  const toAdd = Math.min(
+    maxUsefulWorkers - currentWorkers,
+    this._maxWorkers - currentWorkers
+  );
+  
+  console.log(`🔍 [CALC_ADD] Potential: ${potentialWorkers}, ToAdd: ${toAdd}`);
+  return Math.max(0, toAdd);
 }
 
   _calculateWorkersToRemove() {
