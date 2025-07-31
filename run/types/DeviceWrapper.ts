@@ -1818,7 +1818,9 @@ export class DeviceWrapper {
     );
     await this.clickOnByAccessibilityID('Continue', 5000);
     await this.clickOnElementAll(new FirstGif(this));
-    await this.clickOnByAccessibilityID('Send button');
+    if (this.isIOS()) {
+      await this.clickOnByAccessibilityID('Send button');
+    }
   }
 
   public async sendVoiceMessage() {
