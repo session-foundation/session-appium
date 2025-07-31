@@ -125,45 +125,38 @@ class Dispatcher {
   }
 
   _detectIosDeviceCount() {
-    let actualCount = 0;
+  console.log('🔍 [DEVICE_DETECT] Checking iOS devices...');
+  let actualCount = 0;
+  
+  // Check iOS simulator environment variables
+  for (let i = 1; i <= 12; i++) {
+    const envVar = `IOS_${i}_SIMULATOR`;
+    const udid = process.env[envVar];
     
-    // Check iOS simulator environment variables
-    for (let i = 1; i <= 12; i++) {
-      const udid = process.env[`IOS_${i}_SIMULATOR`];
-      
-      // Check if it's a valid UUID (not placeholder)
-      if (udid && this._isValidIosUdid(udid)) {
+    // Add detailed logging
+    if (udid) {
+      const isValid = this._isValidIosUdid(udid);
+      console.log(`🔍 [DEVICE_DETECT] ${envVar} = ${udid} (valid: ${isValid})`);
+      if (isValid) {
         actualCount++;
       }
+    } else {
+      console.log(`🔍 [DEVICE_DETECT] ${envVar} = not set`);
     }
-    
-    console.log(`🔍 [DEVICE_POOL] Detected ${actualCount} actual iOS devices`);
-    return actualCount;
   }
+  
+  console.log(`🔍 [DEVICE_POOL] Detected ${actualCount} actual iOS devices`);
+  return actualCount;
+}
 
-  _detectAndroidDeviceCount() {
-    let actualCount = 0;
-    
-    // For Android, you might check differently
-    // This is a placeholder - implement based on your Android setup
-    for (let i = 1; i <= 12; i++) {
-      // Check if Android emulator exists
-      // You might check ANDROID_${i}_EMULATOR or use adb devices
-      actualCount = i; // Placeholder
-    }
-    
-    return Math.min(actualCount, 12);
+_isValidIosUdid(udid) {
+  // Log what's being validated
+  const isValid = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i.test(udid);
+  if (!isValid) {
+    console.log(`❌ [DEVICE_DETECT] Invalid UDID format: ${udid}`);
   }
-
-  _isValidIosUdid(udid) {
-    // UUID format check
-    const uuidRegex = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i;
-    
-    // Check against known placeholders
-    const placeholders = ['just_not_empty', 'placeholder', 'dummy', 'not_set'];
-    
-    return uuidRegex.test(udid) && !placeholders.includes(udid.toLowerCase());
-  }
+  return isValid;
+}
 
   _isDeviceHealthy(deviceIndex) {
   // For iOS devices, check if the simulator UDID is still valid
@@ -373,10 +366,15 @@ class Dispatcher {
 
 _tryScheduleJob(job, devices) {
   if (devices === 4 && this._completedTests < 3) {
-    // Prevent multiple workers from checking at the same time
-    if (this._globalStagger.isChecking) {
-      return false; // Another worker is checking, wait
+    console.log(`🔍 [STAGGER] Worker ${process.env.TEST_WORKER_INDEX} checking at ${Date.now()}`);
+    
+    if (!this._staggerLock.canAllocateDevices(devices, 20000)) {
+      console.log(`🚫 [STAGGER] Worker ${process.env.TEST_WORKER_INDEX} BLOCKED`);
+      return false;
     }
+    
+    console.log(`✅ [STAGGER] Worker ${process.env.TEST_WORKER_INDEX} PROCEEDED at ${Date.now()}`);
+  
     
     this._globalStagger.isChecking = true;
     const now = Date.now();
@@ -517,7 +515,7 @@ _tryScheduleJob(job, devices) {
     return true;
   }
 
-  _allocateDeviceIndices(count) {
+_allocateDeviceIndices(count) {
   const available = [];
   
   // Track which device indices are in use
@@ -525,34 +523,37 @@ _tryScheduleJob(job, devices) {
     this._devicePool.deviceStates = new Array(this._devicePool.total).fill(false);
   }
   
-  // Log current state for debugging
-  const inUseDevices = this._devicePool.deviceStates
-    .map((used, i) => used ? i : null)
-    .filter(i => i !== null);
-  console.log(`🔍 [ALLOC] Trying to allocate ${count} devices. In use: [${inUseDevices.join(', ')}]`);
+  // Enhanced logging
+  const deviceStatus = this._devicePool.deviceStates.map((used, i) => {
+    const health = this._isDeviceHealthy(i);
+    return `${i}:${used ? 'BUSY' : health ? 'FREE' : 'UNHEALTHY'}`;
+  });
+  console.log(`🔍 [ALLOC] Device pool status: [${deviceStatus.join(', ')}]`);
+  console.log(`🔍 [ALLOC] Trying to allocate ${count} devices from ${this._devicePool.total} total`);
   
   // Find available devices
+  let unhealthyCount = 0;
   for (let i = 0; i < this._devicePool.total && available.length < count; i++) {
     if (!this._devicePool.deviceStates[i]) {
-      // Check health
       const isHealthy = this._isDeviceHealthy(i);
       if (isHealthy) {
         available.push(i);
         this._devicePool.deviceStates[i] = true;
       } else {
+        unhealthyCount++;
         console.log(`⚠️ [ALLOC] Device ${i} is unhealthy, skipping`);
       }
     }
   }
   
   if (available.length < count) {
-    console.error(`❌ [ALLOC] Could only find ${available.length} healthy devices, but need ${count}`);
+    console.error(`❌ [ALLOC] Allocation failed: needed ${count}, found ${available.length} healthy (${unhealthyCount} unhealthy)`);
     // Rollback
     available.forEach(i => this._devicePool.deviceStates[i] = false);
     return null;
   }
   
-  console.log(`✅ [ALLOC] Allocated devices: [${available.join(', ')}]`);
+  console.log(`✅ [ALLOC] Successfully allocated ${available.length} devices: [${available.join(', ')}]`);
   return available;
 }
 
@@ -944,45 +945,51 @@ _calculateOptimalWorkerCount() {
     }
   }
 
+// Add throttling to reduce spam
 _calculateWorkersToAdd() {
-  const { deviceCounts } = this._analyzeQueue();
+  const { deviceCounts, totalJobs } = this._analyzeQueue();
   const currentWorkers = this._workerSlots.length;
   const availableDevices = this._devicePool.available;
   
-  console.log(`🔍 [CALC_ADD] Current: ${currentWorkers}/${this._maxWorkers}, Available devices: ${availableDevices}`);
-  console.log(`🔍 [CALC_ADD] Queue breakdown:`, deviceCounts);
+  // Count idle workers properly
+  const idleWorkers = this._workerSlots.filter(slot => 
+    !slot.stopped && slot.currentJobId === null
+  ).length;
   
-  if (availableDevices === 0) return 0;
+  // Skip calculation if nothing has changed (reduce spam)
+  const cacheKey = `${currentWorkers}-${availableDevices}-${totalJobs}-${idleWorkers}`;
+  if (this._lastWorkerCalc === cacheKey) {
+    return 0; // No change, no spam
+  }
+  this._lastWorkerCalc = cacheKey;
   
-  // Calculate how many workers we could run based on queue composition
-  let potentialWorkers = 0;
-  let devicesNeeded = 0;
+  // Don't add workers if we have idle ones
+  if (idleWorkers > 0) {
+    return 0;
+  }
   
-  // Try to pack workers efficiently based on what's in queue
-  // Start with largest device requirements first
-  for (let deviceReq = 4; deviceReq >= 1; deviceReq--) {
-    const testsOfThisSize = deviceCounts[deviceReq] || 0;
-    if (testsOfThisSize > 0 && devicesNeeded + deviceReq <= availableDevices) {
-      const workersForThisSize = Math.floor((availableDevices - devicesNeeded) / deviceReq);
-      const actualWorkers = Math.min(workersForThisSize, testsOfThisSize);
-      potentialWorkers += actualWorkers;
-      devicesNeeded += actualWorkers * deviceReq;
+  // Don't add if no jobs in queue
+  if (totalJobs === 0) {
+    return 0;
+  }
+  
+  // Find minimum device requirement we can fulfill
+  let minDevicesNeeded = 4;
+  for (let d = 1; d <= 4; d++) {
+    if ((deviceCounts[d] || 0) > 0 && availableDevices >= d) {
+      minDevicesNeeded = d;
+      break;
     }
   }
   
-  // Don't add more workers than we have jobs for
-  const maxUsefulWorkers = Math.min(
-    potentialWorkers,
-    Object.values(deviceCounts).reduce((sum, count) => sum + count, 0)
-  );
+  // Can we run at least one more job?
+  if (availableDevices >= minDevicesNeeded) {
+    const toAdd = Math.min(1, this._maxWorkers - currentWorkers);
+    console.log(`➕ [CALC_ADD] Can run ${minDevicesNeeded}-device job, adding ${toAdd} worker`);
+    return toAdd;
+  }
   
-  const toAdd = Math.min(
-    maxUsefulWorkers - currentWorkers,
-    this._maxWorkers - currentWorkers
-  );
-  
-  console.log(`🔍 [CALC_ADD] Potential: ${potentialWorkers}, ToAdd: ${toAdd}`);
-  return Math.max(0, toAdd);
+  return 0;
 }
 
   _calculateWorkersToRemove() {
