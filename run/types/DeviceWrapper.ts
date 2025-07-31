@@ -1953,6 +1953,10 @@ export class DeviceWrapper {
   }
 
   public async trustAttachments(conversationName: string) {
+    await this.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Untrusted attachment message',
+    })
     await this.clickOnElementAll({
       strategy: 'accessibility id',
       selector: 'Untrusted attachment message',
