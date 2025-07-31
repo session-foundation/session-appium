@@ -1,6 +1,7 @@
 import { ANDROID_XPATHS, IOS_XPATHS } from '../../../constants';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { ElementStates, StrategyExtractionObj } from '../../../types/testing';
+import { getAppDisplayName } from '../utils/devnet';
 import { SupportedPlatformsType } from '../utils/open_app';
 
 export abstract class LocatorsInterface {
@@ -438,7 +439,7 @@ export class ShareExtensionIcon extends LocatorsInterface {
         return {
           strategy: 'id',
           selector: 'com.google.android.apps.photos:id/text',
-          text: 'Session',
+          text: `${getAppDisplayName()}`, // Session QA or AQA
         };
       case 'ios':
         return {
@@ -523,60 +524,3 @@ export class ImageName extends LocatorsInterface {
     }
   }
 }
-
-// TODO update StrategyExtractionObj to include Locator class
-// export class PendingMessageRequestControlMessage extends LocatorsInterface {
-//   public build(): StrategyExtractionObj {
-//     switch (this.platform) {
-//       case 'android':
-//         return {
-//           strategy: 'id',
-//           selector: 'network.loki.messenger.qa:id/textSendAfterApproval',
-//           text: 'You will be able to send voice messages and attachments once the recipient has approved this message request.',
-//         };
-//       case 'ios':
-//         return {
-//           strategy: 'accessibility id',
-//           selector: 'Control message',
-//           text: 'You will be able to send voice messages and attachments once the recipient has approved this message request.',
-//         };
-//     }
-//   }
-// }
-
-// export class MessageRequestAcceptedDescriptionControlMessage extends LocatorsInterface {
-//   public build(): StrategyExtractionObj {
-//     switch (this.platform) {
-//       case 'ios':
-//         return {
-//           strategy: 'accessibility id',
-//           selector: 'Control message',
-//           text: 'Sending a message to this user will automatically accept their message request and reveal your Account ID.',
-//         };
-//       case 'android':
-//         return {
-//           strategy: 'id',
-//           selector: 'network.loki.messenger.qa:id/sendAcceptsTextView',
-//           text: 'Sending a message to this user will automatically accept their message request and reveal your Account ID.',
-//         };
-//     }
-//   }
-// }
-
-// export class MessageReadStatus extends LocatorsInterface {
-//   public build(): StrategyExtractionObj {
-//     switch (this.platform) {
-//       case 'android':
-//         return {
-//           strategy: 'id',
-//           selector: 'network.loki.messenger.qa:id/messageStatusTextView',
-//           text: 'Read',
-//         };
-//       case 'ios':
-//         return {
-//           strategy: 'accessibility id',
-//           selector: 'Message sent status: Read',
-//         };
-//     }
-//   }
-// }

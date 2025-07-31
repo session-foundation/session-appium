@@ -33,10 +33,12 @@ export type AllureSuiteConfig =
         | 'Delete Contact'
         | 'Delete Conversation'
         | 'Hide Note to Self'
-        | 'Set Nickname';
+        | 'Set Nickname'
+        | 'Share to Session';
     }
   | { parent: 'Visual Checks' }
   | { parent: 'Voice Calls' };
+
 /**
  * Standardized Test Step Descriptions
  *
@@ -69,7 +71,6 @@ export const TestSteps = {
   // Open/Navigate steps
   OPEN: {
     UPDATE_GROUP_INFO: "Open 'Update Group Information' modal",
-    SET_NICKNAME: "Open 'Set Nickname' modal",
   },
   // Disappearing Messages
   DISAPPEARING_MESSAGES: {
