@@ -27,6 +27,123 @@ var import_rebase = require("../../node_modules/playwright/lib/runner/rebase");
 var import_workerHost = require("../../node_modules/playwright/lib/runner/workerHost");
 var import_ipc = require("../../node_modules/playwright/lib/common/ipc");
 
+class StaggerLock {
+  constructor() {
+    this.lockFile = path.join(process.cwd(), '.playwright-device-stagger.json');
+    this.workerPid = process.pid;
+    this.workerId = process.env.TEST_WORKER_INDEX || 'unknown';
+    
+    // Ensure lock file exists
+    this._initializeLockFile();
+  }
+
+  _initializeLockFile() {
+    try {
+      if (!fs.existsSync(this.lockFile)) {
+        fs.writeFileSync(this.lockFile, JSON.stringify({
+          lastAllocationTime: 0,
+          lastWorker: null,
+          history: []
+        }, null, 2));
+      }
+    } catch (error) {
+      console.error('[STAGGER] Failed to initialize lock file:', error);
+    }
+  }
+
+  canAllocateDevices(deviceCount, requiredInterval = 20000) {
+    const maxRetries = 3;
+    let retries = 0;
+    
+    while (retries < maxRetries) {
+      try {
+        // Read current state
+        const data = this._readLockFile();
+        const now = Date.now();
+        const timeSinceLastAllocation = now - data.lastAllocationTime;
+        
+        // Check if enough time has passed
+        if (data.lastAllocationTime === 0 || timeSinceLastAllocation >= requiredInterval) {
+          // Try to claim the slot
+          const newData = {
+            lastAllocationTime: now,
+            lastWorker: {
+              pid: this.workerPid,
+              id: this.workerId,
+              deviceCount: deviceCount
+            },
+            history: [
+              ...data.history.slice(-9), // Keep last 10 entries
+              {
+                time: now,
+                worker: this.workerId,
+                pid: this.workerPid,
+                devices: deviceCount
+              }
+            ]
+          };
+          
+          // Atomic write with temp file
+          const tempFile = `${this.lockFile}.${this.workerPid}.tmp`;
+          fs.writeFileSync(tempFile, JSON.stringify(newData, null, 2));
+          
+          // Verify our write by reading back
+          const writtenData = JSON.parse(fs.readFileSync(tempFile, 'utf8'));
+          if (writtenData.lastAllocationTime === now) {
+            // Our write was successful, move temp to actual
+            fs.renameSync(tempFile, this.lockFile);
+            
+            console.log(`✅ [STAGGER] Worker ${this.workerId} (pid:${this.workerPid}) allocated ${deviceCount} devices`);
+            console.log(`   Next allocation allowed in ${(requiredInterval/1000).toFixed(1)}s`);
+            return true;
+          }
+        } else {
+          const waitTime = (requiredInterval - timeSinceLastAllocation) / 1000;
+          console.log(`⏳ [STAGGER] Worker ${this.workerId} must wait ${waitTime.toFixed(1)}s more`);
+          console.log(`   Last allocation: ${data.lastWorker?.id || 'unknown'} at ${new Date(data.lastAllocationTime).toISOString()}`);
+          return false;
+        }
+      } catch (error) {
+        retries++;
+        if (retries >= maxRetries) {
+          console.error(`[STAGGER] Failed after ${maxRetries} attempts:`, error);
+          // In case of persistent errors, allow allocation to prevent deadlock
+          return true;
+        }
+        // Brief wait before retry
+        const waitMs = 100 * retries;
+        console.log(`[STAGGER] Retry ${retries}/${maxRetries} after ${waitMs}ms`);
+        const start = Date.now();
+        while (Date.now() - start < waitMs) { /* spin wait */ }
+      }
+    }
+    
+    return true; // Fallback to allow progress
+  }
+
+  _readLockFile() {
+    try {
+      const content = fs.readFileSync(this.lockFile, 'utf8');
+      return JSON.parse(content);
+    } catch (error) {
+      console.error('[STAGGER] Error reading lock file:', error);
+      return { lastAllocationTime: 0, lastWorker: null, history: [] };
+    }
+  }
+
+  cleanup() {
+    try {
+      // Remove any temp files this worker created
+      const tempFile = `${this.lockFile}.${this.workerPid}.tmp`;
+      if (fs.existsSync(tempFile)) {
+        fs.unlinkSync(tempFile);
+      }
+    } catch (error) {
+      // Ignore cleanup errors
+    }
+  }
+}
+
 class Dispatcher {
   constructor(config, reporter, failureTracker) {
     this._workerSlots = [];
@@ -42,6 +159,7 @@ class Dispatcher {
     this._failureTracker = failureTracker;
     this._devicePoolMinAvailable = [];
     this._statusLogInterval = null;
+    this._staggerLock = new StaggerLock();
 
     // Dynamic worker configuration
     this._maxWorkers = this._config.config.workers || 12; // Max workers allowed
