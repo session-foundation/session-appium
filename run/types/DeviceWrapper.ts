@@ -1371,6 +1371,8 @@ export class DeviceWrapper {
     if (!sendButton) {
       throw new Error('Send button not found: Need to restart iOS emulator: Known issue');
     }
+    // Might need to scroll down if the message is too long
+    await this.scrollToBottom();
     // Wait for tick
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
@@ -2039,7 +2041,7 @@ export class DeviceWrapper {
     await this.scroll({ x: width / 2, y: height * 0.95 }, { x: width / 2, y: height * 0.35 }, 100);
   }
   public async scrollToBottom() {
-    const scrollButton = await this.doesElementExist(new ScrollToBottomButton(this));
+    const scrollButton = await this.doesElementExist({ ...new ScrollToBottomButton(this).build(), maxWait: 2000 });
     if (scrollButton) {
       await this.clickOnElementAll(new ScrollToBottomButton(this));
     } else {
