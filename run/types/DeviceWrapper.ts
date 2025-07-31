@@ -998,13 +998,12 @@ export class DeviceWrapper {
    * @param args.text - Optional text content to match within elements of the same type
    * @param args.initialMaxWait - Time to wait for element to initially appear (defaults to 10_000ms)
    * @param args.maxWait - Time to wait for deletion AFTER element is found (defaults to 30_000ms)
-   * @param preven
+   * @param args.preventEarlyDeletion - If true, throws an error if the element disappears too early (% of maxWait)
    *
    * @throws Error if:
    * - The element is never found within initialMaxWait
    * - The element still exists after maxWait
-   * - The element disappears suspiciously early (less than 80% of maxWait)
-   *
+   * - The element disappears suspiciously early (if preventEarlyDeletion is true)
    * Note: For checks where you just need to ensure an element
    * is not present (regardless of prior existence), use verifyElementNotPresent() instead.
    */
