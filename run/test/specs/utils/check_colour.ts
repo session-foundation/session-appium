@@ -11,17 +11,23 @@ export async function parseDataImage(base64: string) {
   const middleX = Math.floor(width / 2);
   const middleY = Math.floor(height / 2);
 
-  const pxDataStart = (width * middleY + middleX) * 3;
-  const pxDataEnd = pxDataStart + 3;
-
   const px = await new Promise<Buffer>(resolve => {
     reader.decodePixels(decodedPx => {
       resolve(decodedPx);
     });
   });
 
+  // Auto-detect format based on buffer size
+  // iOS screenshots are RGB format (3 bytes per pixel)
+  // Android screenshots RGBA format (4 bytes per pixel)
+  const bytesPerPixel = px.length / (width * height);
+
+  const pxDataStart = (width * middleY + middleX) * bytesPerPixel;
+  const pxDataEnd = pxDataStart + 3;
+
   const middlePx = px.buffer.slice(pxDataStart, pxDataEnd);
   const pixelColor = Buffer.from(middlePx).toString('hex');
+
   return pixelColor;
 }
 
