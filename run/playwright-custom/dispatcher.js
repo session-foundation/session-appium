@@ -127,7 +127,7 @@ class Dispatcher {
     // Initialize device pool in Redis
     const devices = Array.from({ length: this._devicePoolSize }, (_, i) => String(i));
     if (devices.length > 0) {
-      await this._redis.rpush(this._redisKeys.devicesAvailable, ...devices);
+      await this._redis.rPush(this._redisKeys.devicesAvailable, ...devices);
     }
     
     console.log(`🎮 [DEVICE_POOL] Initialized ${this._devicePoolSize} devices in Redis`);
@@ -169,11 +169,11 @@ class Dispatcher {
 
   async _processJobQueue() {
     // Get jobs from Redis queue
-    const queueLength = await this._redis.zcard(this._redisKeys.jobQueue);
+    const queueLength = await this._redis.zCard(this._redisKeys.jobQueue);
     if (queueLength === 0) return;
     
     // Get top jobs that might be runnable
-    const jobs = await this._redis.zrange(this._redisKeys.jobQueue, 0, 20);
+    const jobs = await this._redis.zRange(this._redisKeys.jobQueue, 0, 20);
     
     for (const jobStr of jobs) {
       const job = JSON.parse(jobStr);
@@ -181,7 +181,7 @@ class Dispatcher {
       
       if (scheduled) {
         // Remove from queue
-        await this._redis.zrem(this._redisKeys.jobQueue, jobStr);
+        await this._redis.zRem(this._redisKeys.jobQueue, jobStr);
       } else {
         // Can't schedule this or any larger jobs
         break;
@@ -202,7 +202,7 @@ class Dispatcher {
       
       // Add to Redis queue
       const priority = devices; // Lower device count = higher priority
-      await this._redis.zadd(this._redisKeys.jobQueue, priority, JSON.stringify({
+      await this._redis.zAdd(this._redisKeys.jobQueue, priority, JSON.stringify({
         ...job,
         devices,
         id: `job-${Date.now()}-${Math.random()}`
@@ -266,11 +266,11 @@ class Dispatcher {
     // Allocate devices from Redis
     const allocatedDevices = [];
     for (let i = 0; i < devices; i++) {
-      const device = await this._redis.lpop(this._redisKeys.devicesAvailable);
+      const device = await this._redis.lPop(this._redisKeys.devicesAvailable);
       if (device === null) {
         // Allocation failed, return what we got
         if (allocatedDevices.length > 0) {
-          await this._redis.rpush(this._redisKeys.devicesAvailable, ...allocatedDevices);
+          await this._redis.rPush(this._redisKeys.devicesAvailable, ...allocatedDevices);
         }
         return false;
       }
@@ -279,7 +279,7 @@ class Dispatcher {
     
     // Store allocation in Redis
     const allocationKey = `worker-${workerIndex}`;
-    await this._redis.hset(
+    await this._redis.hSet(
       this._redisKeys.devicesAllocations,
       allocationKey,
       JSON.stringify(allocatedDevices)
@@ -289,7 +289,7 @@ class Dispatcher {
     console.log(`🔒 [DEVICES] Worker ${workerIndex} allocated devices: ${allocatedDevices.join(', ')}`);
     
     // Update stats
-    await this._redis.hincrby(this._redisKeys.stats, 'totalAllocations', 1);
+    await this._redis.hIncrBy(this._redisKeys.stats, 'totalAllocations', 1);
     
     // Set up job dispatcher
     const jobDispatcher = new JobDispatcher(
@@ -347,18 +347,18 @@ class Dispatcher {
 
   async _deallocateDevices(workerIndex) {
     const allocationKey = `worker-${workerIndex}`;
-    const allocation = await this._redis.hget(this._redisKeys.devicesAllocations, allocationKey);
+    const allocation = await this._redis.hGet(this._redisKeys.devicesAllocations, allocationKey);
     
     if (allocation) {
       const devices = JSON.parse(allocation);
       
       // Return devices to available pool
       if (devices.length > 0) {
-        await this._redis.rpush(this._redisKeys.devicesAvailable, ...devices.map(String));
+        await this._redis.rPush(this._redisKeys.devicesAvailable, ...devices.map(String));
       }
       
       // Remove allocation record
-      await this._redis.hdel(this._redisKeys.devicesAllocations, allocationKey);
+      await this._redis.hDel(this._redisKeys.devicesAllocations, allocationKey);
       
       console.log(`🔓 [DEVICES] Worker ${workerIndex} released devices: ${devices.join(', ')}`);
     }
@@ -432,7 +432,7 @@ class Dispatcher {
     if (this._finished.isDone()) return;
     
     // Check Redis queue
-    const queueLength = await this._redis.zcard(this._redisKeys.jobQueue);
+    const queueLength = await this._redis.zCard(this._redisKeys.jobQueue);
     
     if ((this._queue.length || queueLength) && !this._isStopped) return;
     if (this._workerSlots.some((w) => w.busy)) return;
@@ -449,7 +449,7 @@ class Dispatcher {
     }
     
     // Log final stats
-    const stats = await this._redis.hgetall(this._redisKeys.stats);
+    const stats = await this._redis.hGetall(this._redisKeys.stats);
     if (stats.totalAllocations) {
       console.log("\n📊 [STATS] Final Statistics:");
       console.log(`    Total device allocations: ${stats.totalAllocations || 0}`);
@@ -560,7 +560,7 @@ class Dispatcher {
     
     const activeWorkers = this._workerSlots.filter(w => w.busy).length;
     const idleWorkers = this._workerSlots.length - activeWorkers;
-    const queueLength = await this._redis.zcard(this._redisKeys.jobQueue) + this._queue.length;
+    const queueLength = await this._redis.zCard(this._redisKeys.jobQueue) + this._queue.length;
     const availableDevices = await this._redis.llen(this._redisKeys.devicesAvailable);
     
     console.log(`🔍 [WORKER_POOL] Workers: ${activeWorkers} active, ${idleWorkers} idle | Queue: ${queueLength} | Devices: ${availableDevices}/${this._devicePoolSize} available`);
