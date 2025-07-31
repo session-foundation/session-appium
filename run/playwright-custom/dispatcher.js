@@ -157,7 +157,7 @@ class Dispatcher {
   async _scheduleJob() {
     if (this._isStopped) return;
     
-    const availableDevices = await this._redis.llen(this._redisKeys.devicesAvailable);
+    const availableDevices = await this._redis.lLen(this._redisKeys.devicesAvailable);
     console.log(`\n🔄 [SCHEDULER] Running scheduler (${availableDevices}/${this._devicePoolSize} devices available)`);
     
     // Process jobs from Redis queue
@@ -176,9 +176,10 @@ class Dispatcher {
     const jobs = await this._redis.zRange(this._redisKeys.jobQueue, 0, 20);
     
     for (const jobStr of jobs) {
-      const job = JSON.parse(jobStr);
+      const jobData = JSON.parse(jobStr);
+      const job = this._localJobMap.get(jobData._localJobRef) || jobData;
       const scheduled = await this._tryScheduleJob(job, job.devices);
-      
+
       if (scheduled) {
         // Remove from queue
         await this._redis.zRem(this._redisKeys.jobQueue, jobStr);
@@ -194,21 +195,42 @@ class Dispatcher {
     
     for (const job of this._queue) {
       const devices = this._getJobDeviceRequirement(job);
-      
+      const priority = devices || 0; // Default to 0 if no devices found
+
+      // Also add a check before adding to Redis
+      if (!Number.isFinite(priority)) {
+        console.warn(`⚠️ Invalid priority ${priority} for job, using 0`);
+        priority = 0;
+      }      
       if (!this._canRunBasedOnProjectLimits(job)) {
         remainingJobs.push(job);
         continue;
       }
       
-      // Add to Redis queue
-      const priority = devices; // Lower device count = higher priority
-      await this._redis.zAdd(this._redisKeys.jobQueue, priority, JSON.stringify({
-        ...job,
+      // Only serialize what we need, not the circular test objects
+      const jobData = {
+        id: `job-${Date.now()}-${Math.random()}`,
         devices,
-        id: `job-${Date.now()}-${Math.random()}`
-      }));
+        workerHash: job.workerHash,
+        projectId: job.projectId,
+        requireFile: job.requireFile,
+        // Store test IDs only, not the full objects
+        testIds: job.tests.map(t => t.id),
+        // Store the original job reference locally
+        _localJobRef: Math.random() // unique key to retrieve from map
+      };
+
+// Store the actual job object locally
+if (!this._localJobMap) this._localJobMap = new Map();
+this._localJobMap.set(jobData._localJobRef, job);
+
+await this._redis.zAdd(this._redisKeys.jobQueue, {
+  score: priority || 0,
+  value: JSON.stringify(jobData)
+});
+
     }
-    
+
     this._queue = remainingJobs;
   }
 
@@ -242,7 +264,8 @@ class Dispatcher {
     }
     
     // Check device availability
-    const availableDevices = await this._redis.llen(this._redisKeys.devicesAvailable);
+
+    const availableDevices = await this._redis.lLen(this._redisKeys.devicesAvailable);
     if (devices > availableDevices) {
       console.log(`   ❌ Not enough devices (need ${devices}, have ${availableDevices})`);
       return false;
@@ -561,7 +584,7 @@ class Dispatcher {
     const activeWorkers = this._workerSlots.filter(w => w.busy).length;
     const idleWorkers = this._workerSlots.length - activeWorkers;
     const queueLength = await this._redis.zCard(this._redisKeys.jobQueue) + this._queue.length;
-    const availableDevices = await this._redis.llen(this._redisKeys.devicesAvailable);
+    const availableDevices = await this._redis.lLen(this._redisKeys.devicesAvailable);
     
     console.log(`🔍 [WORKER_POOL] Workers: ${activeWorkers} active, ${idleWorkers} idle | Queue: ${queueLength} | Devices: ${availableDevices}/${this._devicePoolSize} available`);
     
