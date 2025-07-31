@@ -124,7 +124,6 @@ export type StrategyExtractionObj =
 
 export type XPath =
   | '//XCUIElementTypeCell'
-  | `(//android.widget.ImageView[@content-desc="Clear"])[2]`
   | `(//android.widget.ImageView[@resource-id="network.loki.messenger.qa:id/thumbnail"])[1]`
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
@@ -397,6 +396,8 @@ export type Id =
   | 'block-user-menu-option'
   | 'Block'
   | 'Call'
+  | 'clear-input-button-description'
+  | 'clear-input-button-name'
   | 'Close button'
   | 'com.android.chrome:id/negative_button'
   | 'com.android.chrome:id/signin_fre_dismiss_button'
