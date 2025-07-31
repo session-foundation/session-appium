@@ -26,6 +26,8 @@ var import_utils2 = require("playwright-core/lib/utils");
 var import_rebase = require("../../node_modules/playwright/lib/runner/rebase");
 var import_workerHost = require("../../node_modules/playwright/lib/runner/workerHost");
 var import_ipc = require("../../node_modules/playwright/lib/common/ipc");
+const fs = require('fs');
+const path = require('path');
 
 class StaggerLock {
   constructor() {
