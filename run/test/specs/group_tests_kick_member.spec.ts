@@ -43,7 +43,9 @@ async function kickMember(platform: SupportedPlatformsType, testInfo: TestInfo) 
       .toString()
   );
   await alice1.clickOnElementAll(new ConfirmRemovalButton(alice1));
-  await alice1.onIOS().waitForTextElementToBePresent(new MemberStatus(alice1).build('Pending removal'));
+  await alice1
+    .onIOS()
+    .waitForTextElementToBePresent(new MemberStatus(alice1).build('Pending removal'));
   await alice1.hasElementBeenDeleted({
     ...new GroupMember(alice1).build(USERNAME.BOB),
     maxWait: 10000,

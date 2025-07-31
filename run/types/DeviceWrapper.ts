@@ -2041,7 +2041,10 @@ export class DeviceWrapper {
     await this.scroll({ x: width / 2, y: height * 0.95 }, { x: width / 2, y: height * 0.35 }, 100);
   }
   public async scrollToBottom() {
-    const scrollButton = await this.doesElementExist({ ...new ScrollToBottomButton(this).build(), maxWait: 2000 });
+    const scrollButton = await this.doesElementExist({
+      ...new ScrollToBottomButton(this).build(),
+      maxWait: 2000,
+    });
     if (scrollButton) {
       await this.clickOnElementAll(new ScrollToBottomButton(this));
     } else {
