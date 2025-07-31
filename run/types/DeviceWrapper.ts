@@ -1956,7 +1956,7 @@ export class DeviceWrapper {
     await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Untrusted attachment message',
-    })
+    });
     await this.clickOnElementAll({
       strategy: 'accessibility id',
       selector: 'Untrusted attachment message',

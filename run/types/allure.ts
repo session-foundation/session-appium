@@ -28,7 +28,12 @@ export type AllureSuiteConfig =
   | { parent: 'Settings'; suite: 'App Disguise' }
   | {
       parent: 'User Actions';
-      suite: 'Block/Unblock' | 'Delete Contact' | 'Delete Conversation' | 'Hide Note to Self';
+      suite:
+        | 'Block/Unblock'
+        | 'Delete Contact'
+        | 'Delete Conversation'
+        | 'Hide Note to Self'
+        | 'Set Nickname';
     }
   | { parent: 'Visual Checks' }
   | { parent: 'Voice Calls' };
@@ -64,6 +69,7 @@ export const TestSteps = {
   // Open/Navigate steps
   OPEN: {
     UPDATE_GROUP_INFO: "Open 'Update Group Information' modal",
+    SET_NICKNAME: "Open 'Set Nickname' modal",
   },
   // Disappearing Messages
   DISAPPEARING_MESSAGES: {
@@ -82,5 +88,6 @@ export const TestSteps = {
     CALLING: 'Verify call has been started',
     CALL_SUCCESSFUL: 'Verify call has been put through successfully',
     MISSED_CALL: 'Verify missed call',
+    NICKNAME_CHANGED: (context: string) => `Verify nickname changed in/on ${context}`,
   },
 };
