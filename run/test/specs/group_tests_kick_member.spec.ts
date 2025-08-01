@@ -82,7 +82,6 @@ async function kickMember(platform: SupportedPlatformsType, testInfo: TestInfo) 
     strategy: 'accessibility id',
     selector: 'Empty list',
   });
-  //   Does message input exist? Is conversation settings visible?
-  await bob1.doesElementExist({ ...new MessageInput(bob1).build(), maxWait: 1000 });
-  await bob1.doesElementExist({ ...new ConversationSettings(bob1).build(), maxWait: 1000 });
+  // Message input should not be present after being kicked
+  await bob1.verifyElementNotPresent({ ...new MessageInput(bob1).build(), maxWait: 1000 });
 }

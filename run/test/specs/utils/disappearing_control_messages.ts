@@ -30,19 +30,19 @@ export const checkDisappearingControlMessage = async (
   // Check device 1
   if (platform === 'android') {
     await Promise.all([
-      device1.disappearingControlMessage(disappearingMessagesSetYou),
-      device1.disappearingControlMessage(disappearingMessagesSetBob),
+      device1.waitForControlMessageToBePresent(disappearingMessagesSetYou),
+      device1.waitForControlMessageToBePresent(disappearingMessagesSetBob),
     ]);
     // Check device 2
     await Promise.all([
-      device2.disappearingControlMessage(disappearingMessagesSetYou),
-      device2.disappearingControlMessage(disappearingMessagesSetAlice),
+      device2.waitForControlMessageToBePresent(disappearingMessagesSetYou),
+      device2.waitForControlMessageToBePresent(disappearingMessagesSetAlice),
     ]);
   }
   if (platform === 'ios') {
     await Promise.all([
-      device1.disappearingControlMessage(disappearingMessagesSetYou),
-      device2.disappearingControlMessage(disappearingMessagesSetAlice),
+      device1.waitForControlMessageToBePresent(disappearingMessagesSetYou),
+      device2.waitForControlMessageToBePresent(disappearingMessagesSetAlice),
     ]);
   }
   // Check if control messages are syncing from both user A and user B
@@ -52,7 +52,7 @@ export const checkDisappearingControlMessage = async (
       selector: 'Conversation list item',
       text: userNameB,
     });
-    await linkedDevice.disappearingControlMessage(disappearingMessagesSetYou);
-    await linkedDevice.disappearingControlMessage(disappearingMessagesSetBob);
+    await linkedDevice.waitForControlMessageToBePresent(disappearingMessagesSetYou);
+    await linkedDevice.waitForControlMessageToBePresent(disappearingMessagesSetBob);
   }
 };

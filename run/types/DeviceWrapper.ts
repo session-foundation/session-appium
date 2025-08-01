@@ -722,11 +722,11 @@ export class DeviceWrapper {
     if (elements && elements.length) {
       const matching = await this.findAsync(elements, async e => {
         const text = await this.getTextFromElement(e);
-        // this.info(`text ${text} looking for ${textToLookFor}`);
-        if (text.toLowerCase().includes(textToLookFor.toLowerCase())) {
+        const isPartialMatch = text && text.toLowerCase().includes(textToLookFor.toLowerCase());
+        if (isPartialMatch) {
           this.info(`Text found to include ${textToLookFor}`);
         }
-        return Boolean(text && text.toLowerCase() === textToLookFor.toLowerCase());
+        return Boolean(isPartialMatch);
       });
 
       return matching || null;
@@ -903,57 +903,26 @@ export class DeviceWrapper {
     );
     await clickOnCoordinates(this, bestMatch.center);
   }
-
-  public async doesElementExist(
+  /**
+   * Checks if an element exists on the screen without throwing an error. 
+   * Only useful for scenarios where you want to interact with an element if it exists 
+   * but don't care if it doesn't.
+   * For explicit verification of present or not present, use either 
+   * waitForTextElementToBePresent or verifyElementNotPresent.
+   *
+   * @param args - Element locator with optional text matching and timeout
+   * @param args.text - Optional text content to match within elements
+   * @param args.maxWait - Maximum time to wait in ms (default: 60000)
+   * @returns The element if found, null otherwise
+   */
+    public async doesElementExist(
     args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
-  ) {
-    const beforeStart = Date.now();
-    const maxWaitMSec = args.maxWait || 30000;
-    const waitPerLoop = 100;
-    let element: AppiumNextElementType | null = null;
-
-    // Build the locator if necessary, and extract the expected text.
-    // Use the text from the locator if available; otherwise fallback to args.text.
-    // This ensures that the correct text value is used for matching, preventing false positives in tests.
-    const locator = args instanceof LocatorsInterface ? args.build() : args;
-    const text: string | undefined = ('text' in locator ? locator.text : undefined) || args.text;
-
-    while (element === null) {
-      try {
-        if (!text) {
-          element = await this.findElement(locator.strategy, locator.selector);
-        } else {
-          const els = await this.findElements(locator.strategy, locator.selector);
-          element = await this.findMatchingTextInElementArray(els, text);
-          if (element) {
-            this.log(`${locator.strategy}: ${locator.selector} with matching text "${text}" found`);
-          } else {
-            this.log(
-              `Couldn't find "${text}" with matching ${locator.strategy}: ${locator.selector}`
-            );
-          }
-        }
-      } catch (e: any) {
-        this.info(`doesElementExist failed with ${locator.strategy} ${locator.selector}`);
-      }
-      // Break immediately if we found the element
-      if (element) {
-        break;
-      }
-
-      // Check for timeout before sleeping
-      if (Date.now() >= beforeStart + maxWaitMSec) {
-        this.log(locator.selector, "doesn't exist, time expired");
-        break;
-      } else {
-        this.log(locator.selector, "Doesn't exist but retrying");
-      }
-
-      // Sleep before trying again
-      await sleepFor(waitPerLoop);
+  ): Promise<AppiumNextElementType | null> {
+    try {
+      return await this.waitForTextElementToBePresent(args);
+    } catch {
+      return null;
     }
-
-    return element;
   }
 
   /**
@@ -1197,163 +1166,105 @@ export class DeviceWrapper {
   // WAIT FOR FUNCTIONS
 
   public async waitForTextElementToBePresent(
-    args: {
-      text?: string;
-      maxWait?: number;
-    } & (LocatorsInterface | StrategyExtractionObj)
-  ): Promise<AppiumNextElementType> {
-    let el: AppiumNextElementType | null = null;
-    const locator = args instanceof LocatorsInterface ? args.build() : args;
-
-    const { text, maxWait } = args;
-
-    const maxWaitMSec: number = typeof maxWait === 'number' ? maxWait : 60000;
-    let currentWait = 0;
-    const waitPerLoop = 100;
-    while (el === null) {
+  args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
+): Promise<AppiumNextElementType> {
+  const locator = args instanceof LocatorsInterface ? args.build() : args;
+  const { text, maxWait = 60000 } = args;
+  
+  const description = describeLocator({ ...locator, text });
+  this.log(`Waiting for ${description} to be present`);
+  
+  const result = await this.pollUntil(
+    async () => {
       try {
-        const waitingForStr = `Waiting for "${locator.strategy}" and "${locator.selector}" to be present`;
+        let element: AppiumNextElementType | null = null;
+        
         if (text) {
-          this.log(`${waitingForStr} with "${text}"`);
           const els = await this.findElements(locator.strategy, locator.selector);
-          el = await this.findMatchingTextInElementArray(els, text);
+          element = await this.findMatchingTextInElementArray(els, text);
         } else {
-          this.log(waitingForStr);
-          el = await this.findElement(locator.strategy, locator.selector);
+          element = await this.findElement(locator.strategy, locator.selector);
         }
-      } catch (e: any) {
-        this.info(
-          `waitForTextElementToBePresent threw: "${locator.strategy}": "${locator.selector}`
-        );
+        
+        return element 
+          ? { success: true, data: element }
+          : { success: false };
+      } catch {
+        return { success: false };
       }
-      if (!el) {
-        await sleepFor(waitPerLoop);
-      }
-      currentWait += waitPerLoop;
-
-      if (currentWait >= maxWaitMSec) {
-        if (text) {
-          throw new Error(`Waited for too long looking for '${locator.selector}' and '${text}`);
-        }
-        throw new Error(`Waited for too long looking for '${locator.selector}'`);
-      }
-      if (el) {
-        if (text) {
-          this.log(`'${locator.selector}' and '${text}' has been found`);
-        } else {
-          this.log(`'${locator.selector}' has been found`);
-        }
-      }
-    }
-    return el;
+    },
+    { maxWait }
+  );
+  
+  if (!result) {
+    throw new Error(`Waited too long for ${description}`);
   }
+  
+  this.log(`${description} has been found`);
+  return result;
+}
 
   public async waitForControlMessageToBePresent(
     text: string,
-    maxWait?: number
+    maxWait = 15000
   ): Promise<AppiumNextElementType> {
-    let el: AppiumNextElementType | null = null;
-    const maxWaitMSec: number = typeof maxWait === 'number' ? maxWait : 15000;
-    let currentWait = 0;
-    const waitPerLoop = 100;
-    const textWithQuotes = `"${text}"`;
-    while (el === null) {
-      try {
-        this.log(`Waiting for control message to be present with "${textWithQuotes}"`);
-        const els = await this.findElements('accessibility id', 'Control message');
-        el = await this.findMatchingTextInElementArray(els, text);
-      } catch (e: any) {
-        this.info('waitForControlMessageToBePresent threw: ', e.message);
-      }
-      if (!el) {
-        await sleepFor(waitPerLoop);
-      }
-      currentWait += waitPerLoop;
-      if (currentWait >= maxWaitMSec) {
-        this.log('Waited too long');
-        throw new Error(
-          `Waited for too long (${maxWaitMSec}ms) looking for Control message "${textWithQuotes}"`
-        );
-      }
+    const result = await this.pollUntil(
+      async () => {
+        try {
+          const els = await this.findElements('accessibility id', 'Control message');
+          const element = await this.findMatchingTextInElementArray(els, text);
+          
+          return element 
+            ? { success: true, data: element }
+            : { success: false, error: `Control message with text "${text}" not found` };
+        } catch (err) {
+          return { 
+            success: false, 
+            error: err instanceof Error ? err.message : String(err)
+          };
+        }
+      },
+      { maxWait }
+    );
+    
+    if (!result) {
+      throw new Error(`Control message "${text}" not found after ${maxWait}ms`);
     }
-    this.log(`Control message "${textWithQuotes}" has been found`);
-    return el;
-  }
-
-  public async disappearingControlMessage(
-    text: string,
-    maxWait?: number
-  ): Promise<AppiumNextElementType> {
-    let el: AppiumNextElementType | null = null;
-    const maxWaitMSec: number = typeof maxWait === 'number' ? maxWait : 15000;
-    let currentWait = 0;
-    const waitPerLoop = 100;
-    while (el === null) {
-      try {
-        this.log(`Waiting for control message to be present with ${text}`);
-        const els = await this.findElements('accessibility id', 'Control message');
-        el = await this.findMatchingTextInElementArray(els, text);
-      } catch (e) {
-        this.info('disappearingControlMessage threw: ', e);
-      }
-      if (!el) {
-        await sleepFor(waitPerLoop);
-      }
-      currentWait += waitPerLoop;
-      if (currentWait >= maxWaitMSec) {
-        this.log('Waited too long');
-        throw new Error(
-          `Waited for too long (${maxWaitMSec}ms) looking for Control message ${text}`
-        );
-      }
-    }
-    this.log(`Control message ${text} has been found`);
-    return el;
+    
+    this.log(`Control message "${text}" has been found`);
+    return result;
   }
 
   public async waitForLoadingMedia() {
-    let loadingAnimation: AppiumNextElementType | null = null;
-
-    do {
-      try {
-        loadingAnimation = await this.waitForTextElementToBePresent({
+    await this.pollUntil(
+      async () => {
+        const element = await this.findElementQuietly({
           strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/thumbnail_load_indicator',
-          maxWait: 1000,
+          selector: 'network.loki.messenger.qa:id/thumbnail_load_indicator'
         });
-
-        if (loadingAnimation) {
-          await sleepFor(100);
-          this.info('Loading animation was found, waiting for it to be gone');
-        }
-      } catch (e: any) {
-        this.log('Loading animation not found');
-        loadingAnimation = null;
-      }
-    } while (loadingAnimation);
-
+        
+        // Success when element is GONE
+        return { success: !element };
+      },
+      { maxWait: 15_000 }
+    );
+    
     this.info('Loading animation has finished');
   }
 
   public async waitForLoadingOnboarding() {
-    let loadingAnimation: AppiumNextElementType | null = null;
-    do {
-      try {
-        loadingAnimation = await this.waitForTextElementToBePresent({
-          ...new LoadingAnimation(this).build(),
-          maxWait: 1000,
-        });
-
-        if (loadingAnimation) {
-          await sleepFor(500);
-          this.info('Loading animation was found, waiting for it to be gone');
-        }
-      } catch (e: any) {
-        this.log('Loading animation not found');
-        loadingAnimation = null;
-      }
-    } while (loadingAnimation);
-
+    const locator = new LoadingAnimation(this).build();
+    
+    await this.pollUntil(
+      async () => {
+        const element = await this.findElementQuietly(locator);
+        
+        // Success when element is GONE
+        return { success: !element };
+      },
+      { maxWait: 15_000 }
+    );
+    
     this.info('Loading animation has finished');
   }
   /**
@@ -1936,51 +1847,22 @@ export class DeviceWrapper {
   }
 
   public async sendVoiceMessage() {
-    const maxRetries = 3;
-    let attempt = 0;
     await this.longPress('New voice message');
+    
     if (this.isAndroid()) {
       await this.clickOnElementAll({
         strategy: 'id',
         selector: 'com.android.permissioncontroller:id/permission_allow_foreground_only_button',
         text: 'While using the app',
       });
-      try {
-        const el = await this.doesElementExist({
-          strategy: 'accessibility id',
-          selector: 'New voice message',
-        });
-        if (!el) {
-          throw new Error(`longPress on voice message unsuccessful, couldn't find message`);
-        }
-        await this.pressAndHold('New voice message');
-        const longPressSuccess = await this.doesElementExist({
-          strategy: 'accessibility id',
-          selector: 'Reply to message',
-          maxWait: 1000,
-        });
-
-        if (longPressSuccess) {
-          this.log('LongClick successful'); // Exit the loop if successful
-        } else {
-          throw new Error(`longPress on voice message unsuccessful`);
-        }
-      } catch (error) {
-        attempt++;
-        if (attempt >= maxRetries) {
-          throw new Error(
-            `Longpress on on voice message unsuccessful after ${maxRetries} attempts, ${error as string}`
-          );
-        }
-        this.log(`Longpress attempt ${attempt} failed. Retrying...`);
-        await sleepFor(1000);
-      }
-    } else if (this.isIOS()) {
-      // await this.pressAndHold('New voice message');
+    } 
+    if (this.isIOS()) {
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
-      await this.pressAndHold('New voice message');
     }
+
+    await this.pressAndHold('New voice message');
   }
+
   public async uploadProfilePicture() {
     await this.clickOnElementAll(new UserSettings(this));
     // Click on Profile picture

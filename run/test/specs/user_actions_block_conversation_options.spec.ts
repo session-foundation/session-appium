@@ -83,7 +83,7 @@ async function blockUserInConversationSettings(
   await alice1.clickOnElementAll(new ExitUserProfile(alice1));
   // Send message from Blocked User
   await bob1.sendMessage(blockedMessage);
-  await alice1.doesElementExist({
+  await alice1.verifyElementNotPresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: blockedMessage,

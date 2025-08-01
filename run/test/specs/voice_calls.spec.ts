@@ -83,12 +83,12 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
     await alice1.clickOnElementAll(new CallButton(alice1));
     // The Missed call modal is currently not exposed so the test just dismisses with a button press, see SES-4192
     await bob1.clickOnElementXPath(`//XCUIElementTypeButton[@name="Settings"]`);
-    await alice1.doesElementExist({
+    await alice1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Ringing...',
       maxWait: 5_000,
     });
-    await alice1.doesElementExist({
+    await alice1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Awaiting Recipient Answer... 4/6',
       maxWait: 5_000,
@@ -201,13 +201,13 @@ async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: Test
   await test.step(TestSteps.CALLS.INITIATE_CALL(alice.userName), async () => {
     await alice1.clickOnElementAll(new CallButton(alice1));
     await test.step(TestSteps.VERIFY.CALLING, async () => {
-      await alice1.doesElementExist({
+      await alice1.waitForTextElementToBePresent({
         strategy: 'id',
         selector: 'network.loki.messenger.qa:id/callTitle',
         text: 'Ringing...',
         maxWait: 5_000,
       });
-      await alice1.doesElementExist({
+      await alice1.waitForTextElementToBePresent({
         strategy: 'id',
         selector: 'network.loki.messenger.qa:id/callSubtitle',
         text: 'Sending Call Offer 2/5',
