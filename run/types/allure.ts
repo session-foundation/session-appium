@@ -30,6 +30,7 @@ export type AllureSuiteConfig =
       parent: 'User Actions';
       suite:
         | 'Block/Unblock'
+        | 'Change Profile Picture'
         | 'Delete Contact'
         | 'Delete Conversation'
         | 'Hide Note to Self'
@@ -72,6 +73,10 @@ export const TestSteps = {
   OPEN: {
     UPDATE_GROUP_INFO: "Open 'Update Group Information' modal",
   },
+  // User Actions
+  USER_ACTIONS: {
+    CHANGE_PROFILE_PICTURE: 'Change profile picture',
+  },
   // Disappearing Messages
   DISAPPEARING_MESSAGES: {
     SET_DISAPPEARING_MSG: 'Set Disappearing Messages',
@@ -90,5 +95,6 @@ export const TestSteps = {
     CALL_SUCCESSFUL: 'Verify call has been put through successfully',
     MISSED_CALL: 'Verify missed call',
     NICKNAME_CHANGED: (context: string) => `Verify nickname changed in/on ${context}`,
+    PROFILE_PICTURE_CHANGED: 'Verify profile picture has been changed',
   },
 };

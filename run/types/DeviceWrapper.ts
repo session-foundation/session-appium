@@ -49,6 +49,7 @@ import {
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
 import { getAdbFullPath } from '../test/specs/utils/binaries';
 import { parseDataImage } from '../test/specs/utils/check_colour';
+import { isSameColor } from '../test/specs/utils/check_colour';
 import { copyFileToSimulator } from '../test/specs/utils/copy_file_to_simulator';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/specs/utils/utilities';
@@ -1355,6 +1356,116 @@ export class DeviceWrapper {
 
     this.info('Loading animation has finished');
   }
+  /**
+   * Continuous polling utility for any async condition.
+   */
+  private async pollUntil<T>(
+    fn: () => Promise<{ success: boolean; data?: T; error?: string }>,
+    {
+      maxWait = 20_000,
+      onAttempt,
+    }: {
+      maxWait?: number;
+      onAttempt?: (attempt: number, elapsedMs: number) => void;
+    } = {}
+  ): Promise<T | undefined> {
+    const start = Date.now();
+    let attempt = 0;
+    let lastError: string | undefined;
+
+    while (Date.now() - start < maxWait) {
+      try {
+        const result = await fn();
+        if (result.success) {
+          this.log(`Success after ${attempt + 1} attempts (${Date.now() - start}ms)`);
+          return result.data;
+        }
+        lastError = result.error;
+      } catch (err) {
+        lastError = err instanceof Error ? err.message : String(err);
+      }
+      attempt++;
+      onAttempt?.(attempt, Date.now() - start);
+    }
+
+    throw new Error(
+      `Polling failed after after ${attempt} attempt(s) (${Date.now() - start}ms) with ${lastError} `
+    );
+  }
+
+  /**
+   * Wait for an element to meet a specific condition
+   */
+  async waitForElementCondition<T>(
+    args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj),
+    checkElement: (
+      element: AppiumNextElementType
+    ) => Promise<{ success: boolean; data?: T; error?: string }>,
+    options: {
+      maxWait?: number;
+      elementTimeout?: number;
+    } = {}
+  ): Promise<T | undefined> {
+    const { elementTimeout = 500 } = options;
+    return this.pollUntil(async () => {
+      try {
+        // Convert to StrategyExtractionObj if needed
+        const locator = args instanceof LocatorsInterface ? args.build() : args;
+
+        // Create new args with short timeout for polling
+        const pollArgs = {
+          ...locator,
+          text: args.text,
+          maxWait: elementTimeout, // Short timeout for each poll attempt
+        };
+
+        const element = await this.waitForTextElementToBePresent(pollArgs);
+        return await checkElement(element);
+      } catch (error) {
+        return {
+          success: false,
+          error: `Element not found: ${error instanceof Error ? error.message : String(error)}`,
+        };
+      }
+    }, options);
+  }
+  /**
+   * Waits for an element's screenshot to match a specific color.
+   *
+   * @param args - Element locator
+   * @param expectedColor - Hex color code (e.g., '04cbfe')
+   * @param options - Optional timeouts: maxWait (total) and elementTimeout (per check)
+   * @throws If color doesn't match within timeout
+   *
+   */
+  public async waitForElementColorMatch(
+    args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj),
+    expectedColor: string,
+    options: {
+      maxWait?: number;
+      elementTimeout?: number;
+    } = {}
+  ): Promise<void> {
+    await this.waitForElementCondition(
+      args,
+      async element => {
+        // Capture screenshot of the element as base64
+        const base64 = await this.getElementScreenshot(element.ELEMENT);
+        // Extract the middle pixel color from the screenshot
+        const actualColor = await parseDataImage(base64);
+        // Compare colors using the standard color matcher
+        const matches = isSameColor(expectedColor, actualColor);
+
+        return {
+          success: matches,
+          error: matches
+            ? undefined
+            : `Color mismatch: expected #${expectedColor}, got #${actualColor}`,
+        };
+      },
+      options
+    );
+  }
 
   // UTILITY FUNCTIONS
 
@@ -2216,7 +2327,7 @@ export class DeviceWrapper {
       // Execute the action in the home screen context
       const iosPermissions = await this.doesElementExist({
         ...args,
-        maxWait: 500,
+        maxWait: 1000,
       });
       this.info('iosPermissions', iosPermissions);
       if (iosPermissions) {
