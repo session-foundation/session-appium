@@ -1272,21 +1272,24 @@ export class DeviceWrapper {
     fn: () => Promise<{ success: boolean; data?: T; error?: string }>,
     {
       maxWait = 20_000,
+      pollInterval = 100,
       onAttempt,
     }: {
       maxWait?: number;
+      pollInterval?: number;
       onAttempt?: (attempt: number, elapsedMs: number) => void;
     } = {}
   ): Promise<T | undefined> {
     const start = Date.now();
+    let elapsed = 0;
     let attempt = 0;
     let lastError: string | undefined;
 
-    while (Date.now() - start < maxWait) {
+    while ((elapsed = Date.now() - start) < maxWait) {
       try {
         const result = await fn();
         if (result.success) {
-          this.log(`Success after ${attempt + 1} attempts (${Date.now() - start}ms)`);
+          this.log(`Polling successful after ${attempt + 1} attempt(s) (${elapsed}ms)`);
           return result.data;
         }
         lastError = result.error;
@@ -1294,12 +1297,13 @@ export class DeviceWrapper {
         lastError = err instanceof Error ? err.message : String(err);
       }
       attempt++;
-      onAttempt?.(attempt, Date.now() - start);
-    }
+      onAttempt?.(attempt, elapsed);
 
-    throw new Error(
-      `Polling failed after after ${attempt} attempt(s) (${Date.now() - start}ms) with ${lastError} `
-    );
+      if (elapsed + pollInterval < maxWait) {
+        await sleepFor(pollInterval);
+      }
+    }
+    throw new Error(`Polling failed after ${attempt} attempt(s) (${elapsed}ms) with ${lastError} `);
   }
 
   /**
