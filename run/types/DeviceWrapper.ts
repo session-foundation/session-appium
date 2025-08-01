@@ -1027,12 +1027,12 @@ export class DeviceWrapper {
     const functionStartTime = Date.now();
     // Phase 1: Wait for element to appear
     this.log(`Waiting for element ${description} to be deleted...`);
-    await this.waitForElementToAppear(locator, text, initialMaxWait);
+    await this.waitForElementToAppear(locator, initialMaxWait, text);
     const foundTime = Date.now();
     this.log(`Element ${description} has been found, now waiting for deletion`);
 
     // Phase 2: Wait for element to disappear
-    await this.waitForElementToDisappear(locator, text, maxWait);
+    await this.waitForElementToDisappear(locator, maxWait, text);
 
     // Always calculate total time for logging
     const totalTime = (Date.now() - functionStartTime) / 1000;
@@ -1061,8 +1061,8 @@ export class DeviceWrapper {
    */
   private async waitForElementToAppear(
     locator: StrategyExtractionObj,
-    text: string | undefined,
-    timeout: number
+    timeout: number,
+    text?: string
   ): Promise<void> {
     const start = Date.now();
 
@@ -1085,8 +1085,8 @@ export class DeviceWrapper {
    */
   private async waitForElementToDisappear(
     locator: StrategyExtractionObj,
-    text: string | undefined,
-    timeout: number
+    timeout: number,
+    text?: string
   ): Promise<void> {
     const start = Date.now();
     const requiredConsecutiveMisses = 3;
@@ -1138,7 +1138,7 @@ export class DeviceWrapper {
    */
   private async findElementQuietly(
     locator: StrategyExtractionObj,
-    text: string | undefined
+    text?: string
   ): Promise<AppiumNextElementType | null> {
     try {
       if (text) {
@@ -1576,7 +1576,7 @@ export class DeviceWrapper {
     }
     // Select 'Reply' option
     // Send message
-    const replyMessage = await this.sendMessage(`${user.userName} + " replied to ${body}`);
+    const replyMessage = await this.sendMessage(`${user.userName} replied to ${body}`);
 
     return replyMessage;
   }
@@ -2155,14 +2155,14 @@ export class DeviceWrapper {
     await this.scroll({ x: width / 2, y: height * 0.95 }, { x: width / 2, y: height * 0.35 }, 100);
   }
   public async scrollToBottom() {
-    const scrollButton = await this.doesElementExist({
-      ...new ScrollToBottomButton(this).build(),
-      maxWait: 2000,
-    });
-    if (scrollButton) {
-      await this.clickOnElementAll(new ScrollToBottomButton(this));
-    } else {
-      this.info('Scroll button not visible');
+    try {
+      const scrollButton = await this.waitForTextElementToBePresent({
+        ...new ScrollToBottomButton(this).build(),
+        maxWait: 1_000  
+      });
+      await this.click(scrollButton.ELEMENT);
+    } catch {
+      this.info('Scroll button not found after 1s, continuing');
     }
   }
 
