@@ -19,6 +19,12 @@ bothPlatformsIt({
   risk: 'medium',
   testCb: kickMember,
   countOfDevicesNeeded: 3,
+  allureSuites: {
+    parent: 'Groups',
+    suite: 'Edit Group',
+  },
+  allureDescription:
+    'Verifies that a group member can be kicked from a group and that the kicked member is removed from the group.',
 });
 
 async function kickMember(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -43,13 +49,20 @@ async function kickMember(platform: SupportedPlatformsType, testInfo: TestInfo) 
       .toString()
   );
   await alice1.clickOnElementAll(new ConfirmRemovalButton(alice1));
-  await alice1
-    .onIOS()
-    .waitForTextElementToBePresent(new MemberStatus(alice1).build('Pending removal'));
-  await alice1.hasElementBeenDeleted({
-    ...new GroupMember(alice1).build(USERNAME.BOB),
-    maxWait: 10000,
-  });
+  if (platform === 'ios') {
+    // These elements disappear slowly on iOS so we get a chance to check for their presence
+    await alice1.waitForTextElementToBePresent(new MemberStatus(alice1).build('Pending removal'));
+    await alice1.hasElementBeenDeleted({
+      ...new GroupMember(alice1).build(USERNAME.BOB),
+      maxWait: 10_000,
+    });
+  } else {
+    // These elements disappear immediately on Android so we can't check for their presence
+    await alice1.verifyElementNotPresent({
+      ...new GroupMember(alice1).build(USERNAME.BOB),
+      maxWait: 5_000,
+    });
+  }
   await alice1.navigateBack();
   await alice1.navigateBack();
   await Promise.all([
