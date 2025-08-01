@@ -904,10 +904,10 @@ export class DeviceWrapper {
     await clickOnCoordinates(this, bestMatch.center);
   }
   /**
-   * Checks if an element exists on the screen without throwing an error. 
-   * Only useful for scenarios where you want to interact with an element if it exists 
+   * Checks if an element exists on the screen without throwing an error.
+   * Only useful for scenarios where you want to interact with an element if it exists
    * but don't care if it doesn't.
-   * For explicit verification of present or not present, use either 
+   * For explicit verification of present or not present, use either
    * waitForTextElementToBePresent or verifyElementNotPresent.
    *
    * @param args - Element locator with optional text matching and timeout
@@ -915,7 +915,7 @@ export class DeviceWrapper {
    * @param args.maxWait - Maximum time to wait in ms (default: 60000)
    * @returns The element if found, null otherwise
    */
-    public async doesElementExist(
+  public async doesElementExist(
     args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<AppiumNextElementType | null> {
     try {
@@ -1166,43 +1166,41 @@ export class DeviceWrapper {
   // WAIT FOR FUNCTIONS
 
   public async waitForTextElementToBePresent(
-  args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
-): Promise<AppiumNextElementType> {
-  const locator = args instanceof LocatorsInterface ? args.build() : args;
-  const { text, maxWait = 60000 } = args;
-  
-  const description = describeLocator({ ...locator, text });
-  this.log(`Waiting for ${description} to be present`);
-  
-  const result = await this.pollUntil(
-    async () => {
-      try {
-        let element: AppiumNextElementType | null = null;
-        
-        if (text) {
-          const els = await this.findElements(locator.strategy, locator.selector);
-          element = await this.findMatchingTextInElementArray(els, text);
-        } else {
-          element = await this.findElement(locator.strategy, locator.selector);
+    args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
+  ): Promise<AppiumNextElementType> {
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const { text, maxWait = 60000 } = args;
+
+    const description = describeLocator({ ...locator, text });
+    this.log(`Waiting for ${description} to be present`);
+
+    const result = await this.pollUntil(
+      async () => {
+        try {
+          let element: AppiumNextElementType | null = null;
+
+          if (text) {
+            const els = await this.findElements(locator.strategy, locator.selector);
+            element = await this.findMatchingTextInElementArray(els, text);
+          } else {
+            element = await this.findElement(locator.strategy, locator.selector);
+          }
+
+          return element ? { success: true, data: element } : { success: false };
+        } catch {
+          return { success: false };
         }
-        
-        return element 
-          ? { success: true, data: element }
-          : { success: false };
-      } catch {
-        return { success: false };
-      }
-    },
-    { maxWait }
-  );
-  
-  if (!result) {
-    throw new Error(`Waited too long for ${description}`);
+      },
+      { maxWait }
+    );
+
+    if (!result) {
+      throw new Error(`Waited too long for ${description}`);
+    }
+
+    this.log(`${description} has been found`);
+    return result;
   }
-  
-  this.log(`${description} has been found`);
-  return result;
-}
 
   public async waitForControlMessageToBePresent(
     text: string,
@@ -1213,24 +1211,24 @@ export class DeviceWrapper {
         try {
           const els = await this.findElements('accessibility id', 'Control message');
           const element = await this.findMatchingTextInElementArray(els, text);
-          
-          return element 
+
+          return element
             ? { success: true, data: element }
             : { success: false, error: `Control message with text "${text}" not found` };
         } catch (err) {
-          return { 
-            success: false, 
-            error: err instanceof Error ? err.message : String(err)
+          return {
+            success: false,
+            error: err instanceof Error ? err.message : String(err),
           };
         }
       },
       { maxWait }
     );
-    
+
     if (!result) {
       throw new Error(`Control message "${text}" not found after ${maxWait}ms`);
     }
-    
+
     this.log(`Control message "${text}" has been found`);
     return result;
   }
@@ -1240,31 +1238,31 @@ export class DeviceWrapper {
       async () => {
         const element = await this.findElementQuietly({
           strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/thumbnail_load_indicator'
+          selector: 'network.loki.messenger.qa:id/thumbnail_load_indicator',
         });
-        
+
         // Success when element is GONE
         return { success: !element };
       },
       { maxWait: 15_000 }
     );
-    
+
     this.info('Loading animation has finished');
   }
 
   public async waitForLoadingOnboarding() {
     const locator = new LoadingAnimation(this).build();
-    
+
     await this.pollUntil(
       async () => {
         const element = await this.findElementQuietly(locator);
-        
+
         // Success when element is GONE
         return { success: !element };
       },
       { maxWait: 15_000 }
     );
-    
+
     this.info('Loading animation has finished');
   }
   /**
@@ -1848,14 +1846,14 @@ export class DeviceWrapper {
 
   public async sendVoiceMessage() {
     await this.longPress('New voice message');
-    
+
     if (this.isAndroid()) {
       await this.clickOnElementAll({
         strategy: 'id',
         selector: 'com.android.permissioncontroller:id/permission_allow_foreground_only_button',
         text: 'While using the app',
       });
-    } 
+    }
     if (this.isIOS()) {
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
     }
@@ -2040,7 +2038,7 @@ export class DeviceWrapper {
     try {
       const scrollButton = await this.waitForTextElementToBePresent({
         ...new ScrollToBottomButton(this).build(),
-        maxWait: 1_000  
+        maxWait: 1_000,
       });
       await this.click(scrollButton.ELEMENT);
     } catch {
