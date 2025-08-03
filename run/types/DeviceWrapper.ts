@@ -1303,7 +1303,10 @@ export class DeviceWrapper {
         await sleepFor(pollInterval);
       }
     }
-    throw new Error(`Polling failed after ${attempt} attempt(s) (${elapsed}ms) with ${lastError} `);
+    throw new Error(
+      lastError
+        ? `${lastError} after ${attempt} attempts (${elapsed}ms)`
+        : `Polling failed after ${attempt} attempts (${elapsed}ms)`);
   }
 
   /**
