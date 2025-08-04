@@ -28,19 +28,19 @@ export async function handlePhotosFirstTimeOpen(device: DeviceWrapper) {
       device.log(`Photos app has been opened for the first time, dismissing modals`);
       await device.clickOnElementAll(new iOSPhotosContinuebutton(device));
       await device.clickOnByAccessibilityID('Don’t Allow');
-  }
-  // On Android, the Photos app shows a sign-in prompt the first time it's opened that needs to be dismissed
-  if (device.isAndroid()) {
-    const signInButton = await device.doesElementExist({
-      strategy: 'id',
-      selector: 'com.google.android.apps.photos:id/sign_in_button'
-    });
-    if (!signInButton) {
-      device.log(`Photos app opened without a sign-in prompt, proceeding`);
-    } else {
-      device.log(`Photos app has been opened for the first time, dismissing sign-in prompt`);
-      await device.clickOnCoordinates(550, 500); // Tap outside of the sign-in modal to dismiss
+    }
+    // On Android, the Photos app shows a sign-in prompt the first time it's opened that needs to be dismissed
+    if (device.isAndroid()) {
+      const signInButton = await device.doesElementExist({
+        strategy: 'id',
+        selector: 'com.google.android.apps.photos:id/sign_in_button',
+      });
+      if (!signInButton) {
+        device.log(`Photos app opened without a sign-in prompt, proceeding`);
+      } else {
+        device.log(`Photos app has been opened for the first time, dismissing sign-in prompt`);
+        await device.clickOnCoordinates(550, 500); // Tap outside of the sign-in modal to dismiss
+      }
     }
   }
-}
 }

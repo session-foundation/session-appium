@@ -46,9 +46,8 @@ async function shareToSession(platform: SupportedPlatformsType, testInfo: TestIn
     await sleepFor(2000);
   });
   await test.step('Select image and share to Session', async () => {
+    await handlePhotosFirstTimeOpen(alice1);
     if (platform === 'ios') {
-      // first launch of Photos app on iOS shows a 'What's New' screen
-      await handlePhotosFirstTimeOpen(alice1);
       await alice1.clickOnByAccessibilityID('Select');
       await alice1.matchAndTapImage(
         { strategy: 'xpath', selector: `//XCUIElementTypeImage` },

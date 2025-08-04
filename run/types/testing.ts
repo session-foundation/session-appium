@@ -407,6 +407,7 @@ export type Id =
   | 'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   | 'com.android.permissioncontroller:id/permission_deny_button'
   | 'com.android.settings:id/switch_text'
+  | 'com.google.android.apps.photos:id/sign_in_button'
   | 'com.google.android.apps.photos:id/text'
   | 'Confirm invite button'
   | 'Contact'

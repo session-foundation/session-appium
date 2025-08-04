@@ -88,19 +88,13 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType, testIn
   );
   await bob1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Confirm' });
   // Check conversation subtitle?
-  await Promise.all([
-    alice1.verifyElementNotPresent({
-      ...new DisappearingMessagesSubtitle(alice1).build(),
-      maxWait: 500,
-    }),
-    bob1.verifyElementNotPresent({
-      ...new DisappearingMessagesSubtitle(bob1).build(),
-      maxWait: 500,
-    }),
-    alice2.verifyElementNotPresent({
-      ...new DisappearingMessagesSubtitle(alice2).build(),
-      maxWait: 500,
-    }),
-  ]);
+  await Promise.all(
+    [alice1, bob1, alice2].map(device =>
+      device.verifyElementNotPresent({
+        ...new DisappearingMessagesSubtitle(device).build(),
+        maxWait: 5_000,
+      })
+    )
+  );
   await closeApp(alice1, bob1, alice2);
 }
