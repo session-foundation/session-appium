@@ -5,207 +5,207 @@
 
 export const simpleDictionary = {
   about: {
-      en: "About",
+      en: 'About',
       args: undefined,
   },
   accept: {
-      en: "Accept",
+      en: 'Accept',
       args: undefined,
   },
   accountIDCopy: {
-      en: "Copy Account ID",
+      en: 'Copy Account ID',
       args: undefined,
   },
   accountId: {
-      en: "Account ID",
+      en: 'Account ID',
       args: undefined,
   },
   accountIdCopied: {
-      en: "Account ID Copied",
+      en: 'Account ID Copied',
       args: undefined,
   },
   accountIdCopyDescription: {
-      en: "Copy your Account ID then share it with your friends so they can message you.",
+      en: 'Copy your Account ID then share it with your friends so they can message you.',
       args: undefined,
   },
   accountIdEnter: {
-      en: "Enter Account ID",
+      en: 'Enter Account ID',
       args: undefined,
   },
   accountIdErrorInvalid: {
-      en: "This Account ID is invalid. Please check and try again.",
+      en: 'This Account ID is invalid. Please check and try again.',
       args: undefined,
   },
   accountIdOrOnsEnter: {
-      en: "Enter Account ID or ONS",
+      en: 'Enter Account ID or ONS',
       args: undefined,
   },
   accountIdOrOnsInvite: {
-      en: "Invite Account ID or ONS",
+      en: 'Invite Account ID or ONS',
       args: undefined,
   },
   accountIdShare: {
       en: "Hey, I've been using Session to chat with complete privacy and security. Come join me! My Account ID is<br/><br/>{account_id}<br/><br/>Download it at https://getsession.org/download",
-      args: {account_id: "string"}
+      args: {account_id: 'string'}
   },
   accountIdYours: {
-      en: "Your Account ID",
+      en: 'Your Account ID',
       args: undefined,
   },
   accountIdYoursDescription: {
-      en: "This is your Account ID. Other users can scan it to start a conversation with you.",
+      en: 'This is your Account ID. Other users can scan it to start a conversation with you.',
       args: undefined,
   },
   actualSize: {
-      en: "Actual Size",
+      en: 'Actual Size',
       args: undefined,
   },
   add: {
-      en: "Add",
+      en: 'Add',
       args: undefined,
   },
   addAdmins: {
-      en: "Add Admins",
+      en: 'Add Admins',
       args: undefined,
   },
   addAdminsDescription: {
-      en: "Enter the Account ID of the user you are promoting to admin.<br/><br/>To add multiple users, enter each Account ID separated by a comma. Up to 20 Account IDs can be specified at a time.",
+      en: 'Enter the Account ID of the user you are promoting to admin.<br/><br/>To add multiple users, enter each Account ID separated by a comma. Up to 20 Account IDs can be specified at a time.',
       args: undefined,
   },
   adminCannotBeRemoved: {
-      en: "Admins cannot be removed.",
+      en: 'Admins cannot be removed.',
       args: undefined,
   },
   adminMorePromotedToAdmin: {
-      en: "<b>{name}</b> and <b>{count} others</b> were promoted to Admin.",
-      args: {name: "string", count: "number"}
+      en: '<b>{name}</b> and <b>{count} others</b> were promoted to Admin.',
+      args: {name: 'string', count: 'number'}
   },
   adminPromote: {
-      en: "Promote Admins",
+      en: 'Promote Admins',
       args: undefined,
   },
   adminPromoteDescription: {
-      en: "Are you sure you want to promote <b>{name}</b> to admin? Admins cannot be removed.",
-      args: {name: "string"}
+      en: 'Are you sure you want to promote <b>{name}</b> to admin? Admins cannot be removed.',
+      args: {name: 'string'}
   },
   adminPromoteMoreDescription: {
-      en: "Are you sure you want to promote <b>{name}</b> and <b>{count} others</b> to admin? Admins cannot be removed.",
-      args: {name: "string", count: "number"}
+      en: 'Are you sure you want to promote <b>{name}</b> and <b>{count} others</b> to admin? Admins cannot be removed.',
+      args: {name: 'string', count: 'number'}
   },
   adminPromoteToAdmin: {
-      en: "Promote to Admin",
+      en: 'Promote to Admin',
       args: undefined,
   },
   adminPromoteTwoDescription: {
-      en: "Are you sure you want to promote <b>{name}</b> and <b>{other_name}</b> to admin? Admins cannot be removed.",
-      args: {name: "string", other_name: "string"}
+      en: 'Are you sure you want to promote <b>{name}</b> and <b>{other_name}</b> to admin? Admins cannot be removed.',
+      args: {name: 'string', other_name: 'string'}
   },
   adminPromotedToAdmin: {
-      en: "<b>{name}</b> was promoted to Admin.",
-      args: {name: "string"}
+      en: '<b>{name}</b> was promoted to Admin.',
+      args: {name: 'string'}
   },
   adminPromotionFailed: {
-      en: "Admin promotion failed",
+      en: 'Admin promotion failed',
       args: undefined,
   },
   adminPromotionFailedDescription: {
-      en: "Failed to promote {name} in {group_name}",
-      args: {name: "string", group_name: "string"}
+      en: 'Failed to promote {name} in {group_name}',
+      args: {name: 'string', group_name: 'string'}
   },
   adminPromotionFailedDescriptionMultiple: {
-      en: "Failed to promote {name} and {count} others in {group_name}",
-      args: {name: "string", count: "number", group_name: "string"}
+      en: 'Failed to promote {name} and {count} others in {group_name}',
+      args: {name: 'string', count: 'number', group_name: 'string'}
   },
   adminPromotionFailedDescriptionTwo: {
-      en: "Failed to promote {name} and {other_name} in {group_name}",
-      args: {name: "string", other_name: "string", group_name: "string"}
+      en: 'Failed to promote {name} and {other_name} in {group_name}',
+      args: {name: 'string', other_name: 'string', group_name: 'string'}
   },
   adminPromotionNotSent: {
-      en: "Promotion not sent",
+      en: 'Promotion not sent',
       args: undefined,
   },
   adminPromotionSent: {
-      en: "Admin promotion sent",
+      en: 'Admin promotion sent',
       args: undefined,
   },
   adminPromotionStatusUnknown: {
-      en: "Promotion status unknown",
+      en: 'Promotion status unknown',
       args: undefined,
   },
   adminRemove: {
-      en: "Remove Admins",
+      en: 'Remove Admins',
       args: undefined,
   },
   adminRemoveAsAdmin: {
-      en: "Remove as Admin",
+      en: 'Remove as Admin',
       args: undefined,
   },
   adminRemoveCommunityNone: {
-      en: "There are no Admins in this Community.",
+      en: 'There are no Admins in this Community.',
       args: undefined,
   },
   adminRemoveFailed: {
-      en: "Failed to remove {name} as Admin.",
-      args: {name: "string"}
+      en: 'Failed to remove {name} as Admin.',
+      args: {name: 'string'}
   },
   adminRemoveFailedMultiple: {
-      en: "Failed to remove <b>{name}</b> and <b>{count} others</b> as Admin.",
-      args: {name: "string", count: "number"}
+      en: 'Failed to remove <b>{name}</b> and <b>{count} others</b> as Admin.',
+      args: {name: 'string', count: 'number'}
   },
   adminRemoveFailedOther: {
-      en: "Failed to remove <b>{name}</b> and <b>{other_name}</b> as Admin.",
-      args: {name: "string", other_name: "string"}
+      en: 'Failed to remove <b>{name}</b> and <b>{other_name}</b> as Admin.',
+      args: {name: 'string', other_name: 'string'}
   },
   adminRemovedUser: {
-      en: "<b>{name}</b> was removed as Admin.",
-      args: {name: "string"}
+      en: '<b>{name}</b> was removed as Admin.',
+      args: {name: 'string'}
   },
   adminRemovedUserMultiple: {
-      en: "<b>{name}</b> and <b>{count} others</b> were removed as Admin.",
-      args: {name: "string", count: "number"}
+      en: '<b>{name}</b> and <b>{count} others</b> were removed as Admin.',
+      args: {name: 'string', count: 'number'}
   },
   adminRemovedUserOther: {
-      en: "<b>{name}</b> and <b>{other_name}</b> were removed as Admin.",
-      args: {name: "string", other_name: "string"}
+      en: '<b>{name}</b> and <b>{other_name}</b> were removed as Admin.',
+      args: {name: 'string', other_name: 'string'}
   },
   adminSettings: {
-      en: "Admin Settings",
+      en: 'Admin Settings',
       args: undefined,
   },
   adminTwoPromotedToAdmin: {
-      en: "<b>{name}</b> and <b>{other_name}</b> were promoted to Admin.",
-      args: {name: "string", other_name: "string"}
+      en: '<b>{name}</b> and <b>{other_name}</b> were promoted to Admin.',
+      args: {name: 'string', other_name: 'string'}
   },
   andMore: {
-      en: "+{count}",
-      args: {count: "number"}
+      en: '+{count}',
+      args: {count: 'number'}
   },
   anonymous: {
-      en: "Anonymous",
+      en: 'Anonymous',
       args: undefined,
   },
   appIcon: {
-      en: "App Icon",
+      en: 'App Icon',
       args: undefined,
   },
   appIconAndNameChange: {
-      en: "Change App Icon and Name",
+      en: 'Change App Icon and Name',
       args: undefined,
   },
   appIconAndNameChangeConfirmation: {
-      en: "Changing the app icon and name requires Session to be closed. Notifications will continue to use the default Session icon and name.",
+      en: 'Changing the app icon and name requires Session to be closed. Notifications will continue to use the default Session icon and name.',
       args: undefined,
   },
   appIconAndNameDescription: {
-      en: "Alternate app icon and name is displayed on home screen and app drawer.",
+      en: 'Alternate app icon and name is displayed on home screen and app drawer.',
       args: undefined,
   },
   appIconAndNameSelectionDescription: {
-      en: "The selected app icon and name is displayed on the home screen and app drawer.",
+      en: 'The selected app icon and name is displayed on the home screen and app drawer.',
       args: undefined,
   },
   appIconAndNameSelectionTitle: {
-      en: "Icon and name",
+      en: 'Icon and name',
       args: undefined,
   },
   appIconDescription: {
@@ -213,63 +213,63 @@ export const simpleDictionary = {
       args: undefined,
   },
   appIconEnableIcon: {
-      en: "Use alternate app icon",
+      en: 'Use alternate app icon',
       args: undefined,
   },
   appIconEnableIconAndName: {
-      en: "Use alternate app icon and name",
+      en: 'Use alternate app icon and name',
       args: undefined,
   },
   appIconSelect: {
-      en: "Select alternate app icon",
+      en: 'Select alternate app icon',
       args: undefined,
   },
   appIconSelectionTitle: {
-      en: "Icon",
+      en: 'Icon',
       args: undefined,
   },
   appNameCalculator: {
-      en: "Calculator",
+      en: 'Calculator',
       args: undefined,
   },
   appNameMeetingSE: {
-      en: "MeetingSE",
+      en: 'MeetingSE',
       args: undefined,
   },
   appNameNews: {
-      en: "News",
+      en: 'News',
       args: undefined,
   },
   appNameNotes: {
-      en: "Notes",
+      en: 'Notes',
       args: undefined,
   },
   appNameStocks: {
-      en: "Stocks",
+      en: 'Stocks',
       args: undefined,
   },
   appNameWeather: {
-      en: "Weather",
+      en: 'Weather',
       args: undefined,
   },
   appearanceAutoDarkMode: {
-      en: "Auto dark-mode",
+      en: 'Auto dark-mode',
       args: undefined,
   },
   appearanceHideMenuBar: {
-      en: "Hide Menu Bar",
+      en: 'Hide Menu Bar',
       args: undefined,
   },
   appearanceLanguage: {
-      en: "Language",
+      en: 'Language',
       args: undefined,
   },
   appearanceLanguageDescription: {
-      en: "Choose your language setting for Session. Session will restart when you change your language setting.",
+      en: 'Choose your language setting for Session. Session will restart when you change your language setting.',
       args: undefined,
   },
   appearancePreview1: {
-      en: "How are you?",
+      en: 'How are you?',
       args: undefined,
   },
   appearancePreview2: {
@@ -281,107 +281,107 @@ export const simpleDictionary = {
       args: undefined,
   },
   appearancePrimaryColor: {
-      en: "Primary Color",
+      en: 'Primary Color',
       args: undefined,
   },
   appearanceThemes: {
-      en: "Themes",
+      en: 'Themes',
       args: undefined,
   },
   appearanceThemesClassicDark: {
-      en: "Classic Dark",
+      en: 'Classic Dark',
       args: undefined,
   },
   appearanceThemesClassicLight: {
-      en: "Classic Light",
+      en: 'Classic Light',
       args: undefined,
   },
   appearanceThemesOceanDark: {
-      en: "Ocean Dark",
+      en: 'Ocean Dark',
       args: undefined,
   },
   appearanceThemesOceanLight: {
-      en: "Ocean Light",
+      en: 'Ocean Light',
       args: undefined,
   },
   appearanceZoom: {
-      en: "Zoom",
+      en: 'Zoom',
       args: undefined,
   },
   appearanceZoomIn: {
-      en: "Zoom In",
+      en: 'Zoom In',
       args: undefined,
   },
   appearanceZoomOut: {
-      en: "Zoom Out",
+      en: 'Zoom Out',
       args: undefined,
   },
   attachment: {
-      en: "Attachment",
+      en: 'Attachment',
       args: undefined,
   },
   attachments: {
-      en: "Attachments",
+      en: 'Attachments',
       args: undefined,
   },
   attachmentsAdd: {
-      en: "Add attachment",
+      en: 'Add attachment',
       args: undefined,
   },
   attachmentsAlbumUnnamed: {
-      en: "Unnamed Album",
+      en: 'Unnamed Album',
       args: undefined,
   },
   attachmentsAutoDownload: {
-      en: "Auto-download Attachments",
+      en: 'Auto-download Attachments',
       args: undefined,
   },
   attachmentsAutoDownloadDescription: {
-      en: "Automatically download media and files from this chat.",
+      en: 'Automatically download media and files from this chat.',
       args: undefined,
   },
   attachmentsAutoDownloadModalDescription: {
-      en: "Would you like to automatically download all files from <b>{conversation_name}</b>?",
-      args: {conversation_name: "string"}
+      en: 'Would you like to automatically download all files from <b>{conversation_name}</b>?',
+      args: {conversation_name: 'string'}
   },
   attachmentsAutoDownloadModalTitle: {
-      en: "Auto Download",
+      en: 'Auto Download',
       args: undefined,
   },
   attachmentsClearAll: {
-      en: "Clear All Attachments",
+      en: 'Clear All Attachments',
       args: undefined,
   },
   attachmentsClearAllDescription: {
-      en: "Are you sure you want to clear all attachments? Messages with attachments will also be deleted.",
+      en: 'Are you sure you want to clear all attachments? Messages with attachments will also be deleted.',
       args: undefined,
   },
   attachmentsClickToDownload: {
-      en: "Click to download {file_type}",
-      args: {file_type: "string"}
+      en: 'Click to download {file_type}',
+      args: {file_type: 'string'}
   },
   attachmentsCollapseOptions: {
-      en: "Collapse attachment options",
+      en: 'Collapse attachment options',
       args: undefined,
   },
   attachmentsCollecting: {
-      en: "Collecting attachments...",
+      en: 'Collecting attachments...',
       args: undefined,
   },
   attachmentsDownload: {
-      en: "Download Attachment",
+      en: 'Download Attachment',
       args: undefined,
   },
   attachmentsDuration: {
-      en: "Duration:",
+      en: 'Duration:',
       args: undefined,
   },
   attachmentsErrorLoad: {
-      en: "Error attaching file",
+      en: 'Error attaching file',
       args: undefined,
   },
   attachmentsErrorMediaSelection: {
-      en: "Failed to select attachment",
+      en: 'Failed to select attachment',
       args: undefined,
   },
   attachmentsErrorNoApp: {
@@ -389,47 +389,47 @@ export const simpleDictionary = {
       args: undefined,
   },
   attachmentsErrorNotSupported: {
-      en: "This file type is not supported.",
+      en: 'This file type is not supported.',
       args: undefined,
   },
   attachmentsErrorNumber: {
-      en: "Unable to send more than 32 image and video files at once.",
+      en: 'Unable to send more than 32 image and video files at once.',
       args: undefined,
   },
   attachmentsErrorOpen: {
-      en: "Unable to open file.",
+      en: 'Unable to open file.',
       args: undefined,
   },
   attachmentsErrorSending: {
-      en: "Error sending file",
+      en: 'Error sending file',
       args: undefined,
   },
   attachmentsErrorSeparate: {
-      en: "Please send files as separate messages.",
+      en: 'Please send files as separate messages.',
       args: undefined,
   },
   attachmentsErrorSize: {
-      en: "Files must be less than 10MB",
+      en: 'Files must be less than 10MB',
       args: undefined,
   },
   attachmentsErrorTypes: {
-      en: "Cannot attach images and video with other file types. Try sending other files in a separate message.",
+      en: 'Cannot attach images and video with other file types. Try sending other files in a separate message.',
       args: undefined,
   },
   attachmentsExpired: {
-      en: "Attachment expired",
+      en: 'Attachment expired',
       args: undefined,
   },
   attachmentsFileId: {
-      en: "File ID:",
+      en: 'File ID:',
       args: undefined,
   },
   attachmentsFileSize: {
-      en: "File Size:",
+      en: 'File Size:',
       args: undefined,
   },
   attachmentsFileType: {
-      en: "File Type:",
+      en: 'File Type:',
       args: undefined,
   },
   attachmentsFilesEmpty: {
@@ -437,675 +437,675 @@ export const simpleDictionary = {
       args: undefined,
   },
   attachmentsImageErrorMetadata: {
-      en: "Unable to remove metadata from file.",
+      en: 'Unable to remove metadata from file.',
       args: undefined,
   },
   attachmentsLoadingNewer: {
-      en: "Loading Newer Media...",
+      en: 'Loading Newer Media...',
       args: undefined,
   },
   attachmentsLoadingNewerFiles: {
-      en: "Loading Newer Files...",
+      en: 'Loading Newer Files...',
       args: undefined,
   },
   attachmentsLoadingOlder: {
-      en: "Loading Older Media...",
+      en: 'Loading Older Media...',
       args: undefined,
   },
   attachmentsLoadingOlderFiles: {
-      en: "Loading Older Files...",
+      en: 'Loading Older Files...',
       args: undefined,
   },
   attachmentsMedia: {
-      en: "{name} on {date_time}",
-      args: {name: "string", date_time: "string"}
+      en: '{name} on {date_time}',
+      args: {name: 'string', date_time: 'string'}
   },
   attachmentsMediaEmpty: {
       en: "You don't have any media in this conversation.",
       args: undefined,
   },
   attachmentsMediaSaved: {
-      en: "Media saved by {name}",
-      args: {name: "string"}
+      en: 'Media saved by {name}',
+      args: {name: 'string'}
   },
   attachmentsMoveAndScale: {
-      en: "Move and Scale",
+      en: 'Move and Scale',
       args: undefined,
   },
   attachmentsNa: {
-      en: "N/A",
+      en: 'N/A',
       args: undefined,
   },
   attachmentsNotification: {
-      en: "{emoji} Attachment",
-      args: {emoji: "string"}
+      en: '{emoji} Attachment',
+      args: {emoji: 'string'}
   },
   attachmentsNotificationGroup: {
-      en: "{author}: {emoji} Attachment",
-      args: {author: "string", emoji: "string"}
+      en: '{author}: {emoji} Attachment',
+      args: {author: 'string', emoji: 'string'}
   },
   attachmentsResolution: {
-      en: "Resolution:",
+      en: 'Resolution:',
       args: undefined,
   },
   attachmentsSaveError: {
-      en: "Unable to save file.",
+      en: 'Unable to save file.',
       args: undefined,
   },
   attachmentsSendTo: {
-      en: "Send to {name}",
-      args: {name: "string"}
+      en: 'Send to {name}',
+      args: {name: 'string'}
   },
   attachmentsTapToDownload: {
-      en: "Tap to download {file_type}",
-      args: {file_type: "string"}
+      en: 'Tap to download {file_type}',
+      args: {file_type: 'string'}
   },
   attachmentsThisMonth: {
-      en: "This Month",
+      en: 'This Month',
       args: undefined,
   },
   attachmentsThisWeek: {
-      en: "This Week",
+      en: 'This Week',
       args: undefined,
   },
   attachmentsWarning: {
-      en: "Attachments you save can be accessed by other apps on your device.",
+      en: 'Attachments you save can be accessed by other apps on your device.',
       args: undefined,
   },
   audio: {
-      en: "Audio",
+      en: 'Audio',
       args: undefined,
   },
   audioNoInput: {
-      en: "No audio input found",
+      en: 'No audio input found',
       args: undefined,
   },
   audioNoOutput: {
-      en: "No audio output found",
+      en: 'No audio output found',
       args: undefined,
   },
   audioUnableToPlay: {
-      en: "Unable to play audio file.",
+      en: 'Unable to play audio file.',
       args: undefined,
   },
   audioUnableToRecord: {
-      en: "Unable to record audio.",
+      en: 'Unable to record audio.',
       args: undefined,
   },
   authenticateFailed: {
-      en: "Authentication Failed",
+      en: 'Authentication Failed',
       args: undefined,
   },
   authenticateFailedTooManyAttempts: {
-      en: "Too many failed authentication attempts. Please try again later.",
+      en: 'Too many failed authentication attempts. Please try again later.',
       args: undefined,
   },
   authenticateNotAccessed: {
-      en: "Authentication could not be accessed.",
+      en: 'Authentication could not be accessed.',
       args: undefined,
   },
   authenticateToOpen: {
-      en: "Authenticate to open Session.",
+      en: 'Authenticate to open Session.',
       args: undefined,
   },
   back: {
-      en: "Back",
+      en: 'Back',
       args: undefined,
   },
   banDeleteAll: {
-      en: "Ban and Delete All",
+      en: 'Ban and Delete All',
       args: undefined,
   },
   banErrorFailed: {
-      en: "Ban failed",
+      en: 'Ban failed',
       args: undefined,
   },
   banUnbanErrorFailed: {
-      en: "Unban failed",
+      en: 'Unban failed',
       args: undefined,
   },
   banUnbanUser: {
-      en: "Unban User",
+      en: 'Unban User',
       args: undefined,
   },
   banUnbanUserDescription: {
-      en: "Enter the Account ID of the user you are unbanning",
+      en: 'Enter the Account ID of the user you are unbanning',
       args: undefined,
   },
   banUnbanUserUnbanned: {
-      en: "User unbanned",
+      en: 'User unbanned',
       args: undefined,
   },
   banUser: {
-      en: "Ban User",
+      en: 'Ban User',
       args: undefined,
   },
   banUserBanned: {
-      en: "User banned",
+      en: 'User banned',
       args: undefined,
   },
   banUserDescription: {
-      en: "Enter the Account ID of the user you are banning",
+      en: 'Enter the Account ID of the user you are banning',
       args: undefined,
   },
   blindedId: {
-      en: "Blinded ID",
+      en: 'Blinded ID',
       args: undefined,
   },
   block: {
-      en: "Block",
+      en: 'Block',
       args: undefined,
   },
   blockBlockedDescription: {
-      en: "Unblock this contact to send a message",
+      en: 'Unblock this contact to send a message',
       args: undefined,
   },
   blockBlockedNone: {
-      en: "No blocked contacts",
+      en: 'No blocked contacts',
       args: undefined,
   },
   blockBlockedUser: {
-      en: "Blocked {name}",
-      args: {name: "string"}
+      en: 'Blocked {name}',
+      args: {name: 'string'}
   },
   blockDescription: {
-      en: "Are you sure you want to block <b>{name}</b>? Blocked users cannot send you message requests, group invites or call you.",
-      args: {name: "string"}
+      en: 'Are you sure you want to block <b>{name}</b>? Blocked users cannot send you message requests, group invites or call you.',
+      args: {name: 'string'}
   },
   blockUnblock: {
-      en: "Unblock",
+      en: 'Unblock',
       args: undefined,
   },
   blockUnblockName: {
-      en: "Are you sure you want to unblock <b>{name}</b>?",
-      args: {name: "string"}
+      en: 'Are you sure you want to unblock <b>{name}</b>?',
+      args: {name: 'string'}
   },
   blockUnblockNameMultiple: {
-      en: "Are you sure you want to unblock <b>{name}</b> and <b>{count} others</b>?",
-      args: {name: "string", count: "number"}
+      en: 'Are you sure you want to unblock <b>{name}</b> and <b>{count} others</b>?',
+      args: {name: 'string', count: 'number'}
   },
   blockUnblockNameTwo: {
-      en: "Are you sure you want to unblock <b>{name}</b> and 1 other?",
-      args: {name: "string"}
+      en: 'Are you sure you want to unblock <b>{name}</b> and 1 other?',
+      args: {name: 'string'}
   },
   blockUnblockedUser: {
-      en: "Unblocked {name}",
-      args: {name: "string"}
+      en: 'Unblocked {name}',
+      args: {name: 'string'}
   },
   call: {
-      en: "Call",
+      en: 'Call',
       args: undefined,
   },
   callsCalledYou: {
-      en: "{name} called you",
-      args: {name: "string"}
+      en: '{name} called you',
+      args: {name: 'string'}
   },
   callsCannotStart: {
-      en: "You cannot start a new call. Finish your current call first.",
+      en: 'You cannot start a new call. Finish your current call first.',
       args: undefined,
   },
   callsConnecting: {
-      en: "Connecting...",
+      en: 'Connecting...',
       args: undefined,
   },
   callsEnd: {
-      en: "End call",
+      en: 'End call',
       args: undefined,
   },
   callsEnded: {
-      en: "Call Ended",
+      en: 'Call Ended',
       args: undefined,
   },
   callsErrorAnswer: {
-      en: "Failed to answer call",
+      en: 'Failed to answer call',
       args: undefined,
   },
   callsErrorStart: {
-      en: "Failed to start call",
+      en: 'Failed to start call',
       args: undefined,
   },
   callsInProgress: {
-      en: "Call in progress",
+      en: 'Call in progress',
       args: undefined,
   },
   callsIncoming: {
-      en: "Incoming call from {name}",
-      args: {name: "string"}
+      en: 'Incoming call from {name}',
+      args: {name: 'string'}
   },
   callsIncomingUnknown: {
-      en: "Incoming call",
+      en: 'Incoming call',
       args: undefined,
   },
   callsMicrophonePermissionsRequired: {
       en: "You missed a call from <b>{name}</b> because you haven't granted <b>microphone access</b>.",
-      args: {name: "string"}
+      args: {name: 'string'}
   },
   callsMissed: {
-      en: "Missed Call",
+      en: 'Missed Call',
       args: undefined,
   },
   callsMissedCallFrom: {
-      en: "Missed call from {name}",
-      args: {name: "string"}
+      en: 'Missed call from {name}',
+      args: {name: 'string'}
   },
   callsNotificationsRequired: {
-      en: "Voice and Video Calls require notifications to be enabled in your device system settings.",
+      en: 'Voice and Video Calls require notifications to be enabled in your device system settings.',
       args: undefined,
   },
   callsPermissionsRequired: {
-      en: "Call Permissions Required",
+      en: 'Call Permissions Required',
       args: undefined,
   },
   callsPermissionsRequiredDescription: {
-      en: "You can enable the \"Voice and Video Calls\" permission in Privacy Settings.",
+      en: 'You can enable the "Voice and Video Calls" permission in Privacy Settings.',
       args: undefined,
   },
   callsPermissionsRequiredDescription1: {
-      en: "You can enable the \"Voice and Video Calls\" permission in Permissions Settings.",
+      en: 'You can enable the "Voice and Video Calls" permission in Permissions Settings.',
       args: undefined,
   },
   callsReconnecting: {
-      en: "Reconnecting…",
+      en: 'Reconnecting…',
       args: undefined,
   },
   callsRinging: {
-      en: "Ringing...",
+      en: 'Ringing...',
       args: undefined,
   },
   callsSessionCall: {
-      en: "Session Call",
+      en: 'Session Call',
       args: undefined,
   },
   callsSettings: {
-      en: "Calls (Beta)",
+      en: 'Calls (Beta)',
       args: undefined,
   },
   callsVoiceAndVideo: {
-      en: "Voice and Video Calls",
+      en: 'Voice and Video Calls',
       args: undefined,
   },
   callsVoiceAndVideoBeta: {
-      en: "Voice and Video Calls (Beta)",
+      en: 'Voice and Video Calls (Beta)',
       args: undefined,
   },
   callsVoiceAndVideoModalDescription: {
-      en: "Your IP is visible to your call partner and a Session Technology Foundation server while using beta calls.",
+      en: 'Your IP is visible to your call partner and a Session Technology Foundation server while using beta calls.',
       args: undefined,
   },
   callsVoiceAndVideoToggleDescription: {
-      en: "Enables voice and video calls to and from other users.",
+      en: 'Enables voice and video calls to and from other users.',
       args: undefined,
   },
   callsYouCalled: {
-      en: "You called {name}",
-      args: {name: "string"}
+      en: 'You called {name}',
+      args: {name: 'string'}
   },
   callsYouMissedCallPermissions: {
       en: "You missed a call from <b>{name}</b> because you haven't enabled <b>Voice and Video Calls</b> in Privacy Settings.",
-      args: {name: "string"}
+      args: {name: 'string'}
   },
   cameraErrorNotFound: {
-      en: "No camera found",
+      en: 'No camera found',
       args: undefined,
   },
   cameraErrorUnavailable: {
-      en: "Camera unavailable.",
+      en: 'Camera unavailable.',
       args: undefined,
   },
   cameraGrantAccess: {
-      en: "Grant Camera Access",
+      en: 'Grant Camera Access',
       args: undefined,
   },
   cameraGrantAccessDenied: {
-      en: "Session needs camera access to take photos and videos, but it has been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Camera\".",
+      en: 'Session needs camera access to take photos and videos, but it has been permanently denied. Please continue to app settings, select "Permissions", and enable "Camera".',
       args: undefined,
   },
   cameraGrantAccessDescription: {
-      en: "Session needs camera access to take photos and videos, or scan QR codes.",
+      en: 'Session needs camera access to take photos and videos, or scan QR codes.',
       args: undefined,
   },
   cameraGrantAccessQr: {
-      en: "Session needs camera access to scan QR codes",
+      en: 'Session needs camera access to scan QR codes',
       args: undefined,
   },
   cancel: {
-      en: "Cancel",
+      en: 'Cancel',
       args: undefined,
   },
   changePasswordFail: {
-      en: "Failed to change password",
+      en: 'Failed to change password',
       args: undefined,
   },
   clear: {
-      en: "Clear",
+      en: 'Clear',
       args: undefined,
   },
   clearAll: {
-      en: "Clear All",
+      en: 'Clear All',
       args: undefined,
   },
   clearDataAll: {
-      en: "Clear All Data",
+      en: 'Clear All Data',
       args: undefined,
   },
   clearDataAllDescription: {
-      en: "This will permanently delete your messages and contacts. Would you like to clear this device only, or delete your data from the network as well?",
+      en: 'This will permanently delete your messages and contacts. Would you like to clear this device only, or delete your data from the network as well?',
       args: undefined,
   },
   clearDataError: {
-      en: "Data Not Deleted",
+      en: 'Data Not Deleted',
       args: undefined,
   },
   clearDataErrorDescriptionGeneric: {
-      en: "An unknown error occurred and your data was not deleted. Do you want to delete your data from just this device instead?",
+      en: 'An unknown error occurred and your data was not deleted. Do you want to delete your data from just this device instead?',
       args: undefined,
   },
   clearDevice: {
-      en: "Clear Device",
+      en: 'Clear Device',
       args: undefined,
   },
   clearDeviceAndNetwork: {
-      en: "Clear device and network",
+      en: 'Clear device and network',
       args: undefined,
   },
   clearDeviceAndNetworkConfirm: {
-      en: "Are you sure you want to delete your data from the network? If you continue, you will not be able to restore your messages or contacts.",
+      en: 'Are you sure you want to delete your data from the network? If you continue, you will not be able to restore your messages or contacts.',
       args: undefined,
   },
   clearDeviceDescription: {
-      en: "Are you sure you want to clear your device?",
+      en: 'Are you sure you want to clear your device?',
       args: undefined,
   },
   clearDeviceOnly: {
-      en: "Clear device only",
+      en: 'Clear device only',
       args: undefined,
   },
   clearDeviceRestart: {
-      en: "Clear Device and Restart",
+      en: 'Clear Device and Restart',
       args: undefined,
   },
   clearDeviceRestore: {
-      en: "Clear Device and Restore",
+      en: 'Clear Device and Restore',
       args: undefined,
   },
   clearMessages: {
-      en: "Clear All Messages",
+      en: 'Clear All Messages',
       args: undefined,
   },
   clearMessagesChatDescription: {
-      en: "Are you sure you want to clear all messages from your conversation with <b>{name}</b> from your device?",
-      args: {name: "string"}
+      en: 'Are you sure you want to clear all messages from your conversation with <b>{name}</b> from your device?',
+      args: {name: 'string'}
   },
   clearMessagesChatDescriptionUpdated: {
-      en: "Are you sure you want to clear all messages from your conversation with <b>{name}</b> on this device?",
-      args: {name: "string"}
+      en: 'Are you sure you want to clear all messages from your conversation with <b>{name}</b> on this device?',
+      args: {name: 'string'}
   },
   clearMessagesCommunity: {
-      en: "Are you sure you want to clear all <b>{community_name}</b> messages from your device?",
-      args: {community_name: "string"}
+      en: 'Are you sure you want to clear all <b>{community_name}</b> messages from your device?',
+      args: {community_name: 'string'}
   },
   clearMessagesCommunityUpdated: {
-      en: "Are you sure you want to clear all messages from <b>{community_name}</b> on this device?",
-      args: {community_name: "string"}
+      en: 'Are you sure you want to clear all messages from <b>{community_name}</b> on this device?',
+      args: {community_name: 'string'}
   },
   clearMessagesForEveryone: {
-      en: "Clear for everyone",
+      en: 'Clear for everyone',
       args: undefined,
   },
   clearMessagesForMe: {
-      en: "Clear for me",
+      en: 'Clear for me',
       args: undefined,
   },
   clearMessagesGroupAdminDescription: {
-      en: "Are you sure you want to clear all <b>{group_name}</b> messages?",
-      args: {group_name: "string"}
+      en: 'Are you sure you want to clear all <b>{group_name}</b> messages?',
+      args: {group_name: 'string'}
   },
   clearMessagesGroupAdminDescriptionUpdated: {
-      en: "Are you sure you want to clear all messages from <b>{group_name}</b>?",
-      args: {group_name: "string"}
+      en: 'Are you sure you want to clear all messages from <b>{group_name}</b>?',
+      args: {group_name: 'string'}
   },
   clearMessagesGroupDescription: {
-      en: "Are you sure you want to clear all <b>{group_name}</b> messages from your device?",
-      args: {group_name: "string"}
+      en: 'Are you sure you want to clear all <b>{group_name}</b> messages from your device?',
+      args: {group_name: 'string'}
   },
   clearMessagesGroupDescriptionUpdated: {
-      en: "Are you sure you want to clear all messages from <b>{group_name}</b> on this device?",
-      args: {group_name: "string"}
+      en: 'Are you sure you want to clear all messages from <b>{group_name}</b> on this device?',
+      args: {group_name: 'string'}
   },
   clearMessagesNoteToSelfDescription: {
-      en: "Are you sure you want to clear all Note to Self messages from your device?",
+      en: 'Are you sure you want to clear all Note to Self messages from your device?',
       args: undefined,
   },
   clearMessagesNoteToSelfDescriptionUpdated: {
-      en: "Are you sure you want to clear all <b>Note to Self</b> messages on this device?",
+      en: 'Are you sure you want to clear all <b>Note to Self</b> messages on this device?',
       args: undefined,
   },
   clearOnThisDevice: {
-      en: "Clear on this device",
+      en: 'Clear on this device',
       args: undefined,
   },
   close: {
-      en: "Close",
+      en: 'Close',
       args: undefined,
   },
   closeApp: {
-      en: "Close App",
+      en: 'Close App',
       args: undefined,
   },
   closeWindow: {
-      en: "Close Window",
+      en: 'Close Window',
       args: undefined,
   },
   commitHashDesktop: {
-      en: "Commit Hash: {hash}",
-      args: {hash: "string"}
+      en: 'Commit Hash: {hash}',
+      args: {hash: 'string'}
   },
   communityBanDeleteDescription: {
-      en: "This will ban the selected user from this Community and delete all their messages. Are you sure you want to continue?",
+      en: 'This will ban the selected user from this Community and delete all their messages. Are you sure you want to continue?',
       args: undefined,
   },
   communityBanDescription: {
-      en: "This will ban the selected user from this Community. Are you sure you want to continue?",
+      en: 'This will ban the selected user from this Community. Are you sure you want to continue?',
       args: undefined,
   },
   communityEnterUrl: {
-      en: "Enter Community URL",
+      en: 'Enter Community URL',
       args: undefined,
   },
   communityEnterUrlErrorInvalid: {
-      en: "Invalid URL",
+      en: 'Invalid URL',
       args: undefined,
   },
   communityEnterUrlErrorInvalidDescription: {
-      en: "Please check the Community URL and try again.",
+      en: 'Please check the Community URL and try again.',
       args: undefined,
   },
   communityError: {
-      en: "Community Error",
+      en: 'Community Error',
       args: undefined,
   },
   communityErrorDescription: {
-      en: "Oops, an error occurred. Please try again later.",
+      en: 'Oops, an error occurred. Please try again later.',
       args: undefined,
   },
   communityInvitation: {
-      en: "Community Invitation",
+      en: 'Community Invitation',
       args: undefined,
   },
   communityJoin: {
-      en: "Join Community",
+      en: 'Join Community',
       args: undefined,
   },
   communityJoinDescription: {
-      en: "Are you sure you want to join {community_name}?",
-      args: {community_name: "string"}
+      en: 'Are you sure you want to join {community_name}?',
+      args: {community_name: 'string'}
   },
   communityJoinError: {
-      en: "Failed to join community",
+      en: 'Failed to join community',
       args: undefined,
   },
   communityJoinOfficial: {
-      en: "Or join one of these...",
+      en: 'Or join one of these...',
       args: undefined,
   },
   communityJoined: {
-      en: "Joined Community",
+      en: 'Joined Community',
       args: undefined,
   },
   communityJoinedAlready: {
-      en: "You are already a member of this community.",
+      en: 'You are already a member of this community.',
       args: undefined,
   },
   communityLeave: {
-      en: "Leave Community",
+      en: 'Leave Community',
       args: undefined,
   },
   communityLeaveError: {
-      en: "Failed to leave {community_name}",
-      args: {community_name: "string"}
+      en: 'Failed to leave {community_name}',
+      args: {community_name: 'string'}
   },
   communityUnknown: {
-      en: "Unknown Community",
+      en: 'Unknown Community',
       args: undefined,
   },
   communityUrl: {
-      en: "Community URL",
+      en: 'Community URL',
       args: undefined,
   },
   communityUrlCopy: {
-      en: "Copy Community URL",
+      en: 'Copy Community URL',
       args: undefined,
   },
   confirm: {
-      en: "Confirm",
+      en: 'Confirm',
       args: undefined,
   },
   contactContacts: {
-      en: "Contacts",
+      en: 'Contacts',
       args: undefined,
   },
   contactDelete: {
-      en: "Delete Contact",
+      en: 'Delete Contact',
       args: undefined,
   },
   contactDeleteDescription: {
-      en: "Are you sure you want to delete <b>{name}</b> from your contacts? New messages from <b>{name}</b> will arrive as a message request.",
-      args: {name: "string"}
+      en: 'Are you sure you want to delete <b>{name}</b> from your contacts? New messages from <b>{name}</b> will arrive as a message request.',
+      args: {name: 'string'}
   },
   contactNone: {
       en: "You don't have any contacts yet",
       args: undefined,
   },
   contactSelect: {
-      en: "Select Contacts",
+      en: 'Select Contacts',
       args: undefined,
   },
   contactUserDetails: {
-      en: "User Details",
+      en: 'User Details',
       args: undefined,
   },
   contentDescriptionCamera: {
-      en: "Camera",
+      en: 'Camera',
       args: undefined,
   },
   contentDescriptionChooseConversationType: {
-      en: "Choose an action to start a conversation",
+      en: 'Choose an action to start a conversation',
       args: undefined,
   },
   contentDescriptionMediaMessage: {
-      en: "Media message",
+      en: 'Media message',
       args: undefined,
   },
   contentDescriptionMessageComposition: {
-      en: "Message composition",
+      en: 'Message composition',
       args: undefined,
   },
   contentDescriptionQuoteThumbnail: {
-      en: "Thumbnail of image from quoted message",
+      en: 'Thumbnail of image from quoted message',
       args: undefined,
   },
   contentDescriptionStartConversation: {
-      en: "Create a conversation with a new contact",
+      en: 'Create a conversation with a new contact',
       args: undefined,
   },
   conversationsAddToHome: {
-      en: "Add to home screen",
+      en: 'Add to home screen',
       args: undefined,
   },
   conversationsAddedToHome: {
-      en: "Added to home screen",
+      en: 'Added to home screen',
       args: undefined,
   },
   conversationsAudioMessages: {
-      en: "Audio Messages",
+      en: 'Audio Messages',
       args: undefined,
   },
   conversationsAutoplayAudioMessage: {
-      en: "Autoplay Audio Messages",
+      en: 'Autoplay Audio Messages',
       args: undefined,
   },
   conversationsAutoplayAudioMessageDescription: {
-      en: "Autoplay consecutively sent audio messages.",
+      en: 'Autoplay consecutively sent audio messages.',
       args: undefined,
   },
   conversationsBlockedContacts: {
-      en: "Blocked Contacts",
+      en: 'Blocked Contacts',
       args: undefined,
   },
   conversationsCommunities: {
-      en: "Communities",
+      en: 'Communities',
       args: undefined,
   },
   conversationsDelete: {
-      en: "Delete Conversation",
+      en: 'Delete Conversation',
       args: undefined,
   },
   conversationsDeleteDescription: {
-      en: "Are you sure you want to delete your conversation with <b>{name}</b>? New messages from <b>{name}</b> will start a new conversation.",
-      args: {name: "string"}
+      en: 'Are you sure you want to delete your conversation with <b>{name}</b>? New messages from <b>{name}</b> will start a new conversation.',
+      args: {name: 'string'}
   },
   conversationsDeleted: {
-      en: "Conversation deleted",
+      en: 'Conversation deleted',
       args: undefined,
   },
   conversationsEmpty: {
-      en: "There are no messages in {conversation_name}.",
-      args: {conversation_name: "string"}
+      en: 'There are no messages in {conversation_name}.',
+      args: {conversation_name: 'string'}
   },
   conversationsEnter: {
-      en: "Enter Key",
+      en: 'Enter Key',
       args: undefined,
   },
   conversationsEnterDescription: {
-      en: "Function of the enter key when typing in a conversation.",
+      en: 'Function of the enter key when typing in a conversation.',
       args: undefined,
   },
   conversationsEnterNewLine: {
-      en: "SHIFT + ENTER sends a message, ENTER starts a new line",
+      en: 'SHIFT + ENTER sends a message, ENTER starts a new line',
       args: undefined,
   },
   conversationsEnterSends: {
-      en: "ENTER sends a message, SHIFT + ENTER starts a new line",
+      en: 'ENTER sends a message, SHIFT + ENTER starts a new line',
       args: undefined,
   },
   conversationsGroups: {
-      en: "Groups",
+      en: 'Groups',
       args: undefined,
   },
   conversationsMessageTrimming: {
-      en: "Message Trimming",
+      en: 'Message Trimming',
       args: undefined,
   },
   conversationsMessageTrimmingTrimCommunities: {
-      en: "Trim Communities",
+      en: 'Trim Communities',
       args: undefined,
   },
   conversationsMessageTrimmingTrimCommunitiesDescription: {
-      en: "Delete messages from Community conversations older than 6 months, and where there are over 2,000 messages.",
+      en: 'Delete messages from Community conversations older than 6 months, and where there are over 2,000 messages.',
       args: undefined,
   },
   conversationsNew: {
-      en: "New Conversation",
+      en: 'New Conversation',
       args: undefined,
   },
   conversationsNone: {
@@ -1113,59 +1113,59 @@ export const simpleDictionary = {
       args: undefined,
   },
   conversationsSendWithEnterKey: {
-      en: "Send with Enter Key",
+      en: 'Send with Enter Key',
       args: undefined,
   },
   conversationsSendWithEnterKeyDescription: {
-      en: "Tapping the Enter Key will send message instead of starting a new line.",
+      en: 'Tapping the Enter Key will send message instead of starting a new line.',
       args: undefined,
   },
   conversationsSettingsAllMedia: {
-      en: "All Media",
+      en: 'All Media',
       args: undefined,
   },
   conversationsSpellCheck: {
-      en: "Spell Check",
+      en: 'Spell Check',
       args: undefined,
   },
   conversationsSpellCheckDescription: {
-      en: "Enable spell check when typing messages.",
+      en: 'Enable spell check when typing messages.',
       args: undefined,
   },
   conversationsStart: {
-      en: "Start Conversation",
+      en: 'Start Conversation',
       args: undefined,
   },
   copied: {
-      en: "Copied",
+      en: 'Copied',
       args: undefined,
   },
   copy: {
-      en: "Copy",
+      en: 'Copy',
       args: undefined,
   },
   create: {
-      en: "Create",
+      en: 'Create',
       args: undefined,
   },
   creatingCall: {
-      en: "Creating Call",
+      en: 'Creating Call',
       args: undefined,
   },
   cut: {
-      en: "Cut",
+      en: 'Cut',
       args: undefined,
   },
   databaseErrorClearDataWarning: {
-      en: "Are you sure you want to delete all messages, attachments, and account data from this device and create a new account?",
+      en: 'Are you sure you want to delete all messages, attachments, and account data from this device and create a new account?',
       args: undefined,
   },
   databaseErrorGeneric: {
-      en: "A database error occurred.<br/><br/>Export your application logs to share for troubleshooting. If this is unsuccessful, reinstall Session and restore your account.",
+      en: 'A database error occurred.<br/><br/>Export your application logs to share for troubleshooting. If this is unsuccessful, reinstall Session and restore your account.',
       args: undefined,
   },
   databaseErrorRestoreDataWarning: {
-      en: "Are you sure you want to delete all messages, attachments, and account data from this device and restore your account from the network?",
+      en: 'Are you sure you want to delete all messages, attachments, and account data from this device and restore your account from the network?',
       args: undefined,
   },
   databaseErrorTimeout: {
@@ -1173,43 +1173,43 @@ export const simpleDictionary = {
       args: undefined,
   },
   databaseErrorUpdate: {
-      en: "Your app database is incompatible with this version of Session. Reinstall the app and restore your account to generate a new database and continue using Session.<br/><br/>Warning: This will result in the loss of all messages and attachments older than two weeks.",
+      en: 'Your app database is incompatible with this version of Session. Reinstall the app and restore your account to generate a new database and continue using Session.<br/><br/>Warning: This will result in the loss of all messages and attachments older than two weeks.',
       args: undefined,
   },
   databaseOptimizing: {
-      en: "Optimizing Database",
+      en: 'Optimizing Database',
       args: undefined,
   },
   debugLog: {
-      en: "Debug Log",
+      en: 'Debug Log',
       args: undefined,
   },
   decline: {
-      en: "Decline",
+      en: 'Decline',
       args: undefined,
   },
   delete: {
-      en: "Delete",
+      en: 'Delete',
       args: undefined,
   },
   deleteAfterGroupFirstReleaseConfigOutdated: {
-      en: "Some of your devices are using outdated versions. Syncing may be unreliable until they are updated.",
+      en: 'Some of your devices are using outdated versions. Syncing may be unreliable until they are updated.',
       args: undefined,
   },
   deleteAfterGroupPR1BlockThisUser: {
-      en: "Block This User",
+      en: 'Block This User',
       args: undefined,
   },
   deleteAfterGroupPR1BlockUser: {
-      en: "Block User",
+      en: 'Block User',
       args: undefined,
   },
   deleteAfterGroupPR1GroupSettings: {
-      en: "Group Settings",
+      en: 'Group Settings',
       args: undefined,
   },
   deleteAfterGroupPR1MentionsOnly: {
-      en: "Notify for Mentions Only",
+      en: 'Notify for Mentions Only',
       args: undefined,
   },
   deleteAfterGroupPR1MentionsOnlyDescription: {
@@ -1217,11 +1217,11 @@ export const simpleDictionary = {
       args: undefined,
   },
   deleteAfterGroupPR1MessageSound: {
-      en: "Message Sound",
+      en: 'Message Sound',
       args: undefined,
   },
   deleteAfterGroupPR3DeleteMessagesConfirmation: {
-      en: "Permanently delete the messages in this conversation?",
+      en: 'Permanently delete the messages in this conversation?',
       args: undefined,
   },
   deleteAfterGroupPR3GroupErrorLeave: {
@@ -1229,439 +1229,439 @@ export const simpleDictionary = {
       args: undefined,
   },
   deleteAfterLegacyDisappearingMessagesLegacy: {
-      en: "Legacy",
+      en: 'Legacy',
       args: undefined,
   },
   deleteAfterLegacyDisappearingMessagesOriginal: {
-      en: "Original version of disappearing messages.",
+      en: 'Original version of disappearing messages.',
       args: undefined,
   },
   deleteAfterLegacyDisappearingMessagesTheyChangedTimer: {
-      en: "<b>{name}</b> set the disappearing message timer to <b>{time}</b>",
-      args: {name: "string", time: "string"}
+      en: '<b>{name}</b> set the disappearing message timer to <b>{time}</b>',
+      args: {name: 'string', time: 'string'}
   },
   deleteAfterLegacyGroupsGroupCreation: {
-      en: "Please wait while the group is created...",
+      en: 'Please wait while the group is created...',
       args: undefined,
   },
   deleteAfterLegacyGroupsGroupUpdateErrorTitle: {
-      en: "Failed to Update Group",
+      en: 'Failed to Update Group',
       args: undefined,
   },
   deleteAfterMessageDeletionStandardisationMessageDeletionForbidden: {
-      en: "You don’t have permission to delete others’ messages",
+      en: 'You don’t have permission to delete others’ messages',
       args: undefined,
   },
   deleteContactDescription: {
-      en: "Are you sure you want to delete <b>{name}</b> from your contacts?<br/><br/>This will delete your conversation, including all messages and attachments. Future messages from <b>{name}</b> will appear as a message request.",
-      args: {name: "string"}
+      en: 'Are you sure you want to delete <b>{name}</b> from your contacts?<br/><br/>This will delete your conversation, including all messages and attachments. Future messages from <b>{name}</b> will appear as a message request.',
+      args: {name: 'string'}
   },
   deleteConversationDescription: {
-      en: "Are you sure you want to delete your conversation with <b>{name}</b>?<br/>This will permanently delete all messages and attachments.",
-      args: {name: "string"}
+      en: 'Are you sure you want to delete your conversation with <b>{name}</b>?<br/>This will permanently delete all messages and attachments.',
+      args: {name: 'string'}
   },
   deleteMessageDeletedGlobally: {
-      en: "This message was deleted",
+      en: 'This message was deleted',
       args: undefined,
   },
   deleteMessageDeletedLocally: {
-      en: "This message was deleted on this device",
+      en: 'This message was deleted on this device',
       args: undefined,
   },
   deleteMessageDescriptionEveryone: {
-      en: "Are you sure you want to delete this message for everyone?",
+      en: 'Are you sure you want to delete this message for everyone?',
       args: undefined,
   },
   deleteMessageDeviceOnly: {
-      en: "Delete on this device only",
+      en: 'Delete on this device only',
       args: undefined,
   },
   deleteMessageDevicesAll: {
-      en: "Delete on all my devices",
+      en: 'Delete on all my devices',
       args: undefined,
   },
   deleteMessageEveryone: {
-      en: "Delete for everyone",
+      en: 'Delete for everyone',
       args: undefined,
   },
   deleteMessagesDescriptionEveryone: {
-      en: "Are you sure you want to delete these messages for everyone?",
+      en: 'Are you sure you want to delete these messages for everyone?',
       args: undefined,
   },
   deleting: {
-      en: "Deleting",
+      en: 'Deleting',
       args: undefined,
   },
   developerToolsToggle: {
-      en: "Toggle Developer Tools",
+      en: 'Toggle Developer Tools',
       args: undefined,
   },
   dictationStart: {
-      en: "Start Dictation...",
+      en: 'Start Dictation...',
       args: undefined,
   },
   disappearingMessages: {
-      en: "Disappearing Messages",
+      en: 'Disappearing Messages',
       args: undefined,
   },
   disappearingMessagesCountdownBig: {
-      en: "Message will delete in {time_large}",
-      args: {time_large: "string"}
+      en: 'Message will delete in {time_large}',
+      args: {time_large: 'string'}
   },
   disappearingMessagesCountdownBigMobile: {
-      en: "Auto-deletes in {time_large}",
-      args: {time_large: "string"}
+      en: 'Auto-deletes in {time_large}',
+      args: {time_large: 'string'}
   },
   disappearingMessagesCountdownBigSmall: {
-      en: "Message will delete in {time_large} {time_small}",
-      args: {time_large: "string", time_small: "string"}
+      en: 'Message will delete in {time_large} {time_small}',
+      args: {time_large: 'string', time_small: 'string'}
   },
   disappearingMessagesCountdownBigSmallMobile: {
-      en: "Auto-deletes in {time_large} {time_small}",
-      args: {time_large: "string", time_small: "string"}
+      en: 'Auto-deletes in {time_large} {time_small}',
+      args: {time_large: 'string', time_small: 'string'}
   },
   disappearingMessagesDeleteType: {
-      en: "Delete Type",
+      en: 'Delete Type',
       args: undefined,
   },
   disappearingMessagesDescription: {
-      en: "This setting applies to everyone in this conversation.",
+      en: 'This setting applies to everyone in this conversation.',
       args: undefined,
   },
   disappearingMessagesDescription1: {
-      en: "This setting applies to messages you send in this conversation.",
+      en: 'This setting applies to messages you send in this conversation.',
       args: undefined,
   },
   disappearingMessagesDescriptionGroup: {
-      en: "This setting applies to everyone in this conversation.<br/>Only group admins can change this setting.",
+      en: 'This setting applies to everyone in this conversation.<br/>Only group admins can change this setting.',
       args: undefined,
   },
   disappearingMessagesDisappear: {
-      en: "Disappear After {disappearing_messages_type} - {time}",
-      args: {disappearing_messages_type: "string", time: "string"}
+      en: 'Disappear After {disappearing_messages_type} - {time}',
+      args: {disappearing_messages_type: 'string', time: 'string'}
   },
   disappearingMessagesDisappearAfterRead: {
-      en: "Disappear After Read",
+      en: 'Disappear After Read',
       args: undefined,
   },
   disappearingMessagesDisappearAfterReadDescription: {
-      en: "Messages delete after they have been read.",
+      en: 'Messages delete after they have been read.',
       args: undefined,
   },
   disappearingMessagesDisappearAfterReadState: {
-      en: "Disappear After Read - {time}",
-      args: {time: "string"}
+      en: 'Disappear After Read - {time}',
+      args: {time: 'string'}
   },
   disappearingMessagesDisappearAfterSend: {
-      en: "Disappear After Send",
+      en: 'Disappear After Send',
       args: undefined,
   },
   disappearingMessagesDisappearAfterSendDescription: {
-      en: "Messages delete after they have been sent.",
+      en: 'Messages delete after they have been sent.',
       args: undefined,
   },
   disappearingMessagesDisappearAfterSendState: {
-      en: "Disappear After Send - {time}",
-      args: {time: "string"}
+      en: 'Disappear After Send - {time}',
+      args: {time: 'string'}
   },
   disappearingMessagesFollowSetting: {
-      en: "Follow Setting",
+      en: 'Follow Setting',
       args: undefined,
   },
   disappearingMessagesFollowSettingOff: {
-      en: "Messages you send will no longer disappear. Are you sure you want to turn <b>off</b> disappearing messages?",
+      en: 'Messages you send will no longer disappear. Are you sure you want to turn <b>off</b> disappearing messages?',
       args: undefined,
   },
   disappearingMessagesFollowSettingOn: {
-      en: "Set your messages to disappear <b>{time}</b> after they have been <b>{disappearing_messages_type}</b>?",
-      args: {time: "string", disappearing_messages_type: "string"}
+      en: 'Set your messages to disappear <b>{time}</b> after they have been <b>{disappearing_messages_type}</b>?',
+      args: {time: 'string', disappearing_messages_type: 'string'}
   },
   disappearingMessagesLegacy: {
-      en: "{name} is using an outdated client. Disappearing messages may not work as expected.",
-      args: {name: "string"}
+      en: '{name} is using an outdated client. Disappearing messages may not work as expected.',
+      args: {name: 'string'}
   },
   disappearingMessagesOnlyAdmins: {
-      en: "Only group admins can change this setting.",
+      en: 'Only group admins can change this setting.',
       args: undefined,
   },
   disappearingMessagesSent: {
-      en: "Sent",
+      en: 'Sent',
       args: undefined,
   },
   disappearingMessagesSet: {
-      en: "<b>{name}</b> has set messages to disappear {time} after they have been {disappearing_messages_type}.",
-      args: {name: "string", time: "string", disappearing_messages_type: "string"}
+      en: '<b>{name}</b> has set messages to disappear {time} after they have been {disappearing_messages_type}.',
+      args: {name: 'string', time: 'string', disappearing_messages_type: 'string'}
   },
   disappearingMessagesSetYou: {
-      en: "<b>You</b> set messages to disappear {time} after they have been {disappearing_messages_type}.",
-      args: {time: "string", disappearing_messages_type: "string"}
+      en: '<b>You</b> set messages to disappear {time} after they have been {disappearing_messages_type}.',
+      args: {time: 'string', disappearing_messages_type: 'string'}
   },
   disappearingMessagesTimer: {
-      en: "Timer",
+      en: 'Timer',
       args: undefined,
   },
   disappearingMessagesTurnedOff: {
-      en: "<b>{name}</b> has turned disappearing messages off. Messages they send will no longer disappear.",
-      args: {name: "string"}
+      en: '<b>{name}</b> has turned disappearing messages off. Messages they send will no longer disappear.',
+      args: {name: 'string'}
   },
   disappearingMessagesTurnedOffGroup: {
-      en: "<b>{name}</b> has turned disappearing messages <b>off</b>.",
-      args: {name: "string"}
+      en: '<b>{name}</b> has turned disappearing messages <b>off</b>.',
+      args: {name: 'string'}
   },
   disappearingMessagesTurnedOffYou: {
-      en: "<b>You</b> turned <b>off</b> disappearing messages. Messages you send will no longer disappear.",
+      en: '<b>You</b> turned <b>off</b> disappearing messages. Messages you send will no longer disappear.',
       args: undefined,
   },
   disappearingMessagesTurnedOffYouGroup: {
-      en: "<b>You</b> turned <b>off</b> disappearing messages.",
+      en: '<b>You</b> turned <b>off</b> disappearing messages.',
       args: undefined,
   },
   disappearingMessagesTypeRead: {
-      en: "read",
+      en: 'read',
       args: undefined,
   },
   disappearingMessagesTypeSent: {
-      en: "sent",
+      en: 'sent',
       args: undefined,
   },
   disappearingMessagesUpdated: {
-      en: "<b>{admin_name}</b> updated disappearing message settings.",
-      args: {admin_name: "string"}
+      en: '<b>{admin_name}</b> updated disappearing message settings.',
+      args: {admin_name: 'string'}
   },
   disappearingMessagesUpdatedYou: {
-      en: "<b>You</b> updated disappearing message settings.",
+      en: '<b>You</b> updated disappearing message settings.',
       args: undefined,
   },
   dismiss: {
-      en: "Dismiss",
+      en: 'Dismiss',
       args: undefined,
   },
   displayNameDescription: {
-      en: "It can be your real name, an alias, or anything else you like — and you can change it at any time.",
+      en: 'It can be your real name, an alias, or anything else you like — and you can change it at any time.',
       args: undefined,
   },
   displayNameEnter: {
-      en: "Enter your display name",
+      en: 'Enter your display name',
       args: undefined,
   },
   displayNameErrorDescription: {
-      en: "Please enter a display name",
+      en: 'Please enter a display name',
       args: undefined,
   },
   displayNameErrorDescriptionShorter: {
-      en: "Please enter a shorter display name",
+      en: 'Please enter a shorter display name',
       args: undefined,
   },
   displayNameErrorNew: {
-      en: "We were unable to load your display name. Please enter a new display name to continue.",
+      en: 'We were unable to load your display name. Please enter a new display name to continue.',
       args: undefined,
   },
   displayNameNew: {
-      en: "Pick a new display name",
+      en: 'Pick a new display name',
       args: undefined,
   },
   displayNamePick: {
-      en: "Pick your display name",
+      en: 'Pick your display name',
       args: undefined,
   },
   displayNameSet: {
-      en: "Set Display Name",
+      en: 'Set Display Name',
       args: undefined,
   },
   displayNameVisible: {
-      en: "Your Display Name is visible to users, groups, and communities you interact with.",
+      en: 'Your Display Name is visible to users, groups, and communities you interact with.',
       args: undefined,
   },
   document: {
-      en: "Document",
+      en: 'Document',
       args: undefined,
   },
   donate: {
-      en: "Donate",
+      en: 'Donate',
       args: undefined,
   },
   done: {
-      en: "Done",
+      en: 'Done',
       args: undefined,
   },
   download: {
-      en: "Download",
+      en: 'Download',
       args: undefined,
   },
   downloading: {
-      en: "Downloading...",
+      en: 'Downloading...',
       args: undefined,
   },
   draft: {
-      en: "Draft",
+      en: 'Draft',
       args: undefined,
   },
   edit: {
-      en: "Edit",
+      en: 'Edit',
       args: undefined,
   },
   emojiAndSymbols: {
-      en: "Emoji and Symbols",
+      en: 'Emoji and Symbols',
       args: undefined,
   },
   emojiCategoryActivities: {
-      en: "Activities",
+      en: 'Activities',
       args: undefined,
   },
   emojiCategoryAnimals: {
-      en: "Animals and Nature",
+      en: 'Animals and Nature',
       args: undefined,
   },
   emojiCategoryFlags: {
-      en: "Flags",
+      en: 'Flags',
       args: undefined,
   },
   emojiCategoryFood: {
-      en: "Food and Drink",
+      en: 'Food and Drink',
       args: undefined,
   },
   emojiCategoryObjects: {
-      en: "Objects",
+      en: 'Objects',
       args: undefined,
   },
   emojiCategoryRecentlyUsed: {
-      en: "Recently Used",
+      en: 'Recently Used',
       args: undefined,
   },
   emojiCategorySmileys: {
-      en: "Smileys and People",
+      en: 'Smileys and People',
       args: undefined,
   },
   emojiCategorySymbols: {
-      en: "Symbols",
+      en: 'Symbols',
       args: undefined,
   },
   emojiCategoryTravel: {
-      en: "Travel and Places",
+      en: 'Travel and Places',
       args: undefined,
   },
   emojiReactsClearAll: {
-      en: "Are you sure you want to clear all {emoji}?",
-      args: {emoji: "string"}
+      en: 'Are you sure you want to clear all {emoji}?',
+      args: {emoji: 'string'}
   },
   emojiReactsCoolDown: {
       en: "Slow down! You've sent too many emoji reacts. Try again soon",
       args: undefined,
   },
   emojiReactsHoverNameDesktop: {
-      en: "{name} reacted with {emoji_name}",
-      args: {name: "string", emoji_name: "string"}
+      en: '{name} reacted with {emoji_name}',
+      args: {name: 'string', emoji_name: 'string'}
   },
   emojiReactsHoverNameTwoDesktop: {
-      en: "{name} and {other_name} reacted with {emoji_name}",
-      args: {name: "string", other_name: "string", emoji_name: "string"}
+      en: '{name} and {other_name} reacted with {emoji_name}',
+      args: {name: 'string', other_name: 'string', emoji_name: 'string'}
   },
   emojiReactsHoverTwoNameMultipleDesktop: {
-      en: "{name} and <span>{count} others</span> reacted with {emoji_name}",
-      args: {name: "string", count: "number", emoji_name: "string"}
+      en: '{name} and <span>{count} others</span> reacted with {emoji_name}',
+      args: {name: 'string', count: 'number', emoji_name: 'string'}
   },
   emojiReactsHoverYouNameDesktop: {
-      en: "You reacted with {emoji_name}",
-      args: {emoji_name: "string"}
+      en: 'You reacted with {emoji_name}',
+      args: {emoji_name: 'string'}
   },
   emojiReactsHoverYouNameMultipleDesktop: {
-      en: "You and <span>{count} others</span> reacted with {emoji_name}",
-      args: {count: "number", emoji_name: "string"}
+      en: 'You and <span>{count} others</span> reacted with {emoji_name}',
+      args: {count: 'number', emoji_name: 'string'}
   },
   emojiReactsHoverYouNameTwoDesktop: {
-      en: "You and {name} reacted with {emoji_name}",
-      args: {name: "string", emoji_name: "string"}
+      en: 'You and {name} reacted with {emoji_name}',
+      args: {name: 'string', emoji_name: 'string'}
   },
   emojiReactsNotification: {
-      en: "Reacted to your message {emoji}",
-      args: {emoji: "string"}
+      en: 'Reacted to your message {emoji}',
+      args: {emoji: 'string'}
   },
   enable: {
-      en: "Enable",
+      en: 'Enable',
       args: undefined,
   },
   enjoyingSession: {
-      en: "Enjoying Session?",
+      en: 'Enjoying Session?',
       args: undefined,
   },
   enjoyingSessionButtonNegative: {
-      en: "Needs Work {emoji}",
-      args: {emoji: "string"}
+      en: 'Needs Work {emoji}',
+      args: {emoji: 'string'}
   },
   enjoyingSessionButtonPositive: {
       en: "It's Great {emoji}",
-      args: {emoji: "string"}
+      args: {emoji: 'string'}
   },
   enjoyingSessionDescription: {
       en: "You've been using Session for a little while, how’s it going? We’d really appreciate hearing your thoughts.",
       args: undefined,
   },
   errorConnection: {
-      en: "Please check your internet connection and try again.",
+      en: 'Please check your internet connection and try again.',
       args: undefined,
   },
   errorCopyAndQuit: {
-      en: "Copy Error and Quit",
+      en: 'Copy Error and Quit',
       args: undefined,
   },
   errorDatabase: {
-      en: "Database Error",
+      en: 'Database Error',
       args: undefined,
   },
   errorGeneric: {
-      en: "Something went wrong. Please try again later.",
+      en: 'Something went wrong. Please try again later.',
       args: undefined,
   },
   errorUnknown: {
-      en: "An unknown error occurred.",
+      en: 'An unknown error occurred.',
       args: undefined,
   },
   failedToDownload: {
-      en: "Failed to download",
+      en: 'Failed to download',
       args: undefined,
   },
   failures: {
-      en: "Failures",
+      en: 'Failures',
       args: undefined,
   },
   file: {
-      en: "File",
+      en: 'File',
       args: undefined,
   },
   files: {
-      en: "Files",
+      en: 'Files',
       args: undefined,
   },
   followSystemSettings: {
-      en: "Follow system settings",
+      en: 'Follow system settings',
       args: undefined,
   },
   forever: {
-      en: "Forever",
+      en: 'Forever',
       args: undefined,
   },
   from: {
-      en: "From:",
+      en: 'From:',
       args: undefined,
   },
   fullScreenToggle: {
-      en: "Toggle Full Screen",
+      en: 'Toggle Full Screen',
       args: undefined,
   },
   gif: {
-      en: "GIF",
+      en: 'GIF',
       args: undefined,
   },
   giphyWarning: {
-      en: "Giphy",
+      en: 'Giphy',
       args: undefined,
   },
   giphyWarningDescription: {
-      en: "Session will connect to Giphy to provide search results. You will not have full metadata protection when sending GIFs.",
+      en: 'Session will connect to Giphy to provide search results. You will not have full metadata protection when sending GIFs.',
       args: undefined,
   },
   giveFeedback: {
-      en: "Give Feedback?",
+      en: 'Give Feedback?',
       args: undefined,
   },
   giveFeedbackDescription: {
@@ -1669,319 +1669,319 @@ export const simpleDictionary = {
       args: undefined,
   },
   groupAddMemberMaximum: {
-      en: "Groups have a maximum of 100 members",
+      en: 'Groups have a maximum of 100 members',
       args: undefined,
   },
   groupCreate: {
-      en: "Create Group",
+      en: 'Create Group',
       args: undefined,
   },
   groupCreateErrorNoMembers: {
-      en: "Please pick at least one other group member.",
+      en: 'Please pick at least one other group member.',
       args: undefined,
   },
   groupDelete: {
-      en: "Delete Group",
+      en: 'Delete Group',
       args: undefined,
   },
   groupDeleteDescription: {
-      en: "Are you sure you want to delete <b>{group_name}</b>?<br/><br/>This will remove all members and delete all group content.",
-      args: {group_name: "string"}
+      en: 'Are you sure you want to delete <b>{group_name}</b>?<br/><br/>This will remove all members and delete all group content.',
+      args: {group_name: 'string'}
   },
   groupDeleteDescriptionMember: {
-      en: "Are you sure you want to delete <b>{group_name}</b>?",
-      args: {group_name: "string"}
+      en: 'Are you sure you want to delete <b>{group_name}</b>?',
+      args: {group_name: 'string'}
   },
   groupDeletedMemberDescription: {
-      en: "{group_name} has been deleted by a group admin. You will not be able to send any more messages.",
-      args: {group_name: "string"}
+      en: '{group_name} has been deleted by a group admin. You will not be able to send any more messages.',
+      args: {group_name: 'string'}
   },
   groupDescriptionEnter: {
-      en: "Enter a group description",
+      en: 'Enter a group description',
       args: undefined,
   },
   groupDisplayPictureUpdated: {
-      en: "Group display picture updated.",
+      en: 'Group display picture updated.',
       args: undefined,
   },
   groupEdit: {
-      en: "Edit Group",
+      en: 'Edit Group',
       args: undefined,
   },
   groupError: {
-      en: "Group Error",
+      en: 'Group Error',
       args: undefined,
   },
   groupErrorCreate: {
-      en: "Failed to create group. Please check your internet connection and try again.",
+      en: 'Failed to create group. Please check your internet connection and try again.',
       args: undefined,
   },
   groupErrorJoin: {
-      en: "Failed to join {group_name}",
-      args: {group_name: "string"}
+      en: 'Failed to join {group_name}',
+      args: {group_name: 'string'}
   },
   groupInformationSet: {
-      en: "Set Group Information",
+      en: 'Set Group Information',
       args: undefined,
   },
   groupInviteDelete: {
-      en: "Are you sure you want to delete this group invite?",
+      en: 'Are you sure you want to delete this group invite?',
       args: undefined,
   },
   groupInviteFailed: {
-      en: "Invite failed",
+      en: 'Invite failed',
       args: undefined,
   },
   groupInviteFailedMultiple: {
-      en: "Failed to invite {name} and {count} others to {group_name}",
-      args: {name: "string", count: "number", group_name: "string"}
+      en: 'Failed to invite {name} and {count} others to {group_name}',
+      args: {name: 'string', count: 'number', group_name: 'string'}
   },
   groupInviteFailedTwo: {
-      en: "Failed to invite {name} and {other_name} to {group_name}",
-      args: {name: "string", other_name: "string", group_name: "string"}
+      en: 'Failed to invite {name} and {other_name} to {group_name}',
+      args: {name: 'string', other_name: 'string', group_name: 'string'}
   },
   groupInviteFailedUser: {
-      en: "Failed to invite {name} to {group_name}",
-      args: {name: "string", group_name: "string"}
+      en: 'Failed to invite {name} to {group_name}',
+      args: {name: 'string', group_name: 'string'}
   },
   groupInviteNotSent: {
-      en: "Invite not sent",
+      en: 'Invite not sent',
       args: undefined,
   },
   groupInviteReinvite: {
-      en: "<b>{name}</b> invited you to rejoin <b>{group_name}</b>, where you are an Admin.",
-      args: {name: "string", group_name: "string"}
+      en: '<b>{name}</b> invited you to rejoin <b>{group_name}</b>, where you are an Admin.',
+      args: {name: 'string', group_name: 'string'}
   },
   groupInviteReinviteYou: {
-      en: "You were invited to rejoin <b>{group_name}</b>, where you are an Admin.",
-      args: {group_name: "string"}
+      en: 'You were invited to rejoin <b>{group_name}</b>, where you are an Admin.',
+      args: {group_name: 'string'}
   },
   groupInviteSent: {
-      en: "Invite sent",
+      en: 'Invite sent',
       args: undefined,
   },
   groupInviteStatusUnknown: {
-      en: "Invite status unknown",
+      en: 'Invite status unknown',
       args: undefined,
   },
   groupInviteSuccessful: {
-      en: "Group invite successful",
+      en: 'Group invite successful',
       args: undefined,
   },
   groupInviteVersion: {
-      en: "Users must have the latest release to receive invitations",
+      en: 'Users must have the latest release to receive invitations',
       args: undefined,
   },
   groupInviteYou: {
-      en: "<b>You</b> were invited to join the group.",
+      en: '<b>You</b> were invited to join the group.',
       args: undefined,
   },
   groupInviteYouAndMoreNew: {
-      en: "<b>You</b> and <b>{count} others</b> were invited to join the group.",
-      args: {count: "number"}
+      en: '<b>You</b> and <b>{count} others</b> were invited to join the group.',
+      args: {count: 'number'}
   },
   groupInviteYouAndOtherNew: {
-      en: "<b>You</b> and <b>{other_name}</b> were invited to join the group.",
-      args: {other_name: "string"}
+      en: '<b>You</b> and <b>{other_name}</b> were invited to join the group.',
+      args: {other_name: 'string'}
   },
   groupInviteYouHistory: {
-      en: "<b>You</b> were invited to join the group. Chat history was shared.",
+      en: '<b>You</b> were invited to join the group. Chat history was shared.',
       args: undefined,
   },
   groupLeave: {
-      en: "Leave Group",
+      en: 'Leave Group',
       args: undefined,
   },
   groupLeaveDescription: {
-      en: "Are you sure you want to leave <b>{group_name}</b>?",
-      args: {group_name: "string"}
+      en: 'Are you sure you want to leave <b>{group_name}</b>?',
+      args: {group_name: 'string'}
   },
   groupLeaveDescriptionAdmin: {
-      en: "Are you sure you want to leave <b>{group_name}</b>?<br/><br/>This will remove all members and delete all group content.",
-      args: {group_name: "string"}
+      en: 'Are you sure you want to leave <b>{group_name}</b>?<br/><br/>This will remove all members and delete all group content.',
+      args: {group_name: 'string'}
   },
   groupLeaveErrorFailed: {
-      en: "Failed to leave {group_name}",
-      args: {group_name: "string"}
+      en: 'Failed to leave {group_name}',
+      args: {group_name: 'string'}
   },
   groupMemberLeft: {
-      en: "<b>{name}</b> left the group.",
-      args: {name: "string"}
+      en: '<b>{name}</b> left the group.',
+      args: {name: 'string'}
   },
   groupMemberLeftMultiple: {
-      en: "<b>{name}</b> and <b>{count} others</b> left the group.",
-      args: {name: "string", count: "number"}
+      en: '<b>{name}</b> and <b>{count} others</b> left the group.',
+      args: {name: 'string', count: 'number'}
   },
   groupMemberLeftTwo: {
-      en: "<b>{name}</b> and <b>{other_name}</b> left the group.",
-      args: {name: "string", other_name: "string"}
+      en: '<b>{name}</b> and <b>{other_name}</b> left the group.',
+      args: {name: 'string', other_name: 'string'}
   },
   groupMemberNew: {
-      en: "<b>{name}</b> was invited to join the group.",
-      args: {name: "string"}
+      en: '<b>{name}</b> was invited to join the group.',
+      args: {name: 'string'}
   },
   groupMemberNewHistory: {
-      en: "<b>{name}</b> was invited to join the group. Chat history was shared.",
-      args: {name: "string"}
+      en: '<b>{name}</b> was invited to join the group. Chat history was shared.',
+      args: {name: 'string'}
   },
   groupMemberNewHistoryMultiple: {
-      en: "<b>{name}</b> and <b>{count} others</b> were invited to join the group. Chat history was shared.",
-      args: {name: "string", count: "number"}
+      en: '<b>{name}</b> and <b>{count} others</b> were invited to join the group. Chat history was shared.',
+      args: {name: 'string', count: 'number'}
   },
   groupMemberNewHistoryTwo: {
-      en: "<b>{name}</b> and <b>{other_name}</b> were invited to join the group. Chat history was shared.",
-      args: {name: "string", other_name: "string"}
+      en: '<b>{name}</b> and <b>{other_name}</b> were invited to join the group. Chat history was shared.',
+      args: {name: 'string', other_name: 'string'}
   },
   groupMemberNewMultiple: {
-      en: "<b>{name}</b> and <b>{count} others</b> were invited to join the group.",
-      args: {name: "string", count: "number"}
+      en: '<b>{name}</b> and <b>{count} others</b> were invited to join the group.',
+      args: {name: 'string', count: 'number'}
   },
   groupMemberNewTwo: {
-      en: "<b>{name}</b> and <b>{other_name}</b> were invited to join the group.",
-      args: {name: "string", other_name: "string"}
+      en: '<b>{name}</b> and <b>{other_name}</b> were invited to join the group.',
+      args: {name: 'string', other_name: 'string'}
   },
   groupMemberNewYouHistoryMultiple: {
-      en: "<b>You</b> and <b>{count} others</b> were invited to join the group. Chat history was shared.",
-      args: {count: "number"}
+      en: '<b>You</b> and <b>{count} others</b> were invited to join the group. Chat history was shared.',
+      args: {count: 'number'}
   },
   groupMemberNewYouHistoryTwo: {
-      en: "<b>You</b> and <b>{other_name}</b> were invited to join the group. Chat history was shared.",
-      args: {other_name: "string"}
+      en: '<b>You</b> and <b>{other_name}</b> were invited to join the group. Chat history was shared.',
+      args: {other_name: 'string'}
   },
   groupMemberYouLeft: {
-      en: "<b>You</b> left the group.",
+      en: '<b>You</b> left the group.',
       args: undefined,
   },
   groupMembers: {
-      en: "Group Members",
+      en: 'Group Members',
       args: undefined,
   },
   groupMembersNone: {
-      en: "There are no other members in this group.",
+      en: 'There are no other members in this group.',
       args: undefined,
   },
   groupName: {
-      en: "Group Name",
+      en: 'Group Name',
       args: undefined,
   },
   groupNameEnter: {
-      en: "Enter a group name",
+      en: 'Enter a group name',
       args: undefined,
   },
   groupNameEnterPlease: {
-      en: "Please enter a group name.",
+      en: 'Please enter a group name.',
       args: undefined,
   },
   groupNameEnterShorter: {
-      en: "Please enter a shorter group name",
+      en: 'Please enter a shorter group name',
       args: undefined,
   },
   groupNameNew: {
-      en: "Group name is now {group_name}.",
-      args: {group_name: "string"}
+      en: 'Group name is now {group_name}.',
+      args: {group_name: 'string'}
   },
   groupNameUpdated: {
-      en: "Group name updated.",
+      en: 'Group name updated.',
       args: undefined,
   },
   groupNameVisible: {
-      en: "Group name is visible to all group members.",
+      en: 'Group name is visible to all group members.',
       args: undefined,
   },
   groupNoMessages: {
-      en: "You have no messages from <b>{group_name}</b>. Send a message to start the conversation!",
-      args: {group_name: "string"}
+      en: 'You have no messages from <b>{group_name}</b>. Send a message to start the conversation!',
+      args: {group_name: 'string'}
   },
   groupNotUpdatedWarning: {
-      en: "This group has not been updated in over 30 days. You may experience issues sending messages or viewing group information.",
+      en: 'This group has not been updated in over 30 days. You may experience issues sending messages or viewing group information.',
       args: undefined,
   },
   groupOnlyAdmin: {
-      en: "You are the only admin in <b>{group_name}</b>.<br/><br/>Group members and settings cannot be changed without an admin.",
-      args: {group_name: "string"}
+      en: 'You are the only admin in <b>{group_name}</b>.<br/><br/>Group members and settings cannot be changed without an admin.',
+      args: {group_name: 'string'}
   },
   groupPendingRemoval: {
-      en: "Pending removal",
+      en: 'Pending removal',
       args: undefined,
   },
   groupPromotedYou: {
-      en: "<b>You</b> were promoted to Admin.",
+      en: '<b>You</b> were promoted to Admin.',
       args: undefined,
   },
   groupPromotedYouMultiple: {
-      en: "<b>You</b> and <b>{count} others</b> were promoted to Admin.",
-      args: {count: "number"}
+      en: '<b>You</b> and <b>{count} others</b> were promoted to Admin.',
+      args: {count: 'number'}
   },
   groupPromotedYouTwo: {
-      en: "<b>You</b> and <b>{other_name}</b> were promoted to Admin.",
-      args: {other_name: "string"}
+      en: '<b>You</b> and <b>{other_name}</b> were promoted to Admin.',
+      args: {other_name: 'string'}
   },
   groupRemoveDescription: {
-      en: "Would you like to remove <b>{name}</b> from <b>{group_name}</b>?",
-      args: {name: "string", group_name: "string"}
+      en: 'Would you like to remove <b>{name}</b> from <b>{group_name}</b>?',
+      args: {name: 'string', group_name: 'string'}
   },
   groupRemoveDescriptionMultiple: {
-      en: "Would you like to remove <b>{name}</b> and <b>{count} others</b> from <b>{group_name}</b>?",
-      args: {name: "string", count: "number", group_name: "string"}
+      en: 'Would you like to remove <b>{name}</b> and <b>{count} others</b> from <b>{group_name}</b>?',
+      args: {name: 'string', count: 'number', group_name: 'string'}
   },
   groupRemoveDescriptionTwo: {
-      en: "Would you like to remove <b>{name}</b> and <b>{other_name}</b> from <b>{group_name}</b>?",
-      args: {name: "string", other_name: "string", group_name: "string"}
+      en: 'Would you like to remove <b>{name}</b> and <b>{other_name}</b> from <b>{group_name}</b>?',
+      args: {name: 'string', other_name: 'string', group_name: 'string'}
   },
   groupRemoved: {
-      en: "<b>{name}</b> was removed from the group.",
-      args: {name: "string"}
+      en: '<b>{name}</b> was removed from the group.',
+      args: {name: 'string'}
   },
   groupRemovedMultiple: {
-      en: "<b>{name}</b> and <b>{count} others</b> were removed from the group.",
-      args: {name: "string", count: "number"}
+      en: '<b>{name}</b> and <b>{count} others</b> were removed from the group.',
+      args: {name: 'string', count: 'number'}
   },
   groupRemovedTwo: {
-      en: "<b>{name}</b> and <b>{other_name}</b> were removed from the group.",
-      args: {name: "string", other_name: "string"}
+      en: '<b>{name}</b> and <b>{other_name}</b> were removed from the group.',
+      args: {name: 'string', other_name: 'string'}
   },
   groupRemovedYou: {
-      en: "You were removed from <b>{group_name}</b>.",
-      args: {group_name: "string"}
+      en: 'You were removed from <b>{group_name}</b>.',
+      args: {group_name: 'string'}
   },
   groupRemovedYouGeneral: {
-      en: "You were removed from the group.",
+      en: 'You were removed from the group.',
       args: undefined,
   },
   groupRemovedYouMultiple: {
-      en: "<b>You</b> and <b>{count} others</b> were removed from the group.",
-      args: {count: "number"}
+      en: '<b>You</b> and <b>{count} others</b> were removed from the group.',
+      args: {count: 'number'}
   },
   groupRemovedYouTwo: {
-      en: "<b>You</b> and <b>{other_name}</b> were removed from the group.",
-      args: {other_name: "string"}
+      en: '<b>You</b> and <b>{other_name}</b> were removed from the group.',
+      args: {other_name: 'string'}
   },
   groupSetDisplayPicture: {
-      en: "Set Group Display Picture",
+      en: 'Set Group Display Picture',
       args: undefined,
   },
   groupUnknown: {
-      en: "Unknown Group",
+      en: 'Unknown Group',
       args: undefined,
   },
   groupUpdated: {
-      en: "Group updated",
+      en: 'Group updated',
       args: undefined,
   },
   handlingConnectionCandidates: {
-      en: "Handling Connection Candidates",
+      en: 'Handling Connection Candidates',
       args: undefined,
   },
   helpFAQ: {
-      en: "FAQ",
+      en: 'FAQ',
       args: undefined,
   },
   helpHelpUsTranslateSession: {
-      en: "Help us translate Session",
+      en: 'Help us translate Session',
       args: undefined,
   },
   helpReportABug: {
-      en: "Report a bug",
+      en: 'Report a bug',
       args: undefined,
   },
   helpReportABugDescription: {
@@ -1989,7 +1989,7 @@ export const simpleDictionary = {
       args: undefined,
   },
   helpReportABugExportLogs: {
-      en: "Export Logs",
+      en: 'Export Logs',
       args: undefined,
   },
   helpReportABugExportLogsDescription: {
@@ -1997,15 +1997,15 @@ export const simpleDictionary = {
       args: undefined,
   },
   helpReportABugExportLogsSaveToDesktop: {
-      en: "Save to desktop",
+      en: 'Save to desktop',
       args: undefined,
   },
   helpReportABugExportLogsSaveToDesktopDescription: {
-      en: "Save this file to your desktop, then share it with Session developers.",
+      en: 'Save this file to your desktop, then share it with Session developers.',
       args: undefined,
   },
   helpSupport: {
-      en: "Support",
+      en: 'Support',
       args: undefined,
   },
   helpWedLoveYourFeedback: {
@@ -2013,127 +2013,127 @@ export const simpleDictionary = {
       args: undefined,
   },
   hide: {
-      en: "Hide",
+      en: 'Hide',
       args: undefined,
   },
   hideMenuBarDescription: {
-      en: "Toggle system menu bar visibility",
+      en: 'Toggle system menu bar visibility',
       args: undefined,
   },
   hideNoteToSelfDescription: {
-      en: "Are you sure you want to hide <b>Note to Self</b> from your conversation list?",
+      en: 'Are you sure you want to hide <b>Note to Self</b> from your conversation list?',
       args: undefined,
   },
   hideOthers: {
-      en: "Hide Others",
+      en: 'Hide Others',
       args: undefined,
   },
   image: {
-      en: "Image",
+      en: 'Image',
       args: undefined,
   },
   images: {
-      en: "images",
+      en: 'images',
       args: undefined,
   },
   incognitoKeyboard: {
-      en: "Incognito Keyboard",
+      en: 'Incognito Keyboard',
       args: undefined,
   },
   incognitoKeyboardDescription: {
-      en: "Request incognito mode if available. Depending on the keyboard you are using, your keyboard may ignore this request.",
+      en: 'Request incognito mode if available. Depending on the keyboard you are using, your keyboard may ignore this request.',
       args: undefined,
   },
   info: {
-      en: "Info",
+      en: 'Info',
       args: undefined,
   },
   invalidShortcut: {
-      en: "Invalid shortcut",
+      en: 'Invalid shortcut',
       args: undefined,
   },
   join: {
-      en: "Join",
+      en: 'Join',
       args: undefined,
   },
   later: {
-      en: "Later",
+      en: 'Later',
       args: undefined,
   },
   learnMore: {
-      en: "Learn More",
+      en: 'Learn More',
       args: undefined,
   },
   leave: {
-      en: "Leave",
+      en: 'Leave',
       args: undefined,
   },
   leaving: {
-      en: "Leaving...",
+      en: 'Leaving...',
       args: undefined,
   },
   legacyGroupAfterDeprecationAdmin: {
-      en: "This group is now read-only. Recreate this group to keep chatting.",
+      en: 'This group is now read-only. Recreate this group to keep chatting.',
       args: undefined,
   },
   legacyGroupAfterDeprecationMember: {
-      en: "This group is now read-only. Ask the group admin to recreate this group to keep chatting.",
+      en: 'This group is now read-only. Ask the group admin to recreate this group to keep chatting.',
       args: undefined,
   },
   legacyGroupBeforeDeprecationAdmin: {
-      en: "Groups have been upgraded! Recreate this group for improved reliability. This group will become read-only at {date}.",
-      args: {date: "string"}
+      en: 'Groups have been upgraded! Recreate this group for improved reliability. This group will become read-only at {date}.',
+      args: {date: 'string'}
   },
   legacyGroupBeforeDeprecationMember: {
-      en: "Groups have been upgraded! Ask the group admin to recreate this group for improved reliability. This group will become read-only at {date}.",
-      args: {date: "string"}
+      en: 'Groups have been upgraded! Ask the group admin to recreate this group for improved reliability. This group will become read-only at {date}.',
+      args: {date: 'string'}
   },
   legacyGroupChatHistory: {
-      en: "Chat history will not be transferred to the new group. You can still view all chat history in your old group.",
+      en: 'Chat history will not be transferred to the new group. You can still view all chat history in your old group.',
       args: undefined,
   },
   legacyGroupMemberNew: {
-      en: "<b>{name}</b> joined the group.",
-      args: {name: "string"}
+      en: '<b>{name}</b> joined the group.',
+      args: {name: 'string'}
   },
   legacyGroupMemberNewMultiple: {
-      en: "<b>{name}</b> and <b>{count} others</b> joined the group.",
-      args: {name: "string", count: "number"}
+      en: '<b>{name}</b> and <b>{count} others</b> joined the group.',
+      args: {name: 'string', count: 'number'}
   },
   legacyGroupMemberNewYouMultiple: {
-      en: "<b>You</b> and <b>{count} others</b> joined the group.",
-      args: {count: "number"}
+      en: '<b>You</b> and <b>{count} others</b> joined the group.',
+      args: {count: 'number'}
   },
   legacyGroupMemberNewYouOther: {
-      en: "<b>You</b> and <b>{other_name}</b> joined the group.",
-      args: {other_name: "string"}
+      en: '<b>You</b> and <b>{other_name}</b> joined the group.',
+      args: {other_name: 'string'}
   },
   legacyGroupMemberTwoNew: {
-      en: "<b>{name}</b> and <b>{other_name}</b> joined the group.",
-      args: {name: "string", other_name: "string"}
+      en: '<b>{name}</b> and <b>{other_name}</b> joined the group.',
+      args: {name: 'string', other_name: 'string'}
   },
   legacyGroupMemberYouNew: {
-      en: "<b>You</b> joined the group.",
+      en: '<b>You</b> joined the group.',
       args: undefined,
   },
   linkPreviews: {
-      en: "Link Previews",
+      en: 'Link Previews',
       args: undefined,
   },
   linkPreviewsDescription: {
-      en: "Show link previews for supported URLs.",
+      en: 'Show link previews for supported URLs.',
       args: undefined,
   },
   linkPreviewsEnable: {
-      en: "Enable Link Previews",
+      en: 'Enable Link Previews',
       args: undefined,
   },
   linkPreviewsErrorLoad: {
-      en: "Unable to load link preview",
+      en: 'Unable to load link preview',
       args: undefined,
   },
   linkPreviewsErrorUnsecure: {
-      en: "Preview not loaded for unsecure link",
+      en: 'Preview not loaded for unsecure link',
       args: undefined,
   },
   linkPreviewsFirstDescription: {
@@ -2141,15 +2141,15 @@ export const simpleDictionary = {
       args: undefined,
   },
   linkPreviewsSend: {
-      en: "Send Link Previews",
+      en: 'Send Link Previews',
       args: undefined,
   },
   linkPreviewsSendModalDescription: {
-      en: "You will not have full metadata protection when sending link previews.",
+      en: 'You will not have full metadata protection when sending link previews.',
       args: undefined,
   },
   linkPreviewsTurnedOff: {
-      en: "Link Previews Are Off",
+      en: 'Link Previews Are Off',
       args: undefined,
   },
   linkPreviewsTurnedOffDescription: {
@@ -2157,135 +2157,135 @@ export const simpleDictionary = {
       args: undefined,
   },
   loadAccount: {
-      en: "Load Account",
+      en: 'Load Account',
       args: undefined,
   },
   loadAccountProgressMessage: {
-      en: "Loading your account",
+      en: 'Loading your account',
       args: undefined,
   },
   loading: {
-      en: "Loading...",
+      en: 'Loading...',
       args: undefined,
   },
   lockApp: {
-      en: "Lock App",
+      en: 'Lock App',
       args: undefined,
   },
   lockAppDescription: {
-      en: "Require fingerprint, PIN, pattern or password to unlock Session.",
+      en: 'Require fingerprint, PIN, pattern or password to unlock Session.',
       args: undefined,
   },
   lockAppDescriptionIos: {
-      en: "Require Touch ID, Face ID or your passcode to unlock Session.",
+      en: 'Require Touch ID, Face ID or your passcode to unlock Session.',
       args: undefined,
   },
   lockAppEnablePasscode: {
-      en: "You must enable a passcode in your iOS Settings in order to use Screen Lock.",
+      en: 'You must enable a passcode in your iOS Settings in order to use Screen Lock.',
       args: undefined,
   },
   lockAppLocked: {
-      en: "Session is locked",
+      en: 'Session is locked',
       args: undefined,
   },
   lockAppQuickResponse: {
-      en: "Quick response unavailable when Session is locked!",
+      en: 'Quick response unavailable when Session is locked!',
       args: undefined,
   },
   lockAppStatus: {
-      en: "Lock status",
+      en: 'Lock status',
       args: undefined,
   },
   lockAppUnlock: {
-      en: "Tap to unlock",
+      en: 'Tap to unlock',
       args: undefined,
   },
   lockAppUnlocked: {
-      en: "Session is unlocked",
+      en: 'Session is unlocked',
       args: undefined,
   },
   manageMembers: {
-      en: "Manage Members",
+      en: 'Manage Members',
       args: undefined,
   },
   max: {
-      en: "Max",
+      en: 'Max',
       args: undefined,
   },
   media: {
-      en: "Media",
+      en: 'Media',
       args: undefined,
   },
   membersAddAccountIdOrOns: {
-      en: "Add Account ID or ONS",
+      en: 'Add Account ID or ONS',
       args: undefined,
   },
   membersInvite: {
-      en: "Invite Contacts",
+      en: 'Invite Contacts',
       args: undefined,
   },
   membersInviteShareDescription: {
-      en: "Would you like to share group message history with <b>{name}</b>?",
-      args: {name: "string"}
+      en: 'Would you like to share group message history with <b>{name}</b>?',
+      args: {name: 'string'}
   },
   membersInviteShareDescriptionMultiple: {
-      en: "Would you like to share group message history with <b>{name}</b> and <b>{count} others</b>?",
-      args: {name: "string", count: "number"}
+      en: 'Would you like to share group message history with <b>{name}</b> and <b>{count} others</b>?',
+      args: {name: 'string', count: 'number'}
   },
   membersInviteShareDescriptionTwo: {
-      en: "Would you like to share group message history with <b>{name}</b> and <b>{other_name}</b>?",
-      args: {name: "string", other_name: "string"}
+      en: 'Would you like to share group message history with <b>{name}</b> and <b>{other_name}</b>?',
+      args: {name: 'string', other_name: 'string'}
   },
   membersInviteShareMessageHistory: {
-      en: "Share message history",
+      en: 'Share message history',
       args: undefined,
   },
   membersInviteShareNewMessagesOnly: {
-      en: "Share new messages only",
+      en: 'Share new messages only',
       args: undefined,
   },
   membersInviteTitle: {
-      en: "Invite",
+      en: 'Invite',
       args: undefined,
   },
   message: {
-      en: "Message",
+      en: 'Message',
       args: undefined,
   },
   messageBubbleReadMore: {
-      en: "Read more",
+      en: 'Read more',
       args: undefined,
   },
   messageEmpty: {
-      en: "This message is empty.",
+      en: 'This message is empty.',
       args: undefined,
   },
   messageErrorDelivery: {
-      en: "Message delivery failed",
+      en: 'Message delivery failed',
       args: undefined,
   },
   messageErrorLimit: {
-      en: "Message limit reached",
+      en: 'Message limit reached',
       args: undefined,
   },
   messageErrorOld: {
-      en: "Received a message encrypted using an old version of Session that is no longer supported. Please ask the sender to update to the most recent version and resend the message.",
+      en: 'Received a message encrypted using an old version of Session that is no longer supported. Please ask the sender to update to the most recent version and resend the message.',
       args: undefined,
   },
   messageErrorOriginal: {
-      en: "Original message not found",
+      en: 'Original message not found',
       args: undefined,
   },
   messageInfo: {
-      en: "Message Info",
+      en: 'Message Info',
       args: undefined,
   },
   messageMarkRead: {
-      en: "Mark read",
+      en: 'Mark read',
       args: undefined,
   },
   messageMarkUnread: {
-      en: "Mark unread",
+      en: 'Mark unread',
       args: undefined,
   },
   messageNewDescriptionDesktop: {
@@ -2297,231 +2297,231 @@ export const simpleDictionary = {
       args: undefined,
   },
   messageReplyingTo: {
-      en: "Replying to",
+      en: 'Replying to',
       args: undefined,
   },
   messageRequestDisabledToastAttachments: {
-      en: "You cannot send attachments until your Message Request is accepted",
+      en: 'You cannot send attachments until your Message Request is accepted',
       args: undefined,
   },
   messageRequestDisabledToastVoiceMessages: {
-      en: "You cannot send voice messages until your Message Request is accepted",
+      en: 'You cannot send voice messages until your Message Request is accepted',
       args: undefined,
   },
   messageRequestGroupInvite: {
-      en: "<b>{name}</b> invited you to join <b>{group_name}</b>.",
-      args: {name: "string", group_name: "string"}
+      en: '<b>{name}</b> invited you to join <b>{group_name}</b>.',
+      args: {name: 'string', group_name: 'string'}
   },
   messageRequestGroupInviteDescription: {
-      en: "Sending a message to this group will automatically accept the group invite.",
+      en: 'Sending a message to this group will automatically accept the group invite.',
       args: undefined,
   },
   messageRequestPending: {
-      en: "Your message request is currently pending.",
+      en: 'Your message request is currently pending.',
       args: undefined,
   },
   messageRequestPendingDescription: {
-      en: "You will be able to send voice messages and attachments once the recipient has approved this message request.",
+      en: 'You will be able to send voice messages and attachments once the recipient has approved this message request.',
       args: undefined,
   },
   messageRequestYouHaveAccepted: {
-      en: "You have accepted the message request from <b>{name}</b>.",
-      args: {name: "string"}
+      en: 'You have accepted the message request from <b>{name}</b>.',
+      args: {name: 'string'}
   },
   messageRequestsAcceptDescription: {
-      en: "Sending a message to this user will automatically accept their message request and reveal your Account ID.",
+      en: 'Sending a message to this user will automatically accept their message request and reveal your Account ID.',
       args: undefined,
   },
   messageRequestsAccepted: {
-      en: "Your message request has been accepted.",
+      en: 'Your message request has been accepted.',
       args: undefined,
   },
   messageRequestsClearAllExplanation: {
-      en: "Are you sure you want to clear all message requests and group invites?",
+      en: 'Are you sure you want to clear all message requests and group invites?',
       args: undefined,
   },
   messageRequestsCommunities: {
-      en: "Community Message Requests",
+      en: 'Community Message Requests',
       args: undefined,
   },
   messageRequestsCommunitiesDescription: {
-      en: "Allow message requests from Community conversations.",
+      en: 'Allow message requests from Community conversations.',
       args: undefined,
   },
   messageRequestsContactDelete: {
-      en: "Are you sure you want to delete this message request and the associated contact?",
+      en: 'Are you sure you want to delete this message request and the associated contact?',
       args: undefined,
   },
   messageRequestsDelete: {
-      en: "Are you sure you want to delete this message request?",
+      en: 'Are you sure you want to delete this message request?',
       args: undefined,
   },
   messageRequestsNew: {
-      en: "You have a new message request",
+      en: 'You have a new message request',
       args: undefined,
   },
   messageRequestsNonePending: {
-      en: "No pending message requests",
+      en: 'No pending message requests',
       args: undefined,
   },
   messageRequestsTurnedOff: {
-      en: "<b>{name}</b> has message requests from Community conversations turned off, so you cannot send them a message.",
-      args: {name: "string"}
+      en: '<b>{name}</b> has message requests from Community conversations turned off, so you cannot send them a message.',
+      args: {name: 'string'}
   },
   messageSelect: {
-      en: "Select Message",
+      en: 'Select Message',
       args: undefined,
   },
   messageSnippetGroup: {
-      en: "{author}: {message_snippet}",
-      args: {author: "string", message_snippet: "string"}
+      en: '{author}: {message_snippet}',
+      args: {author: 'string', message_snippet: 'string'}
   },
   messageStatusFailedToSend: {
-      en: "Failed to send",
+      en: 'Failed to send',
       args: undefined,
   },
   messageStatusFailedToSync: {
-      en: "Failed to sync",
+      en: 'Failed to sync',
       args: undefined,
   },
   messageStatusSyncing: {
-      en: "Syncing",
+      en: 'Syncing',
       args: undefined,
   },
   messageUnread: {
-      en: "Unread messages",
+      en: 'Unread messages',
       args: undefined,
   },
   messageVoice: {
-      en: "Voice Message",
+      en: 'Voice Message',
       args: undefined,
   },
   messageVoiceErrorShort: {
-      en: "Hold to record a voice message",
+      en: 'Hold to record a voice message',
       args: undefined,
   },
   messageVoiceSlideToCancel: {
-      en: "Slide to Cancel",
+      en: 'Slide to Cancel',
       args: undefined,
   },
   messageVoiceSnippet: {
-      en: "{emoji} Voice Message",
-      args: {emoji: "string"}
+      en: '{emoji} Voice Message',
+      args: {emoji: 'string'}
   },
   messageVoiceSnippetGroup: {
-      en: "{author}: {emoji} Voice Message",
-      args: {author: "string", emoji: "string"}
+      en: '{author}: {emoji} Voice Message',
+      args: {author: 'string', emoji: 'string'}
   },
   messages: {
-      en: "Messages",
+      en: 'Messages',
       args: undefined,
   },
   minimize: {
-      en: "Minimize",
+      en: 'Minimize',
       args: undefined,
   },
   modalMessageCharacterDisplayTitle: {
-      en: "Message Length",
+      en: 'Message Length',
       args: undefined,
   },
   modalMessageCharacterTooLongDescription: {
-      en: "You have exceeded the character limit for this message. Please shorten your message to {limit} characters or less.",
-      args: {limit: "string"}
+      en: 'You have exceeded the character limit for this message. Please shorten your message to {limit} characters or less.',
+      args: {limit: 'string'}
   },
   modalMessageCharacterTooLongTitle: {
-      en: "Message Too Long",
+      en: 'Message Too Long',
       args: undefined,
   },
   modalMessageTooLongDescription: {
-      en: "Please shorten your message to {limit} characters or less.",
-      args: {limit: "string"}
+      en: 'Please shorten your message to {limit} characters or less.',
+      args: {limit: 'string'}
   },
   modalMessageTooLongTitle: {
-      en: "Message Too Long",
+      en: 'Message Too Long',
       args: undefined,
   },
   next: {
-      en: "Next",
+      en: 'Next',
       args: undefined,
   },
   nicknameDescription: {
-      en: "Choose a nickname for <b>{name}</b>. This will appear to you in your one-to-one and group conversations.",
-      args: {name: "string"}
+      en: 'Choose a nickname for <b>{name}</b>. This will appear to you in your one-to-one and group conversations.',
+      args: {name: 'string'}
   },
   nicknameEnter: {
-      en: "Enter nickname",
+      en: 'Enter nickname',
       args: undefined,
   },
   nicknameErrorShorter: {
-      en: "Please enter a shorter nickname",
+      en: 'Please enter a shorter nickname',
       args: undefined,
   },
   nicknameRemove: {
-      en: "Remove Nickname",
+      en: 'Remove Nickname',
       args: undefined,
   },
   nicknameSet: {
-      en: "Set Nickname",
+      en: 'Set Nickname',
       args: undefined,
   },
   no: {
-      en: "No",
+      en: 'No',
       args: undefined,
   },
   noSuggestions: {
-      en: "No Suggestions",
+      en: 'No Suggestions',
       args: undefined,
   },
   none: {
-      en: "None",
+      en: 'None',
       args: undefined,
   },
   notNow: {
-      en: "Not now",
+      en: 'Not now',
       args: undefined,
   },
   noteToSelf: {
-      en: "Note to Self",
+      en: 'Note to Self',
       args: undefined,
   },
   noteToSelfEmpty: {
-      en: "You have no messages in Note to Self.",
+      en: 'You have no messages in Note to Self.',
       args: undefined,
   },
   noteToSelfHide: {
-      en: "Hide Note to Self",
+      en: 'Hide Note to Self',
       args: undefined,
   },
   noteToSelfHideDescription: {
-      en: "Are you sure you want to hide Note to Self?",
+      en: 'Are you sure you want to hide Note to Self?',
       args: undefined,
   },
   notificationsAllMessages: {
-      en: "All Messages",
+      en: 'All Messages',
       args: undefined,
   },
   notificationsContent: {
-      en: "Notification Content",
+      en: 'Notification Content',
       args: undefined,
   },
   notificationsContentDescription: {
-      en: "The information shown in notifications.",
+      en: 'The information shown in notifications.',
       args: undefined,
   },
   notificationsContentShowNameAndContent: {
-      en: "Name and Content",
+      en: 'Name and Content',
       args: undefined,
   },
   notificationsContentShowNameOnly: {
-      en: "Name Only",
+      en: 'Name Only',
       args: undefined,
   },
   notificationsContentShowNoNameOrContent: {
-      en: "No Name or Content",
+      en: 'No Name or Content',
       args: undefined,
   },
   notificationsFastMode: {
-      en: "Fast Mode",
+      en: 'Fast Mode',
       args: undefined,
   },
   notificationsFastModeDescription: {
@@ -2537,179 +2537,179 @@ export const simpleDictionary = {
       args: undefined,
   },
   notificationsGoToDevice: {
-      en: "Go to device notification settings",
+      en: 'Go to device notification settings',
       args: undefined,
   },
   notificationsHeaderAllMessages: {
-      en: "Notifications - All",
+      en: 'Notifications - All',
       args: undefined,
   },
   notificationsHeaderMentionsOnly: {
-      en: "Notifications - Mentions Only",
+      en: 'Notifications - Mentions Only',
       args: undefined,
   },
   notificationsHeaderMute: {
-      en: "Notifications - Muted",
+      en: 'Notifications - Muted',
       args: undefined,
   },
   notificationsIosGroup: {
-      en: "{name} to {conversation_name}",
-      args: {name: "string", conversation_name: "string"}
+      en: '{name} to {conversation_name}',
+      args: {name: 'string', conversation_name: 'string'}
   },
   notificationsIosRestart: {
-      en: "You may have received messages while your {device} was restarting.",
-      args: {device: "string"}
+      en: 'You may have received messages while your {device} was restarting.',
+      args: {device: 'string'}
   },
   notificationsLedColor: {
-      en: "LED color",
+      en: 'LED color',
       args: undefined,
   },
   notificationsMentionsOnly: {
-      en: "Mentions Only",
+      en: 'Mentions Only',
       args: undefined,
   },
   notificationsMessage: {
-      en: "Message notifications",
+      en: 'Message notifications',
       args: undefined,
   },
   notificationsMostRecent: {
-      en: "Most recent from {name}",
-      args: {name: "string"}
+      en: 'Most recent from {name}',
+      args: {name: 'string'}
   },
   notificationsMute: {
-      en: "Mute",
+      en: 'Mute',
       args: undefined,
   },
   notificationsMuteFor: {
-      en: "Mute for {time_large}",
-      args: {time_large: "string"}
+      en: 'Mute for {time_large}',
+      args: {time_large: 'string'}
   },
   notificationsMuteUnmute: {
-      en: "Unmute",
+      en: 'Unmute',
       args: undefined,
   },
   notificationsMuted: {
-      en: "Muted",
+      en: 'Muted',
       args: undefined,
   },
   notificationsMutedFor: {
-      en: "Muted for {time_large}",
-      args: {time_large: "string"}
+      en: 'Muted for {time_large}',
+      args: {time_large: 'string'}
   },
   notificationsMutedForTime: {
-      en: "Muted until {date_time}",
-      args: {date_time: "string"}
+      en: 'Muted until {date_time}',
+      args: {date_time: 'string'}
   },
   notificationsSlowMode: {
-      en: "Slow Mode",
+      en: 'Slow Mode',
       args: undefined,
   },
   notificationsSlowModeDescription: {
-      en: "Session will occasionally check for new messages in the background.",
+      en: 'Session will occasionally check for new messages in the background.',
       args: undefined,
   },
   notificationsSound: {
-      en: "Sound",
+      en: 'Sound',
       args: undefined,
   },
   notificationsSoundDescription: {
-      en: "Sound when App is open",
+      en: 'Sound when App is open',
       args: undefined,
   },
   notificationsSoundDesktop: {
-      en: "Audio Notifications",
+      en: 'Audio Notifications',
       args: undefined,
   },
   notificationsStrategy: {
-      en: "Notification Strategy",
+      en: 'Notification Strategy',
       args: undefined,
   },
   notificationsStyle: {
-      en: "Notification Style",
+      en: 'Notification Style',
       args: undefined,
   },
   notificationsSystem: {
-      en: "{message_count} new messages in {conversation_count} conversations",
-      args: {message_count: "string", conversation_count: "string"}
+      en: '{message_count} new messages in {conversation_count} conversations',
+      args: {message_count: 'string', conversation_count: 'string'}
   },
   notificationsVibrate: {
-      en: "Vibrate",
+      en: 'Vibrate',
       args: undefined,
   },
   off: {
-      en: "Off",
+      en: 'Off',
       args: undefined,
   },
   okay: {
-      en: "Okay",
+      en: 'Okay',
       args: undefined,
   },
   on: {
-      en: "On",
+      en: 'On',
       args: undefined,
   },
   onboardingAccountCreate: {
-      en: "Create account",
+      en: 'Create account',
       args: undefined,
   },
   onboardingAccountCreated: {
-      en: "Account Created",
+      en: 'Account Created',
       args: undefined,
   },
   onboardingAccountExists: {
-      en: "I have an account",
+      en: 'I have an account',
       args: undefined,
   },
   onboardingBackAccountCreation: {
-      en: "You cannot go back further. In order to cancel your account creation, Session needs to quit.",
+      en: 'You cannot go back further. In order to cancel your account creation, Session needs to quit.',
       args: undefined,
   },
   onboardingBackLoadAccount: {
-      en: "You cannot go back further. In order to stop loading your account, Session needs to quit.",
+      en: 'You cannot go back further. In order to stop loading your account, Session needs to quit.',
       args: undefined,
   },
   onboardingBubbleCreatingAnAccountIsEasy: {
-      en: "Creating an account is instant, free, and anonymous {emoji}",
-      args: {emoji: "string"}
+      en: 'Creating an account is instant, free, and anonymous {emoji}',
+      args: {emoji: 'string'}
   },
   onboardingBubbleNoPhoneNumber: {
       en: "You don't even need a phone number to sign up.",
       args: undefined,
   },
   onboardingBubblePrivacyInYourPocket: {
-      en: "Privacy in your pocket.",
+      en: 'Privacy in your pocket.',
       args: undefined,
   },
   onboardingBubbleSessionIsEngineered: {
-      en: "Session is engineered to protect your privacy.",
+      en: 'Session is engineered to protect your privacy.',
       args: undefined,
   },
   onboardingBubbleWelcomeToSession: {
-      en: "Welcome to Session {emoji}",
-      args: {emoji: "string"}
+      en: 'Welcome to Session {emoji}',
+      args: {emoji: 'string'}
   },
   onboardingHitThePlusButton: {
-      en: "Hit the plus button to start a chat, create a group, or join an official community!",
+      en: 'Hit the plus button to start a chat, create a group, or join an official community!',
       args: undefined,
   },
   onboardingMessageNotificationExplanation: {
-      en: "There are two ways Session can notify you of new messages.",
+      en: 'There are two ways Session can notify you of new messages.',
       args: undefined,
   },
   onboardingPrivacy: {
-      en: "Privacy Policy",
+      en: 'Privacy Policy',
       args: undefined,
   },
   onboardingTos: {
-      en: "Terms of Service",
+      en: 'Terms of Service',
       args: undefined,
   },
   onboardingTosPrivacy: {
-      en: "By using this service, you agree to our <b>Terms of Service</b> and <b>Privacy Policy</b>",
+      en: 'By using this service, you agree to our <b>Terms of Service</b> and <b>Privacy Policy</b>',
       args: undefined,
   },
   onionRoutingPath: {
-      en: "Path",
+      en: 'Path',
       args: undefined,
   },
   onionRoutingPathDescription: {
@@ -2717,19 +2717,19 @@ export const simpleDictionary = {
       args: undefined,
   },
   onionRoutingPathDestination: {
-      en: "Destination",
+      en: 'Destination',
       args: undefined,
   },
   onionRoutingPathEntryNode: {
-      en: "Entry Node",
+      en: 'Entry Node',
       args: undefined,
   },
   onionRoutingPathServiceNode: {
-      en: "Service Node",
+      en: 'Service Node',
       args: undefined,
   },
   onionRoutingPathUnknownCountry: {
-      en: "Unknown Country",
+      en: 'Unknown Country',
       args: undefined,
   },
   onsErrorNotRecognized: {
@@ -2737,187 +2737,187 @@ export const simpleDictionary = {
       args: undefined,
   },
   onsErrorUnableToSearch: {
-      en: "We were unable to search for this ONS. Please try again later.",
+      en: 'We were unable to search for this ONS. Please try again later.',
       args: undefined,
   },
   open: {
-      en: "Open",
+      en: 'Open',
       args: undefined,
   },
   openSurvey: {
-      en: "Open Survey",
+      en: 'Open Survey',
       args: undefined,
   },
   other: {
-      en: "Other",
+      en: 'Other',
       args: undefined,
   },
   passwordChange: {
-      en: "Change Password",
+      en: 'Change Password',
       args: undefined,
   },
   passwordChangeDescription: {
-      en: "Change the password required to unlock Session.",
+      en: 'Change the password required to unlock Session.',
       args: undefined,
   },
   passwordChangedDescription: {
-      en: "Your password has been changed. Please keep it safe.",
+      en: 'Your password has been changed. Please keep it safe.',
       args: undefined,
   },
   passwordConfirm: {
-      en: "Confirm password",
+      en: 'Confirm password',
       args: undefined,
   },
   passwordCreate: {
-      en: "Create your password",
+      en: 'Create your password',
       args: undefined,
   },
   passwordCurrentIncorrect: {
-      en: "Your current password is incorrect.",
+      en: 'Your current password is incorrect.',
       args: undefined,
   },
   passwordDescription: {
-      en: "Require password to unlock Session.",
+      en: 'Require password to unlock Session.',
       args: undefined,
   },
   passwordEnter: {
-      en: "Enter password",
+      en: 'Enter password',
       args: undefined,
   },
   passwordEnterCurrent: {
-      en: "Please enter your current password",
+      en: 'Please enter your current password',
       args: undefined,
   },
   passwordEnterNew: {
-      en: "Please enter your new password",
+      en: 'Please enter your new password',
       args: undefined,
   },
   passwordError: {
-      en: "Password must only contain letters, numbers and symbols",
+      en: 'Password must only contain letters, numbers and symbols',
       args: undefined,
   },
   passwordErrorLength: {
-      en: "Password must be between {min} and {max} characters long",
-      args: {min: "string", max: "string"}
+      en: 'Password must be between {min} and {max} characters long',
+      args: {min: 'string', max: 'string'}
   },
   passwordErrorMatch: {
-      en: "Passwords do not match",
+      en: 'Passwords do not match',
       args: undefined,
   },
   passwordFailed: {
-      en: "Failed to set password",
+      en: 'Failed to set password',
       args: undefined,
   },
   passwordIncorrect: {
-      en: "Incorrect password",
+      en: 'Incorrect password',
       args: undefined,
   },
   passwordRemove: {
-      en: "Remove Password",
+      en: 'Remove Password',
       args: undefined,
   },
   passwordRemoveDescription: {
-      en: "Remove the password required to unlock Session.",
+      en: 'Remove the password required to unlock Session.',
       args: undefined,
   },
   passwordRemovedDescription: {
-      en: "Your password has been removed.",
+      en: 'Your password has been removed.',
       args: undefined,
   },
   passwordSet: {
-      en: "Set Password",
+      en: 'Set Password',
       args: undefined,
   },
   passwordSetDescription: {
-      en: "Your password has been set. Please keep it safe.",
+      en: 'Your password has been set. Please keep it safe.',
       args: undefined,
   },
   paste: {
-      en: "Paste",
+      en: 'Paste',
       args: undefined,
   },
   permissionChange: {
-      en: "Permission Change",
+      en: 'Permission Change',
       args: undefined,
   },
   permissionMusicAudioDenied: {
-      en: "Session needs music and audio access in order to send files, music and audio, but it has been permanently denied. Tap Settings → Permissions, and turn \"Music and audio\" on.",
+      en: 'Session needs music and audio access in order to send files, music and audio, but it has been permanently denied. Tap Settings → Permissions, and turn "Music and audio" on.',
       args: undefined,
   },
   permissionsAppleMusic: {
-      en: "Session needs to use Apple Music to play media attachments.",
+      en: 'Session needs to use Apple Music to play media attachments.',
       args: undefined,
   },
   permissionsAutoUpdate: {
-      en: "Auto Update",
+      en: 'Auto Update',
       args: undefined,
   },
   permissionsAutoUpdateDescription: {
-      en: "Automatically check for updates on startup.",
+      en: 'Automatically check for updates on startup.',
       args: undefined,
   },
   permissionsCameraAccessRequiredCallsIos: {
-      en: "Camera access is required to make video calls. Toggle the \"Camera\" permission in Settings to continue.",
+      en: 'Camera access is required to make video calls. Toggle the "Camera" permission in Settings to continue.',
       args: undefined,
   },
   permissionsCameraChangeDescriptionIos: {
-      en: "Camera access is currently enabled. To disable it, toggle the \"Camera\" permission in Settings.",
+      en: 'Camera access is currently enabled. To disable it, toggle the "Camera" permission in Settings.',
       args: undefined,
   },
   permissionsCameraDenied: {
-      en: "Session needs camera access to take photos and videos, but it has been permanently denied. Tap Settings → Permissions, and turn \"Camera\" on.",
+      en: 'Session needs camera access to take photos and videos, but it has been permanently denied. Tap Settings → Permissions, and turn "Camera" on.',
       args: undefined,
   },
   permissionsCameraDescriptionIos: {
-      en: "Allow access to camera for video calls.",
+      en: 'Allow access to camera for video calls.',
       args: undefined,
   },
   permissionsFaceId: {
-      en: "The screen lock feature on Session uses Face ID.",
+      en: 'The screen lock feature on Session uses Face ID.',
       args: undefined,
   },
   permissionsKeepInSystemTray: {
-      en: "Keep in System Tray",
+      en: 'Keep in System Tray',
       args: undefined,
   },
   permissionsKeepInSystemTrayDescription: {
-      en: "Session continues running in the background when you close the window",
+      en: 'Session continues running in the background when you close the window',
       args: undefined,
   },
   permissionsLibrary: {
-      en: "Session needs photo library access to continue. You can enable access in the iOS settings.",
+      en: 'Session needs photo library access to continue. You can enable access in the iOS settings.',
       args: undefined,
   },
   permissionsLocalNetworkAccessRequiredCallsIos: {
-      en: "Local Network access is required to facilitate calls. Toggle the \"Local Network\" permission in Settings to continue.",
+      en: 'Local Network access is required to facilitate calls. Toggle the "Local Network" permission in Settings to continue.',
       args: undefined,
   },
   permissionsLocalNetworkAccessRequiredIos: {
-      en: "Session needs access to local network to make voice and video calls.",
+      en: 'Session needs access to local network to make voice and video calls.',
       args: undefined,
   },
   permissionsLocalNetworkChangeDescriptionIos: {
-      en: "Local Network access is currently enabled. To disable it, toggle the \"Local Network\" permission in Settings.",
+      en: 'Local Network access is currently enabled. To disable it, toggle the "Local Network" permission in Settings.',
       args: undefined,
   },
   permissionsLocalNetworkDescriptionIos: {
-      en: "Allow access to local network to facilitate voice and video calls.",
+      en: 'Allow access to local network to facilitate voice and video calls.',
       args: undefined,
   },
   permissionsLocalNetworkIos: {
-      en: "Local Network",
+      en: 'Local Network',
       args: undefined,
   },
   permissionsMicrophone: {
-      en: "Microphone",
+      en: 'Microphone',
       args: undefined,
   },
   permissionsMicrophoneAccessRequired: {
-      en: "Session needs microphone access to make calls and send audio messages, but it has been permanently denied. Tap settings → Permissions, and turn \"Microphone\" on.",
+      en: 'Session needs microphone access to make calls and send audio messages, but it has been permanently denied. Tap settings → Permissions, and turn "Microphone" on.',
       args: undefined,
   },
   permissionsMicrophoneAccessRequiredCallsIos: {
-      en: "Microphone access is required to make calls and record audio messages. Toggle the \"Microphone\" permission in Settings to continue.",
+      en: 'Microphone access is required to make calls and record audio messages. Toggle the "Microphone" permission in Settings to continue.',
       args: undefined,
   },
   permissionsMicrophoneAccessRequiredDesktop: {
@@ -2925,47 +2925,47 @@ export const simpleDictionary = {
       args: undefined,
   },
   permissionsMicrophoneAccessRequiredIos: {
-      en: "Session needs microphone access to make calls and record audio messages.",
+      en: 'Session needs microphone access to make calls and record audio messages.',
       args: undefined,
   },
   permissionsMicrophoneChangeDescriptionIos: {
-      en: "Microphone access is currently enabled. To disable it, toggle the \"Microphone\" permission in Settings.",
+      en: 'Microphone access is currently enabled. To disable it, toggle the "Microphone" permission in Settings.',
       args: undefined,
   },
   permissionsMicrophoneDescription: {
-      en: "Allow access to microphone.",
+      en: 'Allow access to microphone.',
       args: undefined,
   },
   permissionsMicrophoneDescriptionIos: {
-      en: "Allow access to microphone for voice calls and audio messages.",
+      en: 'Allow access to microphone for voice calls and audio messages.',
       args: undefined,
   },
   permissionsMusicAudio: {
-      en: "Session needs music and audio access in order to send files, music and audio.",
+      en: 'Session needs music and audio access in order to send files, music and audio.',
       args: undefined,
   },
   permissionsRequired: {
-      en: "Permission Required",
+      en: 'Permission Required',
       args: undefined,
   },
   permissionsStorageDenied: {
-      en: "Session needs photo library access so you can send photos and videos, but it has been permanently denied. Tap Settings → Permissions, and turn \"Photos and videos\" on.",
+      en: 'Session needs photo library access so you can send photos and videos, but it has been permanently denied. Tap Settings → Permissions, and turn "Photos and videos" on.',
       args: undefined,
   },
   permissionsStorageDeniedLegacy: {
-      en: "Session needs storage access so you can send and save attachments. Tap Settings → Permissions, and turn \"Storage\" on.",
+      en: 'Session needs storage access so you can send and save attachments. Tap Settings → Permissions, and turn "Storage" on.',
       args: undefined,
   },
   permissionsStorageSave: {
-      en: "Session needs storage access to save attachments and media.",
+      en: 'Session needs storage access to save attachments and media.',
       args: undefined,
   },
   permissionsStorageSaveDenied: {
-      en: "Session needs storage access to save photos and videos, but it has been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Storage\".",
+      en: 'Session needs storage access to save photos and videos, but it has been permanently denied. Please continue to app settings, select "Permissions", and enable "Storage".',
       args: undefined,
   },
   permissionsStorageSend: {
-      en: "Session needs storage access to send photos and videos.",
+      en: 'Session needs storage access to send photos and videos.',
       args: undefined,
   },
   permissionsWriteCommunity: {
@@ -2973,219 +2973,219 @@ export const simpleDictionary = {
       args: undefined,
   },
   pin: {
-      en: "Pin",
+      en: 'Pin',
       args: undefined,
   },
   pinConversation: {
-      en: "Pin Conversation",
+      en: 'Pin Conversation',
       args: undefined,
   },
   pinUnpin: {
-      en: "Unpin",
+      en: 'Unpin',
       args: undefined,
   },
   pinUnpinConversation: {
-      en: "Unpin Conversation",
+      en: 'Unpin Conversation',
       args: undefined,
   },
   preview: {
-      en: "Preview",
+      en: 'Preview',
       args: undefined,
   },
   proActivated: {
-      en: "Activated",
+      en: 'Activated',
       args: undefined,
   },
   proAlreadyPurchased: {
-      en: "You’ve already got",
+      en: 'You’ve already got',
       args: undefined,
   },
   proAnimatedDisplayPicture: {
-      en: "Go ahead and upload GIFs and animated WebP images for your display picture!",
+      en: 'Go ahead and upload GIFs and animated WebP images for your display picture!',
       args: undefined,
   },
   proAnimatedDisplayPictureCallToActionDescription: {
-      en: "Get animated display pictures and unlock premium features with Session Pro",
+      en: 'Get animated display pictures and unlock premium features with Session Pro',
       args: undefined,
   },
   proAnimatedDisplayPictureFeature: {
-      en: "Animated Display Picture",
+      en: 'Animated Display Picture',
       args: undefined,
   },
   proAnimatedDisplayPictureModalDescription: {
-      en: "users can upload GIFs",
+      en: 'users can upload GIFs',
       args: undefined,
   },
   proAnimatedDisplayPicturesNonProModalDescription: {
-      en: "Upload GIFs with",
+      en: 'Upload GIFs with',
       args: undefined,
   },
   proBadge: {
-      en: "Session Pro Badge",
+      en: 'Session Pro Badge',
       args: undefined,
   },
   proCallToActionLongerMessages: {
-      en: "Want to send longer messages? Send more text and unlock premium features with Session Pro",
+      en: 'Want to send longer messages? Send more text and unlock premium features with Session Pro',
       args: undefined,
   },
   proCallToActionPinnedConversations: {
-      en: "Want more pins? Organize your chats and unlock premium features with Session Pro",
+      en: 'Want more pins? Organize your chats and unlock premium features with Session Pro',
       args: undefined,
   },
   proCallToActionPinnedConversationsMoreThan: {
-      en: "Want more than 5 pins? Organize your chats and unlock premium features with Session Pro",
+      en: 'Want more than 5 pins? Organize your chats and unlock premium features with Session Pro',
       args: undefined,
   },
   proFeatureListAnimatedDisplayPicture: {
-      en: "Upload GIF and WebP display pictures",
+      en: 'Upload GIF and WebP display pictures',
       args: undefined,
   },
   proFeatureListLargerGroups: {
-      en: "Larger group chats up to 300 members",
+      en: 'Larger group chats up to 300 members',
       args: undefined,
   },
   proFeatureListLoadsMore: {
-      en: "Plus loads more exclusive features",
+      en: 'Plus loads more exclusive features',
       args: undefined,
   },
   proFeatureListLongerMessages: {
-      en: "Messages up to 10,000 characters",
+      en: 'Messages up to 10,000 characters',
       args: undefined,
   },
   proFeatureListPinnedConversations: {
-      en: "Pin unlimited conversations",
+      en: 'Pin unlimited conversations',
       args: undefined,
   },
   proGroupActivated: {
-      en: "Group Activated",
+      en: 'Group Activated',
       args: undefined,
   },
   proGroupActivatedDescription: {
-      en: "This group has expanded capacity! It can support up to 300 members because a group admin has",
+      en: 'This group has expanded capacity! It can support up to 300 members because a group admin has',
       args: undefined,
   },
   proIncreasedAttachmentSizeFeature: {
-      en: "Increased Attachment Size",
+      en: 'Increased Attachment Size',
       args: undefined,
   },
   proIncreasedMessageLengthFeature: {
-      en: "Increased Message Length",
+      en: 'Increased Message Length',
       args: undefined,
   },
   proMessageInfoFeatures: {
-      en: "This message used the following Session Pro features:",
+      en: 'This message used the following Session Pro features:',
       args: undefined,
   },
   proSendMore: {
-      en: "Send more with",
+      en: 'Send more with',
       args: undefined,
   },
   proUserProfileModalCallToAction: {
-      en: "Want to get more out of Session? Upgrade to Session Pro for a more powerful messaging experience.",
+      en: 'Want to get more out of Session? Upgrade to Session Pro for a more powerful messaging experience.',
       args: undefined,
   },
   profile: {
-      en: "Profile",
+      en: 'Profile',
       args: undefined,
   },
   profileDisplayPicture: {
-      en: "Display Picture",
+      en: 'Display Picture',
       args: undefined,
   },
   profileDisplayPictureRemoveError: {
-      en: "Failed to remove display picture.",
+      en: 'Failed to remove display picture.',
       args: undefined,
   },
   profileDisplayPictureSet: {
-      en: "Set Display Picture",
+      en: 'Set Display Picture',
       args: undefined,
   },
   profileDisplayPictureSizeError: {
-      en: "Please pick a smaller file.",
+      en: 'Please pick a smaller file.',
       args: undefined,
   },
   profileErrorUpdate: {
-      en: "Failed to update profile.",
+      en: 'Failed to update profile.',
       args: undefined,
   },
   promote: {
-      en: "Promote",
+      en: 'Promote',
       args: undefined,
   },
   qrCode: {
-      en: "QR Code",
+      en: 'QR Code',
       args: undefined,
   },
   qrNotAccountId: {
-      en: "This QR code does not contain an Account ID",
+      en: 'This QR code does not contain an Account ID',
       args: undefined,
   },
   qrNotRecoveryPassword: {
-      en: "This QR code does not contain a Recovery Password",
+      en: 'This QR code does not contain a Recovery Password',
       args: undefined,
   },
   qrScan: {
-      en: "Scan QR Code",
+      en: 'Scan QR Code',
       args: undefined,
   },
   qrView: {
-      en: "View QR",
+      en: 'View QR',
       args: undefined,
   },
   qrYoursDescription: {
-      en: "Friends can message you by scanning your QR code.",
+      en: 'Friends can message you by scanning your QR code.',
       args: undefined,
   },
   quit: {
-      en: "Quit Session",
+      en: 'Quit Session',
       args: undefined,
   },
   quitButton: {
-      en: "Quit",
+      en: 'Quit',
       args: undefined,
   },
   rateSession: {
-      en: "Rate Session?",
+      en: 'Rate Session?',
       args: undefined,
   },
   rateSessionApp: {
-      en: "Rate App",
+      en: 'Rate App',
       args: undefined,
   },
   rateSessionModalDescription: {
       en: "We're glad you're enjoying Session, if you have a moment, rating us in the {storevariant} helps others discover private, secure messaging!",
-      args: {storevariant: "string"}
+      args: {storevariant: 'string'}
   },
   read: {
-      en: "Read",
+      en: 'Read',
       args: undefined,
   },
   readReceipts: {
-      en: "Read Receipts",
+      en: 'Read Receipts',
       args: undefined,
   },
   readReceiptsDescription: {
-      en: "Show read receipts for all messages you send and receive.",
+      en: 'Show read receipts for all messages you send and receive.',
       args: undefined,
   },
   received: {
-      en: "Received:",
+      en: 'Received:',
       args: undefined,
   },
   receivedAnswer: {
-      en: "Received Answer",
+      en: 'Received Answer',
       args: undefined,
   },
   receivingCallOffer: {
-      en: "Receiving Call Offer",
+      en: 'Receiving Call Offer',
       args: undefined,
   },
   receivingPreOffer: {
-      en: "Receiving Pre Offer",
+      en: 'Receiving Pre Offer',
       args: undefined,
   },
   recommended: {
-      en: "Recommended",
+      en: 'Recommended',
       args: undefined,
   },
   recoveryPasswordBannerDescription: {
@@ -3193,7 +3193,7 @@ export const simpleDictionary = {
       args: undefined,
   },
   recoveryPasswordBannerTitle: {
-      en: "Save your recovery password",
+      en: 'Save your recovery password',
       args: undefined,
   },
   recoveryPasswordDescription: {
@@ -3201,51 +3201,51 @@ export const simpleDictionary = {
       args: undefined,
   },
   recoveryPasswordEnter: {
-      en: "Enter your recovery password",
+      en: 'Enter your recovery password',
       args: undefined,
   },
   recoveryPasswordErrorLoad: {
-      en: "An error occurred when trying to load your recovery password.<br/><br/>Please export your logs, then upload the file through the Session Help Desk to help resolve this issue.",
+      en: 'An error occurred when trying to load your recovery password.<br/><br/>Please export your logs, then upload the file through the Session Help Desk to help resolve this issue.',
       args: undefined,
   },
   recoveryPasswordErrorMessageGeneric: {
-      en: "Please check your recovery password and try again.",
+      en: 'Please check your recovery password and try again.',
       args: undefined,
   },
   recoveryPasswordErrorMessageIncorrect: {
-      en: "Some of the words in your Recovery Password are incorrect. Please check and try again.",
+      en: 'Some of the words in your Recovery Password are incorrect. Please check and try again.',
       args: undefined,
   },
   recoveryPasswordErrorMessageShort: {
-      en: "The Recovery Password you entered is not long enough. Please check and try again.",
+      en: 'The Recovery Password you entered is not long enough. Please check and try again.',
       args: undefined,
   },
   recoveryPasswordErrorTitle: {
-      en: "Incorrect Recovery Password",
+      en: 'Incorrect Recovery Password',
       args: undefined,
   },
   recoveryPasswordExplanation: {
-      en: "To load your account, enter your recovery password.",
+      en: 'To load your account, enter your recovery password.',
       args: undefined,
   },
   recoveryPasswordHidePermanently: {
-      en: "Hide Recovery Password Permanently",
+      en: 'Hide Recovery Password Permanently',
       args: undefined,
   },
   recoveryPasswordHidePermanentlyDescription1: {
-      en: "Without your recovery password, you cannot load your account on new devices. <br/><br/>We strongly recommend you save your recovery password in a safe and secure place before continuing.",
+      en: 'Without your recovery password, you cannot load your account on new devices. <br/><br/>We strongly recommend you save your recovery password in a safe and secure place before continuing.',
       args: undefined,
   },
   recoveryPasswordHidePermanentlyDescription2: {
-      en: "Are you sure you want to permanently hide your recovery password on this device? This cannot be undone.",
+      en: 'Are you sure you want to permanently hide your recovery password on this device? This cannot be undone.',
       args: undefined,
   },
   recoveryPasswordHideRecoveryPassword: {
-      en: "Hide Recovery Password",
+      en: 'Hide Recovery Password',
       args: undefined,
   },
   recoveryPasswordHideRecoveryPasswordDescription: {
-      en: "Permanently hide your recovery password on this device.",
+      en: 'Permanently hide your recovery password on this device.',
       args: undefined,
   },
   recoveryPasswordRestoreDescription: {
@@ -3253,7 +3253,7 @@ export const simpleDictionary = {
       args: undefined,
   },
   recoveryPasswordView: {
-      en: "View Password",
+      en: 'View Password',
       args: undefined,
   },
   recoveryPasswordWarningSendDescription: {
@@ -3261,51 +3261,51 @@ export const simpleDictionary = {
       args: undefined,
   },
   recreateGroup: {
-      en: "Recreate Group",
+      en: 'Recreate Group',
       args: undefined,
   },
   redo: {
-      en: "Redo",
+      en: 'Redo',
       args: undefined,
   },
   remainingCharactersOverTooltip: {
-      en: "Reduce message length by {count}",
-      args: {count: "number"}
+      en: 'Reduce message length by {count}',
+      args: {count: 'number'}
   },
   remove: {
-      en: "Remove",
+      en: 'Remove',
       args: undefined,
   },
   removePasswordFail: {
-      en: "Failed to remove password",
+      en: 'Failed to remove password',
       args: undefined,
   },
   reply: {
-      en: "Reply",
+      en: 'Reply',
       args: undefined,
   },
   resend: {
-      en: "Resend",
+      en: 'Resend',
       args: undefined,
   },
   resolving: {
-      en: "Loading country information...",
+      en: 'Loading country information...',
       args: undefined,
   },
   restart: {
-      en: "Restart",
+      en: 'Restart',
       args: undefined,
   },
   resync: {
-      en: "Resync",
+      en: 'Resync',
       args: undefined,
   },
   retry: {
-      en: "Retry",
+      en: 'Retry',
       args: undefined,
   },
   reviewLimit: {
-      en: "Review Limit",
+      en: 'Review Limit',
       args: undefined,
   },
   reviewLimitDescription: {
@@ -3313,215 +3313,215 @@ export const simpleDictionary = {
       args: undefined,
   },
   save: {
-      en: "Save",
+      en: 'Save',
       args: undefined,
   },
   saved: {
-      en: "Saved",
+      en: 'Saved',
       args: undefined,
   },
   savedMessages: {
-      en: "Saved messages",
+      en: 'Saved messages',
       args: undefined,
   },
   saving: {
-      en: "Saving...",
+      en: 'Saving...',
       args: undefined,
   },
   scan: {
-      en: "Scan",
+      en: 'Scan',
       args: undefined,
   },
   screenSecurity: {
-      en: "Screen Security",
+      en: 'Screen Security',
       args: undefined,
   },
   screenshotNotifications: {
-      en: "Screenshot Notifications",
+      en: 'Screenshot Notifications',
       args: undefined,
   },
   screenshotNotificationsDescription: {
-      en: "Require a notification when a contact takes a screenshot of a one-to-one chat.",
+      en: 'Require a notification when a contact takes a screenshot of a one-to-one chat.',
       args: undefined,
   },
   screenshotTaken: {
-      en: "<b>{name}</b> took a screenshot.",
-      args: {name: "string"}
+      en: '<b>{name}</b> took a screenshot.',
+      args: {name: 'string'}
   },
   search: {
-      en: "Search",
+      en: 'Search',
       args: undefined,
   },
   searchContacts: {
-      en: "Search Contacts",
+      en: 'Search Contacts',
       args: undefined,
   },
   searchConversation: {
-      en: "Search Conversation",
+      en: 'Search Conversation',
       args: undefined,
   },
   searchEnter: {
-      en: "Please enter your search.",
+      en: 'Please enter your search.',
       args: undefined,
   },
   searchMatchesNone: {
-      en: "No results found.",
+      en: 'No results found.',
       args: undefined,
   },
   searchMatchesNoneSpecific: {
-      en: "No results found for {query}",
-      args: {query: "string"}
+      en: 'No results found for {query}',
+      args: {query: 'string'}
   },
   searchMembers: {
-      en: "Search Members",
+      en: 'Search Members',
       args: undefined,
   },
   searchSearching: {
-      en: "Searching...",
+      en: 'Searching...',
       args: undefined,
   },
   select: {
-      en: "Select",
+      en: 'Select',
       args: undefined,
   },
   selectAll: {
-      en: "Select All",
+      en: 'Select All',
       args: undefined,
   },
   selectAppIcon: {
-      en: "Select app icon",
+      en: 'Select app icon',
       args: undefined,
   },
   send: {
-      en: "Send",
+      en: 'Send',
       args: undefined,
   },
   sending: {
-      en: "Sending",
+      en: 'Sending',
       args: undefined,
   },
   sendingCallOffer: {
-      en: "Sending Call Offer",
+      en: 'Sending Call Offer',
       args: undefined,
   },
   sendingConnectionCandidates: {
-      en: "Sending Connection Candidates",
+      en: 'Sending Connection Candidates',
       args: undefined,
   },
   sent: {
-      en: "Sent:",
+      en: 'Sent:',
       args: undefined,
   },
   sessionAppearance: {
-      en: "Appearance",
+      en: 'Appearance',
       args: undefined,
   },
   sessionClearData: {
-      en: "Clear Data",
+      en: 'Clear Data',
       args: undefined,
   },
   sessionConversations: {
-      en: "Conversations",
+      en: 'Conversations',
       args: undefined,
   },
   sessionHelp: {
-      en: "Help",
+      en: 'Help',
       args: undefined,
   },
   sessionInviteAFriend: {
-      en: "Invite a Friend",
+      en: 'Invite a Friend',
       args: undefined,
   },
   sessionMessageRequests: {
-      en: "Message Requests",
+      en: 'Message Requests',
       args: undefined,
   },
   sessionNetworkCurrentPrice: {
-      en: "Current SESH price",
+      en: 'Current SESH price',
       args: undefined,
   },
   sessionNetworkDescription: {
-      en: "Messages are sent using the Session Network. The network is comprised of nodes incentivized with Session Token, which keeps Session decentralized and secure. <span><b>Learn More</b> {icon}</span>",
-      args: {icon: "string"}
+      en: 'Messages are sent using the Session Network. The network is comprised of nodes incentivized with Session Token, which keeps Session decentralized and secure. <span><b>Learn More</b> {icon}</span>',
+      args: {icon: 'string'}
   },
   sessionNetworkLearnAboutStaking: {
-      en: "Learn About Staking",
+      en: 'Learn About Staking',
       args: undefined,
   },
   sessionNetworkMarketCap: {
-      en: "Market Cap",
+      en: 'Market Cap',
       args: undefined,
   },
   sessionNetworkNodesSecuring: {
-      en: "Session Nodes securing <span>your messages</span>",
+      en: 'Session Nodes securing <span>your messages</span>',
       args: undefined,
   },
   sessionNetworkNodesSwarm: {
-      en: "Session Nodes in <span>your swarm</span>",
+      en: 'Session Nodes in <span>your swarm</span>',
       args: undefined,
   },
   sessionNetworkNotificationLive: {
-      en: "Session Token is live! Explore the new Session Network section in Settings to learn how Session Token powers Session.",
+      en: 'Session Token is live! Explore the new Session Network section in Settings to learn how Session Token powers Session.',
       args: undefined,
   },
   sessionNetworkSecuredBy: {
-      en: "Network secured by",
+      en: 'Network secured by',
       args: undefined,
   },
   sessionNetworkTokenDescription: {
-      en: "When you stake Session Token to secure the network, you earn rewards in SESH from the Staking Reward Pool.",
+      en: 'When you stake Session Token to secure the network, you earn rewards in SESH from the Staking Reward Pool.',
       args: undefined,
   },
   sessionNew: {
-      en: "<span><b>•</b> New</span>",
+      en: '<span><b>•</b> New</span>',
       args: undefined,
   },
   sessionNotifications: {
-      en: "Notifications",
+      en: 'Notifications',
       args: undefined,
   },
   sessionPermissions: {
-      en: "Permissions",
+      en: 'Permissions',
       args: undefined,
   },
   sessionPrivacy: {
-      en: "Privacy",
+      en: 'Privacy',
       args: undefined,
   },
   sessionRecoveryPassword: {
-      en: "Recovery Password",
+      en: 'Recovery Password',
       args: undefined,
   },
   sessionSettings: {
-      en: "Settings",
+      en: 'Settings',
       args: undefined,
   },
   set: {
-      en: "Set",
+      en: 'Set',
       args: undefined,
   },
   setCommunityDisplayPicture: {
-      en: "Set Community Display Picture",
+      en: 'Set Community Display Picture',
       args: undefined,
   },
   settingsRestartDescription: {
-      en: "You must restart Session to apply your new settings.",
+      en: 'You must restart Session to apply your new settings.',
       args: undefined,
   },
   share: {
-      en: "Share",
+      en: 'Share',
       args: undefined,
   },
   shareAccountIdDescription: {
-      en: "Invite your friend to chat with you on Session by sharing your Account ID with them.",
+      en: 'Invite your friend to chat with you on Session by sharing your Account ID with them.',
       args: undefined,
   },
   shareAccountIdDescriptionCopied: {
-      en: "Share with your friends wherever you usually speak with them — then move the conversation here.",
+      en: 'Share with your friends wherever you usually speak with them — then move the conversation here.',
       args: undefined,
   },
   shareExtensionDatabaseError: {
-      en: "There is an issue opening the database. Please restart the app and try again.",
+      en: 'There is an issue opening the database. Please restart the app and try again.',
       args: undefined,
   },
   shareExtensionNoAccountError: {
@@ -3529,404 +3529,404 @@ export const simpleDictionary = {
       args: undefined,
   },
   shareToSession: {
-      en: "Share to Session",
+      en: 'Share to Session',
       args: undefined,
   },
   show: {
-      en: "Show",
+      en: 'Show',
       args: undefined,
   },
   showAll: {
-      en: "Show All",
+      en: 'Show All',
       args: undefined,
   },
   showLess: {
-      en: "Show Less",
+      en: 'Show Less',
       args: undefined,
   },
   showNoteToSelf: {
-      en: "Show Note to Self",
+      en: 'Show Note to Self',
       args: undefined,
   },
   showNoteToSelfDescription: {
-      en: "Are you sure you want to show <b>Note to Self</b> in your conversation list?",
+      en: 'Are you sure you want to show <b>Note to Self</b> in your conversation list?',
       args: undefined,
   },
   stickers: {
-      en: "Stickers",
+      en: 'Stickers',
       args: undefined,
   },
   supportGoTo: {
-      en: "Go to Support Page",
+      en: 'Go to Support Page',
       args: undefined,
   },
   systemInformationDesktop: {
-      en: "System Information: {information}",
-      args: {information: "string"}
+      en: 'System Information: {information}',
+      args: {information: 'string'}
   },
   tapToRetry: {
-      en: "Tap to retry",
+      en: 'Tap to retry',
       args: undefined,
   },
   theContinue: {
-      en: "Continue",
+      en: 'Continue',
       args: undefined,
   },
   theDefault: {
-      en: "Default",
+      en: 'Default',
       args: undefined,
   },
   theError: {
-      en: "Error",
+      en: 'Error',
       args: undefined,
   },
   tooltipAccountIdVisible: {
-      en: "The Account ID of <b>{name}</b> is visible based on your previous interactions",
-      args: {name: "string"}
+      en: 'The Account ID of <b>{name}</b> is visible based on your previous interactions',
+      args: {name: 'string'}
   },
   tooltipBlindedIdCommunities: {
-      en: "Blinded IDs are used in communities to reduce spam and increase privacy",
+      en: 'Blinded IDs are used in communities to reduce spam and increase privacy',
       args: undefined,
   },
   tryAgain: {
-      en: "Try Again",
+      en: 'Try Again',
       args: undefined,
   },
   typingIndicators: {
-      en: "Typing Indicators",
+      en: 'Typing Indicators',
       args: undefined,
   },
   typingIndicatorsDescription: {
-      en: "See and share typing indicators.",
+      en: 'See and share typing indicators.',
       args: undefined,
   },
   unavailable: {
-      en: "Unavailable",
+      en: 'Unavailable',
       args: undefined,
   },
   undo: {
-      en: "Undo",
+      en: 'Undo',
       args: undefined,
   },
   unknown: {
-      en: "Unknown",
+      en: 'Unknown',
       args: undefined,
   },
   updateApp: {
-      en: "App updates",
+      en: 'App updates',
       args: undefined,
   },
   updateDownloaded: {
-      en: "Update installed, click to restart",
+      en: 'Update installed, click to restart',
       args: undefined,
   },
   updateDownloading: {
-      en: "Downloading update: {percent_loader}%",
-      args: {percent_loader: "string"}
+      en: 'Downloading update: {percent_loader}%',
+      args: {percent_loader: 'string'}
   },
   updateError: {
-      en: "Cannot Update",
+      en: 'Cannot Update',
       args: undefined,
   },
   updateErrorDescription: {
-      en: "Session failed to update. Please go to https://getsession.org/download and install the new version manually, then contact our Help Center to let us know about this problem.",
+      en: 'Session failed to update. Please go to https://getsession.org/download and install the new version manually, then contact our Help Center to let us know about this problem.',
       args: undefined,
   },
   updateGroupInformation: {
-      en: "Update Group Information",
+      en: 'Update Group Information',
       args: undefined,
   },
   updateGroupInformationDescription: {
-      en: "Group name and description are visible to all group members.",
+      en: 'Group name and description are visible to all group members.',
       args: undefined,
   },
   updateGroupInformationEnterShorterDescription: {
-      en: "Please enter a shorter group description",
+      en: 'Please enter a shorter group description',
       args: undefined,
   },
   updateNewVersion: {
-      en: "A new version of Session is available, tap to update",
+      en: 'A new version of Session is available, tap to update',
       args: undefined,
   },
   updateNewVersionDescription: {
-      en: "A new version ({version}) of Session is available.",
-      args: {version: "string"}
+      en: 'A new version ({version}) of Session is available.',
+      args: {version: 'string'}
   },
   updateReleaseNotes: {
-      en: "Go to Release Notes",
+      en: 'Go to Release Notes',
       args: undefined,
   },
   updateSession: {
-      en: "Session Update",
+      en: 'Session Update',
       args: undefined,
   },
   updateVersion: {
-      en: "Version {version}",
-      args: {version: "string"}
+      en: 'Version {version}',
+      args: {version: 'string'}
   },
   updated: {
-      en: "Last updated {relative_time} ago",
-      args: {relative_time: "string"}
+      en: 'Last updated {relative_time} ago',
+      args: {relative_time: 'string'}
   },
   upgradeTo: {
-      en: "Upgrade to",
+      en: 'Upgrade to',
       args: undefined,
   },
   uploading: {
-      en: "Uploading",
+      en: 'Uploading',
       args: undefined,
   },
   urlCopy: {
-      en: "Copy URL",
+      en: 'Copy URL',
       args: undefined,
   },
   urlOpen: {
-      en: "Open URL",
+      en: 'Open URL',
       args: undefined,
   },
   urlOpenBrowser: {
-      en: "This will open in your browser.",
+      en: 'This will open in your browser.',
       args: undefined,
   },
   urlOpenDescription: {
-      en: "Are you sure you want to open this URL in your browser?<br/><br/><b>{url}</b>",
-      args: {url: "string"}
+      en: 'Are you sure you want to open this URL in your browser?<br/><br/><b>{url}</b>',
+      args: {url: 'string'}
   },
   useFastMode: {
-      en: "Use Fast Mode",
+      en: 'Use Fast Mode',
       args: undefined,
   },
   video: {
-      en: "Video",
+      en: 'Video',
       args: undefined,
   },
   videoErrorPlay: {
-      en: "Unable to play video.",
+      en: 'Unable to play video.',
       args: undefined,
   },
   view: {
-      en: "View",
+      en: 'View',
       args: undefined,
   },
   viewLess: {
-      en: "View Less",
+      en: 'View Less',
       args: undefined,
   },
   viewMore: {
-      en: "View More",
+      en: 'View More',
       args: undefined,
   },
   waitFewMinutes: {
-      en: "This can take a few minutes.",
+      en: 'This can take a few minutes.',
       args: undefined,
   },
   waitOneMoment: {
-      en: "One moment please...",
+      en: 'One moment please...',
       args: undefined,
   },
   warning: {
-      en: "Warning",
+      en: 'Warning',
       args: undefined,
   },
   window: {
-      en: "Window",
+      en: 'Window',
       args: undefined,
   },
   yes: {
-      en: "Yes",
+      en: 'Yes',
       args: undefined,
   },
   you: {
-      en: "You",
+      en: 'You',
       args: undefined,
   },
   sessionNetworkDataPrice: {
-      en: "Price data powered by CoinGecko<br/>Accurate at {date_time}",
-      args: {date_time: "string"}
+      en: 'Price data powered by CoinGecko<br/>Accurate at {date_time}',
+      args: {date_time: 'string'}
   },
 } as const;
 
 export const pluralsDictionary = {
   adminSendingPromotion: {
     en:{
-      one: "Sending admin promotion",
-      other: "Sending admin promotions"
+      one: 'Sending admin promotion',
+      other: 'Sending admin promotions'
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   clearDataErrorDescription: {
     en:{
-      one: "Data not deleted by {count} Service Node. Service Node ID: {service_node_id}.",
-      other: "Data not deleted by {count} Service Nodes. Service Node IDs: {service_node_id}."
+      one: 'Data not deleted by {count} Service Node. Service Node ID: {service_node_id}.',
+      other: 'Data not deleted by {count} Service Nodes. Service Node IDs: {service_node_id}.'
     },
-    args: {count: "number", service_node_id: "string"}
+    args: {count: 'number', service_node_id: 'string'}
   },
   deleteMessage: {
     en:{
-      one: "Delete Message",
-      other: "Delete Messages"
+      one: 'Delete Message',
+      other: 'Delete Messages'
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   deleteMessageConfirm: {
     en:{
-      one: "Are you sure you want to delete this message?",
-      other: "Are you sure you want to delete these messages?"
+      one: 'Are you sure you want to delete this message?',
+      other: 'Are you sure you want to delete these messages?'
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   deleteMessageDeleted: {
     en:{
-      one: "Message deleted",
-      other: "Messages deleted"
+      one: 'Message deleted',
+      other: 'Messages deleted'
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   deleteMessageDescriptionDevice: {
     en:{
-      one: "Are you sure you want to delete this message from this device only?",
-      other: "Are you sure you want to delete these messages from this device only?"
+      one: 'Are you sure you want to delete this message from this device only?',
+      other: 'Are you sure you want to delete these messages from this device only?'
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   deleteMessageFailed: {
     en:{
-      one: "Failed to delete message",
-      other: "Failed to delete messages"
+      one: 'Failed to delete message',
+      other: 'Failed to delete messages'
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   deleteMessageNoteToSelfWarning: {
     en:{
-      one: "This message cannot be deleted from all your devices",
-      other: "Some of the messages you have selected cannot be deleted from all your devices"
+      one: 'This message cannot be deleted from all your devices',
+      other: 'Some of the messages you have selected cannot be deleted from all your devices'
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   deleteMessageWarning: {
     en:{
-      one: "This message cannot be deleted for everyone",
-      other: "Some of the messages you have selected cannot be deleted for everyone"
+      one: 'This message cannot be deleted for everyone',
+      other: 'Some of the messages you have selected cannot be deleted for everyone'
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   emojiReactsCountOthers: {
     en:{
-      one: "And {count} other has reacted {emoji} to this message.",
-      other: "And {count} others have reacted {emoji} to this message."
+      one: 'And {count} other has reacted {emoji} to this message.',
+      other: 'And {count} others have reacted {emoji} to this message.'
     },
-    args: {count: "number", emoji: "string"}
+    args: {count: 'number', emoji: 'string'}
   },
   groupInviteSending: {
     en:{
-      one: "Sending invite",
-      other: "Sending invites"
+      one: 'Sending invite',
+      other: 'Sending invites'
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   groupRemoveMessages: {
     en:{
-      one: "Remove user and their messages",
-      other: "Remove users and their messages"
+      one: 'Remove user and their messages',
+      other: 'Remove users and their messages'
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   groupRemoveUserOnly: {
     en:{
-      one: "Remove user",
-      other: "Remove users"
+      one: 'Remove user',
+      other: 'Remove users'
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   inviteFailed: {
     en:{
-      one: "Invite Failed",
-      other: "Invites Failed"
+      one: 'Invite Failed',
+      other: 'Invites Failed'
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   inviteFailedDescription: {
     en:{
-      one: "The invite could not be sent. Would you like to try again?",
-      other: "The invites could not be sent. Would you like to try again?"
+      one: 'The invite could not be sent. Would you like to try again?',
+      other: 'The invites could not be sent. Would you like to try again?'
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   members: {
     en:{
-      one: "{count} member",
-      other: "{count} members"
+      one: '{count} member',
+      other: '{count} members'
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   membersActive: {
     en:{
-      one: "{count} active member",
-      other: "{count} active members"
+      one: '{count} active member',
+      other: '{count} active members'
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   membersInviteSend: {
     en:{
-      one: "Send Invite",
-      other: "Send Invites"
+      one: 'Send Invite',
+      other: 'Send Invites'
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   messageNew: {
     en:{
-      one: "New Message",
-      other: "New Messages"
+      one: 'New Message',
+      other: 'New Messages'
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   messageNewYouveGot: {
     en:{
       one: "You've got a new message.",
       other: "You've got {count} new messages."
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   messageNewYouveGotGroup: {
     en:{
       one: "You've got a new message in {group_name}.",
       other: "You've got {count} new messages in {group_name}."
     },
-    args: {group_name: "string", count: "number"}
+    args: {group_name: 'string', count: 'number'}
   },
   modalMessageCharacterDisplayDescription: {
     en:{
-      one: "Messages have a character limit of {limit} characters. You have {count} character remaining.",
-      other: "Messages have a character limit of {limit} characters. You have {count} characters remaining."
+      one: 'Messages have a character limit of {limit} characters. You have {count} character remaining.',
+      other: 'Messages have a character limit of {limit} characters. You have {count} characters remaining.'
     },
-    args: {limit: "string", count: "number"}
+    args: {limit: 'string', count: 'number'}
   },
   promotionFailed: {
     en:{
-      one: "Promotion Failed",
-      other: "Promotions Failed"
+      one: 'Promotion Failed',
+      other: 'Promotions Failed'
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   promotionFailedDescription: {
     en:{
-      one: "The promotion could not be applied. Would you like to try again?",
-      other: "The promotions could not be applied. Would you like to try again?"
+      one: 'The promotion could not be applied. Would you like to try again?',
+      other: 'The promotions could not be applied. Would you like to try again?'
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   remainingCharactersTooltip: {
     en:{
-      one: "{count} character remaining",
-      other: "{count} characters remaining"
+      one: '{count} character remaining',
+      other: '{count} characters remaining'
     },
-    args: {count: "number"}
+    args: {count: 'number'}
   },
   searchMatches: {
     en:{
-      one: "{found_count} of {count} match",
-      other: "{found_count} of {count} matches"
+      one: '{found_count} of {count} match',
+      other: '{found_count} of {count} matches'
     },
-    args: {found_count: "number", count: "number"}
+    args: {found_count: 'number', count: 'number'}
   },
 } as const;
