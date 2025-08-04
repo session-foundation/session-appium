@@ -2,6 +2,12 @@ name: Prune Old Allure Attachments
 on:
   schedule:
     - cron: '0 16 * * 0' # Weekly, 16:00 UTC Sunday
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: 'If true, only list files that would be deleted (no deletion or commit)'
+        required: false
+        default: 'false'
 
 jobs:
   prune:
@@ -15,12 +21,28 @@ jobs:
           GIT_LFS_SKIP_SMUDGE: 1 # Don't actually download LFS content
 
       - name: Prune Allure attachments older than 14 days
+        env:
+          DRY_RUN: ${{ github.event.inputs.dry-run }}
         run: |
           echo "## Pruning Report" >> $GITHUB_STEP_SUMMARY
-          COUNT=$(find . -type f -path "*/data/attachments/*" \( -name "*.png" -o -name "*.txt" -o -name "*.imagediff" \) -mtime +14 | wc -l)
-          echo "Deleting $COUNT files older than 14 days" >> $GITHUB_STEP_SUMMARY
+          echo "Dry run mode: $DRY_RUN" >> $GITHUB_STEP_SUMMARY
 
-          find . -type f -path "*/data/attachments/*" \( -name "*.png" -o -name "*.txt" -o -name "*.imagediff" \) -mtime +14 -delete
+          FIND_CMD='find . -type f -path "*/data/attachments/*" \( -name "*.png" -o -name "*.txt" -o -name "*.imagediff" \) -mtime +14 -print0'
+          COUNT=$(eval "$FIND_CMD" | tee files_to_delete.txt | tr -cd '\0' | wc -c)
+          echo "Found $COUNT file(s) older than 14 days" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$DRY_RUN" == "true" ] && [ "$COUNT" -gt 0 ]; then
+            echo "### Files that would be deleted:" >> $GITHUB_STEP_SUMMARY
+            tr '\0' '\n' < files_to_delete.txt >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "$DRY_RUN" != "true" ] && [ "$COUNT" -gt 0 ]; then
+            echo "Deleting files..."
+            xargs -0 rm -f < files_to_delete.txt
+            rm -f files_to_delete.txt
+          else
+            echo "Dry run enabled or nothing to delete - no files deleted"
+          fi
 
       - name: Commit changes
         run: |
