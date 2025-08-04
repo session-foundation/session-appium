@@ -31,6 +31,9 @@ function publishToGhPages(dir: string, dest: string, repo: string, message: stri
           name: 'github-actions',
           email: 'github-actions@users.noreply.github.com',
         },
+        add: true,
+        history: false,
+        silent: false,
       },
       err => {
         if (err) {
