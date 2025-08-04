@@ -1186,14 +1186,14 @@ export class DeviceWrapper {
             element = await this.findElement(locator.strategy, locator.selector);
           }
 
-          return element 
+          return element
             ? { success: true, data: element }
-            : { success: false, error: `Element ${description} not found` }; 
+            : { success: false, error: `Element ${description} not found` };
         } catch (err) {
           return {
             success: false,
             error: err instanceof Error ? err.message : String(err),
-           };
+          };
         }
       },
       { maxWait }
