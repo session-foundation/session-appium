@@ -29,6 +29,7 @@ export async function handlePhotosFirstTimeOpen(device: DeviceWrapper) {
       await device.clickOnElementAll(new iOSPhotosContinuebutton(device));
       await device.clickOnByAccessibilityID('Don’t Allow');
     }
+  }
     // On Android, the Photos app shows a sign-in prompt the first time it's opened that needs to be dismissed
     if (device.isAndroid()) {
       const signInButton = await device.doesElementExist({
@@ -43,4 +44,4 @@ export async function handlePhotosFirstTimeOpen(device: DeviceWrapper) {
       }
     }
   }
-}
+
