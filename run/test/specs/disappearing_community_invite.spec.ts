@@ -62,7 +62,7 @@ async function disappearingCommunityInviteMessage(
   await bob1.hasElementBeenDeleted({
     ...new CommunityInvitation(bob1).build(),
     maxWait,
-    preventEarlyDeletion: true, 
+    preventEarlyDeletion: true,
   });
   // Leave Invite Contacts, Conversation Settings, Community, and open convo with Bob
   await alice1.navigateBack();

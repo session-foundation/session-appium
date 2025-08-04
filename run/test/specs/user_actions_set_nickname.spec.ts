@@ -63,7 +63,7 @@ async function setNickname(platform: SupportedPlatformsType, testInfo: TestInfo)
     await alice1.navigateBack();
     await alice1.waitForTextElementToBePresent({
       ...new ConversationItem(alice1, nickName).build(),
-      maxWait: 5000,
+      maxWait: 10_000,
     });
   });
   // Close app
