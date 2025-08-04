@@ -1,4 +1,3 @@
-
 name: Prune Old Allure Attachments
 on:
   schedule:
@@ -40,9 +39,9 @@ jobs:
           RETENTION_DAYS: ${{ steps.retention.outputs.days }}
         run: |
           CUTOFF_DATE=$(date -d "$RETENTION_DAYS days ago" +%s)
-          
+
           echo "Retention: $RETENTION_DAYS days | Dry run: $DRY_RUN" >> $GITHUB_STEP_SUMMARY
-          
+
           # Find old attachment files
           > files_to_delete.txt
           for pattern in '*/data/attachments/*.png' '*/data/attachments/*.txt' '*/data/attachments/*.imagediff'; do
@@ -51,10 +50,10 @@ jobs:
               [ "$COMMIT_DATE" -lt "$CUTOFF_DATE" ] && [ "$COMMIT_DATE" -ne "0" ] && echo "$file" >> files_to_delete.txt
             done
           done
-          
+
           COUNT=$(wc -l < files_to_delete.txt 2>/dev/null || echo 0)
           echo "Found $COUNT old files" >> $GITHUB_STEP_SUMMARY
-          
+
           if [ "$COUNT" -gt 0 ]; then
             if [ "$DRY_RUN" == "true" ]; then
               echo "Files to delete:" >> $GITHUB_STEP_SUMMARY
@@ -65,7 +64,7 @@ jobs:
               echo "Deleted $COUNT files" >> $GITHUB_STEP_SUMMARY
             fi
           fi
-          
+
           rm -f files_to_delete.txt
 
       - name: Commit changes
@@ -73,7 +72,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           if [ -n "$(git status --porcelain)" ]; then
             git add -A
             git commit -m "ci: Prune attachments older than ${{ steps.retention.outputs.days }} days"
