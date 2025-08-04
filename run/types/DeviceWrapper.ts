@@ -954,7 +954,7 @@ export class DeviceWrapper {
     const description = describeLocator({ ...locator, text: args.text });
 
     if (element) {
-      throw new Error(`Element ${description} is present when it should not be`);
+      throw new Error(`Element ${description} is present after ${maxWait}ms when it should not be`);
     }
 
     // Element not found - success!
@@ -1306,7 +1306,8 @@ export class DeviceWrapper {
     throw new Error(
       lastError
         ? `${lastError} after ${attempt} attempts (${elapsed}ms)`
-        : `Polling failed after ${attempt} attempts (${elapsed}ms)`);
+        : `Polling failed after ${attempt} attempts (${elapsed}ms)`
+    );
   }
 
   /**

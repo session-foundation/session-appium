@@ -57,7 +57,7 @@ async function blockedRequest(platform: SupportedPlatformsType, testInfo: TestIn
       strategy: 'accessibility id',
       selector: messageRequestsNonePending as AccessibilityId,
     }),
-    device3.verifyElementNotPresent({
+    device3.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message requests banner',
     }),
