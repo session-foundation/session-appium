@@ -27,10 +27,10 @@ async function resolveONS(platform: SupportedPlatformsType, testInfo: TestInfo) 
   const { ons, pubkey } = ONS_MAPPINGS.TESTQA;
   const expectedPubkey = truncatePubkey(pubkey, platform);
 
-  const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
+  const device = await test.step(TestSteps.SETUP.NEW_USER, async () => {
+    const { device }  = await openAppOnPlatformSingleDevice(platform, testInfo);
     await newUser(device, USERNAME.ALICE, false);
-    return { device };
+    return device;
   });
   await test.step(TestSteps.NEW_CONVERSATION.NEW_MESSAGE, async () => {
     await device.clickOnElementAll(new PlusButton(device));
