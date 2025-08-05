@@ -954,11 +954,13 @@ export class DeviceWrapper {
     const description = describeLocator({ ...locator, text: args.text });
 
     if (element) {
-      throw new Error(`Element ${description} is present after ${maxWait}ms when it should not be`);
+      throw new Error(
+        `Element with ${description} is present after ${maxWait}ms when it should not be`
+      );
     }
 
     // Element not found - success!
-    this.log(`Verified no element ${description} is present`);
+    this.log(`Verified no element with ${description} is present`);
   }
 
   /**
@@ -995,10 +997,10 @@ export class DeviceWrapper {
     // Track total time from start - disappearing timers begin on send, not on display
     const functionStartTime = Date.now();
     // Phase 1: Wait for element to appear
-    this.log(`Waiting for element ${description} to be deleted...`);
+    this.log(`Waiting for element with ${description} to be deleted...`);
     await this.waitForElementToAppear(locator, initialMaxWait, text);
     const foundTime = Date.now();
-    this.log(`Element ${description} has been found, now waiting for deletion`);
+    this.log(`Element with ${description} has been found, now waiting for deletion`);
 
     // Phase 2: Wait for element to disappear
     await this.waitForElementToDisappear(locator, maxWait, text);
@@ -1015,7 +1017,7 @@ export class DeviceWrapper {
 
       if (totalTime < minAcceptableTotalTime) {
         throw new Error(
-          `Element ${description} disappeared suspiciously early: ${totalTime.toFixed(1)}s total ` +
+          `Element with ${description} disappeared suspiciously early: ${totalTime.toFixed(1)}s total ` +
             `(found after ${((foundTime - functionStartTime) / 1000).toFixed(1)}s, ` +
             `deleted after ${deletionPhaseTime.toFixed(1)}s). ` +
             `Expected ~${expectedTotalTime}s total.`
@@ -1023,7 +1025,9 @@ export class DeviceWrapper {
       }
     }
 
-    this.log(`Element ${description} has been deleted after ${totalTime.toFixed(1)}s total time`);
+    this.log(
+      `Element with ${description} has been deleted after ${totalTime.toFixed(1)}s total time`
+    );
   }
   /**
    * Wait for an element to appear on screen
@@ -1043,7 +1047,7 @@ export class DeviceWrapper {
 
     const desc = describeLocator({ ...locator, text });
     throw new Error(
-      `Element ${desc} was never found within ${timeout}ms - cannot verify deletion of non-existent element`
+      `Element with ${desc} was never found within ${timeout}ms - cannot verify deletion of non-existent element`
     );
   }
 
@@ -1098,7 +1102,7 @@ export class DeviceWrapper {
     const desc = describeLocator({ ...locator, text });
 
     throw new Error(
-      `Element ${desc} was still present and visible after ${timeout}ms deletion timeout`
+      `Element with ${desc} was still present and visible after ${timeout}ms deletion timeout`
     );
   }
 
@@ -1169,10 +1173,10 @@ export class DeviceWrapper {
     args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<AppiumNextElementType> {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
-    const { text, maxWait = 60000 } = args;
+    const { text, maxWait = 30_000 } = args;
 
     const description = describeLocator({ ...locator, text });
-    this.log(`Waiting for ${description} to be present`);
+    this.log(`Waiting for element with ${description} to be present`);
 
     const result = await this.pollUntil(
       async () => {
@@ -1188,11 +1192,11 @@ export class DeviceWrapper {
 
           return element
             ? { success: true, data: element }
-            : { success: false, error: `Element ${description} not found` };
+            : { success: false, error: `Element with ${description} not found` };
         } catch (err) {
           return {
             success: false,
-            error: err instanceof Error ? err.message : String(err),
+            error: `Element with ${description} not found`,
           };
         }
       },
@@ -1200,10 +1204,10 @@ export class DeviceWrapper {
     );
 
     if (!result) {
-      throw new Error(`Waited too long for ${description}`);
+      throw new Error(`Waited too long for element with ${description}`);
     }
 
-    this.log(`${description} has been found`);
+    this.log(`Element with ${description} has been found`);
     return result;
   }
 
@@ -1308,11 +1312,9 @@ export class DeviceWrapper {
         await sleepFor(pollInterval);
       }
     }
-    throw new Error(
-      lastError
-        ? `${lastError} after ${attempt} attempts (${elapsed}ms)`
-        : `Polling failed after ${attempt} attempts (${elapsed}ms)`
-    );
+    // Log the error with details but only throw generic error so that they get grouped in the report
+    this.error(`${lastError} after ${attempt} attempts (${elapsed}ms)`);
+    throw new Error(lastError || 'Polling failed');
   }
 
   /**
