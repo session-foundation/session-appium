@@ -586,6 +586,10 @@ export const simpleDictionary = {
     en: 'Enter the Account ID of the user you are banning',
     args: undefined,
   },
+  blindedId: {
+    en: 'Blinded ID',
+    args: undefined,
+  },
   block: {
     en: 'Block',
     args: undefined,
@@ -1463,7 +1467,7 @@ export const simpleDictionary = {
     args: undefined,
   },
   displayNameVisible: {
-    en: 'Your Display Name is visible to users, groups and communities you interact with.',
+    en: 'Your Display Name is visible to users, groups, and communities you interact with.',
     args: undefined,
   },
   document: {
@@ -1574,6 +1578,22 @@ export const simpleDictionary = {
     en: 'Enable',
     args: undefined,
   },
+  enjoyingSession: {
+    en: 'Enjoying Session?',
+    args: undefined,
+  },
+  enjoyingSessionButtonNegative: {
+    en: 'Needs Work {emoji}',
+    args: { emoji: 'string' },
+  },
+  enjoyingSessionButtonPositive: {
+    en: "It's Great {emoji}",
+    args: { emoji: 'string' },
+  },
+  enjoyingSessionDescription: {
+    en: "You've been using Session for a little while, how’s it going? We’d really appreciate hearing your thoughts.",
+    args: undefined,
+  },
   errorConnection: {
     en: 'Please check your internet connection and try again.',
     args: undefined,
@@ -1636,6 +1656,14 @@ export const simpleDictionary = {
   },
   giphyWarningDescription: {
     en: 'Session will connect to Giphy to provide search results. You will not have full metadata protection when sending GIFs.',
+    args: undefined,
+  },
+  giveFeedback: {
+    en: 'Give Feedback?',
+    args: undefined,
+  },
+  giveFeedbackDescription: {
+    en: "Sorry to hear your Session experience hasn’t been ideal. We'd be grateful if you could take a moment to share your thoughts in a brief survey",
     args: undefined,
   },
   groupAddMemberMaximum: {
@@ -2714,6 +2742,10 @@ export const simpleDictionary = {
     en: 'Open',
     args: undefined,
   },
+  openSurvey: {
+    en: 'Open Survey',
+    args: undefined,
+  },
   other: {
     en: 'Other',
     args: undefined,
@@ -2763,8 +2795,8 @@ export const simpleDictionary = {
     args: undefined,
   },
   passwordErrorLength: {
-    en: 'Password must be between 6 and 64 characters long',
-    args: undefined,
+    en: 'Password must be between {min} and {max} characters long',
+    args: { min: 'string', max: 'string' },
   },
   passwordErrorMatch: {
     en: 'Passwords do not match',
@@ -2958,6 +2990,38 @@ export const simpleDictionary = {
     en: 'Preview',
     args: undefined,
   },
+  proActivated: {
+    en: 'Activated',
+    args: undefined,
+  },
+  proAlreadyPurchased: {
+    en: 'You’ve already got',
+    args: undefined,
+  },
+  proAnimatedDisplayPicture: {
+    en: 'Go ahead and upload GIFs and animated WebP images for your display picture!',
+    args: undefined,
+  },
+  proAnimatedDisplayPictureCallToActionDescription: {
+    en: 'Get animated display pictures and unlock premium features with Session Pro',
+    args: undefined,
+  },
+  proAnimatedDisplayPictureFeature: {
+    en: 'Animated Display Picture',
+    args: undefined,
+  },
+  proAnimatedDisplayPictureModalDescription: {
+    en: 'users can upload GIFs',
+    args: undefined,
+  },
+  proAnimatedDisplayPicturesNonProModalDescription: {
+    en: 'Upload GIFs with',
+    args: undefined,
+  },
+  proBadge: {
+    en: 'Session Pro Badge',
+    args: undefined,
+  },
   proCallToActionLongerMessages: {
     en: 'Want to send longer messages? Send more text and unlock premium features with Session Pro',
     args: undefined,
@@ -2968,6 +3032,10 @@ export const simpleDictionary = {
   },
   proCallToActionPinnedConversationsMoreThan: {
     en: 'Want more than 5 pins? Organize your chats and unlock premium features with Session Pro',
+    args: undefined,
+  },
+  proFeatureListAnimatedDisplayPicture: {
+    en: 'Upload GIF and WebP display pictures',
     args: undefined,
   },
   proFeatureListLargerGroups: {
@@ -2986,8 +3054,32 @@ export const simpleDictionary = {
     en: 'Pin unlimited conversations',
     args: undefined,
   },
+  proGroupActivated: {
+    en: 'Group Activated',
+    args: undefined,
+  },
+  proGroupActivatedDescription: {
+    en: 'This group has expanded capacity! It can support up to 300 members because a group admin has',
+    args: undefined,
+  },
+  proIncreasedAttachmentSizeFeature: {
+    en: 'Increased Attachment Size',
+    args: undefined,
+  },
+  proIncreasedMessageLengthFeature: {
+    en: 'Increased Message Length',
+    args: undefined,
+  },
+  proMessageInfoFeatures: {
+    en: 'This message used the following Session Pro features:',
+    args: undefined,
+  },
   proSendMore: {
     en: 'Send more with',
+    args: undefined,
+  },
+  proUserProfileModalCallToAction: {
+    en: 'Want to get more out of Session? Upgrade to Session Pro for a more powerful messaging experience.',
     args: undefined,
   },
   profile: {
@@ -3049,6 +3141,18 @@ export const simpleDictionary = {
   quitButton: {
     en: 'Quit',
     args: undefined,
+  },
+  rateSession: {
+    en: 'Rate Session?',
+    args: undefined,
+  },
+  rateSessionApp: {
+    en: 'Rate App',
+    args: undefined,
+  },
+  rateSessionModalDescription: {
+    en: "We're glad you're enjoying Session, if you have a moment, rating us in the {storevariant} helps others discover private, secure messaging!",
+    args: { storevariant: 'string' },
   },
   read: {
     en: 'Read',
@@ -3196,6 +3300,14 @@ export const simpleDictionary = {
   },
   retry: {
     en: 'Retry',
+    args: undefined,
+  },
+  reviewLimit: {
+    en: 'Review Limit',
+    args: undefined,
+  },
+  reviewLimitDescription: {
+    en: "It looks like you've already reviewed Session recently, thanks for your feedback!",
     args: undefined,
   },
   save: {
@@ -3464,6 +3576,14 @@ export const simpleDictionary = {
   },
   theError: {
     en: 'Error',
+    args: undefined,
+  },
+  tooltipAccountIdVisible: {
+    en: 'The Account ID of <b>{name}</b> is visible based on your previous interactions',
+    args: { name: 'string' },
+  },
+  tooltipBlindedIdCommunities: {
+    en: 'Blinded IDs are used in communities to reduce spam and increase privacy',
     args: undefined,
   },
   tryAgain: {
@@ -3774,9 +3894,9 @@ export const pluralsDictionary = {
   },
   modalMessageCharacterDisplayDescription: {
     en: {
-      one: 'Messages have a character limit of {limit} characters. You have {count} character remaining',
+      one: 'Messages have a character limit of {limit} characters. You have {count} character remaining.',
       other:
-        'Messages have a character limit of {limit} characters. You have {count} characters remaining',
+        'Messages have a character limit of {limit} characters. You have {count} characters remaining.',
     },
     args: { limit: 'string', count: 'number' },
   },

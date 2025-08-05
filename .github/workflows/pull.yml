@@ -49,5 +49,8 @@ jobs:
         shell: bash
         run: yarn tsc
 
+      - name: Auto-fix strings
+        run: yarn prettier run/localizer --write && yarn eslint run/localizer --fix
+
       - name: Lint Files
         run: yarn lint-check
