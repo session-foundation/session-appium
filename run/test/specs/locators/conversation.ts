@@ -14,6 +14,15 @@ export class MessageInput extends LocatorsInterface {
   }
 }
 
+export class SendButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    return {
+      strategy: 'accessibility id',
+      selector: 'Send message button',
+    };
+  }
+}
+
 export class ScrollToBottomButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {

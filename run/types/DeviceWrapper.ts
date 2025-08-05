@@ -17,7 +17,6 @@ import {
   ImagePermissionsModalAllow,
   LocatorsInterface,
   ReadReceiptsButton,
-  SendMediaButton,
 } from '../../run/test/specs/locators';
 import {
   profilePicture,
@@ -32,6 +31,7 @@ import {
   MessageInput,
   OutgoingMessageStatusSent,
   ScrollToBottomButton,
+  SendButton,
 } from '../test/specs/locators/conversation';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { PlusButton } from '../test/specs/locators/home';
@@ -1398,10 +1398,7 @@ export class DeviceWrapper {
 
     // Click send
 
-    const sendButton = await this.clickOnElementAll({
-      strategy: 'accessibility id',
-      selector: 'Send message button',
-    });
+    const sendButton = await this.clickOnElementAll(new SendButton(this));
     if (!sendButton) {
       throw new Error('Send button not found: Need to restart iOS emulator: Known issue');
     }
@@ -1449,10 +1446,7 @@ export class DeviceWrapper {
 
     await this.inputText(message, new MessageInput(this));
     // Click send
-    const sendButton = await this.clickOnElementAll({
-      strategy: 'accessibility id',
-      selector: 'Send message button',
-    });
+    const sendButton = await this.clickOnElementAll(new SendButton(this));
     if (!sendButton) {
       throw new Error('Send button not found: Need to restart iOS emulator: Known issue');
     }
@@ -1613,8 +1607,6 @@ export class DeviceWrapper {
         { strategy: 'xpath', selector: `//XCUIElementTypeCell` },
         testImage
       );
-      await this.clickOnByAccessibilityID('Text input box');
-      await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
     } else if (this.isAndroid()) {
       // Push file first
       await this.pushMediaToDevice(testImage);
@@ -1636,9 +1628,9 @@ export class DeviceWrapper {
         strategy: 'id',
         selector: 'network.loki.messenger.qa:id/mediapicker_image_item_thumbnail',
       });
-      await this.inputText(message, new MessageInput(this));
     }
-    await this.clickOnElementAll(new SendMediaButton(this));
+    await this.inputText(message, new MessageInput(this));
+    await this.clickOnElementAll(new SendButton(this));
     if (community) {
       await this.scrollToBottom();
     }
@@ -1663,7 +1655,7 @@ export class DeviceWrapper {
     await this.modalPopup({
       strategy: 'accessibility id',
       selector: 'Allow Full Access',
-      maxWait: 500,
+      maxWait: 2_000,
     });
     await sleepFor(2000); // Appium needs a moment, matchAndTapImage sometimes finds 0 elements otherwise
     // For some reason video gets added to the top of the Recents folder so it's best to scroll up
@@ -1674,9 +1666,7 @@ export class DeviceWrapper {
       { strategy: 'xpath', selector: `//XCUIElementTypeCell` },
       testVideoThumbnail
     );
-    await this.clickOnByAccessibilityID('Text input box');
-    await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
-    await this.clickOnByAccessibilityID('Send button');
+    await this.sendMessage(message);
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
@@ -1773,12 +1763,7 @@ export class DeviceWrapper {
       }
       await this.clickOnByAccessibilityID(formattedFileName);
       await sleepFor(500);
-      await this.clickOnByAccessibilityID('Text input box');
-      await this.inputText(testMessage, {
-        strategy: 'accessibility id',
-        selector: 'Text input box',
-      });
-      await this.clickOnByAccessibilityID('Send button');
+      await this.sendMessage(testMessage);
     } else if (this.isAndroid()) {
       await this.pushMediaToDevice(testFile);
       await this.clickOnElementAll(new AttachmentsButton(this));
@@ -1855,7 +1840,7 @@ export class DeviceWrapper {
     await this.clickOnByAccessibilityID('Continue', 5000);
     await this.clickOnElementAll(new FirstGif(this));
     if (this.isIOS()) {
-      await this.clickOnByAccessibilityID('Send button');
+      await this.clickOnElementAll(new SendButton(this));
     }
   }
 
@@ -1953,7 +1938,7 @@ export class DeviceWrapper {
         text: contact.userName,
       });
     }
-    await this.clickOnByAccessibilityID('Send message button');
+    await this.clickOnElementAll(new SendButton(this));
     await this.waitForTextElementToBePresent(new OutgoingMessageStatusSent(this));
   }
 

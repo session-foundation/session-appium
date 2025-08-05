@@ -4,7 +4,8 @@ import { testImage } from '../../constants/testfiles';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ImageName, MediaMessageInput, SendMediaButton, ShareExtensionIcon } from './locators';
+import { ImageName, ShareExtensionIcon } from './locators';
+import { MessageInput, SendButton } from './locators/conversation';
 import { PhotoLibrary } from './locators/external';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
@@ -62,8 +63,8 @@ async function shareToSession(platform: SupportedPlatformsType, testInfo: TestIn
       selector: 'Contact',
       text: USERNAME.BOB,
     });
-    await alice1.inputText(testMessage, new MediaMessageInput(alice1));
-    await alice1.clickOnElementAll(new SendMediaButton(alice1));
+    await alice1.inputText(testMessage, new MessageInput(alice1));
+    await alice1.clickOnElementAll(new SendButton(alice1));
     // Loading screen...
     // TODO: On iOS, reset Photos UI state for alice1 (e.g. deselect, back out) after test runs
     // Currently skipping cleanup—future flake risk if Photos is left in selection mode

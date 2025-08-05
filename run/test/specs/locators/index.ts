@@ -476,35 +476,6 @@ export class LinkPreviewMessage extends LocatorsInterface {
     }
   }
 }
-export class MediaMessageInput extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Message input box',
-        };
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Message input box',
-        };
-    }
-  }
-}
-
-export class SendMediaButton extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Send message button',
-        };
-    }
-  }
-}
 
 export class ImageName extends LocatorsInterface {
   public build(): StrategyExtractionObj {

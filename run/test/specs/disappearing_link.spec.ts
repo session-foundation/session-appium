@@ -6,7 +6,7 @@ import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { LinkPreview, LinkPreviewMessage } from './locators';
-import { MessageInput, OutgoingMessageStatusSent } from './locators/conversation';
+import { MessageInput, OutgoingMessageStatusSent, SendButton } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -61,7 +61,7 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
     await alice1.inputText(testLink, new MessageInput(alice1));
     await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
 
-    await alice1.clickOnByAccessibilityID('Send message button');
+    await alice1.clickOnElementAll(new SendButton(alice1));
     await alice1.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(alice1).build(),
       maxWait: 20000,
@@ -115,7 +115,7 @@ async function disappearingLinkMessage1o1Android(
     await alice1.clickOnByAccessibilityID('Enable');
     // Preview takes a while to load
     await sleepFor(5000);
-    await alice1.clickOnByAccessibilityID('Send message button');
+    await alice1.clickOnElementAll(new SendButton(alice1));
     await alice1.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(alice1).build(),
       maxWait: 20000,
