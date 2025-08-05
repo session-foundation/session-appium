@@ -190,9 +190,15 @@ class Dispatcher {
     const jobs = await this._redis.zRange(this._redisKeys.jobQueue, 0, 20);
     
     for (const jobStr of jobs) {
-      const jobData = JSON.parse(jobStr);
-      const job = this._localJobMap.get(jobData._localJobRef) || jobData;
-      const scheduled = await this._tryScheduleJob(job, job.devices);
+     const jobData = JSON.parse(jobStr);
+    const job = this._localJobMap.get(jobData._localJobRef);
+
+    if (!job) {
+      console.error(`❌ [ERROR] Job ${jobData.id} not found in local map!`);
+      await this._redis.zRem(this._redisKeys.jobQueue, jobStr);
+      continue; // Skip this job
+    }
+          const scheduled = await this._tryScheduleJob(job, job.devices);
 
       if (scheduled) {
         // Remove from queue
