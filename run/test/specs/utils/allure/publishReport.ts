@@ -32,7 +32,7 @@ function publishToGhPages(dir: string, dest: string, repo: string, message: stri
           email: 'github-actions@users.noreply.github.com',
         },
         add: true,
-        history: false,
+        history: true, // preserve commit history for old attachment pruning
         silent: false,
       },
       err => {
