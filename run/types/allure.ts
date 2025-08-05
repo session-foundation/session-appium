@@ -20,10 +20,10 @@ import { UserNameType } from '@session-foundation/qa-seeder';
  */
 
 export type AllureSuiteConfig =
-  | { parent: 'Communities' }
   | { parent: 'Disappearing Messages'; suite: 'Conversation Types' | 'Message Types' | 'Rules' }
   | { parent: 'Groups'; suite: 'Edit Group' }
   | { parent: 'Linkouts' }
+  | { parent: 'New Conversation'; suite: 'Join Community' | 'New Message' }
   | { parent: 'Sending Messages'; suite: 'Sending Attachments' }
   | { parent: 'Settings'; suite: 'App Disguise' }
   | {
@@ -62,6 +62,7 @@ export const TestSteps = {
   },
   // Plus Button options
   NEW_CONVERSATION: {
+    NEW_MESSAGE: 'New Message',
     JOIN_COMMUNITY: 'Join Community',
   },
   // Sending things

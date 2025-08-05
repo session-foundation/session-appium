@@ -21,3 +21,10 @@ export const longText =
 export const testLink = `https://getsession.org/`;
 
 export const DEVNET_URL = 'http://sesh-net.local:1280';
+
+export const ONS_MAPPINGS = {
+  TESTQA: {
+    ons: 'testqa',
+    pubkey: '05df4a36db2dea751b359ea104c7f310b33e743f455763b9daad90603829f4a535',
+  },
+};
