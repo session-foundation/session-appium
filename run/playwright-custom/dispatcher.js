@@ -67,6 +67,8 @@ class Dispatcher {
     this._failureTracker = failureTracker;
     this._devicePoolMinAvailable = [];
     this._statusLogInterval = null;
+    this._localJobMap = new Map();
+
     
     // Dynamic worker configuration
     this._maxWorkers = this._config.config.workers || 12;
@@ -97,9 +99,21 @@ class Dispatcher {
       );
     }
     
-    this._devicePoolSize = devicePoolSize;
     this._completedTests = 0;
     
+    this._devicePoolSize = devicePoolSize;
+    this._devicePool = {
+      total: devicePoolSize,
+      available: devicePoolSize,
+      stats: {
+        totalAllocated: 0,
+        totalQueued: 0,
+        maxQueueSize: 0,
+        totalWaitTime: 0,
+        waitCounts: 0,
+      }
+    };
+
     // Redis keys
     this._redisKeys = {
       devicesAvailable: 'playwright:devices:available',
@@ -207,27 +221,25 @@ class Dispatcher {
         continue;
       }
       
-      // Only serialize what we need, not the circular test objects
+      // In _processLocalQueue, when adding to Redis queue:
       const jobData = {
         id: `job-${Date.now()}-${Math.random()}`,
         devices,
         workerHash: job.workerHash,
         projectId: job.projectId,
         requireFile: job.requireFile,
-        // Store test IDs only, not the full objects
         testIds: job.tests.map(t => t.id),
-        // Store the original job reference locally
-        _localJobRef: Math.random() // unique key to retrieve from map
+        _localJobRef: Math.random()
       };
 
-// Store the actual job object locally
-if (!this._localJobMap) this._localJobMap = new Map();
-this._localJobMap.set(jobData._localJobRef, job);
+      // Store the actual job object locally
+      this._localJobMap.set(jobData._localJobRef, job);
 
-await this._redis.zAdd(this._redisKeys.jobQueue, {
-  score: priority || 0,
-  value: JSON.stringify(jobData)
-});
+      await this._redis.zAdd(this._redisKeys.jobQueue, {
+        score: priority || 0,
+        value: JSON.stringify(jobData)
+      });
+
 
     }
 
@@ -270,7 +282,17 @@ await this._redis.zAdd(this._redisKeys.jobQueue, {
       console.log(`   ❌ Not enough devices (need ${devices}, have ${availableDevices})`);
       return false;
     }
-    
+    console.log(`🔍 [DEBUG] Worker slots:`, this._workerSlots.map((w, i) => ({
+      index: i,
+      busy: w.busy,
+      hasWorker: !!w.worker
+    })));
+
+    console.log(`🔍 [DEBUG] Job properties:`, {
+      hasWorkerHash: !!job.workerHash,
+      hasTests: !!job.tests,
+      testCount: job.tests?.length
+    });
     // Find available worker
     let workerIndex = this._workerSlots.findIndex(
       (w) => !w.busy && w.worker && w.worker.hash() === job.workerHash && !w.worker.didSendStop()
@@ -286,33 +308,33 @@ await this._redis.zAdd(this._redisKeys.jobQueue, {
     
     console.log(`   ✅ Found available worker ${workerIndex}`);
     
-    // Allocate devices from Redis
-    const allocatedDevices = [];
-    for (let i = 0; i < devices; i++) {
-      const device = await this._redis.lPop(this._redisKeys.devicesAvailable);
-      if (device === null) {
-        // Allocation failed, return what we got
-        if (allocatedDevices.length > 0) {
-          await this._redis.rPush(this._redisKeys.devicesAvailable, ...allocatedDevices);
-        }
-        return false;
-      }
-      allocatedDevices.push(parseInt(device));
+      // Allocate devices from Redis
+    if (devices > 0) {
+      const allocatedIndices = await this._allocateDeviceIndices(devices);
+      if (!allocatedIndices) return false;
+      
+      // Update available count
+      const availableNow = await this._redis.lLen(this._redisKeys.devicesAvailable);
+      this._devicePool.available = availableNow;
+      
+      // Store allocation
+      const allocationKey = `worker-${workerIndex}`;
+      await this._redis.hSet(
+        this._redisKeys.devicesAllocations,
+        allocationKey,
+        JSON.stringify({
+          devices: allocatedIndices,
+          jobId: job.id || 'unknown'
+        })
+      );
+      
+      job.allocatedDevices = allocatedIndices;
+      console.log(`🔒 [DEVICES] Worker ${workerIndex} allocated devices: ${allocatedIndices.join(', ')}`);
+      
+      // Track stats
+      this._devicePoolMinAvailable.push(this._devicePool.available);
+      this._devicePool.stats.totalAllocated++;
     }
-    
-    // Store allocation in Redis
-    const allocationKey = `worker-${workerIndex}`;
-    await this._redis.hSet(
-      this._redisKeys.devicesAllocations,
-      allocationKey,
-      JSON.stringify(allocatedDevices)
-    );
-    
-    job.allocatedDevices = allocatedDevices;
-    console.log(`🔒 [DEVICES] Worker ${workerIndex} allocated devices: ${allocatedDevices.join(', ')}`);
-    
-    // Update stats
-    await this._redis.hIncrBy(this._redisKeys.stats, 'totalAllocations', 1);
     
     // Set up job dispatcher
     const jobDispatcher = new JobDispatcher(
@@ -373,18 +395,102 @@ await this._redis.zAdd(this._redisKeys.jobQueue, {
     const allocation = await this._redis.hGet(this._redisKeys.devicesAllocations, allocationKey);
     
     if (allocation) {
-      const devices = JSON.parse(allocation);
+      const data = JSON.parse(allocation);
+      const devices = data.devices || data; // Handle both old and new format
       
-      // Return devices to available pool
       if (devices.length > 0) {
         await this._redis.rPush(this._redisKeys.devicesAvailable, ...devices.map(String));
       }
       
-      // Remove allocation record
       await this._redis.hDel(this._redisKeys.devicesAllocations, allocationKey);
+      
+      // Update available count
+      const availableNow = await this._redis.lLen(this._redisKeys.devicesAvailable);
+      this._devicePool.available = availableNow;
       
       console.log(`🔓 [DEVICES] Worker ${workerIndex} released devices: ${devices.join(', ')}`);
     }
+  }
+
+  async _allocateDeviceIndices(count) {
+    const allocated = [];
+    
+    // Pop devices from Redis
+    for (let i = 0; i < count; i++) {
+      const device = await this._redis.lPop(this._redisKeys.devicesAvailable);
+      if (device === null) {
+        // Failed, return what we got
+        if (allocated.length > 0) {
+          await this._redis.rPush(this._redisKeys.devicesAvailable, ...allocated.map(String));
+        }
+        return null;
+      }
+      allocated.push(parseInt(device));
+    }
+    
+    console.log(`✅ [ALLOC] Allocated devices: [${allocated.join(', ')}]`);
+    return allocated;
+  }
+  _isDeviceHealthy(deviceIndex) {
+    // For iOS devices, check if the simulator UDID is still valid
+    const udid = process.env[`IOS_${deviceIndex + 1}_SIMULATOR`];
+    
+    if (!udid || !this._isValidIosUdid(udid)) {
+      console.warn(`⚠️  [DEVICE] Device ${deviceIndex} appears unhealthy (invalid UDID)`);
+      return false;
+    }
+    
+    return true;
+  }
+
+    _startTestTimeout(workerIndex, job) {
+    // Longer timeout for CI and tests with multiple devices
+    const devices = this._getJobDeviceRequirement(job);
+    const baseTimeout = process.env.CI ? 600000 : 300000; // 10 min CI, 5 min local
+    const deviceMultiplier = devices > 2 ? 1.5 : 1;
+    const TEST_TIMEOUT = baseTimeout * deviceMultiplier;
+    
+    if (!this._timeouts) this._timeouts = new Map();
+    
+    const timeoutId = setTimeout(() => {
+      console.error(`⏱️ [TIMEOUT] Test on worker ${workerIndex} exceeded ${TEST_TIMEOUT/1000}s`);
+      this._handleTestTimeout(workerIndex);
+    }, TEST_TIMEOUT);
+    
+    this._timeouts.set(workerIndex, timeoutId);
+  }
+
+  _clearTestTimeout(workerIndex) {
+    if (this._timeouts && this._timeouts.has(workerIndex)) {
+      clearTimeout(this._timeouts.get(workerIndex));
+      this._timeouts.delete(workerIndex);
+    }
+  }
+
+  _handleTestTimeout(workerIndex) {
+    console.log(`🔥 [TIMEOUT] Handling timeout for worker ${workerIndex}`);
+    
+    const slot = this._workerSlots[workerIndex];
+    if (slot && slot.worker) {
+      void slot.worker.stop(true);
+    }
+    
+    if (slot && slot.jobDispatcher) {
+      slot.jobDispatcher.onExit({ 
+        unexpectedly: true, 
+        code: -1, 
+        signal: 'TIMEOUT' 
+      });
+    }
+    
+    this._deallocateDevices(workerIndex);
+    
+    if (workerIndex < this._workerSlots.length && this._workerSlots[workerIndex]) {
+      this._workerSlots[workerIndex].busy = false;
+      this._workerSlots[workerIndex].jobDispatcher = void 0;
+    }
+    
+    this._scheduleJob();
   }
 
   _getJobDeviceRequirement(job) {
