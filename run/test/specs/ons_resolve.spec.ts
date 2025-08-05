@@ -28,7 +28,7 @@ async function resolveONS(platform: SupportedPlatformsType, testInfo: TestInfo) 
   const expectedPubkey = truncatePubkey(pubkey, platform);
 
   const device = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device }  = await openAppOnPlatformSingleDevice(platform, testInfo);
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
     await newUser(device, USERNAME.ALICE, false);
     return device;
   });
