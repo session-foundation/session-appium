@@ -644,12 +644,24 @@ _getJobDeviceRequirement(job) {
   
   let worker = this._workerSlots[index].worker;
   
-  // Check if this is a new worker that needs staggering
-  const needsNewWorker = !worker || worker.hash() !== job.workerHash || worker.didSendStop();
+  // Check if device allocation has changed for this worker
+  const deviceAllocationChanged = worker && 
+    JSON.stringify(worker.allocatedDevices || []) !== JSON.stringify(job.allocatedDevices || []);
+  
+  // Check if this is a new worker that needs creating
+  const needsNewWorker = !worker || 
+    worker.hash() !== job.workerHash || 
+    worker.didSendStop() ||
+    deviceAllocationChanged;
   
   if (needsNewWorker) {
+    // Log why we're creating a new worker
+    if (deviceAllocationChanged) {
+      console.log(`🔄 [WORKER] Restarting worker ${index} due to device allocation change: ` +
+        `${JSON.stringify(worker.allocatedDevices || [])} -> ${JSON.stringify(job.allocatedDevices || [])}`);
+    }
+    
     // Only apply stagger for initial workers on CI
-    // Initial workers are those created in the run() method
     if (process.env.CI && !this._workerSlots[index].hasStarted && index < this._initialWorkerCount) {
       const staggerDelay = index * 30000; // 30s per worker
       if (staggerDelay > 0) {
@@ -667,6 +679,10 @@ _getJobDeviceRequirement(job) {
     
     worker = this._createWorker(job, index, (0, import_ipc.serializeConfig)(this._config, true));
     this._workerSlots[index].worker = worker;
+    
+    // Track allocated devices on the worker for comparison
+    worker.allocatedDevices = job.allocatedDevices;
+    
     worker.on("exit", () => this._workerSlots[index].worker = void 0);
     const startError = await worker.start();
     if (this._isStopped) return;
@@ -958,62 +974,65 @@ _startWorkerManagement() {
     console.log(`✅ [WORKERS] Removed ${removed} idle workers`);
   }
 
-  _createWorker(testGroup, parallelIndex, loaderData) {
-    const projectConfig = this._config.projects.find((p) => p.id === testGroup.projectId);
-    const outputDir = projectConfig.project.outputDir;
-    
-    // Don't set ALLOCATED_DEVICES here - it will be set per job
-    const extraEnv = {
-      ...(this._extraEnvByProjectId.get(testGroup.projectId) || {}),
-      TEST_WORKER_INDEX: String(parallelIndex)
-    };
-    
-    const worker = new import_workerHost.WorkerHost(
-      testGroup, 
-      parallelIndex, 
-      loaderData, 
-      extraEnv,
-      outputDir
-    );
-      
-    const handleOutput = (params) => {
-      const chunk = chunkFromParams(params);
-      if (worker.didFail()) {
-        return { chunk };
-      }
-      const workerSlot = this._workerSlots[parallelIndex];
-      const currentlyRunning = workerSlot?.jobDispatcher?.currentlyRunning();
-      
-      if (!currentlyRunning) return { chunk };
-      
-      return { chunk, test: currentlyRunning.test, result: currentlyRunning.result };
+ _createWorker(testGroup, parallelIndex, loaderData) {
+  const projectConfig = this._config.projects.find((p) => p.id === testGroup.projectId);
+  const outputDir = projectConfig.project.outputDir;
+  
+  // Include allocated devices in the environment for this worker
+  const allocatedDevicesStr = testGroup.allocatedDevices ? testGroup.allocatedDevices.join(',') : '';
+  
+  const extraEnv = {
+    ...(this._extraEnvByProjectId.get(testGroup.projectId) || {}),
+    ALLOCATED_DEVICES: allocatedDevicesStr,
+    TEST_WORKER_INDEX: String(parallelIndex)
+  };
+  
+  const worker = new import_workerHost.WorkerHost(
+    testGroup, 
+    parallelIndex, 
+    loaderData, 
+    extraEnv,
+    outputDir
+  );
+  
+  const handleOutput = (params) => {
+    const chunk = chunkFromParams(params);
+    if (worker.didFail()) {
+      return { chunk };
     }
+    const workerSlot = this._workerSlots[parallelIndex];
+    const currentlyRunning = workerSlot?.jobDispatcher?.currentlyRunning();
     
-    worker.on("stdOut", (params) => {
-      const { chunk, test, result } = handleOutput(params);
-      result?.stdout.push(chunk);
-      this._reporter.onStdOut?.(chunk, test, result);
-    });
+    if (!currentlyRunning) return { chunk };
     
-    worker.on("stdErr", (params) => {
-      const { chunk, test, result } = handleOutput(params);
-      result?.stderr.push(chunk);
-      this._reporter.onStdErr?.(chunk, test, result);
-    });
-    
-    worker.on("teardownErrors", (params) => {
-      this._failureTracker.onWorkerError();
-      for (const error of params.fatalErrors)
-        this._reporter.onError?.(error);
-    });
-    
-    worker.on("exit", () => {
-      const producedEnv = this._producedEnvByProjectId.get(testGroup.projectId) || {};
-      this._producedEnvByProjectId.set(testGroup.projectId, { ...producedEnv, ...worker.producedEnv() });
-    });
-    
-    return worker;
+    return { chunk, test: currentlyRunning.test, result: currentlyRunning.result };
   }
+  
+  worker.on("stdOut", (params) => {
+    const { chunk, test, result } = handleOutput(params);
+    result?.stdout.push(chunk);
+    this._reporter.onStdOut?.(chunk, test, result);
+  });
+  
+  worker.on("stdErr", (params) => {
+    const { chunk, test, result } = handleOutput(params);
+    result?.stderr.push(chunk);
+    this._reporter.onStdErr?.(chunk, test, result);
+  });
+  
+  worker.on("teardownErrors", (params) => {
+    this._failureTracker.onWorkerError();
+    for (const error of params.fatalErrors)
+      this._reporter.onError?.(error);
+  });
+  
+  worker.on("exit", () => {
+    const producedEnv = this._producedEnvByProjectId.get(testGroup.projectId) || {};
+    this._producedEnvByProjectId.set(testGroup.projectId, { ...producedEnv, ...worker.producedEnv() });
+  });
+  
+  return worker;
+}
 
   producedEnvByProjectId() {
     return this._producedEnvByProjectId;
@@ -1044,9 +1063,11 @@ class JobDispatcher {
     this._stopCallback = stopCallback;
     this._remainingByTestId = new Map(this.job.tests.map((e) => [e.id, e]))
       this._processingQueue = false;
-  this._scheduling = false;
-  this._adjustingWorkers = false;
-  this._completedTests = 0;;
+    this._scheduling = false;
+    this._adjustingWorkers = false;
+    this._completedTests = 0;
+    this._initialWorkerCount = 0; // Add this
+
   }
   
   _onTestBegin(params) {
