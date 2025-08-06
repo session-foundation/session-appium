@@ -188,39 +188,46 @@ class Dispatcher {
   }
 
 async _scheduleJob() {
-  if (this._isStopped) return;
+  console.log('🔍 [DEBUG] Entering _scheduleJob');
+  
+  if (this._isStopped) {
+    console.log('🔍 [DEBUG] Stopped, returning');
+    return;
+  }
   
   try {
     const availableDevices = await this._redis.lLen(this._redisKeys.devicesAvailable);
     console.log(`\n🔄 [SCHEDULER] Running scheduler (${availableDevices}/${this._devicePoolSize} devices available)`);
+    
+    // Check if we have any jobs in queue
+    if (this._queue.length === 0) {
+      console.log('📭 [SCHEDULER] No jobs in queue');
+      return;
+    }
+    
+    // Process the queue - this should handle scheduling
+    await this._processLocalQueue();
+    
   } catch (err) {
-    console.error('❌ Error getting device count:', err);
-    return;
-  }
-  
-  // Process local queue only
-  await this._processLocalQueue();
-  
-  // Trigger worker adjustment if dynamic scaling is enabled
-  if (this._dynamicWorkerScaling && this._queue.length > 0) {
-    await this._adjustWorkerPool();
+    console.error('❌ Error in _scheduleJob:', err);
+    throw err;
   }
 }
 
- async _processLocalQueue() {
+
+  async _processLocalQueue() {
   if (this._queue.length === 0) return;
   
-  // Get available device count first
   const availableDevices = await this._redis.lLen(this._redisKeys.devicesAvailable);
   
-  // Find minimum device requirement in queue
+  // Only log first few jobs, not all of them
+  console.log(`📋 [QUEUE] Processing queue with ${this._queue.length} jobs, ${availableDevices} devices available`);
+  
   const minDevicesNeeded = Math.min(...this._queue.map(job => this._getJobDeviceRequirement(job) || 1));
   
-  // Early exit if we don't have enough devices for ANY job
   if (availableDevices < minDevicesNeeded) {
-    // Only log once when transitioning to no devices
     if (!this._lastNoDevicesLog || Date.now() - this._lastNoDevicesLog > 5000) {
-      console.log(`⏸️  [QUEUE] Skipping queue processing - ${availableDevices} devices available, min needed: ${minDevicesNeeded}`);
+      console.log(`⏸️  [QUEUE] Skipping - need at least ${minDevicesNeeded} devices, have ${availableDevices}`);
       this._lastNoDevicesLog = Date.now();
     }
     return;
@@ -228,26 +235,74 @@ async _scheduleJob() {
   
   const remainingJobs = [];
   
-  for (const job of this._queue) {
+  // Process jobs in order until we schedule one
+  for (let i = 0; i < this._queue.length; i++) {
+    const job = this._queue[i];
     const devices = this._getJobDeviceRequirement(job);
     
+    // Can we run this job?
     if (!this._canRunBasedOnProjectLimits(job)) {
       remainingJobs.push(job);
       continue;
     }
     
-    // Try to schedule immediately
+    // Try to schedule
     if (await this._tryScheduleJob(job, devices)) {
-      console.log(`🚀 [SCHEDULER] Scheduled job needing ${devices} devices`);
-      // Job scheduled, don't add to remaining
+      console.log(`✅ [SCHEDULER] Scheduled job ${i + 1}/${this._queue.length} (${devices} devices)`);
+      
+      // Add all remaining jobs to the queue without checking them
+      for (let j = i + 1; j < this._queue.length; j++) {
+        remainingJobs.push(this._queue[j]);
+      }
+      break; // Exit the loop!
     } else {
-      // Couldn't schedule, keep in queue
       remainingJobs.push(job);
     }
   }
   
   this._queue = remainingJobs;
 }
+
+// Also optimize the early exit check to be more efficient
+async _scheduleJob() {
+  if (this._isStopped) return;
+  
+  try {
+    // Quick check if we have any free workers
+    const hasIdleWorker = this._workerSlots.some(w => !w.busy);
+    if (!hasIdleWorker) {
+      console.log('🔄 [SCHEDULER] No idle workers, skipping');
+      return;
+    }
+    
+    const availableDevices = await this._redis.lLen(this._redisKeys.devicesAvailable);
+    
+    // Quick check if we have any devices
+    if (availableDevices === 0 && this._queue.length > 0) {
+      if (!this._lastNoDevicesLog || Date.now() - this._lastNoDevicesLog > 5000) {
+        console.log('🔄 [SCHEDULER] No devices available, skipping');
+        this._lastNoDevicesLog = Date.now();
+      }
+      return;
+    }
+    
+    console.log(`\n🔄 [SCHEDULER] Running scheduler (${availableDevices}/${this._devicePoolSize} devices available)`);
+    
+    // Process the queue
+    await this._processLocalQueue();
+    
+    // Trigger worker adjustment if dynamic scaling is enabled
+    if (this._dynamicWorkerScaling && this._queue.length > 0) {
+      await this._adjustWorkerPool();
+    }
+    
+  } catch (err) {
+    console.error('❌ Error in _scheduleJob:', err);
+    throw err;
+  }
+}
+
+
 
   _canRunBasedOnProjectLimits(job) {
     const projectIdWorkerLimit = this._workerLimitPerProjectId.get(job.projectId);
@@ -260,107 +315,95 @@ async _scheduleJob() {
     return runningWorkersWithSameProjectId < projectIdWorkerLimit;
   }
 
-  async _tryScheduleJob(job, devices) {
-    // Stagger check for 4-device tests
-    if (devices >= 3 && this._completedTests < 5) {
-      const canProceed = await this._checkStagger(devices);
-      if (!canProceed) return false;
-    }
-    
-    console.log(`🔍 [TRY_SCHEDULE] Trying to schedule job needing ${devices} devices`);
-    
-    // Validate device requirement
-    if (devices > this._devicePoolSize) {
-      console.error(`❌ [ERROR] Job requires ${devices} devices but only ${this._devicePoolSize} exist`);
-      this._failJobWithErrors(job, [{ 
-        message: `Test requires ${devices} devices but pool only has ${this._devicePoolSize}` 
-      }]);
-      return true;
-    }
-    
-    // Check device availability
-
-    const availableDevices = await this._redis.lLen(this._redisKeys.devicesAvailable);
-    if (devices > availableDevices) {
-      console.log(`   ❌ Not enough devices (need ${devices}, have ${availableDevices})`);
-      return false;
-    }
-    // Find available worker
-    let workerIndex = this._workerSlots.findIndex(
-      (w) => !w.busy && w.worker && w.worker.hash() === job.workerHash && !w.worker.didSendStop()
-    );
-    if (workerIndex === -1) {
-      workerIndex = this._workerSlots.findIndex((w) => !w.busy);
-    }
-    
-    if (workerIndex === -1) {
-      console.log(`   ❌ No available workers`);
-      return false;
-    }
-    
-    console.log(`   ✅ Found available worker ${workerIndex}`);
-    
-      // Allocate devices from Redis
-    if (devices > 0) {
-      const allocatedIndices = await this._allocateDeviceIndices(devices);
-      if (!allocatedIndices) return false;
-      
-      // Update available count
-      const availableNow = await this._redis.lLen(this._redisKeys.devicesAvailable);
-      this._devicePool.available = availableNow;
-      
-      // Store allocation
-      const allocationKey = `worker-${workerIndex}`;
-      const allocationData = {
-        devices: allocatedIndices,
-        jobId: job.id || 'unknown'
-      };
-
-      console.log('  Key:', allocationKey);
-      console.log('  Data:', allocationData);
-      console.log('  Redis key:', this._redisKeys.devicesAllocations);
-
-      await this._redis.hSet(
-        this._redisKeys.devicesAllocations,
-        allocationKey,
-        JSON.stringify(allocationData)
-      );
-      
-      job.allocatedDevices = allocatedIndices;
-      console.log(`🔒 [DEVICES] Worker ${workerIndex} allocated devices: ${allocatedIndices.join(', ')}`);
-      
-      // Track stats
-      this._devicePoolMinAvailable.push(this._devicePool.available);
-      this._devicePool.stats.totalAllocated++;
-    }
-    
-    // Set up job dispatcher
-    const jobDispatcher = new JobDispatcher(
-      job,
-      this._reporter,
-      this._failureTracker,
-      () => this.stop().catch(() => {})
-    );
-    
-    this._workerSlots[workerIndex].busy = true;
-    this._workerSlots[workerIndex].jobDispatcher = jobDispatcher;
-    
-    // Run job
-    void this._runJobInWorker(workerIndex, jobDispatcher).then(async () => {
-      // Cleanup
-      this._workerSlots[workerIndex].jobDispatcher = void 0;
-      this._workerSlots[workerIndex].busy = false;
-      
-      // Release devices back to Redis
-      await this._deallocateDevices(workerIndex);
-      
-      // Schedule next job
-      this._scheduleJob();
-      this._checkFinished();
-    });
-    
+async _tryScheduleJob(job, devices) {
+  const firstTest = job.tests?.[0];
+  
+  // Validate device requirement
+  if (devices > this._devicePoolSize) {
+    console.error(`❌ [ERROR] Job requires ${devices} devices but only ${this._devicePoolSize} exist`);
+    this._failJobWithErrors(job, [{ 
+      message: `Test requires ${devices} devices but pool only has ${this._devicePoolSize}` 
+    }]);
     return true;
   }
+  
+  // Check device availability
+  const availableDevices = await this._redis.lLen(this._redisKeys.devicesAvailable);
+  if (devices > availableDevices) {
+    return false; // Don't log, this is normal
+  }
+  
+  // Find available worker
+  let workerIndex = this._workerSlots.findIndex(
+    (w) => !w.busy && w.worker && w.worker.hash() === job.workerHash && !w.worker.didSendStop()
+  );
+  if (workerIndex === -1) {
+    workerIndex = this._workerSlots.findIndex((w) => !w.busy);
+  }
+  
+  if (workerIndex === -1) {
+    return false; // Don't log, this is normal
+  }
+  
+  console.log(`🎯 [SCHEDULE] Assigning "${firstTest?.title?.substring(0, 40)}..." (${devices} devices) to worker ${workerIndex}`);
+  
+  // Allocate devices from Redis
+  if (devices > 0) {
+    const allocatedIndices = await this._allocateDeviceIndices(devices);
+    if (!allocatedIndices) return false;
+    
+    // Update available count
+    const availableNow = await this._redis.lLen(this._redisKeys.devicesAvailable);
+    this._devicePool.available = availableNow;
+    
+    // Store allocation
+    const allocationKey = `worker-${workerIndex}`;
+    const allocationData = {
+      devices: allocatedIndices,
+      jobId: job.id || 'unknown'
+    };
+    
+    await this._redis.hSet(
+      this._redisKeys.devicesAllocations,
+      allocationKey,
+      JSON.stringify(allocationData)
+    );
+    
+    job.allocatedDevices = allocatedIndices;
+    console.log(`🔒 [DEVICES] Worker ${workerIndex} allocated devices: ${allocatedIndices.join(', ')}`);
+    
+    // Track stats
+    this._devicePoolMinAvailable.push(this._devicePool.available);
+    this._devicePool.stats.totalAllocated++;
+  }
+  
+  // Set up job dispatcher
+  const jobDispatcher = new JobDispatcher(
+    job,
+    this._reporter,
+    this._failureTracker,
+    () => this.stop().catch(() => {})
+  );
+  
+  this._workerSlots[workerIndex].busy = true;
+  this._workerSlots[workerIndex].jobDispatcher = jobDispatcher;
+  
+  // Run job
+  void this._runJobInWorker(workerIndex, jobDispatcher).then(async () => {
+    // Cleanup
+    this._workerSlots[workerIndex].jobDispatcher = void 0;
+    this._workerSlots[workerIndex].busy = false;
+    
+    // Release devices back to Redis
+    await this._deallocateDevices(workerIndex);
+    
+    // Schedule next job
+    this._scheduleJob();
+    this._checkFinished();
+  });
+  
+  return true;
+}
 
   async _checkStagger(devices) {
   const staggerKey = `${this._redisKeys.staggerLock}:${devices}`;
@@ -510,13 +553,24 @@ async _scheduleJob() {
     this._scheduleJob();
   }
 
-  _getJobDeviceRequirement(job) {
-    const test = job.tests?.[0];
-    if (!test) return 0;
-    
-    const deviceMatch = test.title?.match(/@(\d+)-devices/);
-    return deviceMatch ? parseInt(deviceMatch[1]) : 0;
+_getJobDeviceRequirement(job) {
+  const test = job.tests?.[0];
+  if (!test) {
+    console.warn('⚠️  [DEVICE] Job has no tests:', job);
+    return 0;
   }
+  
+  const deviceMatch = test.title?.match(/@(\d+)-devices/);
+  const devices = deviceMatch ? parseInt(deviceMatch[1]) : 0;
+  
+  // Debug log for first few calls
+  if (!this._deviceReqLogCount) this._deviceReqLogCount = 0;
+  if (this._deviceReqLogCount++ < 5) {
+    console.log(`🔍 [DEVICE] Test "${test.title?.substring(0, 50)}..." requires ${devices} devices`);
+  }
+  
+  return devices;
+}
 
   _failJobWithErrors(job, errors) {
     for (const test of job.tests) {
@@ -536,29 +590,43 @@ async _scheduleJob() {
   if (jobDispatcher.skipWholeJob()) return;
   
   let worker = this._workerSlots[index].worker;
-  if (worker && (worker.hash() !== job.workerHash || worker.didSendStop())) {
-    await worker.stop();
-    worker = void 0;
-    if (this._isStopped) return;
-  }
   
-  let startError;
-  if (!worker) {
+  // Check if this is a new worker that needs staggering
+  const needsNewWorker = !worker || worker.hash() !== job.workerHash || worker.didSendStop();
+  
+  if (needsNewWorker) {
+    // Apply stagger for worker startup on CI
+    if (process.env.CI && !this._workerSlots[index].hasStarted) {
+      const staggerDelay = index * 30000; // 30s per worker
+      if (staggerDelay > 0) {
+        console.log(`⏳ [STAGGER] Worker ${index} waiting ${staggerDelay/1000}s before starting (CI simulator stagger)`);
+        await new Promise(resolve => setTimeout(resolve, staggerDelay));
+      }
+      this._workerSlots[index].hasStarted = true;
+    }
+    
+    if (worker) {
+      await worker.stop();
+      worker = void 0;
+      if (this._isStopped) return;
+    }
+    
     worker = this._createWorker(job, index, (0, import_ipc.serializeConfig)(this._config, true));
     this._workerSlots[index].worker = worker;
     worker.on("exit", () => this._workerSlots[index].worker = void 0);
-    startError = await worker.start();
+    const startError = await worker.start();
     if (this._isStopped) return;
+    
+    if (startError) {
+      jobDispatcher.onExit(startError);
+      return;
+    }
   }
   
-  // Start timeout BEFORE running job
+  // Start timeout for the job
   this._startTestTimeout(index, job);
   
-  if (startError) {
-    jobDispatcher.onExit(startError);
-  } else {
-    jobDispatcher.runInWorker(worker);
-  }
+  jobDispatcher.runInWorker(worker);
   
   const result = await jobDispatcher.jobResult;
   
@@ -580,6 +648,7 @@ async _scheduleJob() {
   
   this._lastWorkerActivity.set(index, Date.now());
 }
+
 
   async _checkFinished() {
     if (this._finished.isDone()) return;
@@ -628,7 +697,8 @@ async _scheduleJob() {
   this._extraEnvByProjectId = extraEnvByProjectId;
   
   // Sort test groups by device requirement (First Fit Decreasing)
-  this._queue = this._optimizeTestOrder(testGroups);
+  const sortedGroups = this._optimizeTestOrder(testGroups);
+  this._queue = [...sortedGroups];
   
   // Log summary
   console.log('\n🎬 [DISPATCHER] Starting run with test groups');
@@ -656,18 +726,23 @@ async _scheduleJob() {
     void this.stop();
   }
   
-  // Calculate optimal initial workers based on device pool and test requirements
+  // Calculate optimal initial workers
   const maxDeviceTest = Math.max(...this._queue.map(g => this._getJobDeviceRequirement(g)));
   const optimalInitialWorkers = Math.floor(this._devicePoolSize / maxDeviceTest) || 1;
   const initialWorkers = Math.min(this._maxWorkers, testGroups.length, optimalInitialWorkers);
   
   console.log(`🚀 [WORKERS] Starting with ${initialWorkers} workers (pool: ${this._devicePoolSize} devices, max test needs: ${maxDeviceTest} devices)`);
   
-  for (let i = 0; i < initialWorkers; i++) {
-    this._workerSlots.push({ busy: false });
+  // If we're on CI with 12 devices and 4-device tests, we should get 3 workers
+  if (process.env.CI) {
+    console.log(`🎯 [CI] Simulator startup will be staggered: Worker 0 starts immediately, then 30s delay per additional worker`);
   }
   
-  // Start scheduling
+  for (let i = 0; i < initialWorkers; i++) {
+    this._workerSlots.push({ busy: false, hasStarted: false });
+  }
+  
+  // Start scheduling - workers will be staggered when they actually start
   for (let i = 0; i < this._workerSlots.length; i++) {
     await this._scheduleJob();
   }
@@ -687,7 +762,6 @@ async _scheduleJob() {
     redisInitPromise = null;
   }
 }
-
   _optimizeTestOrder(testGroups) {
   // First Fit Decreasing - properly handle 0-device tests
   const testsWithDevices = testGroups.map(group => ({
