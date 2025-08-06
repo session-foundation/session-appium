@@ -111,12 +111,12 @@ export function getCapabilitiesForWorker(workerId: number): CustomW3CCapabilitie
 }
 export const getActualDeviceCount = (): number => {
   let actualCount = 0;
-  
+
   // Check each simulator environment variable
   for (let i = 1; i <= 12; i++) {
     const simEnvVar = `IOS_${i}_SIMULATOR`;
     const udid = process.env[simEnvVar];
-    
+
     // Check if it's a valid UDID (not just a placeholder)
     if (udid && isValidUdid(udid)) {
       actualCount++;
@@ -124,16 +124,16 @@ export const getActualDeviceCount = (): number => {
       console.log(`🔍 [DEVICE_POOL] ${simEnvVar}="${udid}" is not a valid UDID, skipping`);
     }
   }
-  
+
   return actualCount;
 };
 
 export const isValidUdid = (udid: string): boolean => {
   // Check if it's a valid UUID format (iOS simulator)
   const uuidRegex = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i;
-  
+
   // Also check it's not a placeholder
   const placeholders = ['just_not_empty', 'placeholder', 'dummy', 'not_set', 'n/a'];
-  
+
   return uuidRegex.test(udid) && !placeholders.includes(udid.toLowerCase());
 };
