@@ -221,7 +221,6 @@ async _scheduleJob() {
 
 
   async _processLocalQueue() {
-  // Prevent concurrent queue processing
   if (this._processingQueue) {
     return;
   }
@@ -233,8 +232,6 @@ async _scheduleJob() {
       return;
     }
     
-    // Double-check device availability with a small delay
-    await new Promise(resolve => setTimeout(resolve, 100));
     const availableDevices = await this._redis.lLen(this._redisKeys.devicesAvailable);
     
     console.log(`📋 [QUEUE] Processing ${this._queue.length} jobs, ${availableDevices} devices available`);
@@ -244,28 +241,60 @@ async _scheduleJob() {
       const firstJob = this._queue[0];
       const firstDevices = this._getJobDeviceRequirement(firstJob);
       console.log(`   First job needs ${firstDevices} devices: "${firstJob.tests?.[0]?.title?.substring(0, 40)}..."`);
+    }
+    
+    const minDevicesNeeded = Math.min(...this._queue.map(job => this._getJobDeviceRequirement(job) || 1));
+    
+    if (availableDevices < minDevicesNeeded) {
+      if (!this._lastNoDevicesLog || Date.now() - this._lastNoDevicesLog > 5000) {
+        console.log(`⏸️  [QUEUE] Skipping - need at least ${minDevicesNeeded} devices, have ${availableDevices}`);
+        this._lastNoDevicesLog = Date.now();
+      }
+      return;
+    }
+    
+    // Find ONE job to schedule
+    let scheduledIndex = -1;
+    let hitCooldown = false;
+    
+    for (let i = 0; i < this._queue.length; i++) {
+      const job = this._queue[i];
+      const devices = this._getJobDeviceRequirement(job);
       
-      // If we should have more devices, double-check
-      if (firstDevices > availableDevices && availableDevices < this._devicePoolSize) {
-        console.log(`   ⚠️  Rechecking device count...`);
-        await new Promise(resolve => setTimeout(resolve, 200));
-        const recheckedDevices = await this._redis.lLen(this._redisKeys.devicesAvailable);
-        if (recheckedDevices !== availableDevices) {
-          console.log(`   ✅ Device count updated: ${availableDevices} -> ${recheckedDevices}`);
-          // Use the updated count
-          const updatedAvailable = recheckedDevices;
-          return this._processQueueWithDevices(updatedAvailable);
-        }
+      // Skip if not enough devices
+      if (devices > availableDevices) {
+        continue;
+      }
+      
+      // Skip if project limits exceeded
+      if (!this._canRunBasedOnProjectLimits(job)) {
+        continue;
+      }
+      
+      // Try to schedule this job
+      const result = await this._tryScheduleJob(job, devices);
+      
+      if (result === 'cooldown') {
+        // Hit cooldown, stop trying other jobs
+        hitCooldown = true;
+        console.log(`🧊 [QUEUE] Devices in cooldown, stopping queue processing`);
+        break;
+      } else if (result === true) {
+        console.log(`✅ [SCHEDULER] Scheduled job ${i + 1}/${this._queue.length} (${devices} devices)`);
+        scheduledIndex = i;
+        break;
       }
     }
     
-    return this._processQueueWithDevices(availableDevices);
+    // Update queue by removing the scheduled job
+    if (scheduledIndex >= 0) {
+      this._queue.splice(scheduledIndex, 1);
+    }
     
   } finally {
     this._processingQueue = false;
   }
 }
-
 // Separate method to process queue with known device count
 async _processQueueWithDevices(availableDevices) {
   const minDevicesNeeded = Math.min(...this._queue.map(job => this._getJobDeviceRequirement(job) || 1));
@@ -395,7 +424,7 @@ async _tryScheduleJob(job, devices) {
   // Allocate devices from Redis
   if (devices > 0) {
     const allocatedIndices = await this._allocateDeviceIndices(devices);
-    if (!allocatedIndices) return false;
+    if (!allocatedIndices) return 'cooldown';
     
     // Update available count
     const availableNow = await this._redis.lLen(this._redisKeys.devicesAvailable);
