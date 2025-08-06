@@ -1,5 +1,8 @@
+import type { DeviceWrapper } from '../../../types/DeviceWrapper';
+
 import { testCommunityName } from '../../../constants/community';
 import { StrategyExtractionObj } from '../../../types/testing';
+import { getAppDisplayName } from '../utils/devnet';
 import { LocatorsInterface } from './index';
 
 export class MessageInput extends LocatorsInterface {
@@ -11,13 +14,22 @@ export class MessageInput extends LocatorsInterface {
   }
 }
 
+export class SendButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    return {
+      strategy: 'accessibility id',
+      selector: 'Send message button',
+    };
+  }
+}
+
 export class ScrollToBottomButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger:id/scrollToBottomButton',
+          selector: 'network.loki.messenger.qa:id/scrollToBottomButton',
         } as const;
       case 'ios':
         return {
@@ -152,7 +164,7 @@ export class NotificationSwitch extends LocatorsInterface {
         return {
           strategy: 'id',
           selector: 'com.android.settings:id/switch_text',
-          text: 'All Session notifications',
+          text: `All ${getAppDisplayName()} notifications`,
         } as const;
       case 'ios':
         throw new Error('Platform not supported');
@@ -333,7 +345,7 @@ export class CommunityInvitation extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger:id/openGroupTitleTextView',
+          selector: 'network.loki.messenger.qa:id/openGroupTitleTextView',
           text: testCommunityName,
         } as const;
       case 'ios':
@@ -341,6 +353,81 @@ export class CommunityInvitation extends LocatorsInterface {
           strategy: 'accessibility id',
           selector: 'Community invitation',
           text: testCommunityName,
+        } as const;
+    }
+  }
+}
+
+export class EditNicknameButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'edit-profile-icon',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Username',
+        } as const;
+    }
+  }
+}
+
+export class NicknameInput extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'nickname-input',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Username input',
+        } as const;
+    }
+  }
+}
+
+export class SaveNicknameButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'set-nickname-confirm-button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Save',
+        } as const;
+    }
+  }
+}
+
+export class PreferredDisplayName extends LocatorsInterface {
+  public text: string | undefined;
+  constructor(device: DeviceWrapper, text?: string) {
+    super(device);
+    this.text = text;
+  }
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'preferred-display-name',
+          text: this.text,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Username',
+          text: this.text,
         } as const;
     }
   }

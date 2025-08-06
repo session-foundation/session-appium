@@ -2,6 +2,18 @@ name: Prune Old Allure Attachments
 on:
   schedule:
     - cron: '0 16 * * 0' # Weekly, 16:00 UTC Sunday
+  workflow_dispatch:
+    inputs:
+      retention-days:
+        description: 'Number of days to retain attachments'
+        required: false
+        default: '14'
+        type: string
+      dry-run:
+        description: 'If true, only list files that would be deleted (no deletion or commit)'
+        required: false
+        default: 'false'
+        type: boolean
 
 jobs:
   prune:
@@ -14,24 +26,60 @@ jobs:
         env:
           GIT_LFS_SKIP_SMUDGE: 1 # Don't actually download LFS content
 
-      - name: Prune Allure attachments older than 14 days
+      - name: Set retention days
+        id: retention
         run: |
-          echo "## Pruning Report" >> $GITHUB_STEP_SUMMARY
-          COUNT=$(find . -type f -path "*/data/attachments/*" \( -name "*.png" -o -name "*.txt" -o -name "*.imagediff" \) -mtime +14 | wc -l)
-          echo "Deleting $COUNT files older than 14 days" >> $GITHUB_STEP_SUMMARY
+          DAYS="${{ github.event.inputs.retention-days || '14' }}"
+          [[ "$DAYS" =~ ^[1-9][0-9]*$ ]] || { echo "Error: retention-days must be a positive integer"; exit 1; }
+          echo "days=$DAYS" >> $GITHUB_OUTPUT
 
-          find . -type f -path "*/data/attachments/*" \( -name "*.png" -o -name "*.txt" -o -name "*.imagediff" \) -mtime +14 -delete
+      - name: Prune Allure attachments
+        env:
+          DRY_RUN: ${{ github.event.inputs.dry-run || 'false' }}
+          RETENTION_DAYS: ${{ steps.retention.outputs.days }}
+        run: |
+          CUTOFF_DATE=$(date -d "$RETENTION_DAYS days ago" +%s)
+
+          echo "Retention: $RETENTION_DAYS days | Dry run: $DRY_RUN" >> $GITHUB_STEP_SUMMARY
+
+          # Find old attachment files
+          > files_to_delete.txt
+          for pattern in '*/data/attachments/*.png' '*/data/attachments/*.txt' '*/data/attachments/*.imagediff'; do
+            git ls-files -z "$pattern" | while IFS= read -r -d '' file; do
+              COMMIT_DATE=$(git log -1 --format="%ct" -- "$file" 2>/dev/null || echo "0")
+              [ "$COMMIT_DATE" -lt "$CUTOFF_DATE" ] && [ "$COMMIT_DATE" -ne "0" ] && echo "$file" >> files_to_delete.txt
+            done
+          done
+
+          COUNT=$(wc -l < files_to_delete.txt 2>/dev/null || echo 0)
+          echo "Found $COUNT old files" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$COUNT" -gt 0 ]; then
+            if [ "$DRY_RUN" == "true" ]; then
+              echo "Files to delete:" >> $GITHUB_STEP_SUMMARY
+              head -20 files_to_delete.txt >> $GITHUB_STEP_SUMMARY
+              [ "$COUNT" -gt 20 ] && echo "...(+$((COUNT-20)) more)" >> $GITHUB_STEP_SUMMARY
+            else
+              xargs rm -f < files_to_delete.txt
+              echo "Deleted $COUNT files" >> $GITHUB_STEP_SUMMARY
+            fi
+          fi
+
+          rm -f files_to_delete.txt
 
       - name: Commit changes
+        if: github.event.inputs.dry-run != 'true'
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@users.noreply.github.com"
-          git add -A
-          git commit -m "Prune attachments older than 14 days" || echo "Nothing to prune"
-          git push
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if [ -n "$(git status --porcelain)" ]; then
+            git add -A
+            git commit -m "ci: Prune attachments older than ${{ steps.retention.outputs.days }} days"
+            git push
+          fi
 
       - name: Prune LFS objects
+        if: github.event.inputs.dry-run != 'true'
         run: |
-          echo "## Pruning LFS objects" >> $GITHUB_STEP_SUMMARY
-          git lfs prune --verify-remote
-          echo "LFS prune complete" >> $GITHUB_STEP_SUMMARY
+          git lfs prune --verify-remote || echo "LFS prune failed"

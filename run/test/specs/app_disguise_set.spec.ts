@@ -57,7 +57,7 @@ async function appDisguiseSetIcon(platform: SupportedPlatformsType, testInfo: Te
     // The disguised app must be uninstalled otherwise every following test will fail
     await closeApp(device);
     await runScriptAndLog(
-      `${getAdbFullPath()} -s ${device.udid} uninstall network.loki.messenger`,
+      `${getAdbFullPath()} -s ${device.udid} uninstall network.loki.messenger.qa`,
       true
     );
   }

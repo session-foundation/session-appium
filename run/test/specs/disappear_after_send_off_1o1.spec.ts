@@ -74,9 +74,9 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType, testIn
     .withArgs({ name: alice.userName })
     .toString();
   await Promise.all([
-    alice1.disappearingControlMessage(disappearingMessagesTurnedOffYou),
-    bob1.disappearingControlMessage(disappearingMessagesTurnedOff),
-    alice2.disappearingControlMessage(disappearingMessagesTurnedOffYou),
+    alice1.waitForControlMessageToBePresent(disappearingMessagesTurnedOffYou),
+    bob1.waitForControlMessageToBePresent(disappearingMessagesTurnedOff),
+    alice2.waitForControlMessageToBePresent(disappearingMessagesTurnedOffYou),
   ]);
   // Follow setting on device 2
   await bob1.clickOnElementAll(new FollowSettingsButton(bob1));
@@ -88,19 +88,13 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType, testIn
   );
   await bob1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Confirm' });
   // Check conversation subtitle?
-  await Promise.all([
-    alice1.doesElementExist({
-      ...new DisappearingMessagesSubtitle(alice1).build(),
-      maxWait: 500,
-    }),
-    bob1.doesElementExist({
-      ...new DisappearingMessagesSubtitle(bob1).build(),
-      maxWait: 500,
-    }),
-    alice2.doesElementExist({
-      ...new DisappearingMessagesSubtitle(alice2).build(),
-      maxWait: 500,
-    }),
-  ]);
+  await Promise.all(
+    [alice1, bob1, alice2].map(device =>
+      device.verifyElementNotPresent({
+        ...new DisappearingMessagesSubtitle(device).build(),
+        maxWait: 5_000,
+      })
+    )
+  );
   await closeApp(alice1, bob1, alice2);
 }

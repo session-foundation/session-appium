@@ -20,8 +20,8 @@ const sharedCapabilities: AppiumAndroidCapabilities & AppiumCapabilities = {
   'appium:app': androidAppFullPath,
   'appium:platformName': 'Android',
   'appium:platformVersion': '14',
-  'appium:appPackage': 'network.loki.messenger',
-  'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+  'appium:appPackage': 'network.loki.messenger.qa',
+  'appium:appActivity': 'network.loki.messenger.RoutingActivity', // This one still needs the original package name (without qa suffix)
   'appium:automationName': 'UiAutomator2',
   'appium:newCommandTimeout': 300000,
   'appium:eventTimings': false,

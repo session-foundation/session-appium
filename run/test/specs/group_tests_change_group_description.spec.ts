@@ -132,7 +132,7 @@ async function changeGroupDescriptionAndroid(platform: SupportedPlatformsType, t
 
   await test.step('Update group description', async () => {
     // Clear the long description
-    await alice1.clickOnElementXPath(`(//android.widget.ImageView[@content-desc="Clear"])[2]`); // SES-4184
+    await alice1.clickOnElementById('clear-input-button-description');
     await alice1.inputText(trimmedGroupDescription, new EditGroupDescriptionInput(alice1));
     await alice1.clickOnElementAll(new SaveGroupNameChangeButton(alice1));
   });

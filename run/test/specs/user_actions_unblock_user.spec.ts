@@ -49,7 +49,7 @@ async function unblockUser(platform: SupportedPlatformsType, testInfo: TestInfo)
   }
   // Send message from Blocked User
   await bob1.sendMessage(blockedMessage);
-  await alice1.doesElementExist({
+  await alice1.verifyElementNotPresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: blockedMessage,
@@ -63,5 +63,5 @@ async function unblockUser(platform: SupportedPlatformsType, testInfo: TestInfo)
     false
   );
   await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Unblock' });
-  await alice1.doesElementExist({ ...new BlockedBanner(alice1).build(), maxWait: 2000 });
+  await alice1.verifyElementNotPresent({ ...new BlockedBanner(alice1).build(), maxWait: 2000 });
 }

@@ -58,20 +58,18 @@ async function disappearingCommunityInviteMessage(
   await alice1.clickOnElementAll(new CommunityInviteConfirmButton(alice1));
   // The community invite process fails silently so we will check if the invite came through first
   await bob1.waitForTextElementToBePresent(new CommunityInvitation(bob1));
+  // Bob already has the convo open so we can start checking for the disappearing message immediately
+  await bob1.hasElementBeenDeleted({
+    ...new CommunityInvitation(bob1).build(),
+    maxWait,
+    preventEarlyDeletion: true,
+  });
   // Leave Invite Contacts, Conversation Settings, Community, and open convo with Bob
   await alice1.navigateBack();
   await alice1.navigateBack();
   await alice1.navigateBack();
   await alice1.clickOnElementAll(new ConversationItem(alice1, bob.userName));
-  // Wait for message to disappear
-  await Promise.all(
-    [alice1, bob1].map(device =>
-      device.hasElementBeenDeleted({
-        ...new CommunityInvitation(device).build(),
-        maxWait,
-        preventEarlyDeletion: true,
-      })
-    )
-  );
+  // At this point the invite should have disappeared already so we just check it's not there
+  await alice1.verifyElementNotPresent(new CommunityInvitation(alice1));
   await closeApp(alice1, bob1);
 }

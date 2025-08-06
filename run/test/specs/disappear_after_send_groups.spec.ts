@@ -47,9 +47,9 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType, testIn
     .toString();
   // Check control message is correct on device 1, 2 and 3
   await Promise.all([
-    alice1.disappearingControlMessage(disappearingMessagesSetYou),
-    bob1.disappearingControlMessage(disappearingMessagesSetControl),
-    charlie1.disappearingControlMessage(disappearingMessagesSetControl),
+    alice1.waitForControlMessageToBePresent(disappearingMessagesSetYou),
+    bob1.waitForControlMessageToBePresent(disappearingMessagesSetControl),
+    charlie1.waitForControlMessageToBePresent(disappearingMessagesSetControl),
   ]);
   // Check for test messages (should be deleted)
   await alice1.sendMessage(testMessage);

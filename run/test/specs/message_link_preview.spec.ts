@@ -4,7 +4,7 @@ import { testLink } from '../../constants';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { LinkPreview, LinkPreviewMessage } from './locators';
-import { MessageInput, OutgoingMessageStatusSent } from './locators/conversation';
+import { MessageInput, OutgoingMessageStatusSent, SendButton } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -41,7 +41,7 @@ async function sendLinkIos(platform: SupportedPlatformsType, testInfo: TestInfo)
     englishStrippedStr('linkPreviewsFirstDescription').toString()
   );
   await alice1.clickOnByAccessibilityID('Enable');
-  await alice1.clickOnByAccessibilityID('Send message button');
+  await alice1.clickOnElementAll(new SendButton(alice1));
   await alice1.waitForTextElementToBePresent({
     ...new OutgoingMessageStatusSent(alice1).build(),
     maxWait: 20000,
@@ -49,7 +49,7 @@ async function sendLinkIos(platform: SupportedPlatformsType, testInfo: TestInfo)
   await alice1.inputText(testLink, new MessageInput(alice1));
   // Wait for link preview to load
   await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
-  await alice1.clickOnByAccessibilityID('Send message button');
+  await alice1.clickOnElementAll(new SendButton(alice1));
   // Make sure image preview is available in device 2
   await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
@@ -91,7 +91,7 @@ async function sendLinkAndroid(platform: SupportedPlatformsType, testInfo: TestI
   });
   //wait for preview to generate
   await sleepFor(5000);
-  await alice1.clickOnByAccessibilityID('Send message button');
+  await alice1.clickOnElementAll(new SendButton(alice1));
   await alice1.waitForTextElementToBePresent({
     ...new OutgoingMessageStatusSent(alice1).build(),
     maxWait: 25000,

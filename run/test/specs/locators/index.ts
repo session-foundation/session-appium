@@ -1,6 +1,7 @@
 import { ANDROID_XPATHS, IOS_XPATHS } from '../../../constants';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { ElementStates, StrategyExtractionObj } from '../../../types/testing';
+import { getAppDisplayName } from '../utils/devnet';
 import { SupportedPlatformsType } from '../utils/open_app';
 
 export abstract class LocatorsInterface {
@@ -56,7 +57,7 @@ export class ApplyChanges extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger:id/action_apply',
+          selector: 'network.loki.messenger.qa:id/action_apply',
         } as const;
       case 'ios':
         return {
@@ -438,7 +439,7 @@ export class ShareExtensionIcon extends LocatorsInterface {
         return {
           strategy: 'id',
           selector: 'com.google.android.apps.photos:id/text',
-          text: 'Session',
+          text: `${getAppDisplayName()}`, // Session QA or AQA
         };
       case 'ios':
         return {
@@ -468,43 +469,10 @@ export class LinkPreviewMessage extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger:id/linkPreviewView',
+          selector: 'network.loki.messenger.qa:id/linkPreviewView',
         };
       case 'ios':
         throw new Error(`No such element on iOS`);
-    }
-  }
-}
-export class MediaMessageInput extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Message input box',
-        };
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Text input box',
-        };
-    }
-  }
-}
-
-export class SendMediaButton extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Send message button',
-        };
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Send button',
-        };
     }
   }
 }
@@ -523,60 +491,3 @@ export class ImageName extends LocatorsInterface {
     }
   }
 }
-
-// TODO update StrategyExtractionObj to include Locator class
-// export class PendingMessageRequestControlMessage extends LocatorsInterface {
-//   public build(): StrategyExtractionObj {
-//     switch (this.platform) {
-//       case 'android':
-//         return {
-//           strategy: 'id',
-//           selector: 'network.loki.messenger:id/textSendAfterApproval',
-//           text: 'You will be able to send voice messages and attachments once the recipient has approved this message request.',
-//         };
-//       case 'ios':
-//         return {
-//           strategy: 'accessibility id',
-//           selector: 'Control message',
-//           text: 'You will be able to send voice messages and attachments once the recipient has approved this message request.',
-//         };
-//     }
-//   }
-// }
-
-// export class MessageRequestAcceptedDescriptionControlMessage extends LocatorsInterface {
-//   public build(): StrategyExtractionObj {
-//     switch (this.platform) {
-//       case 'ios':
-//         return {
-//           strategy: 'accessibility id',
-//           selector: 'Control message',
-//           text: 'Sending a message to this user will automatically accept their message request and reveal your Account ID.',
-//         };
-//       case 'android':
-//         return {
-//           strategy: 'id',
-//           selector: 'network.loki.messenger:id/sendAcceptsTextView',
-//           text: 'Sending a message to this user will automatically accept their message request and reveal your Account ID.',
-//         };
-//     }
-//   }
-// }
-
-// export class MessageReadStatus extends LocatorsInterface {
-//   public build(): StrategyExtractionObj {
-//     switch (this.platform) {
-//       case 'android':
-//         return {
-//           strategy: 'id',
-//           selector: 'network.loki.messenger:id/messageStatusTextView',
-//           text: 'Read',
-//         };
-//       case 'ios':
-//         return {
-//           strategy: 'accessibility id',
-//           selector: 'Message sent status: Read',
-//         };
-//     }
-//   }
-// }

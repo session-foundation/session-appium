@@ -6,7 +6,7 @@ import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { LinkPreviewMessage } from './locators';
-import { MessageInput, OutgoingMessageStatusSent } from './locators/conversation';
+import { MessageInput, OutgoingMessageStatusSent, SendButton } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -59,7 +59,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
     await alice1.onIOS().inputText(testLink, new MessageInput(alice1));
     // Let preview load
     await sleepFor(5000);
-    await alice1.clickOnByAccessibilityID('Send message button');
+    await alice1.clickOnElementAll(new SendButton(alice1));
     await alice1.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(alice1).build(),
       maxWait: 20000,

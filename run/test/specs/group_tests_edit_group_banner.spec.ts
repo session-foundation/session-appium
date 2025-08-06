@@ -28,9 +28,6 @@ async function editGroupBanner(platform: SupportedPlatformsType, testInfo: TestI
   // Navigate to Edit Group screen
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   await alice1.clickOnElementAll(new ManageMembersMenuItem(alice1));
-  const groupsBanner = await alice1.doesElementExist(new LatestReleaseBanner(alice1));
-  if (!groupsBanner) {
-    throw new Error('v2 groups warning banner is not shown or text is incorrect');
-  }
+  await alice1.waitForTextElementToBePresent(new LatestReleaseBanner(alice1));
   await closeApp(alice1, bob1, charlie1);
 }

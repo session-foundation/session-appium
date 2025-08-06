@@ -10,10 +10,9 @@ import {
 import type { DeviceWrapper } from '../../../types/DeviceWrapper';
 
 import { ConversationItem } from '../locators/home';
+import { getNetworkTarget } from '../utils/devnet';
 import { openAppMultipleDevices, type SupportedPlatformsType } from '../utils/open_app';
 import { restoreAccountNoFallback } from '../utils/restore_account';
-
-const networkToTarget = 'mainnet';
 
 type WithAlice = { alice: StateUser };
 type WithBob = { bob: StateUser };
@@ -94,7 +93,7 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
 }) {
   const [devices, prebuilt] = await Promise.all([
     openAppMultipleDevices(platform, appsToOpen, testInfo),
-    buildStateForTest(stateToBuildKey, groupName, networkToTarget),
+    buildStateForTest(stateToBuildKey, groupName, getNetworkTarget(platform)),
   ]);
 
   return { devices, prebuilt };

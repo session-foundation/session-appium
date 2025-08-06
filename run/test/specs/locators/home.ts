@@ -9,7 +9,7 @@ export class EmptyLandingPage extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger:id/emptyStateContainer',
+          selector: 'network.loki.messenger.qa:id/emptyStateContainer',
         } as const;
       case 'ios':
         return {
