@@ -648,15 +648,16 @@ _getJobDeviceRequirement(job) {
   const needsNewWorker = !worker || worker.hash() !== job.workerHash || worker.didSendStop();
   
   if (needsNewWorker) {
-    // Apply stagger for worker startup on CI
-    if (process.env.CI && !this._workerSlots[index].hasStarted) {
+    // Only apply stagger for initial workers on CI
+    // Initial workers are those created in the run() method
+    if (process.env.CI && !this._workerSlots[index].hasStarted && index < this._initialWorkerCount) {
       const staggerDelay = index * 30000; // 30s per worker
       if (staggerDelay > 0) {
         console.log(`⏳ [STAGGER] Worker ${index} waiting ${staggerDelay/1000}s before starting (CI simulator stagger)`);
         await new Promise(resolve => setTimeout(resolve, staggerDelay));
       }
-      this._workerSlots[index].hasStarted = true;
     }
+    this._workerSlots[index].hasStarted = true;
     
     if (worker) {
       await worker.stop();
@@ -811,10 +812,13 @@ _getJobDeviceRequirement(job) {
   const optimalInitialWorkers = Math.floor(this._devicePoolSize / maxDeviceTest) || 1;
   const initialWorkers = Math.min(this._maxWorkers, testGroups.length, optimalInitialWorkers);
   
+  // Store initial worker count for stagger logic
+  this._initialWorkerCount = initialWorkers;
+  
   console.log(`🚀 [WORKERS] Starting with ${initialWorkers} workers (pool: ${this._devicePoolSize} devices, max test needs: ${maxDeviceTest} devices)`);
   
   if (process.env.CI) {
-    console.log(`🎯 [CI] Simulator startup will be staggered: Worker 0 starts immediately, then 30s delay per additional worker`);
+    console.log(`🎯 [CI] Simulator startup will be staggered for first ${initialWorkers} workers: Worker 0 starts immediately, then 30s delay per additional worker`);
   }
   
   // Create initial workers
@@ -846,6 +850,7 @@ _getJobDeviceRequirement(job) {
     redisInitPromise = null;
   }
 }
+
   _optimizeTestOrder(testGroups) {
   // First Fit Decreasing - properly handle 0-device tests
   const testsWithDevices = testGroups.map(group => ({
@@ -957,12 +962,10 @@ _startWorkerManagement() {
     const projectConfig = this._config.projects.find((p) => p.id === testGroup.projectId);
     const outputDir = projectConfig.project.outputDir;
     
-    const allocatedDevicesStr = testGroup.allocatedDevices ? testGroup.allocatedDevices.join(',') : '';
-    
+    // Don't set ALLOCATED_DEVICES here - it will be set per job
     const extraEnv = {
       ...(this._extraEnvByProjectId.get(testGroup.projectId) || {}),
-      ALLOCATED_DEVICES: allocatedDevicesStr,
-      TEST_WORKER_INDEX: String(parallelIndex)  // Important for stagger!
+      TEST_WORKER_INDEX: String(parallelIndex)
     };
     
     const worker = new import_workerHost.WorkerHost(
@@ -972,7 +975,7 @@ _startWorkerManagement() {
       extraEnv,
       outputDir
     );
-    
+      
     const handleOutput = (params) => {
       const chunk = chunkFromParams(params);
       if (worker.didFail()) {
@@ -1270,17 +1273,25 @@ class JobDispatcher {
     this._parallelIndex = worker.parallelIndex;
     this._workerIndex = worker.workerIndex;
     
+    // Set allocated devices as environment variable for this specific job
     if (this.job.allocatedDevices) {
       const allocatedDevicesStr = this.job.allocatedDevices.join(',');
-      process.env.ALLOCATED_DEVICES = allocatedDevicesStr;
+      // This needs to be passed to the worker, not set in the dispatcher process
+      worker.env = {
+        ...worker.env,
+        ALLOCATED_DEVICES: allocatedDevicesStr
+      };
     }
     
     const runPayload = {
       file: this.job.requireFile,
       entries: this.job.tests.map((test) => {
         return { testId: test.id, retry: test.results.length };
-      })
+      }),
+      // Pass allocated devices in the payload
+      allocatedDevices: this.job.allocatedDevices
     };
+    
     worker.runTestGroup(runPayload);
     this._listeners = [
       import_utils.eventsHelper.addEventListener(worker, "testBegin", this._onTestBegin.bind(this)),
