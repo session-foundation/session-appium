@@ -1294,10 +1294,11 @@ export class DeviceWrapper {
     let attempt = 0;
     let lastError: string | undefined;
 
-    while ((elapsed = Date.now() - start) < maxWait) {
+    do {
       try {
         const result = await fn();
         if (result.success) {
+          elapsed = Date.now() - start;
           this.log(`Polling successful after ${attempt + 1} attempt(s) (${elapsed}ms)`);
           return result.data;
         }
@@ -1305,13 +1306,17 @@ export class DeviceWrapper {
       } catch (err) {
         lastError = err instanceof Error ? err.message : String(err);
       }
+      
       attempt++;
+      elapsed = Date.now() - start;
       onAttempt?.(attempt, elapsed);
-
+      
+      // Only sleep if we're going to continue
       if (elapsed + pollInterval < maxWait) {
         await sleepFor(pollInterval);
       }
-    }
+      
+    } while (elapsed < maxWait);
     // Log the error with details but only throw generic error so that they get grouped in the report
     this.error(`${lastError} after ${attempt} attempts (${elapsed}ms)`);
     throw new Error(lastError || 'Polling failed');
