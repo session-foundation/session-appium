@@ -228,9 +228,10 @@ async _scheduleJob() {
       return;
     }
     
+    // Double-check device availability with a small delay
+    await new Promise(resolve => setTimeout(resolve, 100));
     const availableDevices = await this._redis.lLen(this._redisKeys.devicesAvailable);
     
-    // Log current state
     console.log(`📋 [QUEUE] Processing ${this._queue.length} jobs, ${availableDevices} devices available`);
     
     // Debug: Show what's at the front of the queue
@@ -238,50 +239,68 @@ async _scheduleJob() {
       const firstJob = this._queue[0];
       const firstDevices = this._getJobDeviceRequirement(firstJob);
       console.log(`   First job needs ${firstDevices} devices: "${firstJob.tests?.[0]?.title?.substring(0, 40)}..."`);
-    }
-    
-    const minDevicesNeeded = Math.min(...this._queue.map(job => this._getJobDeviceRequirement(job) || 1));
-    
-    if (availableDevices < minDevicesNeeded) {
-      if (!this._lastNoDevicesLog || Date.now() - this._lastNoDevicesLog > 5000) {
-        console.log(`⏸️  [QUEUE] Skipping - need at least ${minDevicesNeeded} devices, have ${availableDevices}`);
-        this._lastNoDevicesLog = Date.now();
-      }
-      return;
-    }
-    
-    // Find ONE job to schedule
-    let scheduledIndex = -1;
-    
-    for (let i = 0; i < this._queue.length; i++) {
-      const job = this._queue[i];
-      const devices = this._getJobDeviceRequirement(job);
       
-      // Skip if not enough devices
-      if (devices > availableDevices) {
-        continue;
-      }
-      
-      // Skip if project limits exceeded
-      if (!this._canRunBasedOnProjectLimits(job)) {
-        continue;
-      }
-      
-      // Try to schedule this job
-      if (await this._tryScheduleJob(job, devices)) {
-        console.log(`✅ [SCHEDULER] Scheduled job ${i + 1}/${this._queue.length} (${devices} devices)`);
-        scheduledIndex = i;
-        break;
+      // If we should have more devices, double-check
+      if (firstDevices > availableDevices && availableDevices < this._devicePoolSize) {
+        console.log(`   ⚠️  Rechecking device count...`);
+        await new Promise(resolve => setTimeout(resolve, 200));
+        const recheckedDevices = await this._redis.lLen(this._redisKeys.devicesAvailable);
+        if (recheckedDevices !== availableDevices) {
+          console.log(`   ✅ Device count updated: ${availableDevices} -> ${recheckedDevices}`);
+          // Use the updated count
+          const updatedAvailable = recheckedDevices;
+          return this._processQueueWithDevices(updatedAvailable);
+        }
       }
     }
     
-    // Update queue by removing the scheduled job
-    if (scheduledIndex >= 0) {
-      this._queue.splice(scheduledIndex, 1);
-    }
+    return this._processQueueWithDevices(availableDevices);
     
   } finally {
     this._processingQueue = false;
+  }
+}
+
+// Separate method to process queue with known device count
+async _processQueueWithDevices(availableDevices) {
+  const minDevicesNeeded = Math.min(...this._queue.map(job => this._getJobDeviceRequirement(job) || 1));
+  
+  if (availableDevices < minDevicesNeeded) {
+    if (!this._lastNoDevicesLog || Date.now() - this._lastNoDevicesLog > 5000) {
+      console.log(`⏸️  [QUEUE] Skipping - need at least ${minDevicesNeeded} devices, have ${availableDevices}`);
+      this._lastNoDevicesLog = Date.now();
+    }
+    return;
+  }
+  
+  // Find ONE job to schedule
+  let scheduledIndex = -1;
+  
+  for (let i = 0; i < this._queue.length; i++) {
+    const job = this._queue[i];
+    const devices = this._getJobDeviceRequirement(job);
+    
+    // Skip if not enough devices
+    if (devices > availableDevices) {
+      continue;
+    }
+    
+    // Skip if project limits exceeded
+    if (!this._canRunBasedOnProjectLimits(job)) {
+      continue;
+    }
+    
+    // Try to schedule this job
+    if (await this._tryScheduleJob(job, devices)) {
+      console.log(`✅ [SCHEDULER] Scheduled job ${i + 1}/${this._queue.length} (${devices} devices)`);
+      scheduledIndex = i;
+      break;
+    }
+  }
+  
+  // Update queue by removing the scheduled job
+  if (scheduledIndex >= 0) {
+    this._queue.splice(scheduledIndex, 1);
   }
 }
 
@@ -477,27 +496,34 @@ async _tryScheduleJob(job, devices) {
   }
 }
 
-  async _deallocateDevices(workerIndex) {
-    const allocationKey = `worker-${workerIndex}`;
-    const allocation = await this._redis.hGet(this._redisKeys.devicesAllocations, allocationKey);
+ async _deallocateDevices(workerIndex) {
+  const allocationKey = `worker-${workerIndex}`;
+  const allocation = await this._redis.hGet(this._redisKeys.devicesAllocations, allocationKey);
+  
+  if (allocation) {
+    const data = JSON.parse(allocation);
+    const devices = data.devices || data; // Handle both old and new format
     
-    if (allocation) {
-      const data = JSON.parse(allocation);
-      const devices = data.devices || data; // Handle both old and new format
+    if (devices.length > 0) {
+      // Convert all devices to strings for Redis
+      const deviceStrings = devices.map(d => String(d));
       
-      if (devices.length > 0) {
-        await this._redis.rPush(this._redisKeys.devicesAvailable, ...devices.map(String));
-      }
+      // Push all devices back in one atomic operation
+      await this._redis.rPush(this._redisKeys.devicesAvailable, deviceStrings);
       
+      // Delete the allocation record
       await this._redis.hDel(this._redisKeys.devicesAllocations, allocationKey);
       
-      // Update available count
+      // Update available count - wait a bit for Redis to settle
+      await new Promise(resolve => setTimeout(resolve, 50));
       const availableNow = await this._redis.lLen(this._redisKeys.devicesAvailable);
       this._devicePool.available = availableNow;
       
-      console.log(`🔓 [DEVICES] Worker ${workerIndex} released devices: ${devices.join(', ')}`);
+      console.log(`🔓 [DEVICES] Worker ${workerIndex} released ${devices.length} devices: ${devices.join(', ')} (pool now has ${availableNow})`);
     }
   }
+}
+
 
   async _allocateDeviceIndices(count) {
     const allocated = [];
@@ -674,8 +700,24 @@ _getJobDeviceRequirement(job) {
   }
   
   this._lastWorkerActivity.set(index, Date.now());
+  
+  // Cleanup
+  this._workerSlots[index].jobDispatcher = void 0;
+  this._workerSlots[index].busy = false;
+  
+  // Release devices back to Redis
+  await this._deallocateDevices(index);
+  
+  // Wait a bit to ensure devices are properly released
+  await new Promise(resolve => setTimeout(resolve, 200));
+  
+  // Schedule next job
+  if (!this._isStopped) {
+    this._scheduleJob();
+  }
+  
+  this._checkFinished();
 }
-
 
   async _checkFinished() {
     if (this._finished.isDone()) return;
