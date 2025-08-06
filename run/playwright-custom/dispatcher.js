@@ -699,6 +699,10 @@ _getJobDeviceRequirement(job) {
   jobDispatcher.runInWorker(worker);
   
   const result = await jobDispatcher.jobResult;
+  console.log(`🔍 [RETRY_DEBUG] Job result: didFail=${result.didFail}, hasNewJob=${!!result.newJob}`);
+  if (result.newJob) {
+    console.log(`🔍 [RETRY_DEBUG] New retry job has ${result.newJob.tests.length} tests`);
+  }
   
   // Clear timeout after job completes
   this._clearTestTimeout(index);
@@ -712,8 +716,11 @@ _getJobDeviceRequirement(job) {
   }
   
   if (!this._isStopped && result.newJob) {
+    console.log(`➕ [RETRY_DEBUG] Adding retry job to queue for ${result.newJob.tests.length} tests`);
     this._queue.unshift(result.newJob);
     this._updateCounterForWorkerHash(result.newJob.workerHash, 1);
+  } else if (result.newJob) {
+    console.log(`❌ [RETRY_DEBUG] NOT adding retry job because _isStopped=${this._isStopped}`);
   }
   
   this._lastWorkerActivity.set(index, Date.now());
@@ -739,7 +746,8 @@ _getJobDeviceRequirement(job) {
   async _checkFinished() {
     if (this._finished.isDone()) return;
     
-    if ((this._queue.length || queueLength) && !this._isStopped) return;
+    // Remove the undefined queueLength variable
+    if (this._queue.length && !this._isStopped) return;
     if (this._workerSlots.some((w) => w.busy)) return;
     
     // Cleanup
@@ -754,11 +762,16 @@ _getJobDeviceRequirement(job) {
     }
     
     // Log final stats
-    if (stats.totalAllocations) {
-      console.log("\n📊 [STATS] Final Statistics:");
-      console.log(`    Total device allocations: ${stats.totalAllocations || 0}`);
-      console.log(`    Device pool size: ${this._devicePoolSize}`);
+    console.log("\n📊 [STATS] Final Statistics:");
+    console.log(`    Total device allocations: ${this._devicePool.stats.totalAllocated || 0}`);
+    console.log(`    Device pool size: ${this._devicePoolSize}`);
+    if (this._devicePoolMinAvailable.length > 0) {
+      console.log(`    Min available devices during run: ${Math.min(...this._devicePoolMinAvailable)}`);
     }
+    console.log(`    Total tests completed: ${this._completedTests || 0}`);
+    console.log(`    Final worker count: ${this._workerSlots.length}`);
+    
+    console.log("\n✅ [DISPATCHER] All tests completed successfully!");
     
     this._finished.resolve();
   }
@@ -1224,7 +1237,10 @@ class JobDispatcher {
   }
   
   _onDone(params) {
+    console.log(`🔍 [RETRY_DEBUG] _onDone called for ${this.job.tests.length} tests`);
+    
     if (!this._remainingByTestId.size && !this._failedTests.size && !params.fatalErrors.length && !params.skipTestsDueToSetupFailure.length && !params.fatalUnknownTestIds && !params.unexpectedExitError) {
+      console.log(`✅ [RETRY_DEBUG] All tests passed, no retries needed`);
       this._finished({ didFail: false });
       return;
     }
@@ -1247,9 +1263,16 @@ class JobDispatcher {
     }
     const retryCandidates = /* @__PURE__ */ new Set();
     const serialSuitesWithFailures = /* @__PURE__ */ new Set();
+
+    console.log(`🔍 [RETRY_DEBUG] Failed tests: ${this._failedTests.size}`);
+    console.log(`🔍 [RETRY_DEBUG] Failed with non-retriable error: ${this._failedWithNonRetriableError.size}`);
+    
     for (const failedTest of this._failedTests) {
-      if (this._failedWithNonRetriableError.has(failedTest))
+      if (this._failedWithNonRetriableError.has(failedTest)) {
+        console.log(`❌ [RETRY_DEBUG] Test "${failedTest.title}" has non-retriable error, skipping retry`);
         continue;
+      }
+      console.log(`➕ [RETRY_DEBUG] Adding "${failedTest.title}" to retry candidates`);
       retryCandidates.add(failedTest);
       let outermostSerialSuite;
       for (let parent = failedTest.parent; parent; parent = parent.parent) {
@@ -1270,11 +1293,20 @@ class JobDispatcher {
       serialSuite.allTests().forEach((test) => retryCandidates.add(test));
     }
     const remaining = [...this._remainingByTestId.values()];
+    console.log(`🔍 [RETRY_DEBUG] Remaining tests from remainingByTestId: ${remaining.length}`);
     for (const test of retryCandidates) {
-      if (test.results.length < test.retries + 1)
+      console.log(`🔍 [RETRY_DEBUG] Checking retry for "${test.title}": results=${test.results.length}, retries=${test.retries}`);
+      if (test.results.length < test.retries + 1) {
+        console.log(`✅ [RETRY_DEBUG] Will retry "${test.title}" (attempt ${test.results.length + 1}/${test.retries + 1})`);
         remaining.push(test);
+      } else {
+        console.log(`❌ [RETRY_DEBUG] Max retries reached for "${test.title}"`);
+      }
     }
+    
     const newJob = remaining.length ? { ...this.job, tests: remaining } : void 0;
+    console.log(`🔍 [RETRY_DEBUG] Creating newJob with ${remaining.length} tests: ${newJob ? 'YES' : 'NO'}`);
+    
     this._finished({ didFail: true, newJob });
   }
   
