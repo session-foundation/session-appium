@@ -906,6 +906,10 @@ export const simpleDictionary = {
     en: 'This will ban the selected user from this Community. Are you sure you want to continue?',
     args: undefined,
   },
+  communityDescriptionEnter: {
+    en: 'Enter a community description',
+    args: undefined,
+  },
   communityEnterUrl: {
     en: 'Enter Community URL',
     args: undefined,
@@ -961,6 +965,14 @@ export const simpleDictionary = {
   communityLeaveError: {
     en: 'Failed to leave {community_name}',
     args: { community_name: 'string' },
+  },
+  communityNameEnter: {
+    en: 'Enter a community name',
+    args: undefined,
+  },
+  communityNameEnterPlease: {
+    en: 'Please enter a community name',
+    args: undefined,
   },
   communityUnknown: {
     en: 'Unknown Community',
@@ -3612,6 +3624,22 @@ export const simpleDictionary = {
   },
   updateApp: {
     en: 'App updates',
+    args: undefined,
+  },
+  updateCommunityInformation: {
+    en: 'Update Community Information',
+    args: undefined,
+  },
+  updateCommunityInformationDescription: {
+    en: 'Community name and description are visible to all community members',
+    args: undefined,
+  },
+  updateCommunityInformationEnterShorterDescription: {
+    en: 'Please enter a shorter community description',
+    args: undefined,
+  },
+  updateCommunityInformationEnterShorterName: {
+    en: 'Please enter a shorter community name',
     args: undefined,
   },
   updateDownloaded: {
