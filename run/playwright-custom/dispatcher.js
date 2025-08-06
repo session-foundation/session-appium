@@ -134,7 +134,12 @@ class Dispatcher {
           this._redisKeys.staggerLock,
           this._redisKeys.stats
         ];
-                
+        
+    // Also clean up any cooldown keys from previous runs
+    for (let i = 0; i < this._devicePoolSize; i++) {
+      keysToDelete.push(`playwright:cooldown:${i}`);
+    }
+
         if (keysToDelete.every(key => key !== undefined)) {
           await this._redis.del(...keysToDelete);
         }
@@ -496,54 +501,107 @@ async _tryScheduleJob(job, devices) {
   }
 }
 
- async _deallocateDevices(workerIndex) {
+async _deallocateDevices(workerIndex) {
   const allocationKey = `worker-${workerIndex}`;
   const allocation = await this._redis.hGet(this._redisKeys.devicesAllocations, allocationKey);
   
   if (allocation) {
     const data = JSON.parse(allocation);
-    const devices = data.devices || data; // Handle both old and new format
+    const devices = data.devices || data;
     
     if (devices.length > 0) {
-      // Convert all devices to strings for Redis
-      const deviceStrings = devices.map(d => String(d));
+      // Quarantine ALL devices for 2 seconds to ensure Appium cleanup
+      const cooldownTime = 2;
+      console.log(`🧊 [COOLDOWN] Devices ${devices.join(', ')} entering ${cooldownTime}s cooldown period`);
       
-      // Push all devices back in one atomic operation
-      await this._redis.rPush(this._redisKeys.devicesAvailable, deviceStrings);
+      // Set quarantine flags with TTL
+      const cooldownPromises = devices.map(device => 
+        this._redis.setEx(`playwright:cooldown:${device}`, cooldownTime, `from-worker-${workerIndex}`)
+      );
+      await Promise.all(cooldownPromises);
       
-      // Delete the allocation record
-      await this._redis.hDel(this._redisKeys.devicesAllocations, allocationKey);
-      
-      // Update available count - wait a bit for Redis to settle
-      await new Promise(resolve => setTimeout(resolve, 50));
-      const availableNow = await this._redis.lLen(this._redisKeys.devicesAvailable);
-      this._devicePool.available = availableNow;
-      
-      console.log(`🔓 [DEVICES] Worker ${workerIndex} released ${devices.length} devices: ${devices.join(', ')} (pool now has ${availableNow})`);
+      // Add back to available pool (they're available but cooling down)
+      await this._redis.rPush(this._redisKeys.devicesAvailable, devices.map(String));
     }
+    
+    await this._redis.hDel(this._redisKeys.devicesAllocations, allocationKey);
+    
+    const availableNow = await this._redis.lLen(this._redisKeys.devicesAvailable);
+    this._devicePool.available = availableNow;
+    
+    console.log(`🔓 [DEVICES] Worker ${workerIndex} released ${devices.length} devices: ${devices.join(', ')} (pool now has ${availableNow})`);
   }
 }
 
 
-  async _allocateDeviceIndices(count) {
-    const allocated = [];
+async _allocateDeviceIndices(count) {
+  const allocated = [];
+  const attempted = new Set(); // Track what we've tried to avoid infinite loops
+  
+  while (allocated.length < count) {
+    // Get all available devices at once to see our options
+    const availableCount = await this._redis.lLen(this._redisKeys.devicesAvailable);
     
-    // Pop devices from Redis
-    for (let i = 0; i < count; i++) {
-      const device = await this._redis.lPop(this._redisKeys.devicesAvailable);
-      if (device === null) {
-        // Failed, return what we got
-        if (allocated.length > 0) {
-          await this._redis.rPush(this._redisKeys.devicesAvailable, ...allocated.map(String));
-        }
-        return null;
+    if (availableCount === 0) {
+      // No devices at all
+      if (allocated.length > 0) {
+        await this._redis.rPush(this._redisKeys.devicesAvailable, allocated.map(String));
       }
-      allocated.push(parseInt(device));
+      return null;
     }
     
-    console.log(`✅ [ALLOC] Allocated devices: [${allocated.join(', ')}]`);
-    return allocated;
+    // Try to find a device not in cooldown
+    let foundDevice = null;
+    let skippedDevices = [];
+    
+    // Pop devices until we find one not in cooldown
+    for (let i = 0; i < availableCount && !foundDevice; i++) {
+      const device = await this._redis.lPop(this._redisKeys.devicesAvailable);
+      if (!device) break;
+      
+      // Check if we've already tried this device
+      if (attempted.has(device)) {
+        skippedDevices.push(device);
+        continue;
+      }
+      
+      attempted.add(device);
+      
+      // Check cooldown
+      const cooldownKey = `playwright:cooldown:${device}`;
+      const inCooldown = await this._redis.exists(cooldownKey);
+      
+      if (inCooldown) {
+        const ttl = await this._redis.ttl(cooldownKey);
+        console.log(`🧊 [ALLOC] Device ${device} in cooldown for ${ttl}s more`);
+        skippedDevices.push(device);
+      } else {
+        foundDevice = device;
+      }
+    }
+    
+    // Put skipped devices back
+    if (skippedDevices.length > 0) {
+      await this._redis.rPush(this._redisKeys.devicesAvailable, skippedDevices);
+    }
+    
+    if (!foundDevice) {
+      // All devices are in cooldown
+      console.log(`⏳ [ALLOC] All available devices in cooldown, waiting...`);
+      
+      // Return what we have so far
+      if (allocated.length > 0) {
+        await this._redis.rPush(this._redisKeys.devicesAvailable, allocated.map(String));
+      }
+      return null;
+    }
+    
+    allocated.push(parseInt(foundDevice));
   }
+  
+  console.log(`✅ [ALLOC] Allocated devices: [${allocated.join(', ')}]`);
+  return allocated;
+}
   _isDeviceHealthy(deviceIndex) {
     // For iOS devices, check if the simulator UDID is still valid
     const udid = process.env[`IOS_${deviceIndex + 1}_SIMULATOR`];
@@ -556,6 +614,17 @@ async _tryScheduleJob(job, devices) {
     return true;
   }
 
+  async _getDeviceCooldownStatus() {
+  const status = {};
+  for (let i = 0; i < this._devicePoolSize; i++) {
+    const cooldownKey = `playwright:cooldown:${i}`;
+    const ttl = await this._redis.ttl(cooldownKey);
+    if (ttl > 0) {
+      status[i] = ttl;
+    }
+  }
+  return status;
+}
     _startTestTimeout(workerIndex, job) {
     // Longer timeout for CI and tests with multiple devices
     const devices = this._getJobDeviceRequirement(job);
@@ -914,12 +983,19 @@ _startWorkerManagement() {
   this._workerManagementInterval = setInterval(async () => {
     await this._adjustWorkerPool();
     
-    // Also trigger scheduling if there are idle workers and queued jobs
+    // Log cooldown status
+    const cooldowns = await this._getDeviceCooldownStatus();
+    const cooldownCount = Object.keys(cooldowns).length;
+    if (cooldownCount > 0) {
+      console.log(`🧊 [COOLDOWN] ${cooldownCount} devices cooling down:`, cooldowns);
+    }
+    
+    // Trigger scheduling if needed
     const hasIdleWorker = this._workerSlots.some(w => !w.busy);
     if (hasIdleWorker && this._queue.length > 0) {
       this._scheduleJob();
     }
-  }, 10000); // Check every 10 seconds
+  }, 10000);
 }
 
   async _adjustWorkerPool() {
