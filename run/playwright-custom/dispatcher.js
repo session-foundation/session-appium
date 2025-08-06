@@ -49,7 +49,7 @@ async function getRedis() {
     })();
   }
   
-  return redisInitPromise;
+  return await redisInitPromise;
 }
 
 class Dispatcher {
@@ -67,7 +67,6 @@ class Dispatcher {
     this._failureTracker = failureTracker;
     this._devicePoolMinAvailable = [];
     this._statusLogInterval = null;
-    this._localJobMap = new Map();
 
     
     // Dynamic worker configuration
@@ -119,33 +118,63 @@ class Dispatcher {
       devicesAvailable: 'playwright:devices:available',
       devicesAllocations: 'playwright:devices:allocations',
       staggerLock: 'playwright:stagger:lock',
-      jobQueue: 'playwright:jobs:queue',
-      workerStatus: 'playwright:workers:status',
       stats: 'playwright:stats'
     };
   }
 
-  async _initializeRedis() {
-    this._redis = await getRedis();
-    
-    // Clean up any previous state
-    await this._redis.del(
-      this._redisKeys.devicesAvailable,
-      this._redisKeys.devicesAllocations,
-      this._redisKeys.staggerLock,
-      this._redisKeys.jobQueue,
-      this._redisKeys.workerStatus,
-      this._redisKeys.stats
-    );
-    
-    // Initialize device pool in Redis
-    const devices = Array.from({ length: this._devicePoolSize }, (_, i) => String(i));
-    if (devices.length > 0) {
-      await this._redis.rPush(this._redisKeys.devicesAvailable, ...devices);
+    // Fix 3: Debug why only 1 device is available
+    async _initializeRedis() {
+      console.log('🔍 [DEBUG] Getting Redis client...');
+      this._redis = await getRedis();
+      
+      // Clean up any previous state
+      try {
+        const keysToDelete = [
+          this._redisKeys.devicesAvailable,
+          this._redisKeys.devicesAllocations,
+          this._redisKeys.staggerLock,
+          this._redisKeys.stats
+        ];
+        
+        console.log('🔍 [DEBUG] Keys to delete:', keysToDelete);
+        
+        if (keysToDelete.every(key => key !== undefined)) {
+          await this._redis.del(...keysToDelete);
+        }
+      } catch (err) {
+        console.error('❌ Error deleting keys:', err);
+      }
+      
+      // Check what's already in Redis
+      console.log('🔍 [DEBUG] Checking existing devices in Redis...');
+      const existingCount = await this._redis.lLen(this._redisKeys.devicesAvailable);
+      console.log(`🔍 [DEBUG] Found ${existingCount} existing devices in Redis`);
+      
+      // Initialize device pool in Redis
+      console.log('🔍 [DEBUG] About to create devices array with size:', this._devicePoolSize);
+      
+      if (!this._devicePoolSize || this._devicePoolSize <= 0) {
+        console.error('❌ Invalid device pool size:', this._devicePoolSize);
+        return;
+      }
+      
+      const devices = Array.from({ length: this._devicePoolSize }, (_, i) => String(i));
+      console.log('🔍 [DEBUG] Devices to push:', devices);
+      
+      if (devices.length > 0 && this._redisKeys.devicesAvailable) {
+        // Try without spread operator
+        await this._redis.rPush(this._redisKeys.devicesAvailable, devices);
+      }
+            
+      // Verify what we actually have
+      const finalCount = await this._redis.lLen(this._redisKeys.devicesAvailable);
+      console.log(`🎮 [DEVICE_POOL] Initialized ${this._devicePoolSize} devices in Redis (verified: ${finalCount})`);
+      
+      if (finalCount !== this._devicePoolSize) {
+        console.error(`❌ [DEVICE_POOL] Mismatch! Expected ${this._devicePoolSize} but have ${finalCount}`);
+      }
     }
-    
-    console.log(`🎮 [DEVICE_POOL] Initialized ${this._devicePoolSize} devices in Redis`);
-  }
+
 
   _detectIosDeviceCount() {
     console.log('🔍 [DEVICE_DETECT] Checking iOS devices...');
@@ -168,89 +197,77 @@ class Dispatcher {
     return /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i.test(udid);
   }
 
-  async _scheduleJob() {
-    if (this._isStopped) return;
-    
-    const availableDevices = await this._redis.lLen(this._redisKeys.devicesAvailable);
-    console.log(`\n🔄 [SCHEDULER] Running scheduler (${availableDevices}/${this._devicePoolSize} devices available)`);
-    
-    // Process jobs from Redis queue
-    await this._processJobQueue();
-    
-    // Check local queue for any remaining jobs
-    await this._processLocalQueue();
+async _scheduleJob() {
+  console.log('🔍 [DEBUG] Entering _scheduleJob');
+  console.log('🔍 [DEBUG] this:', typeof this);
+  console.log('🔍 [DEBUG] this.constructor:', this?.constructor?.name);
+  console.log('🔍 [DEBUG] this._redis:', this._redis);
+  console.log('🔍 [DEBUG] Redis client type:', typeof this._redis);
+  console.log('🔍 [DEBUG] Redis lLen type:', typeof this._redis?.lLen);
+  
+  if (this._isStopped) {
+    console.log('🔍 [DEBUG] Stopped, returning');
+    return;
   }
-
-  async _processJobQueue() {
-    // Get jobs from Redis queue
-    const queueLength = await this._redis.zCard(this._redisKeys.jobQueue);
-    if (queueLength === 0) return;
-    
-    // Get top jobs that might be runnable
-    const jobs = await this._redis.zRange(this._redisKeys.jobQueue, 0, 20);
-    
-    for (const jobStr of jobs) {
-     const jobData = JSON.parse(jobStr);
-    const job = this._localJobMap.get(jobData._localJobRef);
-
-    if (!job) {
-      console.error(`❌ [ERROR] Job ${jobData.id} not found in local map!`);
-      await this._redis.zRem(this._redisKeys.jobQueue, jobStr);
-      continue; // Skip this job
-    }
-          const scheduled = await this._tryScheduleJob(job, job.devices);
-
-      if (scheduled) {
-        // Remove from queue
-        await this._redis.zRem(this._redisKeys.jobQueue, jobStr);
-      } else {
-        // Can't schedule this or any larger jobs
-        break;
-      }
-    }
+  
+ try {
+  console.log('🔍 [DEBUG] About to call lLen');
+  console.log('🔍 [DEBUG] Redis client keys:', Object.keys(this._redis));
+  
+  // Try calling it directly with a hardcoded string
+  console.log('🔍 [DEBUG] Testing with hardcoded key...');
+  const test = await this._redis.lLen('playwright:devices:available');
+  console.log('🔍 [DEBUG] Hardcoded worked:', test);
+  
+  // Now try with variable
+  const key = this._redisKeys.devicesAvailable;
+  console.log('🔍 [DEBUG] Using variable key:', key);
+  console.log('🔍 [DEBUG] Key char codes:', Array.from(key).map(c => c.charCodeAt(0)));
+  
+  const availableDevices = await this._redis.lLen(key);
+  console.log(`\n🔄 [SCHEDULER] Running scheduler (${availableDevices}/${this._devicePoolSize} devices available)`);
+} catch (err) {
+  console.error('❌ Error details:', err.message);
+  console.error('❌ Error stack:', err.stack);
+  
+  // Try raw Redis command
+  try {
+    const raw = await this._redis.sendCommand(['LLEN', 'playwright:devices:available']);
+    console.log('🔍 [DEBUG] Raw command worked:', raw);
+  } catch (err2) {
+    console.error('❌ Raw command also failed:', err2);
   }
+  
+  throw err;
+}
+  
+  // Process local queue only
+  await this._processLocalQueue();
+}
 
   async _processLocalQueue() {
-    const remainingJobs = [];
+  const remainingJobs = [];
+  
+  for (const job of this._queue) {
+    const devices = this._getJobDeviceRequirement(job);
     
-    for (const job of this._queue) {
-      const devices = this._getJobDeviceRequirement(job);
-      const priority = devices || 0; // Default to 0 if no devices found
-
-      // Also add a check before adding to Redis
-      if (!Number.isFinite(priority)) {
-        console.warn(`⚠️ Invalid priority ${priority} for job, using 0`);
-        priority = 0;
-      }      
-      if (!this._canRunBasedOnProjectLimits(job)) {
-        remainingJobs.push(job);
-        continue;
-      }
-      
-      // In _processLocalQueue, when adding to Redis queue:
-      const jobData = {
-        id: `job-${Date.now()}-${Math.random()}`,
-        devices,
-        workerHash: job.workerHash,
-        projectId: job.projectId,
-        requireFile: job.requireFile,
-        testIds: job.tests.map(t => t.id),
-        _localJobRef: Math.random()
-      };
-
-      // Store the actual job object locally
-      this._localJobMap.set(jobData._localJobRef, job);
-
-      await this._redis.zAdd(this._redisKeys.jobQueue, {
-        score: priority || 0,
-        value: JSON.stringify(jobData)
-      });
-
-
+    if (!this._canRunBasedOnProjectLimits(job)) {
+      remainingJobs.push(job);
+      continue;
     }
-
-    this._queue = remainingJobs;
+    
+    // Try to schedule immediately
+    if (await this._tryScheduleJob(job, devices)) {
+      console.log(`🚀 [SCHEDULER] Scheduled job needing ${devices} devices`);
+      // Job scheduled, don't add to remaining
+    } else {
+      // Couldn't schedule, keep in queue
+      remainingJobs.push(job);
+    }
   }
+  
+  this._queue = remainingJobs;
+}
 
   _canRunBasedOnProjectLimits(job) {
     const projectIdWorkerLimit = this._workerLimitPerProjectId.get(job.projectId);
@@ -325,13 +342,20 @@ class Dispatcher {
       
       // Store allocation
       const allocationKey = `worker-${workerIndex}`;
+      const allocationData = {
+        devices: allocatedIndices,
+        jobId: job.id || 'unknown'
+      };
+
+      console.log('🔍 [DEBUG] Storing allocation:');
+      console.log('  Key:', allocationKey);
+      console.log('  Data:', allocationData);
+      console.log('  Redis key:', this._redisKeys.devicesAllocations);
+
       await this._redis.hSet(
         this._redisKeys.devicesAllocations,
         allocationKey,
-        JSON.stringify({
-          devices: allocatedIndices,
-          jobId: job.id || 'unknown'
-        })
+        JSON.stringify(allocationData)
       );
       
       job.allocatedDevices = allocatedIndices;
@@ -371,15 +395,18 @@ class Dispatcher {
   }
 
   async _checkStagger(devices) {
-    const staggerKey = `${this._redisKeys.staggerLock}:${devices}`;
-    const interval = devices === 4 ? 30000 : 20000;
-    
+  const staggerKey = `${this._redisKeys.staggerLock}:${devices}`;
+  const interval = devices === 4 ? 30000 : 20000;
+  
+  console.log('🔍 [DEBUG] Stagger key:', staggerKey, 'interval:', interval);
+  
+  try {
     // Try to acquire lock
     const result = await this._redis.set(
       staggerKey,
-      Date.now(),
-      'PX', interval,  // Expire after interval
-      'NX'             // Only set if not exists
+      String(Date.now()), // Make sure it's a string
+      'PX', interval,
+      'NX'
     );
     
     if (result === 'OK') {
@@ -388,13 +415,17 @@ class Dispatcher {
     }
     
     // Check TTL to see how long to wait
-    const ttl = await this._redis.pttl(staggerKey);
+    const ttl = await this._redis.pTTL(staggerKey);
     if (ttl > 0) {
       console.log(`⏳ [STAGGER] Must wait ${(ttl/1000).toFixed(1)}s for ${devices}-device test`);
     }
     
     return false;
+  } catch (err) {
+    console.error('❌ Error in _checkStagger:', err);
+    throw err;
   }
+}
 
   async _deallocateDevices(workerIndex) {
     const allocationKey = `worker-${workerIndex}`;
@@ -519,55 +550,59 @@ class Dispatcher {
   }
 
   async _runJobInWorker(index, jobDispatcher) {
-    this._lastWorkerActivity.set(index, Date.now());
-    const job = jobDispatcher.job;
-    
-    if (jobDispatcher.skipWholeJob()) return;
-    
-    let worker = this._workerSlots[index].worker;
-    if (worker && (worker.hash() !== job.workerHash || worker.didSendStop())) {
-      await worker.stop();
-      worker = void 0;
-      if (this._isStopped) return;
-    }
-    
-    let startError;
-    if (!worker) {
-      worker = this._createWorker(job, index, (0, import_ipc.serializeConfig)(this._config, true));
-      this._workerSlots[index].worker = worker;
-      worker.on("exit", () => this._workerSlots[index].worker = void 0);
-      startError = await worker.start();
-      if (this._isStopped) return;
-    }
-    
-    if (startError) {
-      jobDispatcher.onExit(startError);
-    } else {
-      jobDispatcher.runInWorker(worker);
-    }
-    
-    const result = await jobDispatcher.jobResult;
-    this._updateCounterForWorkerHash(job.workerHash, -1);
-    
-    if (result.didFail) {
-      void worker.stop(true);
-    } else if (this._isWorkerRedundant(worker)) {
-      void worker.stop();
-    }
-    
-    if (!this._isStopped && result.newJob) {
-      this._queue.unshift(result.newJob);
-      this._updateCounterForWorkerHash(result.newJob.workerHash, 1);
-    }
-    
-    this._lastWorkerActivity.set(index, Date.now());
+  this._lastWorkerActivity.set(index, Date.now());
+  const job = jobDispatcher.job;
+  
+  if (jobDispatcher.skipWholeJob()) return;
+  
+  let worker = this._workerSlots[index].worker;
+  if (worker && (worker.hash() !== job.workerHash || worker.didSendStop())) {
+    await worker.stop();
+    worker = void 0;
+    if (this._isStopped) return;
   }
+  
+  let startError;
+  if (!worker) {
+    worker = this._createWorker(job, index, (0, import_ipc.serializeConfig)(this._config, true));
+    this._workerSlots[index].worker = worker;
+    worker.on("exit", () => this._workerSlots[index].worker = void 0);
+    startError = await worker.start();
+    if (this._isStopped) return;
+  }
+  
+  // Start timeout BEFORE running job
+  this._startTestTimeout(index, job);
+  
+  if (startError) {
+    jobDispatcher.onExit(startError);
+  } else {
+    jobDispatcher.runInWorker(worker);
+  }
+  
+  const result = await jobDispatcher.jobResult;
+  
+  // Clear timeout after job completes
+  this._clearTestTimeout(index);
+  
+  this._updateCounterForWorkerHash(job.workerHash, -1);
+  
+  if (result.didFail) {
+    void worker.stop(true);
+  } else if (this._isWorkerRedundant(worker)) {
+    void worker.stop();
+  }
+  
+  if (!this._isStopped && result.newJob) {
+    this._queue.unshift(result.newJob);
+    this._updateCounterForWorkerHash(result.newJob.workerHash, 1);
+  }
+  
+  this._lastWorkerActivity.set(index, Date.now());
+}
 
   async _checkFinished() {
     if (this._finished.isDone()) return;
-    
-    // Check Redis queue
-    const queueLength = await this._redis.zCard(this._redisKeys.jobQueue);
     
     if ((this._queue.length || queueLength) && !this._isStopped) return;
     if (this._workerSlots.some((w) => w.busy)) return;
@@ -584,7 +619,6 @@ class Dispatcher {
     }
     
     // Log final stats
-    const stats = await this._redis.hGetall(this._redisKeys.stats);
     if (stats.totalAllocations) {
       console.log("\n📊 [STATS] Final Statistics:");
       console.log(`    Total device allocations: ${stats.totalAllocations || 0}`);
@@ -607,53 +641,61 @@ class Dispatcher {
     this._queuedOrRunningHashCount.set(hash, delta + (this._queuedOrRunningHashCount.get(hash) || 0));
   }
 
-  async run(testGroups, extraEnvByProjectId) {
-    // Initialize Redis
-    await this._initializeRedis();
-    
-    this._extraEnvByProjectId = extraEnvByProjectId;
-    
-    // Sort test groups by device requirement (First Fit Decreasing)
-    this._queue = this._optimizeTestOrder(testGroups);
-    
-    // Log summary
-    console.log('\n🎬 [DISPATCHER] Starting run with test groups');
-    const deviceCounts = {};
-    this._queue.forEach(group => {
-      const devices = this._getJobDeviceRequirement(group);
-      deviceCounts[devices] = (deviceCounts[devices] || 0) + 1;
-    });
-    
-    console.log(`📊 [SUMMARY] Device requirements:`);
-    Object.entries(deviceCounts).forEach(([devices, count]) => {
-      if (count > 0) {
-        console.log(`    ${devices} devices: ${count} tests`);
-      }
-    });
-    
-    for (const group of testGroups) {
-      this._updateCounterForWorkerHash(group.workerHash, 1);
+async run(testGroups, extraEnvByProjectId) {
+  // Initialize Redis
+  await this._initializeRedis();
+  console.log('🔍 [DEBUG] After init, Redis type:', this._redis?.constructor?.name);
+  
+  this._extraEnvByProjectId = extraEnvByProjectId;
+  console.log('🔍 [DEBUG] After extraEnv, Redis type:', this._redis?.constructor?.name);
+  
+  // Sort test groups by device requirement (First Fit Decreasing)
+  this._queue = this._optimizeTestOrder(testGroups);
+  console.log('🔍 [DEBUG] After optimize, Redis type:', this._redis?.constructor?.name);
+  
+  // Log summary
+  console.log('\n🎬 [DISPATCHER] Starting run with test groups');
+  const deviceCounts = {};
+  this._queue.forEach(group => {
+    const devices = this._getJobDeviceRequirement(group);
+    deviceCounts[devices] = (deviceCounts[devices] || 0) + 1;
+  });
+  
+  console.log(`📊 [SUMMARY] Device requirements:`);
+  Object.entries(deviceCounts).forEach(([devices, count]) => {
+    if (count > 0) {
+      console.log(`    ${devices} devices: ${count} tests`);
     }
-    
-    this._isStopped = false;
-    this._workerSlots = [];
-    
-    if (this._failureTracker.hasReachedMaxFailures()) {
-      void this.stop();
-    }
-    
-    // Start workers
-    const initialWorkers = Math.min(this._maxWorkers, testGroups.length, 3);
-    console.log(`🚀 [WORKERS] Starting with ${initialWorkers} workers`);
-    
-    for (let i = 0; i < initialWorkers; i++) {
-      this._workerSlots.push({ busy: false });
-    }
-    
-    // Start scheduling
-    for (let i = 0; i < this._workerSlots.length; i++) {
-      this._scheduleJob();
-    }
+  });
+  
+  for (const group of testGroups) {
+    this._updateCounterForWorkerHash(group.workerHash, 1);
+  }
+  
+  this._isStopped = false;
+  this._workerSlots = [];
+  
+  if (this._failureTracker.hasReachedMaxFailures()) {
+    void this.stop();
+  }
+  
+  // Start workers - DEFINE initialWorkers HERE
+  const initialWorkers = Math.min(this._maxWorkers, testGroups.length, 3);
+  console.log(`🚀 [WORKERS] Starting with ${initialWorkers} workers`);
+  
+  console.log('🔍 [DEBUG] Before worker loop, Redis type:', this._redis?.constructor?.name);
+  
+  for (let i = 0; i < initialWorkers; i++) {
+    this._workerSlots.push({ busy: false });
+  }
+  
+  console.log('🔍 [DEBUG] Before scheduling, Redis type:', this._redis?.constructor?.name);
+  
+  // Start scheduling
+  for (let i = 0; i < this._workerSlots.length; i++) {
+    console.log(`🔍 [DEBUG] Before _scheduleJob ${i}, Redis type:`, this._redis?.constructor?.name);
+    await this._scheduleJob();
+  }
     
     // Start worker management
     if (this._dynamicWorkerScaling) {
@@ -695,7 +737,7 @@ class Dispatcher {
     
     const activeWorkers = this._workerSlots.filter(w => w.busy).length;
     const idleWorkers = this._workerSlots.length - activeWorkers;
-    const queueLength = await this._redis.zCard(this._redisKeys.jobQueue) + this._queue.length;
+    const queueLength = await this._queue.length;
     const availableDevices = await this._redis.lLen(this._redisKeys.devicesAvailable);
     
     console.log(`🔍 [WORKER_POOL] Workers: ${activeWorkers} active, ${idleWorkers} idle | Queue: ${queueLength} | Devices: ${availableDevices}/${this._devicePoolSize} available`);
