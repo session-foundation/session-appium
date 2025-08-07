@@ -3,7 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { MessageInput } from './locators/conversation';
+import { MessageInput, SendButton } from './locators/conversation';
 import { PlusButton } from './locators/home';
 import { EnterAccountID, NewMessageOption, NextButton } from './locators/start_conversation';
 import { newUser } from './utils/create_account';
@@ -51,10 +51,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType, testInfo:
 
   await device1.inputText(testMessage, new MessageInput(device1));
   // Click send
-  await device1.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Send message button',
-  });
+  await device1.clickOnElementAll(new SendButton(device1));
   // Wait for tick
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',

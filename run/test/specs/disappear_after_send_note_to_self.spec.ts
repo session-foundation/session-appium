@@ -44,7 +44,7 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, te
     time,
   ]);
   await sleepFor(1000);
-  await device.disappearingControlMessage(
+  await device.waitForControlMessageToBePresent(
     `You set messages to disappear ${time} after they have been ${controlMode}.`
   );
   await device.sendMessage(testMessage);
@@ -53,6 +53,7 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, te
     selector: 'Message body',
     text: testMessage,
     maxWait,
+    preventEarlyDeletion: true,
   });
   // Great success
   await closeApp(device);

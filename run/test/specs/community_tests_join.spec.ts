@@ -14,7 +14,8 @@ bothPlatformsIt({
   testCb: joinCommunityTest,
   countOfDevicesNeeded: 2,
   allureSuites: {
-    parent: 'Communities',
+    parent: 'New Conversation',
+    suite: 'Join Community',
   },
   allureDescription:
     'Verifies that joining a community works and the conversation syncs to a linked device',

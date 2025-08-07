@@ -42,6 +42,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType, t
         strategy: 'accessibility id',
         selector: 'Voice message',
         maxWait,
+        preventEarlyDeletion: true,
       })
     )
   );

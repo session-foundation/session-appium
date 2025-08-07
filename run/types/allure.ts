@@ -20,19 +20,27 @@ import { UserNameType } from '@session-foundation/qa-seeder';
  */
 
 export type AllureSuiteConfig =
-  | { parent: 'Communities' }
   | { parent: 'Disappearing Messages'; suite: 'Conversation Types' | 'Message Types' | 'Rules' }
   | { parent: 'Groups'; suite: 'Edit Group' }
   | { parent: 'In-App Review Prompt'; suite: 'Flows' | 'Triggers' }
   | { parent: 'Linkouts' }
+  | { parent: 'New Conversation'; suite: 'Join Community' | 'New Message' }
   | { parent: 'Sending Messages'; suite: 'Sending Attachments' }
   | { parent: 'Settings'; suite: 'App Disguise' }
   | {
       parent: 'User Actions';
-      suite: 'Block/Unblock' | 'Delete Contact' | 'Delete Conversation' | 'Hide Note to Self';
+      suite:
+        | 'Block/Unblock'
+        | 'Change Profile Picture'
+        | 'Delete Contact'
+        | 'Delete Conversation'
+        | 'Hide Note to Self'
+        | 'Set Nickname'
+        | 'Share to Session';
     }
   | { parent: 'Visual Checks' }
   | { parent: 'Voice Calls' };
+
 /**
  * Standardized Test Step Descriptions
  *
@@ -55,6 +63,7 @@ export const TestSteps = {
   },
   // Plus Button options
   NEW_CONVERSATION: {
+    NEW_MESSAGE: 'New Message',
     JOIN_COMMUNITY: 'Join Community',
   },
   // Sending things
@@ -66,6 +75,10 @@ export const TestSteps = {
   OPEN: {
     UPDATE_GROUP_INFO: `Open 'Update Group Information' modal`,
     USER_SETTINGS: 'Open User Settings',
+  },
+  // User Actions
+  USER_ACTIONS: {
+    CHANGE_PROFILE_PICTURE: 'Change profile picture',
   },
   // Disappearing Messages
   DISAPPEARING_MESSAGES: {
@@ -84,5 +97,7 @@ export const TestSteps = {
     CALLING: 'Verify call has been started',
     CALL_SUCCESSFUL: 'Verify call has been put through successfully',
     MISSED_CALL: 'Verify missed call',
+    NICKNAME_CHANGED: (context: string) => `Verify nickname changed in/on ${context}`,
+    PROFILE_PICTURE_CHANGED: 'Verify profile picture has been changed',
   },
 };

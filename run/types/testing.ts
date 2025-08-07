@@ -124,7 +124,6 @@ export type StrategyExtractionObj =
 
 export type XPath =
   | '//XCUIElementTypeCell'
-  | `(//android.widget.ImageView[@content-desc="Clear"])[2]`
   | `(//android.widget.ImageView[@resource-id="network.loki.messenger.qa:id/thumbnail"])[1]`
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
@@ -344,7 +343,6 @@ export type AccessibilityId =
   | 'Select'
   | 'Select alternate app icon'
   | 'Send'
-  | 'Send button'
   | 'Send message button'
   | 'Session'
   | 'Session | Send Messages, Not Metadata. | Private Messenger'
@@ -365,7 +363,6 @@ export type AccessibilityId =
   | 'TabBarItemTitle'
   | 'Terms of Service'
   | 'test_file, pdf'
-  | 'Text input box'
   | 'Time selector'
   | 'Unblock'
   | 'Untrusted attachment message'
@@ -398,6 +395,8 @@ export type Id =
   | 'block-user-menu-option'
   | 'Block'
   | 'Call'
+  | 'clear-input-button-description'
+  | 'clear-input-button-name'
   | 'Close button'
   | 'com.android.chrome:id/negative_button'
   | 'com.android.chrome:id/signin_fre_dismiss_button'
@@ -407,6 +406,7 @@ export type Id =
   | 'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   | 'com.android.permissioncontroller:id/permission_deny_button'
   | 'com.android.settings:id/switch_text'
+  | 'com.google.android.apps.photos:id/sign_in_button'
   | 'com.google.android.apps.photos:id/text'
   | 'Confirm invite button'
   | 'Contact'
@@ -491,11 +491,13 @@ export type Id =
   | 'network.loki.messenger.qa:id/title'
   | 'New direct message'
   | 'Next'
+  | 'nickname-input'
   | 'not-now-button'
   | 'Notifications'
   | 'open-survey-button'
   | 'Open'
   | 'Open URL'
+  | 'preferred-display-name'
   | 'Privacy'
   | 'Privacy Policy'
   | 'Quit'
@@ -511,6 +513,7 @@ export type Id =
   | 'Select All'
   | 'session-network-menu-item'
   | 'Session id input box'
+  | 'set-nickname-confirm-button'
   | 'Set button'
   | 'Share button'
   | 'show-nts-confirm-button'
