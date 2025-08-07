@@ -30,22 +30,19 @@ async function sendGifGroupiOS(platform: SupportedPlatformsType, testInfo: TestI
     testInfo: testInfo,
   });
 
-  const testMessage = 'Testing-GIF-1';
   const replyMessage = `Replying to GIF from ${alice.userName}`;
 
-  await alice1.sendGIF(testMessage);
+  await alice1.sendGIF();
   await sleepFor(500);
   await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
-    selector: 'Message body',
-    text: testMessage,
+    selector: 'Media message',
   });
   await charlie1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
-    selector: 'Message body',
-    text: testMessage,
+    selector: 'Media message',
   });
-  await bob1.longPressMessage(testMessage);
+  await bob1.longPress('Media message');
   // Check reply came through on alice1
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);
@@ -74,10 +71,9 @@ async function sendGifGroupAndroid(platform: SupportedPlatformsType, testInfo: T
     focusGroupConvo: true,
     testInfo: testInfo,
   });
-  const testMessage = 'Testing-GIF-1';
   const replyMessage = `Replying to GIF from ${alice.userName}`;
   // Click on attachments button
-  await alice1.sendGIF(testMessage);
+  await alice1.sendGIF();
   await Promise.all([
     bob1.trustAttachments(testGroupName),
     charlie1.trustAttachments(testGroupName),

@@ -46,10 +46,10 @@ async function membersCantSetDisappearingMessages(
   await bob1
     .onIOS()
     .clickOnElementAll(new DisappearingMessageRadial(bob1, DISAPPEARING_TIMES.ONE_DAY));
-  const setButton = await bob1.doesElementExist({
+  // Set button should not be visible
+  await bob1.verifyElementNotPresent({
     ...new SetDisappearMessagesButton(bob1).build(),
     maxWait: 500,
   });
-  if (setButton) throw new Error('Disappearing Messages Set button should not be visible');
   await closeApp(alice1, bob1, charlie1);
 }

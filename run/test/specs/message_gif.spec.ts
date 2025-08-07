@@ -26,15 +26,17 @@ async function sendGifIos(platform: SupportedPlatformsType, testInfo: TestInfo) 
     focusFriendsConvo: true,
     testInfo,
   });
-  const testMessage = 'Testing-GIF-1';
-  await alice1.sendGIF(testMessage);
+  const replyMessage = `Replying to GIF from ${alice.userName}`;
+  await alice1.sendGIF();
+  await bob1.trustAttachments(alice.userName);
   // Reply to message
   await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
-    selector: 'Message body',
-    text: testMessage,
+    selector: 'Media message',
   });
-  const replyMessage = await bob1.replyToMessage(alice, testMessage);
+  await bob1.longPress('Media message');
+  await bob1.clickOnByAccessibilityID('Reply to message');
+  await bob1.sendMessage(replyMessage);
   await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
@@ -55,11 +57,9 @@ async function sendGifAndroid(platform: SupportedPlatformsType, testInfo: TestIn
     focusFriendsConvo: true,
     testInfo,
   });
-  const testMessage = 'Test message with GIF';
-
   const replyMessage = `Replying to GIF from ${alice.userName}`;
   // Click on attachments button
-  await alice1.sendGIF(testMessage);
+  await alice1.sendGIF();
   // Check if the 'Tap to download media' config appears
   // Click on config
   await bob1.trustAttachments(alice.userName);

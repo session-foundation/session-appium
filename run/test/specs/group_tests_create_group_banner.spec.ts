@@ -27,9 +27,7 @@ async function createGroupBanner(platform: SupportedPlatformsType, testInfo: Tes
   // Open the Create Group screen from home
   await alice1.clickOnElementAll(new PlusButton(alice1));
   await alice1.clickOnElementAll(new CreateGroupOption(alice1));
-  const groupsBanner = await alice1.doesElementExist(new LatestReleaseBanner(alice1));
-  if (!groupsBanner) {
-    throw new Error('v2 groups warning banner is not shown or text is incorrect');
-  }
+  // Verify the banner is present
+  await alice1.waitForTextElementToBePresent(new LatestReleaseBanner(alice1));
   await closeApp(alice1, bob1);
 }

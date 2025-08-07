@@ -25,7 +25,6 @@ const maxWait = 35_000; // 30s plus buffer
 
 async function disappearingGifMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Disappear after sent test';
-  const testMessage = "Testing disappearing messages for GIF's";
   const {
     devices: { alice1, bob1, charlie1 },
   } = await open_Alice1_Bob1_Charlie1_friends_group({
@@ -36,35 +35,20 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType, tes
   });
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   // Click on attachments button
-  await alice1.sendGIF(testMessage);
+  await alice1.sendGIF();
   await Promise.all(
     [bob1, charlie1].map(device => device.onAndroid().trustAttachments(testGroupName))
   );
-  if (platform === 'ios') {
-    // Because the test looks for message body (not media) on iOS, it's not necessary to pass a longer initialMaxWait
-    await Promise.all(
-      [alice1, bob1, charlie1].map(device =>
-        device.hasElementBeenDeleted({
-          strategy: 'accessibility id',
-          selector: 'Message body',
-          maxWait,
-          text: testMessage,
-        })
-      )
-    );
-  }
-  if (platform === 'android') {
-    await Promise.all(
-      [alice1, bob1, charlie1].map(device =>
-        device.hasElementBeenDeleted({
-          strategy: 'accessibility id',
-          selector: 'Media message',
-          initialMaxWait,
-          maxWait,
-        })
-      )
-    );
-  }
-
+  await Promise.all(
+    [alice1, bob1, charlie1].map(device =>
+      device.hasElementBeenDeleted({
+        strategy: 'accessibility id',
+        selector: 'Media message',
+        initialMaxWait,
+        maxWait,
+        preventEarlyDeletion: true,
+      })
+    )
+  );
   await closeApp(alice1, bob1, charlie1);
 }

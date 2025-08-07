@@ -46,6 +46,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType, tes
           initialMaxWait,
           maxWait,
           text: testMessage,
+          preventEarlyDeletion: true,
         })
       )
     );
@@ -57,6 +58,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType, tes
           selector: 'Media message',
           initialMaxWait,
           maxWait,
+          preventEarlyDeletion: true,
         })
       )
     );

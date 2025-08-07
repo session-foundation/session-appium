@@ -42,11 +42,13 @@ async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType, tes
       strategy: 'accessibility id',
       selector: 'Voice message',
       maxWait,
+      preventEarlyDeletion: true,
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Voice message',
       maxWait,
+      preventEarlyDeletion: true,
     }),
   ]);
   await closeApp(alice1, bob1);

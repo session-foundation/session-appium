@@ -1,104 +1,71 @@
-import type { TestInfo } from '@playwright/test';
+import { test, type TestInfo } from '@playwright/test';
 
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
-import { bothPlatformsItSeparate } from '../../types/sessionIt';
+import { TestSteps } from '../../types/allure';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { UsernameInput } from './locators';
-import { ConversationHeaderName, ConversationSettings } from './locators/conversation';
-import { SaveNameChangeButton } from './locators/settings';
+import {
+  ConversationHeaderName,
+  ConversationSettings,
+  EditNicknameButton,
+  NicknameInput,
+  PreferredDisplayName,
+  SaveNicknameButton,
+} from './locators/conversation';
+import { ConversationItem } from './locators/home';
 import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsItSeparate({
+bothPlatformsIt({
   title: 'Set nickname',
   risk: 'high',
   countOfDevicesNeeded: 2,
-  ios: {
-    testCb: setNicknameIos,
+  testCb: setNickname,
+  allureSuites: {
+    parent: 'User Actions',
+    suite: 'Set Nickname',
   },
-  android: {
-    testCb: setNicknameAndroid,
-  },
+  allureDescription: `Verifies that a user can set a nickname for a contact and that it appears correctly in the conversation settings, conversation header and home screen.`,
 });
 
-async function setNicknameIos(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const nickName = 'New nickname';
+async function setNickname(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
-  } = await open_Alice1_Bob1_friends({
-    platform,
-    focusFriendsConvo: true,
-    testInfo,
+  } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
+    return open_Alice1_Bob1_friends({
+      platform,
+      focusFriendsConvo: true,
+      testInfo,
+    });
   });
-  // Click on settings/more info
-  await alice1.clickOnElementAll(new ConversationSettings(alice1));
-  // Click on username to set nickname
-  await alice1.clickOnByAccessibilityID('Username');
-  await alice1.clickOnElementAll(new UsernameInput(alice1));
-  await sleepFor(500);
-  await alice1.checkModalStrings(
-    englishStrippedStr('nicknameSet').toString(),
-    englishStrippedStr('nicknameDescription').withArgs({ name: USERNAME.BOB }).toString()
-  );
-  // Type in nickname
-  // await alice1.deleteText(new UsernameInput(alice1));
-  await alice1.inputText(nickName, new UsernameInput(alice1));
-  // Click apply/done
-  await alice1.clickOnElementAll(new SaveNameChangeButton(alice1));
-  // Check it's changed in heading also
-  await alice1.navigateBack();
-  const newNickname = await alice1.grabTextFromAccessibilityId('Conversation header name');
-  if (newNickname !== nickName) {
-    throw new Error('Nickname has not been changed in header');
-  }
-  // Check in conversation list also
-  await alice1.navigateBack();
-  await sleepFor(500);
-  await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Conversation list item',
-    text: newNickname,
+  const nickName = 'My best friend';
+  await test.step("Open 'Set Nickname' modal and change nickname", async () => {
+    await alice1.clickOnElementAll(new ConversationSettings(alice1));
+    await alice1.clickOnElementAll(new EditNicknameButton(alice1));
+    await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Set Nickname'), async () => {
+      await alice1.checkModalStrings(
+        englishStrippedStr('nicknameSet').toString(),
+        englishStrippedStr('nicknameDescription').withArgs({ name: USERNAME.BOB }).toString()
+      );
+    });
+    await alice1.clickOnElementAll(new NicknameInput(alice1));
+    await alice1.inputText(nickName, new NicknameInput(alice1));
+    await alice1.clickOnElementAll(new SaveNicknameButton(alice1));
   });
-  // Close app
-  await closeApp(alice1, bob1);
-}
-
-async function setNicknameAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const {
-    devices: { alice1, bob1 },
-    prebuilt: { bob },
-  } = await open_Alice1_Bob1_friends({
-    platform,
-    focusFriendsConvo: true,
-    testInfo,
+  await test.step(TestSteps.VERIFY.NICKNAME_CHANGED('conversation settings'), async () => {
+    await alice1.waitForTextElementToBePresent(new PreferredDisplayName(alice1, nickName));
   });
-  const nickName = 'New nickname';
-  // Go back to conversation list
-  await alice1.navigateBack();
-  // Select conversation in list with Bob
-  await alice1.longPressConversation(bob.userName);
-  // Select 'Details' option
-  await alice1.clickOnByAccessibilityID('Details');
-  // Select username to edit
-  await alice1.clickOnByAccessibilityID('Edit user nickname');
-  // Type in nickname
-  await alice1.inputText(nickName, { strategy: 'accessibility id', selector: 'Display name' });
-  // Click on tick button
-  await alice1.clickOnByAccessibilityID('Apply');
-  // CLick out of pop up
-  await alice1.clickOnByAccessibilityID('Message user');
-  // Check name at top of conversation is nickname
-  await alice1.waitForTextElementToBePresent(new ConversationHeaderName(alice1));
-  // Send a message so nickname is updated in conversation list
-  await alice1.sendMessage('Message to test nickname change');
-  const conversationHeader = await alice1.waitForTextElementToBePresent(
-    new ConversationHeaderName(alice1)
-  );
-  const actualNickname = await alice1.getTextFromElement(conversationHeader);
-  if (actualNickname !== nickName) {
-    throw new Error('Nickname has not been changed in header');
-  }
+  await test.step(TestSteps.VERIFY.NICKNAME_CHANGED('conversation header'), async () => {
+    await alice1.navigateBack();
+    await alice1.waitForTextElementToBePresent(new ConversationHeaderName(alice1));
+  });
+  await test.step(TestSteps.VERIFY.NICKNAME_CHANGED('home screen'), async () => {
+    await alice1.navigateBack();
+    await alice1.waitForTextElementToBePresent({
+      ...new ConversationItem(alice1, nickName).build(),
+      maxWait: 10_000,
+    });
+  });
   // Close app
   await closeApp(alice1, bob1);
 }
