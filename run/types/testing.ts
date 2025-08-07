@@ -483,6 +483,7 @@ export type Id =
   | 'network.loki.messenger.qa:id/singleModeImageView'
   | 'network.loki.messenger.qa:id/system_settings_app_icon'
   | 'network.loki.messenger.qa:id/textSendAfterApproval'
+  | 'network.loki.messenger.qa:id/theme_option_classic_light'
   | 'network.loki.messenger.qa:id/thumbnail_load_indicator'
   | 'network.loki.messenger.qa:id/title'
   | 'New direct message'
@@ -516,7 +517,9 @@ export type Id =
   | 'Version warning banner'
   | 'Yes'
   | `All ${AppName} notifications`
-  | `Disappear after ${DisappearModes} option`;
+  | `Disappear after ${DisappearModes} option`
+  | `It's Great ❤️`
+  | `Needs Work 😕`;
 
 export type TestRisk = 'high' | 'low' | 'medium';
 

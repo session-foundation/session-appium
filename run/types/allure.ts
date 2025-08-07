@@ -23,6 +23,7 @@ export type AllureSuiteConfig =
   | { parent: 'Communities' }
   | { parent: 'Disappearing Messages'; suite: 'Conversation Types' | 'Message Types' | 'Rules' }
   | { parent: 'Groups'; suite: 'Edit Group' }
+  | { parent: 'In-App Review Prompt'; suite: 'Triggers' }
   | { parent: 'Linkouts' }
   | { parent: 'Sending Messages'; suite: 'Sending Attachments' }
   | { parent: 'Settings'; suite: 'App Disguise' }
@@ -63,7 +64,8 @@ export const TestSteps = {
   },
   // Open/Navigate steps
   OPEN: {
-    UPDATE_GROUP_INFO: "Open 'Update Group Information' modal",
+    UPDATE_GROUP_INFO: `Open 'Update Group Information' modal`,
+    USER_SETTINGS: 'Open User Settings',
   },
   // Disappearing Messages
   DISAPPEARING_MESSAGES: {
