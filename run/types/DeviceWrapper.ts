@@ -78,6 +78,7 @@ export class DeviceWrapper {
   private readonly device: AndroidUiautomator2Driver | XCUITestDriver;
   public readonly udid: string;
   private deviceIdentity: string = '';
+  private version: string | null = null;
 
   constructor(device: AndroidUiautomator2Driver | XCUITestDriver, udid: string) {
     this.device = device;
@@ -2275,6 +2276,32 @@ export class DeviceWrapper {
     const base64image = await this.getElementScreenshot(element.ELEMENT);
     const pixelColor = await parseDataImage(base64image);
     return pixelColor;
+  }
+
+  public async getVersionNumber() {
+    if (this.isIOS()) {
+      throw new Error('getVersionNumber not implemented on iOS yet');
+    }
+    // Return cached version if we already have it
+    if (this.version) {
+      return this.version;
+    }
+
+    await this.clickOnElementAll(new UserSettings(this));
+    await this.scrollDown();
+    const versionElement = await this.findElement(
+      'id',
+      'network.loki.messenger.qa:id/versionTextView'
+    );
+    const versionText = await this.getAttribute('text', versionElement.ELEMENT);
+    const match = versionText?.match(/(\d+\.\d+\.\d+)/);
+
+    if (!match) {
+      throw new Error(`Could not extract version from: ${versionText}`);
+    }
+
+    this.version = match[1];
+    return this.version;
   }
 
   private getUdid() {
