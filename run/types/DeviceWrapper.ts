@@ -75,6 +75,12 @@ export type ActionSequence = {
 
 type AppiumNextElementType = { ELEMENT: string };
 
+type PollResult<T = undefined> = {
+  success: boolean;
+  data?: T;
+  error?: string;
+};
+
 export class DeviceWrapper {
   private readonly device: AndroidUiautomator2Driver | XCUITestDriver;
   public readonly udid: string;
@@ -1278,7 +1284,7 @@ export class DeviceWrapper {
    * Continuous polling utility for any async condition.
    */
   private async pollUntil<T>(
-    fn: () => Promise<{ success: boolean; data?: T; error?: string }>,
+    fn: () => Promise<PollResult<T>>,
     {
       maxWait = 20_000,
       pollInterval = 100,
@@ -1306,16 +1312,15 @@ export class DeviceWrapper {
       } catch (err) {
         lastError = err instanceof Error ? err.message : String(err);
       }
-      
+
       attempt++;
       elapsed = Date.now() - start;
       onAttempt?.(attempt, elapsed);
-      
+
       // Only sleep if we're going to continue
       if (elapsed + pollInterval < maxWait) {
         await sleepFor(pollInterval);
       }
-      
     } while (elapsed < maxWait);
     // Log the error with details but only throw generic error so that they get grouped in the report
     this.error(`${lastError} after ${attempt} attempts (${elapsed}ms)`);
@@ -1327,9 +1332,7 @@ export class DeviceWrapper {
    */
   async waitForElementCondition<T>(
     args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj),
-    checkElement: (
-      element: AppiumNextElementType
-    ) => Promise<{ success: boolean; data?: T; error?: string }>,
+    checkElement: (element: AppiumNextElementType) => Promise<PollResult<T>>,
     options: {
       maxWait?: number;
       elementTimeout?: number;
