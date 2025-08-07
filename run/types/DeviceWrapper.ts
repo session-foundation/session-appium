@@ -1380,7 +1380,7 @@ export class DeviceWrapper {
   ): Promise<void> {
     await this.waitForElementCondition(
       args,
-      async element => {
+      async (element): Promise<PollResult> => {
         // Capture screenshot of the element as base64
         const base64 = await this.getElementScreenshot(element.ELEMENT);
         // Extract the middle pixel color from the screenshot
