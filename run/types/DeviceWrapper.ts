@@ -2116,24 +2116,21 @@ export class DeviceWrapper {
     await this.closeScreen(false);
   }
 
-  public async checkPermissions(
-    selector: Extract<AccessibilityId, 'Allow' | 'Allow Full Access' | 'Don’t Allow'>
-  ) {
+  public async processPermissions(locator: LocatorsInterface) {
+    const locatorConfig = locator.build();
+
     if (this.isAndroid()) {
       const permissions = await this.doesElementExist({
-        strategy: 'id',
-        selector: 'com.android.permissioncontroller:id/permission_deny_button',
-        maxWait: 1000,
+        ...locatorConfig,
+        maxWait: 2_000,
       });
 
       if (permissions) {
-        await this.clickOnElementAll({
-          strategy: 'id',
-          selector: 'com.android.permissioncontroller:id/permission_deny_button',
-        });
+        await this.clickOnElementAll(locatorConfig);
       }
       return;
     }
+
     if (this.isIOS()) {
       // Retrieve the currently active app information
       const activeAppInfo = await this.execute('mobile: activeAppInfo');
@@ -2145,12 +2142,13 @@ export class DeviceWrapper {
       try {
         // Execute the action in the home screen context
         const iosPermissions = await this.doesElementExist({
-          strategy: 'accessibility id',
-          selector,
-          maxWait: 500,
+          ...locatorConfig,
+          maxWait: 2_000,
         });
+
         if (iosPermissions) {
-          await this.clickOnByAccessibilityID(selector);
+          // Handle based on strategy type
+          await this.clickOnElementAll(locatorConfig);
         }
       } catch (e) {
         this.info('iosPermissions doesElementExist failed with: ', e);

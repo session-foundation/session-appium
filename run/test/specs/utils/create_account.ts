@@ -1,6 +1,5 @@
 import type { UserNameType } from '@session-foundation/qa-seeder';
 
-import { sleepFor } from '.';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
 import { ContinueButton } from '../locators/global';
@@ -8,12 +7,22 @@ import { CreateAccountButton, DisplayNameInput, SlowModeRadio } from '../locator
 import { RecoveryPhraseContainer, RevealRecoveryPhraseButton } from '../locators/settings';
 import { UserSettings } from '../locators/settings';
 import { CopyButton } from '../locators/start_conversation';
+import { handlePermissions } from './permissions';
 
-export const newUser = async (
+export interface BaseSetupOptions {
+  allowNotificationPermissions?: boolean;
+}
+
+export interface NewUserSetupOptions extends BaseSetupOptions {
+  saveUserData?: boolean;
+}
+
+export async function newUser(
   device: DeviceWrapper,
   userName: UserNameType,
-  saveUserData: boolean = true
-): Promise<User> => {
+  options?: NewUserSetupOptions
+): Promise<User> {
+  const { saveUserData = true, allowNotificationPermissions = false } = options || {};
   device.setDeviceIdentity(`${userName.toLowerCase()}1`);
   // Click create session ID
   await device.clickOnElementAll(new CreateAccountButton(device));
@@ -26,13 +35,8 @@ export const newUser = async (
   await device.clickOnElementAll(new SlowModeRadio(device));
   // Select Continue to save notification settings
   await device.clickOnElementAll(new ContinueButton(device));
-  // TODO need to retry check every 1s for 5s
-  device.warn('about to look for Allow permission in 5s');
-  await sleepFor(5000);
-  await device.checkPermissions('Allow');
-  device.warn('looked for Allow permission');
-  await sleepFor(1000);
-
+  // Handle permissions based on the flag
+  await handlePermissions(device, allowNotificationPermissions);
   // Some tests don't need to save the Account ID and Recovery Password
   if (!saveUserData) {
     return { userName, accountID: 'not_needed', recoveryPhrase: 'not_needed' };
@@ -55,4 +59,4 @@ export const newUser = async (
   const accountID = await device.grabTextFromAccessibilityId('Account ID');
   await device.closeScreen(false);
   return { userName, accountID, recoveryPhrase };
-};
+}
