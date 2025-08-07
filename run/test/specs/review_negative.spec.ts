@@ -4,17 +4,23 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { TestSteps } from '../../types/allure';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import {
+  ReviewPromptNeedsWorkButton,
+  ReviewPromptNotNowButton,
+  ReviewPromptOpenSurveyButton,
+} from './locators/home';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { assertUrlIsReachable } from './utils/utilities';
 
 androidIt({
-  title: 'Review negative flow',
+  title: 'Review prompt negative flow',
   risk: 'medium',
   countOfDevicesNeeded: 1,
   allureSuites: {
     parent: 'In-App Review Prompt',
-    suite: 'Triggers',
+    suite: 'Flows',
   },
   allureDescription: 'Verifies the modal texts and buttons in the negative flow',
   testCb: reviewPromptPositive,
@@ -42,23 +48,14 @@ async function reviewPromptPositive(platform: SupportedPlatformsType, testInfo: 
     englishStrippedStr('enjoyingSession').toString(),
     englishStrippedStr('enjoyingSessionDescription').toString()
   );
-  await device.clickOnElementById(`Needs Work 😕`);
+  await device.clickOnElementAll(new ReviewPromptNeedsWorkButton(device));
+  await sleepFor(100);
   await device.checkModalStrings(
     englishStrippedStr('giveFeedback').toString(),
     englishStrippedStr('giveFeedbackDescription').toString()
   );
-  await device.waitForTextElementToBePresent({
-    strategy: 'id',
-    selector: 'Open Survey',
-  });
-  await device.waitForTextElementToBePresent({
-    strategy: 'id',
-    selector: 'Not now',
-  });
-  await device.clickOnElementAll({
-    strategy: 'id',
-    selector: 'Open Survey',
-  });
+  await device.waitForTextElementToBePresent(new ReviewPromptNotNowButton(device));
+  await device.clickOnElementAll(new ReviewPromptOpenSurveyButton(device));
   await device.checkModalStrings(
     englishStrippedStr('urlOpen').toString(),
     englishStrippedStr('urlOpenDescription').withArgs({ url }).toString()

@@ -432,6 +432,8 @@ export type Id =
   | 'Download media'
   | 'edit-profile-icon'
   | 'Empty list'
+  | 'enjoy-session-negative-button'
+  | 'enjoy-session-positive-button'
   | 'Enter display name'
   | 'error-message'
   | 'group-description'
@@ -489,15 +491,15 @@ export type Id =
   | 'network.loki.messenger.qa:id/title'
   | 'New direct message'
   | 'Next'
+  | 'not-now-button'
   | 'Notifications'
-  | 'Not now'
+  | 'open-survey-button'
   | 'Open'
-  | 'Open Survey'
   | 'Open URL'
   | 'Privacy'
   | 'Privacy Policy'
   | 'Quit'
-  | 'Rate App'
+  | 'rate-app-button'
   | 'Recovery password container'
   | 'Recovery password menu item'
   | 'Recovery phrase input'
@@ -521,9 +523,7 @@ export type Id =
   | 'Version warning banner'
   | 'Yes'
   | `All ${AppName} notifications`
-  | `Disappear after ${DisappearModes} option`
-  | `It's Great ❤️`
-  | `Needs Work 😕`;
+  | `Disappear after ${DisappearModes} option`;
 
 export type TestRisk = 'high' | 'low' | 'medium';
 

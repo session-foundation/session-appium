@@ -23,7 +23,7 @@ export type AllureSuiteConfig =
   | { parent: 'Communities' }
   | { parent: 'Disappearing Messages'; suite: 'Conversation Types' | 'Message Types' | 'Rules' }
   | { parent: 'Groups'; suite: 'Edit Group' }
-  | { parent: 'In-App Review Prompt'; suite: 'Triggers' }
+  | { parent: 'In-App Review Prompt'; suite: 'Flows' | 'Triggers' }
   | { parent: 'Linkouts' }
   | { parent: 'Sending Messages'; suite: 'Sending Attachments' }
   | { parent: 'Settings'; suite: 'App Disguise' }

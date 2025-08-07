@@ -72,3 +72,73 @@ export class LongPressBlockOption extends LocatorsInterface {
     }
   }
 }
+
+export class ReviewPromptItsGreatButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'enjoy-session-positive-button',
+        };
+      case 'ios':
+        throw new Error('Not implemented');
+    }
+  }
+}
+
+export class ReviewPromptNeedsWorkButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'enjoy-session-negative-button',
+        };
+      case 'ios':
+        throw new Error('Not implemented');
+    }
+  }
+}
+
+export class ReviewPromptRateAppButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'rate-app-button',
+        };
+      case 'ios':
+        throw new Error('Not implemented');
+    }
+  }
+}
+
+export class ReviewPromptNotNowButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'not-now-button',
+        };
+      case 'ios':
+        throw new Error('Not implemented');
+    }
+  }
+}
+
+export class ReviewPromptOpenSurveyButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'open-survey-button',
+        };
+      case 'ios':
+        throw new Error('Not implemented');
+    }
+  }
+}

@@ -5,7 +5,6 @@ import { TestSteps } from '../../types/allure';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { DenyPermissionLocator } from './locators/global';
 import { AppearanceMenuItem, DonationsMenuItem, UserSettings } from './locators/settings';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
@@ -70,22 +69,11 @@ for (const { titleSnippet, descriptionSnippet, testStepName, trigger } of review
         await device.back();
         await device.back();
       });
-      // Annoyingly, you might have to process perms again
-      await device.processPermissions(new DenyPermissionLocator(device));
-
       await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('App Review'), async () => {
         await device.checkModalStrings(
           englishStrippedStr('enjoyingSession').toString(),
           englishStrippedStr('enjoyingSessionDescription').toString()
         );
-        await device.waitForTextElementToBePresent({
-          strategy: 'id',
-          selector: `It's Great ❤️`,
-        });
-        await device.waitForTextElementToBePresent({
-          strategy: 'id',
-          selector: `Needs Work 😕`,
-        });
       });
       await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
         await closeApp(device);

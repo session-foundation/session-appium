@@ -4,17 +4,23 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { TestSteps } from '../../types/allure';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import {
+  ReviewPromptItsGreatButton,
+  ReviewPromptNotNowButton,
+  ReviewPromptRateAppButton,
+} from './locators/home';
 import { UserSettings } from './locators/settings';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
 androidIt({
-  title: 'Review positive flow',
+  title: 'Review prompt positive flow',
   risk: 'medium',
   countOfDevicesNeeded: 1,
   allureSuites: {
     parent: 'In-App Review Prompt',
-    suite: 'Triggers',
+    suite: 'Flows',
   },
   allureDescription: 'Verifies the modal texts and buttons in the positive flow',
   testCb: reviewPromptPositive,
@@ -42,19 +48,14 @@ async function reviewPromptPositive(platform: SupportedPlatformsType, testInfo: 
     englishStrippedStr('enjoyingSession').toString(),
     englishStrippedStr('enjoyingSessionDescription').toString()
   );
-  await device.clickOnElementById(`It's Great ❤️`);
+  await device.clickOnElementAll(new ReviewPromptItsGreatButton(device));
+  await sleepFor(100);
   await device.checkModalStrings(
     englishStrippedStr('rateSession').toString(),
     englishStrippedStr('rateSessionModalDescription').withArgs({ storevariant }).toString()
   );
-  await device.waitForTextElementToBePresent({
-    strategy: 'id',
-    selector: 'Rate App',
-  });
-  await device.waitForTextElementToBePresent({
-    strategy: 'id',
-    selector: 'Not now',
-  });
+  await device.waitForTextElementToBePresent(new ReviewPromptRateAppButton(device));
+  await device.waitForTextElementToBePresent(new ReviewPromptNotNowButton(device));
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);
   });
