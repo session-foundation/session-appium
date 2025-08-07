@@ -26,7 +26,7 @@ export async function parseDataImage(base64: string) {
   const bytesPerPixel = px.length / totalPixels;
 
   // Convert 2D coordinates to 1D pixel index
-  const centerPixelIndex = (width * centerY) + centerX;
+  const centerPixelIndex = width * centerY + centerX;
 
   // Convert pixel index to byte position
   const pixelStartByte = centerPixelIndex * bytesPerPixel;
