@@ -5,6 +5,7 @@ import { TestSteps } from '../../types/allure';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { DenyPermissionLocator } from './locators/global';
 import { AppearanceMenuItem, DonationsMenuItem, UserSettings } from './locators/settings';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
@@ -55,7 +56,10 @@ for (const { titleSnippet, descriptionSnippet, testStepName, trigger } of review
     testCb: async (platform: SupportedPlatformsType, testInfo: TestInfo) => {
       const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
         const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
-        await newUser(device, USERNAME.ALICE, false);
+        await newUser(device, USERNAME.ALICE, {
+          saveUserData: false,
+          allowNotificationPermissions: true,
+        });
         return { device };
       });
       await test.step(TestSteps.OPEN.USER_SETTINGS, async () => {
@@ -66,6 +70,9 @@ for (const { titleSnippet, descriptionSnippet, testStepName, trigger } of review
         await device.back();
         await device.back();
       });
+      // Annoyingly, you might have to process perms again
+      await device.processPermissions(new DenyPermissionLocator(device));
+
       await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('App Review'), async () => {
         await device.checkModalStrings(
           englishStrippedStr('enjoyingSession').toString(),
