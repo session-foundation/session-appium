@@ -169,6 +169,7 @@ export type AccessibilityId =
   | 'Apply changes'
   | 'Attachments button'
   | 'Awaiting Recipient Answer... 4/6'
+  | 'back'
   | 'Back'
   | 'Block'
   | 'blocked-banner'

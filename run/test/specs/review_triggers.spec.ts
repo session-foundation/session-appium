@@ -9,7 +9,7 @@ import { AppearanceMenuItem, DonationsMenuItem, UserSettings } from './locators/
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
-// Yes, multiple tests in one file! 
+// Yes, multiple tests in one file!
 const reviewTriggers = [
   {
     titleSnippet: 'Donate',
