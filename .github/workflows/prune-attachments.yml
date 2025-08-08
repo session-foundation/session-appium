@@ -39,6 +39,7 @@ jobs:
           RETENTION_DAYS: ${{ steps.retention.outputs.days }}
         run: |
           CUTOFF_DATE=$(date -d "$RETENTION_DAYS days ago" +%s)
+          PREVIEW_LIMIT=20
 
           echo "Retention: $RETENTION_DAYS days | Dry run: $DRY_RUN" >> $GITHUB_STEP_SUMMARY
 
@@ -57,8 +58,8 @@ jobs:
           if [ "$COUNT" -gt 0 ]; then
             if [ "$DRY_RUN" == "true" ]; then
               echo "Files to delete:" >> $GITHUB_STEP_SUMMARY
-              head -20 files_to_delete.txt >> $GITHUB_STEP_SUMMARY
-              [ "$COUNT" -gt 20 ] && echo "...(+$((COUNT-20)) more)" >> $GITHUB_STEP_SUMMARY
+              head -$PREVIEW_LIMIT files_to_delete.txt >> $GITHUB_STEP_SUMMARY
+              [ "$COUNT" -gt $PREVIEW_LIMIT ] && echo "...(+$((COUNT-$PREVIEW_LIMIT)) more)" >> $GITHUB_STEP_SUMMARY
             else
               xargs rm -f < files_to_delete.txt
               echo "Deleted $COUNT files" >> $GITHUB_STEP_SUMMARY

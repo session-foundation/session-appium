@@ -75,6 +75,12 @@ export type ActionSequence = {
 
 type AppiumNextElementType = { ELEMENT: string };
 
+type PollResult<T = undefined> = {
+  success: boolean;
+  data?: T;
+  error?: string;
+};
+
 export class DeviceWrapper {
   private readonly device: AndroidUiautomator2Driver | XCUITestDriver;
   public readonly udid: string;
@@ -1278,7 +1284,7 @@ export class DeviceWrapper {
    * Continuous polling utility for any async condition.
    */
   private async pollUntil<T>(
-    fn: () => Promise<{ success: boolean; data?: T; error?: string }>,
+    fn: () => Promise<PollResult<T>>,
     {
       maxWait = 20_000,
       pollInterval = 100,
@@ -1294,10 +1300,11 @@ export class DeviceWrapper {
     let attempt = 0;
     let lastError: string | undefined;
 
-    while ((elapsed = Date.now() - start) < maxWait) {
+    do {
       try {
         const result = await fn();
         if (result.success) {
+          elapsed = Date.now() - start;
           this.log(`Polling successful after ${attempt + 1} attempt(s) (${elapsed}ms)`);
           return result.data;
         }
@@ -1305,13 +1312,16 @@ export class DeviceWrapper {
       } catch (err) {
         lastError = err instanceof Error ? err.message : String(err);
       }
+
       attempt++;
+      elapsed = Date.now() - start;
       onAttempt?.(attempt, elapsed);
 
+      // Only sleep if we're going to continue
       if (elapsed + pollInterval < maxWait) {
         await sleepFor(pollInterval);
       }
-    }
+    } while (elapsed < maxWait);
     // Log the error with details but only throw generic error so that they get grouped in the report
     this.error(`${lastError} after ${attempt} attempts (${elapsed}ms)`);
     throw new Error(lastError || 'Polling failed');
@@ -1322,9 +1332,7 @@ export class DeviceWrapper {
    */
   async waitForElementCondition<T>(
     args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj),
-    checkElement: (
-      element: AppiumNextElementType
-    ) => Promise<{ success: boolean; data?: T; error?: string }>,
+    checkElement: (element: AppiumNextElementType) => Promise<PollResult<T>>,
     options: {
       maxWait?: number;
       elementTimeout?: number;
@@ -1372,7 +1380,7 @@ export class DeviceWrapper {
   ): Promise<void> {
     await this.waitForElementCondition(
       args,
-      async element => {
+      async (element): Promise<PollResult> => {
         // Capture screenshot of the element as base64
         const base64 = await this.getElementScreenshot(element.ELEMENT);
         // Extract the middle pixel color from the screenshot
