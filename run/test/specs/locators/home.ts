@@ -27,7 +27,7 @@ export class MessageRequestsBanner extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Message requests banner'
+          selector: 'Message requests banner',
         } as const;
     }
   }

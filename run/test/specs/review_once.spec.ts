@@ -11,14 +11,14 @@ import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
 androidIt({
-  title: 'Review prompt once',
+  title: 'Review prompt only once',
   risk: 'medium',
   countOfDevicesNeeded: 1,
   allureSuites: {
     parent: 'In-App Review Prompt',
     suite: 'Triggers',
   },
-  allureDescription: 'Verifies that the in-app review prompt shows once after triggered',
+  allureDescription: 'Verifies that the in-app review prompt only shows shows once after triggered',
   testCb: reviewPromptOnce,
 });
 
@@ -34,19 +34,23 @@ async function reviewPromptOnce(platform: SupportedPlatformsType, testInfo: Test
     await device.back();
     await device.back();
   });
-  await device.checkModalStrings(
-    englishStrippedStr('enjoyingSession').toString(),
-    englishStrippedStr('enjoyingSessionDescription').toString()
-  );
-  await device.clickOnByAccessibilityID('back'); // Yes this is lowercase to close the modal
+  await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
+    await device.checkModalStrings(
+      englishStrippedStr('enjoyingSession').toString(),
+      englishStrippedStr('enjoyingSessionDescription').toString()
+    );
+    await device.clickOnByAccessibilityID('back'); // Yes this is lowercase to close the modal
+  });
   await test.step(TestSteps.OPEN.PATH, async () => {
     await device.clickOnElementAll(new UserSettings(device));
     await device.clickOnElementAll(new PathMenuItem(device));
     await device.back();
     await device.back();
   });
-  await device.waitForTextElementToBePresent(new PlusButton(device)); // Making sure we're on the home screen
-  await device.verifyElementNotPresent(new ModalHeading(device));
+  await test.step('Verify review prompt is not shown again', async () => {
+    await device.waitForTextElementToBePresent(new PlusButton(device)); // Making sure we're on the home screen
+    await device.verifyElementNotPresent(new ModalHeading(device));
+  });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);
   });

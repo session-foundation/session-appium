@@ -27,12 +27,12 @@ async function blockedRequest(platform: SupportedPlatformsType, testInfo: TestIn
   await device1.sendNewMessage(bob, `${alice.userName} to ${bob.userName}`);
   // Wait for banner to appear on device 2 and 3
   await Promise.all(
-    [device2,device3].map(device => 
-    device.waitForTextElementToBePresent(new MessageRequestsBanner(device)),
+    [device2, device3].map(device =>
+      device.waitForTextElementToBePresent(new MessageRequestsBanner(device))
     )
   );
   // Bob clicks on message request banner
-  await device2.clickOnElementAll(new MessageRequestsBanner(device2))
+  await device2.clickOnElementAll(new MessageRequestsBanner(device2));
   // Bob clicks on request conversation item
   await device2.clickOnByAccessibilityID('Message request');
   // Bob clicks on block option

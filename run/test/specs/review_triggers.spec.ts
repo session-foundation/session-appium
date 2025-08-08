@@ -59,7 +59,7 @@ for (const { titleSnippet, descriptionSnippet, testStepName, trigger } of review
         const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
         await newUser(device, USERNAME.ALICE, {
           saveUserData: false,
-          allowNotificationPermissions: true, // Notification prompt can cause trouble
+          allowNotificationPermissions: true, // The notification prompt can show twice if denied so we accept notifications
         });
         return { device };
       });

@@ -2304,10 +2304,6 @@ export class DeviceWrapper {
     if (this.isIOS()) {
       throw new Error('getVersionNumber not implemented on iOS yet');
     }
-    // Return cached version if we already have it
-    if (this.version) {
-      return this.version;
-    }
 
     await this.clickOnElementAll(new UserSettings(this));
     await this.scrollDown();
