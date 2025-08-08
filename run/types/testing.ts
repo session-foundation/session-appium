@@ -314,6 +314,7 @@ export type AccessibilityId =
   | 'Okay'
   | 'Open'
   | 'Open URL'
+  | 'Path'
   | 'Photo library'
   | 'Photos'
   | 'Pin'

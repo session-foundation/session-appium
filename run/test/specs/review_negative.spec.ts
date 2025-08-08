@@ -9,24 +9,25 @@ import {
   ReviewPromptNotNowButton,
   ReviewPromptOpenSurveyButton,
 } from './locators/home';
-import { sleepFor } from './utils';
+import { PathMenuItem } from './locators/settings';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { assertUrlIsReachable } from './utils/utilities';
 
 androidIt({
   title: 'Review prompt negative flow',
-  risk: 'medium',
+  risk: 'high',
   countOfDevicesNeeded: 1,
   allureSuites: {
     parent: 'In-App Review Prompt',
     suite: 'Flows',
   },
-  allureDescription: 'Verifies the modal texts and buttons in the negative flow',
-  testCb: reviewPromptPositive,
+  allureDescription:
+    'Verifies the in-app review modal texts and buttons for the negative flow (Enjoying Session - Give Feedback - Open URL)',
+  testCb: reviewPromptNegative,
 });
 
-async function reviewPromptPositive(platform: SupportedPlatformsType, testInfo: TestInfo) {
+async function reviewPromptNegative(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
@@ -36,31 +37,33 @@ async function reviewPromptPositive(platform: SupportedPlatformsType, testInfo: 
   const version = await device.getVersionNumber();
   const url = `https://getsession.org/feedback?platform=${platform}&version=${version}`;
 
-  await test.step('Open Path screen', async () => {
-    await device.clickOnElementAll({
-      strategy: 'xpath',
-      selector: `//android.widget.TextView[@text="Path"]`,
-    });
+  await test.step(TestSteps.OPEN.PATH, async () => {
+    await device.clickOnElementAll(new PathMenuItem(device));
     await device.back();
     await device.back();
   });
-  await device.checkModalStrings(
-    englishStrippedStr('enjoyingSession').toString(),
-    englishStrippedStr('enjoyingSessionDescription').toString()
-  );
-  await device.clickOnElementAll(new ReviewPromptNeedsWorkButton(device));
-  await sleepFor(100);
-  await device.checkModalStrings(
-    englishStrippedStr('giveFeedback').toString(),
-    englishStrippedStr('giveFeedbackDescription').toString()
-  );
-  await device.waitForTextElementToBePresent(new ReviewPromptNotNowButton(device));
-  await device.clickOnElementAll(new ReviewPromptOpenSurveyButton(device));
-  await device.checkModalStrings(
-    englishStrippedStr('urlOpen').toString(),
-    englishStrippedStr('urlOpenDescription').withArgs({ url }).toString()
-  );
-  await assertUrlIsReachable(url);
+  await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Enjoying Session'), async () => {
+    await device.checkModalStrings(
+      englishStrippedStr('enjoyingSession').toString(),
+      englishStrippedStr('enjoyingSessionDescription').toString()
+    );
+    await device.clickOnElementAll(new ReviewPromptNeedsWorkButton(device));
+  });
+  await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Give Feedback'), async () => {
+    await device.checkModalStrings(
+      englishStrippedStr('giveFeedback').toString(),
+      englishStrippedStr('giveFeedbackDescription').toString()
+    );
+    await device.waitForTextElementToBePresent(new ReviewPromptNotNowButton(device));
+    await device.clickOnElementAll(new ReviewPromptOpenSurveyButton(device));
+  });
+  await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Open URL'), async () => {
+    await device.checkModalStrings(
+      englishStrippedStr('urlOpen').toString(),
+      englishStrippedStr('urlOpenDescription').withArgs({ url }).toString()
+    );
+    await assertUrlIsReachable(url);
+  });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);
   });

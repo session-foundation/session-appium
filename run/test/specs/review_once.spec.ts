@@ -6,7 +6,7 @@ import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ModalHeading } from './locators/global';
 import { PlusButton } from './locators/home';
-import { UserSettings } from './locators/settings';
+import { PathMenuItem, UserSettings } from './locators/settings';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
@@ -28,14 +28,9 @@ async function reviewPromptOnce(platform: SupportedPlatformsType, testInfo: Test
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
     return { device };
   });
-  await test.step(TestSteps.OPEN.USER_SETTINGS, async () => {
+  await test.step(TestSteps.OPEN.PATH, async () => {
     await device.clickOnElementAll(new UserSettings(device));
-  });
-  await test.step('Open Path screen', async () => {
-    await device.clickOnElementAll({
-      strategy: 'xpath',
-      selector: `//android.widget.TextView[@text="Path"]`,
-    });
+    await device.clickOnElementAll(new PathMenuItem(device));
     await device.back();
     await device.back();
   });
@@ -44,14 +39,9 @@ async function reviewPromptOnce(platform: SupportedPlatformsType, testInfo: Test
     englishStrippedStr('enjoyingSessionDescription').toString()
   );
   await device.clickOnByAccessibilityID('back'); // Yes this is lowercase to close the modal
-  await test.step(TestSteps.OPEN.USER_SETTINGS, async () => {
+  await test.step(TestSteps.OPEN.PATH, async () => {
     await device.clickOnElementAll(new UserSettings(device));
-  });
-  await test.step('Open Path screen', async () => {
-    await device.clickOnElementAll({
-      strategy: 'xpath',
-      selector: `//android.widget.TextView[@text="Path"]`,
-    });
+    await device.clickOnElementAll(new PathMenuItem(device));
     await device.back();
     await device.back();
   });

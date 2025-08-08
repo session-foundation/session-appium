@@ -74,7 +74,7 @@ export const TestSteps = {
   // Open/Navigate steps
   OPEN: {
     UPDATE_GROUP_INFO: `Open 'Update Group Information' modal`,
-    USER_SETTINGS: 'Open User Settings',
+    PATH: 'Open Path screen',
   },
   // User Actions
   USER_ACTIONS: {

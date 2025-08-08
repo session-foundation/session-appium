@@ -5,7 +5,12 @@ import { TestSteps } from '../../types/allure';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { AppearanceMenuItem, DonationsMenuItem, UserSettings } from './locators/settings';
+import {
+  AppearanceMenuItem,
+  DonationsMenuItem,
+  PathMenuItem,
+  UserSettings,
+} from './locators/settings';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
@@ -22,12 +27,9 @@ const reviewTriggers = [
   {
     titleSnippet: 'Path',
     descriptionSnippet: 'visits the Path screen in Settings',
-    testStepName: 'Open Path screen',
+    testStepName: TestSteps.OPEN.PATH,
     trigger: async (device: DeviceWrapper) => {
-      await device.clickOnElementAll({
-        strategy: 'xpath',
-        selector: `//android.widget.TextView[@text="Path"]`,
-      });
+      await device.clickOnElementAll(new PathMenuItem(device));
     },
   },
   {
@@ -57,14 +59,12 @@ for (const { titleSnippet, descriptionSnippet, testStepName, trigger } of review
         const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
         await newUser(device, USERNAME.ALICE, {
           saveUserData: false,
-          allowNotificationPermissions: true,
+          allowNotificationPermissions: true, // Notification prompt can cause trouble
         });
         return { device };
       });
-      await test.step(TestSteps.OPEN.USER_SETTINGS, async () => {
-        await device.clickOnElementAll(new UserSettings(device));
-      });
       await test.step(testStepName, async () => {
+        await device.clickOnElementAll(new UserSettings(device));
         await trigger(device);
         await device.back();
         await device.back();
