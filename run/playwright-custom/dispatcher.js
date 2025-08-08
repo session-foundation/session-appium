@@ -75,6 +75,16 @@ class Dispatcher {
     this._workerIdleTimeout = 10000;
     this._lastWorkerActivity = new Map();
     this._dynamicWorkerScaling = this._config.config.dynamicWorkerScaling !== false;
+
+    this._totalExpectedTests = 0;
+    this._completedTests = 0;
+    this._startedTests = new Set();
+    this._completedTestIds = new Set();
+    this._finishCheckTimeout = null;
+    this._retryAttempts = new Map(); // testId -> attempt count
+    this._maxRetries = parseInt(process.env.PLAYWRIGHT_RETRIES_COUNT || '0') || 
+                   config.config.retries || 
+                   0;
     
     console.log(`🎯 [WORKERS] Dynamic scaling enabled: ${this._minWorkers}-${this._maxWorkers} workers`);
     
@@ -220,7 +230,7 @@ async _scheduleJob() {
 }
 
 
-  async _processLocalQueue() {
+async _processLocalQueue() {
   if (this._processingQueue) {
     return;
   }
@@ -229,6 +239,11 @@ async _scheduleJob() {
   
   try {
     if (this._queue.length === 0) {
+      // Check if we're truly done or waiting for retries
+      const runningJobs = this._workerSlots.filter(w => w.busy).length;
+      if (runningJobs === 0) {
+        console.log(`🔍 [QUEUE] Empty queue, ${this._completedTestIds.size}/${this._totalExpectedTests} tests completed`);
+      }
       return;
     }
     
@@ -236,65 +251,70 @@ async _scheduleJob() {
     
     console.log(`📋 [QUEUE] Processing ${this._queue.length} jobs, ${availableDevices} devices available`);
     
-    // Debug: Show what's at the front of the queue
-    if (this._queue.length > 0) {
-      const firstJob = this._queue[0];
-      const firstDevices = this._getJobDeviceRequirement(firstJob);
-      console.log(`   First job needs ${firstDevices} devices: "${firstJob.tests?.[0]?.title?.substring(0, 40)}..."`);
-    }
-    
-    const minDevicesNeeded = Math.min(...this._queue.map(job => this._getJobDeviceRequirement(job) || 1));
-    
-    if (availableDevices < minDevicesNeeded) {
-      if (!this._lastNoDevicesLog || Date.now() - this._lastNoDevicesLog > 5000) {
-        console.log(`⏸️  [QUEUE] Skipping - need at least ${minDevicesNeeded} devices, have ${availableDevices}`);
-        this._lastNoDevicesLog = Date.now();
-      }
-      return;
-    }
-    
-    // Find ONE job to schedule
-    let scheduledIndex = -1;
+    // Find jobs we can run
+    const runnableJobs = [];
     let hitCooldown = false;
     
     for (let i = 0; i < this._queue.length; i++) {
       const job = this._queue[i];
       const devices = this._getJobDeviceRequirement(job);
       
-      // Skip if not enough devices
       if (devices > availableDevices) {
         continue;
       }
       
-      // Skip if project limits exceeded
       if (!this._canRunBasedOnProjectLimits(job)) {
         continue;
       }
       
-      // Try to schedule this job
-      const result = await this._tryScheduleJob(job, devices);
-      
-      if (result === 'cooldown') {
-        // Hit cooldown, stop trying other jobs
+      // Check if we can allocate without hitting cooldown
+      const testAllocation = await this._canAllocateWithoutCooldown(devices);
+      if (!testAllocation) {
         hitCooldown = true;
-        console.log(`🧊 [QUEUE] Devices in cooldown, stopping queue processing`);
-        break;
-      } else if (result === true) {
-        console.log(`✅ [SCHEDULER] Scheduled job ${i + 1}/${this._queue.length} (${devices} devices)`);
-        scheduledIndex = i;
+        console.log(`🧊 [QUEUE] Would hit cooldown for ${devices}-device job, stopping scan`);
         break;
       }
+      
+      runnableJobs.push({ index: i, job, devices });
     }
     
-    // Update queue by removing the scheduled job
-    if (scheduledIndex >= 0) {
-      this._queue.splice(scheduledIndex, 1);
+    // Schedule the first runnable job
+    if (runnableJobs.length > 0 && !hitCooldown) {
+      const { index, job, devices } = runnableJobs[0];
+      const result = await this._tryScheduleJob(job, devices);
+      
+      if (result === true) {
+        console.log(`✅ [SCHEDULER] Scheduled job ${index + 1}/${this._queue.length} (${devices} devices)`);
+        this._queue.splice(index, 1);
+      }
     }
     
   } finally {
     this._processingQueue = false;
   }
 }
+
+async _canAllocateWithoutCooldown(count) {
+  let availableNonCooling = 0;
+  const deviceCount = await this._redis.lLen(this._redisKeys.devicesAvailable);
+  
+  // Peek at devices without removing them
+  const devices = await this._redis.lRange(this._redisKeys.devicesAvailable, 0, -1);
+  
+  for (const device of devices) {
+    const cooldownKey = `playwright:cooldown:${device}`;
+    const inCooldown = await this._redis.exists(cooldownKey);
+    if (!inCooldown) {
+      availableNonCooling++;
+      if (availableNonCooling >= count) {
+        return true;
+      }
+    }
+  }
+  
+  return false;
+}
+
 // Separate method to process queue with known device count
 async _processQueueWithDevices(availableDevices) {
   const minDevicesNeeded = Math.min(...this._queue.map(job => this._getJobDeviceRequirement(job) || 1));
@@ -539,8 +559,8 @@ async _deallocateDevices(workerIndex) {
     const devices = data.devices || data;
     
     if (devices.length > 0) {
-      // Quarantine ALL devices for 2 seconds to ensure Appium cleanup
-      const cooldownTime = 2;
+      // Quarantine ALL devices for 1 second to ensure Appium cleanup
+      const cooldownTime = 1;
       console.log(`🧊 [COOLDOWN] Devices ${devices.join(', ')} entering ${cooldownTime}s cooldown period`);
       
       // Set quarantine flags with TTL
@@ -798,10 +818,17 @@ _getJobDeviceRequirement(job) {
   
   const result = await jobDispatcher.jobResult;
   console.log(`🔍 [RETRY_DEBUG] Job result: didFail=${result.didFail}, hasNewJob=${!!result.newJob}`);
+  
   if (result.newJob) {
     console.log(`🔍 [RETRY_DEBUG] New retry job has ${result.newJob.tests.length} tests`);
-  }
-  
+    
+    // Track retry attempts
+    result.newJob.tests.forEach(test => {
+      const attempts = (this._retryAttempts.get(test.id) || 0) + 1;
+      this._retryAttempts.set(test.id, attempts);
+      console.log(`🔄 [RETRY] Test "${test.title}" retry attempt ${attempts}`);
+    })
+  };
   // Clear timeout after job completes
   this._clearTestTimeout(index);
   
@@ -813,12 +840,14 @@ _getJobDeviceRequirement(job) {
     void worker.stop();
   }
   
-  if (!this._isStopped && result.newJob) {
-    console.log(`➕ [RETRY_DEBUG] Adding retry job to queue for ${result.newJob.tests.length} tests`);
+if (!this._isStopped && result.newJob) {
+    console.log(`➕ [RETRY] Adding retry job to queue for ${result.newJob.tests.length} tests`);
+    // Add to front of queue to prioritize retries
     this._queue.unshift(result.newJob);
     this._updateCounterForWorkerHash(result.newJob.workerHash, 1);
-  } else if (result.newJob) {
-    console.log(`❌ [RETRY_DEBUG] NOT adding retry job because _isStopped=${this._isStopped}`);
+    
+    // Trigger immediate scheduling attempt
+    setTimeout(() => this._scheduleJob(), 100);
   }
   
   this._lastWorkerActivity.set(index, Date.now());
@@ -844,11 +873,54 @@ _getJobDeviceRequirement(job) {
   async _checkFinished() {
     if (this._finished.isDone()) return;
     
-    // Remove the undefined queueLength variable
-    if (this._queue.length && !this._isStopped) return;
-    if (this._workerSlots.some((w) => w.busy)) return;
+    // Don't finish if we have queued jobs or busy workers
+    if (this._queue.length > 0 || this._workerSlots.some(w => w.busy)) {
+      return;
+    }
     
-    // Cleanup
+    // Verify all tests completed
+    if (this._completedTestIds.size < this._totalExpectedTests) {
+      console.warn(`⚠️  [FINISH] Only ${this._completedTestIds.size}/${this._totalExpectedTests} tests completed`);
+      
+      // Wait a bit for retries to be added
+      if (!this._finishCheckTimeout) {
+        this._finishCheckTimeout = setTimeout(() => {
+          // Re-check conditions after timeout
+          if (this._queue.length === 0 && !this._workerSlots.some(w => w.busy)) {
+            console.error(`❌ [FINISH] Missing ${this._totalExpectedTests - this._completedTestIds.size} tests!`);
+            
+            // List missing tests if we're tracking them
+            if (this._startedTests) {
+              const missingTests = [];
+              for (const testId of this._startedTests) {
+                if (!this._completedTestIds.has(testId)) {
+                  missingTests.push(testId);
+                }
+              }
+              console.error(`❌ [FINISH] Missing test IDs:`, missingTests);
+            }
+            
+            // Force finish despite missing tests to prevent hanging
+            this._forceFinish();
+          }
+          this._finishCheckTimeout = null;
+        }, 5000);
+        return;
+      }
+    }
+    
+    // Clear timeout if we have one (all tests completed)
+    if (this._finishCheckTimeout) {
+      clearTimeout(this._finishCheckTimeout);
+      this._finishCheckTimeout = null;
+    }
+    
+    // Proceed to cleanup and finish
+    this._doFinish();
+  }
+
+  _doFinish() {
+    // Cleanup intervals
     if (this._statusLogInterval) {
       clearInterval(this._statusLogInterval);
       this._statusLogInterval = null;
@@ -866,12 +938,21 @@ _getJobDeviceRequirement(job) {
     if (this._devicePoolMinAvailable.length > 0) {
       console.log(`    Min available devices during run: ${Math.min(...this._devicePoolMinAvailable)}`);
     }
-    console.log(`    Total tests completed: ${this._completedTests || 0}`);
+    console.log(`    Total tests completed: ${this._completedTestIds.size}/${this._totalExpectedTests}`);
     console.log(`    Final worker count: ${this._workerSlots.length}`);
     
-    console.log("\n✅ [DISPATCHER] All tests completed successfully!");
+    const successMessage = this._completedTestIds.size === this._totalExpectedTests 
+      ? "✅ [DISPATCHER] All tests completed successfully!"
+      : `⚠️  [DISPATCHER] Run completed with ${this._totalExpectedTests - this._completedTestIds.size} missing tests`;
+    
+    console.log(`\n${successMessage}`);
     
     this._finished.resolve();
+  }
+
+  _forceFinish() {
+    console.warn("⚠️  [DISPATCHER] Force finishing due to missing tests");
+    this._doFinish();
   }
 
   _isWorkerRedundant(worker) {
@@ -888,10 +969,31 @@ _getJobDeviceRequirement(job) {
   }
 
   async run(testGroups, extraEnvByProjectId) {
-  // Initialize Redis
   await this._initializeRedis();
   
   this._extraEnvByProjectId = extraEnvByProjectId;
+  
+  // Count total unique tests (including retries)
+  const allTests = new Set();
+  testGroups.forEach((group, groupIndex) => {
+      console.log(`[DEBUG] Group ${groupIndex} has ${group.tests?.length || 0} tests`);
+
+    group.tests.forEach((test, testIndex) => {
+          console.log(`[DEBUG] Test ${testIndex}: id=${test?.id}, title=${test?.title?.substring(0, 30)}`);
+
+      if (test && test.id) {
+        allTests.add(test.id);
+        // Only set retry attempts if test has an id
+        this._retryAttempts.set(test.id, 0);
+      } else {
+        console.warn('⚠️  [DISPATCHER] Test without ID found:', test);
+      }
+    });
+  });
+  this._totalExpectedTests = allTests.size;
+  
+  console.log(`📊 [DISPATCHER] Starting with ${this._totalExpectedTests} unique tests across ${testGroups.length} groups`);
+  
   
   // Sort test groups by device requirement (First Fit Decreasing)
   const sortedGroups = this._optimizeTestOrder(testGroups);
@@ -952,6 +1054,8 @@ _getJobDeviceRequirement(job) {
   for (let i = 0; i < initialWorkers; i++) {
     this._workerSlots.push({ busy: false, hasStarted: false });
   }
+
+  this._startStatusLogging();
   
   // Schedule initial jobs one by one
   for (let i = 0; i < initialWorkers; i++) {
@@ -976,6 +1080,24 @@ _getJobDeviceRequirement(job) {
     redisClient = null;
     redisInitPromise = null;
   }
+}
+
+_startStatusLogging() {
+  this._statusLogInterval = setInterval(async () => {
+    const availableDevices = await this._redis.lLen(this._redisKeys.devicesAvailable);
+    const busyWorkers = this._workerSlots.filter(w => w.busy).length;
+    const cooldowns = await this._getDeviceCooldownStatus();
+    const cooldownCount = Object.keys(cooldowns).length;
+    
+    console.log(`📊 [STATUS] Queue: ${this._queue.length} | Workers: ${busyWorkers}/${this._workerSlots.length} | Devices: ${availableDevices}/${this._devicePoolSize} | Cooldowns: ${cooldownCount} | Completed: ${this._completedTestIds.size}/${this._totalExpectedTests}`);
+    
+    // Log first few queue items
+    if (this._queue.length > 0) {
+      console.log(`   Queue head: ${this._queue.slice(0, 3).map(j => 
+        `${this._getJobDeviceRequirement(j)}d`
+      ).join(', ')}${this._queue.length > 3 ? '...' : ''}`);
+    }
+  }, 15000); // Every 15 seconds
 }
 
   _optimizeTestOrder(testGroups) {
@@ -1148,6 +1270,18 @@ _startWorkerManagement() {
     const producedEnv = this._producedEnvByProjectId.get(testGroup.projectId) || {};
     this._producedEnvByProjectId.set(testGroup.projectId, { ...producedEnv, ...worker.producedEnv() });
   });
+  worker.on("done", (params) => {
+    // Track test completion
+    if (testGroup.tests) {
+      testGroup.tests.forEach(test => {
+        if (!params.remainingTestIds?.includes(test.id)) {
+          this._completedTestIds.add(test.id);
+        }
+      });
+    }
+    console.log(`📊 [PROGRESS] ${this._completedTestIds.size}/${this._totalExpectedTests} tests completed`);
+  });
+  
   
   return worker;
 }
@@ -1185,7 +1319,14 @@ class JobDispatcher {
     this._adjustingWorkers = false;
     this._completedTests = 0;
     this._initialWorkerCount = 0; // Add this
-
+    this._totalExpectedTests = 0;
+    this._completedTests = 0;
+    this._startedTests = new Set();
+    this._completedTestIds = new Set();
+    this._finishCheckTimeout = null;
+    this._retryAttempts = new Map(); // testId -> attempt count
+    this._maxRetries = parseInt(process.env.PLAYWRIGHT_RETRIES_COUNT || '0') ||  
+                   0;
   }
   
   _onTestBegin(params) {
