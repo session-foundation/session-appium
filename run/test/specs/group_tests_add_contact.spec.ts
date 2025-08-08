@@ -8,7 +8,7 @@ import { ConversationSettings } from './locators/conversation';
 import { Contact } from './locators/global';
 import { InviteContactConfirm, ManageMembersMenuItem } from './locators/groups';
 import { ConversationItem } from './locators/home';
-import { open_Alice1_Bob1_Charlie1_Unknown1 } from './state_builder';
+import { open_Alice1_Bob1_friends_group_Unknown1 } from './state_builder';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -18,22 +18,22 @@ bothPlatformsIt({
   title: 'Add contact to group',
   risk: 'high',
   testCb: addContactToGroup,
-  countOfDevicesNeeded: 4,
+  countOfDevicesNeeded: 3,
 });
 async function addContactToGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Group to test adding contact';
   const {
-    devices: { alice1, bob1, charlie1, unknown1 },
+    devices: { alice1, bob1, unknown1 },
     prebuilt: { alice, group },
-  } = await open_Alice1_Bob1_Charlie1_Unknown1({
+  } = await open_Alice1_Bob1_friends_group_Unknown1({
     platform,
     groupName: testGroupName,
     focusGroupConvo: true,
     testInfo: testInfo,
   });
-  const userD = await newUser(unknown1, USERNAME.DRACULA);
+  const userC = await newUser(unknown1, USERNAME.CHARLIE);
   await alice1.navigateBack();
-  await newContact(platform, alice1, alice, unknown1, userD);
+  await newContact(platform, alice1, alice, unknown1, userC);
   // Exit to conversation list
   await alice1.navigateBack();
   // Select group conversation in list
@@ -49,7 +49,7 @@ async function addContactToGroup(platform: SupportedPlatformsType, testInfo: Tes
   // Select new user
   await alice1.clickOnElementAll({
     ...new Contact(alice1).build(),
-    text: USERNAME.DRACULA,
+    text: USERNAME.CHARLIE,
   });
   await alice1.clickOnElementAll(new InviteContactConfirm(alice1));
   // Leave Manage Members
@@ -58,9 +58,9 @@ async function addContactToGroup(platform: SupportedPlatformsType, testInfo: Tes
   await alice1.navigateBack();
   // Check control messages
   await Promise.all(
-    [alice1, bob1, charlie1].map(device =>
+    [alice1, bob1].map(device =>
       device.waitForControlMessageToBePresent(
-        englishStrippedStr('groupMemberNew').withArgs({ name: USERNAME.DRACULA }).toString()
+        englishStrippedStr('groupMemberNew').withArgs({ name: USERNAME.CHARLIE }).toString()
       )
     )
   );
@@ -71,5 +71,5 @@ async function addContactToGroup(platform: SupportedPlatformsType, testInfo: Tes
   await unknown1.selectByText('Conversation list item', group.groupName);
   // Check for control message on device 4
   await unknown1.waitForControlMessageToBePresent(englishStrippedStr('groupInviteYou').toString());
-  await closeApp(alice1, bob1, charlie1, unknown1);
+  await closeApp(alice1, bob1, unknown1);
 }
