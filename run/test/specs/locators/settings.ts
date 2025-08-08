@@ -271,3 +271,20 @@ export class DonationsMenuItem extends LocatorsInterface {
     }
   }
 }
+
+export class PathMenuItem extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'xpath',
+          selector: `//android.widget.TextView[@text="Path"]`,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Path',
+        } as const;
+    }
+  }
+}

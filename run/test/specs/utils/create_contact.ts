@@ -1,6 +1,7 @@
 import { runOnlyOnIOS, sleepFor } from '.';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
+import { MessageRequestsBanner } from '../locators/home';
 import { SupportedPlatformsType } from './open_app';
 
 export const newContact = async (
@@ -15,7 +16,7 @@ export const newContact = async (
   await sleepFor(100);
   await runOnlyOnIOS(platform, () => retryMsgSentForBanner(platform, device1, device2, 30000)); // this runOnlyOnIOS is needed
 
-  await device2.clickOnByAccessibilityID('Message requests banner');
+  await device2.clickOnElementAll(new MessageRequestsBanner(device2));
   await device2.clickOnByAccessibilityID('Message request');
   await device2.onAndroid().clickOnByAccessibilityID('Accept message request');
   // Type into message input box
@@ -47,8 +48,7 @@ export const retryMsgSentForBanner = async (
 
   while (!messageRequest && Date.now() - startTime < timeout) {
     const element = await device2.doesElementExist({
-      strategy: 'accessibility id',
-      selector: 'Message requests banner',
+      ...new MessageRequestsBanner(device2).build(),
       maxWait: 5000,
     });
 

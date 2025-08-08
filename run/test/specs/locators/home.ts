@@ -19,6 +19,20 @@ export class EmptyLandingPage extends LocatorsInterface {
     }
   }
 }
+
+export class MessageRequestsBanner extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Message requests banner',
+        } as const;
+    }
+  }
+}
+
 export class ConversationItem extends LocatorsInterface {
   public text: string | undefined;
   constructor(device: DeviceWrapper, text?: string) {
@@ -66,6 +80,76 @@ export class LongPressBlockOption extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'Block',
+        };
+      case 'ios':
+        throw new Error('Not implemented');
+    }
+  }
+}
+
+export class ReviewPromptItsGreatButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'enjoy-session-positive-button',
+        };
+      case 'ios':
+        throw new Error('Not implemented');
+    }
+  }
+}
+
+export class ReviewPromptNeedsWorkButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'enjoy-session-negative-button',
+        };
+      case 'ios':
+        throw new Error('Not implemented');
+    }
+  }
+}
+
+export class ReviewPromptRateAppButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'rate-app-button',
+        };
+      case 'ios':
+        throw new Error('Not implemented');
+    }
+  }
+}
+
+export class ReviewPromptNotNowButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'not-now-button',
+        };
+      case 'ios':
+        throw new Error('Not implemented');
+    }
+  }
+}
+
+export class ReviewPromptOpenSurveyButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'open-survey-button',
         };
       case 'ios':
         throw new Error('Not implemented');
