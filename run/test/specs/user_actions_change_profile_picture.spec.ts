@@ -24,7 +24,7 @@ async function changeProfilePicture(platform: SupportedPlatformsType, testInfo: 
   const expectedPixelHexColor = '04cbfe'; // This is the color of the profile picture image stored in the repo
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
-    await newUser(device, USERNAME.ALICE, {saveUserData: false});
+    await newUser(device, USERNAME.ALICE, { saveUserData: false });
     return { device };
   });
   await test.step(TestSteps.USER_ACTIONS.CHANGE_PROFILE_PICTURE, async () => {
