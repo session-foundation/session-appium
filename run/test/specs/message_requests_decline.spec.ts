@@ -4,7 +4,7 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { type AccessibilityId, USERNAME } from '../../types/testing';
 import { DeclineMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
-import { PlusButton } from './locators/home';
+import { MessageRequestsBanner, PlusButton } from './locators/home';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
@@ -27,11 +27,11 @@ async function declineRequest(platform: SupportedPlatformsType, testInfo: TestIn
   await device1.sendNewMessage(bob, `${alice.userName} to ${bob.userName}`);
   // Wait for banner to appear
   // Bob clicks on message request banner
-  await device2.clickOnByAccessibilityID('Message requests banner');
+  await device2.clickOnElementAll(new MessageRequestsBanner(device2));
   // Bob clicks on request conversation item
   await device2.clickOnByAccessibilityID('Message request');
   // Check message request appears on linked device (device 3)
-  await device3.clickOnByAccessibilityID('Message requests banner');
+  await device3.clickOnElementAll(new MessageRequestsBanner(device3));
   await device3.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message request',

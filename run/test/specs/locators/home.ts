@@ -19,6 +19,20 @@ export class EmptyLandingPage extends LocatorsInterface {
     }
   }
 }
+
+export class MessageRequestsBanner extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Message requests banner'
+        } as const;
+    }
+  }
+}
+
 export class ConversationItem extends LocatorsInterface {
   public text: string | undefined;
   constructor(device: DeviceWrapper, text?: string) {

@@ -5,6 +5,7 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { MessageInput, SendButton } from './locators/conversation';
 import { PlusButton } from './locators/home';
+import { MessageRequestsBanner } from './locators/home';
 import { EnterAccountID, NewMessageOption, NextButton } from './locators/start_conversation';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
@@ -60,7 +61,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType, testInfo:
   });
   // Wait for banner to appear
   // Bob clicks on message request banner
-  await device2.clickOnByAccessibilityID('Message requests banner');
+  await device2.clickOnElementAll(new MessageRequestsBanner(device2));
   // Bob clicks on request conversation item
   await device2.clickOnByAccessibilityID('Message request');
   // Check control message warning of sending message request reply

@@ -4,7 +4,7 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { type AccessibilityId, USERNAME } from '../../types/testing';
 import { BlockedContactsSettings } from './locators';
-import { PlusButton } from './locators/home';
+import { MessageRequestsBanner, PlusButton } from './locators/home';
 import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -26,18 +26,13 @@ async function blockedRequest(platform: SupportedPlatformsType, testInfo: TestIn
   // Send message from Alice to Bob
   await device1.sendNewMessage(bob, `${alice.userName} to ${bob.userName}`);
   // Wait for banner to appear on device 2 and 3
-  await Promise.all([
-    device2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message requests banner',
-    }),
-    device3.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message requests banner',
-    }),
-  ]);
+  await Promise.all(
+    [device2,device3].map(device => 
+    device.waitForTextElementToBePresent(new MessageRequestsBanner(device)),
+    )
+  );
   // Bob clicks on message request banner
-  await device2.clickOnByAccessibilityID('Message requests banner');
+  await device2.clickOnElementAll(new MessageRequestsBanner(device2))
   // Bob clicks on request conversation item
   await device2.clickOnByAccessibilityID('Message request');
   // Bob clicks on block option
@@ -57,10 +52,7 @@ async function blockedRequest(platform: SupportedPlatformsType, testInfo: TestIn
       strategy: 'accessibility id',
       selector: messageRequestsNonePending as AccessibilityId,
     }),
-    device3.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Message requests banner',
-    }),
+    device3.hasElementBeenDeleted(new MessageRequestsBanner(device3)),
   ]);
   const blockedMessage = `"${alice.userName} to ${bob.userName} - shouldn't get through"`;
   await device1.sendMessage(blockedMessage);
