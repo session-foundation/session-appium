@@ -40,32 +40,34 @@ jobs:
         run: |
           CUTOFF_DATE=$(date -d "$RETENTION_DAYS days ago" +%s)
           PREVIEW_LIMIT=20
-
+          
           echo "Retention: $RETENTION_DAYS days | Dry run: $DRY_RUN" >> $GITHUB_STEP_SUMMARY
-
+          
           # Find old attachment files
           > files_to_delete.txt
           for pattern in '*/data/attachments/*.png' '*/data/attachments/*.txt' '*/data/attachments/*.imagediff'; do
-            git ls-files -z "$pattern" | while IFS= read -r -d '' file; do
+            while IFS= read -r -d '' file; do
               COMMIT_DATE=$(git log -1 --format="%ct" -- "$file" 2>/dev/null || echo "0")
               [ "$COMMIT_DATE" -lt "$CUTOFF_DATE" ] && [ "$COMMIT_DATE" -ne "0" ] && echo "$file" >> files_to_delete.txt
-            done
+            done < <(git ls-files -z "$pattern")
           done
-
+          
           COUNT=$(wc -l < files_to_delete.txt 2>/dev/null || echo 0)
           echo "Found $COUNT old files" >> $GITHUB_STEP_SUMMARY
-
+          
           if [ "$COUNT" -gt 0 ]; then
             if [ "$DRY_RUN" == "true" ]; then
               echo "Files to delete:" >> $GITHUB_STEP_SUMMARY
-              head -$PREVIEW_LIMIT files_to_delete.txt >> $GITHUB_STEP_SUMMARY
-              [ "$COUNT" -gt $PREVIEW_LIMIT ] && echo "...(+$((COUNT-$PREVIEW_LIMIT)) more)" >> $GITHUB_STEP_SUMMARY
+              if [ -s files_to_delete.txt ]; then
+                head -$PREVIEW_LIMIT files_to_delete.txt >> $GITHUB_STEP_SUMMARY
+                [ "$COUNT" -gt $PREVIEW_LIMIT ] && echo "...(+$((COUNT-PREVIEW_LIMIT)) more)" >> $GITHUB_STEP_SUMMARY
+              fi
             else
               xargs rm -f < files_to_delete.txt
               echo "Deleted $COUNT files" >> $GITHUB_STEP_SUMMARY
             fi
           fi
-
+          
           rm -f files_to_delete.txt
 
       - name: Commit changes
