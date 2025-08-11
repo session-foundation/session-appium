@@ -124,11 +124,10 @@ export type StrategyExtractionObj =
 
 export type XPath =
   | '//XCUIElementTypeCell'
-  | `(//android.widget.ImageView[@content-desc="Clear"])[2]`
-  | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`
+  | `(//android.widget.ImageView[@resource-id="network.loki.messenger.qa:id/thumbnail"])[1]`
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
-  | `//*[@resource-id='network.loki.messenger:id/callTitle' and contains(@text, ':')]`
+  | `//*[@resource-id='network.loki.messenger.qa:id/callTitle' and contains(@text, ':')]`
   | `//*[starts-with(@content-desc, "Photo taken on")]`
   | `//android.widget.TextView[@text="${string}"]`
   | `//XCUIElementTypeAlert//*//XCUIElementTypeButton`
@@ -169,6 +168,7 @@ export type AccessibilityId =
   | 'Apply changes'
   | 'Attachments button'
   | 'Awaiting Recipient Answer... 4/6'
+  | 'back'
   | 'Back'
   | 'Block'
   | 'blocked-banner'
@@ -314,6 +314,7 @@ export type AccessibilityId =
   | 'Okay'
   | 'Open'
   | 'Open URL'
+  | 'Path'
   | 'Photo library'
   | 'Photos'
   | 'Pin'
@@ -343,7 +344,6 @@ export type AccessibilityId =
   | 'Select'
   | 'Select alternate app icon'
   | 'Send'
-  | 'Send button'
   | 'Send message button'
   | 'Session'
   | 'Session | Send Messages, Not Metadata. | Private Messenger'
@@ -364,7 +364,6 @@ export type AccessibilityId =
   | 'TabBarItemTitle'
   | 'Terms of Service'
   | 'test_file, pdf'
-  | 'Text input box'
   | 'Time selector'
   | 'Unblock'
   | 'Untrusted attachment message'
@@ -387,7 +386,6 @@ export type AccessibilityId =
 export type Id =
   | DISAPPEARING_TIMES
   | 'Account ID'
-  | 'All Session notifications'
   | 'android:id/content_preview_text'
   | 'android:id/summary'
   | 'android:id/text1'
@@ -398,6 +396,8 @@ export type Id =
   | 'block-user-menu-option'
   | 'Block'
   | 'Call'
+  | 'clear-input-button-description'
+  | 'clear-input-button-name'
   | 'Close button'
   | 'com.android.chrome:id/negative_button'
   | 'com.android.chrome:id/signin_fre_dismiss_button'
@@ -407,6 +407,7 @@ export type Id =
   | 'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   | 'com.android.permissioncontroller:id/permission_deny_button'
   | 'com.android.settings:id/switch_text'
+  | 'com.google.android.apps.photos:id/sign_in_button'
   | 'com.google.android.apps.photos:id/text'
   | 'Confirm invite button'
   | 'Contact'
@@ -432,6 +433,8 @@ export type Id =
   | 'Download media'
   | 'edit-profile-icon'
   | 'Empty list'
+  | 'enjoy-session-negative-button'
+  | 'enjoy-session-positive-button'
   | 'Enter display name'
   | 'error-message'
   | 'group-description'
@@ -461,39 +464,45 @@ export type Id =
   | 'Modal description'
   | 'Modal heading'
   | 'Navigate back'
-  | 'network.loki.messenger:id/acceptCallButton'
-  | 'network.loki.messenger:id/action_apply'
-  | 'network.loki.messenger:id/back_button'
-  | 'network.loki.messenger:id/call_text_view'
-  | 'network.loki.messenger:id/callInProgress'
-  | 'network.loki.messenger:id/callSubtitle'
-  | 'network.loki.messenger:id/callTitle'
-  | 'network.loki.messenger:id/crop_image_menu_crop'
-  | 'network.loki.messenger:id/emptyStateContainer'
-  | 'network.loki.messenger:id/endCallButton'
-  | 'network.loki.messenger:id/linkPreviewView'
-  | 'network.loki.messenger:id/mediapicker_folder_item_thumbnail'
-  | 'network.loki.messenger:id/mediapicker_image_item_thumbnail'
-  | 'network.loki.messenger:id/messageStatusTextView'
-  | 'network.loki.messenger:id/openGroupTitleTextView'
-  | 'network.loki.messenger:id/play_overlay'
-  | 'network.loki.messenger:id/scrollToBottomButton'
-  | 'network.loki.messenger:id/search_cancel'
-  | 'network.loki.messenger:id/search_result_title'
-  | 'network.loki.messenger:id/sendAcceptsTextView'
-  | 'network.loki.messenger:id/singleModeImageView'
-  | 'network.loki.messenger:id/system_settings_app_icon'
-  | 'network.loki.messenger:id/textSendAfterApproval'
-  | 'network.loki.messenger:id/thumbnail_load_indicator'
-  | 'network.loki.messenger:id/title'
+  | 'network.loki.messenger.qa:id/acceptCallButton'
+  | 'network.loki.messenger.qa:id/action_apply'
+  | 'network.loki.messenger.qa:id/back_button'
+  | 'network.loki.messenger.qa:id/call_text_view'
+  | 'network.loki.messenger.qa:id/callInProgress'
+  | 'network.loki.messenger.qa:id/callSubtitle'
+  | 'network.loki.messenger.qa:id/callTitle'
+  | 'network.loki.messenger.qa:id/crop_image_menu_crop'
+  | 'network.loki.messenger.qa:id/emptyStateContainer'
+  | 'network.loki.messenger.qa:id/endCallButton'
+  | 'network.loki.messenger.qa:id/linkPreviewView'
+  | 'network.loki.messenger.qa:id/mediapicker_folder_item_thumbnail'
+  | 'network.loki.messenger.qa:id/mediapicker_image_item_thumbnail'
+  | 'network.loki.messenger.qa:id/messageStatusTextView'
+  | 'network.loki.messenger.qa:id/openGroupTitleTextView'
+  | 'network.loki.messenger.qa:id/play_overlay'
+  | 'network.loki.messenger.qa:id/scrollToBottomButton'
+  | 'network.loki.messenger.qa:id/search_cancel'
+  | 'network.loki.messenger.qa:id/search_result_title'
+  | 'network.loki.messenger.qa:id/sendAcceptsTextView'
+  | 'network.loki.messenger.qa:id/singleModeImageView'
+  | 'network.loki.messenger.qa:id/system_settings_app_icon'
+  | 'network.loki.messenger.qa:id/textSendAfterApproval'
+  | 'network.loki.messenger.qa:id/theme_option_classic_light'
+  | 'network.loki.messenger.qa:id/thumbnail_load_indicator'
+  | 'network.loki.messenger.qa:id/title'
   | 'New direct message'
   | 'Next'
+  | 'nickname-input'
+  | 'not-now-button'
   | 'Notifications'
+  | 'open-survey-button'
   | 'Open'
   | 'Open URL'
+  | 'preferred-display-name'
   | 'Privacy'
   | 'Privacy Policy'
   | 'Quit'
+  | 'rate-app-button'
   | 'Recovery password container'
   | 'Recovery password menu item'
   | 'Recovery phrase input'
@@ -505,6 +514,7 @@ export type Id =
   | 'Select All'
   | 'session-network-menu-item'
   | 'Session id input box'
+  | 'set-nickname-confirm-button'
   | 'Set button'
   | 'Share button'
   | 'show-nts-confirm-button'
@@ -516,6 +526,7 @@ export type Id =
   | 'update-group-info-name-input'
   | 'Version warning banner'
   | 'Yes'
+  | `All ${AppName} notifications`
   | `Disappear after ${DisappearModes} option`;
 
 export type TestRisk = 'high' | 'low' | 'medium';
@@ -525,3 +536,5 @@ export type ElementStates = 'new_account' | 'restore_account';
 export type PageName = 'network_page' | 'staking_page';
 
 export type Suffix = 'diff' | 'screenshot';
+
+export type AppName = 'Session AQA' | 'Session QA';

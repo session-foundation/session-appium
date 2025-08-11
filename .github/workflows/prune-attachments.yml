@@ -2,6 +2,18 @@ name: Prune Old Allure Attachments
 on:
   schedule:
     - cron: '0 16 * * 0' # Weekly, 16:00 UTC Sunday
+  workflow_dispatch:
+    inputs:
+      retention-days:
+        description: 'Number of days to retain attachments'
+        required: false
+        default: '14'
+        type: string
+      dry-run:
+        description: 'If true, only list files that would be deleted (no deletion or commit)'
+        required: false
+        default: 'false'
+        type: boolean
 
 jobs:
   prune:
@@ -14,24 +26,64 @@ jobs:
         env:
           GIT_LFS_SKIP_SMUDGE: 1 # Don't actually download LFS content
 
-      - name: Prune Allure attachments older than 14 days
+      - name: Set retention days
+        id: retention
         run: |
-          echo "## Pruning Report" >> $GITHUB_STEP_SUMMARY
-          COUNT=$(find . -type f -path "*/data/attachments/*" \( -name "*.png" -o -name "*.txt" -o -name "*.imagediff" \) -mtime +14 | wc -l)
-          echo "Deleting $COUNT files older than 14 days" >> $GITHUB_STEP_SUMMARY
+          DAYS="${{ github.event.inputs.retention-days || '14' }}"
+          [[ "$DAYS" =~ ^[1-9][0-9]*$ ]] || { echo "Error: retention-days must be a positive integer"; exit 1; }
+          echo "days=$DAYS" >> $GITHUB_OUTPUT
 
-          find . -type f -path "*/data/attachments/*" \( -name "*.png" -o -name "*.txt" -o -name "*.imagediff" \) -mtime +14 -delete
+      - name: Prune Allure attachments
+        env:
+          DRY_RUN: ${{ github.event.inputs.dry-run || 'false' }}
+          RETENTION_DAYS: ${{ steps.retention.outputs.days }}
+        run: |
+          CUTOFF_DATE=$(date -d "$RETENTION_DAYS days ago" +%s)
+          PREVIEW_LIMIT=20
+          DELETE_LIST="files_to_delete.txt"
+
+          echo "Retention: $RETENTION_DAYS days | Dry run: $DRY_RUN" >> $GITHUB_STEP_SUMMARY
+
+          # Find old attachment files
+          > "$DELETE_LIST"
+          for pattern in '*/data/attachments/*.png' '*/data/attachments/*.txt' '*/data/attachments/*.imagediff'; do
+            while IFS= read -r -d '' file; do
+              COMMIT_DATE=$(git log -1 --format="%ct" -- "$file" 2>/dev/null || echo "0")
+              [ "$COMMIT_DATE" -lt "$CUTOFF_DATE" ] && [ "$COMMIT_DATE" -ne "0" ] && echo "$file" >> "$DELETE_LIST"
+            done < <(git ls-files -z "$pattern")
+          done
+
+          COUNT=$(wc -l < "$DELETE_LIST" 2>/dev/null || echo 0)
+          echo "Found $COUNT old files" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$COUNT" -gt 0 ]; then
+            if [ "$DRY_RUN" == "true" ]; then
+              echo "Files to delete:" >> $GITHUB_STEP_SUMMARY
+              if [ -s "$DELETE_LIST" ]; then
+                head -$PREVIEW_LIMIT "$DELETE_LIST" >> $GITHUB_STEP_SUMMARY
+                [ "$COUNT" -gt $PREVIEW_LIMIT ] && echo "...(+$((COUNT-PREVIEW_LIMIT)) more)" >> $GITHUB_STEP_SUMMARY
+              fi
+            else
+              xargs rm -f < "$DELETE_LIST"
+              echo "Deleted $COUNT files" >> $GITHUB_STEP_SUMMARY
+            fi
+          fi
+
+          rm -f "$DELETE_LIST"
 
       - name: Commit changes
+        if: github.event.inputs.dry-run != 'true'
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@users.noreply.github.com"
-          git add -A
-          git commit -m "Prune attachments older than 14 days" || echo "Nothing to prune"
-          git push
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if [ -n "$(git status --porcelain)" ]; then
+            git add -A
+            git commit -m "ci: Prune attachments older than ${{ steps.retention.outputs.days }} days"
+            git push
+          fi
 
       - name: Prune LFS objects
+        if: github.event.inputs.dry-run != 'true'
         run: |
-          echo "## Pruning LFS objects" >> $GITHUB_STEP_SUMMARY
-          git lfs prune --verify-remote
-          echo "LFS prune complete" >> $GITHUB_STEP_SUMMARY
+          git lfs prune --verify-remote || echo "LFS prune failed"

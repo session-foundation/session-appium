@@ -25,7 +25,7 @@ bothPlatformsIt({
 async function networkPageLearnMore(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   const linkURL = 'https://docs.getsession.org/session-network';
-  await newUser(device, USERNAME.ALICE, false);
+  await newUser(device, USERNAME.ALICE, { saveUserData: false });
   await device.clickOnElementAll(new UserSettings(device));
   await device.onAndroid().scrollDown();
   await device.clickOnElementAll(new SessionNetworkMenuItem(device));

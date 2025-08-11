@@ -200,7 +200,7 @@ export class SelectAppIcon extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger:id/system_settings_app_icon',
+          selector: 'network.loki.messenger.qa:id/system_settings_app_icon',
         } as const;
       case 'ios':
         return {
@@ -267,6 +267,23 @@ export class DonationsMenuItem extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'Donate',
+        } as const;
+    }
+  }
+}
+
+export class PathMenuItem extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'xpath',
+          selector: `//android.widget.TextView[@text="Path"]`,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Path',
         } as const;
     }
   }

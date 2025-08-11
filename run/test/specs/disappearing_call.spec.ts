@@ -131,32 +131,34 @@ async function disappearingCallMessage1o1Android(
   // Alice tries again, call is put through even though Bob has not activated their settings
   await alice1.clickOnElementAll(new CallButton(alice1));
   // Confirm call is put through
-  await alice1.doesElementExist({
+  await alice1.waitForTextElementToBePresent({
     strategy: 'id',
-    selector: 'network.loki.messenger:id/callTitle',
+    selector: 'network.loki.messenger.qa:id/callTitle',
     text: 'Ringing...',
     maxWait: 5_000,
   });
-  await alice1.doesElementExist({
+  await alice1.waitForTextElementToBePresent({
     strategy: 'id',
-    selector: 'network.loki.messenger:id/callSubtitle',
+    selector: 'network.loki.messenger.qa:id/callSubtitle',
     text: 'Sending Call Offer 2/5',
     maxWait: 5_000,
   });
-  await alice1.clickOnElementById('network.loki.messenger:id/endCallButton');
+  await alice1.clickOnElementById('network.loki.messenger.qa:id/endCallButton');
   // Wait for control message to disappear
   await Promise.all([
     alice1.hasElementBeenDeleted({
       strategy: 'id',
-      selector: 'network.loki.messenger:id/call_text_view',
+      selector: 'network.loki.messenger.qa:id/call_text_view',
       text: `You called ${bob.userName}`,
       maxWait,
+      preventEarlyDeletion: true,
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'id',
-      selector: 'network.loki.messenger:id/call_text_view',
+      selector: 'network.loki.messenger.qa:id/call_text_view',
       text: `Missed call from ${alice.userName}`,
       maxWait,
+      preventEarlyDeletion: true,
     }),
   ]);
   await closeApp(alice1, bob1);

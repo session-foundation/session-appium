@@ -3,8 +3,9 @@ import type { TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { MessageInput } from './locators/conversation';
+import { MessageInput, SendButton } from './locators/conversation';
 import { PlusButton } from './locators/home';
+import { MessageRequestsBanner } from './locators/home';
 import { EnterAccountID, NewMessageOption, NextButton } from './locators/start_conversation';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
@@ -45,16 +46,13 @@ async function acceptRequestWithText(platform: SupportedPlatformsType, testInfo:
   });
   await device1.onAndroid().waitForTextElementToBePresent({
     strategy: 'id',
-    selector: 'network.loki.messenger:id/textSendAfterApproval',
+    selector: 'network.loki.messenger.qa:id/textSendAfterApproval',
     text: messageRequestPendingDescription,
   });
 
   await device1.inputText(testMessage, new MessageInput(device1));
   // Click send
-  await device1.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Send message button',
-  });
+  await device1.clickOnElementAll(new SendButton(device1));
   // Wait for tick
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
@@ -63,7 +61,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType, testInfo:
   });
   // Wait for banner to appear
   // Bob clicks on message request banner
-  await device2.clickOnByAccessibilityID('Message requests banner');
+  await device2.clickOnElementAll(new MessageRequestsBanner(device2));
   // Bob clicks on request conversation item
   await device2.clickOnByAccessibilityID('Message request');
   // Check control message warning of sending message request reply
@@ -75,7 +73,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType, testInfo:
 
   await device2.onAndroid().waitForTextElementToBePresent({
     strategy: 'id',
-    selector: 'network.loki.messenger:id/sendAcceptsTextView',
+    selector: 'network.loki.messenger.qa:id/sendAcceptsTextView',
     text: messageRequestsAcceptDescription,
   });
 

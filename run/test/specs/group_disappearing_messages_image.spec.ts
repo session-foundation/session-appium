@@ -48,6 +48,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
           selector: 'Message body',
           maxWait,
           text: testMessage,
+          preventEarlyDeletion: true,
         })
       )
     );
@@ -59,6 +60,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
           strategy: 'accessibility id',
           selector: 'Media message',
           maxWait,
+          preventEarlyDeletion: true,
         })
       )
     );

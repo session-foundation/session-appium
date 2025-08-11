@@ -76,3 +76,37 @@ export class Contact extends LocatorsInterface {
     }
   }
 }
+
+export class AllowPermissionLocator extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'com.android.permissioncontroller:id/permission_allow_button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Allow',
+        } as const;
+    }
+  }
+}
+
+export class DenyPermissionLocator extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'com.android.permissioncontroller:id/permission_deny_button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Don’t Allow',
+        } as const;
+    }
+  }
+}

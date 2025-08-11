@@ -49,5 +49,14 @@ jobs:
         shell: bash
         run: yarn tsc
 
+      - name: Auto-fix strings
+        run: yarn prettier run/localizer --write && yarn eslint run/localizer --fix
+
+      - name: Commit strings fixes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'ci: auto-format locales'
+          file_pattern: 'run/localizer/*.ts'
+
       - name: Lint Files
         run: yarn lint-check

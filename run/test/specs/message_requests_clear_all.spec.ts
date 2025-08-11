@@ -3,6 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { type AccessibilityId, USERNAME } from '../../types/testing';
+import { MessageRequestsBanner } from './locators/home';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 
@@ -23,7 +24,7 @@ async function clearAllRequests(platform: SupportedPlatformsType, testInfo: Test
   await device1.sendNewMessage(bob, `${alice.userName} to ${bob.userName}`);
   // Wait for banner to appear
   // Bob clicks on message request banner
-  await device2.clickOnByAccessibilityID('Message requests banner');
+  await device2.clickOnElementAll(new MessageRequestsBanner(device2));
   // Select Clear All button
   await device2.clickOnByAccessibilityID('Clear all');
   await device2.checkModalStrings(

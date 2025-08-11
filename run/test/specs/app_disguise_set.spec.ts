@@ -33,7 +33,7 @@ androidIt({
 
 async function appDisguiseSetIcon(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
-  await newUser(device, USERNAME.ALICE, false);
+  await newUser(device, USERNAME.ALICE, { saveUserData: false });
   await device.clickOnElementAll(new UserSettings(device));
   // Must scroll down to reveal the Appearance menu item
   await device.scrollDown();
@@ -57,7 +57,7 @@ async function appDisguiseSetIcon(platform: SupportedPlatformsType, testInfo: Te
     // The disguised app must be uninstalled otherwise every following test will fail
     await closeApp(device);
     await runScriptAndLog(
-      `${getAdbFullPath()} -s ${device.udid} uninstall network.loki.messenger`,
+      `${getAdbFullPath()} -s ${device.udid} uninstall network.loki.messenger.qa`,
       true
     );
   }

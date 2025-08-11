@@ -1,70 +1,42 @@
-import type { TestInfo } from '@playwright/test';
+import { test, type TestInfo } from '@playwright/test';
 
-import { bothPlatformsItSeparate } from '../../types/sessionIt';
+import { TestSteps } from '../../types/allure';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { UserSettings } from './locators/settings';
-import { sleepFor } from './utils';
-import { parseDataImage } from './utils/check_colour';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
-bothPlatformsItSeparate({
+bothPlatformsIt({
   title: 'Change profile picture',
   risk: 'medium',
   countOfDevicesNeeded: 1,
-  ios: {
-    testCb: changeProfilePictureiOS,
+  testCb: changeProfilePicture,
+  allureSuites: {
+    parent: 'User Actions',
+    suite: 'Change Profile Picture',
   },
-  android: {
-    testCb: changeProfilePictureAndroid,
-  },
+  allureDescription:
+    'Verifies that the profile picture can be changed and the new picture is displayed correctly.',
 });
 
-async function changeProfilePictureiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
-  const pixelHexColour = '04cbfe';
-  // Create new user
-  await newUser(device, USERNAME.ALICE);
-  // Click on settings/avatar
-  await device.uploadProfilePicture();
-  // Take screenshot
-  await sleepFor(4000);
-  const el = await device.waitForTextElementToBePresent(new UserSettings(device));
-  const base64 = await device.getElementScreenshot(el.ELEMENT);
-  const pixelColor = await parseDataImage(base64);
-  device.log('RGB Value of pixel is:', pixelColor);
-  if (pixelColor === pixelHexColour) {
-    device.log('Colour is correct');
-  } else {
-    device.log("Colour isn't 04cbfe, it is: ", pixelColor);
-  }
-  await closeApp(device);
-}
-
-async function changeProfilePictureAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
-  let expectedPixelHexColour: string;
-  if (platform === 'android') {
-    expectedPixelHexColour = 'cbfeff';
-  } else if (platform === 'ios') {
-    expectedPixelHexColour = '04cbfe';
-  } else {
-    throw new Error('Platform not supported');
-  }
-  // Create new user
-  await newUser(device, USERNAME.ALICE);
-  // Click on settings/avatar
-  await device.uploadProfilePicture();
-  const el = await device.waitForTextElementToBePresent(new UserSettings(device));
-  // Waiting for the image to change in the UI
-  await sleepFor(10000);
-  const base64 = await device.getElementScreenshot(el.ELEMENT);
-  const actualPixelColor = await parseDataImage(base64);
-  device.log('Hex value of pixel is:', actualPixelColor);
-  if (actualPixelColor === expectedPixelHexColour) {
-    device.log('Colour is correct');
-  } else {
-    throw new Error(`Colour isn't ${expectedPixelHexColour}, it is: ` + actualPixelColor);
-  }
-  await closeApp(device);
+async function changeProfilePicture(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const expectedPixelHexColor = '04cbfe'; // This is the color of the profile picture image stored in the repo
+  const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
+    await newUser(device, USERNAME.ALICE, { saveUserData: false });
+    return { device };
+  });
+  await test.step(TestSteps.USER_ACTIONS.CHANGE_PROFILE_PICTURE, async () => {
+    await device.uploadProfilePicture();
+  });
+  await test.step(TestSteps.VERIFY.PROFILE_PICTURE_CHANGED, async () => {
+    await device.waitForElementColorMatch(new UserSettings(device), expectedPixelHexColor, {
+      maxWait: 10_000,
+      elementTimeout: 500,
+    });
+  });
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(device);
+  });
 }

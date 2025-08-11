@@ -60,6 +60,7 @@ async function sendImageCommunityAndroid(platform: SupportedPlatformsType, testI
     await sleepFor(5000); // Give bob some time to receive the message so the test doesn't scroll down too early
     await bob1.scrollToBottom();
     await bob1.trustAttachments(testCommunityName);
+    await bob1.scrollToBottom(); // Gotta keep scrolling down to make sure we're at the very bottom
     await bob1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
@@ -74,7 +75,7 @@ async function sendImageCommunityAndroid(platform: SupportedPlatformsType, testI
 async function sendImageCommunityIOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
-    await newUser(device, USERNAME.ALICE, false);
+    await newUser(device, USERNAME.ALICE, { saveUserData: false });
     return { device };
   });
   const testImageMessage = `Image message + ${new Date().getTime()} - ${platform}`;

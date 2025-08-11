@@ -26,7 +26,7 @@ bothPlatformsIt({
 async function donateLinkout(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   const linkURL = 'https://session.foundation/donate#app';
-  await newUser(device, USERNAME.ALICE, false);
+  await newUser(device, USERNAME.ALICE, { saveUserData: false });
   await device.clickOnElementAll(new UserSettings(device));
   await device.clickOnElementAll(new DonationsMenuItem(device));
   await device.checkModalStrings(

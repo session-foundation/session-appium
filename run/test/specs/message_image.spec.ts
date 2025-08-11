@@ -14,7 +14,7 @@ bothPlatformsIt({
 async function sendImage(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
-    prebuilt: { alice },
+    prebuilt: { alice, bob },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
@@ -32,7 +32,7 @@ async function sendImage(platform: SupportedPlatformsType, testInfo: TestInfo) {
     text: testMessage,
   });
   // Reply to message (on device 2 - Bob)
-  const replyMessage = await bob1.replyToMessage(alice, testMessage);
+  const replyMessage = await bob1.replyToMessage(bob, testMessage);
   await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',

@@ -28,7 +28,7 @@ export class BackButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger:id/back_button',
+          selector: 'network.loki.messenger.qa:id/back_button',
         } as const;
       case 'ios':
         return {
