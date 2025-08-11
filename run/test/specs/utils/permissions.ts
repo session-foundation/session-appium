@@ -2,6 +2,7 @@ import { W3CCapabilities } from '@wdio/types/build/Capabilities';
 import { XCUITestDriver, XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
 
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
+import { AllowPermissionLocator, DenyPermissionLocator } from '../locators/global';
 import { runScriptAndLog } from './utilities';
 
 export const cleanPermissions = async (
@@ -57,4 +58,14 @@ export const cleanPermissions = async (
   throw new Error(
     'Failed to open the iOS app and find the Create account button after multiple retries.'
   );
+};
+export const handlePermissions = async (
+  device: DeviceWrapper,
+  allowPermissions: boolean = false
+) => {
+  const permissionLocator = allowPermissions
+    ? new AllowPermissionLocator(device)
+    : new DenyPermissionLocator(device);
+
+  await device.processPermissions(permissionLocator);
 };

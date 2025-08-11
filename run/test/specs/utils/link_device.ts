@@ -11,12 +11,16 @@ import {
   SlowModeRadio,
 } from '../locators/onboarding';
 import { newUser } from './create_account';
+import { BaseSetupOptions } from './create_account';
+import { handlePermissions } from './permissions';
 
 export const linkedDevice = async (
   device1: DeviceWrapper,
   device2: DeviceWrapper,
-  userName: UserNameType
+  userName: UserNameType,
+  options?: BaseSetupOptions
 ) => {
+  const { allowNotificationPermissions = false } = options || {};
   const user = await newUser(device1, userName);
   // Log in with recovery seed on device 2
   device2.setDeviceIdentity(`${userName.toLowerCase()}2`);
@@ -45,8 +49,7 @@ export const linkedDevice = async (
     device2.info('Display name found: Loading account');
   }
   // Wait for permissions modal to pop up
-  await sleepFor(500);
-  await device2.checkPermissions('Allow');
+  await handlePermissions(device2, allowNotificationPermissions);
   // Check that button was clicked
   await device2.waitForTextElementToBePresent(new PlusButton(device2));
 

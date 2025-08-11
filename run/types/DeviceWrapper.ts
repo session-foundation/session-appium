@@ -85,6 +85,7 @@ export class DeviceWrapper {
   private readonly device: AndroidUiautomator2Driver | XCUITestDriver;
   public readonly udid: string;
   private deviceIdentity: string = '';
+  private version: string | null = null;
 
   constructor(device: AndroidUiautomator2Driver | XCUITestDriver, udid: string) {
     this.device = device;
@@ -2139,24 +2140,21 @@ export class DeviceWrapper {
     await this.closeScreen(false);
   }
 
-  public async checkPermissions(
-    selector: Extract<AccessibilityId, 'Allow' | 'Allow Full Access' | 'Don’t Allow'>
-  ) {
+  public async processPermissions(locator: LocatorsInterface) {
+    const locatorConfig = locator.build();
+
     if (this.isAndroid()) {
       const permissions = await this.doesElementExist({
-        strategy: 'id',
-        selector: 'com.android.permissioncontroller:id/permission_deny_button',
-        maxWait: 1000,
+        ...locatorConfig,
+        maxWait: 2_000,
       });
 
       if (permissions) {
-        await this.clickOnElementAll({
-          strategy: 'id',
-          selector: 'com.android.permissioncontroller:id/permission_deny_button',
-        });
+        await this.clickOnElementAll(locatorConfig);
       }
       return;
     }
+
     if (this.isIOS()) {
       // Retrieve the currently active app information
       const activeAppInfo = await this.execute('mobile: activeAppInfo');
@@ -2168,12 +2166,13 @@ export class DeviceWrapper {
       try {
         // Execute the action in the home screen context
         const iosPermissions = await this.doesElementExist({
-          strategy: 'accessibility id',
-          selector,
-          maxWait: 500,
+          ...locatorConfig,
+          maxWait: 2_000,
         });
+
         if (iosPermissions) {
-          await this.clickOnByAccessibilityID(selector);
+          // Handle based on strategy type
+          await this.clickOnElementAll(locatorConfig);
         }
       } catch (e) {
         this.info('iosPermissions doesElementExist failed with: ', e);
@@ -2299,6 +2298,28 @@ export class DeviceWrapper {
     const base64image = await this.getElementScreenshot(element.ELEMENT);
     const pixelColor = await parseDataImage(base64image);
     return pixelColor;
+  }
+
+  public async getVersionNumber() {
+    if (this.isIOS()) {
+      throw new Error('getVersionNumber not implemented on iOS yet');
+    }
+
+    await this.clickOnElementAll(new UserSettings(this));
+    await this.scrollDown();
+    const versionElement = await this.findElement(
+      'id',
+      'network.loki.messenger.qa:id/versionTextView'
+    );
+    const versionText = await this.getAttribute('text', versionElement.ELEMENT);
+    const match = versionText?.match(/(\d+\.\d+\.\d+)/);
+
+    if (!match) {
+      throw new Error(`Could not extract version from: ${versionText}`);
+    }
+
+    this.version = match[1];
+    return this.version;
   }
 
   private getUdid() {

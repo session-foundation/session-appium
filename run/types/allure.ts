@@ -22,6 +22,7 @@ import { UserNameType } from '@session-foundation/qa-seeder';
 export type AllureSuiteConfig =
   | { parent: 'Disappearing Messages'; suite: 'Conversation Types' | 'Message Types' | 'Rules' }
   | { parent: 'Groups'; suite: 'Edit Group' }
+  | { parent: 'In-App Review Prompt'; suite: 'Flows' | 'Triggers' }
   | { parent: 'Linkouts' }
   | { parent: 'New Conversation'; suite: 'Join Community' | 'New Message' }
   | { parent: 'Sending Messages'; suite: 'Sending Attachments' }
@@ -72,7 +73,8 @@ export const TestSteps = {
   },
   // Open/Navigate steps
   OPEN: {
-    UPDATE_GROUP_INFO: "Open 'Update Group Information' modal",
+    UPDATE_GROUP_INFO: `Open 'Update Group Information' modal`,
+    PATH: 'Open Path screen',
   },
   // User Actions
   USER_ACTIONS: {
