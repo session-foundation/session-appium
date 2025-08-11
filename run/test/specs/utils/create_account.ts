@@ -9,13 +9,13 @@ import { UserSettings } from '../locators/settings';
 import { CopyButton } from '../locators/start_conversation';
 import { handlePermissions } from './permissions';
 
-export interface BaseSetupOptions {
+export type BaseSetupOptions = {
   allowNotificationPermissions?: boolean;
-}
+};
 
-export interface NewUserSetupOptions extends BaseSetupOptions {
+export type NewUserSetupOptions = BaseSetupOptions & {
   saveUserData?: boolean;
-}
+};
 
 export async function newUser(
   device: DeviceWrapper,
