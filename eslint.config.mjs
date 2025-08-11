@@ -21,6 +21,7 @@ export default tseslint.config(
       'scripts/*.js',
       'avd/',
       'allure*/',
+      'run/localizer/locales.ts',
     ],
   },
   eslint.configs.recommended,
