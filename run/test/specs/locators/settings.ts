@@ -182,8 +182,9 @@ export class AppearanceMenuItem extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'Appearance',
+          strategy: '-android uiautomator',
+          selector:
+            'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().resourceId("Appearance"))',
         } as const;
       case 'ios':
         return {
@@ -199,8 +200,9 @@ export class SelectAppIcon extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/system_settings_app_icon',
+          strategy: '-android uiautomator',
+          selector:
+            'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().text("Select app icon"))',
         } as const;
       case 'ios':
         return {
