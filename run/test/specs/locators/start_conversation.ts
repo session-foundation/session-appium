@@ -138,22 +138,7 @@ export class EnterAccountID extends LocatorsInterface {
 }
 
 // INVITE A FRIEND SECTION
-export class AccountIDField extends LocatorsInterface {
-  public build() {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: 'Account ID',
-        } as const;
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Account ID',
-        } as const;
-    }
-  }
-}
+
 
 export class ShareButton extends LocatorsInterface {
   public build() {

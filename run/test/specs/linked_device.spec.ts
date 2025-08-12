@@ -4,6 +4,7 @@ import { USERNAME } from '@session-foundation/qa-seeder';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { UsernameSettings } from './locators';
+import { AccountIDDisplay } from './locators/global';
 import { UserSettings } from './locators/settings';
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
@@ -33,11 +34,6 @@ async function linkDevice(platform: SupportedPlatformsType, testInfo: TestInfo) 
     ...new UsernameSettings(alice2).build(),
     text: alice.userName,
   });
-  await alice2.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Account ID',
-    text: alice.accountID,
-  });
-
+  await alice2.waitForTextElementToBePresent(new AccountIDDisplay(alice2,alice.accountID));
   await closeApp(alice1, alice2);
 }

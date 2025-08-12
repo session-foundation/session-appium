@@ -3,8 +3,9 @@ import type { TestInfo } from '@playwright/test';
 import { IOS_XPATHS } from '../../constants';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { AccountIDDisplay } from './locators/global';
 import { PlusButton } from './locators/home';
-import { AccountIDField, InviteAFriendOption, ShareButton } from './locators/start_conversation';
+import { InviteAFriendOption, ShareButton } from './locators/start_conversation';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
@@ -25,7 +26,7 @@ async function inviteAFriend(platform: SupportedPlatformsType, testInfo: TestInf
   // Select Invite a Friend
   await device.clickOnElementAll(new InviteAFriendOption(device));
   // Check for presence of Account ID field
-  await device.waitForTextElementToBePresent(new AccountIDField(device));
+  await device.waitForTextElementToBePresent(new AccountIDDisplay(device));
   // Tap Share
   await device.clickOnElementAll(new ShareButton(device));
   // defining the "Hey..." message element to retrieve the share message from

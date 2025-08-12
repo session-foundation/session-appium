@@ -2,7 +2,7 @@ import type { UserNameType } from '@session-foundation/qa-seeder';
 
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
-import { ContinueButton } from '../locators/global';
+import { AccountIDDisplay, ContinueButton } from '../locators/global';
 import { CreateAccountButton, DisplayNameInput, SlowModeRadio } from '../locators/onboarding';
 import { RecoveryPhraseContainer, RevealRecoveryPhraseButton } from '../locators/settings';
 import { UserSettings } from '../locators/settings';
@@ -56,7 +56,8 @@ export async function newUser(
   // Exit Modal
   await device.navigateBack(false);
   await device.clickOnElementAll(new UserSettings(device));
-  const accountID = await device.grabTextFromAccessibilityId('Account ID');
+  const el = await device.waitForTextElementToBePresent(new AccountIDDisplay(device))
+  const accountID = await device.getTextFromElement(el);
   await device.closeScreen(false);
   return { userName, accountID, recoveryPhrase };
 }

@@ -120,3 +120,27 @@ export class DenyPermissionLocator extends LocatorsInterface {
     }
   }
 }
+
+export class AccountIDDisplay extends LocatorsInterface {
+  public text: string | undefined;
+  constructor(device: DeviceWrapper, text?: string) {
+    super(device);
+    this.text = text;
+  }
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Account ID',
+          text: this.text,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Account ID',
+          text: this.text,
+        } as const;
+    }
+  }
+}
