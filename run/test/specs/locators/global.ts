@@ -1,3 +1,4 @@
+import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { LocatorsInterface } from './index';
 
 export class ModalHeading extends LocatorsInterface {
@@ -61,17 +62,26 @@ export class EnableLinkPreviewsModalButton extends LocatorsInterface {
 }
 
 export class Contact extends LocatorsInterface {
+  public text: string | undefined;
+  constructor(device: DeviceWrapper, text?: string) {
+    super(device);
+    this.text = text;
+  }
   public build() {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'Contact',
+          strategy: '-android uiautomator',
+          selector: `new UiSelector().resourceId("pro-badge-text").text("${this.text}")`,
+          // strategy: 'id',
+          // selector: 'pro-badge-text',
+          // text: this.text
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Contact',
+          text: this.text,
         } as const;
     }
   }

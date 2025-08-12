@@ -33,8 +33,8 @@ import {
   ScrollToBottomButton,
   SendButton,
 } from '../test/specs/locators/conversation';
-import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
-import { PlusButton } from '../test/specs/locators/home';
+import { Contact, ModalDescription, ModalHeading } from '../test/specs/locators/global';
+import { ConversationItem, PlusButton } from '../test/specs/locators/home';
 import { LoadingAnimation } from '../test/specs/locators/onboarding';
 import {
   PrivacyMenuItem,
@@ -516,11 +516,7 @@ export class DeviceWrapper {
 
     while (attempt < maxRetries && !success) {
       try {
-        const el = await this.waitForTextElementToBePresent({
-          strategy: 'accessibility id',
-          selector: 'Conversation list item',
-          text: userName,
-        });
+        const el = await this.waitForTextElementToBePresent(new ConversationItem(this, userName));
 
         if (!el) {
           throw new Error(
@@ -1470,17 +1466,7 @@ export class DeviceWrapper {
 
   public async sendMessageTo(sender: User, receiver: Group | User) {
     const message = `${sender.userName} to ${receiver.userName}`;
-    await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: receiver.userName,
-    });
-    await sleepFor(100);
-    await this.clickOnElementAll({
-      strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: receiver.userName,
-    });
+    await this.clickOnElementAll(new ConversationItem(this, receiver.userName));
     this.log(`${sender.userName} + " sent message to ${receiver.userName}`);
     await this.sendMessage(message);
     this.log(`Message received by ${receiver.userName} from ${sender.userName}`);
@@ -1941,11 +1927,7 @@ export class DeviceWrapper {
         text: contact.userName,
       });
     } else {
-      await this.clickOnElementAll({
-        strategy: 'accessibility id',
-        selector: 'Contact',
-        text: contact.userName,
-      });
+      await this.clickOnElementAll(new Contact(this, contact.userName));
     }
     await this.clickOnElementAll(new SendButton(this));
     await this.waitForTextElementToBePresent(new OutgoingMessageStatusSent(this));

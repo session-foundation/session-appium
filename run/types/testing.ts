@@ -57,7 +57,7 @@ export const InteractionPoints: Record<string, Coordinates> = {
   BackToSession: { x: 42, y: 42 },
 };
 
-export type Strategy = 'accessibility id' | 'class name' | 'id' | 'xpath';
+export type Strategy = '-android uiautomator' | 'accessibility id' | 'class name' | 'id' | 'xpath';
 
 export type ConversationType = '1:1' | 'Community' | 'Group' | 'Note to Self';
 
@@ -97,6 +97,11 @@ export type DisappearOptsGroup = [
 export type MergedOptions = DisappearOpts1o1 | DisappearOptsGroup;
 
 export type StrategyExtractionObj =
+  | {
+      strategy: Extract<Strategy, '-android uiautomator'>;
+      selector: UiAutomatorQuery;
+      text?: string;
+    }
   | {
       strategy: Extract<Strategy, 'accessibility id'>;
       selector: AccessibilityId;
@@ -147,6 +152,8 @@ export type XPath =
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/androidx.appcompat.widget.LinearLayoutCompat/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView[2]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.TabHost/android.widget.LinearLayout/android.widget.FrameLayout/androidx.viewpager.widget.ViewPager/android.widget.RelativeLayout/android.widget.GridView/android.widget.LinearLayout/android.widget.LinearLayout[2]`;
+
+export type UiAutomatorQuery = `new UiSelector().resourceId("pro-badge-text").text("${string}")`;
 
 export type AccessibilityId =
   | DISAPPEARING_TIMES
@@ -501,6 +508,7 @@ export type Id =
   | 'preferred-display-name'
   | 'Privacy'
   | 'Privacy Policy'
+  | 'pro-badge-text'
   | 'Quit'
   | 'rate-app-button'
   | 'Recovery password container'

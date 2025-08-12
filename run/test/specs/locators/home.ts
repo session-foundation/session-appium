@@ -40,11 +40,22 @@ export class ConversationItem extends LocatorsInterface {
     this.text = text;
   }
   public build() {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: this.text,
-    } as const;
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: '-android uiautomator',
+          selector: `new UiSelector().resourceId("pro-badge-text").text("${this.text}")`,
+          // strategy: 'id',
+          // selector: 'pro-badge-text',
+          // text: this.text
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Conversation list item',
+          text: this.text,
+        } as const;
+    }
   }
 }
 

@@ -4,7 +4,8 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { BlockedContactsSettings } from './locators';
-import { LongPressBlockOption } from './locators/home';
+import { Contact } from './locators/global';
+import { ConversationItem, LongPressBlockOption } from './locators/home';
 import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -43,20 +44,14 @@ async function blockUserInConversationList(platform: SupportedPlatformsType, tes
   await alice1.clickOnByAccessibilityID('Block');
   // Once you block the conversation disappears from the home screen
   await alice1.verifyElementNotPresent({
-    strategy: 'accessibility id',
-    selector: 'Conversation list item',
-    text: bob.userName,
-    maxWait: 5000,
+    ...new ConversationItem(alice1, bob.userName).build(),
+    maxWait: 5_000,
   });
   await alice1.clickOnElementAll(new UserSettings(alice1));
   // 'Conversations' might be hidden beyond the Settings view, gotta scroll down to find it
   await alice1.scrollDown();
   await alice1.clickOnElementAll(new ConversationsMenuItem(alice1));
   await alice1.clickOnElementAll(new BlockedContactsSettings(alice1));
-  await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Contact',
-    text: bob.userName,
-  });
+  await alice1.waitForTextElementToBePresent(new Contact(alice1, bob.userName));
   await closeApp(alice1, bob1);
 }

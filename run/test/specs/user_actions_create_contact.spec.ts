@@ -2,7 +2,7 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { MessageRequestsBanner } from './locators/home';
+import { ConversationItem, MessageRequestsBanner } from './locators/home';
 import { newUser } from './utils/create_account';
 import { retryMsgSentForBanner } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
@@ -48,42 +48,11 @@ async function createContact(platform: SupportedPlatformsType, testInfo: TestInf
   await device1.navigateBack();
   await device2.navigateBack();
   // Check username has changed from session id on both device 1 and 3
-  await Promise.all([
-    device1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: Bob.userName,
-    }),
-    device3.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: Bob.userName,
-    }),
-  ]);
-  // Check contact is added to contacts list on device 1 and 3 (linked device)
-  // await Promise.all([
-  //   device1.clickOnElementAll({
-  //     strategy: "accessibility id",
-  //     selector: "New conversation button",
-  //   }),
-  //   device3.clickOnElementAll({
-  //     strategy: "accessibility id",
-  //     selector: "New conversation button",
-  //   }),
-  // ]);
+  await Promise.all(
+    [device1, device3].map(device =>
+      device.waitForTextElementToBePresent(new ConversationItem(device, Bob.userName))
+    )
+  );
 
-  // NEED CONTACT ACCESSIBILITY ID TO BE ADDED
-  // await Promise.all([
-  //   device1.waitForTextElementToBePresent({
-  //     strategy: "accessibility id",
-  //     selector: "Contacts",
-  //   }),
-  //   device3.waitForTextElementToBePresent({
-  //     strategy: "accessibility id",
-  //     selector: "Contacts",
-  //   }),
-  // ]);
-
-  // Wait for tick
   await closeApp(device1, device2, device3);
 }

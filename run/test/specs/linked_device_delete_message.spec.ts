@@ -25,9 +25,7 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType, test
   const sentMessage = await alice1.sendMessage(testMessage);
   // Check message came through on linked device(3)
   // Enter conversation with user B on device 3
-  await alice2.waitForTextElementToBePresent(new ConversationItem(alice2, bob.userName));
-  await alice2.selectByText('Conversation list item', bob.userName);
-  // Find message
+  await alice2.clickOnElementAll(new ConversationItem(alice2, bob.userName)); // Find message
   await alice2.findMessageWithBody(sentMessage);
   // Select message on device 1, long press
   await alice1.longPressMessage(sentMessage);

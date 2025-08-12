@@ -9,6 +9,7 @@ import {
   ExitUserProfile,
 } from './locators';
 import { BlockedBanner, ConversationSettings } from './locators/conversation';
+import { Contact } from './locators/global';
 import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
@@ -73,11 +74,7 @@ async function blockUserInConversationSettings(
   await alice1.clickOnElementAll(new ConversationsMenuItem(alice1));
   await alice1.clickOnElementAll(new BlockedContactsSettings(alice1));
   // Accessibility ID for Blocked Contact not present on iOS
-  await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Contact',
-    text: bob.userName,
-  });
+  await alice1.waitForTextElementToBePresent(new Contact(alice1, bob.userName));
   await alice1.navigateBack(false);
   await alice1.navigateBack(false);
   await alice1.clickOnElementAll(new ExitUserProfile(alice1));
