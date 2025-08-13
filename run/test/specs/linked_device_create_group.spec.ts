@@ -70,9 +70,7 @@ async function linkedGroupiOS(platform: SupportedPlatformsType, testInfo: TestIn
   // Wait 5 seconds for name to update
   await sleepFor(5000);
   // Check linked device for name change (conversation header name)
-  await device2.waitForTextElementToBePresent(
-    new ConversationHeaderName(device2).build(newGroupName)
-  );
+  await device2.waitForTextElementToBePresent(new ConversationHeaderName(device2, newGroupName));
   await Promise.all([
     device2.waitForControlMessageToBePresent(groupNameNew),
     device3.waitForControlMessageToBePresent(groupNameNew),
@@ -118,9 +116,7 @@ async function linkedGroupAndroid(platform: SupportedPlatformsType, testInfo: Te
   // Config message is "Group name is now {group_name}"
   await device1.waitForControlMessageToBePresent(groupNameNew);
   // Check linked device for name change (conversation header name)
-  await device2.waitForTextElementToBePresent(
-    new ConversationHeaderName(device2).build(newGroupName)
-  );
+  await device2.waitForTextElementToBePresent(new ConversationHeaderName(device2, newGroupName));
   await Promise.all([
     device2.waitForControlMessageToBePresent(groupNameNew),
     device3.waitForControlMessageToBePresent(groupNameNew),

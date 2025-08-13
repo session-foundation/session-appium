@@ -44,6 +44,23 @@ export class UserSettings extends LocatorsInterface {
   }
 }
 
+export class UserAvatar extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'User settings',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'User settings',
+        } as const;
+    }
+  }
+}
+
 export class RecoveryPasswordMenuItem extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -117,7 +134,7 @@ export class SaveNameChangeButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Save',
+          selector: 'update-username-confirm-button',
         } as const;
       case 'ios':
         return {

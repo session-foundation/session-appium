@@ -39,17 +39,6 @@ export function describeLocator(locator: StrategyExtractionObj & { text?: string
 export abstract class LocatorsInterfaceScreenshot extends LocatorsInterface {
   abstract screenshotFileName(state?: ElementStates): string;
 }
-// When applying a nickname or username change
-export class TickButton extends LocatorsInterface {
-  public build() {
-    switch (this.platform) {
-      case 'android':
-        return { strategy: 'accessibility id', selector: 'Set' } as const;
-      case 'ios':
-        return { strategy: 'accessibility id', selector: 'Done' } as const;
-    }
-  }
-}
 
 export class ApplyChanges extends LocatorsInterface {
   public build() {
@@ -103,18 +92,42 @@ export class ExitUserProfile extends LocatorsInterface {
   }
 }
 
-export class UsernameSettings extends LocatorsInterface {
+export class UsernameDisplay extends LocatorsInterface {
+  public text: string | undefined;
+  constructor(device: DeviceWrapper, text?: string) {
+    super(device);
+    this.text = text;
+  }
   public build() {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
-          selector: 'Display name',
+          strategy: 'id',
+          selector: 'pro-badge-text',
+          text: this.text,
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Username',
+          text: this.text,
+        } as const;
+    }
+  }
+}
+
+export class EditUsernameButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Edit',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Username input',
         } as const;
     }
   }
@@ -125,13 +138,30 @@ export class UsernameInput extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
-          selector: 'Enter display name',
+          strategy: 'class name',
+          selector: 'android.widget.EditText',
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Username input',
+        } as const;
+    }
+  }
+}
+
+export class ClearInputButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'clear-input-button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'id',
+          selector: 'clear-input-button',
         } as const;
     }
   }
@@ -359,8 +389,9 @@ export class BlockedContactsSettings extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
-          selector: 'Blocked contacts',
+          // Temporary fix until there's a unique ID
+          strategy: '-android uiautomator',
+          selector: `new UiSelector().text("View and manage blocked contacts.")`,
         };
       case 'ios':
         return {

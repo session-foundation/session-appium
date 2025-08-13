@@ -39,6 +39,7 @@ import { LoadingAnimation } from '../test/specs/locators/onboarding';
 import {
   PrivacyMenuItem,
   SaveProfilePictureButton,
+  UserAvatar,
   UserSettings,
 } from '../test/specs/locators/settings';
 import {
@@ -1859,7 +1860,7 @@ export class DeviceWrapper {
   public async uploadProfilePicture() {
     await this.clickOnElementAll(new UserSettings(this));
     // Click on Profile picture
-    await this.clickOnElementAll(new UserSettings(this));
+    await this.clickOnElementAll(new UserAvatar(this));
     await this.clickOnElementAll(new ChangeProfilePictureButton(this));
     if (this.isIOS()) {
       // Push file first
@@ -2025,15 +2026,16 @@ export class DeviceWrapper {
 
     await this.scroll({ x: width / 2, y: height * 0.95 }, { x: width / 2, y: height * 0.35 }, 100);
   }
+
   public async scrollToBottom() {
     try {
       const scrollButton = await this.waitForTextElementToBePresent({
         ...new ScrollToBottomButton(this).build(),
-        maxWait: 1_000,
+        maxWait: 3_000,
       });
       await this.click(scrollButton.ELEMENT);
     } catch {
-      this.info('Scroll button not found after 1s, continuing');
+      this.info('Scroll button not found, continuing');
     }
   }
 

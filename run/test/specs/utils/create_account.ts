@@ -56,7 +56,7 @@ export async function newUser(
   // Exit Modal
   await device.navigateBack(false);
   await device.clickOnElementAll(new UserSettings(device));
-  const el = await device.waitForTextElementToBePresent(new AccountIDDisplay(device))
+  const el = await device.waitForTextElementToBePresent(new AccountIDDisplay(device));
   const accountID = await device.getTextFromElement(el);
   await device.closeScreen(false);
   return { userName, accountID, recoveryPhrase };

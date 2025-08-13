@@ -3,7 +3,7 @@ import { test, type TestInfo } from '@playwright/test';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { UserSettings } from './locators/settings';
+import { UserAvatar } from './locators/settings';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
@@ -31,7 +31,7 @@ async function changeProfilePicture(platform: SupportedPlatformsType, testInfo: 
     await device.uploadProfilePicture();
   });
   await test.step(TestSteps.VERIFY.PROFILE_PICTURE_CHANGED, async () => {
-    await device.waitForElementColorMatch(new UserSettings(device), expectedPixelHexColor, {
+    await device.waitForElementColorMatch(new UserAvatar(device), expectedPixelHexColor, {
       maxWait: 10_000,
       elementTimeout: 500,
     });

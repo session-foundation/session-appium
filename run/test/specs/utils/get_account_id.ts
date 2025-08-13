@@ -1,7 +1,6 @@
 import { User } from '../../../types/testing';
 import { SupportedPlatformsType } from './open_app';
 
-
 export function sortByPubkey(...users: Array<User>) {
   return [...users]
     .sort((a, b) => a.accountID.localeCompare(b.accountID))

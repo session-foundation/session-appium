@@ -2,7 +2,7 @@ import { test, type TestInfo } from '@playwright/test';
 
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { UserSettings } from './locators/settings';
+import { UserAvatar } from './locators/settings';
 import { open_Alice2 } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
@@ -26,7 +26,7 @@ async function avatarRestored(platform: SupportedPlatformsType, testInfo: TestIn
   } = await open_Alice2({ platform, testInfo });
   await alice1.uploadProfilePicture();
   await test.step(TestSteps.VERIFY.PROFILE_PICTURE_CHANGED, async () => {
-    await alice2.waitForElementColorMatch(new UserSettings(alice2), expectedPixelHexColor, {
+    await alice2.waitForElementColorMatch(new UserAvatar(alice2), expectedPixelHexColor, {
       maxWait: 20_000,
       elementTimeout: 500,
     });

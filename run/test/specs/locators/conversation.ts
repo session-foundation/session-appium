@@ -130,19 +130,24 @@ export class CallButton extends LocatorsInterface {
 }
 
 export class ConversationHeaderName extends LocatorsInterface {
-  public build(text?: string) {
+  public text: string | undefined;
+  constructor(device: DeviceWrapper, text?: string) {
+    super(device);
+    this.text = text;
+  }
+  public build() {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'Conversation header name',
-          text,
+          strategy: '-android uiautomator',
+          selector: `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-text"))`,
+          text: this.text,
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Conversation header name',
-          text,
+          text: this.text,
         } as const;
     }
   }

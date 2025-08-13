@@ -156,7 +156,9 @@ export type XPath =
 export type UiAutomatorQuery =
   | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().resourceId("Appearance"))'
   | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().text("Select app icon"))'
-  | `new UiSelector().resourceId("pro-badge-text").text("${string}")`;
+  | 'new UiSelector().text("Enter your display name")'
+  | `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-text"))`
+  | `new UiSelector().text(${string})`;
 
 export type AccessibilityId =
   | DISAPPEARING_TIMES
@@ -408,6 +410,7 @@ export type Id =
   | 'Call'
   | 'clear-input-button-description'
   | 'clear-input-button-name'
+  | 'clear-input-button'
   | 'Close button'
   | 'com.android.chrome:id/negative_button'
   | 'com.android.chrome:id/signin_fre_dismiss_button'
@@ -535,6 +538,8 @@ export type Id =
   | 'update-group-info-confirm-button'
   | 'update-group-info-description-input'
   | 'update-group-info-name-input'
+  | 'update-username-confirm-button'
+  | 'User settings'
   | 'Version warning banner'
   | 'Yes'
   | `All ${AppName} notifications`

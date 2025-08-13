@@ -139,7 +139,6 @@ export class EnterAccountID extends LocatorsInterface {
 
 // INVITE A FRIEND SECTION
 
-
 export class ShareButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {

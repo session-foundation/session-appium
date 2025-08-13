@@ -259,7 +259,7 @@ export class GroupMember extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Contact',
+          selector: 'pro-badge-text',
           text: `${username}`,
         } as const;
       case 'ios':

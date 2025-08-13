@@ -3,7 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { USERNAME } from '@session-foundation/qa-seeder';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { UsernameSettings } from './locators';
+import { UsernameDisplay } from './locators';
 import { AccountIDDisplay } from './locators/global';
 import { UserSettings } from './locators/settings';
 import { linkedDevice } from './utils/link_device';
@@ -30,10 +30,7 @@ async function linkDevice(platform: SupportedPlatformsType, testInfo: TestInfo) 
   // Verify username and session ID match
   await alice2.clickOnElementAll(new UserSettings(alice2));
   // Check username
-  await alice2.waitForTextElementToBePresent({
-    ...new UsernameSettings(alice2).build(),
-    text: alice.userName,
-  });
-  await alice2.waitForTextElementToBePresent(new AccountIDDisplay(alice2,alice.accountID));
+  await alice2.waitForTextElementToBePresent(new UsernameDisplay(alice2, alice.userName));
+  await alice2.waitForTextElementToBePresent(new AccountIDDisplay(alice2, alice.accountID));
   await closeApp(alice1, alice2);
 }

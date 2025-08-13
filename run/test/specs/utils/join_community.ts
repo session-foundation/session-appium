@@ -13,7 +13,5 @@ export const joinCommunity = async (
   await device.clickOnElementAll(new JoinCommunityOption(device));
   await device.inputText(communityLink, new CommunityInput(device));
   await device.clickOnElementAll(new JoinCommunityButton(device));
-  await device.waitForTextElementToBePresent(
-    new ConversationHeaderName(device).build(communityName)
-  );
+  await device.waitForTextElementToBePresent(new ConversationHeaderName(device, communityName));
 };
