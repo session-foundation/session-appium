@@ -70,8 +70,8 @@ export class UpdateGroupInformation extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'group-name',
+          strategy: 'accessibility id',
+          selector: 'Edit',
         };
       case 'ios': {
         const groupName = this.groupName;

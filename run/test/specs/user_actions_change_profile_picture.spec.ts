@@ -31,10 +31,10 @@ async function changeProfilePicture(platform: SupportedPlatformsType, testInfo: 
     await device.uploadProfilePicture();
   });
   await test.step(TestSteps.VERIFY.PROFILE_PICTURE_CHANGED, async () => {
-    await device.waitForElementColorMatch(new UserAvatar(device), expectedPixelHexColor, {
-      maxWait: 10_000,
-      elementTimeout: 500,
-    });
+    await device.waitForElementColorMatch(
+      { ...new UserAvatar(device).build(), maxWait: 10_000 },
+      expectedPixelHexColor
+    );
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);

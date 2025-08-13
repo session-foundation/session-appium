@@ -6,7 +6,7 @@ import {
   BlockedContactsSettings,
   BlockUser,
   BlockUserConfirmationModal,
-  ExitUserProfile,
+  CloseSettings,
 } from './locators';
 import { BlockedBanner, ConversationSettings } from './locators/conversation';
 import { Contact } from './locators/global';
@@ -77,7 +77,7 @@ async function blockUserInConversationSettings(
   await alice1.waitForTextElementToBePresent(new Contact(alice1, bob.userName));
   await alice1.navigateBack(false);
   await alice1.navigateBack(false);
-  await alice1.clickOnElementAll(new ExitUserProfile(alice1));
+  await alice1.clickOnElementAll(new CloseSettings(alice1));
   // Send message from Blocked User
   await bob1.sendMessage(blockedMessage);
   await alice1.verifyElementNotPresent({

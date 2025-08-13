@@ -75,13 +75,13 @@ export class ReadReceiptsButton extends LocatorsInterface {
   }
 }
 
-export class ExitUserProfile extends LocatorsInterface {
+export class CloseSettings extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'accessibility id',
-          selector: 'Navigate up',
+          selector: 'Close',
         } as const;
       case 'ios':
         return {

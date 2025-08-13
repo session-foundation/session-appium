@@ -156,6 +156,7 @@ export type XPath =
 export type UiAutomatorQuery =
   | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().resourceId("Appearance"))'
   | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().text("Select app icon"))'
+  | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().textStartsWith("Version"))'
   | 'new UiSelector().text("Enter your display name")'
   | `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-text"))`
   | `new UiSelector().text(${string})`;
@@ -451,7 +452,6 @@ export type Id =
   | 'Enter display name'
   | 'error-message'
   | 'group-description'
-  | 'group-name'
   | 'Group name'
   | 'Group name input'
   | 'hide-nts-confirm-button'

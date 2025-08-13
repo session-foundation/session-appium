@@ -368,8 +368,8 @@ export class EditNicknameButton extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'edit-profile-icon',
+          strategy: 'accessibility id',
+          selector: 'Edit',
         } as const;
       case 'ios':
         return {

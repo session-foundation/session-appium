@@ -2,6 +2,7 @@ import type { UserNameType } from '@session-foundation/qa-seeder';
 
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
+import { CloseSettings } from '../locators';
 import { AccountIDDisplay, ContinueButton } from '../locators/global';
 import { CreateAccountButton, DisplayNameInput, SlowModeRadio } from '../locators/onboarding';
 import { RecoveryPhraseContainer, RevealRecoveryPhraseButton } from '../locators/settings';
@@ -58,6 +59,6 @@ export async function newUser(
   await device.clickOnElementAll(new UserSettings(device));
   const el = await device.waitForTextElementToBePresent(new AccountIDDisplay(device));
   const accountID = await device.getTextFromElement(el);
-  await device.closeScreen(false);
+  await device.waitForTextElementToBePresent(new CloseSettings(device));
   return { userName, accountID, recoveryPhrase };
 }
