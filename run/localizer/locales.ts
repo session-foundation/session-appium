@@ -199,8 +199,8 @@ export type TokenSimpleNoArgs =
     'cameraGrantAccessQr' |
     'cancel' |
     'change' |
-    'changePasswordDescription' |
     'changePasswordFail' |
+    'changePasswordModalDescription' |
     'clear' |
     'clearAll' |
     'clearDataAll' |
@@ -609,12 +609,11 @@ export type TokenSimpleNoArgs =
     'other' |
     'password' |
     'passwordChange' |
-    'passwordChangeDescription' |
-    'passwordChangedDescription' |
+    'passwordChangeShortDescription' |
+    'passwordChangedDescriptionToast' |
     'passwordConfirm' |
     'passwordCreate' |
     'passwordCurrentIncorrect' |
-    'passwordDescription' |
     'passwordEnter' |
     'passwordEnterCurrent' |
     'passwordEnterNew' |
@@ -624,10 +623,11 @@ export type TokenSimpleNoArgs =
     'passwordIncorrect' |
     'passwordNewConfirm' |
     'passwordRemove' |
-    'passwordRemoveDescription' |
-    'passwordRemovedDescription' |
+    'passwordRemoveShortDescription' |
+    'passwordRemovedDescriptionToast' |
     'passwordSet' |
-    'passwordSetDescription' |
+    'passwordSetDescriptionToast' |
+    'passwordSetShortDescription' |
     'passwordStrengthCharLength' |
     'passwordStrengthIncludeNumber' |
     'passwordStrengthIncludesLetter' |
@@ -749,6 +749,7 @@ export type TokenSimpleNoArgs =
     'redo' |
     'remove' |
     'removePasswordFail' |
+    'removePasswordModalDescription' |
     'reply' |
     'resend' |
     'resolving' |
@@ -802,6 +803,7 @@ export type TokenSimpleNoArgs =
     'sessionSettings' |
     'set' |
     'setCommunityDisplayPicture' |
+    'setPasswordModalDescription' |
     'settingsRestartDescription' |
     'share' |
     'shareAccountIdDescription' |
@@ -1727,11 +1729,11 @@ export const simpleDictionaryNoArgs: Record<
   change: {
       en: "Change",
   },
-  changePasswordDescription: {
-      en: "Change your password for Session. Locally stored data will be re-encrypted with your new password.",
-  },
   changePasswordFail: {
       en: "Failed to change password",
+  },
+  changePasswordModalDescription: {
+      en: "Change your password for Session. Locally stored data will be re-encrypted with your new password.",
   },
   clear: {
       en: "Clear",
@@ -2957,10 +2959,10 @@ export const simpleDictionaryNoArgs: Record<
   passwordChange: {
       en: "Change Password",
   },
-  passwordChangeDescription: {
+  passwordChangeShortDescription: {
       en: "Change the password required to unlock Session.",
   },
-  passwordChangedDescription: {
+  passwordChangedDescriptionToast: {
       en: "Your password has been changed. Please keep it safe.",
   },
   passwordConfirm: {
@@ -2971,9 +2973,6 @@ export const simpleDictionaryNoArgs: Record<
   },
   passwordCurrentIncorrect: {
       en: "Your current password is incorrect.",
-  },
-  passwordDescription: {
-      en: "Require password to unlock Session on startup.",
   },
   passwordEnter: {
       en: "Enter password",
@@ -3002,17 +3001,20 @@ export const simpleDictionaryNoArgs: Record<
   passwordRemove: {
       en: "Remove Password",
   },
-  passwordRemoveDescription: {
-      en: "Remove your current password for Session. Locally stored data will be re-encrypted with a randomly generated key, stored on your device.",
+  passwordRemoveShortDescription: {
+      en: "Remove the password required to unlock Session",
   },
-  passwordRemovedDescription: {
+  passwordRemovedDescriptionToast: {
       en: "Your password has been removed.",
   },
   passwordSet: {
       en: "Set Password",
   },
-  passwordSetDescription: {
-      en: "Set a password for Session. Locally stored data will be encrypted with this password. You will be asked to enter this password each time Session starts.",
+  passwordSetDescriptionToast: {
+      en: "Your password has been set. Please keep it safe.",
+  },
+  passwordSetShortDescription: {
+      en: "Require password to unlock Session on startup.",
   },
   passwordStrengthCharLength: {
       en: "Longer than 12 characters",
@@ -3377,6 +3379,9 @@ export const simpleDictionaryNoArgs: Record<
   removePasswordFail: {
       en: "Failed to remove password",
   },
+  removePasswordModalDescription: {
+      en: "Remove your current password for Session. Locally stored data will be re-encrypted with a randomly generated key, stored on your device.",
+  },
   reply: {
       en: "Reply",
   },
@@ -3535,6 +3540,9 @@ export const simpleDictionaryNoArgs: Record<
   },
   setCommunityDisplayPicture: {
       en: "Set Community Display Picture",
+  },
+  setPasswordModalDescription: {
+      en: "Set a password for Session. Locally stored data will be encrypted with this password. You will be asked to enter this password each time Session starts.",
   },
   settingsRestartDescription: {
       en: "You must restart Session to apply your new settings.",
