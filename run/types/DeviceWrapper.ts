@@ -2246,8 +2246,9 @@ export class DeviceWrapper {
     // Find the element using UiScrollable
     const versionElement = await this.waitForTextElementToBePresent({
       strategy: '-android uiautomator',
-      selector: 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().textStartsWith("Version"))',
-  });
+      selector:
+        'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().textStartsWith("Version"))',
+    });
 
     // Get the full text from the element
     const versionText = await this.getAttribute('text', versionElement.ELEMENT);

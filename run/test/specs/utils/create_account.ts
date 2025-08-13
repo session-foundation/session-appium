@@ -59,6 +59,6 @@ export async function newUser(
   await device.clickOnElementAll(new UserSettings(device));
   const el = await device.waitForTextElementToBePresent(new AccountIDDisplay(device));
   const accountID = await device.getTextFromElement(el);
-  await device.waitForTextElementToBePresent(new CloseSettings(device));
+  await device.clickOnElementAll(new CloseSettings(device));
   return { userName, accountID, recoveryPhrase };
 }
