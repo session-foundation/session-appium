@@ -21,7 +21,7 @@ export default tseslint.config(
       'scripts/*.js',
       'avd/',
       'allure*/',
-      'run/localizer/locales.ts',
+      'run/localizer/*',
     ],
   },
   eslint.configs.recommended,
@@ -83,7 +83,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['run/localizer/locales.ts'],
+    files: ['run/localizer/*'],
     rules: {
       'perfectionist/sort-imports': 'off',
       'perfectionist/sort-named-imports': 'off',
