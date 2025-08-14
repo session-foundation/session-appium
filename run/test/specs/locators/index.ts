@@ -127,7 +127,7 @@ export class EditUsernameButton extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Username input',
+          selector: 'Username',
         } as const;
     }
   }
