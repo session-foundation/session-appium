@@ -1327,7 +1327,7 @@ export class DeviceWrapper {
       }
     } while (elapsed < maxWait);
     // Log the error with details but only throw generic error so that they get grouped in the report
-    this.error(`${lastError} after ${attempt} attempts (${elapsed}ms)`);
+    this.log(`${lastError} after ${attempt} attempts (${elapsed}ms)`);
     throw new Error(lastError || 'Polling failed');
   }
   /**
