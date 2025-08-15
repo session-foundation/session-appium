@@ -40,24 +40,25 @@ async function appDisguiseSetIconIOS(platform: SupportedPlatformsType, testInfo:
   await newUser(device, USERNAME.ALICE, { saveUserData: false });
   await device.clickOnElementAll(new UserSettings(device));
   await device.clickOnElementAll(new AppearanceMenuItem(device));
-  await sleepFor(2000);
-  await device.scrollDown();
   await device.clickOnElementAll(new SelectAppIcon(device));
   try {
     await device.clickOnElementAll(new AppDisguiseMeetingIcon(device));
     await device.waitForTextElementToBePresent({
-      strategy: 'accessibility id', 
-      selector: 'You have changed the icon for “Session”.'
+      strategy: 'accessibility id',
+      selector: 'You have changed the icon for “Session”.',
     });
     await device.clickOnElementAll({
-      strategy: 'accessibility id', 
-      selector: 'OK'
+      strategy: 'accessibility id',
+      selector: 'OK',
     });
-    // TODO maybe grab a screenshot of the disguised app and see what you can do with it 
+    // TODO maybe grab a screenshot of the disguised app and see what you can do with it
   } finally {
     // The disguised app must be uninstalled otherwise every following test will fail
     await closeApp(device);
-    await runScriptAndLog(`xcrun simctl uninstall ${device.udid} com.loki-project.loki-messenger`, true);
+    await runScriptAndLog(
+      `xcrun simctl uninstall ${device.udid} com.loki-project.loki-messenger`,
+      true
+    );
   }
 }
 
@@ -66,8 +67,6 @@ async function appDisguiseSetIconAndroid(platform: SupportedPlatformsType, testI
   await newUser(device, USERNAME.ALICE, { saveUserData: false });
   await device.clickOnElementAll(new UserSettings(device));
   await device.clickOnElementAll(new AppearanceMenuItem(device));
-  await sleepFor(2000);
-  await device.scrollDown();
   await device.clickOnElementAll(new SelectAppIcon(device));
   try {
     await device.clickOnElementAll(new AppDisguiseMeetingIcon(device));
