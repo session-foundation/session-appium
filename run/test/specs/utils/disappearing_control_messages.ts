@@ -3,6 +3,7 @@ import type { UserNameType } from '@session-foundation/qa-seeder';
 import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { DisappearActions, DISAPPEARING_TIMES } from '../../../types/testing';
+import { ConversationItem } from '../locators/home';
 import { SupportedPlatformsType } from './open_app';
 
 export const checkDisappearingControlMessage = async (
@@ -47,11 +48,7 @@ export const checkDisappearingControlMessage = async (
   }
   // Check if control messages are syncing from both user A and user B
   if (linkedDevice) {
-    await linkedDevice.clickOnElementAll({
-      strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: userNameB,
-    });
+    await linkedDevice.clickOnElementAll(new ConversationItem(linkedDevice, userNameB));
     await linkedDevice.waitForControlMessageToBePresent(disappearingMessagesSetYou);
     await linkedDevice.waitForControlMessageToBePresent(disappearingMessagesSetBob);
   }

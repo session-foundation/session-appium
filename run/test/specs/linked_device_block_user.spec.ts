@@ -4,6 +4,7 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { BlockedContactsSettings, BlockUser, BlockUserConfirmationModal } from './locators';
 import { BlockedBanner, ConversationSettings } from './locators/conversation';
+import { Contact } from './locators/global';
 import { ConversationItem } from './locators/home';
 import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { open_Alice2_Bob1_friends } from './state_builder';
@@ -73,16 +74,8 @@ async function blockUserInConversationOptions(
     alice2.clickOnElementAll(new BlockedContactsSettings(alice2)),
   ]);
   await Promise.all([
-    alice1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Contact',
-      text: bob.userName,
-    }),
-    alice2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Contact',
-      text: bob.userName,
-    }),
+    alice1.waitForTextElementToBePresent(new Contact(alice1, bob.userName)),
+    alice2.waitForTextElementToBePresent(new Contact(alice2, bob.userName)),
   ]);
   // Close app
   await closeApp(alice1, bob1, alice2);

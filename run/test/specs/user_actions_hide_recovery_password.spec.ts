@@ -3,7 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ContinueButton } from './locators/global';
+import { AccountIDDisplay, ContinueButton } from './locators/global';
 import {
   HideRecoveryPasswordButton,
   RecoveryPasswordMenuItem,
@@ -49,10 +49,7 @@ async function hideRecoveryPassword(platform: SupportedPlatformsType, testInfo: 
   });
   // Should be taken back to Settings page after hiding recovery password
   await device1.onAndroid().scrollUp();
-  await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Account ID',
-  });
+  await device1.waitForTextElementToBePresent(new AccountIDDisplay(device1));
   // Check that linked device still has Recovery Password
   await device2.clickOnElementAll(new UserSettings(device2));
   await device2.scrollDown();

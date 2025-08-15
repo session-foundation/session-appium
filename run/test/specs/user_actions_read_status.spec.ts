@@ -1,6 +1,7 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
+import { ConversationItem } from './locators/home';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils/index';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -25,19 +26,11 @@ async function readStatus(platform: SupportedPlatformsType, testInfo: TestInfo) 
   // Go to settings to turn on read status
   // Device 1
   await Promise.all([alice1.turnOnReadReceipts(), bob1.turnOnReadReceipts()]);
-  await alice1.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Conversation list item',
-    text: bob.userName,
-  });
+  await alice1.clickOnElementAll(new ConversationItem(alice1, bob.userName));
   // Send message from User A to User B to verify read status is working
   await alice1.sendMessage(testMessage);
   await sleepFor(100);
-  await bob1.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Conversation list item',
-    text: alice.userName,
-  });
+  await bob1.clickOnElementAll(new ConversationItem(bob1, alice.userName));
   await bob1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',

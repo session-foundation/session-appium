@@ -57,7 +57,7 @@ export const InteractionPoints: Record<string, Coordinates> = {
   BackToSession: { x: 42, y: 42 },
 };
 
-export type Strategy = 'accessibility id' | 'class name' | 'id' | 'xpath';
+export type Strategy = '-android uiautomator' | 'accessibility id' | 'class name' | 'id' | 'xpath';
 
 export type ConversationType = '1:1' | 'Community' | 'Group' | 'Note to Self';
 
@@ -97,6 +97,11 @@ export type DisappearOptsGroup = [
 export type MergedOptions = DisappearOpts1o1 | DisappearOptsGroup;
 
 export type StrategyExtractionObj =
+  | {
+      strategy: Extract<Strategy, '-android uiautomator'>;
+      selector: UiAutomatorQuery;
+      text?: string;
+    }
   | {
       strategy: Extract<Strategy, 'accessibility id'>;
       selector: AccessibilityId;
@@ -147,6 +152,14 @@ export type XPath =
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/androidx.appcompat.widget.LinearLayoutCompat/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView[2]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.TabHost/android.widget.LinearLayout/android.widget.FrameLayout/androidx.viewpager.widget.ViewPager/android.widget.RelativeLayout/android.widget.GridView/android.widget.LinearLayout/android.widget.LinearLayout[2]`;
+
+export type UiAutomatorQuery =
+  | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().resourceId("Appearance"))'
+  | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().text("Select app icon"))'
+  | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().textStartsWith("Version"))'
+  | 'new UiSelector().text("Enter your display name")'
+  | `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-text"))`
+  | `new UiSelector().text(${string})`;
 
 export type AccessibilityId =
   | DISAPPEARING_TIMES
@@ -282,6 +295,7 @@ export type AccessibilityId =
   | 'Manage Members'
   | 'Media message'
   | 'MeetingSE'
+  | 'Meetings option'
   | 'Mentions list'
   | 'Message body'
   | 'Message composition'
@@ -378,6 +392,7 @@ export type AccessibilityId =
   | 'Voice message'
   | 'X'
   | 'Yes'
+  | 'You have changed the icon for “Session”.'
   | 'Your message request has been accepted.'
   | `${DISAPPEARING_TIMES} - Radio`
   | `${GROUPNAME}`
@@ -398,6 +413,7 @@ export type Id =
   | 'Call'
   | 'clear-input-button-description'
   | 'clear-input-button-name'
+  | 'clear-input-button'
   | 'Close button'
   | 'com.android.chrome:id/negative_button'
   | 'com.android.chrome:id/signin_fre_dismiss_button'
@@ -438,7 +454,6 @@ export type Id =
   | 'Enter display name'
   | 'error-message'
   | 'group-description'
-  | 'group-name'
   | 'Group name'
   | 'Group name input'
   | 'hide-nts-confirm-button'
@@ -501,6 +516,7 @@ export type Id =
   | 'preferred-display-name'
   | 'Privacy'
   | 'Privacy Policy'
+  | 'pro-badge-text'
   | 'Quit'
   | 'rate-app-button'
   | 'Recovery password container'
@@ -524,6 +540,8 @@ export type Id =
   | 'update-group-info-confirm-button'
   | 'update-group-info-description-input'
   | 'update-group-info-name-input'
+  | 'update-username-confirm-button'
+  | 'User settings'
   | 'Version warning banner'
   | 'Yes'
   | `All ${AppName} notifications`

@@ -26,11 +26,11 @@ async function appDisguiseIcons(platform: SupportedPlatformsType, testInfo: Test
   await newUser(device, USERNAME.ALICE, { saveUserData: false });
   await device.clickOnElementAll(new UserSettings(device));
   // Must scroll down to reveal the Appearance menu item
-  await device.scrollDown();
+  await device.onIOS().scrollDown();
   await device.clickOnElementAll(new AppearanceMenuItem(device));
   await sleepFor(2000);
   // Must scroll down to reveal the app disguise option
-  await device.scrollDown();
+  await device.onIOS().scrollDown();
   await device.clickOnElementAll(new SelectAppIcon(device));
   await verifyElementScreenshot(device, new AppDisguisePageScreenshot(device), testInfo);
   await closeApp(device);

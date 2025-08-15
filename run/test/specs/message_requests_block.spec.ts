@@ -4,6 +4,7 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { type AccessibilityId, USERNAME } from '../../types/testing';
 import { BlockedContactsSettings } from './locators';
+import { Contact } from './locators/global';
 import { MessageRequestsBanner, PlusButton } from './locators/home';
 import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { sleepFor } from './utils';
@@ -77,18 +78,11 @@ async function blockedRequest(platform: SupportedPlatformsType, testInfo: TestIn
     device2.clickOnElementAll(new BlockedContactsSettings(device2)),
     device3.clickOnElementAll(new BlockedContactsSettings(device3)),
   ]);
-  await Promise.all([
-    device2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Contact',
-      text: alice.userName,
-    }),
-    device3.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Contact',
-      text: alice.userName,
-    }),
-  ]);
+  await Promise.all(
+    [device2, device3].map(device =>
+      device.waitForTextElementToBePresent(new Contact(device, alice.userName))
+    )
+  );
   // Close app
   await closeApp(device1, device2, device3);
 }

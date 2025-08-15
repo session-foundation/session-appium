@@ -32,9 +32,7 @@ async function restoreGroup(platform: SupportedPlatformsType, testInfo: TestInfo
   //   Check that group has loaded on linked device
   await device4.clickOnElementAll(new ConversationItem(device4, testGroupName));
   // Check the group name has loaded
-  await device4.waitForTextElementToBePresent(
-    new ConversationHeaderName(device4).build(testGroupName)
-  );
+  await device4.waitForTextElementToBePresent(new ConversationHeaderName(device4, testGroupName));
   // Check all messages are present
   await Promise.all([
     device4.waitForTextElementToBePresent({

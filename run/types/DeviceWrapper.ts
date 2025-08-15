@@ -10,6 +10,7 @@ import * as sinon from 'sinon';
 
 import {
   ChangeProfilePictureButton,
+  CloseSettings,
   describeLocator,
   DownloadMediaButton,
   FirstGif,
@@ -33,12 +34,13 @@ import {
   ScrollToBottomButton,
   SendButton,
 } from '../test/specs/locators/conversation';
-import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
-import { PlusButton } from '../test/specs/locators/home';
+import { Contact, ModalDescription, ModalHeading } from '../test/specs/locators/global';
+import { ConversationItem, PlusButton } from '../test/specs/locators/home';
 import { LoadingAnimation } from '../test/specs/locators/onboarding';
 import {
   PrivacyMenuItem,
   SaveProfilePictureButton,
+  UserAvatar,
   UserSettings,
 } from '../test/specs/locators/settings';
 import {
@@ -310,15 +312,18 @@ export class DeviceWrapper {
       Array<AppiumNextElementType>
     >;
   }
+
   /**
-   * Attempts to click an element using a primary locator, and if not found, falls back to a secondary locator.
+   * Attempts to find an element using a primary locator, and if not found, falls back to a secondary locator.
    * This is useful for supporting UI transitions (e.g., between legacy and Compose Android screens) where
-   * the same UI element may have different locators depending context.
+   * the same UI element may have different locators depending on context.
    *
-   * @param primaryLocator - The first locator to try (e.g., new Compose locator or legacy locator).
-   * @param fallbackLocator - The locator to try if the primary is not found.
+   * @param primaryLocator - The first locator to try (e.g., new Compose locator).
+   * @param fallbackLocator - The locator to try if the primary is not found (e.g., legacy locator).
    * @param maxWait - Maximum wait time in milliseconds for each locator (default: 3000).
-   * @throws If neither locator is found.
+   * @returns The found element, which can be used for clicking, text extraction, or other operations.
+   * @throws If neither locator finds an element within the timeout period.
+   *
    */
   public async findWithFallback(
     primaryLocator: LocatorsInterface | StrategyExtractionObj,
@@ -329,21 +334,23 @@ export class DeviceWrapper {
       primaryLocator instanceof LocatorsInterface ? primaryLocator.build() : primaryLocator;
     const fallback =
       fallbackLocator instanceof LocatorsInterface ? fallbackLocator.build() : fallbackLocator;
-    let found = await this.doesElementExist({ ...primary, maxWait });
-    if (found) {
-      await this.clickOnElementAll(primary);
-      return found;
-    }
 
-    console.warn(
-      `[findWithFallback] Could not find primary locator with '${primary.strategy}', falling back on '${fallback.strategy}'`
-    );
-    found = await this.doesElementExist({ ...fallback, maxWait });
-    if (found) {
-      await this.clickOnElementAll(fallback);
-      return found;
+    const primaryDescription = describeLocator(primary);
+    const fallbackDescription = describeLocator(fallback);
+
+    try {
+      return await this.waitForTextElementToBePresent({ ...primary, maxWait });
+    } catch (primaryError) {
+      console.warn(
+        `[findWithFallback] Could not find element with ${primaryDescription}, falling back to ${fallbackDescription}`
+      );
+
+      try {
+        return await this.waitForTextElementToBePresent({ ...fallback, maxWait });
+      } catch (fallbackError) {
+        throw new Error(`Element ${primaryDescription} and ${fallbackDescription} not found.`);
+      }
     }
-    throw new Error(`[findWithFallback] Could not find primary or fallback locator`);
   }
 
   public async longClick(element: AppiumNextElementType, durationMs: number) {
@@ -516,11 +523,7 @@ export class DeviceWrapper {
 
     while (attempt < maxRetries && !success) {
       try {
-        const el = await this.waitForTextElementToBePresent({
-          strategy: 'accessibility id',
-          selector: 'Conversation list item',
-          text: userName,
-        });
+        const el = await this.waitForTextElementToBePresent(new ConversationItem(this, userName));
 
         if (!el) {
           throw new Error(
@@ -1324,69 +1327,39 @@ export class DeviceWrapper {
       }
     } while (elapsed < maxWait);
     // Log the error with details but only throw generic error so that they get grouped in the report
-    this.error(`${lastError} after ${attempt} attempts (${elapsed}ms)`);
+    this.log(`${lastError} after ${attempt} attempts (${elapsed}ms)`);
     throw new Error(lastError || 'Polling failed');
-  }
-
-  /**
-   * Wait for an element to meet a specific condition
-   */
-  async waitForElementCondition<T>(
-    args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj),
-    checkElement: (element: AppiumNextElementType) => Promise<PollResult<T>>,
-    options: {
-      maxWait?: number;
-      elementTimeout?: number;
-    } = {}
-  ): Promise<T | undefined> {
-    const { elementTimeout = 500 } = options;
-    return this.pollUntil(async () => {
-      try {
-        // Convert to StrategyExtractionObj if needed
-        const locator = args instanceof LocatorsInterface ? args.build() : args;
-
-        // Create new args with short timeout for polling
-        const pollArgs = {
-          ...locator,
-          text: args.text,
-          maxWait: elementTimeout, // Short timeout for each poll attempt
-        };
-
-        const element = await this.waitForTextElementToBePresent(pollArgs);
-        return await checkElement(element);
-      } catch (error) {
-        return {
-          success: false,
-          error: `Element not found: ${error instanceof Error ? error.message : String(error)}`,
-        };
-      }
-    }, options);
   }
   /**
    * Waits for an element's screenshot to match a specific color.
    *
-   * @param args - Element locator
+   * @param args - Element locator with optional text and maxWait
    * @param expectedColor - Hex color code (e.g., '04cbfe')
-   * @param options - Optional timeouts: maxWait (total) and elementTimeout (per check)
    * @throws If color doesn't match within timeout
-   *
    */
+
   public async waitForElementColorMatch(
     args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj),
-    expectedColor: string,
-    options: {
-      maxWait?: number;
-      elementTimeout?: number;
-    } = {}
+    expectedColor: string
   ): Promise<void> {
-    await this.waitForElementCondition(
-      args,
-      async (element): Promise<PollResult> => {
-        // Capture screenshot of the element as base64
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const description = describeLocator({ ...locator, text: args.text });
+
+    this.log(`Waiting for ${description} to have color #${expectedColor}`);
+
+    await this.pollUntil(
+      async () => {
+        const element = await this.findElementQuietly(locator, args.text);
+
+        if (!element) {
+          return {
+            success: false,
+            error: `Element not found`,
+          };
+        }
+
         const base64 = await this.getElementScreenshot(element.ELEMENT);
-        // Extract the middle pixel color from the screenshot
         const actualColor = await parseDataImage(base64);
-        // Compare colors using the standard color matcher
         const matches = isSameColor(expectedColor, actualColor);
 
         return {
@@ -1396,10 +1369,11 @@ export class DeviceWrapper {
             : `Color mismatch: expected #${expectedColor}, got #${actualColor}`,
         };
       },
-      options
+      {
+        maxWait: args.maxWait, // Will use default from pollUntil if undefined
+      }
     );
   }
-
   // UTILITY FUNCTIONS
 
   public async sendMessage(message: string) {
@@ -1470,17 +1444,7 @@ export class DeviceWrapper {
 
   public async sendMessageTo(sender: User, receiver: Group | User) {
     const message = `${sender.userName} to ${receiver.userName}`;
-    await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: receiver.userName,
-    });
-    await sleepFor(100);
-    await this.clickOnElementAll({
-      strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: receiver.userName,
-    });
+    await this.clickOnElementAll(new ConversationItem(this, receiver.userName));
     this.log(`${sender.userName} + " sent message to ${receiver.userName}`);
     await this.sendMessage(message);
     this.log(`Message received by ${receiver.userName} from ${sender.userName}`);
@@ -1873,7 +1837,7 @@ export class DeviceWrapper {
   public async uploadProfilePicture() {
     await this.clickOnElementAll(new UserSettings(this));
     // Click on Profile picture
-    await this.clickOnElementAll(new UserSettings(this));
+    await this.clickOnElementAll(new UserAvatar(this));
     await this.clickOnElementAll(new ChangeProfilePictureButton(this));
     if (this.isIOS()) {
       // Push file first
@@ -1941,11 +1905,7 @@ export class DeviceWrapper {
         text: contact.userName,
       });
     } else {
-      await this.clickOnElementAll({
-        strategy: 'accessibility id',
-        selector: 'Contact',
-        text: contact.userName,
-      });
+      await this.clickOnElementAll(new Contact(this, contact.userName));
     }
     await this.clickOnElementAll(new SendButton(this));
     await this.waitForTextElementToBePresent(new OutgoingMessageStatusSent(this));
@@ -2043,15 +2003,16 @@ export class DeviceWrapper {
 
     await this.scroll({ x: width / 2, y: height * 0.95 }, { x: width / 2, y: height * 0.35 }, 100);
   }
+
   public async scrollToBottom() {
     try {
       const scrollButton = await this.waitForTextElementToBePresent({
         ...new ScrollToBottomButton(this).build(),
-        maxWait: 1_000,
+        maxWait: 3_000,
       });
       await this.click(scrollButton.ELEMENT);
     } catch {
-      this.info('Scroll button not found after 1s, continuing');
+      this.info('Scroll button not found, continuing');
     }
   }
 
@@ -2088,32 +2049,8 @@ export class DeviceWrapper {
       const [primary, fallback] = newAndroid
         ? [newLocator, legacyLocator]
         : [legacyLocator, newLocator];
-      await this.findWithFallback(primary, fallback);
-    }
-  }
-
-  public async closeScreen(newAndroid: boolean = true) {
-    if (this.isIOS()) {
-      await this.clickOnByAccessibilityID('Close button');
-      return;
-    }
-
-    if (this.isAndroid()) {
-      const newLocator = {
-        strategy: 'id',
-        selector: 'Close button',
-      } as StrategyExtractionObj;
-
-      const legacyLocator = {
-        strategy: 'accessibility id',
-        selector: 'Navigate up',
-      } as StrategyExtractionObj;
-
-      const [primary, fallback] = newAndroid
-        ? [newLocator, legacyLocator]
-        : [legacyLocator, newLocator];
-
-      await this.findWithFallback(primary, fallback);
+      const el = await this.findWithFallback(primary, fallback);
+      await this.click(el.ELEMENT);
     }
   }
 
@@ -2137,7 +2074,7 @@ export class DeviceWrapper {
     await this.clickOnElementAll(new ReadReceiptsButton(this));
     await this.navigateBack(false);
     await sleepFor(100);
-    await this.closeScreen(false);
+    await this.clickOnElementAll(new CloseSettings(this));
   }
 
   public async processPermissions(locator: LocatorsInterface) {
@@ -2306,13 +2243,20 @@ export class DeviceWrapper {
     }
 
     await this.clickOnElementAll(new UserSettings(this));
-    await this.scrollDown();
-    const versionElement = await this.findElement(
-      'id',
-      'network.loki.messenger.qa:id/versionTextView'
-    );
+    // Find the element using UiScrollable
+    const versionElement = await this.waitForTextElementToBePresent({
+      strategy: '-android uiautomator',
+      selector:
+        'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().textStartsWith("Version"))',
+    });
+
+    // Get the full text from the element
     const versionText = await this.getAttribute('text', versionElement.ELEMENT);
+    // versionText will be something like "Version  1.27.0 (4175 - ac77d8)  - Mainnet"
+
+    // Extract just the version number
     const match = versionText?.match(/(\d+\.\d+\.\d+)/);
+    // match[1] will be "1.27.0"
 
     if (!match) {
       throw new Error(`Could not extract version from: ${versionText}`);
