@@ -254,8 +254,10 @@ export class AppDisguiseMeetingIcon extends LocatorsInterface {
           selector: 'MeetingSE option',
         } as const;
       case 'ios':
-        // NOTE see SES-3809
-        throw new Error('No locators implemented for iOS');
+        return {
+          strategy: 'accessibility id',
+          selector: 'Meetings option',
+        } as const;
     }
   }
 }

@@ -295,6 +295,7 @@ export type AccessibilityId =
   | 'Manage Members'
   | 'Media message'
   | 'MeetingSE'
+  | 'Meetings option'
   | 'Mentions list'
   | 'Message body'
   | 'Message composition'
@@ -391,6 +392,7 @@ export type AccessibilityId =
   | 'Voice message'
   | 'X'
   | 'Yes'
+  | 'You have changed the icon for “Session”.'
   | 'Your message request has been accepted.'
   | `${DISAPPEARING_TIMES} - Radio`
   | `${GROUPNAME}`
