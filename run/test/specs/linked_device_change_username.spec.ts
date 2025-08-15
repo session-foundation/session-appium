@@ -29,7 +29,8 @@ async function changeUsernameLinked(platform: SupportedPlatformsType, testInfo: 
   await alice1.clickOnElementAll(new EditUsernameButton(alice1));
   // type in new username
   await sleepFor(100);
-  await alice1.clickOnElementAll(new ClearInputButton(alice1));
+  await alice1.onIOS().deleteText(new UsernameInput(alice1));
+  await alice1.onAndroid().clickOnElementAll(new ClearInputButton(alice1));
   await alice1.inputText(newUsername, new UsernameInput(alice1));
   await alice1.clickOnElementAll(new SaveNameChangeButton(alice1));
   await alice2.waitForTextElementToBePresent(new UsernameDisplay(alice2, newUsername));

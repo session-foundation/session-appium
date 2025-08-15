@@ -27,7 +27,8 @@ async function changeUsername(platform: SupportedPlatformsType, testInfo: TestIn
     englishStrippedStr('displayNameSet').toString(),
     englishStrippedStr('displayNameVisible').toString()
   );
-  await device.clickOnElementAll(new ClearInputButton(device));
+  await device.onIOS().deleteText(new UsernameInput(device));
+  await device.onAndroid().clickOnElementAll(new ClearInputButton(device));
   await device.inputText(newUsername, new UsernameInput(device));
   await device.clickOnElementAll(new SaveNameChangeButton(device));
   await device.waitForTextElementToBePresent(new UsernameDisplay(device, newUsername));
