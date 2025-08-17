@@ -733,9 +733,6 @@ export class DeviceWrapper {
       const matching = await this.findAsync(elements, async e => {
         const text = await this.getTextFromElement(e);
         const isPartialMatch = text && text.toLowerCase().includes(textToLookFor.toLowerCase());
-        if (isPartialMatch) {
-          this.info(`Text found to include ${textToLookFor}`);
-        }
         return Boolean(isPartialMatch);
       });
 
@@ -1225,6 +1222,7 @@ export class DeviceWrapper {
     text: string,
     maxWait = 15000
   ): Promise<AppiumNextElementType> {
+    this.log(`Waiting for control message "${text}" to be present`);
     const result = await this.pollUntil(
       async () => {
         try {
@@ -1233,11 +1231,11 @@ export class DeviceWrapper {
 
           return element
             ? { success: true, data: element }
-            : { success: false, error: `Control message with text "${text}" not found` };
+            : { success: false, error: `Control message "${text}" not found` };
         } catch (err) {
           return {
             success: false,
-            error: err instanceof Error ? err.message : String(err),
+            error: `Control message "${text}" not found`,
           };
         }
       },
@@ -1245,7 +1243,7 @@ export class DeviceWrapper {
     );
 
     if (!result) {
-      throw new Error(`Control message "${text}" not found after ${maxWait}ms`);
+      throw new Error(`Waited too long for control message "${text}"`);
     }
 
     this.log(`Control message "${text}" has been found`);
