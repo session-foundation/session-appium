@@ -75,10 +75,12 @@ export const TestSteps = {
   OPEN: {
     UPDATE_GROUP_INFO: `Open 'Update Group Information' modal`,
     PATH: 'Open Path screen',
+    APPEARANCE: 'Open Appearance settings',
   },
   // User Actions
   USER_ACTIONS: {
     CHANGE_PROFILE_PICTURE: 'Change profile picture',
+    APP_DISGUISE: 'Set App Disguise',
   },
   // Disappearing Messages
   DISAPPEARING_MESSAGES: {
@@ -90,6 +92,8 @@ export const TestSteps = {
   },
   // Verify steps
   VERIFY: {
+    ELEMENT_SCREENSHOT: (elementDesc: string) =>
+      `Verify ${elementDesc} element screenshot matches baseline`,
     GENERIC_MODAL: 'Verify modal strings',
     SPECIFIC_MODAL: (modalDesc: string) => `Verify ${modalDesc} modal strings`,
     MESSAGE_RECEIVED: 'Verify message has been received',

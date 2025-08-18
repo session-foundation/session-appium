@@ -1,9 +1,9 @@
-import type { TestInfo } from '@playwright/test';
+import { test, type TestInfo } from '@playwright/test';
 
+import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { AppearanceMenuItem, SelectAppIcon, UserSettings } from './locators/settings';
-import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { AppDisguisePageScreenshot } from './utils/screenshot_paths';
@@ -22,16 +22,20 @@ bothPlatformsIt({
 });
 
 async function appDisguiseIcons(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
-  await newUser(device, USERNAME.ALICE, { saveUserData: false });
-  await device.clickOnElementAll(new UserSettings(device));
-  // Must scroll down to reveal the Appearance menu item
-  await device.onIOS().scrollDown();
-  await device.clickOnElementAll(new AppearanceMenuItem(device));
-  await sleepFor(2000);
-  // Must scroll down to reveal the app disguise option
-  await device.onIOS().scrollDown();
-  await device.clickOnElementAll(new SelectAppIcon(device));
-  await verifyElementScreenshot(device, new AppDisguisePageScreenshot(device), testInfo);
-  await closeApp(device);
+  const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
+    await newUser(device, USERNAME.ALICE, { saveUserData: false });
+    return { device };
+  });
+  await test.step(TestSteps.OPEN.APPEARANCE, async () => {
+    await device.clickOnElementAll(new UserSettings(device));
+    await device.clickOnElementAll(new AppearanceMenuItem(device));
+  });
+  await test.step(TestSteps.VERIFY.ELEMENT_SCREENSHOT('app disguise icons'), async () => {
+    await device.clickOnElementAll(new SelectAppIcon(device));
+    await verifyElementScreenshot(device, new AppDisguisePageScreenshot(device), testInfo);
+  });
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(device);
+  });
 }
