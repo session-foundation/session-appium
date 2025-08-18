@@ -31,7 +31,16 @@ export abstract class LocatorsInterface {
 
 export function describeLocator(locator: StrategyExtractionObj & { text?: string }): string {
   const { strategy, selector, text } = locator;
-  const base = `${strategy} "${selector}"`;
+
+  // Trim selector if its too long, show beginning and end
+  const maxSelectorLength = 80;
+  const halfLength = Math.floor(maxSelectorLength / 2);
+  const trimmedSelector =
+    selector.length > maxSelectorLength
+      ? `${selector.substring(0, halfLength)}…${selector.substring(selector.length - halfLength)}`
+      : selector;
+
+  const base = `${strategy} "${trimmedSelector}"`;
   return text ? `${base} and text "${text}"` : base;
 }
 
