@@ -298,8 +298,8 @@ export class PathMenuItem extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'xpath',
-          selector: `//android.widget.TextView[@text="Path"]`,
+          strategy: '-android uiautomator',
+          selector: 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().resourceId("path-menu-item"))'
         } as const;
       case 'ios':
         return {

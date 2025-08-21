@@ -155,6 +155,7 @@ export type XPath =
 
 export type UiAutomatorQuery =
   | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().resourceId("Appearance"))'
+  | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().resourceId("path-menu-item"))'
   | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().text("Select app icon"))'
   | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().textStartsWith("Version"))'
   | 'new UiSelector().text("Enter your display name")'
@@ -199,7 +200,6 @@ export type AccessibilityId =
   | 'Clear all'
   | 'Close'
   | 'Close button'
-  | 'Community input'
   | 'Community invitation'
   | 'Configuration message'
   | 'Confirm'
@@ -427,6 +427,7 @@ export type Id =
   | 'com.android.settings:id/switch_text'
   | 'com.google.android.apps.photos:id/sign_in_button'
   | 'com.google.android.apps.photos:id/text'
+  | 'Community input'
   | 'Confirm invite button'
   | 'Contact'
   | 'Contact status'
