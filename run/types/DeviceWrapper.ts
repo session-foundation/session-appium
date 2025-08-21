@@ -1180,7 +1180,11 @@ export class DeviceWrapper {
     args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<AppiumNextElementType> {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
-    const { text, maxWait = 30_000 } = args;
+
+    // Prefer text from args (if passed directly), otherwise check locator
+    const text = args.text ?? ('text' in locator ? locator.text : undefined);
+
+    const { maxWait = 30_000 } = args;
 
     const description = describeLocator({ ...locator, text });
     this.log(`Waiting for element with ${description} to be present`);
