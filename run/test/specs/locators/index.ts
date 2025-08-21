@@ -262,7 +262,7 @@ export class JoinCommunityButton extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
+          strategy: 'id',
           selector: 'Join community button',
         };
       case 'ios':
