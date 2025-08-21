@@ -25,7 +25,7 @@ async function sendEmojiReactionCommunity(platform: SupportedPlatformsType, test
   const message = `Testing emoji reacts - ${new Date().getTime()} - ${platform}`;
   const {
     devices: { alice1, bob1 },
-    prebuilt: { alice, bob },
+    prebuilt: { alice },
   } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
     return open_Alice1_Bob1_friends({
       platform,
@@ -36,7 +36,7 @@ async function sendEmojiReactionCommunity(platform: SupportedPlatformsType, test
   await Promise.all(
     [alice1, bob1].map(device => joinCommunity(device, testCommunityLink, testCommunityName))
   );
-  await test.step(TestSteps.SEND.MESSAGE(alice.userName, bob.userName), async () => {
+  await test.step(TestSteps.SEND.MESSAGE(alice.userName, testCommunityName), async () => {
     await alice1.sendMessage(message);
   });
   await test.step(TestSteps.SEND.EMOJI_REACT, async () => {
