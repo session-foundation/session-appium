@@ -164,6 +164,8 @@ export type UiAutomatorQuery =
 export type AccessibilityId =
   | DISAPPEARING_TIMES
   | UserNameType
+  | '😂'
+  | '2'
   | 'Accept message request'
   | 'Accept name change'
   | 'Account ID'
@@ -489,12 +491,15 @@ export type Id =
   | 'network.loki.messenger.qa:id/crop_image_menu_crop'
   | 'network.loki.messenger.qa:id/emptyStateContainer'
   | 'network.loki.messenger.qa:id/endCallButton'
+  | 'network.loki.messenger.qa:id/layout_emoji_container'
   | 'network.loki.messenger.qa:id/linkPreviewView'
   | 'network.loki.messenger.qa:id/mediapicker_folder_item_thumbnail'
   | 'network.loki.messenger.qa:id/mediapicker_image_item_thumbnail'
   | 'network.loki.messenger.qa:id/messageStatusTextView'
   | 'network.loki.messenger.qa:id/openGroupTitleTextView'
   | 'network.loki.messenger.qa:id/play_overlay'
+  | 'network.loki.messenger.qa:id/reaction_1'
+  | 'network.loki.messenger.qa:id/reactions_pill_count'
   | 'network.loki.messenger.qa:id/scrollToBottomButton'
   | 'network.loki.messenger.qa:id/search_cancel'
   | 'network.loki.messenger.qa:id/search_result_title'

@@ -25,7 +25,7 @@ export type AllureSuiteConfig =
   | { parent: 'In-App Review Prompt'; suite: 'Flows' | 'Triggers' }
   | { parent: 'Linkouts' }
   | { parent: 'New Conversation'; suite: 'Join Community' | 'New Message' }
-  | { parent: 'Sending Messages'; suite: 'Sending Attachments' }
+  | { parent: 'Sending Messages'; suite: 'Attachments' | 'Emoji reacts' }
   | { parent: 'Settings'; suite: 'App Disguise' }
   | {
       parent: 'User Actions';
@@ -68,8 +68,11 @@ export const TestSteps = {
   },
   // Sending things
   SEND: {
+    MESSAGE: (sender: UserNameType, recipient: string) =>
+      `${sender} sends a message to ${recipient}`,
     LINK: 'Send Link',
     IMAGE: 'Send Image',
+    EMOJI_REACT: `Send an emoji react`,
   },
   // Open/Navigate steps
   OPEN: {
@@ -103,5 +106,6 @@ export const TestSteps = {
     MISSED_CALL: 'Verify missed call',
     NICKNAME_CHANGED: (context: string) => `Verify nickname changed in/on ${context}`,
     PROFILE_PICTURE_CHANGED: 'Verify profile picture has been changed',
+    EMOJI_REACT: 'Verify emoji react appears for everyone',
   },
 };

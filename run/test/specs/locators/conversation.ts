@@ -437,3 +437,55 @@ export class PreferredDisplayName extends LocatorsInterface {
     }
   }
 }
+
+export class FirstEmojiReact extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger.qa:id/reaction_1',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: '😂',
+        } as const;
+    }
+  }
+}
+
+export class EmojiReactsPill extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger.qa:id/layout_emoji_container',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: '😂',
+        } as const;
+    }
+  }
+}
+
+export class EmojiReactsCount extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger.qa:id/reactions_pill_count',
+          text: '2',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: '2',
+        } as const;
+    }
+  }
+}
