@@ -279,7 +279,7 @@ export class CommunityInput extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
+          strategy: 'id',
           selector: 'Community input',
         };
       case 'ios':
