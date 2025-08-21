@@ -42,11 +42,6 @@ export class ConversationItem extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
-        return {
-          strategy: 'id',
-          selector: 'pro-badge-text',
-          text: this.text,
-        } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
