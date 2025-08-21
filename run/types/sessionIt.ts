@@ -24,6 +24,11 @@ type MobileItArgs = {
   shouldSkip?: boolean;
   allureSuites?: AllureSuiteConfig;
   allureDescription?: string;
+  allureLinks?: {
+    all?: string[] | string;
+    android?: string[] | string;
+    ios?: string[] | string;
+  };
 };
 
 export function androidIt(args: Omit<MobileItArgs, 'platform'>) {
@@ -43,6 +48,7 @@ function mobileIt({
   countOfDevicesNeeded,
   allureSuites,
   allureDescription,
+  allureLinks,
 }: MobileItArgs) {
   const testName = `${title} @${platform} @${risk ?? 'default'}-risk @${countOfDevicesNeeded}-devices`;
 
@@ -66,6 +72,25 @@ function mobileIt({
     }
     if (allureDescription) {
       await allure.description(allureDescription);
+    }
+    if (allureLinks) {
+      const allLinks = allureLinks.all
+        ? Array.isArray(allureLinks.all)
+          ? allureLinks.all
+          : [allureLinks.all]
+        : [];
+
+      const platformLinks = allureLinks[platform]
+        ? Array.isArray(allureLinks[platform])
+          ? allureLinks[platform]
+          : [allureLinks[platform]]
+        : [];
+
+      const links = [...allLinks, ...platformLinks];
+
+      for (const jiraKey of links) {
+        await allure.link(`https://optf.atlassian.net/browse/${jiraKey}`, jiraKey, 'issue');
+      }
     }
     let testFailed = false;
 
