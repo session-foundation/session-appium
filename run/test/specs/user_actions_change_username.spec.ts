@@ -14,8 +14,8 @@ bothPlatformsIt({
   countOfDevicesNeeded: 1,
   testCb: changeUsername,
   allureLinks: {
-    android: 'SES-4277'
-  }
+    android: 'SES-4277',
+  },
 });
 
 async function changeUsername(platform: SupportedPlatformsType, testInfo: TestInfo) {

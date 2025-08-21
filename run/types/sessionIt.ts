@@ -1,10 +1,10 @@
 // run/types/sessionIt.ts - Clean version matching original pattern
 import { test, type TestInfo } from '@playwright/test';
-import * as allure from 'allure-js-commons';
 import { omit } from 'lodash';
 
 import type { AppCountPerTest } from '../test/specs/state_builder';
 
+import { setupAllureTestInfo } from '../test/specs/utils/allure/allureHelpers';
 import { getNetworkTarget } from '../test/specs/utils/devnet';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 import {
@@ -64,34 +64,14 @@ function mobileIt({
     getNetworkTarget(platform);
     console.info(`\n\n==========> Running "${testName}"\n\n`);
 
-    if (allureSuites) {
-      await allure.parentSuite(allureSuites.parent);
-      if ('suite' in allureSuites) {
-        await allure.suite(allureSuites.suite);
-      }
-    }
-    if (allureDescription) {
-      await allure.description(allureDescription);
-    }
-    if (allureLinks) {
-      const allLinks = allureLinks.all
-        ? Array.isArray(allureLinks.all)
-          ? allureLinks.all
-          : [allureLinks.all]
-        : [];
+    // Handle Suites, Descriptions and Links
+    await setupAllureTestInfo({
+      suites: allureSuites,
+      description: allureDescription,
+      links: allureLinks,
+      platform,
+    });
 
-      const platformLinks = allureLinks[platform]
-        ? Array.isArray(allureLinks[platform])
-          ? allureLinks[platform]
-          : [allureLinks[platform]]
-        : [];
-
-      const links = [...allLinks, ...platformLinks];
-
-      for (const jiraKey of links) {
-        await allure.link(`https://optf.atlassian.net/browse/${jiraKey}`, jiraKey, 'issue');
-      }
-    }
     let testFailed = false;
 
     try {
