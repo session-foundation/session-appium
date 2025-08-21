@@ -21,7 +21,7 @@ androidIt({
   risk: 'medium',
   countOfDevicesNeeded: 2,
   testCb: sendImageCommunityAndroid,
-  allureSuites: { parent: 'Sending Messages', suite: 'Sending Attachments' },
+  allureSuites: { parent: 'Sending Messages', suite: 'Attachments' },
   allureDescription: 'Verifies that an image can be sent and received in a community',
 });
 
@@ -30,7 +30,7 @@ iosIt({
   risk: 'medium',
   countOfDevicesNeeded: 1,
   testCb: sendImageCommunityIOS,
-  allureSuites: { parent: 'Sending Messages', suite: 'Sending Attachments' },
+  allureSuites: { parent: 'Sending Messages', suite: 'Attachments' },
   allureDescription: `Verifies that an image can be sent to a community. 
   Note that due to Appium's limitations, this test does not verify another device receiving the image.`,
 });
