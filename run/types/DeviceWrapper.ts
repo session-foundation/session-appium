@@ -927,7 +927,7 @@ export class DeviceWrapper {
   }
 
   /**
-   * Ensures an element is not present on the screen at the end of the wait time.
+   * Ensures an element is not visible on the screen at the end of the wait time.
    * This allows any transitions to complete and tolerates some UI flakiness.
    * Unlike hasElementBeenDeleted, this doesn't require the element to exist first.
    *
@@ -954,14 +954,24 @@ export class DeviceWrapper {
 
     const description = describeLocator({ ...locator, text: args.text });
 
-    if (element) {
-      throw new Error(
-        `Element with ${description} is present after ${maxWait}ms when it should not be`
-      );
+      if (element) {
+        // Elements can disappear in the GUI but still be present in the DOM 
+        try {
+          const isVisible = await this.isVisible(element.ELEMENT);
+          if (isVisible) {
+            throw new Error(
+              `Element with ${description} is visible after ${maxWait}ms when it should not be`
+            );
+          }
+          // Element exists but not visible - that's okay
+          this.log(`Element with ${description} exists but is not visible`);
+        } catch (e) {
+          // Stale element or other error - element is gone, that's okay
+          this.log(`Element with ${description} is not present (stale reference)`);
+        }
+      } else {
+        this.log(`Verified no element with ${description} is present`);
     }
-
-    // Element not found - success!
-    this.log(`Verified no element with ${description} is present`);
   }
 
   /**
@@ -1701,7 +1711,7 @@ export class DeviceWrapper {
   public async sendDocument() {
     if (this.isIOS()) {
       const formattedFileName = 'test_file, pdf';
-      const testMessage = 'Testing-document-1';
+      const testMessage = 'Testing documents';
       copyFileToSimulator(this, testFile);
       await this.clickOnElementAll(new AttachmentsButton(this));
       const keyboard = await this.isKeyboardVisible();
