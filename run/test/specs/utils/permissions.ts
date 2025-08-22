@@ -1,3 +1,4 @@
+import { TestInfo } from '@playwright/test';
 import { W3CCapabilities } from '@wdio/types/build/Capabilities';
 import { XCUITestDriver, XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
 
@@ -8,7 +9,8 @@ import { runScriptAndLog } from './utilities';
 export const cleanPermissions = async (
   opts: XCUITestDriverOpts,
   udid: string,
-  capabilities: W3CCapabilities
+  capabilities: W3CCapabilities,
+  testInfo: TestInfo
 ) => {
   let wrappedDevice: DeviceWrapper | null = null;
   const maxRetries = 3;
@@ -17,7 +19,7 @@ export const cleanPermissions = async (
   do {
     try {
       const device: XCUITestDriver = new XCUITestDriver(opts);
-      wrappedDevice = new DeviceWrapper(device, udid);
+      wrappedDevice = new DeviceWrapper(device, udid, testInfo);
 
       await wrappedDevice.createSession(capabilities);
       // This function closes any pop up that hasn't been dismissed from a previous test (only happens for iOS currently)

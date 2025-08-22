@@ -1,8 +1,10 @@
 import { getImageOccurrence } from '@appium/opencv';
+import { TestInfo } from '@playwright/test';
 import { W3CCapabilities } from '@wdio/types/build/Capabilities';
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
 import { XCUITestDriver } from 'appium-xcuitest-driver/build/lib/driver';
 import fs from 'fs/promises';
+import Fuse from 'fuse.js';
 import { isArray, isEmpty } from 'lodash';
 import * as path from 'path';
 import sharp from 'sharp';
@@ -86,10 +88,16 @@ export class DeviceWrapper {
   public readonly udid: string;
   private deviceIdentity: string = '';
   private version: string | null = null;
+  private testInfo: TestInfo;
 
-  constructor(device: AndroidUiautomator2Driver | XCUITestDriver, udid: string) {
+  constructor(
+    device: AndroidUiautomator2Driver | XCUITestDriver,
+    udid: string,
+    testInfo: TestInfo
+  ) {
     this.device = device;
     this.udid = udid;
+    this.testInfo = testInfo;
     // Set temporary identity immediately
     this.deviceIdentity = `device-${udid.slice(-4)}`;
   }
@@ -298,17 +306,125 @@ export class DeviceWrapper {
 
   // ELEMENT INTERACTION
 
+  // Heal a broken locator by finding potential fuzzy matches in the page source and log it for a permanent fix.
+  private async findBestMatch(
+    strategy: Strategy,
+    selector: string
+  ): Promise<{ id: string; strategy: Strategy } | null> {
+    const pageSource = await this.getPageSource();
+    const threshold = 0.4; // 0.0 = exact, 1.0 = match anything
+
+    // Identify common element patterns and map them to our strategies
+    const candidateStrategies = [
+      { strategy: 'accessibility id' as Strategy, pattern: /name="([^"]+)"/g },
+      { strategy: 'accessibility id' as Strategy, pattern: /label="([^"]+)"/g },
+      { strategy: 'accessibility id' as Strategy, pattern: /identifier="([^"]+)"/g },
+      { strategy: 'accessibility id' as Strategy, pattern: /value="([^"]+)"/g },
+      { strategy: 'accessibility id' as Strategy, pattern: /content-desc="([^"]+)"/g },
+      { strategy: 'id' as Strategy, pattern: /resource-id="([^"]+)"/g },
+    ];
+
+    // Extract ALL identifiers from the page
+    const allElements: Array<{ id: string; strategy: Strategy }> = [];
+    for (const { strategy, pattern } of candidateStrategies) {
+      const matches = [...pageSource.matchAll(pattern)];
+      matches.forEach(m => {
+        allElements.push({
+          id: m[1],
+          strategy,
+        });
+      });
+    }
+    // Fuzzy match potential candidates
+    const fuse = new Fuse(allElements, {
+      keys: ['id'],
+      threshold,
+      includeScore: true,
+    });
+
+    const results = fuse.search(selector);
+
+    if (results.length > 0 && results[0].score !== undefined && results[0].score < threshold) {
+      const match = results[0].item;
+      const confidence = ((1 - results[0].score) * 100).toFixed(2);
+
+      // Sometimes the element is just not on screen yet - proceed.
+      if (match.id === selector && match.strategy === strategy) {
+        return null;
+      }
+      this.warn(
+        `Original locator ${strategy} "${selector}" not found. Test healed with ${match.strategy} "${match.id}" (${confidence}% match)`
+      );
+      this.testInfo.annotations.push({
+        type: 'healed',
+        description: ` ${strategy} "${selector}" ➡ ${match.strategy} "${match.id}" (${confidence}% match)`,
+      });
+      return {
+        id: match.id,
+        strategy: match.strategy,
+      };
+    }
+
+    return null;
+  }
+
   public async findElement(strategy: Strategy, selector: string): Promise<AppiumNextElementType> {
-    return this.toShared().findElement(strategy, selector) as Promise<AppiumNextElementType>;
+    try {
+      return await (this.toShared().findElement(
+        strategy,
+        selector
+      ) as Promise<AppiumNextElementType>);
+    } catch (originalError) {
+      // Only try healing for id/accessibility id selectors
+      if (strategy !== 'accessibility id' && strategy !== 'id') {
+        throw originalError;
+      }
+
+      const best = await this.findBestMatch(strategy, selector);
+
+      if (best) {
+        return await (this.toShared().findElement(
+          best.strategy,
+          best.id
+        ) as Promise<AppiumNextElementType>);
+      }
+
+      throw originalError;
+    }
   }
 
   public async findElements(
     strategy: Strategy,
     selector: string
   ): Promise<Array<AppiumNextElementType>> {
-    return this.toShared().findElements(strategy, selector) as Promise<
-      Array<AppiumNextElementType>
-    >;
+    try {
+      const elements = await (this.toShared().findElements(strategy, selector) as Promise<
+        Array<AppiumNextElementType>
+      >);
+      if (elements && elements.length > 0) {
+        return elements;
+      }
+      throw new Error('No elements found');
+    } catch {
+      // Only try healing for id/accessibility id selectors
+      if (strategy !== 'accessibility id' && strategy !== 'id') {
+        return [];
+      }
+
+      const best = await this.findBestMatch(strategy, selector);
+
+      if (best) {
+        try {
+          return await (this.toShared().findElements(best.strategy, best.id) as Promise<
+            Array<AppiumNextElementType>
+          >);
+        } catch {
+          return [];
+        }
+      }
+
+      return [];
+    }
   }
   /**
    * Attempts to click an element using a primary locator, and if not found, falls back to a secondary locator.
