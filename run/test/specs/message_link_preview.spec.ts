@@ -4,7 +4,12 @@ import { testLink } from '../../constants';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { LinkPreview, LinkPreviewMessage } from './locators';
-import { MessageInput, OutgoingMessageStatusSent, SendButton } from './locators/conversation';
+import {
+  MessageBody,
+  MessageInput,
+  OutgoingMessageStatusSent,
+  SendButton,
+} from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -51,20 +56,11 @@ async function sendLinkIos(platform: SupportedPlatformsType, testInfo: TestInfo)
   await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
   await alice1.clickOnElementAll(new SendButton(alice1));
   // Make sure image preview is available in device 2
-  await bob1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: testLink,
-  });
-
+  await bob1.waitForTextElementToBePresent(new MessageBody(bob1, testLink));
   await bob1.longPressMessage(testLink);
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);
-  await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: replyMessage,
-  });
+  await alice1.waitForTextElementToBePresent(new MessageBody(alice1, replyMessage));
   await closeApp(alice1, bob1);
 }
 

@@ -29,6 +29,7 @@ import {
 import { englishStrippedStr } from '../localizer/englishStrippedStr';
 import {
   AttachmentsButton,
+  MessageBody,
   MessageInput,
   OutgoingMessageStatusSent,
   ScrollToBottomButton,
@@ -479,10 +480,8 @@ export class DeviceWrapper {
     while (attempt < maxRetries && !success) {
       try {
         const el = await this.waitForTextElementToBePresent({
-          strategy: 'accessibility id',
-          selector: 'Message body',
-          text: textToLookFor,
-          maxWait: 1000,
+          ...new MessageBody(this, textToLookFor).build(),
+          maxWait: 1_000,
         });
         if (!el) {
           throw new Error(
@@ -769,12 +768,7 @@ export class DeviceWrapper {
   }
 
   public async findMessageWithBody(textToLookFor: string): Promise<AppiumNextElementType> {
-    await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: textToLookFor,
-    });
-
+    await this.waitForTextElementToBePresent(new MessageBody(this, textToLookFor));
     const message = await this.findMatchingTextAndAccessibilityId('Message body', textToLookFor);
     return message;
   }

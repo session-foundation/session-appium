@@ -3,7 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DeleteMessageConfirmationModal } from './locators';
-import { DeletedMessage } from './locators/conversation';
+import { DeletedMessage, MessageBody } from './locators/conversation';
 import { ConversationItem } from './locators/home';
 import { open_Alice2_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -39,18 +39,11 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType, test
   // Check linked device for deleted message
   await alice1.waitForTextElementToBePresent(new DeletedMessage(alice1));
   // Check device 2 and 3 for no change
-  await Promise.all([
-    bob1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: sentMessage,
-    }),
-    alice2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: sentMessage,
-    }),
-  ]);
+  await Promise.all(
+    [bob1, alice2].map(device =>
+      device.waitForTextElementToBePresent(new MessageBody(device, sentMessage))
+    )
+  );
   // Close app
   await closeApp(alice1, bob1, alice2);
 }

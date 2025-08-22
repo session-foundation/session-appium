@@ -5,7 +5,7 @@ import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ImageName, ShareExtensionIcon } from './locators';
-import { MessageInput, SendButton } from './locators/conversation';
+import { MessageBody, MessageInput, SendButton } from './locators/conversation';
 import { PhotoLibrary } from './locators/external';
 import { Contact } from './locators/global';
 import { open_Alice1_Bob1_friends } from './state_builder';
@@ -70,11 +70,7 @@ async function shareToSession(platform: SupportedPlatformsType, testInfo: TestIn
   });
   await test.step(TestSteps.VERIFY.MESSAGE_RECEIVED, async () => {
     await bob1.trustAttachments(USERNAME.ALICE);
-    await bob1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: testMessage,
-    });
+    await bob1.waitForTextElementToBePresent(new MessageBody(bob1, testMessage));
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, bob1);

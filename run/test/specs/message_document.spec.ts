@@ -1,6 +1,7 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
+import { MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
@@ -19,17 +20,13 @@ async function sendDocument(platform: SupportedPlatformsType, testInfo: TestInfo
     focusFriendsConvo: true,
     testInfo,
   });
-  const testMessage = 'Testing-document-1';
+  const testMessage = 'Testing documents';
   const replyMessage = `Replying to document from ${alice.userName}`;
 
   await alice1.sendDocument();
   await bob1.trustAttachments(alice.userName);
   // Reply to message
-  await bob1.onIOS().waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: testMessage,
-  });
+  await bob1.onIOS().waitForTextElementToBePresent(new MessageBody(bob1, testMessage));
   await bob1.onAndroid().waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Document',
@@ -38,11 +35,7 @@ async function sendDocument(platform: SupportedPlatformsType, testInfo: TestInfo
   await bob1.onAndroid().longPress('Document');
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);
-  await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: replyMessage,
-  });
+  await alice1.waitForTextElementToBePresent(new MessageBody(alice1, replyMessage));
   // Close app and server
   await closeApp(alice1, bob1);
 }

@@ -2,7 +2,7 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ConversationHeaderName } from './locators/conversation';
+import { ConversationHeaderName, MessageBody } from './locators/conversation';
 import { ConversationItem } from './locators/home';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -35,31 +35,15 @@ async function restoreGroup(platform: SupportedPlatformsType, testInfo: TestInfo
   await device4.waitForTextElementToBePresent(new ConversationHeaderName(device4, testGroupName));
   // Check all messages are present
   await Promise.all([
-    device4.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: aliceMessage,
-    }),
-    device4.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: bobMessage,
-    }),
-    device4.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: charlieMessage,
-    }),
+    device4.waitForTextElementToBePresent(new MessageBody(device4, aliceMessage)),
+    device4.waitForTextElementToBePresent(new MessageBody(device4, bobMessage)),
+    device4.waitForTextElementToBePresent(new MessageBody(device4, charlieMessage)),
   ]);
   const testMessage2 = 'Checking that message input is working';
   await device4.sendMessage(testMessage2);
   await Promise.all(
     [device1, device2, device3].map(device =>
-      device.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Message body',
-        text: testMessage2,
-      })
+      device.waitForTextElementToBePresent(new MessageBody(device, testMessage2))
     )
   );
   await closeApp(device1, device2, device3, device4);

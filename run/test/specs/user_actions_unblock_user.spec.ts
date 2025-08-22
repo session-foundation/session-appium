@@ -3,7 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { BlockUser, BlockUserConfirmationModal } from './locators';
-import { BlockedBanner, ConversationSettings } from './locators/conversation';
+import { BlockedBanner, ConversationSettings, MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { SupportedPlatformsType } from './utils/open_app';
 
@@ -50,10 +50,8 @@ async function unblockUser(platform: SupportedPlatformsType, testInfo: TestInfo)
   // Send message from Blocked User
   await bob1.sendMessage(blockedMessage);
   await alice1.verifyElementNotPresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: blockedMessage,
-    maxWait: 5000,
+    ...new MessageBody(alice1, blockedMessage).build(),
+    maxWait: 5_000,
   });
   // Now that user is blocked, unblock them
   await alice1.clickOnElementAll(new BlockedBanner(alice1));

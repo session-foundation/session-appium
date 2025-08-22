@@ -3,6 +3,7 @@ import { test, type TestInfo } from '@playwright/test';
 import { testCommunityLink, testCommunityName } from '../../constants/community';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
+import { MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { joinCommunity } from './utils/join_community';
@@ -30,9 +31,7 @@ async function sendImageCommunity(platform: SupportedPlatformsType, testInfo: Te
   const testImageMessage = `Image message + ${new Date().getTime()} - ${platform}`;
   await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
     await Promise.all(
-      [alice1, bob1].map(async device => {
-        await joinCommunity(device, testCommunityLink, testCommunityName);
-      })
+      [alice1, bob1].map(device => joinCommunity(device, testCommunityLink, testCommunityName))
     );
   });
   await test.step(TestSteps.SEND.IMAGE, async () => {
@@ -43,13 +42,8 @@ async function sendImageCommunity(platform: SupportedPlatformsType, testInfo: Te
     await bob1.scrollToBottom();
     await bob1.onAndroid().trustAttachments(testCommunityName);
     await bob1.onAndroid().scrollToBottom(); // Trusting attachments scrolls the viewport up a bit so gotta scroll to bottom again
-    await bob1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: testImageMessage,
-    });
+    await bob1.waitForTextElementToBePresent(new MessageBody(bob1, testImageMessage));
   });
-
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, bob1);
   });

@@ -2,6 +2,7 @@ import type { TestInfo } from '@playwright/test';
 
 import { longText } from '../../constants';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
+import { MessageBody } from './locators/conversation';
 import { ConversationItem } from './locators/home';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
@@ -62,11 +63,7 @@ async function sendLongMessageAndroid(platform: SupportedPlatformsType, testInfo
   // Reply to message (User B to User A)
   const sentMessage = await bob1.replyToMessage(alice, longText);
   // Check reply came through on alice1
-  await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: sentMessage,
-  });
+  await alice1.waitForTextElementToBePresent(new MessageBody(alice1, sentMessage));
   // Close app
   await closeApp(alice1, bob1);
 }

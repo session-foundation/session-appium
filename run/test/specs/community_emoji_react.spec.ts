@@ -50,9 +50,9 @@ async function sendEmojiReactionCommunity(platform: SupportedPlatformsType, test
   });
   await test.step(TestSteps.VERIFY.EMOJI_REACT, async () => {
     await Promise.all(
-      [alice1, bob1].map(async device => {
-        await device.waitForTextElementToBePresent(new EmojiReactsPill(device));
-      })
+      [alice1, bob1].map(device =>
+        device.waitForTextElementToBePresent(new EmojiReactsPill(device))
+      )
     );
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

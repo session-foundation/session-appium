@@ -23,6 +23,25 @@ export class SendButton extends LocatorsInterface {
   }
 }
 
+export class MessageBody extends LocatorsInterface {
+  public text: string | undefined;
+  constructor(device: DeviceWrapper, text?: string) {
+    super(device);
+    this.text = text;
+  }
+  public build() {
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Message body',
+          text: this.text,
+        } as const;
+    }
+  }
+}
+
 export class ScrollToBottomButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
