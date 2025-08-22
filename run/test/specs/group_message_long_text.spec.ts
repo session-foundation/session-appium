@@ -12,6 +12,9 @@ bothPlatformsIt({
   countOfDevicesNeeded: 3,
   testCb: sendLongMessageGroup,
   allureDescription: 'Verifies that a long message can be sent to a group',
+  allureLinks: {
+    android: 'SES-4337',
+  },
 });
 
 async function sendLongMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {

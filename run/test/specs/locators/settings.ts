@@ -182,8 +182,9 @@ export class ConversationsMenuItem extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'Conversations',
+          strategy: '-android uiautomator',
+          selector:
+            'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().resourceId("Conversations"))',
         } as const;
       case 'ios':
         return {

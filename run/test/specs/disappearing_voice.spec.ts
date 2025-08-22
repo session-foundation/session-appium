@@ -1,7 +1,7 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { DISAPPEARING_TIMES } from '../../types/testing';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
@@ -36,7 +36,6 @@ async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType, tes
     strategy: 'accessibility id',
     selector: 'Voice message',
   });
-  await bob1.trustAttachments(USERNAME.ALICE);
   await Promise.all([
     alice1.hasElementBeenDeleted({
       strategy: 'accessibility id',
@@ -46,7 +45,7 @@ async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType, tes
     }),
     bob1.hasElementBeenDeleted({
       strategy: 'accessibility id',
-      selector: 'Voice message',
+      selector: 'Untrusted attachment message',
       maxWait,
       preventEarlyDeletion: true,
     }),
