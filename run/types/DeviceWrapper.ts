@@ -892,7 +892,7 @@ export class DeviceWrapper {
         }
       } catch (err) {
         // If matching fails for this element, log and continue to the next
-        this.warn(
+        this.info(
           `[matchAndTapImage] Matching failed for element ${i + 1}:`,
           err instanceof Error ? err.message : err
         );

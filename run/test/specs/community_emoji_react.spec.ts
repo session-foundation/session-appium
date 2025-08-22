@@ -2,14 +2,13 @@ import { test, type TestInfo } from '@playwright/test';
 
 import { testCommunityLink, testCommunityName } from '../../constants/community';
 import { TestSteps } from '../../types/allure';
-import { androidIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { EmojiReactsPill, FirstEmojiReact } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { joinCommunity } from './utils/join_community';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
-// Communities are too unreliable on iOS at the moment, see SES-4425
-androidIt({
+bothPlatformsIt({
   title: 'Send emoji react community',
   risk: 'medium',
   countOfDevicesNeeded: 2,
