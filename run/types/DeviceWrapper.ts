@@ -324,6 +324,15 @@ export class DeviceWrapper {
       { strategy: 'id' as Strategy, pattern: /resource-id="([^"]+)"/g },
     ];
 
+    // System locators such as 'network.loki.messenger.qa:id' can cause false positives with too high similarity scores
+    // Strip any known prefix patterns first
+    const stripPrefix = (id: string) => {
+      return id
+        .replace(/^[a-z]+\.[a-z]+\.[a-z]+(\.[a-z]+)?:id\//, '') // package:id/
+        .replace(/^com\.android\.[^:]+:id\//, '') // Android system
+        .replace(/^android:id\//, ''); // Android framework
+    };
+
     // Extract ALL identifiers from the page
     const allElements: Array<{ id: string; strategy: Strategy }> = [];
     for (const { strategy, pattern } of candidateStrategies) {
@@ -335,14 +344,21 @@ export class DeviceWrapper {
         });
       });
     }
+
+    // Map elements but KEEP the original
+    const searchableElements = allElements.map(el => ({
+      ...el,
+      originalId: el.id, // Keep the full ID
+      strippedId: stripPrefix(el.id), // Add stripped version for searching
+    }));
     // Fuzzy match potential candidates
-    const fuse = new Fuse(allElements, {
+    const fuse = new Fuse(searchableElements, {
       keys: ['id'],
       threshold,
       includeScore: true,
     });
 
-    const results = fuse.search(selector);
+    const results = fuse.search(stripPrefix(selector));
 
     if (results.length > 0 && results[0].score !== undefined && results[0].score < threshold) {
       const match = results[0].item;
@@ -360,7 +376,7 @@ export class DeviceWrapper {
         description: ` ${strategy} "${selector}" ➡ ${match.strategy} "${match.id}" (${confidence}% match)`,
       });
       return {
-        id: match.id,
+        id: match.originalId,
         strategy: match.strategy,
       };
     }
