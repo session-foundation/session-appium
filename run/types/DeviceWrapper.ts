@@ -310,7 +310,7 @@ export class DeviceWrapper {
   private async findBestMatch(
     strategy: Strategy,
     selector: string
-  ): Promise<{ id: string; strategy: Strategy } | null> {
+  ): Promise<{ strategy: Strategy; selector: string } | null> {
     const pageSource = await this.getPageSource();
     const threshold = 0.35; // 0.0 = exact, 1.0 = match anything
 
@@ -326,34 +326,35 @@ export class DeviceWrapper {
 
     // System locators such as 'network.loki.messenger.qa:id' can cause false positives with too high similarity scores
     // Strip any known prefix patterns first
-    const stripPrefix = (id: string) => {
-      return id
+    const stripPrefix = (selector: string) => {
+      return selector
         .replace(/^[a-z]+\.[a-z]+\.[a-z]+(\.[a-z]+)?:id\//, '') // package:id/
         .replace(/^com\.android\.[^:]+:id\//, '') // Android system
         .replace(/^android:id\//, ''); // Android framework
     };
 
     // Extract ALL identifiers from the page
-    const allElements: Array<{ id: string; strategy: Strategy }> = [];
+    const allElements: Array<{ strategy: Strategy; selector: string }> = [];
     for (const { strategy, pattern } of candidateStrategies) {
       const matches = [...pageSource.matchAll(pattern)];
       matches.forEach(m => {
         allElements.push({
-          id: m[1],
           strategy,
+          selector: m[1],
         });
       });
     }
 
-    // Map elements but KEEP the original
+    // Map elements but keep the original
     const searchableElements = allElements.map(el => ({
       ...el,
-      originalId: el.id, // Keep the full ID
-      strippedId: stripPrefix(el.id), // Add stripped version for searching
+      originalSelector: el.selector,
+      strippedSelector: stripPrefix(el.selector), // Stripped version for searching
     }));
+
     // Fuzzy match potential candidates
     const fuse = new Fuse(searchableElements, {
-      keys: ['id'],
+      keys: ['strippedSelector'],
       threshold,
       includeScore: true,
     });
@@ -365,19 +366,19 @@ export class DeviceWrapper {
       const confidence = ((1 - results[0].score) * 100).toFixed(2);
 
       // Sometimes the element is just not on screen yet - proceed.
-      if (match.id === selector && match.strategy === strategy) {
+      if (match.strategy === strategy && match.originalSelector === selector) {
         return null;
       }
-      this.warn(
-        `Original locator ${strategy} "${selector}" not found. Test healed with ${match.strategy} "${match.id}" (${confidence}% match)`
+      this.log(
+        `Original locator ${strategy} "${selector}" not found. Test healed with ${match.strategy} "${match.selector}" (${confidence}% match)`
       );
       this.testInfo.annotations.push({
         type: 'healed',
-        description: ` ${strategy} "${selector}" ➡ ${match.strategy} "${match.id}" (${confidence}% match)`,
+        description: ` ${strategy} "${selector}" ➡ ${match.strategy} "${match.selector}" (${confidence}% match)`,
       });
       return {
-        id: match.originalId,
         strategy: match.strategy,
+        selector: match.originalSelector,
       };
     }
 
@@ -401,7 +402,7 @@ export class DeviceWrapper {
       if (best) {
         return await (this.toShared().findElement(
           best.strategy,
-          best.id
+          best.selector
         ) as Promise<AppiumNextElementType>);
       }
 
@@ -423,6 +424,7 @@ export class DeviceWrapper {
       throw new Error('No elements found');
     } catch {
       // Only try healing for id/accessibility id selectors
+      // In the future we can think about extracting values from XPATH etc.
       if (strategy !== 'accessibility id' && strategy !== 'id') {
         return [];
       }
@@ -431,7 +433,7 @@ export class DeviceWrapper {
 
       if (best) {
         try {
-          return await (this.toShared().findElements(best.strategy, best.id) as Promise<
+          return await (this.toShared().findElements(best.strategy, best.selector) as Promise<
             Array<AppiumNextElementType>
           >);
         } catch {
