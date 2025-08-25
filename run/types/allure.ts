@@ -25,7 +25,7 @@ export type AllureSuiteConfig =
   | { parent: 'In-App Review Prompt'; suite: 'Flows' | 'Triggers' }
   | { parent: 'Linkouts' }
   | { parent: 'New Conversation'; suite: 'Join Community' | 'New Message' }
-  | { parent: 'Sending Messages'; suite: 'Sending Attachments' }
+  | { parent: 'Sending Messages'; suite: 'Attachments' | 'Emoji reacts' }
   | { parent: 'Settings'; suite: 'App Disguise' }
   | {
       parent: 'User Actions';
@@ -68,17 +68,22 @@ export const TestSteps = {
   },
   // Sending things
   SEND: {
+    MESSAGE: (sender: UserNameType, recipient: string) =>
+      `${sender} sends a message to ${recipient}`,
     LINK: 'Send Link',
     IMAGE: 'Send Image',
+    EMOJI_REACT: `Send an emoji react`,
   },
   // Open/Navigate steps
   OPEN: {
     UPDATE_GROUP_INFO: `Open 'Update Group Information' modal`,
     PATH: 'Open Path screen',
+    APPEARANCE: 'Open Appearance settings',
   },
   // User Actions
   USER_ACTIONS: {
     CHANGE_PROFILE_PICTURE: 'Change profile picture',
+    APP_DISGUISE: 'Set App Disguise',
   },
   // Disappearing Messages
   DISAPPEARING_MESSAGES: {
@@ -90,6 +95,8 @@ export const TestSteps = {
   },
   // Verify steps
   VERIFY: {
+    ELEMENT_SCREENSHOT: (elementDesc: string) =>
+      `Verify ${elementDesc} element screenshot matches baseline`,
     GENERIC_MODAL: 'Verify modal strings',
     SPECIFIC_MODAL: (modalDesc: string) => `Verify ${modalDesc} modal strings`,
     MESSAGE_RECEIVED: 'Verify message has been received',
@@ -99,5 +106,6 @@ export const TestSteps = {
     MISSED_CALL: 'Verify missed call',
     NICKNAME_CHANGED: (context: string) => `Verify nickname changed in/on ${context}`,
     PROFILE_PICTURE_CHANGED: 'Verify profile picture has been changed',
+    EMOJI_REACT: 'Verify emoji react appears for everyone',
   },
 };

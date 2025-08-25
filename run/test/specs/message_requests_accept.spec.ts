@@ -3,7 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { MessageRequestsBanner } from './locators/home';
+import { ConversationItem, MessageRequestsBanner } from './locators/home';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
@@ -45,18 +45,11 @@ async function acceptRequest(platform: SupportedPlatformsType, testInfo: TestInf
   // Check conversation list for new contact (user A)
   await device2.navigateBack();
   await device2.onAndroid().navigateBack(false);
-  await Promise.all([
-    device2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: alice.userName,
-    }),
-    device3.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: alice.userName,
-    }),
-  ]);
+  await Promise.all(
+    [device2, device3].map(device =>
+      device.waitForTextElementToBePresent(new ConversationItem(device, alice.userName))
+    )
+  );
   // Close app
   await closeApp(device1, device2, device3);
 }

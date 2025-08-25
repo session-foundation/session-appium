@@ -2,6 +2,7 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
+import { MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
@@ -44,10 +45,8 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
     await Promise.all(
       [alice1, bob1, charlie1].map(device =>
         device.hasElementBeenDeleted({
-          strategy: 'accessibility id',
-          selector: 'Message body',
+          ...new MessageBody(device, testMessage).build(),
           maxWait,
-          text: testMessage,
           preventEarlyDeletion: true,
         })
       )

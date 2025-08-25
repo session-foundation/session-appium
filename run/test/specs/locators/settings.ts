@@ -44,6 +44,23 @@ export class UserSettings extends LocatorsInterface {
   }
 }
 
+export class UserAvatar extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'User settings',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'User settings',
+        } as const;
+    }
+  }
+}
+
 export class RecoveryPasswordMenuItem extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -117,7 +134,7 @@ export class SaveNameChangeButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Save',
+          selector: 'update-username-confirm-button',
         } as const;
       case 'ios':
         return {
@@ -165,8 +182,9 @@ export class ConversationsMenuItem extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'Conversations',
+          strategy: '-android uiautomator',
+          selector:
+            'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().resourceId("Conversations"))',
         } as const;
       case 'ios':
         return {
@@ -182,8 +200,9 @@ export class AppearanceMenuItem extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'Appearance',
+          strategy: '-android uiautomator',
+          selector:
+            'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().resourceId("Appearance"))',
         } as const;
       case 'ios':
         return {
@@ -199,8 +218,9 @@ export class SelectAppIcon extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/system_settings_app_icon',
+          strategy: '-android uiautomator',
+          selector:
+            'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().text("Select app icon"))',
         } as const;
       case 'ios':
         return {
@@ -235,8 +255,10 @@ export class AppDisguiseMeetingIcon extends LocatorsInterface {
           selector: 'MeetingSE option',
         } as const;
       case 'ios':
-        // NOTE see SES-3809
-        throw new Error('No locators implemented for iOS');
+        return {
+          strategy: 'accessibility id',
+          selector: 'Meetings option',
+        } as const;
     }
   }
 }
@@ -277,8 +299,9 @@ export class PathMenuItem extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'xpath',
-          selector: `//android.widget.TextView[@text="Path"]`,
+          strategy: '-android uiautomator',
+          selector:
+            'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().resourceId("path-menu-item"))',
         } as const;
       case 'ios':
         return {

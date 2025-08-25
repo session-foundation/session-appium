@@ -1,6 +1,7 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
+import { MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
@@ -25,11 +26,7 @@ async function mentionsForGroups(platform: SupportedPlatformsType, testInfo: Tes
 
   await alice1.mentionContact(platform, bob);
   // Check format on User B's device
-  await bob1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: `@You`,
-  });
+  await bob1.waitForTextElementToBePresent(new MessageBody(bob1, '@You'));
   // await device2.findMessageWithBody(`@You`);
   // Bob to Select User C
   await bob1.mentionContact(platform, charlie);

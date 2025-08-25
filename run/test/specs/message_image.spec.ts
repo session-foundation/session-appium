@@ -1,6 +1,7 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
+import { MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
@@ -26,19 +27,10 @@ async function sendImage(platform: SupportedPlatformsType, testInfo: TestInfo) {
   await alice1.sendImage(testMessage);
   // Trust message on device 2 (bob)
   await bob1.trustAttachments(alice.userName);
-  await bob1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: testMessage,
-  });
+  await bob1.waitForTextElementToBePresent(new MessageBody(bob1, testMessage));
   // Reply to message (on device 2 - Bob)
   const replyMessage = await bob1.replyToMessage(bob, testMessage);
-  await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: replyMessage,
-  });
-
+  await alice1.waitForTextElementToBePresent(new MessageBody(alice1, replyMessage));
   // Close app and server
   await closeApp(alice1, bob1);
 }

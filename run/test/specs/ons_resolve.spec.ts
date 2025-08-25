@@ -42,7 +42,7 @@ async function resolveONS(platform: SupportedPlatformsType, testInfo: TestInfo) 
   });
   await test.step(`Verify ONS resolution to pubkey '${expectedPubkey}'`, async () => {
     await device.waitForTextElementToBePresent({
-      ...new ConversationHeaderName(device).build(expectedPubkey),
+      ...new ConversationHeaderName(device, expectedPubkey).build(),
       maxWait: 5_000,
     });
   });

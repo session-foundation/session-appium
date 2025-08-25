@@ -6,7 +6,12 @@ import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { LinkPreview, LinkPreviewMessage } from './locators';
-import { MessageInput, OutgoingMessageStatusSent, SendButton } from './locators/conversation';
+import {
+  MessageBody,
+  MessageInput,
+  OutgoingMessageStatusSent,
+  SendButton,
+} from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -72,10 +77,8 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
     await Promise.all(
       [alice1, bob1].map(device =>
         device.hasElementBeenDeleted({
-          strategy: 'accessibility id',
-          selector: 'Message body',
+          ...new MessageBody(device, testLink).build(),
           maxWait,
-          text: testLink,
           preventEarlyDeletion: true,
         })
       )

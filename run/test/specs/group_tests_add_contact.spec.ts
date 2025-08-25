@@ -68,8 +68,7 @@ async function addContactToGroup(platform: SupportedPlatformsType, testInfo: Tes
   await unknown1.navigateBack();
   // Leave Message Requests screen (Android)
   await unknown1.onAndroid().navigateBack();
-  await unknown1.selectByText('Conversation list item', group.groupName);
-  // Check for control message on device 4
+  await unknown1.clickOnElementAll(new ConversationItem(unknown1, group.groupName)); // Check for control message on device 4
   await unknown1.waitForControlMessageToBePresent(englishStrippedStr('groupInviteYou').toString());
   await closeApp(alice1, bob1, charlie1, unknown1);
 }

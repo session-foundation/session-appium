@@ -2,6 +2,7 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES, DisappearModes } from '../../types/testing';
+import { MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { checkDisappearingControlMessage } from './utils/disappearing_control_messages';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -53,21 +54,15 @@ async function disappearAfterSend(platform: SupportedPlatformsType, testInfo: Te
   // Send message to verify that deletion is working
   await alice1.sendMessage(testMessage);
   // Wait for message to disappear
-  await Promise.all([
-    alice1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: testMessage,
-      maxWait,
-      preventEarlyDeletion: true,
-    }),
-    bob1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: testMessage,
-      maxWait,
-    }),
-  ]);
+  await Promise.all(
+    [alice1, bob1].map(device =>
+      device.hasElementBeenDeleted({
+        ...new MessageBody(device, testMessage).build(),
+        maxWait,
+        preventEarlyDeletion: true,
+      })
+    )
+  );
 
   // Great success
   await closeApp(alice1, bob1);

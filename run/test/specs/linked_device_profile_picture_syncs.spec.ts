@@ -26,10 +26,10 @@ async function avatarRestored(platform: SupportedPlatformsType, testInfo: TestIn
   } = await open_Alice2({ platform, testInfo });
   await alice1.uploadProfilePicture();
   await test.step(TestSteps.VERIFY.PROFILE_PICTURE_CHANGED, async () => {
-    await alice2.waitForElementColorMatch(new UserSettings(alice2), expectedPixelHexColor, {
-      maxWait: 20_000,
-      elementTimeout: 500,
-    });
+    await alice2.waitForElementColorMatch(
+      { ...new UserSettings(alice2).build(), maxWait: 20_000 },
+      expectedPixelHexColor
+    );
   });
   await closeApp(alice1, alice2);
 }

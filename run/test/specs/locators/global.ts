@@ -1,3 +1,4 @@
+import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { LocatorsInterface } from './index';
 
 export class ModalHeading extends LocatorsInterface {
@@ -61,17 +62,24 @@ export class EnableLinkPreviewsModalButton extends LocatorsInterface {
 }
 
 export class Contact extends LocatorsInterface {
+  public text: string | undefined;
+  constructor(device: DeviceWrapper, text?: string) {
+    super(device);
+    this.text = text;
+  }
   public build() {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Contact',
+          selector: 'pro-badge-text',
+          text: this.text,
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Contact',
+          text: this.text,
         } as const;
     }
   }
@@ -106,6 +114,30 @@ export class DenyPermissionLocator extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'Don’t Allow',
+        } as const;
+    }
+  }
+}
+
+export class AccountIDDisplay extends LocatorsInterface {
+  public text: string | undefined;
+  constructor(device: DeviceWrapper, text?: string) {
+    super(device);
+    this.text = text;
+  }
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Account ID',
+          text: this.text,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Account ID',
+          text: this.text,
         } as const;
     }
   }

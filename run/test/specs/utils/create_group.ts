@@ -1,6 +1,7 @@
 import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { Group, GROUPNAME, User } from '../../../types/testing';
+import { MessageBody } from '../locators/conversation';
 import { Contact } from '../locators/global';
 import { CreateGroupButton, GroupNameInput } from '../locators/groups';
 import { ConversationItem, PlusButton } from '../locators/home';
@@ -84,45 +85,24 @@ export const createGroup = async (
   // Send message from User A to group to verify all working
   await device1.sendMessage(aliceMessage);
   // Did the other devices receive alice's message?
-  await Promise.all([
-    device2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: aliceMessage,
-    }),
-    device3.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: aliceMessage,
-    }),
-  ]);
+  await Promise.all(
+    [device2, device3].map(device =>
+      device.waitForTextElementToBePresent(new MessageBody(device, aliceMessage))
+    )
+  );
   // Send message from User B to group
   await device2.sendMessage(bobMessage);
-  await Promise.all([
-    device1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: bobMessage,
-    }),
-    device3.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: bobMessage,
-    }),
-  ]);
+  await Promise.all(
+    [device1, device3].map(device =>
+      device.waitForTextElementToBePresent(new MessageBody(device, bobMessage))
+    )
+  );
   // Send message to User C to group
   await device3.sendMessage(charlieMessage);
-  await Promise.all([
-    device1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: charlieMessage,
-    }),
-    device2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: charlieMessage,
-    }),
-  ]);
+  await Promise.all(
+    [device1, device2].map(device =>
+      device.waitForTextElementToBePresent(new MessageBody(device, charlieMessage))
+    )
+  );
   return { userName, userOne, userTwo, userThree };
 };
