@@ -1975,8 +1975,7 @@ export class DeviceWrapper {
     }
     await this.checkModalStrings(
       englishStrippedStr('giphyWarning').toString(),
-      englishStrippedStr('giphyWarningDescription').toString(),
-      false
+      englishStrippedStr('giphyWarningDescription').toString()
     );
     await this.clickOnByAccessibilityID('Continue', 5000);
     await this.clickOnElementAll(new FirstGif(this));
@@ -2096,8 +2095,7 @@ export class DeviceWrapper {
       englishStrippedStr(`attachmentsAutoDownloadModalTitle`).toString(),
       englishStrippedStr(`attachmentsAutoDownloadModalDescription`)
         .withArgs({ conversation_name: conversationName })
-        .toString(),
-      false
+        .toString()
     );
     await this.clickOnElementAll(new DownloadMediaButton(this));
   }
@@ -2366,13 +2364,7 @@ export class DeviceWrapper {
     return;
   }
 
-  public async checkModalStrings(
-    expectedHeading: string,
-    expectedDescription: string,
-    newAndroid: boolean = true
-  ) {
-    const useNewLocator = this.isIOS() || newAndroid;
-
+  public async checkModalStrings(expectedHeading: string, expectedDescription: string) {
     // Sanitize
     function removeNewLines(input: string): string {
       // Handle space + newlines as a unit
@@ -2380,29 +2372,10 @@ export class DeviceWrapper {
     }
 
     // Locators
-    const newHeading = new ModalHeading(this).build();
-    const legacyHeading = {
-      strategy: 'accessibility id',
-      selector: 'Modal heading',
-    } as StrategyExtractionObj;
-
-    const newDescription = new ModalDescription(this).build();
-    const legacyDescription = {
-      strategy: 'accessibility id',
-      selector: 'Modal description',
-    } as StrategyExtractionObj;
-
-    // Pick locator priority based on platform
-    const [headingPrimary, headingFallback] = useNewLocator
-      ? [newHeading, legacyHeading]
-      : [legacyHeading, newHeading];
-
-    const [descPrimary, descFallback] = useNewLocator
-      ? [newDescription, legacyDescription]
-      : [legacyDescription, newDescription];
+    const elHeading = await this.waitForTextElementToBePresent(new ModalHeading(this));
+    const elDescription = await this.waitForTextElementToBePresent(new ModalDescription(this));
 
     // Modal Heading
-    const elHeading = await this.findWithFallback(headingPrimary, headingFallback);
     const actualHeading = removeNewLines(await this.getTextFromElement(elHeading));
     if (expectedHeading === actualHeading) {
       this.log('Modal heading is correct');
@@ -2411,8 +2384,8 @@ export class DeviceWrapper {
         `Modal heading is incorrect.\nExpected: ${expectedHeading}\nActual: ${actualHeading}`
       );
     }
+
     // Modal Description
-    const elDescription = await this.findWithFallback(descPrimary, descFallback);
     const actualDescription = removeNewLines(await this.getTextFromElement(elDescription));
     if (expectedDescription === actualDescription) {
       this.log('Modal description is correct');
