@@ -312,7 +312,7 @@ export class DeviceWrapper {
     selector: string
   ): Promise<{ id: string; strategy: Strategy } | null> {
     const pageSource = await this.getPageSource();
-    const threshold = 0.4; // 0.0 = exact, 1.0 = match anything
+    const threshold = 0.35; // 0.0 = exact, 1.0 = match anything
 
     // Identify common element patterns and map them to our strategies
     const candidateStrategies = [
