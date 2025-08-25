@@ -393,6 +393,7 @@ export class DeviceWrapper {
       ) as Promise<AppiumNextElementType>);
     } catch (originalError) {
       // Only try healing for id/accessibility id selectors
+      // In the future we can think about extracting values from XPATH etc.
       if (strategy !== 'accessibility id' && strategy !== 'id') {
         throw originalError;
       }

@@ -24,7 +24,7 @@ const allureReporter: ReporterDescription = [
     resultsDir: allureResultsDir,
     categories: [
       {
-        name: 'Self-healed tests',
+        name: 'Self-healed tests', // Custom category to group healed tests for better visibility
         messageRegex: '.*healed.*',
       },
     ],
