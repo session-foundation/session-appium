@@ -31,7 +31,7 @@ export const openAppMultipleDevices = async (
 ): Promise<DeviceWrapper[]> => {
   // Create an array of promises for each device
   const devicePromises = Array.from({ length: numberOfDevices }, (_, index) =>
-    openAppOnPlatform(platform, index as CapabilitiesIndexType)
+    openAppOnPlatform(platform, index as CapabilitiesIndexType, testInfo)
   );
 
   // Use Promise.all to wait for all device apps to open
@@ -47,12 +47,15 @@ export const openAppMultipleDevices = async (
 
 const openAppOnPlatform = async (
   platform: SupportedPlatformsType,
-  capabilitiesIndex: CapabilitiesIndexType
+  capabilitiesIndex: CapabilitiesIndexType,
+  testInfo: TestInfo
 ): Promise<{
   device: DeviceWrapper;
 }> => {
   console.info('starting capabilitiesIndex', capabilitiesIndex, platform);
-  return platform === 'ios' ? openiOSApp(capabilitiesIndex) : openAndroidApp(capabilitiesIndex);
+  return platform === 'ios'
+    ? openiOSApp(capabilitiesIndex, testInfo)
+    : openAndroidApp(capabilitiesIndex, testInfo);
 };
 
 export const openAppOnPlatformSingleDevice = async (
@@ -61,7 +64,7 @@ export const openAppOnPlatformSingleDevice = async (
 ): Promise<{
   device: DeviceWrapper;
 }> => {
-  const result = await openAppOnPlatform(platform, 0);
+  const result = await openAppOnPlatform(platform, 0, testInfo);
 
   registerDevicesForTest(testInfo, [result.device], platform);
 
@@ -76,8 +79,8 @@ export const openAppTwoDevices = async (
   device2: DeviceWrapper;
 }> => {
   const [app1, app2] = await Promise.all([
-    openAppOnPlatform(platform, 0),
-    openAppOnPlatform(platform, 1),
+    openAppOnPlatform(platform, 0, testInfo),
+    openAppOnPlatform(platform, 1, testInfo),
   ]);
 
   const result = { device1: app1.device, device2: app2.device };
@@ -96,9 +99,9 @@ export const openAppThreeDevices = async (
   device3: DeviceWrapper;
 }> => {
   const [app1, app2, app3] = await Promise.all([
-    openAppOnPlatform(platform, 0),
-    openAppOnPlatform(platform, 1),
-    openAppOnPlatform(platform, 2),
+    openAppOnPlatform(platform, 0, testInfo),
+    openAppOnPlatform(platform, 1, testInfo),
+    openAppOnPlatform(platform, 2, testInfo),
   ]);
 
   const result = {
@@ -122,10 +125,10 @@ export const openAppFourDevices = async (
   device4: DeviceWrapper;
 }> => {
   const [app1, app2, app3, app4] = await Promise.all([
-    openAppOnPlatform(platform, 0),
-    openAppOnPlatform(platform, 1),
-    openAppOnPlatform(platform, 2),
-    openAppOnPlatform(platform, 3),
+    openAppOnPlatform(platform, 0, testInfo),
+    openAppOnPlatform(platform, 1, testInfo),
+    openAppOnPlatform(platform, 2, testInfo),
+    openAppOnPlatform(platform, 3, testInfo),
   ]);
 
   const result = {
@@ -204,7 +207,8 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
 }
 
 const openAndroidApp = async (
-  capabilitiesIndex: CapabilitiesIndexType
+  capabilitiesIndex: CapabilitiesIndexType,
+  testInfo: TestInfo
 ): Promise<{
   device: DeviceWrapper;
 }> => {
@@ -254,7 +258,7 @@ const openAndroidApp = async (
   const device = new AndroidUiautomator2Driver(opts);
   const udid = getAndroidUdid(actualCapabilitiesIndex);
   console.log(`udid: ${udid}`);
-  const wrappedDevice = new DeviceWrapper(device, udid);
+  const wrappedDevice = new DeviceWrapper(device, udid, testInfo);
 
   await runScriptAndLog(`${getAdbFullPath()} -s ${targetName} shell settings put global heads_up_notifications_enabled 0
     `);
@@ -277,7 +281,8 @@ const openAndroidApp = async (
 };
 
 const openiOSApp = async (
-  capabilitiesIndex: CapabilitiesIndexType
+  capabilitiesIndex: CapabilitiesIndexType,
+  testInfo: TestInfo
 ): Promise<{
   device: DeviceWrapper;
 }> => {
@@ -294,7 +299,7 @@ const openiOSApp = async (
   const capabilities = getIosCapabilities(actualCapabilitiesIndex as CapabilitiesIndexType);
   const udid = capabilities.alwaysMatch['appium:udid'] as string;
 
-  const { device: wrappedDevice } = await cleanPermissions(opts, udid, capabilities);
+  const { device: wrappedDevice } = await cleanPermissions(opts, udid, capabilities, testInfo);
   return { device: wrappedDevice };
 };
 

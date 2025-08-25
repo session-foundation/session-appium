@@ -46,8 +46,7 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
     await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('noteToSelfHide').toString(),
-        englishStrippedStr('hideNoteToSelfDescription').toString(), // This one fails on iOS, see SES-4144
-        false
+        englishStrippedStr('hideNoteToSelfDescription').toString() // This one fails on iOS, see SES-4144
       );
     });
     await alice1.clickOnByAccessibilityID('Hide');

@@ -33,8 +33,7 @@ async function unblockUser(platform: SupportedPlatformsType, testInfo: TestInfo)
   await alice1.clickOnElementAll(new BlockUser(alice1));
   await alice1.checkModalStrings(
     englishStrippedStr('block').toString(),
-    englishStrippedStr('blockDescription').withArgs({ name: bob.userName }).toString(),
-    true
+    englishStrippedStr('blockDescription').withArgs({ name: bob.userName }).toString()
   );
   await alice1.clickOnElementAll(new BlockUserConfirmationModal(alice1));
   await alice1.navigateBack();
@@ -59,8 +58,7 @@ async function unblockUser(platform: SupportedPlatformsType, testInfo: TestInfo)
   await alice1.clickOnElementAll(new BlockedBanner(alice1));
   await alice1.checkModalStrings(
     englishStrippedStr('blockUnblock').toString(),
-    englishStrippedStr('blockUnblockName').withArgs({ name: bob.userName }).toString(),
-    false
+    englishStrippedStr('blockUnblockName').withArgs({ name: bob.userName }).toString()
   );
   await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Unblock' });
   await alice1.verifyElementNotPresent({ ...new BlockedBanner(alice1).build(), maxWait: 2000 });

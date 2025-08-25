@@ -47,8 +47,7 @@ async function deleteConversation(platform: SupportedPlatformsType, testInfo: Te
         englishStrippedStr('conversationsDelete').toString(),
         englishStrippedStr('deleteConversationDescription')
           .withArgs({ name: USERNAME.BOB })
-          .toString(),
-        false
+          .toString()
       );
     });
     await alice1.clickOnByAccessibilityID('Delete');

@@ -166,8 +166,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: Test
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('enable calls permission'), async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('callsPermissionsRequired').toString(),
-        englishStrippedStr('callsPermissionsRequiredDescription').toString(),
-        false
+        englishStrippedStr('callsPermissionsRequiredDescription').toString()
       );
       await alice1.clickOnElementAll({
         strategy: 'accessibility id',
@@ -177,8 +176,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: Test
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('beta calls'), async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('callsVoiceAndVideoBeta').toString(),
-        englishStrippedStr('callsVoiceAndVideoModalDescription').toString(),
-        false
+        englishStrippedStr('callsVoiceAndVideoModalDescription').toString()
       );
       await alice1.clickOnByAccessibilityID('Enable');
     });
@@ -188,8 +186,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: Test
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('notifications permission'), async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('sessionNotifications').toString(),
-        englishStrippedStr('callsNotificationsRequired').toString(),
-        false
+        englishStrippedStr('callsNotificationsRequired').toString()
       );
       await alice1.clickOnElementAll(new NotificationSettings(alice1));
       await alice1.clickOnElementAll(new NotificationSwitch(alice1));
