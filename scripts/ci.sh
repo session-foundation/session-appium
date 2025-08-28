@@ -10,6 +10,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     API_LEVEL="35"
     ANDROID_CMD="commandlinetools-mac-13114758_latest.zip"
     EMULATOR_BIN="emulator"
+    TARGET="google_apis"  # Mac ARM doesn't have playstore variant
 else
     # Linux settings
     ARCH="x86_64"
@@ -17,11 +18,12 @@ else
     API_LEVEL="34"
     ANDROID_CMD="commandlinetools-linux-13114758_latest.zip"
     EMULATOR_BIN="emulator"
+    TARGET="google_apis_playstore"  # Linux can use playstore
 fi
+
 
 # Derive build tools version from API level
 BUILD_TOOLS="${API_LEVEL}.0.0"
-TARGET="google_apis_playstore"
 ANDROID_ARCH=${ANDROID_ARCH_DEFAULT}
 ANDROID_API_LEVEL="android-${API_LEVEL}"
 ANDROID_APIS="${TARGET};${ARCH}"
@@ -47,12 +49,31 @@ function create_emulators() {
     sudo rm -rf $ANDROID_SDK_ROOT
 
     sudo mkdir -p $ANDROID_SDK_ROOT
-    sudo chown $USER:$USER $ANDROID_SDK_ROOT
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        sudo chown $USER:staff $ANDROID_SDK_ROOT
+    else
+        sudo chown $USER:$USER $ANDROID_SDK_ROOT
+    fi
+    # Download the SDK tools
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        curl -L -o /tmp/${ANDROID_CMD} https://dl.google.com/android/repository/${ANDROID_CMD}
+    else
+        wget https://dl.google.com/android/repository/${ANDROID_CMD} -P /tmp
+    fi
 
-    wget https://dl.google.com/android/repository/${ANDROID_CMD} -P /tmp && \
-                unzip -d $ANDROID_SDK_ROOT /tmp/$ANDROID_CMD && \
-                mkdir -p $ANDROID_SDK_ROOT/cmdline-tools/tools && cd $ANDROID_SDK_ROOT/cmdline-tools &&  mv NOTICE.txt source.properties bin lib tools/  && \
-                cd $ANDROID_SDK_ROOT/cmdline-tools/tools && ls
+    # Check if download succeeded
+    if [[ ! -f /tmp/${ANDROID_CMD} ]]; then
+        echo "Failed to download Android SDK tools"
+        return 1
+    fi
+
+    # Extract and setup
+    unzip -d $ANDROID_SDK_ROOT /tmp/$ANDROID_CMD && \
+    mkdir -p $ANDROID_SDK_ROOT/cmdline-tools/tools && \
+    cd $ANDROID_SDK_ROOT/cmdline-tools && \
+    mv NOTICE.txt source.properties bin lib tools/ && \
+    cd $ANDROID_SDK_ROOT/cmdline-tools/tools && \
+    ls
 
     yes Y | sdkmanager --licenses
     yes Y | sdkmanager --verbose --no_https ${ANDROID_SDK_PACKAGES}
