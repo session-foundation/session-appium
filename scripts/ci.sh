@@ -6,11 +6,12 @@ set -x
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # Mac settings
     ARCH="arm64-v8a"
-    EMULATOR_COUNT=9
+    EMULATOR_COUNT=6
     API_LEVEL="35"
     ANDROID_CMD="commandlinetools-mac-13114758_latest.zip"
     EMULATOR_BIN="emulator"
-    TARGET="google_apis"  # Mac ARM doesn't have playstore variant
+    TARGET="google_apis_playstore"  # Mac ARM doesn't have playstore variant
+    ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-"$HOME/Android/sdk"}
 else
     # Linux settings
     ARCH="x86_64"
@@ -19,6 +20,7 @@ else
     ANDROID_CMD="commandlinetools-linux-13114758_latest.zip"
     EMULATOR_BIN="emulator"
     TARGET="google_apis_playstore"  # Linux can use playstore
+    ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-"/opt/android"}
 fi
 
 
@@ -31,7 +33,7 @@ EMULATOR_PACKAGE="system-images;${ANDROID_API_LEVEL};${ANDROID_APIS}"
 PLATFORM_VERSION="platforms;${ANDROID_API_LEVEL}"
 BUILD_TOOL="build-tools;${BUILD_TOOLS}"
 export ANDROID_SDK_PACKAGES="${EMULATOR_PACKAGE} ${PLATFORM_VERSION} ${BUILD_TOOL} platform-tools"
-export ANDROID_SDK_ROOT=/opt/android
+export ANDROID_SDK_ROOT
 
 export PATH="$PATH:$ANDROID_SDK_ROOT/cmdline-tools/tools:$ANDROID_SDK_ROOT/cmdline-tools/tools/bin:$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/tools/bin:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/build-tools/${BUILD_TOOLS}:$ANDROID_SDK_ROOT/platform-tools/"
 export EMULATOR_DEVICE="pixel_6" # all emulators are created with the pixel 6 spec for now
@@ -107,8 +109,8 @@ function start_for_snapshots() {
     for i in $(seq 1 $EMULATOR_COUNT)
     do
         if [[ "$OSTYPE" == "darwin"* ]]; then
-            # Mac: Headless
-            $EMULATOR_BIN @emulator$i -no-window -no-snapshot-load &
+            # Mac: Not headless
+            $EMULATOR_BIN @emulator$i -no-snapshot-load &
         else
             # Linux: Keep as-is with display
             DISPLAY=:0 $EMULATOR_BIN @emulator$i -gpu host -accel on -no-snapshot-load &
@@ -130,7 +132,7 @@ function force_save_snapshots() {
 
 function killall_emulators() {
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        killall qemu-system-aarch64 2>/dev/null || true
+        killall qemu-system-aarch64-headless 2>/dev/null || true
     else
         killall qemu-system-x86_64 2>/dev/null || true
     fi
