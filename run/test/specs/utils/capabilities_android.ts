@@ -35,6 +35,7 @@ const emulator5Udid = 'emulator-5562';
 const emulator6Udid = 'emulator-5564';
 const emulator7Udid = 'emulator-5566';
 const emulator8Udid = 'emulator-5568';
+const emulator9Udid = 'emulator-5570';
 
 const udids = [
   emulator1Udid,
@@ -45,6 +46,7 @@ const udids = [
   emulator6Udid,
   emulator7Udid,
   emulator8Udid,
+  emulator9Udid,
 ];
 
 const emulatorCapabilities: AppiumCapabilities[] = udids.map(udid => ({
@@ -61,6 +63,7 @@ const emulatorCapabilities5 = emulatorCapabilities[4];
 const emulatorCapabilities6 = emulatorCapabilities[5];
 const emulatorCapabilities7 = emulatorCapabilities[6];
 const emulatorCapabilities8 = emulatorCapabilities[7];
+const emulatorCapabilities9 = emulatorCapabilities[8];
 
 export const androidCapabilities = {
   sharedCapabilities,
@@ -77,6 +80,7 @@ function getAllCaps() {
     emulatorCapabilities6,
     emulatorCapabilities7,
     emulatorCapabilities8,
+    emulatorCapabilities9,
   ];
   return emulatorCaps;
 }

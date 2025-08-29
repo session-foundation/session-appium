@@ -4,6 +4,14 @@ run-name: '${{ inputs.RISK }} regressions on ${{ github.head_ref || github.ref }
 on:
   workflow_dispatch:
     inputs:
+      RUNNER: 
+        description: 'Which runner to use'
+        required: true
+        type: choice 
+        options: 
+          - 'linux'
+          - 'mac'
+        default: 'linux'
       APK_URL:
         description: 'apk url to test (.tar.xz)'
         required: true
@@ -70,9 +78,10 @@ on:
 
 jobs:
   android-regression:
-    runs-on: [self-hosted, linux, X64, qa-android]
+    runs-on: ${{ github.event.inputs.RUNNER == 'mac' && fromJSON('["self-hosted", "macOS"]') || fromJSON('["self-hosted", "linux", "X64", "qa-android"]') }}
     env:
       PLATFORM: 'android'
+      EMULATOR_COUNT: ${{ github.event.inputs.RUNNER == 'mac' && '6' || '4' }}
       APK_URL: ${{ github.event.inputs.APK_URL }}
       BUILD_NUMBER: ${{ github.event.inputs.BUILD_NUMBER }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -80,8 +89,6 @@ jobs:
       ALLURE_ENABLED: ${{ github.event.inputs.ALLURE_ENABLED}}
       IOS_APP_PATH_PREFIX: '<just_not_empty>'
       ANDROID_APK: './extracted/session-android.apk'
-      APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
-      ANDROID_SDK_ROOT: '/opt/android'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
@@ -121,7 +128,11 @@ jobs:
       - name: Download APK & extract it
         run: |
           pwd
-          wget -q -O session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
+          if [[ "${{ runner.os }}" == "macOS" ]]; then
+            curl -L -o session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
+          else
+            wget -q -O session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
+          fi
           tar xf session-android.apk.tar.xz
           mv session-android-*universal extracted
 
@@ -144,6 +155,7 @@ jobs:
         continue-on-error: true # just so we don't fail if adb wasn't already running
         run: |
           source ./scripts/ci.sh
+          echo "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT}" >> $GITHUB_ENV
           adb kill-server;
           adb start-server;
 
@@ -151,7 +163,7 @@ jobs:
         shell: bash
         run: |
           source ./scripts/ci.sh
-          start_with_snapshots
+          start_for_snapshots
           wait_for_emulators
 
       - name: List tests part of this run
@@ -164,7 +176,7 @@ jobs:
         continue-on-error: true
         id: devices-1-test-run
         env:
-          PLAYWRIGHT_WORKERS_COUNT: 4
+          PLAYWRIGHT_WORKERS_COUNT: ${{ env.EMULATOR_COUNT }}  # 6 on mac, 4 on linux
           DEVICES_PER_TEST_COUNT: 1
         run: |
           pwd
@@ -180,7 +192,7 @@ jobs:
         continue-on-error: true
         id: devices-2-test-run
         env:
-          PLAYWRIGHT_WORKERS_COUNT: 2
+          PLAYWRIGHT_WORKERS_COUNT:  ${{ github.event.inputs.RUNNER == 'mac' && '3' || '2' }}
           DEVICES_PER_TEST_COUNT: 2
         run: |
           pwd
@@ -196,8 +208,8 @@ jobs:
         continue-on-error: true
         id: other-devices-test-run
         env:
-          PLAYWRIGHT_WORKERS_COUNT: 1
-          DEVICES_PER_TEST_COUNT: 4
+          PLAYWRIGHT_WORKERS_COUNT: ${{ github.event.inputs.RUNNER == 'mac' && '2' || '1' }}
+          DEVICES_PER_TEST_COUNT: 3
         run: |
           pwd
           _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
