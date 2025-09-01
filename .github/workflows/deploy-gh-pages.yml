@@ -4,8 +4,9 @@
 name: Deploy Allure Reports to GitHub Pages
 
 on:
-  push:
-    branches: ['gh-pages']
+  workflow_run:
+    workflows: ['Android regression tests', 'iOS regression tests']
+    types: [completed]
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
