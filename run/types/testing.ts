@@ -145,6 +145,7 @@ export type XPath =
   | `//XCUIElementTypeStaticText[@name="Paste"]`
   | `//XCUIElementTypeStaticText[@name="Videos"]`
   | `//XCUIElementTypeStaticText[contains(@name, '00:')]`
+  | `//XCUIElementTypeStaticText[contains(@name, "Version")]`
   | `//XCUIElementTypeSwitch[@name="Read Receipts, Send read receipts in one-to-one chats."]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`
@@ -197,6 +198,7 @@ export type AccessibilityId =
   | 'Call'
   | 'Call button'
   | 'Cancel'
+  | 'Classic Light'
   | 'Clear'
   | 'Clear all'
   | 'Close'
@@ -220,6 +222,7 @@ export type AccessibilityId =
   | 'Conversations'
   | 'Copy'
   | 'Copy button'
+  | 'Copy URL'
   | 'Create account button'
   | 'Create group'
   | 'Decline message request'
@@ -259,6 +262,8 @@ export type AccessibilityId =
   | 'Empty state label'
   | 'Enable'
   | 'End call button'
+  | 'enjoy-session-negative-button'
+  | 'enjoy-session-positive-button'
   | 'Enter Community URL'
   | 'Enter display name'
   | 'Error message'
@@ -323,12 +328,14 @@ export type AccessibilityId =
   | 'Nickname'
   | 'No'
   | 'No pending message requests'
+  | 'not-now-button'
   | 'Note to Self'
   | 'Notifications'
   | 'Off'
   | 'OK_BUTTON'
   | 'OK'
   | 'Okay'
+  | 'open-survey-button'
   | 'Open'
   | 'Open URL'
   | 'Path'
@@ -337,6 +344,7 @@ export type AccessibilityId =
   | 'Pin'
   | 'Please enter a shorter group name'
   | 'Privacy Policy'
+  | 'rate-app-button'
   | 'Read Receipts - Switch'
   | 'Recents'
   | 'Recovery password'

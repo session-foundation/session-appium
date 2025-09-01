@@ -53,7 +53,10 @@ async function blockedRequest(platform: SupportedPlatformsType, testInfo: TestIn
       strategy: 'accessibility id',
       selector: messageRequestsNonePending as AccessibilityId,
     }),
-    device3.verifyElementNotPresent({...new MessageRequestsBanner(device3).build(), maxWait: 5_000}),
+    device3.verifyElementNotPresent({
+      ...new MessageRequestsBanner(device3).build(),
+      maxWait: 5_000,
+    }),
   ]);
   const blockedMessage = `"${alice.userName} to ${bob.userName} - shouldn't get through"`;
   await device1.sendMessage(blockedMessage);
@@ -63,13 +66,14 @@ async function blockedRequest(platform: SupportedPlatformsType, testInfo: TestIn
   await sleepFor(5000);
   await device2.hasTextElementBeenDeleted('Message body', blockedMessage);
   // Check that user is on Blocked User list in Settings
-await Promise.all(
-  [device2, device3].map(async (device) => {
-    await device.clickOnElementAll(new UserSettings(device));
-    await device.clickOnElementAll(new ConversationsMenuItem(device));
-    await device.clickOnElementAll(new BlockedContactsSettings(device));
-    await device.waitForTextElementToBePresent(new Contact(device, alice.userName));
-  }));
+  await Promise.all(
+    [device2, device3].map(async device => {
+      await device.clickOnElementAll(new UserSettings(device));
+      await device.clickOnElementAll(new ConversationsMenuItem(device));
+      await device.clickOnElementAll(new BlockedContactsSettings(device));
+      await device.waitForTextElementToBePresent(new Contact(device, alice.userName));
+    })
+  );
   // Close app
   await closeApp(device1, device2, device3);
 }

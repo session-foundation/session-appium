@@ -100,7 +100,10 @@ export class ReviewPromptItsGreatButton extends LocatorsInterface {
           selector: 'enjoy-session-positive-button',
         };
       case 'ios':
-        throw new Error('Not implemented');
+        return {
+          strategy: 'accessibility id',
+          selector: 'enjoy-session-positive-button',
+        };
     }
   }
 }
@@ -114,7 +117,10 @@ export class ReviewPromptNeedsWorkButton extends LocatorsInterface {
           selector: 'enjoy-session-negative-button',
         };
       case 'ios':
-        throw new Error('Not implemented');
+        return {
+          strategy: 'accessibility id',
+          selector: 'enjoy-session-negative-button',
+        };
     }
   }
 }
@@ -128,7 +134,10 @@ export class ReviewPromptRateAppButton extends LocatorsInterface {
           selector: 'rate-app-button',
         };
       case 'ios':
-        throw new Error('Not implemented');
+        return {
+          strategy: 'accessibility id',
+          selector: 'rate-app-button',
+        };
     }
   }
 }
@@ -142,7 +151,10 @@ export class ReviewPromptNotNowButton extends LocatorsInterface {
           selector: 'not-now-button',
         };
       case 'ios':
-        throw new Error('Not implemented');
+        return {
+          strategy: 'accessibility id',
+          selector: 'not-now-button',
+        };
     }
   }
 }
@@ -156,7 +168,10 @@ export class ReviewPromptOpenSurveyButton extends LocatorsInterface {
           selector: 'open-survey-button',
         };
       case 'ios':
-        throw new Error('Not implemented');
+        return {
+          strategy: 'accessibility id',
+          selector: 'open-survey-button',
+        };
     }
   }
 }

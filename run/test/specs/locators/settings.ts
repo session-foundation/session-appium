@@ -213,6 +213,23 @@ export class AppearanceMenuItem extends LocatorsInterface {
   }
 }
 
+export class ClassicLightThemeOption extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger.qa:id/theme_option_classic_light',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Classic Light',
+        } as const;
+    }
+  }
+}
+
 export class SelectAppIcon extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -307,6 +324,24 @@ export class PathMenuItem extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'Path',
+        } as const;
+    }
+  }
+}
+
+export class VersionNumber extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: '-android uiautomator',
+          selector:
+            'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().textStartsWith("Version"))',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'xpath',
+          selector: `//XCUIElementTypeStaticText[contains(@name, "Version")]`,
         } as const;
     }
   }

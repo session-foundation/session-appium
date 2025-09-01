@@ -43,6 +43,7 @@ import {
   SaveProfilePictureButton,
   UserAvatar,
   UserSettings,
+  VersionNumber,
 } from '../test/specs/locators/settings';
 import {
   EnterAccountID,
@@ -954,23 +955,23 @@ export class DeviceWrapper {
 
     const description = describeLocator({ ...locator, text: args.text });
 
-      if (element) {
-        // Elements can disappear in the GUI but still be present in the DOM 
-        try {
-          const isVisible = await this.isVisible(element.ELEMENT);
-          if (isVisible) {
-            throw new Error(
-              `Element with ${description} is visible after ${maxWait}ms when it should not be`
-            );
-          }
-          // Element exists but not visible - that's okay
-          this.log(`Element with ${description} exists but is not visible`);
-        } catch (e) {
-          // Stale element or other error - element is gone, that's okay
-          this.log(`Element with ${description} is not present (stale reference)`);
+    if (element) {
+      // Elements can disappear in the GUI but still be present in the DOM
+      try {
+        const isVisible = await this.isVisible(element.ELEMENT);
+        if (isVisible) {
+          throw new Error(
+            `Element with ${description} is visible after ${maxWait}ms when it should not be`
+          );
         }
-      } else {
-        this.log(`Verified no element with ${description} is present`);
+        // Element exists but not visible - that's okay
+        this.log(`Element with ${description} exists but is not visible`);
+      } catch (e) {
+        // Stale element or other error - element is gone, that's okay
+        this.log(`Element with ${description} is not present (stale reference)`);
+      }
+    } else {
+      this.log(`Verified no element with ${description} is present`);
     }
   }
 
@@ -2244,25 +2245,12 @@ export class DeviceWrapper {
   }
 
   public async getVersionNumber() {
-    if (this.isIOS()) {
-      throw new Error('getVersionNumber not implemented on iOS yet');
-    }
-
     await this.clickOnElementAll(new UserSettings(this));
-    // Find the element using UiScrollable
-    const versionElement = await this.waitForTextElementToBePresent({
-      strategy: '-android uiautomator',
-      selector:
-        'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().textStartsWith("Version"))',
-    });
-
+    const versionElement = await this.waitForTextElementToBePresent(new VersionNumber(this));
     // Get the full text from the element
-    const versionText = await this.getAttribute('text', versionElement.ELEMENT);
-    // versionText will be something like "Version  1.27.0 (4175 - ac77d8)  - Mainnet"
-
-    // Extract just the version number
+    const versionText = await this.getTextFromElement(versionElement);
+    // Extract just the version number (e.g. "1.27.0")
     const match = versionText?.match(/(\d+\.\d+\.\d+)/);
-    // match[1] will be "1.27.0"
 
     if (!match) {
       throw new Error(`Could not extract version from: ${versionText}`);
