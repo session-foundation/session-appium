@@ -445,6 +445,7 @@ export type Id =
   | 'Conversation header name'
   | 'Conversations'
   | 'Copy button'
+  | 'Copy URL'
   | 'Create account button'
   | 'Create group'
   | 'delete-contact-confirm-button'

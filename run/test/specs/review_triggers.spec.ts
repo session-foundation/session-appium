@@ -5,6 +5,7 @@ import { TestSteps } from '../../types/allure';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { CopyURLButton } from './locators/global';
 import {
   AppearanceMenuItem,
   ClassicLightThemeOption,
@@ -23,7 +24,7 @@ const reviewTriggers = [
     testStepName: 'Open Donations menu item',
     trigger: async (device: DeviceWrapper) => {
       await device.clickOnElementAll(new DonationsMenuItem(device));
-      await device.clickOnByAccessibilityID('Copy URL'); // Copy URL dismisses the modal on both platforms
+      await device.clickOnElementAll(new CopyURLButton(device)); // Copy URL dismisses the modal on both platforms
     },
   },
   {

@@ -142,3 +142,20 @@ export class AccountIDDisplay extends LocatorsInterface {
     }
   }
 }
+
+export class CopyURLButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Copy URL',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Copy URL',
+        } as const;
+    }
+  }
+}
