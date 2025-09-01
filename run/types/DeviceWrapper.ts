@@ -89,7 +89,6 @@ export class DeviceWrapper {
   private readonly device: AndroidUiautomator2Driver | XCUITestDriver;
   public readonly udid: string;
   private deviceIdentity: string = '';
-  private version: string | null = null;
 
   constructor(device: AndroidUiautomator2Driver | XCUITestDriver, udid: string) {
     this.device = device;
@@ -2245,6 +2244,7 @@ export class DeviceWrapper {
   }
 
   public async getVersionNumber() {
+    // NOTE if this becomes necessary for more tests, consider adding a property/caching to the DeviceWrapper
     await this.clickOnElementAll(new UserSettings(this));
     const versionElement = await this.waitForTextElementToBePresent(new VersionNumber(this));
     // Get the full text from the element
@@ -2256,8 +2256,7 @@ export class DeviceWrapper {
       throw new Error(`Could not extract version from: ${versionText}`);
     }
 
-    this.version = match[1];
-    return this.version;
+    return match[1];
   }
 
   private getUdid() {
