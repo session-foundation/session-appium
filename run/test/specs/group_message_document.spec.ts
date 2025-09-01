@@ -29,7 +29,7 @@ async function sendDocumentGroupiOS(platform: SupportedPlatformsType, testInfo: 
     focusGroupConvo: true,
     testInfo,
   });
-  const testMessage = 'Testing-document';
+  const testMessage = 'Testing documents';
   const replyMessage = `Replying to document from ${alice.userName}`;
 
   await alice1.sendDocument();
