@@ -24,7 +24,7 @@ function publishToGhPages(dir: string, dest: string, repo: string, message: stri
     fs.writeFileSync(nojekyllPath, '');
     console.log('Created .nojekyll file');
   }
-  
+
   return new Promise((resolve, reject) => {
     void ghpages.publish(
       dir,

@@ -1,18 +1,18 @@
-# Recent changes to GitHub Actions requires a separate deployment action to be ran 
-# in order to publish to GitHub Pages. This action listens to pushes on the gh-pages 
-# branch from the regression test workflows and deploys the reports. 
+# Recent changes to GitHub Actions requires a separate deployment action to be ran
+# in order to publish to GitHub Pages. This action listens to pushes on the gh-pages
+# branch from the regression test workflows and deploys the reports.
 name: Deploy Allure Reports to GitHub Pages
 
 on:
   push:
-    branches: ["gh-pages"]
+    branches: ['gh-pages']
 
 permissions:
   pages: write
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: 'pages'
   cancel-in-progress: false
 
 jobs:
@@ -26,15 +26,15 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: gh-pages
-          
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
-          
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
