@@ -18,6 +18,13 @@ if (process.env.CI !== '1' || process.env.ALLURE_ENABLED === 'false') {
 
 // Publishes the report directory to the gh-pages branch of the repo
 function publishToGhPages(dir: string, dest: string, repo: string, message: string): Promise<void> {
+  // Ensure .nojekyll file exists to skip Jekyll processing
+  const nojekyllPath = path.join(dir, '.nojekyll');
+  if (!fs.existsSync(nojekyllPath)) {
+    fs.writeFileSync(nojekyllPath, '');
+    console.log('Created .nojekyll file');
+  }
+  
   return new Promise((resolve, reject) => {
     void ghpages.publish(
       dir,
