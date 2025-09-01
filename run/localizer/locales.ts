@@ -41,7 +41,7 @@ type WithStoreVariant = {storevariant: string};
 type WithMin = {min: string};
 type WithMax = {max: string};
 
-export type TokenSimpleNoArgs =
+export type TokenSimpleNoArgs = 
     'about' |
     'accept' |
     'accountIDCopy' |
@@ -81,12 +81,15 @@ export type TokenSimpleNoArgs =
     'appIconEnableIconAndName' |
     'appIconSelect' |
     'appIconSelectionTitle' |
+    'appName' |
     'appNameCalculator' |
     'appNameMeetingSE' |
     'appNameNews' |
     'appNameNotes' |
     'appNameStocks' |
     'appNameWeather' |
+    'appPro' |
+    'appProBadge' |
     'appearanceAutoDarkMode' |
     'appearanceHideMenuBar' |
     'appearanceLanguage' |
@@ -198,6 +201,7 @@ export type TokenSimpleNoArgs =
     'cameraGrantAccessDescription' |
     'cameraGrantAccessQr' |
     'cancel' |
+    'cancelPlan' |
     'change' |
     'changePasswordFail' |
     'changePasswordModalDescription' |
@@ -286,6 +290,8 @@ export type TokenSimpleNoArgs =
     'copy' |
     'create' |
     'creatingCall' |
+    'currentPassword' |
+    'currentPlan' |
     'cut' |
     'darkMode' |
     'databaseErrorClearDataWarning' |
@@ -449,12 +455,16 @@ export type TokenSimpleNoArgs =
     'hideOthers' |
     'image' |
     'images' |
+    'important' |
     'incognitoKeyboard' |
     'incognitoKeyboardDescription' |
     'info' |
     'invalidShortcut' |
     'join' |
     'later' |
+    'launchOnStartDescriptionDesktop' |
+    'launchOnStartDesktop' |
+    'launchOnStartupDisabledDesktop' |
     'learnMore' |
     'leave' |
     'leaving' |
@@ -472,6 +482,7 @@ export type TokenSimpleNoArgs =
     'linkPreviewsSendModalDescription' |
     'linkPreviewsTurnedOff' |
     'linkPreviewsTurnedOffDescription' |
+    'links' |
     'loadAccount' |
     'loadAccountProgressMessage' |
     'loading' |
@@ -484,7 +495,9 @@ export type TokenSimpleNoArgs =
     'lockAppStatus' |
     'lockAppUnlock' |
     'lockAppUnlocked' |
+    'logs' |
     'manageMembers' |
+    'managePro' |
     'max' |
     'media' |
     'membersAddAccountIdOrOns' |
@@ -534,7 +547,10 @@ export type TokenSimpleNoArgs =
     'modalMessageCharacterDisplayTitle' |
     'modalMessageCharacterTooLongTitle' |
     'modalMessageTooLongTitle' |
+    'networkName' |
+    'newPassword' |
     'next' |
+    'nextSteps' |
     'nicknameEnter' |
     'nicknameErrorShorter' |
     'nicknameRemove' |
@@ -607,6 +623,7 @@ export type TokenSimpleNoArgs =
     'open' |
     'openSurvey' |
     'other' |
+    'oxenFoundation' |
     'password' |
     'passwordChange' |
     'passwordChangeShortDescription' |
@@ -630,8 +647,8 @@ export type TokenSimpleNoArgs =
     'passwordSetShortDescription' |
     'passwordStrengthCharLength' |
     'passwordStrengthIncludeNumber' |
-    'passwordStrengthIncludesLetter' |
     'passwordStrengthIncludesLowercase' |
+    'passwordStrengthIncludesSymbol' |
     'passwordStrengthIncludesUppercase' |
     'passwordStrengthIndicator' |
     'passwordStrengthIndicatorDescription' |
@@ -675,31 +692,68 @@ export type TokenSimpleNoArgs =
     'pinConversation' |
     'pinUnpin' |
     'pinUnpinConversation' |
+    'plusLoadsMore' |
     'preferences' |
     'preview' |
     'previewNotification' |
+    'pro' |
     'proActivated' |
+    'proAllSet' |
     'proAlreadyPurchased' |
     'proAnimatedDisplayPicture' |
     'proAnimatedDisplayPictureCallToActionDescription' |
     'proAnimatedDisplayPictureFeature' |
     'proAnimatedDisplayPictureModalDescription' |
+    'proAnimatedDisplayPictures' |
+    'proAnimatedDisplayPicturesDescription' |
     'proAnimatedDisplayPicturesNonProModalDescription' |
     'proBadge' |
+    'proBadgeVisible' |
+    'proBadges' |
+    'proBadgesDescription' |
     'proCallToActionLongerMessages' |
     'proCallToActionPinnedConversations' |
     'proCallToActionPinnedConversationsMoreThan' |
+    'proExpired' |
+    'proExpiredDescription' |
+    'proExpiringSoon' |
+    'proFaq' |
+    'proFaqDescription' |
     'proFeatureListAnimatedDisplayPicture' |
     'proFeatureListLargerGroups' |
     'proFeatureListLoadsMore' |
     'proFeatureListLongerMessages' |
     'proFeatureListPinnedConversations' |
+    'proFeatures' |
     'proGroupActivated' |
     'proGroupActivatedDescription' |
+    'proImportantDescription' |
     'proIncreasedAttachmentSizeFeature' |
     'proIncreasedMessageLengthFeature' |
+    'proLargerGroups' |
+    'proLargerGroupsDescription' |
+    'proLongerMessages' |
+    'proLongerMessagesDescription' |
     'proMessageInfoFeatures' |
+    'proPlanNotFound' |
+    'proPlanNotFoundDescription' |
+    'proPlanRecover' |
+    'proPlanRenew' |
+    'proPlanRenewStart' |
+    'proPlanRenewSupport' |
+    'proPlanRestored' |
+    'proPlanRestoredDescription' |
+    'proRefundDescription' |
+    'proRefundRequestSessionSupport' |
+    'proRefunding' |
+    'proRequestedRefund' |
     'proSendMore' |
+    'proSettings' |
+    'proStats' |
+    'proStatsTooltip' |
+    'proSupportDescription' |
+    'proUnlimitedPins' |
+    'proUnlimitedPinsDescription' |
     'proUserProfileModalCallToAction' |
     'profile' |
     'profileDisplayPicture' |
@@ -750,7 +804,9 @@ export type TokenSimpleNoArgs =
     'remove' |
     'removePasswordFail' |
     'removePasswordModalDescription' |
+    'renew' |
     'reply' |
+    'requestRefund' |
     'resend' |
     'resolving' |
     'restart' |
@@ -784,6 +840,8 @@ export type TokenSimpleNoArgs =
     'sessionAppearance' |
     'sessionClearData' |
     'sessionConversations' |
+    'sessionDownloadUrl' |
+    'sessionFoundation' |
     'sessionHelp' |
     'sessionInviteAFriend' |
     'sessionMessageRequests' |
@@ -799,12 +857,15 @@ export type TokenSimpleNoArgs =
     'sessionNotifications' |
     'sessionPermissions' |
     'sessionPrivacy' |
+    'sessionProBeta' |
     'sessionRecoveryPassword' |
     'sessionSettings' |
     'set' |
     'setCommunityDisplayPicture' |
     'setPasswordModalDescription' |
+    'settingsCannotChangeDesktop' |
     'settingsRestartDescription' |
+    'settingsStartCategoryDesktop' |
     'share' |
     'shareAccountIdDescription' |
     'shareAccountIdDescriptionCopied' |
@@ -817,6 +878,7 @@ export type TokenSimpleNoArgs =
     'showNoteToSelf' |
     'showNoteToSelfDescription' |
     'spellChecker' |
+    'stakingRewardPool' |
     'stickers' |
     'strength' |
     'supportDescription' |
@@ -825,7 +887,10 @@ export type TokenSimpleNoArgs =
     'theContinue' |
     'theDefault' |
     'theError' |
+    'theReturn' |
     'themePreview' |
+    'tokenNameLong' |
+    'tokenNameShort' |
     'tooltipBlindedIdCommunities' |
     'translate' |
     'tray' |
@@ -847,6 +912,8 @@ export type TokenSimpleNoArgs =
     'updateGroupInformationDescription' |
     'updateGroupInformationEnterShorterDescription' |
     'updateNewVersion' |
+    'updatePlan' |
+    'updatePlanTwo' |
     'updateProfileInformation' |
     'updateProfileInformationDescription' |
     'updateReleaseNotes' |
@@ -858,6 +925,8 @@ export type TokenSimpleNoArgs =
     'urlCopy' |
     'urlOpen' |
     'urlOpenBrowser' |
+    'urlOpenDescriptionAlternative' |
+    'usdNameShort' |
     'useFastMode' |
     'video' |
     'videoErrorPlay' |
@@ -1018,13 +1087,49 @@ export type TokensSimpleAndArgs = {
    notificationsMutedFor: WithTimeLarge,
    notificationsMutedForTime: WithDateTime,
    notificationsSystem: WithMessageCount & WithConversationCount,
+   onDevice: { device_type: string },
+   onDeviceDescription: { device_type: string, platform_account: string },
    onboardingBubbleCreatingAnAccountIsEasy: WithEmoji,
    onboardingBubbleWelcomeToSession: WithEmoji,
+   openStoreWebsite: { platform_store: string },
    passwordErrorLength: WithMin & WithMax,
+   plusLoadsMoreDescription: WithIcon,
+   proAllSetDescription: WithDate,
+   proAutoRenewTime: WithTime,
+   proBilledAnnually: { price: string },
+   proBilledMonthly: { price: string },
+   proBilledQuarterly: { price: string },
+   proDiscountTooltip: { percent: string },
+   proExpiringSoonDescription: WithTime,
+   proExpiringTime: WithTime,
+   proPercentOff: { percent: string },
+   proPlanActivatedAuto: WithDate & { current_plan: string },
+   proPlanActivatedAutoShort: WithDate & { current_plan: string },
+   proPlanActivatedNotAuto: WithDate,
+   proPlanExpireDate: WithDate,
+   proPlanPlatformRefund: { platform_store: string, platform_account: string },
+   proPlanPlatformRefundLong: { platform_store: string },
+   proPlanRenewDesktop: { platform_store: string },
+   proPlanRenewDesktopLinked: { platform_store: string },
+   proPlanRenewDesktopStore: { platform_store: string, platform_account: string },
+   proPlanSignUp: { platform_store: string, platform_account: string },
+   proPriceOneMonth: { monthly_price: string },
+   proPriceThreeMonths: { monthly_price: string },
+   proPriceTwelveMonths: { monthly_price: string },
+   proRefundNextSteps: { platform_account: string },
+   proRefundRequestStorePolicies: { platform_account: string },
+   proRefundSupport: { platform_account: string, platform_store: string },
+   proRefundingDescription: { platform_account: string, platform_store: string },
+   proTosPrivacy: WithIcon,
+   proUpdatePlanDescription: WithDate & { current_plan: string, selected_plan: string },
+   proUpdatePlanExpireDescription: WithDate & { selected_plan: string },
+   processingRefundRequest: { platform_account: string },
    rateSessionModalDescription: WithStoreVariant,
+   refundPlanNonOriginatorApple: { platform_account: string },
    remainingCharactersOverTooltip: WithCount,
    screenshotTaken: WithName,
    searchMatchesNoneSpecific: WithQuery,
+   sessionNetworkDataPrice: WithDateTime,
    sessionNetworkDescription: WithIcon,
    systemInformationDesktop: WithInformation,
    tooltipAccountIdVisible: WithName,
@@ -1033,7 +1138,8 @@ export type TokensSimpleAndArgs = {
    updateVersion: WithVersion,
    updated: WithRelativeTime,
    urlOpenDescription: WithUrl,
-   sessionNetworkDataPrice: WithDateTime
+   viaStoreWebsite: { platform_store: string },
+   viaStoreWebsiteDescription: { platform_account: string, platform_store: string }
 };
 
 export type TokensPluralAndArgs = {
@@ -1059,13 +1165,17 @@ export type TokensPluralAndArgs = {
    messageNewYouveGot: WithCount,
    messageNewYouveGotGroup: WithGroupName & WithCount,
    modalMessageCharacterDisplayDescription: WithLimit & WithCount,
+   proBadgesSent: WithCount & { total: string },
+   proGroupsUpgraded: WithCount & { total: string },
+   proLongerMessagesSent: WithCount & { total: string },
+   proPinnedConversations: WithCount & { total: string },
    promotionFailed: WithCount,
    promotionFailedDescription: WithCount,
    remainingCharactersTooltip: WithCount,
    searchMatches: WithFoundCount & WithCount
 };
 
-export type TokenSimpleWithArgs =
+export type TokenSimpleWithArgs = 
     'accountIdShare' |
     'adminMorePromotedToAdmin' |
     'adminPromoteDescription' |
@@ -1209,13 +1319,49 @@ export type TokenSimpleWithArgs =
     'notificationsMutedFor' |
     'notificationsMutedForTime' |
     'notificationsSystem' |
+    'onDevice' |
+    'onDeviceDescription' |
     'onboardingBubbleCreatingAnAccountIsEasy' |
     'onboardingBubbleWelcomeToSession' |
+    'openStoreWebsite' |
     'passwordErrorLength' |
+    'plusLoadsMoreDescription' |
+    'proAllSetDescription' |
+    'proAutoRenewTime' |
+    'proBilledAnnually' |
+    'proBilledMonthly' |
+    'proBilledQuarterly' |
+    'proDiscountTooltip' |
+    'proExpiringSoonDescription' |
+    'proExpiringTime' |
+    'proPercentOff' |
+    'proPlanActivatedAuto' |
+    'proPlanActivatedAutoShort' |
+    'proPlanActivatedNotAuto' |
+    'proPlanExpireDate' |
+    'proPlanPlatformRefund' |
+    'proPlanPlatformRefundLong' |
+    'proPlanRenewDesktop' |
+    'proPlanRenewDesktopLinked' |
+    'proPlanRenewDesktopStore' |
+    'proPlanSignUp' |
+    'proPriceOneMonth' |
+    'proPriceThreeMonths' |
+    'proPriceTwelveMonths' |
+    'proRefundNextSteps' |
+    'proRefundRequestStorePolicies' |
+    'proRefundSupport' |
+    'proRefundingDescription' |
+    'proTosPrivacy' |
+    'proUpdatePlanDescription' |
+    'proUpdatePlanExpireDescription' |
+    'processingRefundRequest' |
     'rateSessionModalDescription' |
+    'refundPlanNonOriginatorApple' |
     'remainingCharactersOverTooltip' |
     'screenshotTaken' |
     'searchMatchesNoneSpecific' |
+    'sessionNetworkDataPrice' |
     'sessionNetworkDescription' |
     'systemInformationDesktop' |
     'tooltipAccountIdVisible' |
@@ -1224,9 +1370,10 @@ export type TokenSimpleWithArgs =
     'updateVersion' |
     'updated' |
     'urlOpenDescription' |
-    'sessionNetworkDataPrice'
+    'viaStoreWebsite' |
+    'viaStoreWebsiteDescription'
 
-export type TokenPluralWithArgs =
+export type TokenPluralWithArgs = 
     'adminSendingPromotion' |
     'clearDataErrorDescription' |
     'deleteMessage' |
@@ -1249,6 +1396,10 @@ export type TokenPluralWithArgs =
     'messageNewYouveGot' |
     'messageNewYouveGotGroup' |
     'modalMessageCharacterDisplayDescription' |
+    'proBadgesSent' |
+    'proGroupsUpgraded' |
+    'proLongerMessagesSent' |
+    'proPinnedConversations' |
     'promotionFailed' |
     'promotionFailedDescription' |
     'remainingCharactersTooltip' |
@@ -1375,6 +1526,9 @@ export const simpleDictionaryNoArgs: Record<
   appIconSelectionTitle: {
       en: "Icon",
   },
+  appName: {
+      en: "Session",
+  },
   appNameCalculator: {
       en: "Calculator",
   },
@@ -1392,6 +1546,12 @@ export const simpleDictionaryNoArgs: Record<
   },
   appNameWeather: {
       en: "Weather",
+  },
+  appPro: {
+      en: "Session Pro",
+  },
+  appProBadge: {
+      en: "Session Pro Badge",
   },
   appearanceAutoDarkMode: {
       en: "Auto Dark Mode",
@@ -1700,7 +1860,7 @@ export const simpleDictionaryNoArgs: Record<
       en: "Voice and Video Calls (Beta)",
   },
   callsVoiceAndVideoModalDescription: {
-      en: "Your IP is visible to your call partner and a Session Technology Foundation server while using beta calls.",
+      en: "Your IP is visible to your call partner and a Session Foundation server while using beta calls.",
   },
   callsVoiceAndVideoToggleDescription: {
       en: "Enables voice and video calls to and from other users.",
@@ -1725,6 +1885,9 @@ export const simpleDictionaryNoArgs: Record<
   },
   cancel: {
       en: "Cancel",
+  },
+  cancelPlan: {
+      en: "Cancel Plan",
   },
   change: {
       en: "Change",
@@ -1931,7 +2094,7 @@ export const simpleDictionaryNoArgs: Record<
       en: "Enter Key",
   },
   conversationsEnterDescription: {
-      en: "Function of the enter key when typing in a conversation.",
+      en: "Define how the Enter and Shift+Enter keys function in conversations.",
   },
   conversationsEnterNewLine: {
       en: "SHIFT + ENTER sends a message, ENTER starts a new line.",
@@ -1989,6 +2152,12 @@ export const simpleDictionaryNoArgs: Record<
   },
   creatingCall: {
       en: "Creating Call",
+  },
+  currentPassword: {
+      en: "Current Password",
+  },
+  currentPlan: {
+      en: "Current Plan",
   },
   cut: {
       en: "Cut",
@@ -2479,6 +2648,9 @@ export const simpleDictionaryNoArgs: Record<
   images: {
       en: "images",
   },
+  important: {
+      en: "Important",
+  },
   incognitoKeyboard: {
       en: "Incognito Keyboard",
   },
@@ -2496,6 +2668,15 @@ export const simpleDictionaryNoArgs: Record<
   },
   later: {
       en: "Later",
+  },
+  launchOnStartDescriptionDesktop: {
+      en: "Launch Session automatically when your computer starts up.",
+  },
+  launchOnStartDesktop: {
+      en: "Launch on Startup",
+  },
+  launchOnStartupDisabledDesktop: {
+      en: "This setting is managed by your system on Linux. To enable automatic startup, add Session to your startup applications in system settings.",
   },
   learnMore: {
       en: "Learn More",
@@ -2548,6 +2729,9 @@ export const simpleDictionaryNoArgs: Record<
   linkPreviewsTurnedOffDescription: {
       en: "Session must contact linked websites to generate previews of links you send and receive.<br/><br/>You can turn them on in Session's settings.",
   },
+  links: {
+      en: "Links",
+  },
   loadAccount: {
       en: "Load Account",
   },
@@ -2584,8 +2768,14 @@ export const simpleDictionaryNoArgs: Record<
   lockAppUnlocked: {
       en: "Session is unlocked",
   },
+  logs: {
+      en: "Logs",
+  },
   manageMembers: {
       en: "Manage Members",
+  },
+  managePro: {
+      en: "Manage Pro",
   },
   max: {
       en: "Max",
@@ -2734,8 +2924,17 @@ export const simpleDictionaryNoArgs: Record<
   modalMessageTooLongTitle: {
       en: "Message Too Long",
   },
+  networkName: {
+      en: "Session Network",
+  },
+  newPassword: {
+      en: "New Password",
+  },
   next: {
       en: "Next",
+  },
+  nextSteps: {
+      en: "Next Steps",
   },
   nicknameEnter: {
       en: "Enter nickname",
@@ -2953,6 +3152,9 @@ export const simpleDictionaryNoArgs: Record<
   other: {
       en: "Other",
   },
+  oxenFoundation: {
+      en: "Oxen Foundation",
+  },
   password: {
       en: "Password",
   },
@@ -3022,11 +3224,11 @@ export const simpleDictionaryNoArgs: Record<
   passwordStrengthIncludeNumber: {
       en: "Includes a number",
   },
-  passwordStrengthIncludesLetter: {
-      en: "Includes a letter",
-  },
   passwordStrengthIncludesLowercase: {
       en: "Includes a lowercase letter",
+  },
+  passwordStrengthIncludesSymbol: {
+      en: "Includes a symbol",
   },
   passwordStrengthIncludesUppercase: {
       en: "Includes a uppercase letter",
@@ -3157,6 +3359,9 @@ export const simpleDictionaryNoArgs: Record<
   pinUnpinConversation: {
       en: "Unpin Conversation",
   },
+  plusLoadsMore: {
+      en: "Plus Loads More...",
+  },
   preferences: {
       en: "Preferences",
   },
@@ -3166,8 +3371,14 @@ export const simpleDictionaryNoArgs: Record<
   previewNotification: {
       en: "Preview Notification",
   },
+  pro: {
+      en: "Pro",
+  },
   proActivated: {
       en: "Activated",
+  },
+  proAllSet: {
+      en: "You're all set!",
   },
   proAlreadyPurchased: {
       en: "You’ve already got",
@@ -3184,11 +3395,26 @@ export const simpleDictionaryNoArgs: Record<
   proAnimatedDisplayPictureModalDescription: {
       en: "users can upload GIFs",
   },
+  proAnimatedDisplayPictures: {
+      en: "Animated Display Pictures",
+  },
+  proAnimatedDisplayPicturesDescription: {
+      en: "Set animated GIFs and WebP images as your display picture.",
+  },
   proAnimatedDisplayPicturesNonProModalDescription: {
       en: "Upload GIFs with",
   },
   proBadge: {
-      en: "Session Pro Badge",
+      en: "Pro Badge",
+  },
+  proBadgeVisible: {
+      en: "Show Session Pro badge to other users",
+  },
+  proBadges: {
+      en: "Badges",
+  },
+  proBadgesDescription: {
+      en: "Show your support for Session with an exclusive badge next to your display name.",
   },
   proCallToActionLongerMessages: {
       en: "Want to send longer messages? Send more text and unlock premium features with Session Pro",
@@ -3198,6 +3424,21 @@ export const simpleDictionaryNoArgs: Record<
   },
   proCallToActionPinnedConversationsMoreThan: {
       en: "Want more than 5 pins? Organize your chats and unlock premium features with Session Pro",
+  },
+  proExpired: {
+      en: "Expired",
+  },
+  proExpiredDescription: {
+      en: "Unfortunately, your Pro plan has expired. Renew to keep accessing the exclusive perks and features of Session Pro.",
+  },
+  proExpiringSoon: {
+      en: "Expiring Soon",
+  },
+  proFaq: {
+      en: "Pro FAQ",
+  },
+  proFaqDescription: {
+      en: "Find answers to common questions in the Session FAQ.",
   },
   proFeatureListAnimatedDisplayPicture: {
       en: "Upload GIF and WebP display pictures",
@@ -3214,11 +3455,17 @@ export const simpleDictionaryNoArgs: Record<
   proFeatureListPinnedConversations: {
       en: "Pin unlimited conversations",
   },
+  proFeatures: {
+      en: "Pro Features",
+  },
   proGroupActivated: {
       en: "Group Activated",
   },
   proGroupActivatedDescription: {
       en: "This group has expanded capacity! It can support up to 300 members because a group admin has",
+  },
+  proImportantDescription: {
+      en: "Requesting a refund is final. If approved, your Pro plan will be canceled immediately and you will lose access to all Pro features.",
   },
   proIncreasedAttachmentSizeFeature: {
       en: "Increased Attachment Size",
@@ -3226,11 +3473,77 @@ export const simpleDictionaryNoArgs: Record<
   proIncreasedMessageLengthFeature: {
       en: "Increased Message Length",
   },
+  proLargerGroups: {
+      en: "Larger Groups",
+  },
+  proLargerGroupsDescription: {
+      en: "Groups you are an admin in are automatically upgraded to support 300 members.",
+  },
+  proLongerMessages: {
+      en: "Longer Messages",
+  },
+  proLongerMessagesDescription: {
+      en: "You can send messages up to 10,000 characters in all conversations.",
+  },
   proMessageInfoFeatures: {
       en: "This message used the following Session Pro features:",
   },
+  proPlanNotFound: {
+      en: "Pro Plan Not Found",
+  },
+  proPlanNotFoundDescription: {
+      en: "No active plan was found for your account. If you believe this is a mistake, please reach out to Session support for assistance.",
+  },
+  proPlanRecover: {
+      en: "Recover Pro Plan",
+  },
+  proPlanRenew: {
+      en: "Renew Pro Plan",
+  },
+  proPlanRenewStart: {
+      en: "Renew your Session Pro plan to start using powerful Session Pro features again.",
+  },
+  proPlanRenewSupport: {
+      en: "Your Session Pro plan has been renewed! Thank you for supporting the Session Network.",
+  },
+  proPlanRestored: {
+      en: "Pro Plan Restored",
+  },
+  proPlanRestoredDescription: {
+      en: "A valid plan for Session Pro was detected and your Pro status has been restored!",
+  },
+  proRefundDescription: {
+      en: "We’re sorry to see you go. Here's what you need to know before requesting a refund.",
+  },
+  proRefundRequestSessionSupport: {
+      en: "Your refund request will be handled by Session Support.<br/><br/>Request a refund by hitting the button below and completing the refund request form.<br/><br/>While Session Support strives to process refund requests within 24-72 hours, processing may take longer during times of high request volume.",
+  },
+  proRefunding: {
+      en: "Refunding Pro",
+  },
+  proRequestedRefund: {
+      en: "Refund Requested",
+  },
   proSendMore: {
       en: "Send more with",
+  },
+  proSettings: {
+      en: "Pro Settings",
+  },
+  proStats: {
+      en: "Your Pro Stats",
+  },
+  proStatsTooltip: {
+      en: "Pro stats reflect usage on this device and may appear differently on linked devices",
+  },
+  proSupportDescription: {
+      en: "Need help with your Pro plan? Submit a request to the support team.",
+  },
+  proUnlimitedPins: {
+      en: "Unlimited Pins",
+  },
+  proUnlimitedPinsDescription: {
+      en: "Organize all your chats with unlimited pinned conversations.",
   },
   proUserProfileModalCallToAction: {
       en: "Want to get more out of Session? Upgrade to Session Pro for a more powerful messaging experience.",
@@ -3359,7 +3672,7 @@ export const simpleDictionaryNoArgs: Record<
       en: "Enter your recovery password to load your account. If you haven't saved it, you can find it in your app settings.",
   },
   recoveryPasswordView: {
-      en: "View Password",
+      en: "View Recovery Password",
   },
   recoveryPasswordVisibility: {
       en: "Recovery Password Visibility",
@@ -3382,8 +3695,14 @@ export const simpleDictionaryNoArgs: Record<
   removePasswordModalDescription: {
       en: "Remove your current password for Session. Locally stored data will be re-encrypted with a randomly generated key, stored on your device.",
   },
+  renew: {
+      en: "Renew",
+  },
   reply: {
       en: "Reply",
+  },
+  requestRefund: {
+      en: "Request Refund",
   },
   resend: {
       en: "Resend",
@@ -3484,6 +3803,12 @@ export const simpleDictionaryNoArgs: Record<
   sessionConversations: {
       en: "Conversations",
   },
+  sessionDownloadUrl: {
+      en: "https://getsession.org/download",
+  },
+  sessionFoundation: {
+      en: "Session Foundation",
+  },
   sessionHelp: {
       en: "Help",
   },
@@ -3529,6 +3854,9 @@ export const simpleDictionaryNoArgs: Record<
   sessionPrivacy: {
       en: "Privacy",
   },
+  sessionProBeta: {
+      en: "Session Pro Beta",
+  },
   sessionRecoveryPassword: {
       en: "Recovery Password",
   },
@@ -3544,8 +3872,14 @@ export const simpleDictionaryNoArgs: Record<
   setPasswordModalDescription: {
       en: "Set a password for Session. Locally stored data will be encrypted with this password. You will be asked to enter this password each time Session starts.",
   },
+  settingsCannotChangeDesktop: {
+      en: "Cannot Update Setting",
+  },
   settingsRestartDescription: {
       en: "You must restart Session to apply your new settings.",
+  },
+  settingsStartCategoryDesktop: {
+      en: "Startup",
   },
   share: {
       en: "Share",
@@ -3583,6 +3917,9 @@ export const simpleDictionaryNoArgs: Record<
   spellChecker: {
       en: "Spell Checker",
   },
+  stakingRewardPool: {
+      en: "Staking Reward Pool",
+  },
   stickers: {
       en: "Stickers",
   },
@@ -3607,8 +3944,17 @@ export const simpleDictionaryNoArgs: Record<
   theError: {
       en: "Error",
   },
+  theReturn: {
+      en: "Return",
+  },
   themePreview: {
       en: "Theme Preview",
+  },
+  tokenNameLong: {
+      en: "Session Token",
+  },
+  tokenNameShort: {
+      en: "SESH",
   },
   tooltipBlindedIdCommunities: {
       en: "Blinded IDs are used in communities to reduce spam and increase privacy",
@@ -3673,6 +4019,12 @@ export const simpleDictionaryNoArgs: Record<
   updateNewVersion: {
       en: "A new version of Session is available, tap to update",
   },
+  updatePlan: {
+      en: "Update Plan",
+  },
+  updatePlanTwo: {
+      en: "Two ways to update your plan:",
+  },
   updateProfileInformation: {
       en: "Update Profile Information",
   },
@@ -3705,6 +4057,12 @@ export const simpleDictionaryNoArgs: Record<
   },
   urlOpenBrowser: {
       en: "This will open in your browser.",
+  },
+  urlOpenDescriptionAlternative: {
+      en: "Links will open in your browser.",
+  },
+  usdNameShort: {
+      en: "USD",
   },
   useFastMode: {
       en: "Use Fast Mode",
@@ -4187,17 +4545,122 @@ export const simpleDictionaryWithArgs: Record<
   notificationsSystem: {
       en: "{message_count} new messages in {conversation_count} conversations",
  },
+  onDevice: {
+      en: "On your {device_type} device",
+ },
+  onDeviceDescription: {
+      en: "Open this Session account on an {device_type} device logged into the {platform_account} you originally signed up with. Then, change your plan via the Session Pro settings.",
+ },
   onboardingBubbleCreatingAnAccountIsEasy: {
       en: "Creating an account is instant, free, and anonymous {emoji}",
  },
   onboardingBubbleWelcomeToSession: {
       en: "Welcome to Session {emoji}",
  },
+  openStoreWebsite: {
+      en: "Open {platform_store} Website",
+ },
   passwordErrorLength: {
       en: "Password must be between {min} and {max} characters long",
  },
+  plusLoadsMoreDescription: {
+      en: "New features coming soon to Pro. Discover what's next on the <b>Pro Roadmap</b> {icon}",
+ },
+  proAllSetDescription: {
+      en: "Your Session Pro plan was updated! You will be billed when your current Pro plan is automatically renewed on <b>{date}</b>.",
+ },
+  proAutoRenewTime: {
+      en: "Pro auto-renewing in <b>{time}</b>",
+ },
+  proBilledAnnually: {
+      en: "{price} Billed Annually",
+ },
+  proBilledMonthly: {
+      en: "{price} Billed Monthly",
+ },
+  proBilledQuarterly: {
+      en: "{price} Billed Quarterly",
+ },
+  proDiscountTooltip: {
+      en: "Your current plan is already discounted by {percent}% of the full Session Pro price.",
+ },
+  proExpiringSoonDescription: {
+      en: "Your Pro plan is expiring in {time}. Update your plan to keep accessing the exclusive perks and features of Session Pro.",
+ },
+  proExpiringTime: {
+      en: "Pro expiring in <b>{time}</b>",
+ },
+  proPercentOff: {
+      en: "{percent}% Off",
+ },
+  proPlanActivatedAuto: {
+      en: "Your Session Pro plan is active!<br/><br/>Your plan will automatically renew for another <b>{current_plan}</b> on <b>{date}</b>. Updates to your plan take effect when Pro is next renewed.",
+ },
+  proPlanActivatedAutoShort: {
+      en: "Your Session Pro plan is active!<br/><br/>Your plan will automatically renew for another <b>{current_plan}</b> on <b>{date}</b>.",
+ },
+  proPlanActivatedNotAuto: {
+      en: "Your Session Pro plan will expire on {date}.<br/><br/>Update your plan now to ensure uninterrupted access to exclusive Pro features.",
+ },
+  proPlanExpireDate: {
+      en: "Your Session Pro plan will expire on {date}.",
+ },
+  proPlanPlatformRefund: {
+      en: "Because you originally signed up for Session Pro via the <b><span>{platform_store} Store</span></b>, you'll need to use the same {platform_account} to request a refund.",
+ },
+  proPlanPlatformRefundLong: {
+      en: "Because you originally signed up for Session Pro via the <b><span>{platform_store} Store</span></b>, your refund request will be processed by Session Support.<br/><br/>Request a refund by hitting the button below and completing the refund request form.<br/><br/>While Session Support strives to process refund requests within 24-72 hours, processing may take longer during times of high request volume.",
+ },
+  proPlanRenewDesktop: {
+      en: "Currently, Pro plans can only be purchased and renewed via the {platform_store} or {platform_store} Stores. Because you are using Session Desktop, you're not able to renew your plan here.<br/><br/>Session Pro developers are working hard on alternative payment options to allow users to purchase Pro plans outside of the {platform_store} and {platform_store} Stores. <b>Pro Roadmap</b>",
+ },
+  proPlanRenewDesktopLinked: {
+      en: "Renew your plan in the Session Pro settings on a linked device with Session installed via the {platform_store} or {platform_store} Store.",
+ },
+  proPlanRenewDesktopStore: {
+      en: "Renew your plan on the {platform_store} website using the {platform_account} you signed up for Pro with.",
+ },
+  proPlanSignUp: {
+      en: "Because you originally signed up for Session Pro via the <b>{platform_store}</b> Store, you'll need to use your {platform_account} to update your plan.",
+ },
+  proPriceOneMonth: {
+      en: "1 Month - {monthly_price} / Month",
+ },
+  proPriceThreeMonths: {
+      en: "3 Months - {monthly_price} / Month",
+ },
+  proPriceTwelveMonths: {
+      en: "12 Months - {monthly_price} / Month",
+ },
+  proRefundNextSteps: {
+      en: "{platform_account} is now processing your refund request. This typically takes 24-48 hours. Depending on their decision, you may see your Pro status change in Session.",
+ },
+  proRefundRequestStorePolicies: {
+      en: "Your refund request will be handled exclusively by {platform_account} through the {platform_account} website.<br/><br/>Due to {platform_account} refund policies, Session developers have no ability to influence the outcome of refund requests. This includes whether the request is approved or denied, as well as whether a full or partial refund is issued.",
+ },
+  proRefundSupport: {
+      en: "Please contact {platform_account} for further updates on your refund request. Due to {platform_account} refund policies, Session developers have no ability to influence the outcome of refund requests.<br/><br/><span>{platform_store} Refund Support</span>",
+ },
+  proRefundingDescription: {
+      en: "Refunds for Session Pro plans are handled exclusively by {platform_account} through the {platform_store} Store.<br/><br/>Due to {platform_account} refund policies, Session developers have no ability to influence the outcome of refund requests. This includes whether the request is approved or denied, as well as whether a full or partial refund is issued.",
+ },
+  proTosPrivacy: {
+      en: "By updating, you agree to the Session Pro <b>Terms of Service</b> {icon} and <b>Privacy Policy</b> {icon}",
+ },
+  proUpdatePlanDescription: {
+      en: "You are currently on the <b>{current_plan} Plan</b>. Are you sure you want to switch to the <b>{selected_plan} Plan</b>?<br/><br/>By updating, your plan will automatically renew on <b>{date}</b> for an additional {selected_plan} of Pro access.",
+ },
+  proUpdatePlanExpireDescription: {
+      en: "Your plan will expire on <b>{date}</b>.<br/><br/>By updating, your plan will automatically renew on <b>{date}</b> for an additional {selected_plan} of Pro access.",
+ },
+  processingRefundRequest: {
+      en: "{platform_account} is processing your refund request",
+ },
   rateSessionModalDescription: {
       en: "We're glad you're enjoying Session, if you have a moment, rating us in the {storevariant} helps others discover private, secure messaging!",
+ },
+  refundPlanNonOriginatorApple: {
+      en: "Because you originally signed up for Session Pro via a different {platform_account}, you'll need to use that {platform_account} to update your plan.",
  },
   remainingCharactersOverTooltip: {
       en: "Reduce message length by {count}",
@@ -4207,6 +4670,9 @@ export const simpleDictionaryWithArgs: Record<
  },
   searchMatchesNoneSpecific: {
       en: "No results found for {query}",
+ },
+  sessionNetworkDataPrice: {
+      en: "Price data powered by CoinGecko<br/>Accurate at {date_time}",
  },
   sessionNetworkDescription: {
       en: "Messages are sent using the Session Network. The network is comprised of nodes incentivized with Session Token, which keeps Session decentralized and secure. <span><b>Learn More</b> {icon}</span>",
@@ -4232,8 +4698,11 @@ export const simpleDictionaryWithArgs: Record<
   urlOpenDescription: {
       en: "Are you sure you want to open this URL in your browser?<br/><br/><b>{url}</b>",
  },
-  sessionNetworkDataPrice: {
-      en: "Price data powered by CoinGecko<br/>Accurate at {date_time}",
+  viaStoreWebsite: {
+      en: "Via the {platform_store} website",
+ },
+  viaStoreWebsiteDescription: {
+      en: "Change your plan using the {platform_account} you used to sign up with, via the <b><span>{platform_store}</span></b> website.",
  },
 } as const;
 
@@ -4368,6 +4837,30 @@ export const pluralsDictionaryWithArgs = {
     en:{
       one: "Messages have a character limit of {limit} characters. You have {count} character remaining.",
       other: "Messages have a character limit of {limit} characters. You have {count} characters remaining."
+    },
+  },
+  proBadgesSent: {
+    en:{
+      one: "{total} Pro Badge Sent",
+      other: "{total} Pro Badges Sent"
+    },
+  },
+  proGroupsUpgraded: {
+    en:{
+      one: "{total} Group Upgraded",
+      other: "{total} Groups Upgraded"
+    },
+  },
+  proLongerMessagesSent: {
+    en:{
+      one: "{total} Longer Message Sent",
+      other: "{total} Longer Messages Sent"
+    },
+  },
+  proPinnedConversations: {
+    en:{
+      one: "{total} Pinned Conversation",
+      other: "{total} Pinned Conversations"
     },
   },
   promotionFailed: {
