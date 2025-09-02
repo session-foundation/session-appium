@@ -53,7 +53,7 @@ export class ConversationItem extends LocatorsInterface {
 }
 
 // For identifying a conversation with a specific last message in it
-export class MessageInConversation extends LocatorsInterface {
+export class MessageSnippet extends LocatorsInterface {
   public conversationName: string;
   public messageText: string;
 
@@ -67,7 +67,7 @@ export class MessageInConversation extends LocatorsInterface {
     switch (this.platform) {
       case 'ios':
         return {
-          strategy: 'xpath',
+          strategy: 'xpath', // For nested elements like this xpath is unfortunately the best choice
           selector: `//XCUIElementTypeCell[@name="Conversation list item" and @label="${this.conversationName}"]//XCUIElementTypeStaticText[@name="${this.messageText}"]`,
         } as const;
 
