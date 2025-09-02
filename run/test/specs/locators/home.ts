@@ -52,6 +52,34 @@ export class ConversationItem extends LocatorsInterface {
   }
 }
 
+// For identifying a conversation with a specific last message in it
+export class MessageInConversation extends LocatorsInterface {
+  public conversationName: string;
+  public messageText: string;
+
+  constructor(device: DeviceWrapper, conversationName: string, messageText: string) {
+    super(device);
+    this.conversationName = conversationName;
+    this.messageText = messageText;
+  }
+
+  public build() {
+    switch (this.platform) {
+      case 'ios':
+        return {
+          strategy: 'xpath',
+          selector: `//XCUIElementTypeCell[@name="Conversation list item" and @label="${this.conversationName}"]//XCUIElementTypeStaticText[@name="${this.messageText}"]`,
+        } as const;
+
+      case 'android':
+        return {
+          strategy: 'xpath',
+          selector: `//android.widget.LinearLayout[.//android.widget.TextView[@content-desc="Conversation list item" and @text="${this.conversationName}"]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/snippetTextView" and @text="${this.messageText}"]`,
+        } as const;
+    }
+  }
+}
+
 export class PlusButton extends LocatorsInterface {
   public build() {
     return {

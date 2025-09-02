@@ -134,11 +134,13 @@ export type XPath =
   | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
   | `//*[@resource-id='network.loki.messenger.qa:id/callTitle' and contains(@text, ':')]`
   | `//*[starts-with(@content-desc, "Photo taken on")]`
+  | `//android.widget.LinearLayout[.//android.widget.TextView[@content-desc="Conversation list item" and @text="${string}"]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/snippetTextView" and @text="${string}"]`
   | `//android.widget.TextView[@text="${string}"]`
   | `//XCUIElementTypeAlert//*//XCUIElementTypeButton`
   | `//XCUIElementTypeButton[@name="Continue"]`
   | `//XCUIElementTypeButton[@name="Settings"]`
   | `//XCUIElementTypeCell[@name="${string}"]`
+  | `//XCUIElementTypeCell[@name="Conversation list item" and @label="${string}"]//XCUIElementTypeStaticText[@name="${string}"]`
   | `//XCUIElementTypeCell[@name="Session"]`
   | `//XCUIElementTypeImage`
   | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`

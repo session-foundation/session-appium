@@ -34,6 +34,7 @@ export type AllureSuiteConfig =
         | 'Change Profile Picture'
         | 'Delete Contact'
         | 'Delete Conversation'
+        | 'Delete Message'
         | 'Hide Note to Self'
         | 'Set Nickname'
         | 'Share to Session';
@@ -84,6 +85,7 @@ export const TestSteps = {
   USER_ACTIONS: {
     CHANGE_PROFILE_PICTURE: 'Change profile picture',
     APP_DISGUISE: 'Set App Disguise',
+    DELETE_FOR_EVERYONE: 'Delete for everyone',
   },
   // Disappearing Messages
   DISAPPEARING_MESSAGES: {
@@ -101,6 +103,7 @@ export const TestSteps = {
     SPECIFIC_MODAL: (modalDesc: string) => `Verify ${modalDesc} modal strings`,
     MESSAGE_RECEIVED: 'Verify message has been received',
     MESSAGE_DISAPPEARED: 'Verify message disappeared',
+    MESSAGE_DELETED: (context: string) => `Verify message deleted in/on ${context}`,
     CALLING: 'Verify call has been started',
     CALL_SUCCESSFUL: 'Verify call has been put through successfully',
     MISSED_CALL: 'Verify missed call',
