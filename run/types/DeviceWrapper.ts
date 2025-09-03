@@ -385,6 +385,10 @@ export class DeviceWrapper {
     return null;
   }
 
+  /**
+  * Finds element with self-healing for id/accessibility id strategies.
+  * Throws if not found even after healing attempt.
+  */
   public async findElement(strategy: Strategy, selector: string): Promise<AppiumNextElementType> {
     try {
       return await (this.toShared().findElement(
@@ -411,36 +415,39 @@ export class DeviceWrapper {
     }
   }
 
+  /**
+  * Finds elements with self-healing for id/accessibility id strategies.
+  * Returns empty array if not found.
+  */
   public async findElements(
     strategy: Strategy,
     selector: string
   ): Promise<Array<AppiumNextElementType>> {
-      const elements = await (this.toShared().findElements(strategy, selector) as Promise<
-        Array<AppiumNextElementType>
-      >);
-      if (elements && elements.length > 0) {
-        return elements;
-      }
-      // Only try healing for id/accessibility id selectors
-      // In the future we can think about extracting values from XPATH etc.
-      if (strategy !== 'accessibility id' && strategy !== 'id') {
-        return [];
-      }
-
-      const best = await this.findBestMatch(strategy, selector);
-
-      if (best) {
-        try {
-          return await (this.toShared().findElements(best.strategy, best.selector) as Promise<
-            Array<AppiumNextElementType>
-          >);
-        } catch {
-          return [];
-        }
-      }
-
+    const elements = await (this.toShared().findElements(strategy, selector) as Promise<
+      Array<AppiumNextElementType>
+    >);
+    if (elements && elements.length > 0) {
+      return elements;
+    }
+    // Only try healing for id/accessibility id selectors
+    // In the future we can think about extracting values from XPATH etc.
+    if (strategy !== 'accessibility id' && strategy !== 'id') {
       return [];
     }
+
+    const healed = await this.findBestMatch(strategy, selector);
+
+    if (healed) {
+      return (
+        (await (this.toShared().findElements(healed.strategy, healed.selector) as Promise<
+          Array<AppiumNextElementType>
+        >)) || []
+      );
+    }
+
+    return [];
+  }
+
   /**
    * Attempts to click an element using a primary locator, and if not found, falls back to a secondary locator.
    * This is useful for supporting UI transitions (e.g., between legacy and Compose Android screens) where
