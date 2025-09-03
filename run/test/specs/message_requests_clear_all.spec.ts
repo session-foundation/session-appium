@@ -29,8 +29,7 @@ async function clearAllRequests(platform: SupportedPlatformsType, testInfo: Test
   await device2.clickOnByAccessibilityID('Clear all');
   await device2.checkModalStrings(
     englishStrippedStr('clearAll').toString(),
-    englishStrippedStr('messageRequestsClearAllExplanation').toString(),
-    true
+    englishStrippedStr('messageRequestsClearAllExplanation').toString()
   );
   await device2.clickOnByAccessibilityID('Clear');
   // "messageRequestsNonePending": "No pending message requests",
