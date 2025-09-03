@@ -415,15 +415,12 @@ export class DeviceWrapper {
     strategy: Strategy,
     selector: string
   ): Promise<Array<AppiumNextElementType>> {
-    try {
       const elements = await (this.toShared().findElements(strategy, selector) as Promise<
         Array<AppiumNextElementType>
       >);
       if (elements && elements.length > 0) {
         return elements;
       }
-      throw new Error('No elements found');
-    } catch {
       // Only try healing for id/accessibility id selectors
       // In the future we can think about extracting values from XPATH etc.
       if (strategy !== 'accessibility id' && strategy !== 'id') {
@@ -444,7 +441,6 @@ export class DeviceWrapper {
 
       return [];
     }
-  }
   /**
    * Attempts to click an element using a primary locator, and if not found, falls back to a secondary locator.
    * This is useful for supporting UI transitions (e.g., between legacy and Compose Android screens) where
