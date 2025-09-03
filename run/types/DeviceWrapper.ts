@@ -386,9 +386,9 @@ export class DeviceWrapper {
   }
 
   /**
-  * Finds element with self-healing for id/accessibility id strategies.
-  * Throws if not found even after healing attempt.
-  */
+   * Finds element with self-healing for id/accessibility id strategies.
+   * Throws if not found even after healing attempt.
+   */
   public async findElement(strategy: Strategy, selector: string): Promise<AppiumNextElementType> {
     try {
       return await (this.toShared().findElement(
@@ -416,9 +416,9 @@ export class DeviceWrapper {
   }
 
   /**
-  * Finds elements with self-healing for id/accessibility id strategies.
-  * Returns empty array if not found.
-  */
+   * Finds elements with self-healing for id/accessibility id strategies.
+   * Returns empty array if not found.
+   */
   public async findElements(
     strategy: Strategy,
     selector: string
