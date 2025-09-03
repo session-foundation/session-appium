@@ -18,7 +18,18 @@ const useAllure = process.env.CI === '1' && process.env.ALLURE_ENABLED !== 'fals
 const baseReporter: ReporterDescription = [
   './node_modules/@session-foundation/playwright-reporter/dist/index.js',
 ];
-const allureReporter: ReporterDescription = ['allure-playwright', { resultsDir: allureResultsDir }];
+const allureReporter: ReporterDescription = [
+  'allure-playwright',
+  {
+    resultsDir: allureResultsDir,
+    categories: [
+      {
+        name: 'Self-healed tests', // Custom category to group healed tests for better visibility
+        messageRegex: '.*healed.*',
+      },
+    ],
+  },
+];
 
 export default defineConfig({
   timeout: 480000,

@@ -42,8 +42,7 @@ async function blockedRequest(platform: SupportedPlatformsType, testInfo: TestIn
   await sleepFor(1000);
   await device2.checkModalStrings(
     englishStrippedStr('block').toString(),
-    englishStrippedStr('blockDescription').withArgs({ name: alice.userName }).toString(),
-    false
+    englishStrippedStr('blockDescription').withArgs({ name: alice.userName }).toString()
   );
   await device2.clickOnByAccessibilityID('Block'); // This is an old Android modal so can't use the modern locator class
   // "messageRequestsNonePending": "No pending message requests",

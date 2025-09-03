@@ -53,5 +53,6 @@ runs:
         echo "### Regression Test Report" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "[Click here to view the report](${report_url})" >> $GITHUB_STEP_SUMMARY
+        echo "⏳ **Note:** GitHub Pages deployment will run automatically after this workflow completes." >> $GITHUB_STEP_SUMMARY
       env:
         report_url: ${{ steps.publish.outputs.report_url }}

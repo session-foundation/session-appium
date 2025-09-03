@@ -76,6 +76,12 @@ function mobileIt({
 
     try {
       await testCb(platform, testInfo);
+
+      const healedAnnotations = testInfo.annotations.filter(a => a.type === 'healed');
+      if (healedAnnotations.length > 0) {
+        const details = healedAnnotations.map(a => `  ${a.description}`).join('\n');
+        throw new Error(`Test passed but used healed locators:\n${details}`);
+      }
     } catch (error) {
       testFailed = true; // Playwright hasn't updated testInfo.status yet, so track failure manually
       throw error;

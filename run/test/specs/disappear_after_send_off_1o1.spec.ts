@@ -83,8 +83,7 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType, testIn
   await sleepFor(500);
   await bob1.checkModalStrings(
     englishStrippedStr('disappearingMessagesFollowSetting').toString(),
-    englishStrippedStr('disappearingMessagesFollowSettingOff').toString(),
-    false
+    englishStrippedStr('disappearingMessagesFollowSettingOff').toString()
   );
   await bob1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Confirm' });
   // Check conversation subtitle?

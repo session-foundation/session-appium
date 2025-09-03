@@ -38,8 +38,7 @@ async function blockUserInConversationList(platform: SupportedPlatformsType, tes
   await alice1.clickOnElementAll(new LongPressBlockOption(alice1));
   await alice1.checkModalStrings(
     englishStrippedStr('block').toString(),
-    englishStrippedStr('blockDescription').withArgs({ name: USERNAME.BOB }).toString(),
-    false
+    englishStrippedStr('blockDescription').withArgs({ name: USERNAME.BOB }).toString()
   );
   await alice1.clickOnByAccessibilityID('Block');
   // Once you block the conversation disappears from the home screen

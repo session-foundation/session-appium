@@ -91,8 +91,7 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType, testInfo: 
   // Accept dialog for link preview
   await alice1.checkModalStrings(
     englishStrippedStr('linkPreviewsEnable').toString(),
-    englishStrippedStr('linkPreviewsFirstDescription').toString(),
-    true
+    englishStrippedStr('linkPreviewsFirstDescription').toString()
   );
   await alice1.clickOnByAccessibilityID('Enable');
   //wait for preview to generate

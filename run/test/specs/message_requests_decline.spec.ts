@@ -51,8 +51,7 @@ async function declineRequest(platform: SupportedPlatformsType, testInfo: TestIn
     .onAndroid()
     .checkModalStrings(
       englishStrippedStr('delete').toString(),
-      englishStrippedStr('messageRequestsContactDelete').toString(),
-      false
+      englishStrippedStr('messageRequestsContactDelete').toString()
     );
   await device2.clickOnElementAll(new DeleteMesssageRequestConfirmation(device2));
   // "messageRequestsNonePending": "No pending message requests",

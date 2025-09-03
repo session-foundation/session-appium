@@ -1,8 +1,10 @@
 import { getImageOccurrence } from '@appium/opencv';
+import { TestInfo } from '@playwright/test';
 import { W3CCapabilities } from '@wdio/types/build/Capabilities';
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
 import { XCUITestDriver } from 'appium-xcuitest-driver/build/lib/driver';
 import fs from 'fs/promises';
+import Fuse from 'fuse.js';
 import { isArray, isEmpty } from 'lodash';
 import * as path from 'path';
 import sharp from 'sharp';
@@ -89,10 +91,16 @@ export class DeviceWrapper {
   private readonly device: AndroidUiautomator2Driver | XCUITestDriver;
   public readonly udid: string;
   private deviceIdentity: string = '';
+  private testInfo: TestInfo;
 
-  constructor(device: AndroidUiautomator2Driver | XCUITestDriver, udid: string) {
+  constructor(
+    device: AndroidUiautomator2Driver | XCUITestDriver,
+    udid: string,
+    testInfo: TestInfo
+  ) {
     this.device = device;
     this.udid = udid;
+    this.testInfo = testInfo;
     // Set temporary identity immediately
     this.deviceIdentity = `device-${udid.slice(-4)}`;
   }
@@ -301,17 +309,146 @@ export class DeviceWrapper {
 
   // ELEMENT INTERACTION
 
-  public async findElement(strategy: Strategy, selector: string): Promise<AppiumNextElementType> {
-    return this.toShared().findElement(strategy, selector) as Promise<AppiumNextElementType>;
+  // Heal a broken locator by finding potential fuzzy matches in the page source and log it for a permanent fix.
+  private async findBestMatch(
+    strategy: Strategy,
+    selector: string
+  ): Promise<{ strategy: Strategy; selector: string } | null> {
+    const pageSource = await this.getPageSource();
+    const threshold = 0.35; // 0.0 = exact, 1.0 = match anything
+
+    // Identify common element patterns and map them to our strategies
+    const candidateStrategies = [
+      { strategy: 'accessibility id' as Strategy, pattern: /name="([^"]+)"/g },
+      { strategy: 'accessibility id' as Strategy, pattern: /label="([^"]+)"/g },
+      { strategy: 'accessibility id' as Strategy, pattern: /identifier="([^"]+)"/g },
+      { strategy: 'accessibility id' as Strategy, pattern: /value="([^"]+)"/g },
+      { strategy: 'accessibility id' as Strategy, pattern: /content-desc="([^"]+)"/g },
+      { strategy: 'id' as Strategy, pattern: /resource-id="([^"]+)"/g },
+    ];
+
+    // System locators such as 'network.loki.messenger.qa:id' can cause false positives with too high similarity scores
+    // Strip any known prefix patterns first
+    const stripPrefix = (selector: string) => {
+      return selector
+        .replace(/^[a-z]+\.[a-z]+\.[a-z]+(\.[a-z]+)?:id\//, '') // package:id/
+        .replace(/^com\.android\.[^:]+:id\//, '') // Android system
+        .replace(/^android:id\//, ''); // Android framework
+    };
+
+    // Extract ALL identifiers from the page
+    const allElements: Array<{ strategy: Strategy; selector: string }> = [];
+    for (const { strategy, pattern } of candidateStrategies) {
+      const matches = [...pageSource.matchAll(pattern)];
+      matches.forEach(m => {
+        allElements.push({
+          strategy,
+          selector: m[1],
+        });
+      });
+    }
+
+    // Map elements but keep the original
+    const searchableElements = allElements.map(el => ({
+      ...el,
+      originalSelector: el.selector,
+      strippedSelector: stripPrefix(el.selector), // Stripped version for searching
+    }));
+
+    // Fuzzy match potential candidates
+    const fuse = new Fuse(searchableElements, {
+      keys: ['strippedSelector'],
+      threshold,
+      includeScore: true,
+    });
+
+    const results = fuse.search(stripPrefix(selector));
+
+    if (results.length > 0 && results[0].score !== undefined && results[0].score < threshold) {
+      const match = results[0].item;
+      const confidence = ((1 - results[0].score) * 100).toFixed(2);
+
+      // Sometimes the element is just not on screen yet - proceed.
+      if (match.strategy === strategy && match.originalSelector === selector) {
+        return null;
+      }
+      this.log(
+        `Original locator ${strategy} "${selector}" not found. Test healed with ${match.strategy} "${match.selector}" (${confidence}% match)`
+      );
+      this.testInfo.annotations.push({
+        type: 'healed',
+        description: ` ${strategy} "${selector}" ➡ ${match.strategy} "${match.selector}" (${confidence}% match)`,
+      });
+      return {
+        strategy: match.strategy,
+        selector: match.originalSelector,
+      };
+    }
+
+    return null;
   }
 
+  /**
+   * Finds element with self-healing for id/accessibility id strategies.
+   * Throws if not found even after healing attempt.
+   */
+  public async findElement(strategy: Strategy, selector: string): Promise<AppiumNextElementType> {
+    try {
+      return await (this.toShared().findElement(
+        strategy,
+        selector
+      ) as Promise<AppiumNextElementType>);
+    } catch (originalError) {
+      // Only try healing for id/accessibility id selectors
+      // In the future we can think about extracting values from XPATH etc.
+      if (strategy !== 'accessibility id' && strategy !== 'id') {
+        throw originalError;
+      }
+
+      const best = await this.findBestMatch(strategy, selector);
+
+      if (best) {
+        return await (this.toShared().findElement(
+          best.strategy,
+          best.selector
+        ) as Promise<AppiumNextElementType>);
+      }
+
+      throw originalError;
+    }
+  }
+
+  /**
+   * Finds elements with self-healing for id/accessibility id strategies.
+   * Returns empty array if not found.
+   */
   public async findElements(
     strategy: Strategy,
     selector: string
   ): Promise<Array<AppiumNextElementType>> {
-    return this.toShared().findElements(strategy, selector) as Promise<
+    const elements = await (this.toShared().findElements(strategy, selector) as Promise<
       Array<AppiumNextElementType>
-    >;
+    >);
+    if (elements && elements.length > 0) {
+      return elements;
+    }
+    // Only try healing for id/accessibility id selectors
+    // In the future we can think about extracting values from XPATH etc.
+    if (strategy !== 'accessibility id' && strategy !== 'id') {
+      return [];
+    }
+
+    const healed = await this.findBestMatch(strategy, selector);
+
+    if (healed) {
+      return (
+        (await (this.toShared().findElements(healed.strategy, healed.selector) as Promise<
+          Array<AppiumNextElementType>
+        >)) || []
+      );
+    }
+
+    return [];
   }
 
   /**
@@ -1813,8 +1950,7 @@ export class DeviceWrapper {
     }
     await this.checkModalStrings(
       englishStrippedStr('giphyWarning').toString(),
-      englishStrippedStr('giphyWarningDescription').toString(),
-      false
+      englishStrippedStr('giphyWarningDescription').toString()
     );
     await this.clickOnByAccessibilityID('Continue', 5000);
     await this.clickOnElementAll(new FirstGif(this));
@@ -1930,8 +2066,7 @@ export class DeviceWrapper {
       englishStrippedStr(`attachmentsAutoDownloadModalTitle`).toString(),
       englishStrippedStr(`attachmentsAutoDownloadModalDescription`)
         .withArgs({ conversation_name: conversationName })
-        .toString(),
-      false
+        .toString()
     );
     await this.clickOnElementAll(new DownloadMediaButton(this));
   }
@@ -2177,13 +2312,7 @@ export class DeviceWrapper {
     return;
   }
 
-  public async checkModalStrings(
-    expectedHeading: string,
-    expectedDescription: string,
-    newAndroid: boolean = true
-  ) {
-    const useNewLocator = this.isIOS() || newAndroid;
-
+  public async checkModalStrings(expectedHeading: string, expectedDescription: string) {
     // Sanitize
     function removeNewLines(input: string): string {
       // Handle space + newlines as a unit
@@ -2191,29 +2320,10 @@ export class DeviceWrapper {
     }
 
     // Locators
-    const newHeading = new ModalHeading(this).build();
-    const legacyHeading = {
-      strategy: 'accessibility id',
-      selector: 'Modal heading',
-    } as StrategyExtractionObj;
-
-    const newDescription = new ModalDescription(this).build();
-    const legacyDescription = {
-      strategy: 'accessibility id',
-      selector: 'Modal description',
-    } as StrategyExtractionObj;
-
-    // Pick locator priority based on platform
-    const [headingPrimary, headingFallback] = useNewLocator
-      ? [newHeading, legacyHeading]
-      : [legacyHeading, newHeading];
-
-    const [descPrimary, descFallback] = useNewLocator
-      ? [newDescription, legacyDescription]
-      : [legacyDescription, newDescription];
+    const elHeading = await this.waitForTextElementToBePresent(new ModalHeading(this));
+    const elDescription = await this.waitForTextElementToBePresent(new ModalDescription(this));
 
     // Modal Heading
-    const elHeading = await this.findWithFallback(headingPrimary, headingFallback);
     const actualHeading = removeNewLines(await this.getTextFromElement(elHeading));
     if (expectedHeading === actualHeading) {
       this.log('Modal heading is correct');
@@ -2222,8 +2332,8 @@ export class DeviceWrapper {
         `Modal heading is incorrect.\nExpected: ${expectedHeading}\nActual: ${actualHeading}`
       );
     }
+
     // Modal Description
-    const elDescription = await this.findWithFallback(descPrimary, descFallback);
     const actualDescription = removeNewLines(await this.getTextFromElement(elDescription));
     if (expectedDescription === actualDescription) {
       this.log('Modal description is correct');

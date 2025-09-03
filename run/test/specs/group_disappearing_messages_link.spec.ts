@@ -53,8 +53,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
     await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('linkPreviewsEnable').toString(),
-        englishStrippedStr('linkPreviewsFirstDescription').toString(),
-        false
+        englishStrippedStr('linkPreviewsFirstDescription').toString()
       );
     });
     // Accept link preview modal

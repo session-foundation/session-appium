@@ -111,8 +111,7 @@ async function disappearingLinkMessage1o1Android(
     await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('linkPreviewsEnable').toString(),
-        englishStrippedStr('linkPreviewsFirstDescription').toString(),
-        false
+        englishStrippedStr('linkPreviewsFirstDescription').toString()
       );
     });
     await alice1.clickOnByAccessibilityID('Enable');

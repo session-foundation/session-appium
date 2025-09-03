@@ -78,8 +78,7 @@ async function sendLinkAndroid(platform: SupportedPlatformsType, testInfo: TestI
   // Accept dialog for link preview
   await alice1.checkModalStrings(
     englishStrippedStr('linkPreviewsEnable').toString(),
-    englishStrippedStr('linkPreviewsFirstDescription').toString(),
-    true
+    englishStrippedStr('linkPreviewsFirstDescription').toString()
   );
   await alice1.clickOnElementAll({
     strategy: 'accessibility id',
