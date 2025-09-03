@@ -398,9 +398,8 @@ export class BlockedContactsSettings extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          // Temporary fix until there's a unique ID
-          strategy: '-android uiautomator',
-          selector: `new UiSelector().text("View and manage blocked contacts.")`,
+          strategy: 'accessibility id', 
+          selector: 'qa-blocked-contacts-settings-item'
         };
       case 'ios':
         return {

@@ -346,6 +346,7 @@ export type AccessibilityId =
   | 'Pin'
   | 'Please enter a shorter group name'
   | 'Privacy Policy'
+  | 'qa-blocked-contacts-settings-item'
   | 'rate-app-button'
   | 'Read Receipts - Switch'
   | 'Recents'
