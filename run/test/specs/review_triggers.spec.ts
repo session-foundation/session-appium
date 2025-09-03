@@ -3,10 +3,12 @@ import { test, type TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { TestSteps } from '../../types/allure';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
-import { androidIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { CopyURLButton } from './locators/global';
 import {
   AppearanceMenuItem,
+  ClassicLightThemeOption,
   DonationsMenuItem,
   PathMenuItem,
   UserSettings,
@@ -22,6 +24,7 @@ const reviewTriggers = [
     testStepName: 'Open Donations menu item',
     trigger: async (device: DeviceWrapper) => {
       await device.clickOnElementAll(new DonationsMenuItem(device));
+      await device.clickOnElementAll(new CopyURLButton(device)); // Copy URL dismisses the modal on both platforms
     },
   },
   {
@@ -30,6 +33,7 @@ const reviewTriggers = [
     testStepName: TestSteps.OPEN.PATH,
     trigger: async (device: DeviceWrapper) => {
       await device.clickOnElementAll(new PathMenuItem(device));
+      await device.back();
     },
   },
   {
@@ -39,13 +43,14 @@ const reviewTriggers = [
     trigger: async (device: DeviceWrapper) => {
       await device.scrollDown();
       await device.clickOnElementAll(new AppearanceMenuItem(device));
-      await device.clickOnElementById('network.loki.messenger.qa:id/theme_option_classic_light');
+      await device.clickOnElementAll(new ClassicLightThemeOption(device));
+      await device.back();
     },
   },
 ];
 
 for (const { titleSnippet, descriptionSnippet, testStepName, trigger } of reviewTriggers) {
-  androidIt({
+  bothPlatformsIt({
     title: `Review prompt ${titleSnippet} trigger`,
     risk: 'high',
     countOfDevicesNeeded: 1,
@@ -66,7 +71,6 @@ for (const { titleSnippet, descriptionSnippet, testStepName, trigger } of review
       await test.step(testStepName, async () => {
         await device.clickOnElementAll(new UserSettings(device));
         await trigger(device);
-        await device.back();
         await device.back();
       });
       await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('App Review'), async () => {

@@ -1,6 +1,7 @@
 import { runOnlyOnIOS, sleepFor } from '.';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
+import { MessageBody } from '../locators/conversation';
 import { MessageRequestsBanner } from '../locators/home';
 import { SupportedPlatformsType } from './open_app';
 
@@ -28,11 +29,7 @@ export const newContact = async (
   // TO DO - ADD BACK IN ONCE IOS AND ANDROID HAS FIXED THIS ISSUE
   // const messageRequestsAccepted = englishStrippedStr('messageRequestsAccepted').toString();
   // await device1.onAndroid().waitForControlMessageToBePresent(messageRequestsAccepted);
-  await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: replyMessage,
-  });
+  await device1.waitForTextElementToBePresent(new MessageBody(device1, replyMessage));
   console.info(`${sender.userName} and ${receiver.userName} are now contacts`);
   return { sender, receiver, device1, device2 };
 };

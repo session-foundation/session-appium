@@ -23,6 +23,25 @@ export class SendButton extends LocatorsInterface {
   }
 }
 
+export class MessageBody extends LocatorsInterface {
+  public text: string | undefined;
+  constructor(device: DeviceWrapper, text?: string) {
+    super(device);
+    this.text = text;
+  }
+  public build() {
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Message body',
+          text: this.text,
+        } as const;
+    }
+  }
+}
+
 export class ScrollToBottomButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -130,19 +149,24 @@ export class CallButton extends LocatorsInterface {
 }
 
 export class ConversationHeaderName extends LocatorsInterface {
-  public build(text?: string) {
+  public text: string | undefined;
+  constructor(device: DeviceWrapper, text?: string) {
+    super(device);
+    this.text = text;
+  }
+  public build() {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'Conversation header name',
-          text,
+          strategy: '-android uiautomator',
+          selector: `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-text"))`,
+          text: this.text,
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Conversation header name',
-          text,
+          text: this.text,
         } as const;
     }
   }
@@ -363,8 +387,8 @@ export class EditNicknameButton extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'edit-profile-icon',
+          strategy: 'accessibility id',
+          selector: 'Edit',
         } as const;
       case 'ios':
         return {
@@ -428,6 +452,58 @@ export class PreferredDisplayName extends LocatorsInterface {
           strategy: 'accessibility id',
           selector: 'Username',
           text: this.text,
+        } as const;
+    }
+  }
+}
+
+export class FirstEmojiReact extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger.qa:id/reaction_1',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: '😂',
+        } as const;
+    }
+  }
+}
+
+export class EmojiReactsPill extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger.qa:id/layout_emoji_container',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: '😂',
+        } as const;
+    }
+  }
+}
+
+export class EmojiReactsCount extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger.qa:id/reactions_pill_count',
+          text: '2',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: '2',
         } as const;
     }
   }

@@ -2,6 +2,7 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { MessageBody } from './locators/conversation';
 import { PlusButton } from './locators/home';
 import { EnterAccountID, NewMessageOption, NextButton } from './locators/start_conversation';
 import { sleepFor } from './utils';
@@ -49,9 +50,7 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, te
   );
   await device.sendMessage(testMessage);
   await device.hasElementBeenDeleted({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: testMessage,
+    ...new MessageBody(device, testMessage).build(),
     maxWait,
     preventEarlyDeletion: true,
   });

@@ -1,7 +1,7 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
-import { OutgoingMessageStatusSent } from './locators/conversation';
+import { MessageBody, OutgoingMessageStatusSent } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -36,35 +36,23 @@ async function sendImageGroupiOS(platform: SupportedPlatformsType, testInfo: Tes
     ...new OutgoingMessageStatusSent(alice1).build(),
     maxWait: 50000,
   });
-  await Promise.all([
-    bob1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: testMessage,
-      maxWait: 5000,
-    }),
-    charlie1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: testMessage,
-      maxWait: 5000,
-    }),
-  ]);
+  await Promise.all(
+    [bob1, charlie1].map(device =>
+      device.waitForTextElementToBePresent({
+        ...new MessageBody(device, testMessage).build(),
+        maxWait: 5_000,
+      })
+    )
+  );
   const replyMessage = await bob1.replyToMessage(alice, testMessage);
-  await Promise.all([
-    alice1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: replyMessage,
-      maxWait: 5000,
-    }),
-    charlie1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: replyMessage,
-      maxWait: 5000,
-    }),
-  ]);
+  await Promise.all(
+    [alice1, charlie1].map(device =>
+      device.waitForTextElementToBePresent({
+        ...new MessageBody(device, replyMessage).build(),
+        maxWait: 5_000,
+      })
+    )
+  );
   // Close server and devices
   await closeApp(alice1, bob1, charlie1);
 }
@@ -106,18 +94,14 @@ async function sendImageGroupAndroid(platform: SupportedPlatformsType, testInfo:
   await bob1.longPress('Media message');
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);
-  await Promise.all([
-    alice1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: replyMessage,
-    }),
-    charlie1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: replyMessage,
-    }),
-  ]);
+  await Promise.all(
+    [alice1, charlie1].map(device =>
+      device.waitForTextElementToBePresent({
+        ...new MessageBody(device, replyMessage).build(),
+        maxWait: 5_000,
+      })
+    )
+  );
   // Close server and devices
   await closeApp(alice1, bob1, charlie1);
 }

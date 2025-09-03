@@ -18,10 +18,11 @@ bothPlatformsIt({
   allureDescription: 'Verifies that a GIF disappears as expected in a group conversation',
 });
 
-const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+// The timing with 30 seconds was a bit tight in terms of the attachment downloading and becoming visible
+const time = DISAPPEARING_TIMES.ONE_MINUTE;
 const timerType = 'Disappear after send option';
 const initialMaxWait = 15_000; // Downloading the attachment can take a while
-const maxWait = 35_000; // 30s plus buffer
+const maxWait = 70_000; // 70s plus buffer
 
 async function disappearingGifMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Disappear after sent test';
