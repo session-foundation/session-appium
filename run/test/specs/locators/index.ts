@@ -398,8 +398,8 @@ export class BlockedContactsSettings extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id', 
-          selector: 'qa-blocked-contacts-settings-item'
+          strategy: 'accessibility id',
+          selector: 'qa-blocked-contacts-settings-item',
         };
       case 'ios':
         return {

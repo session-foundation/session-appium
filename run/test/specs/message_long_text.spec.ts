@@ -18,9 +18,6 @@ bothPlatformsItSeparate({
   android: {
     testCb: sendLongMessageAndroid,
   },
-  allureLinks: {
-    android: 'SES-4337',
-  },
 });
 
 async function sendLongMessageIos(platform: SupportedPlatformsType, testInfo: TestInfo) {
