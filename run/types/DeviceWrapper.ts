@@ -33,6 +33,7 @@ import {
   AttachmentsButton,
   MessageBody,
   MessageInput,
+  NewVoiceMessageButton,
   OutgoingMessageStatusSent,
   ScrollToBottomButton,
   SendButton,
@@ -617,17 +618,21 @@ export class DeviceWrapper {
     }
     await this.click(el.ELEMENT);
   }
-  // TODO update this function to handle new locator logic
-  public async longPress(accessibilityId: AccessibilityId, text?: string) {
-    const el = await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: accessibilityId,
-      text,
-    });
+  public async longPress(
+    args: { text?: string; duration?: number } & (LocatorsInterface | StrategyExtractionObj)
+  ): Promise<void> {
+    const { text, duration = 2000 } = args;
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    // Merge text if provided
+    const finalLocator = text ? { ...locator, text } : locator;
+
+    const el = await this.waitForTextElementToBePresent({ ...finalLocator });
     if (!el) {
-      throw new Error(`longPress: Could not find accessibilityId: ${accessibilityId}`);
+      const description = describeLocator(finalLocator);
+      throw new Error(`longPress: Could not find element: ${description}`);
     }
-    await this.longClick(el, 2000);
+
+    await this.longClick(el, duration);
   }
 
   public async longPressMessage(textToLookFor: string) {
@@ -1985,7 +1990,7 @@ export class DeviceWrapper {
   }
 
   public async sendVoiceMessage() {
-    await this.longPress('New voice message');
+    await this.longPress(new NewVoiceMessageButton(this));
 
     if (this.isAndroid()) {
       await this.clickOnElementAll({

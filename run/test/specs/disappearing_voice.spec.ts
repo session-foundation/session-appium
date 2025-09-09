@@ -2,6 +2,7 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
+import { VoiceMessage } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
@@ -32,14 +33,9 @@ async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType, tes
   });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   await alice1.sendVoiceMessage();
-  await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Voice message',
-  });
+  await alice1.waitForTextElementToBePresent(new VoiceMessage(alice1));
   await Promise.all([
-    alice1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Voice message',
+      alice1.hasElementBeenDeleted({...new VoiceMessage(alice1).build(),
       maxWait,
       preventEarlyDeletion: true,
     }),

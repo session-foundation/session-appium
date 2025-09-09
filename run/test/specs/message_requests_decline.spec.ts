@@ -4,7 +4,7 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { type AccessibilityId, USERNAME } from '../../types/testing';
 import { DeclineMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
-import { MessageRequestsBanner, PlusButton } from './locators/home';
+import { MessageRequestItem, MessageRequestsBanner, PlusButton } from './locators/home';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
@@ -32,10 +32,7 @@ async function declineRequest(platform: SupportedPlatformsType, testInfo: TestIn
   await device2.clickOnByAccessibilityID('Message request');
   // Check message request appears on linked device (device 3)
   await device3.clickOnElementAll(new MessageRequestsBanner(device3));
-  await device3.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message request',
-  });
+  await device3.waitForTextElementToBePresent(new MessageRequestItem(device3));
   // Click on decline button
   await device2.clickOnElementAll(new DeclineMessageRequestButton(device2));
   // Are you sure you want to delete message request only for ios

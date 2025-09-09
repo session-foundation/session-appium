@@ -2,6 +2,7 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { MediaMessage } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
@@ -38,8 +39,7 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType, testI
   await Promise.all(
     [alice1, bob1].map(device =>
       device.hasElementBeenDeleted({
-        strategy: 'accessibility id',
-        selector: 'Media message',
+        ...new MediaMessage(device).build(),
         initialMaxWait,
         maxWait,
         preventEarlyDeletion: true,

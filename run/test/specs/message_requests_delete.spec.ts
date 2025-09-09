@@ -4,7 +4,7 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { type AccessibilityId, USERNAME } from '../../types/testing';
 import { DeleteMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
-import { MessageRequestsBanner } from './locators/home';
+import { MessageRequestItem, MessageRequestsBanner } from './locators/home';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 
@@ -28,7 +28,7 @@ async function deleteRequest(platform: SupportedPlatformsType, testInfo: TestInf
   await device2.clickOnElementAll(new MessageRequestsBanner(device2));
   // Swipe left on ios
   await device2.onIOS().swipeLeftAny('Message request');
-  await device2.onAndroid().longPress('Message request');
+  await device2.onAndroid().longPress(new MessageRequestItem(device2));
   await device2.clickOnElementAll(new DeleteMessageRequestButton(device2));
   // TODO remove onIOS/onAndroid once SES-3846 has been completed
   await device2

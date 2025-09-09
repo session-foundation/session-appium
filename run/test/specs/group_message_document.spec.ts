@@ -1,7 +1,7 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
-import { MessageBody } from './locators/conversation';
+import { DocumentMessage, MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -66,18 +66,15 @@ async function sendDocumentGroupAndroid(platform: SupportedPlatformsType, testIn
     charlie1.trustAttachments(testGroupName),
   ]);
   // Check document appears in both device 2 and 3's screen
-  await Promise.all([
-    bob1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Document',
-    }),
-    await charlie1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Document',
-    }),
-  ]);
-  // Reply to document from user B
-  await bob1.longPress('Document');
+  await Promise.all(
+    [bob1, charlie1].map(device =>
+      device.waitForTextElementToBePresent(new DocumentMessage(device))
+    )
+  );
+  // Reply to image - user B
+  // Sleep for is waiting for image to load
+  await sleepFor(1000);
+  await bob1.longPress(new DocumentMessage(bob1));
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);
   // Check reply from device 2 came through on alice1 and charlie1

@@ -23,6 +23,19 @@ export class SendButton extends LocatorsInterface {
   }
 }
 
+export class NewVoiceMessageButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'New voice message',
+        } as const;
+    }
+  }
+}
+
 export class MessageBody extends LocatorsInterface {
   public text: string | undefined;
   constructor(device: DeviceWrapper, text?: string) {
@@ -37,6 +50,45 @@ export class MessageBody extends LocatorsInterface {
           strategy: 'accessibility id',
           selector: 'Message body',
           text: this.text,
+        } as const;
+    }
+  }
+}
+
+export class VoiceMessage extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Voice message',
+        } as const;
+    }
+  }
+}
+
+export class MediaMessage extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Media message',
+        } as const;
+    }
+  }
+}
+
+export class DocumentMessage extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Document',
         } as const;
     }
   }

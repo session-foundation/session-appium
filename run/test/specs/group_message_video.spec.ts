@@ -1,7 +1,7 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
-import { MessageBody } from './locators/conversation';
+import { MediaMessage, MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
@@ -91,7 +91,7 @@ async function sendVideoGroupAndroid(platform: SupportedPlatformsType, testInfo:
     }),
   ]);
   // Reply to message on device 2
-  await bob1.longPress('Media message');
+  await bob1.longPress(new MediaMessage(bob1));
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);
   // Check reply appears in device 1 and device 3

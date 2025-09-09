@@ -1,7 +1,7 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
-import { MessageBody } from './locators/conversation';
+import { MediaMessage, MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -35,15 +35,13 @@ async function sendGifGroupiOS(platform: SupportedPlatformsType, testInfo: TestI
 
   await alice1.sendGIF();
   await sleepFor(500);
-  await bob1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Media message',
-  });
-  await charlie1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Media message',
-  });
-  await bob1.longPress('Media message');
+  await Promise.all(
+    [bob1, charlie1].map(device => device.waitForTextElementToBePresent(new MediaMessage(device)))
+  );
+  // Reply to image - user B
+  // Sleep for is waiting for image to load
+  await sleepFor(1000);
+  await bob1.longPress(new MediaMessage(bob1));
   // Check reply came through on alice1
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);
@@ -74,18 +72,12 @@ async function sendGifGroupAndroid(platform: SupportedPlatformsType, testInfo: T
     bob1.trustAttachments(testGroupName),
     charlie1.trustAttachments(testGroupName),
   ]);
-  // Reply to message
-  await bob1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Media message',
-    maxWait: 10000,
-  });
-  await charlie1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Media message',
-    maxWait: 10000,
-  });
-  await bob1.longPress('Media message');
+  await Promise.all(
+    [bob1, charlie1].map(device => device.waitForTextElementToBePresent(new MediaMessage(device)))
+  );
+  // Reply to image - user B
+  // Sleep for is waiting for image to load
+  await bob1.longPress(new MediaMessage(bob1));
   // Check reply came through on alice1
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);

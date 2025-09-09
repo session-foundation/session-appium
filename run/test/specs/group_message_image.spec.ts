@@ -1,7 +1,7 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
-import { MessageBody, OutgoingMessageStatusSent } from './locators/conversation';
+import { MediaMessage, MessageBody, OutgoingMessageStatusSent } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -78,20 +78,13 @@ async function sendImageGroupAndroid(platform: SupportedPlatformsType, testInfo:
     bob1.trustAttachments(testGroupName),
     charlie1.trustAttachments(testGroupName),
   ]);
-  await Promise.all([
-    bob1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Media message',
-    }),
-    charlie1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Media message',
-    }),
-  ]);
+  await Promise.all(
+    [bob1, charlie1].map(device => device.waitForTextElementToBePresent(new MediaMessage(device)))
+  );
   // Reply to image - user B
   // Sleep for is waiting for image to load
   await sleepFor(1000);
-  await bob1.longPress('Media message');
+  await bob1.longPress(new MediaMessage(bob1));
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);
   await Promise.all(

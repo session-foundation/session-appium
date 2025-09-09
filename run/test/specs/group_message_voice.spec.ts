@@ -1,7 +1,7 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { MessageBody } from './locators/conversation';
+import { MessageBody, VoiceMessage } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
@@ -30,13 +30,10 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType, testInfo:
   );
   await Promise.all(
     [alice1, bob1, charlie1].map(device =>
-      device.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Voice message',
-      })
+      device.waitForTextElementToBePresent(new VoiceMessage(device))
     )
   );
-  await bob1.longPress('Voice message');
+  await bob1.longPress(new VoiceMessage(bob1));
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);
   await Promise.all(

@@ -193,22 +193,6 @@ export class FirstGif extends LocatorsInterface {
   }
 }
 
-export class MediaMessage extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Media message',
-        };
-      case 'ios':
-        return {
-          strategy: 'class name',
-          selector: 'XCUIElementTypeImage',
-        };
-    }
-  }
-}
 export class BlockUser extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {

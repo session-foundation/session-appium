@@ -1,7 +1,7 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { MessageBody } from './locators/conversation';
+import { DocumentMessage, MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
@@ -25,14 +25,8 @@ async function sendDocument(platform: SupportedPlatformsType, testInfo: TestInfo
 
   await alice1.sendDocument();
   await bob1.trustAttachments(alice.userName);
-  // Reply to message
-  await bob1.onIOS().waitForTextElementToBePresent(new MessageBody(bob1, testMessage));
-  await bob1.onAndroid().waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Document',
-  });
   await bob1.onIOS().longPressMessage(testMessage);
-  await bob1.onAndroid().longPress('Document');
+  await bob1.onAndroid().longPress(new DocumentMessage(bob1));
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);
   await alice1.waitForTextElementToBePresent(new MessageBody(alice1, replyMessage));
