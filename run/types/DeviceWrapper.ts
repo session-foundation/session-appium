@@ -309,8 +309,7 @@ export class DeviceWrapper {
   /* === all the device-specific function ===  */
 
   // ELEMENT INTERACTION
-
-  // Heal a broken locator by finding potential fuzzy matches in the page source and log it for a permanent fix.
+  // Heal a broken locator by finding potential fuzzy matches with text as first-class criteria
   private async findBestMatch(
     strategy: Strategy,
     selector: string,
@@ -366,77 +365,77 @@ export class DeviceWrapper {
 
     const results = fuse.search(stripPrefix(selector));
 
-    if (results.length > 0 && results[0].score !== undefined && results[0].score < threshold) {
-      const match = results[0].item;
-      const confidence = ((1 - results[0].score) * 100).toFixed(2);
+    // Evaluate each candidate with BOTH selector similarity AND text content
+    for (const result of results) {
+      if (result.score === undefined || result.score >= threshold) continue;
 
-      // Sometimes the element is just not on screen yet - proceed.
+      const match = result.item;
+      const selectorConfidence = ((1 - result.score) * 100).toFixed(2);
+
+      // Sometimes the element is just not on screen yet - skip
       if (match.strategy === strategy && match.originalSelector === selector) {
-        return null;
+        continue;
       }
-      // If expectedText is provided, validate that the healed element(s) contain it
+
+      // If we need text validation, check it as part of matching criteria
+      let textMatches = true;
       if (text) {
         try {
-          // Call raw Appium method directly to avoid recursion
           const healedElements = await (this.toShared().findElements(
             match.strategy,
             match.originalSelector
           ) as Promise<Array<AppiumNextElementType>>);
 
           if (healedElements && healedElements.length > 0) {
-            let hasExpectedText = false;
+            textMatches = false; // Assume no match until proven otherwise
             for (const element of healedElements) {
               try {
                 const elementText = await this.getTextFromElement(element);
                 if (elementText.includes(text)) {
-                  hasExpectedText = true;
+                  textMatches = true;
                   break;
                 }
               } catch (e) {
-                // Skip elements that can't provide text
-                continue;
+                continue; // Skip elements that can't provide text
               }
             }
-
-            if (!hasExpectedText) {
-              this.log(
-                `Potential heal found (${match.strategy} "${match.originalSelector}") but none contain expected text "${text}". Skipping this match.`
-              );
-              return null; // This heal is invalid
-            }
           } else {
-            this.log(
-              `Potential heal found (${match.strategy} "${match.originalSelector}") but no elements found. Skipping this match.`
-            );
-            return null;
+            textMatches = false; // No elements found
           }
         } catch (e) {
-          this.log(
-            `Error validating potential heal (${match.strategy} "${match.originalSelector}"): ${String(e)}. Skipping this match.`
-          );
-          return null;
+          textMatches = false; // Error getting elements
         }
       }
-      // Check if we've already logged this exact healing
-      // Only log new healing signatures
-      const healingSignature = `${strategy} "${selector}" ➡ ${match.strategy} "${match.originalSelector}"`;
-      const alreadyLogged = this.testInfo.annotations.some(
-        a => a.type === 'healed' && a.description?.includes(healingSignature)
-      );
 
-      if (!alreadyLogged) {
-        this.log(
-          `Original locator ${strategy} "${selector}" not found. Test healed with ${match.strategy} "${match.originalSelector}" (${confidence}% match)`
+      // Only accept candidates that pass BOTH selector similarity AND text content
+      if (textMatches) {
+        // Check if we've already logged this exact healing
+        // Only log new healing signatures
+        const healingSignature = `${strategy} "${selector}" ➡ ${match.strategy} "${match.originalSelector}"`;
+        const alreadyLogged = this.testInfo.annotations.some(
+          a => a.type === 'healed' && a.description?.includes(healingSignature)
         );
-        this.testInfo.annotations.push({
-          type: 'healed',
-          description: ` ${healingSignature} (${confidence}% match)`,
-        });
+
+        if (!alreadyLogged) {
+          this.log(
+            `Original locator ${strategy} "${selector}" not found. Test healed with ${match.strategy} "${match.originalSelector}" (${selectorConfidence}% match)`
+          );
+          this.testInfo.annotations.push({
+            type: 'healed',
+            description: ` ${healingSignature} (${selectorConfidence}% match)`,
+          });
+        }
+
+        return {
+          strategy: match.strategy,
+          selector: match.originalSelector,
+        };
+      } else if (text) {
+        // Log why this candidate was rejected
+        this.log(
+          `Candidate ${match.strategy} "${match.originalSelector}" (${selectorConfidence}% match) rejected: missing text "${text}"`
+        );
       }
-      return {
-        strategy: match.strategy,
-        selector: match.originalSelector,
-      };
     }
 
     return null;
@@ -1388,6 +1387,14 @@ export class DeviceWrapper {
   }
   // WAIT FOR FUNCTIONS
 
+/**
+ * Waits for an element to be present with optional text matching and self-healing.
+ * Continuously polls for maxWait seconds, then attempts healing as last resort if not found.
+ * 
+ * @param args - Locator and options (text, maxWait, skipHealing)
+ * @returns Promise resolving to the found element
+ * @throws If element not found
+ */
   public async waitForTextElementToBePresent(
     args: { text?: string; maxWait?: number; skipHealing?: boolean } & (
       | LocatorsInterface
@@ -1422,38 +1429,31 @@ export class DeviceWrapper {
         return null;
       }
     };
-    try {
-      // Clean polling without healing - let pollUntil handle error reporting
-      const result = await this.pollUntil(
-        async () => {
-          const element = await tryFindElement(false); // No healing during polling
-          return element
-            ? { success: true, data: element }
-            : { success: false, error: `Element with ${description} not found` };
-        },
-        { maxWait }
-      );
 
-      this.log(`Element with ${description} has been found`);
-      return result!; // result exists because pollUntil succeeded
-    } catch (originalError) {
-      // If healing is disabled, just throw the original error
-      if (skipHealing) {
-        throw originalError;
-      }
+    const result = await this.pollUntil(
+      async () => {
+        const element = await tryFindElement(false); // No healing during polling
+        return element
+          ? { success: true, data: element }
+          : { success: false, error: `Element with ${description} not found` };
+      },
+      { maxWait }
+    ).catch(async originalError => {
+      // If healing is disabled, re-throw original error
+      if (skipHealing) throw originalError;
 
-      // Try healing as last resort
-      this.log(`Polling failed. Attempting self-healing as last resort...`);
-
-      const element = await tryFindElement(true); // Allow healing
+      // One attempt at healing after polling fails
+      const element = await tryFindElement(true);
       if (element) {
-        this.log(`Self-healing successful! Element with ${description} found via healing`);
+        // Healing succeeded
         return element;
       }
-
-      // Re-throw original error with all the pollUntil details intact
+      // Healing failed, re-throw original error
       throw originalError;
-    }
+    });
+    // Element was found as-is
+    this.log(`Element with ${description} has been found`);
+    return result!; // Result must exist if we reached this point
   }
 
   public async waitForControlMessageToBePresent(
