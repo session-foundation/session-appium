@@ -313,7 +313,8 @@ export class DeviceWrapper {
   // Heal a broken locator by finding potential fuzzy matches in the page source and log it for a permanent fix.
   private async findBestMatch(
     strategy: Strategy,
-    selector: string
+    selector: string,
+    text?: string
   ): Promise<{ strategy: Strategy; selector: string } | null> {
     const pageSource = await this.getPageSource();
     const threshold = 0.35; // 0.0 = exact, 1.0 = match anything
@@ -373,7 +374,49 @@ export class DeviceWrapper {
       if (match.strategy === strategy && match.originalSelector === selector) {
         return null;
       }
+      // If expectedText is provided, validate that the healed element(s) contain it
+      if (text) {
+        try {
+          // Call raw Appium method directly to avoid recursion
+          const healedElements = await (this.toShared().findElements(
+            match.strategy,
+            match.originalSelector
+          ) as Promise<Array<AppiumNextElementType>>);
 
+          if (healedElements && healedElements.length > 0) {
+            let hasExpectedText = false;
+            for (const element of healedElements) {
+              try {
+                const elementText = await this.getTextFromElement(element);
+                if (elementText.includes(text)) {
+                  hasExpectedText = true;
+                  break;
+                }
+              } catch (e) {
+                // Skip elements that can't provide text
+                continue;
+              }
+            }
+
+            if (!hasExpectedText) {
+              this.log(
+                `Potential heal found (${match.strategy} "${match.originalSelector}") but none contain expected text "${text}". Skipping this match.`
+              );
+              return null; // This heal is invalid
+            }
+          } else {
+            this.log(
+              `Potential heal found (${match.strategy} "${match.originalSelector}") but no elements found. Skipping this match.`
+            );
+            return null;
+          }
+        } catch (e) {
+          this.log(
+            `Error validating potential heal (${match.strategy} "${match.originalSelector}"): ${String(e)}. Skipping this match.`
+          );
+          return null;
+        }
+      }
       // Check if we've already logged this exact healing
       // Only log new healing signatures
       const healingSignature = `${strategy} "${selector}" ➡ ${match.strategy} "${match.originalSelector}"`;
@@ -437,12 +480,14 @@ export class DeviceWrapper {
   /**
    * Finds elements with self-healing for id/accessibility id strategies.
    * @param skipHealing - Disable self-healing for this call
+   * @param expectedText - If provided, validates that at least one healed element contains this text
    * Returns empty array if not found.
    */
   public async findElements(
     strategy: Strategy,
     selector: string,
-    skipHealing = false
+    skipHealing = false,
+    expectedText?: string
   ): Promise<Array<AppiumNextElementType>> {
     const elements = await (this.toShared().findElements(strategy, selector) as Promise<
       Array<AppiumNextElementType>
@@ -450,13 +495,13 @@ export class DeviceWrapper {
     if (elements && elements.length > 0) {
       return elements;
     }
+
     // Only try healing for id/accessibility id selectors
-    // In the future we can think about extracting values from XPATH etc.
     if (skipHealing || (strategy !== 'accessibility id' && strategy !== 'id')) {
       return [];
     }
 
-    const healed = await this.findBestMatch(strategy, selector);
+    const healed = await this.findBestMatch(strategy, selector, expectedText);
 
     if (healed) {
       return (
@@ -627,10 +672,6 @@ export class DeviceWrapper {
     const finalLocator = text ? { ...locator, text } : locator;
 
     const el = await this.waitForTextElementToBePresent({ ...finalLocator });
-    if (!el) {
-      const description = describeLocator(finalLocator);
-      throw new Error(`longPress: Could not find element: ${description}`);
-    }
 
     await this.longClick(el, duration);
   }
@@ -1083,7 +1124,11 @@ export class DeviceWrapper {
     args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<AppiumNextElementType | null> {
     try {
-      return await this.waitForTextElementToBePresent(args);
+      const locatorArgs =
+        args instanceof LocatorsInterface
+          ? { ...args.build(), text: args.text, maxWait: args.maxWait, skipHealing: true }
+          : { ...args, skipHealing: true };
+      return await this.waitForTextElementToBePresent(locatorArgs);
     } catch {
       return null;
     }
@@ -1360,37 +1405,55 @@ export class DeviceWrapper {
     const description = describeLocator({ ...locator, text });
     this.log(`Waiting for element with ${description} to be present`);
 
-    const result = await this.pollUntil(
-      async () => {
-        try {
-          let element: AppiumNextElementType | null = null;
-
-          if (text) {
-            const els = await this.findElements(locator.strategy, locator.selector, skipHealing);
-            element = await this.findMatchingTextInElementArray(els, text);
-          } else {
-            element = await this.findElement(locator.strategy, locator.selector, skipHealing);
-          }
-
+    // Helper function to find element with or without healing
+    const tryFindElement = async (allowHealing: boolean): Promise<AppiumNextElementType | null> => {
+      try {
+        if (text) {
+          const els = await this.findElements(
+            locator.strategy,
+            locator.selector,
+            !allowHealing,
+            text
+          );
+          return await this.findMatchingTextInElementArray(els, text);
+        }
+        return await this.findElement(locator.strategy, locator.selector, !allowHealing);
+      } catch (err) {
+        return null;
+      }
+    };
+    try {
+      // Clean polling without healing - let pollUntil handle error reporting
+      const result = await this.pollUntil(
+        async () => {
+          const element = await tryFindElement(false); // No healing during polling
           return element
             ? { success: true, data: element }
             : { success: false, error: `Element with ${description} not found` };
-        } catch (err) {
-          return {
-            success: false,
-            error: `Element with ${description} not found`,
-          };
-        }
-      },
-      { maxWait }
-    );
+        },
+        { maxWait }
+      );
 
-    if (!result) {
-      throw new Error(`Waited too long for element with ${description}`);
+      this.log(`Element with ${description} has been found`);
+      return result!; // result exists because pollUntil succeeded
+    } catch (originalError) {
+      // If healing is disabled, just throw the original error
+      if (skipHealing) {
+        throw originalError;
+      }
+
+      // Try healing as last resort
+      this.log(`Polling failed. Attempting self-healing as last resort...`);
+
+      const element = await tryFindElement(true); // Allow healing
+      if (element) {
+        this.log(`Self-healing successful! Element with ${description} found via healing`);
+        return element;
+      }
+
+      // Re-throw original error with all the pollUntil details intact
+      throw originalError;
     }
-
-    this.log(`Element with ${description} has been found`);
-    return result;
   }
 
   public async waitForControlMessageToBePresent(
@@ -2176,17 +2239,14 @@ export class DeviceWrapper {
   }
 
   public async scrollToBottom() {
-    try {
-      const scrollButton = await this.waitForTextElementToBePresent({
-        ...new ScrollToBottomButton(this).build(),
-        maxWait: 3_000,
-      });
-      await this.click(scrollButton.ELEMENT);
-    } catch {
+    if (
+      await this.doesElementExist({ ...new ScrollToBottomButton(this).build(), maxWait: 3_000 })
+    ) {
+      await this.clickOnElementAll(new ScrollToBottomButton(this));
+    } else {
       this.info('Scroll button not found, continuing');
     }
   }
-
   public async pullToRefresh() {
     if (this.isAndroid()) {
       await this.pressCoordinates(
