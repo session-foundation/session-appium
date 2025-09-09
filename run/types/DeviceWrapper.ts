@@ -390,9 +390,14 @@ export class DeviceWrapper {
 
   /**
    * Finds element with self-healing for id/accessibility id strategies.
-   * Throws if not found even after healing attempt.
+   * @param skipHealing - Disable self-healing for this call
+   * @throws If element not found even after healing attempt.
    */
-  public async findElement(strategy: Strategy, selector: string): Promise<AppiumNextElementType> {
+  public async findElement(
+    strategy: Strategy,
+    selector: string,
+    skipHealing = false
+  ): Promise<AppiumNextElementType> {
     try {
       return await (this.toShared().findElement(
         strategy,
@@ -401,16 +406,16 @@ export class DeviceWrapper {
     } catch (originalError) {
       // Only try healing for id/accessibility id selectors
       // In the future we can think about extracting values from XPATH etc.
-      if (strategy !== 'accessibility id' && strategy !== 'id') {
+      if (skipHealing || (strategy !== 'accessibility id' && strategy !== 'id')) {
         throw originalError;
       }
 
-      const best = await this.findBestMatch(strategy, selector);
+      const healed = await this.findBestMatch(strategy, selector);
 
-      if (best) {
+      if (healed) {
         return await (this.toShared().findElement(
-          best.strategy,
-          best.selector
+          healed.strategy,
+          healed.selector
         ) as Promise<AppiumNextElementType>);
       }
 
@@ -420,11 +425,13 @@ export class DeviceWrapper {
 
   /**
    * Finds elements with self-healing for id/accessibility id strategies.
+   * @param skipHealing - Disable self-healing for this call
    * Returns empty array if not found.
    */
   public async findElements(
     strategy: Strategy,
-    selector: string
+    selector: string,
+    skipHealing = false
   ): Promise<Array<AppiumNextElementType>> {
     const elements = await (this.toShared().findElements(strategy, selector) as Promise<
       Array<AppiumNextElementType>
@@ -434,7 +441,7 @@ export class DeviceWrapper {
     }
     // Only try healing for id/accessibility id selectors
     // In the future we can think about extracting values from XPATH etc.
-    if (strategy !== 'accessibility id' && strategy !== 'id') {
+    if (skipHealing || (strategy !== 'accessibility id' && strategy !== 'id')) {
       return [];
     }
 
@@ -477,14 +484,14 @@ export class DeviceWrapper {
     const fallbackDescription = describeLocator(fallback);
 
     try {
-      return await this.waitForTextElementToBePresent({ ...primary, maxWait });
+      return await this.waitForTextElementToBePresent({ ...primary, maxWait, skipHealing: true });
     } catch (primaryError) {
       console.warn(
         `[findWithFallback] Could not find element with ${primaryDescription}, falling back to ${fallbackDescription}`
       );
 
       try {
-        return await this.waitForTextElementToBePresent({ ...fallback, maxWait });
+        return await this.waitForTextElementToBePresent({ ...fallback, maxWait, skipHealing: true });
       } catch (fallbackError) {
         throw new Error(`Element ${primaryDescription} and ${fallbackDescription} not found.`);
       }
@@ -1318,7 +1325,7 @@ export class DeviceWrapper {
   // WAIT FOR FUNCTIONS
 
   public async waitForTextElementToBePresent(
-    args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
+    args: { text?: string; maxWait?: number, skipHealing?: boolean } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<AppiumNextElementType> {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
 
@@ -1326,6 +1333,7 @@ export class DeviceWrapper {
     const text = args.text ?? ('text' in locator ? locator.text : undefined);
 
     const { maxWait = 30_000 } = args;
+    const skipHealing = 'skipHealing' in args ? args.skipHealing ?? false : false;
 
     const description = describeLocator({ ...locator, text });
     this.log(`Waiting for element with ${description} to be present`);
@@ -1336,10 +1344,10 @@ export class DeviceWrapper {
           let element: AppiumNextElementType | null = null;
 
           if (text) {
-            const els = await this.findElements(locator.strategy, locator.selector);
+            const els = await this.findElements(locator.strategy, locator.selector, skipHealing);
             element = await this.findMatchingTextInElementArray(els, text);
           } else {
-            element = await this.findElement(locator.strategy, locator.selector);
+            element = await this.findElement(locator.strategy, locator.selector, skipHealing);
           }
 
           return element
@@ -2312,6 +2320,13 @@ export class DeviceWrapper {
     return;
   }
 
+  /**
+   * Checks modal heading and description text against expected values.
+   * Uses fallback locators to support both new (id) and legacy (accessibility id) variants on Android.
+   * @param expectedHeading - Expected modal heading string
+   * @param expectedDescription - Expected modal description string
+   * @throws Error if heading or description doesn't match expected text
+   */
   public async checkModalStrings(expectedHeading: string, expectedDescription: string) {
     // Sanitize
     function removeNewLines(input: string): string {
@@ -2319,9 +2334,22 @@ export class DeviceWrapper {
       return input.replace(/\s*\n+/g, ' ').trim();
     }
 
-    // Locators
-    const elHeading = await this.waitForTextElementToBePresent(new ModalHeading(this));
-    const elDescription = await this.waitForTextElementToBePresent(new ModalDescription(this));
+    // Always try new first, fall back to legacy
+    const newHeading = new ModalHeading(this).build();
+    const legacyHeading = {
+      strategy: 'accessibility id',
+      selector: 'Modal heading',
+    } as StrategyExtractionObj;
+
+    const newDescription = new ModalDescription(this).build();
+    const legacyDescription = {
+      strategy: 'accessibility id',
+      selector: 'Modal description',
+    } as StrategyExtractionObj;
+
+    // New → legacy fallback
+    const elHeading = await this.findWithFallback(newHeading, legacyHeading);
+    const elDescription = await this.findWithFallback(newDescription, legacyDescription);
 
     // Modal Heading
     const actualHeading = removeNewLines(await this.getTextFromElement(elHeading));
