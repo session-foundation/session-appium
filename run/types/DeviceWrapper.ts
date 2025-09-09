@@ -372,13 +372,23 @@ export class DeviceWrapper {
       if (match.strategy === strategy && match.originalSelector === selector) {
         return null;
       }
-      this.log(
-        `Original locator ${strategy} "${selector}" not found. Test healed with ${match.strategy} "${match.selector}" (${confidence}% match)`
+
+      // Check if we've already logged this exact healing
+      // Only log new healing signatures
+      const healingSignature = `${strategy} "${selector}" ➡ ${match.strategy} "${match.originalSelector}"`;
+      const alreadyLogged = this.testInfo.annotations.some(
+        a => a.type === 'healed' && a.description?.includes(healingSignature)
       );
-      this.testInfo.annotations.push({
-        type: 'healed',
-        description: ` ${strategy} "${selector}" ➡ ${match.strategy} "${match.selector}" (${confidence}% match)`,
-      });
+
+      if (!alreadyLogged) {
+        this.log(
+          `Original locator ${strategy} "${selector}" not found. Test healed with ${match.strategy} "${match.originalSelector}" (${confidence}% match)`
+        );
+        this.testInfo.annotations.push({
+          type: 'healed',
+          description: ` ${healingSignature} (${confidence}% match)`,
+        });
+      }
       return {
         strategy: match.strategy,
         selector: match.originalSelector,
@@ -491,7 +501,11 @@ export class DeviceWrapper {
       );
 
       try {
-        return await this.waitForTextElementToBePresent({ ...fallback, maxWait, skipHealing: true });
+        return await this.waitForTextElementToBePresent({
+          ...fallback,
+          maxWait,
+          skipHealing: true,
+        });
       } catch (fallbackError) {
         throw new Error(`Element ${primaryDescription} and ${fallbackDescription} not found.`);
       }
@@ -1325,7 +1339,10 @@ export class DeviceWrapper {
   // WAIT FOR FUNCTIONS
 
   public async waitForTextElementToBePresent(
-    args: { text?: string; maxWait?: number, skipHealing?: boolean } & (LocatorsInterface | StrategyExtractionObj)
+    args: { text?: string; maxWait?: number; skipHealing?: boolean } & (
+      | LocatorsInterface
+      | StrategyExtractionObj
+    )
   ): Promise<AppiumNextElementType> {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
 
@@ -1333,7 +1350,7 @@ export class DeviceWrapper {
     const text = args.text ?? ('text' in locator ? locator.text : undefined);
 
     const { maxWait = 30_000 } = args;
-    const skipHealing = 'skipHealing' in args ? args.skipHealing ?? false : false;
+    const skipHealing = 'skipHealing' in args ? (args.skipHealing ?? false) : false;
 
     const description = describeLocator({ ...locator, text });
     this.log(`Waiting for element with ${description} to be present`);
