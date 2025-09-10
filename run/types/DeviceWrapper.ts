@@ -309,6 +309,7 @@ export class DeviceWrapper {
   /* === all the device-specific function ===  */
 
   // ELEMENT INTERACTION
+
   // Heal a broken locator by finding potential fuzzy matches with text as first-class criteria
   private async findBestMatch(
     strategy: Strategy,
@@ -327,6 +328,10 @@ export class DeviceWrapper {
       { strategy: 'accessibility id' as Strategy, pattern: /content-desc="([^"]+)"/g },
       { strategy: 'id' as Strategy, pattern: /resource-id="([^"]+)"/g },
     ];
+
+    const blacklist = [
+      { from: 'Voice message', to: 'New voice message'},
+    ]
 
     // System locators such as 'network.loki.messenger.qa:id' can cause false positives with too high similarity scores
     // Strip any known prefix patterns first
@@ -371,6 +376,17 @@ export class DeviceWrapper {
 
       const match = result.item;
       const selectorConfidence = ((1 - result.score) * 100).toFixed(2);
+
+      const isBlacklisted = blacklist.some(
+        pair => 
+        (selector.includes(pair.from) && match.originalSelector.includes(pair.to) || 
+          selector.includes(pair.to) && match.originalSelector.includes(pair.from))
+      );
+
+      // Don't heal blacklisted pairs
+      if (isBlacklisted) {
+        continue; 
+      }
 
       // Sometimes the element is just not on screen yet - skip
       if (match.strategy === strategy && match.originalSelector === selector) {
