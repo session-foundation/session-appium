@@ -402,6 +402,7 @@ export type AccessibilityId =
   | 'User settings'
   | 'Version warning banner'
   | 'Videos'
+  | 'View and manage blocked contacts.'
   | 'Voice and Video Calls - Switch'
   | 'Voice message'
   | 'X'
@@ -415,6 +416,9 @@ export type AccessibilityId =
 export type Id =
   | DISAPPEARING_TIMES
   | 'Account ID'
+  | 'android:id/aerr_close'
+  | 'android:id/aerr_wait'
+  | 'android:id/alertTitle'
   | 'android:id/content_preview_text'
   | 'android:id/summary'
   | 'android:id/text1'

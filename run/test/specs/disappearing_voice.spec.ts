@@ -35,7 +35,8 @@ async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType, tes
   await alice1.sendVoiceMessage();
   await alice1.waitForTextElementToBePresent(new VoiceMessage(alice1));
   await Promise.all([
-      alice1.hasElementBeenDeleted({...new VoiceMessage(alice1).build(),
+    alice1.hasElementBeenDeleted({
+      ...new VoiceMessage(alice1).build(),
       maxWait,
       preventEarlyDeletion: true,
     }),

@@ -1387,14 +1387,14 @@ export class DeviceWrapper {
   }
   // WAIT FOR FUNCTIONS
 
-/**
- * Waits for an element to be present with optional text matching and self-healing.
- * Continuously polls for maxWait seconds, then attempts healing as last resort if not found.
- * 
- * @param args - Locator and options (text, maxWait, skipHealing)
- * @returns Promise resolving to the found element
- * @throws If element not found
- */
+  /**
+   * Waits for an element to be present with optional text matching and self-healing.
+   * Continuously polls for maxWait seconds, then attempts healing as last resort if not found.
+   *
+   * @param args - Locator and options (text, maxWait, skipHealing)
+   * @returns Promise resolving to the found element
+   * @throws If element not found
+   */
   public async waitForTextElementToBePresent(
     args: { text?: string; maxWait?: number; skipHealing?: boolean } & (
       | LocatorsInterface
