@@ -1325,7 +1325,7 @@ export class DeviceWrapper {
   }
 
   /**
-   * Find an element without throwing errors or logging.
+   * Find an element without throwing errors, logging or healing.
    */
   private async findElementQuietly(
     locator: StrategyExtractionObj,
@@ -1333,7 +1333,7 @@ export class DeviceWrapper {
   ): Promise<AppiumNextElementType | null> {
     try {
       if (text) {
-        const elements = await this.findElements(locator.strategy, locator.selector);
+        const elements = await this.findElements(locator.strategy, locator.selector, true);
         for (const element of elements) {
           const elementText = await this.getText(element.ELEMENT);
           if (elementText && elementText.toLowerCase() === text.toLowerCase()) {
@@ -1342,7 +1342,7 @@ export class DeviceWrapper {
         }
         return null;
       }
-      return await this.findElement(locator.strategy, locator.selector);
+      return await this.findElement(locator.strategy, locator.selector, true);
     } catch {
       return null;
     }
