@@ -35,12 +35,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
   });
 
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
-  // await device1.navigateBack();
   await alice1.sendImage(testMessage);
-  await Promise.all([
-    bob1.onAndroid().trustAttachments(testGroupName),
-    charlie1.onAndroid().trustAttachments(testGroupName),
-  ]);
   if (platform === 'ios') {
     await Promise.all(
       [alice1, bob1, charlie1].map(device =>
@@ -52,17 +47,23 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
       )
     );
   }
-  if (platform === 'android') {
-    await Promise.all(
-      [alice1, bob1, charlie1].map(device =>
-        device.hasElementBeenDeleted({
-          ...new MediaMessage(device).build(),
-
-          maxWait,
-          preventEarlyDeletion: true,
-        })
-      )
-    );
-  }
+if (platform === 'android') {
+  await Promise.all([
+    alice1.hasElementBeenDeleted({
+      ...new MediaMessage(alice1).build(),
+      maxWait,
+      preventEarlyDeletion: true,
+    }),
+    // Bob and Charlie haven't trusted the message 
+    ...[bob1, charlie1].map(device =>
+      device.hasElementBeenDeleted({
+        strategy: 'accessibility id',
+        selector: 'Untrusted attachment message',
+        maxWait,
+        preventEarlyDeletion: true,
+      })
+    )
+  ]);
+}
   await closeApp(alice1, bob1, charlie1);
 }
