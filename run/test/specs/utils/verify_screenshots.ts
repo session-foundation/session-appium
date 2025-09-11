@@ -60,10 +60,13 @@ export async function verifyElementScreenshot<
   const elementScreenshotBase64: string = await device.getElementScreenshot(
     elementToScreenshot.ELEMENT
   );
+
   // Convert the base64 string to a Buffer and save it to disk as a png
   const elementScreenshotPath = path.join(diffsDir, `${uuid}_screenshot.png`);
   const screenshotBuffer = Buffer.from(elementScreenshotBase64, 'base64');
+
   fs.writeFileSync(elementScreenshotPath, screenshotBuffer);
+
   // Check if baseline screenshot exists
   const baselineScreenshotPath = element.screenshotFileName(...args);
   if (!fs.existsSync(baselineScreenshotPath)) {
@@ -71,10 +74,18 @@ export async function verifyElementScreenshot<
       `No baseline image found at: ${baselineScreenshotPath}. A new screenshot has been saved at: ${elementScreenshotPath}`
     );
   }
+
+  // Fail loudly if LFS pointer has not been resolved correctly 
+  const baselineBuffer = fs.readFileSync(baselineScreenshotPath);
+  if (baselineBuffer.toString('utf8', 0, 50).includes('version https://git-lfs')) {
+  throw new Error(`Baseline is corrupted LFS pointer: ${baselineScreenshotPath}. Skipping visual test.`);
+}
+
   // Use looks-same to verify the element screenshot against the baseline
   const { equal, diffImage } = await looksSame(elementScreenshotPath, baselineScreenshotPath, {
     createDiffImage: true,
   });
+
   if (!equal) {
     const diffImagePath = path.join(diffsDir, `${uuid}_diffImage.png`);
     await diffImage.save(diffImagePath);

@@ -110,6 +110,40 @@ jobs:
         with:
           lfs: true
 
+      # This is necessary because the macOS runner was not always pulling the lfs files despite checkout with lfs: true 
+      # Check if LFS files were actually pulled 
+      - name: Verify LFS files 
+        run: |
+          echo "Ensuring all LFS screenshot files are downloaded..."
+          git lfs pull --include="run/screenshots/**/*.png"
+          
+          echo "=== Verifying screenshot files ==="
+          corrupted_files=0
+          total_files=0
+          
+          for file in run/screenshots/**/*.png; do
+            if [[ -f "$file" ]]; then  # Make sure file exists (in case glob doesn't match anything)
+              ((total_files++))
+              if file "$file" | grep -q "PNG image"; then
+                echo "✅ $file"
+              else
+                echo "⚠️  WARNING: $file is not a PNG image - related tests may fail"
+                # Show what it actually is for debugging
+                echo "   File type: $(file "$file")"
+                ((corrupted_files++))
+              fi
+            fi
+          done
+          
+          echo "📊 Screenshot verification: $((total_files - corrupted_files))/$total_files files valid"
+          
+          if [ $corrupted_files -gt 0 ]; then
+            echo "⚠️ Found $corrupted_files corrupted screenshot files"
+            echo "📝 Tests using these files will be skipped or may fail"
+          else
+            echo "✅ All screenshot files are valid PNG images"
+          fi
+
       - name: Fetch result history from gh-pages
         uses: ./github/actions/fetch-allure-history
         if: ${{ env.ALLURE_ENABLED == 'true' }}
