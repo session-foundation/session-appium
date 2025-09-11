@@ -2,70 +2,71 @@
 set -x
 # Android functions
 
-# Detect platform and set variables accordingly
+# Common configuration
+TARGET="google_apis_playstore"
+EMULATOR_DEVICE="pixel_6"
+EMULATOR_BIN="emulator" 
+
+# Platform-specific configuration
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    # Mac settings
+    # Mac ARM64 settings
     ARCH="arm64-v8a"
     EMULATOR_COUNT=6
     API_LEVEL="35"
     ANDROID_CMD="commandlinetools-mac-13114758_latest.zip"
-    EMULATOR_BIN="emulator"
-    TARGET="google_apis_playstore"  # Mac ARM doesn't have playstore variant
     ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-"$HOME/Android/sdk"}
+    RAM_SIZE="2048"
+    EMULATOR_PROCESS="qemu-system-aarch64-headless"
 else
-    # Linux settings
+    # Linux x86_64 settings
     ARCH="x86_64"
     EMULATOR_COUNT=4
     API_LEVEL="34"
     ANDROID_CMD="commandlinetools-linux-13114758_latest.zip"
-    EMULATOR_BIN="emulator"
-    TARGET="google_apis_playstore"  # Linux can use playstore
     ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-"/opt/android"}
+    RAM_SIZE="4192"
+    EMULATOR_PROCESS="qemu-system-x86_64"
 fi
 
-
-# Derive build tools version from API level
+# Derived configuration (uses the variables set above)
 BUILD_TOOLS="${API_LEVEL}.0.0"
-ANDROID_ARCH=${ANDROID_ARCH_DEFAULT}
 ANDROID_API_LEVEL="android-${API_LEVEL}"
-ANDROID_APIS="${TARGET};${ARCH}"
-EMULATOR_PACKAGE="system-images;${ANDROID_API_LEVEL};${ANDROID_APIS}"
+EMULATOR_PACKAGE="system-images;${ANDROID_API_LEVEL};${TARGET};${ARCH}"
 PLATFORM_VERSION="platforms;${ANDROID_API_LEVEL}"
 BUILD_TOOL="build-tools;${BUILD_TOOLS}"
-export ANDROID_SDK_PACKAGES="${EMULATOR_PACKAGE} ${PLATFORM_VERSION} ${BUILD_TOOL} platform-tools"
-export ANDROID_SDK_ROOT
+ANDROID_SDK_PACKAGES="${EMULATOR_PACKAGE} ${PLATFORM_VERSION} ${BUILD_TOOL} platform-tools emulator"
 
-export PATH="$PATH:$ANDROID_SDK_ROOT/cmdline-tools/tools:$ANDROID_SDK_ROOT/cmdline-tools/tools/bin:$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/tools/bin:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/build-tools/${BUILD_TOOLS}:$ANDROID_SDK_ROOT/platform-tools/"
-export EMULATOR_DEVICE="pixel_6" # all emulators are created with the pixel 6 spec for now
+# Export everything
+export ARCH EMULATOR_BIN EMULATOR_COUNT EMULATOR_PROCESS API_LEVEL ANDROID_CMD TARGET ANDROID_SDK_ROOT RAM_SIZE
+export BUILD_TOOLS ANDROID_API_LEVEL EMULATOR_PACKAGE PLATFORM_VERSION BUILD_TOOL ANDROID_SDK_PACKAGES EMULATOR_DEVICE
+export PATH="$ANDROID_SDK_ROOT/cmdline-tools/tools/bin:$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/build-tools/${BUILD_TOOLS}:$PATH"
 
 
 # this should only be done when we bump the API version or add a worker to the CI that needs emulators to be setup
 # Once you've run this, you must also start_for_snapshots() and force_save_snapshots() (see details below)
 function create_emulators() {
-        # Skip apt install on Mac
+    # Skip apt install on Mac
     if [[ "$OSTYPE" != "darwin"* ]]; then
         sudo apt update
-        sudo apt install -y ca-certificates curl git vim bash wget unzip tree htop gzip default-jre libnss3 libxcursor1 libqt5gui5 libc++-dev libxcb-cursor0 htop tree tar gzip gh nload
+        sudo apt install -y ca-certificates curl git vim bash wget unzip tree htop gzip default-jre libnss3 libxcursor1 libqt5gui5 libc++-dev libxcb-cursor0 tar gh nload
     fi
 
     sudo rm -rf $ANDROID_SDK_ROOT
-
     sudo mkdir -p $ANDROID_SDK_ROOT
+
     if [[ "$OSTYPE" == "darwin"* ]]; then
         sudo chown $USER:staff $ANDROID_SDK_ROOT
     else
         sudo chown $USER:$USER $ANDROID_SDK_ROOT
     fi
-    # Download the SDK tools
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        curl -L -o /tmp/${ANDROID_CMD} https://dl.google.com/android/repository/${ANDROID_CMD}
-    else
-        wget https://dl.google.com/android/repository/${ANDROID_CMD} -P /tmp
-    fi
 
-    # Check if download succeeded
-    if [[ ! -f /tmp/${ANDROID_CMD} ]]; then
-        echo "Failed to download Android SDK tools"
+    # Download SDK tools
+    local download_url="https://dl.google.com/android/repository/${ANDROID_CMD}"
+    echo "Downloading Android SDK tools..."
+    curl -fL -o "/tmp/${ANDROID_CMD}" "$download_url"
+
+    if [[ ! -f "/tmp/${ANDROID_CMD}" ]]; then
+        echo "Error: Failed to download Android SDK tools" >&2
         return 1
     fi
 
@@ -93,14 +94,13 @@ function create_emulators() {
     for i in $(seq 1 $EMULATOR_COUNT)
     do
         echo "no" | avdmanager --verbose create avd --force --name "emulator$i" --device "${EMULATOR_DEVICE}" --package "${EMULATOR_PACKAGE}"
-        CONFIG_FILE="$HOME/.android/avd/emulator$i.avd/config.ini"
         
+        # Configure RAM for each AVD
+        local config_file="$HOME/.android/avd/emulator$i.avd/config.ini"
         if [[ "$OSTYPE" == "darwin"* ]]; then
-            # Mac: 9 emulators @ 2GB each
-            sed -i '' 's/^hw\.ramSize=.*/hw.ramSize=2048/' "$CONFIG_FILE"
+            sed -i '' "s/^hw\.ramSize=.*/hw.ramSize=${RAM_SIZE}/" "$config_file"
         else
-            # Linux: Keep original 4GB
-            sed -i 's/^hw\.ramSize=.*/hw.ramSize=4192/' "$CONFIG_FILE"
+            sed -i "s/^hw\.ramSize=.*/hw.ramSize=${RAM_SIZE}/" "$config_file"
         fi
     done
 }
@@ -108,13 +108,7 @@ function create_emulators() {
 function start_for_snapshots() {
     for i in $(seq 1 $EMULATOR_COUNT)
     do
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-            # Mac: Not headless
-            $EMULATOR_BIN @emulator$i -no-snapshot-load &
-        else
-            # Linux: Keep as-is with display
-            DISPLAY=:0 $EMULATOR_BIN @emulator$i -gpu host -accel on -no-snapshot-load &
-        fi
+        $EMULATOR_BIN @emulator$i -gpu host -accel on -no-snapshot-load &
         sleep 20
     done
 }
@@ -131,11 +125,7 @@ function force_save_snapshots() {
 }
 
 function killall_emulators() {
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        killall qemu-system-aarch64-headless 2>/dev/null || true
-    else
-        killall qemu-system-x86_64 2>/dev/null || true
-    fi
+    killall "$EMULATOR_PROCESS" 2>/dev/null || true
 }
 
 

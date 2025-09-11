@@ -162,11 +162,7 @@ jobs:
       - name: Download APK & extract it
         run: |
           pwd
-          if [[ "${{ runner.os }}" == "macOS" ]]; then
-            curl -L -o session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
-          else
-            wget -q -O session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
-          fi
+          curl -L -o session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
           tar xf session-android.apk.tar.xz
           mv session-android-*universal extracted
 
