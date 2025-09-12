@@ -67,7 +67,8 @@ on:
           - '1'
           - '2'
           - '3'
-        default: '3'
+          - '4'
+        default: '4'
       HIDE_WEBDRIVER_LOGS:
         description: 'print webdriver logs (1 to hide, 0 to show). PRINT_ONGOING_TEST_LOGS or PRINT_FAILED_TEST_LOGS must be 1'
         required: true
@@ -94,7 +95,7 @@ jobs:
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
-      PLAYWRIGHT_WORKERS_COUNT: 3 # for iOS, this is the max we can have on our self-hosted runner
+      PLAYWRIGHT_WORKERS_COUNT: ${{ github.event.inputs.PLAYWRIGHT_WORKERS_COUNT }} 
       SDK_MANAGER_FULL_PATH: '<just_not_empty>'
       AVD_MANAGER_FULL_PATH: '<just_not_empty>'
       ANDROID_SYSTEM_IMAGE: '<just_not_empty>'
@@ -157,7 +158,7 @@ jobs:
 
       - name: Run the iOS tests​​ (all device counts)
         env:
-          DEVICES_PER_TEST_COUNT: 4
+          DEVICES_PER_TEST_COUNT: 3
         run: |
           pwd
           _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
