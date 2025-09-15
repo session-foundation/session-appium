@@ -568,7 +568,7 @@ export class DeviceWrapper {
           skipHealing: true,
         });
       } catch (fallbackError) {
-        throw new Error(`Element ${primaryDescription} and ${fallbackDescription} not found.`);
+        throw new Error(`Element ${primaryDescription} or ${fallbackDescription} not found.`);
       }
     }
   }

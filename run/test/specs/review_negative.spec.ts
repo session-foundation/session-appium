@@ -4,6 +4,7 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { CloseSettings } from './locators';
 import {
   ReviewPromptNeedsWorkButton,
   ReviewPromptNotNowButton,
@@ -41,7 +42,7 @@ async function reviewPromptNegative(platform: SupportedPlatformsType, testInfo: 
   await test.step(TestSteps.OPEN.PATH, async () => {
     await device.clickOnElementAll(new PathMenuItem(device));
     await device.back();
-    await device.back();
+    await device.clickOnElementAll(new CloseSettings(device))
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Enjoying Session'), async () => {
     await device.checkModalStrings(
