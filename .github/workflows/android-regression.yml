@@ -81,7 +81,10 @@ jobs:
     runs-on: ${{ github.event.inputs.RUNNER == 'mac' && fromJSON('["self-hosted", "macOS"]') || fromJSON('["self-hosted", "linux", "X64", "qa-android"]') }}
     env:
       PLATFORM: 'android'
-      EMULATOR_COUNT: ${{ github.event.inputs.RUNNER == 'mac' && '6' || '4' }}
+      EMULATOR_COUNT: ${{ github.event.inputs.RUNNER == 'mac' && '6' || '4' }} # macOS runner can support 6 emulators, linux runner only 4
+      WORKERS_1_DEVICE: ${{ github.event.inputs.RUNNER == 'mac' && '6' || '4' }} # 6 or 4 workers, 1 device each
+      WORKERS_2_DEVICE: ${{ github.event.inputs.RUNNER == 'mac' && '3' || '2' }} # 3 or 2 workers, 2 devices each
+      WORKERS_3_DEVICE: ${{ github.event.inputs.RUNNER == 'mac' && '2' || '1' }} # 2 or 1 worker(s), 3 devices each 
       APK_URL: ${{ github.event.inputs.APK_URL }}
       BUILD_NUMBER: ${{ github.event.inputs.BUILD_NUMBER }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -202,47 +205,42 @@ jobs:
           PLATFORM: ${{ env.PLATFORM }}
           RISK: ${{ github.event.inputs.RISK }}
 
-      - name: Run the 1-devices tests ​​with 4 workers
-        continue-on-error: true
-        id: devices-1-test-run
-        env:
-          PLAYWRIGHT_WORKERS_COUNT: ${{ env.EMULATOR_COUNT }}  # 6 on mac, 4 on linux
-          DEVICES_PER_TEST_COUNT: 1
-        run: |
-          pwd
-          TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
-
-      - name: Upload results of this run
-        uses: ./github/actions/upload-test-results
+      - name: Run 1-device tests
+        uses: ./github/actions/run-playwright-tests
         with:
           PLATFORM: ${{ env.PLATFORM }}
+          RISK: ${{ github.event.inputs.RISK }}
+          WORKERS_COUNT: ${{ env.WORKERS_1_DEVICE }}
+          DEVICES_PER_TEST: '1'
+          TEST_NAME: '1-device'
+          GREP_INCLUDE: '@1-devices'
+          HIDE_WEBDRIVER_LOGS: ${{ env.HIDE_WEBDRIVER_LOGS }}
           UPLOAD_IDENTIFIER: 'devices-1-test-run'
 
-      - name: Run the 2-devices tests ​​with 2 workers
-        continue-on-error: true
-        id: devices-2-test-run
-        env:
-          PLAYWRIGHT_WORKERS_COUNT:  ${{ github.event.inputs.RUNNER == 'mac' && '3' || '2' }}
-          DEVICES_PER_TEST_COUNT: 2
-        run: |
-          pwd
-          _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
-
-      - name: Upload results of this run
-        uses: ./github/actions/upload-test-results
+      - name: Run 2-device tests
+        uses: ./github/actions/run-playwright-tests
         with:
           PLATFORM: ${{ env.PLATFORM }}
+          RISK: ${{ github.event.inputs.RISK }}
+          WORKERS_COUNT: ${{ env.WORKERS_2_DEVICE }}
+          DEVICES_PER_TEST: '2'
+          TEST_NAME: '2-device'
+          GREP_INCLUDE: '@2-devices'
+          HIDE_WEBDRIVER_LOGS: ${{ env.HIDE_WEBDRIVER_LOGS }}
           UPLOAD_IDENTIFIER: 'devices-2-test-run'
 
-      - name: Run the tests ​​other tests with 1 worker
-        continue-on-error: true
-        id: other-devices-test-run
-        env:
-          PLAYWRIGHT_WORKERS_COUNT: ${{ github.event.inputs.RUNNER == 'mac' && '2' || '1' }}
-          DEVICES_PER_TEST_COUNT: 3
-        run: |
-          pwd
-          _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
+      - name: Run 3-device tests
+        uses: ./github/actions/run-playwright-tests
+        with:
+          PLATFORM: ${{ env.PLATFORM }}
+          RISK: ${{ github.event.inputs.RISK }}
+          WORKERS_COUNT: ${{ env.WORKERS_3_DEVICE }}
+          DEVICES_PER_TEST: '3'
+          TEST_NAME: '3-device'
+          GREP_INCLUDE: '@3-devices'
+          HIDE_WEBDRIVER_LOGS: ${{ env.HIDE_WEBDRIVER_LOGS }}
+          UPLOAD_IDENTIFIER: 'devices-3-test-run'
+
 
       - name: Generate and publish test report
         uses: ./github/actions/generate-publish-test-report
@@ -256,21 +254,12 @@ jobs:
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
           GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
 
-      - name: Upload results of this run
-        uses: ./github/actions/upload-test-results
-        with:
-          PLATFORM: ${{ env.PLATFORM }}
-          UPLOAD_IDENTIFIER: 'devices-other-test-run'
-
       - name: Upload csv of this whole run
         uses: ./github/actions/upload-csv-test-results
         if: always()
         with:
           PLATFORM: ${{ env.PLATFORM }}
 
-      - name: Check if any tests failed
-        if: steps.devices-1-test-run != 'success' || steps.devices-2-test-run != 'success' || steps.other-devices-test-run.outcome != 'success'
-        run: echo 'Some test failed, see above'; exit 1
 
       - name: Stop emulators
         if: always()

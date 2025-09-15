@@ -1,0 +1,69 @@
+name: 'Run Android Tests'
+description: 'Run Android tests with specified configuration'
+
+inputs:
+  PLATFORM:
+    description: 'Platform to test (android/ios)'
+    required: true
+  RISK:
+    description: 'Risk level to test'
+    required: true
+  WORKERS_COUNT:
+    description: 'Number of Playwright workers'
+    required: true
+  DEVICES_PER_TEST:
+    description: 'Number of devices per test'
+    required: true
+  TEST_NAME:
+    description: 'Name for this test run (for logging)'
+    required: true
+  GREP_INCLUDE:
+    description: 'Pattern to include in grep'
+    required: false
+    default: ''
+  HIDE_WEBDRIVER_LOGS:
+    description: 'Hide webdriver logs (1 to hide, 0 to show)'
+    required: true
+  UPLOAD_IDENTIFIER:
+    description: 'Unique identifier for uploading results'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run ${{ inputs.TEST_NAME }} tests
+      id: run-tests
+      continue-on-error: true
+      shell: bash
+      env:
+        PLAYWRIGHT_WORKERS_COUNT: ${{ inputs.WORKERS_COUNT }}
+        DEVICES_PER_TEST_COUNT: ${{ inputs.DEVICES_PER_TEST }}
+      run: |
+        echo "🚀 Running ${{ inputs.TEST_NAME }} tests"
+        echo "   Workers: ${{ inputs.WORKERS_COUNT }}"
+        echo "   Devices per test: ${{ inputs.DEVICES_PER_TEST }}" 
+        echo "   Total emulator usage: $((${{ inputs.WORKERS_COUNT }} * ${{ inputs.DEVICES_PER_TEST }}))"
+        
+        # Build the base grep pattern
+        base_pattern="(?=.*@${{ inputs.PLATFORM }})"
+        
+        # Add risk filter if specified
+        if [[ "${{ inputs.RISK }}" != "" ]]; then
+          base_pattern="${base_pattern}(?=.*@${{ inputs.RISK }})"
+        fi
+        
+        # Add include pattern if specified
+        if [[ "${{ inputs.GREP_INCLUDE }}" != "" ]]; then
+          base_pattern="${base_pattern}(?=.*${{ inputs.GREP_INCLUDE }})"
+        fi
+        
+        # Run the tests
+          _TESTING=${{ inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test \
+            --grep "$base_pattern"
+        fi
+
+    - name: Upload ${{ inputs.TEST_NAME }} results
+      uses: ./github/actions/upload-test-results
+      with:
+        PLATFORM: ${{ inputs.PLATFORM }}
+        UPLOAD_IDENTIFIER: ${{ inputs.UPLOAD_IDENTIFIER }}
