@@ -206,7 +206,7 @@ jobs:
           RISK: ${{ github.event.inputs.RISK }}
 
       - name: Run 1-device tests
-        uses: ./github/actions/run-playwright-tests
+        uses: ./github/actions/run-tests
         with:
           PLATFORM: ${{ env.PLATFORM }}
           RISK: ${{ github.event.inputs.RISK }}
@@ -218,7 +218,7 @@ jobs:
           UPLOAD_IDENTIFIER: 'devices-1-test-run'
 
       - name: Run 2-device tests
-        uses: ./github/actions/run-playwright-tests
+        uses: ./github/actions/run-tests
         with:
           PLATFORM: ${{ env.PLATFORM }}
           RISK: ${{ github.event.inputs.RISK }}
@@ -230,7 +230,7 @@ jobs:
           UPLOAD_IDENTIFIER: 'devices-2-test-run'
 
       - name: Run 3-device tests
-        uses: ./github/actions/run-playwright-tests
+        uses: ./github/actions/run-tests
         with:
           PLATFORM: ${{ env.PLATFORM }}
           RISK: ${{ github.event.inputs.RISK }}
