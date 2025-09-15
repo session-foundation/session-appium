@@ -71,7 +71,7 @@ for (const { titleSnippet, descriptionSnippet, testStepName, trigger } of review
       await test.step(testStepName, async () => {
         await device.clickOnElementAll(new UserSettings(device));
         await trigger(device);
-        await device.back();
+        await device.navigateBack();
       });
       await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('App Review'), async () => {
         await device.checkModalStrings(

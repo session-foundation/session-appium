@@ -329,7 +329,10 @@ export class DeviceWrapper {
       { strategy: 'id' as Strategy, pattern: /resource-id="([^"]+)"/g },
     ];
 
-    const blacklist = [{ from: 'Voice message', to: 'New voice message' }];
+    const blacklist = [
+      { from: 'Voice message', to: 'New voice message' },
+      { from: 'url_bar', to: 'status_bar'}
+    ];
 
     // System locators such as 'network.loki.messenger.qa:id' can cause false positives with too high similarity scores
     // Strip any known prefix patterns first
@@ -2108,7 +2111,11 @@ export class DeviceWrapper {
         selector: 'Image button',
       });
       await sleepFor(500);
-      await this.clickOnElementAll(new ImageName(this));
+      await this.matchAndTapImage(
+        {strategy: 'xpath', selector: '//*[starts-with(@content-desc, "Photo taken on")]'},
+        profilePicture
+      )
+      // await this.clickOnElementAll(new ImageName(this));
       await this.clickOnElementById('network.loki.messenger.qa:id/crop_image_menu_crop');
     }
     await this.clickOnElementAll(new SaveProfilePictureButton(this));
