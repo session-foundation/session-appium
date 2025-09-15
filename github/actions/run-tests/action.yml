@@ -43,20 +43,20 @@ runs:
         echo "   Workers: ${{ inputs.WORKERS_COUNT }}"
         echo "   Devices per test: ${{ inputs.DEVICES_PER_TEST }}" 
         echo "   Total emulator usage: $((${{ inputs.WORKERS_COUNT }} * ${{ inputs.DEVICES_PER_TEST }}))"
-        
+
         # Build the base grep pattern
         base_pattern="(?=.*@${{ inputs.PLATFORM }})"
-        
+
         # Add risk filter if specified
         if [[ "${{ inputs.RISK }}" != "" ]]; then
           base_pattern="${base_pattern}(?=.*@${{ inputs.RISK }})"
         fi
-        
+
         # Add include pattern if specified
         if [[ "${{ inputs.GREP_INCLUDE }}" != "" ]]; then
           base_pattern="${base_pattern}(?=.*${{ inputs.GREP_INCLUDE }})"
         fi
-        
+
         # Run the tests
           _TESTING=${{ inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test \
             --grep "$base_pattern"

@@ -47,23 +47,23 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
       )
     );
   }
-if (platform === 'android') {
-  await Promise.all([
-    alice1.hasElementBeenDeleted({
-      ...new MediaMessage(alice1).build(),
-      maxWait,
-      preventEarlyDeletion: true,
-    }),
-    // Bob and Charlie haven't trusted the message 
-    ...[bob1, charlie1].map(device =>
-      device.hasElementBeenDeleted({
-        strategy: 'accessibility id',
-        selector: 'Untrusted attachment message',
+  if (platform === 'android') {
+    await Promise.all([
+      alice1.hasElementBeenDeleted({
+        ...new MediaMessage(alice1).build(),
         maxWait,
         preventEarlyDeletion: true,
-      })
-    )
-  ]);
-}
+      }),
+      // Bob and Charlie haven't trusted the message
+      ...[bob1, charlie1].map(device =>
+        device.hasElementBeenDeleted({
+          strategy: 'accessibility id',
+          selector: 'Untrusted attachment message',
+          maxWait,
+          preventEarlyDeletion: true,
+        })
+      ),
+    ]);
+  }
   await closeApp(alice1, bob1, charlie1);
 }

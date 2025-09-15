@@ -56,9 +56,9 @@ on:
         required: true
         type: choice
         options:
-          - 'minimal'     # Recommended for full regressions
-          - 'failures'    # Show failed test logs only
-          - 'verbose'     # All test logs - use with caution!
+          - 'minimal'
+          - 'failures'
+          - 'verbose'
         default: 'minimal'
 
 jobs:

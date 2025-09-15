@@ -55,9 +55,7 @@ async function linkedGroup(platform: SupportedPlatformsType, testInfo: TestInfo)
   // Control message should be "Group name is now {group_name}."
   await alice1.waitForControlMessageToBePresent(groupNameNew);
   // Check linked device for name change (conversation header name)
-  await alice2.waitForTextElementToBePresent(
-    new ConversationHeaderName(alice2, newGroupName)
-  );
+  await alice2.waitForTextElementToBePresent(new ConversationHeaderName(alice2, newGroupName));
   await Promise.all(
     [alice1, alice2, bob1].map(device =>
       device.waitForTextElementToBePresent(new ConversationHeaderName(device, newGroupName))

@@ -1,4 +1,4 @@
-import { existsSync, lstatSync} from 'fs';
+import { existsSync, lstatSync } from 'fs';
 import { toNumber } from 'lodash';
 import * as path from 'path';
 
@@ -45,15 +45,15 @@ export const getAvdManagerFullPath = () => {
   const possiblePaths = [
     path.join(sdkRoot, 'cmdline-tools', 'latest', 'bin', 'avdmanager'),
     path.join(sdkRoot, 'cmdline-tools', 'tools', 'bin', 'avdmanager'),
-    path.join(sdkRoot, 'tools', 'bin', 'avdmanager')
+    path.join(sdkRoot, 'tools', 'bin', 'avdmanager'),
   ];
-  
+
   for (const path of possiblePaths) {
     if (existsSync(path) && lstatSync(path).isFile()) {
       return path;
     }
   }
-  
+
   throw new Error(`avdmanager not found in any expected location under ${sdkRoot}`);
 };
 
@@ -63,15 +63,15 @@ export const getSdkManagerFullPath = () => {
   const possiblePaths = [
     path.join(sdkRoot, 'cmdline-tools', 'latest', 'bin', 'sdkmanager'),
     path.join(sdkRoot, 'cmdline-tools', 'tools', 'bin', 'sdkmanager'),
-    path.join(sdkRoot, 'tools', 'bin', 'sdkmanager')
+    path.join(sdkRoot, 'tools', 'bin', 'sdkmanager'),
   ];
-  
+
   for (const path of possiblePaths) {
     if (existsSync(path) && lstatSync(path).isFile()) {
       return path;
     }
   }
-  
+
   throw new Error(`sdkmanager not found in any expected location under ${sdkRoot}`);
 };
 

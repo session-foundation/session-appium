@@ -75,11 +75,13 @@ export async function verifyElementScreenshot<
     );
   }
 
-  // Fail loudly if LFS pointer has not been resolved correctly 
+  // Fail loudly if LFS pointer has not been resolved correctly
   const baselineBuffer = fs.readFileSync(baselineScreenshotPath);
   if (baselineBuffer.toString('utf8', 0, 50).includes('version https://git-lfs')) {
-  throw new Error(`Baseline is corrupted LFS pointer: ${baselineScreenshotPath}. Skipping visual test.`);
-}
+    throw new Error(
+      `Baseline is corrupted LFS pointer: ${baselineScreenshotPath}. Skipping visual test.`
+    );
+  }
 
   // Use looks-same to verify the element screenshot against the baseline
   const { equal, diffImage } = await looksSame(elementScreenshotPath, baselineScreenshotPath, {
