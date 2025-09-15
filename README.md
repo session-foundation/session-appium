@@ -1,93 +1,91 @@
-# Automation testing for Session
+# Automation Testing for Session
 
-This repository holds the code to do integration tests with Appium and Session on iOS and Android.
+Integration tests for Session app on iOS and Android using Playwright and Appium.
 
-# Setup
+## Quick Start
 
-## Android SDK & Emulators
+1. **Install dependencies:**
+   ```bash
+   nvm use
+   npm install -g yarn
+   yarn install --immutable
+   ```
 
-First, you need to download android studio at https://developer.android.com/studio.
+2. **Setup environment:**
+   ```bash
+   cp .env.sample .env
+   # Edit .env with your specific paths - see Environment Configuration below
+   ```
 
-Once installed, run it, open the SDK Manager and install the latest SDK tools.
 
-Once this is done, open up the AVD Manager, click on "Create Device" -> "Pixel 6" -> Next -> Select the System Image you want (I did my tests with **UpsideDownCake**), install it, select it, "Next" and "Finish".
+3. **Run tests locally:**
+   ```bash
+   yarn start-server                        # Starts Appium server
+   yarn test                                # Run all tests
+   yarn test-android                        # Android tests only
+   yarn test-ios                            # iOS tests only
+   yarn test-one 'Test name'                # Run specific test (both platforms)
+   yarn test-one 'Test name @android/@ios'  # Run specific test on one platform
+   ```
 
-Then, create a second emulator following the exact same steps (the tests need 2 different emulators to run).
+## Local Development
 
-Once done, you should be able to start each emulators and have them running at the same time. They will need to be running for the tests to work, because Appium won't start them.
+Note: The tests use devices with specific resolutions for visual regression testing - ensure you have these available (see below).
 
-## Environment variables needed
+### Android
 
-Before you can start the tests, you need to setup some environment variables. See the file .env.sample for an example.
+Prerequisites: Android Studio installed with SDK tools
+1. Create Pixel 6 emulators via AVD Manager (minimum 3 emulators - tests require up to 3 devices simultaneously)
+    - Recommended system image is Android API 34 with Google Play services
+2. Download Session binaries from [the build repository](https://oxen.rocks)
+   - Choose the appropriate binary based on your network access:
+     - QA: Works on general networks
+     - AutomaticQA: Requires local devnet access
+3. **Start emulators manually** - they need to be running before tests start (Appium won't launch them automatically)
 
-#### ANDROID_SDK_ROOT
+### iOS  
+Prerequisites: Xcode installed with minimum 3 iPhone 16 Pro Max simulators. The recommended Simulator runtime is iOS 18.3 or higher 
+1. Download Session binaries from [the build repository](https://oxen.rocks)
+2. Extract .app file for Appium testing:
+   - If using pre-built binaries from the CI, use the .app directly
+   - Copy Session.app to an easily accessible location
+3. Get iOS simulator UUIDs:
+   ```bash
+   xcrun simctl list devices | grep "iPhone 16 Pro Max"
+   ```
+4. Update environment configuration with path to Session.app and device UUIDs
 
-`ANDROID_SDK_ROOT` should point to the folder containing the sdks, so the folder containing folders like `platform-tools`, `system-images`, etc...
-`export ANDROID_SDK_ROOT=~/Android/Sdk`
+### Environment Configuration
 
-#### APPIUM_ANDROID_BINARIES_ROOT
+Copy `.env.sample` to `.env` and configure the following:
 
-`APPIUM_ANDROID_BINARIES_ROOT` should point to the file containing the apks to install for testing (such as `session-1.18.2-x86.apk`)
-`export APPIUM_ANDROID_BINARIES_ROOT=~/appium-binaries`
-
-#### APPIUM_ADB_FULL_PATH
-
-`APPIUM_ADB_FULL_PATH` should point to the binary of adb inside the ANDROID_SDK folder
-`export APPIUM_ADB_FULL_PATH=~/Android/Sdk/platform-tools/adb`
-
-### Multiple adb binaries
-
-Having multiple adb on your system will make tests unreliable, because the server will be restarted by Appium.
-
-On linux, if running `which adb` does not point to the `adb` binary in the `ANDROID_SDK_ROOT` you will have issues.
-
-You can get rid of adb on linux by running
-
-```
-sudo apt remove adb
-sudo apt remove android-tools-adb
-```
-
-`which adb` should not return anything.
-
-Somehow, Appium asks for the sdk tools but do not force the adb binary to come from the sdk tools folder. Making sure that there is no adb in your path should solve this.
-
-## Running tests on iOS Emulators
-
-First you need to get correct branch of Session that you want to test from Github. See [(https://github.com/session-foundation/session-ios/releases/)] and download the latest **ipa** under **Assets**
-
-Then to access the **.app** file that Appium needs for testing you need to build in Xcode and then find .app in your **Derived Data** folder for Xcode.
-
-For Mac users this file will exist in:
-
-Macintosh HD > Username > Library > Developer > Xcode > Derived Data > (Then there will be a version of Session with a very long line of letters) > Build > Products > App store-iphonesimulator > Session.app
-
-Then Copy and Paste then app file onto Desktop (or anywhere you can access easily) then each time you build, navigate back to the file in Derived Data and copy and paste back to Desktop.
-Then set the path to Session.app in your ios capabilities file.
-
-## Appium & tests setup
-
-First, install nvm for your system (https://github.com/nvm-sh/nvm).
-For windows, head here: https://github.com/coreybutler/nvm-windows
-For Mac, https://github.com/nvm-sh/nvm
-
-```
-nvm install #install node version from the .nvmrc file, currently v16.13.0
-nvm use # use that same node version, currently v16.13.0
-npm install -g yarn
-yarn install --frozen # to install packages referenced from yarn.lock
+**Required paths:**
+```bash
+ANDROID_SDK_ROOT=/path/to/Android/Sdk          # SDK tools auto-discovered from here
+ANDROID_APK=/path/to/session-android.apk       # Android APK for testing
+IOS_APP_PATH_PREFIX=/path/to/Session.app       # iOS app for testing
 ```
 
-Then, choose an option:
-
+**Test configuration:**
+```bash
+PLAYWRIGHT_RETRIES_COUNT=0           # Test retry attempts
+PLAYWRIGHT_WORKERS_COUNT=1           # Parallel test workers
+CI=0                                 # Set to 1 to simulate CI (mostly for Allure reporting)
+ALLURE_ENABLED='false'               # Set to 'true' to generate Allure reports
 ```
-yarn tsc # Build typescript files
-yarn run test # Run all the tests
 
-Platform specific
-yarn run test-android # To run just Android tests
-yarn run test-ios # To run just iOS tests
+### Multiple ADB Binaries Warning
 
-yarn run test-one 'Name of test' # To run one test (on both platforms)
-yarn run test-one 'Name of test android/ios' # To run one test on either platform
+Having multiple adb installations can cause test instability. On Linux, ensure only the SDK version is available:
+
+```bash
+sudo apt remove adb android-tools-adb
+which adb  # Should return nothing
 ```
+
+## Test Organization
+
+Tests are tagged with device requirements and risk levels:
+- `@N-devices` - N-device tests (N = 1 || 2 || 3)
+- `@high-risk`, `@medium-risk`, `@low-risk` - Risk-based test categorization
+- `@android`, `@ios` - Platform-specific tests
