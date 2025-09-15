@@ -51,30 +51,15 @@ on:
           - '2'
         default: '0'
 
-      PRINT_FAILED_TEST_LOGS:
-        description: 'print failed test logs (1 to enable) - DONT DO FOR FULL REGRESSION (it crashes github)'
+      LOG_LEVEL:
+        description: 'Test logging verbosity (WARNING: anything other than minimal mode may crash GitHub Actions on large test runs)'
         required: true
         type: choice
         options:
-          - '0'
-          - '1'
-        default: '0'
-      PRINT_ONGOING_TEST_LOGS:
-        description: 'print ongoing test logs (1 to enable) - DONT DO FOR FULL REGRESSION (it crashes github)'
-        required: true
-        type: choice
-        options:
-          - '0'
-          - '1'
-        default: '0'
-      HIDE_WEBDRIVER_LOGS:
-        description: 'print webdriver logs (1 to hide, 0 to show). PRINT_ONGOING_TEST_LOGS or PRINT_FAILED_TEST_LOGS must be 1'
-        required: true
-        type: choice
-        options:
-          - '0'
-          - '1'
-        default: '1'
+          - 'minimal'     # Recommended for full regressions
+          - 'failures'    # Show failed test logs only
+          - 'verbose'     # All test logs - use with caution!
+        default: 'minimal'
 
 jobs:
   android-regression:
@@ -93,8 +78,9 @@ jobs:
       IOS_APP_PATH_PREFIX: '<just_not_empty>'
       ANDROID_APK: './extracted/session-android.apk'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
-      PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
-      PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
+      PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'failures' || github.event.inputs.LOG_LEVEL == 'verbose' ? '1' : '0' }}
+      PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'verbose' ? '1' : '0' }}
+      HIDE_WEBDRIVER_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'minimal' ? '1' : '0' }}
       IOS_1_SIMULATOR: '<just_not_empty>'
       IOS_2_SIMULATOR: '<just_not_empty>'
       IOS_3_SIMULATOR: '<just_not_empty>'
@@ -151,15 +137,15 @@ jobs:
         uses: ./github/actions/fetch-allure-history
         if: ${{ env.ALLURE_ENABLED == 'true' }}
         with:
-          PLATFORM: ${{env.PLATFORM}}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+          PLATFORM: ${{ env.PLATFORM }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: ./github/actions/print-runner-details
         with:
           APK_URL: ${{ github.event.inputs.APK_URL }}
           RISK: ${{ github.event.inputs.RISK }}
-          PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
-          PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
+          PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
+          PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
           PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
 
       - name: Download APK & extract it
