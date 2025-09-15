@@ -30,10 +30,10 @@ runs:
         DEVICES_PER_TEST_COUNT: ${{ inputs.DEVICES_PER_TEST }}
       run: |
         echo "Running ${{ inputs.DEVICES_PER_TEST }} tests with ${{ inputs.WORKERS_COUNT }} workers"
-        
+
         grep="(?=.*@${{ inputs.PLATFORM }})(?=.*@${{ inputs.DEVICES_PER_TEST }}-devices)"
         [[ "${{ inputs.RISK }}" != "" ]] && grep="${grep}(?=.*@${{ inputs.RISK }})"
-        
+
         _TESTING=${{ inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "$grep"
 
     - name: Upload ${{ inputs.DEVICES_PER_TEST }}-device test results

@@ -4,11 +4,11 @@ run-name: '${{ inputs.RISK }} regressions on ${{ github.head_ref || github.ref }
 on:
   workflow_dispatch:
     inputs:
-      RUNNER: 
+      RUNNER:
         description: 'Which runner to use'
         required: true
-        type: choice 
-        options: 
+        type: choice
+        options:
           - 'linux'
           - 'mac'
         default: 'linux'
@@ -69,7 +69,7 @@ jobs:
       EMULATOR_COUNT: ${{ github.event.inputs.RUNNER == 'mac' && '6' || '4' }} # macOS runner can support 6 emulators, linux runner only 4
       WORKERS_1_DEVICE: ${{ github.event.inputs.RUNNER == 'mac' && '6' || '4' }} # 6 or 4 workers, 1 device each
       WORKERS_2_DEVICE: ${{ github.event.inputs.RUNNER == 'mac' && '3' || '2' }} # 3 or 2 workers, 2 devices each
-      WORKERS_3_DEVICE: ${{ github.event.inputs.RUNNER == 'mac' && '2' || '1' }} # 2 or 1 worker(s), 3 devices each 
+      WORKERS_3_DEVICE: ${{ github.event.inputs.RUNNER == 'mac' && '2' || '1' }} # 2 or 1 worker(s), 3 devices each
       APK_URL: ${{ github.event.inputs.APK_URL }}
       BUILD_NUMBER: ${{ github.event.inputs.BUILD_NUMBER }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -99,17 +99,17 @@ jobs:
         with:
           lfs: true
 
-      # This is necessary because the macOS runner was not always pulling the lfs files despite checkout with lfs: true 
-      # Check if LFS files were actually pulled 
-      - name: Verify LFS files 
+      # This is necessary because the macOS runner was not always pulling the lfs files despite checkout with lfs: true
+      # Check if LFS files were actually pulled
+      - name: Verify LFS files
         run: |
           echo "Ensuring all LFS screenshot files are downloaded..."
           git lfs pull --include="run/screenshots/**/*.png"
-          
+
           echo "=== Verifying screenshot files ==="
           corrupted_files=0
           total_files=0
-          
+
           for file in run/screenshots/**/*.png; do
             if [[ -f "$file" ]]; then  # Make sure file exists (in case glob doesn't match anything)
               ((total_files++))
@@ -123,9 +123,9 @@ jobs:
               fi
             fi
           done
-          
+
           echo "📊 Screenshot verification: $((total_files - corrupted_files))/$total_files files valid"
-          
+
           if [ $corrupted_files -gt 0 ]; then
             echo "⚠️ Found $corrupted_files corrupted screenshot files"
             echo "📝 Tests using these files will be skipped or may fail"
@@ -180,7 +180,7 @@ jobs:
 
       - name: Start emulators
         shell: bash
-        run: | # macOS can handle cold boot, linux cannot 
+        run: | # macOS can handle cold boot, linux cannot
           source ./scripts/ci.sh
           if [[ "${{ github.event.inputs.RUNNER }}" == "mac" ]]; then
             start_for_snapshots 
@@ -239,7 +239,6 @@ jobs:
         with:
           PLATFORM: ${{ env.PLATFORM }}
 
-
       - name: Stop emulators
         if: always()
         continue-on-error: true # just so we don't fail
@@ -247,7 +246,7 @@ jobs:
         run: |
           source ./scripts/ci.sh
           killall_emulators
-    
+
       - name: Check if any tests failed
         if: |
           steps.test-1-device.outputs.test-result == 'failure' || 
