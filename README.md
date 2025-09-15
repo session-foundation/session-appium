@@ -25,7 +25,7 @@ Integration tests for Session app on iOS and Android using Playwright and Appium
    yarn test-android                        # Android tests only
    yarn test-ios                            # iOS tests only
    yarn test-one 'Test name'                # Run specific test (both platforms)
-   yarn test-one 'Test name @android/@ios'  # Run specific test on one platform
+   yarn test-one 'Test name @android'       # Run specific test on one platform
    ```
 
 ## Local Development
@@ -71,7 +71,7 @@ IOS_APP_PATH_PREFIX=/path/to/Session.app       # iOS app for testing
 PLAYWRIGHT_RETRIES_COUNT=0           # Test retry attempts
 PLAYWRIGHT_WORKERS_COUNT=1           # Parallel test workers
 CI=0                                 # Set to 1 to simulate CI (mostly for Allure reporting)
-ALLURE_ENABLED='false'               # Set to 'true' to generate Allure reports
+ALLURE_ENABLED='false'               # Set to 'true' to generate Allure reports (in conjunction with CI=1)
 ```
 
 ### Multiple ADB Binaries Warning
