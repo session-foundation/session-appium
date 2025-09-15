@@ -178,13 +178,16 @@ jobs:
           adb kill-server;
           adb start-server;
 
-      - name: Start emulators from snapshot
+      - name: Start emulators
         shell: bash
-        run: |
+        run: | # macOS can handle cold boot, linux cannot 
           source ./scripts/ci.sh
-          start_for_snapshots
+          if [[ "${{ github.event.inputs.RUNNER }}" == "mac" ]]; then
+            start_for_snapshots 
+          else
+            start_with_snapshots
+          fi
           wait_for_emulators
-
       - name: List tests part of this run
         uses: ./github/actions/list-tests
         with:
