@@ -23,7 +23,6 @@ runs:
   steps:
     - name: Run ${{ inputs.DEVICES_PER_TEST }}-device tests
       id: run-tests
-      continue-on-error: true
       shell: bash
       env:
         PLAYWRIGHT_WORKERS_COUNT: ${{ inputs.WORKERS_COUNT }}
@@ -35,12 +34,6 @@ runs:
         [[ "${{ inputs.RISK }}" != "" ]] && grep="${grep}(?=.*@${{ inputs.RISK }})"
 
         _TESTING=${{ inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "$grep"
-
-    - name: Upload ${{ inputs.DEVICES_PER_TEST }}-device test results
-      uses: ./github/actions/upload-test-results
-      with:
-        PLATFORM: ${{ inputs.PLATFORM }}
-        UPLOAD_IDENTIFIER: devices-${{ inputs.DEVICES_PER_TEST }}-test-run
 
 outputs:
   test-result:

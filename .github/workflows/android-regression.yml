@@ -195,6 +195,7 @@ jobs:
           RISK: ${{ github.event.inputs.RISK }}
 
       - name: Run 1-device tests
+        id: test-1-device
         uses: ./github/actions/run-tests
         with:
           PLATFORM: ${{ env.PLATFORM }}
@@ -202,8 +203,15 @@ jobs:
           WORKERS_COUNT: ${{ env.WORKERS_1_DEVICE }}
           DEVICES_PER_TEST: '1'
           HIDE_WEBDRIVER_LOGS: ${{ env.HIDE_WEBDRIVER_LOGS }}
-
+          
+      - name: Upload 1-device test results
+        uses: ./github/actions/upload-test-results
+        with:
+          PLATFORM: ${{ env.PLATFORM }}
+          UPLOAD_IDENTIFIER: devices-1-test-run
+      
       - name: Run 2-device tests
+        id: test-2-device
         uses: ./github/actions/run-tests
         with:
           PLATFORM: ${{ env.PLATFORM }}
@@ -212,7 +220,14 @@ jobs:
           DEVICES_PER_TEST: '2'
           HIDE_WEBDRIVER_LOGS: ${{ env.HIDE_WEBDRIVER_LOGS }}
 
+      - name: Upload 2-device test results
+        uses: ./github/actions/upload-test-results
+        with:
+          PLATFORM: ${{ env.PLATFORM }}
+          UPLOAD_IDENTIFIER: devices-2-test-run
+
       - name: Run 3-device tests
+        id: test-3-device
         uses: ./github/actions/run-tests
         with:
           PLATFORM: ${{ env.PLATFORM }}
@@ -220,6 +235,12 @@ jobs:
           WORKERS_COUNT: ${{ env.WORKERS_3_DEVICE }}
           DEVICES_PER_TEST: '3'
           HIDE_WEBDRIVER_LOGS: ${{ env.HIDE_WEBDRIVER_LOGS }}
+
+      - name: Upload 3-device test results
+        uses: ./github/actions/upload-test-results
+        with:
+          PLATFORM: ${{ env.PLATFORM }}
+          UPLOAD_IDENTIFIER: devices-3-test-run
 
       - name: Generate and publish test report
         uses: ./github/actions/generate-publish-test-report
@@ -238,6 +259,13 @@ jobs:
         if: always()
         with:
           PLATFORM: ${{ env.PLATFORM }}
+      
+      - name: Check if any tests failed
+        if: |
+          steps.test-1-device.outputs.test-result == 'failure' || 
+          steps.test-2-device.outputs.test-result == 'failure' || 
+          steps.test-3-device.outputs.test-result == 'failure'
+        run: echo 'Tests failed'; exit 1
 
       - name: Stop emulators
         if: always()
@@ -247,9 +275,4 @@ jobs:
           source ./scripts/ci.sh
           killall_emulators
 
-      - name: Check if any tests failed
-        if: |
-          steps.test-1-device.outputs.test-result == 'failure' || 
-          steps.test-2-device.outputs.test-result == 'failure' || 
-          steps.test-3-device.outputs.test-result == 'failure'
-        run: echo 'Tests failed'; exit 1
+
