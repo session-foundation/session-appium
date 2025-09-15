@@ -201,10 +201,7 @@ jobs:
           RISK: ${{ github.event.inputs.RISK }}
           WORKERS_COUNT: ${{ env.WORKERS_1_DEVICE }}
           DEVICES_PER_TEST: '1'
-          TEST_NAME: '1-device'
-          GREP_INCLUDE: '@1-devices'
           HIDE_WEBDRIVER_LOGS: ${{ env.HIDE_WEBDRIVER_LOGS }}
-          UPLOAD_IDENTIFIER: 'devices-1-test-run'
 
       - name: Run 2-device tests
         uses: ./github/actions/run-tests
@@ -213,10 +210,7 @@ jobs:
           RISK: ${{ github.event.inputs.RISK }}
           WORKERS_COUNT: ${{ env.WORKERS_2_DEVICE }}
           DEVICES_PER_TEST: '2'
-          TEST_NAME: '2-device'
-          GREP_INCLUDE: '@2-devices'
           HIDE_WEBDRIVER_LOGS: ${{ env.HIDE_WEBDRIVER_LOGS }}
-          UPLOAD_IDENTIFIER: 'devices-2-test-run'
 
       - name: Run 3-device tests
         uses: ./github/actions/run-tests
@@ -225,11 +219,7 @@ jobs:
           RISK: ${{ github.event.inputs.RISK }}
           WORKERS_COUNT: ${{ env.WORKERS_3_DEVICE }}
           DEVICES_PER_TEST: '3'
-          TEST_NAME: '3-device'
-          GREP_INCLUDE: '@3-devices'
           HIDE_WEBDRIVER_LOGS: ${{ env.HIDE_WEBDRIVER_LOGS }}
-          UPLOAD_IDENTIFIER: 'devices-3-test-run'
-
 
       - name: Generate and publish test report
         uses: ./github/actions/generate-publish-test-report
