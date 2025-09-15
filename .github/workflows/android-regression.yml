@@ -203,13 +203,13 @@ jobs:
           WORKERS_COUNT: ${{ env.WORKERS_1_DEVICE }}
           DEVICES_PER_TEST: '1'
           HIDE_WEBDRIVER_LOGS: ${{ env.HIDE_WEBDRIVER_LOGS }}
-          
+
       - name: Upload 1-device test results
         uses: ./github/actions/upload-test-results
         with:
           PLATFORM: ${{ env.PLATFORM }}
           UPLOAD_IDENTIFIER: devices-1-test-run
-      
+
       - name: Run 2-device tests
         id: test-2-device
         uses: ./github/actions/run-tests
@@ -259,7 +259,7 @@ jobs:
         if: always()
         with:
           PLATFORM: ${{ env.PLATFORM }}
-      
+
       - name: Check if any tests failed
         if: |
           steps.test-1-device.outputs.test-result == 'failure' || 
@@ -274,5 +274,3 @@ jobs:
         run: |
           source ./scripts/ci.sh
           killall_emulators
-
-

@@ -45,13 +45,13 @@ export async function handlePhotosFirstTimeOpen(device: DeviceWrapper) {
     });
 
     if (!signInButton) {
-    // API 35
-    signInButton = await device.doesElementExist({
-      strategy: '-android uiautomator',
-      selector: 'new UiSelector().text("Sign in")',
-      maxWait: 2_000,
-    });
-  }
+      // API 35
+      signInButton = await device.doesElementExist({
+        strategy: '-android uiautomator',
+        selector: 'new UiSelector().text("Sign in")',
+        maxWait: 2_000,
+      });
+    }
     if (!signInButton) {
       device.log(`Photos app opened without a sign-in prompt, proceeding`);
     } else {

@@ -86,7 +86,7 @@ export async function verifyElementScreenshot<
   // Use looks-same to verify the element screenshot against the baseline
   const { equal, diffImage } = await looksSame(elementScreenshotPath, baselineScreenshotPath, {
     createDiffImage: true,
-    tolerance: 5
+    tolerance: 5,
   });
 
   if (!equal) {
@@ -128,7 +128,7 @@ export async function verifyElementScreenshot<
           contentType: 'image/png',
         },
       ]);
-      console.log(`Visual comparison failed. The diff has been saved to ${diffImagePath}`)
+      console.log(`Visual comparison failed. The diff has been saved to ${diffImagePath}`);
       throw new Error(`The UI doesn't match expected appearance`);
     }
 

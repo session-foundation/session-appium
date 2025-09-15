@@ -1,7 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
 import { ConversationHeaderName, MessageBody } from './locators/conversation';
 import { ConversationItem } from './locators/home';
 import { open_Alice1_Bob1_friends_group_Unknown1 } from './state_builder';

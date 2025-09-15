@@ -330,7 +330,7 @@ export class DeviceWrapper {
 
     const blacklist = [
       { from: 'Voice message', to: 'New voice message' },
-      { from: 'url_bar', to: 'status_bar'}
+      { from: 'url_bar', to: 'status_bar' },
     ];
 
     // System locators such as 'network.loki.messenger.qa:id' can cause false positives with too high similarity scores
@@ -2111,9 +2111,9 @@ export class DeviceWrapper {
       });
       await sleepFor(500);
       await this.matchAndTapImage(
-        {strategy: 'xpath', selector: '//*[starts-with(@content-desc, "Photo taken on")]'},
+        { strategy: 'xpath', selector: '//*[starts-with(@content-desc, "Photo taken on")]' },
         profilePicture
-      )
+      );
       // await this.clickOnElementAll(new ImageName(this));
       await this.clickOnElementById('network.loki.messenger.qa:id/crop_image_menu_crop');
     }
