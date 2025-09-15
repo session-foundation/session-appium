@@ -4,7 +4,7 @@ import * as path from 'path';
 
 function existsAndFileOrThrow(path: string, id: string) {
   if (!existsSync(path) || !lstatSync(path).isFile()) {
-    throw new Error(`"${id}" does not exist at: ${path} or not a path`);
+    throw new Error(`"${id}" not found or not a file at: ${path}`);
   }
 }
 

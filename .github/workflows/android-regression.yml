@@ -247,3 +247,10 @@ jobs:
         run: |
           source ./scripts/ci.sh
           killall_emulators
+    
+      - name: Check if any tests failed
+        if: |
+          steps.test-1-device.outputs.test-result == 'failure' || 
+          steps.test-2-device.outputs.test-result == 'failure' || 
+          steps.test-3-device.outputs.test-result == 'failure'
+        run: echo 'Tests failed'; exit 1

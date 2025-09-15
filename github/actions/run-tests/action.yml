@@ -41,3 +41,8 @@ runs:
       with:
         PLATFORM: ${{ inputs.PLATFORM }}
         UPLOAD_IDENTIFIER: devices-${{ inputs.DEVICES_PER_TEST }}-test-run
+
+outputs:
+  test-result:
+    description: 'Test result (success/failure)'
+    value: ${{ steps.run-tests.outcome }}
