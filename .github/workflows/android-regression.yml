@@ -78,9 +78,9 @@ jobs:
       IOS_APP_PATH_PREFIX: '<just_not_empty>'
       ANDROID_APK: './extracted/session-android.apk'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
-      PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'failures' || github.event.inputs.LOG_LEVEL == 'verbose' ? '1' : '0' }}
-      PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'verbose' ? '1' : '0' }}
-      HIDE_WEBDRIVER_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'minimal' ? '1' : '0' }}
+      PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL != 'minimal' && '1' || '0' }}
+      PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'verbose' && '1' || '0' }}
+      HIDE_WEBDRIVER_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'minimal' && '1' || '0' }}
       IOS_1_SIMULATOR: '<just_not_empty>'
       IOS_2_SIMULATOR: '<just_not_empty>'
       IOS_3_SIMULATOR: '<just_not_empty>'
