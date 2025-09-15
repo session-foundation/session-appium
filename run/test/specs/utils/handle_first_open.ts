@@ -36,11 +36,22 @@ export async function handlePhotosFirstTimeOpen(device: DeviceWrapper) {
   }
   // On Android, the Photos app shows a sign-in prompt the first time it's opened that needs to be dismissed
   if (device.isAndroid()) {
-    const signInButton = await device.doesElementExist({
+    let signInButton = null;
+    // API 34
+    signInButton = await device.doesElementExist({
       strategy: 'id',
       selector: 'com.google.android.apps.photos:id/sign_in_button',
       maxWait: 2_000,
     });
+
+    if (!signInButton) {
+    // API 35
+    signInButton = await device.doesElementExist({
+      strategy: '-android uiautomator',
+      selector: 'new UiSelector().text("Sign in")',
+      maxWait: 2_000,
+    });
+  }
     if (!signInButton) {
       device.log(`Photos app opened without a sign-in prompt, proceeding`);
     } else {

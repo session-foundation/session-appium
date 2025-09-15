@@ -16,7 +16,6 @@ import {
   describeLocator,
   DownloadMediaButton,
   FirstGif,
-  ImageName,
   ImagePermissionsModalAllow,
   LocatorsInterface,
   ReadReceiptsButton,
