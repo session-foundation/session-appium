@@ -1638,7 +1638,7 @@ export class DeviceWrapper {
       throw new Error('Send button not found: Need to restart iOS emulator: Known issue');
     }
     // Might need to scroll down if the message is too long
-    await this.scrollToBottom();
+    // await this.scrollToBottom(); TODO temporarily disabling this to verify 
     // Wait for tick
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
