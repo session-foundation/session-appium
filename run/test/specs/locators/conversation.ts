@@ -526,36 +526,45 @@ export class FirstEmojiReact extends LocatorsInterface {
   }
 }
 
+// Find the reactions pill underneath a specific message 
 export class EmojiReactsPill extends LocatorsInterface {
-  public build() {
+  constructor(device: DeviceWrapper, private messageText: string) {
+    super(device);
+  }
+
+  public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
-        return {
-          strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/layout_emoji_container',
-        } as const;
+          return {
+            strategy: 'xpath',
+            selector:  `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${this.messageText}")]]//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/layout_emoji_container"]`
+          } as const;
       case 'ios':
         return {
-          strategy: 'accessibility id',
-          selector: '😂',
+          strategy: 'xpath',
+          selector: `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${this.messageText}"]]//XCUIElementTypeStaticText[@value="😂"]`
         } as const;
+      
     }
   }
-}
+};
 
 export class EmojiReactsCount extends LocatorsInterface {
-  public build() {
+  constructor(device: DeviceWrapper, private messageText: string, private expectedCount: string = '2') {
+    super(device);
+  }
+
+  public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/reactions_pill_count',
-          text: '2',
+          strategy: 'xpath',
+          selector: `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${this.messageText}")]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/reactions_pill_count"][@text="${this.expectedCount}"]`
         } as const;
       case 'ios':
         return {
-          strategy: 'accessibility id',
-          selector: '2',
+          strategy: 'xpath',
+          selector: `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${this.messageText}"]]//XCUIElementTypeStaticText[@value="${this.expectedCount}"]`
         } as const;
     }
   }

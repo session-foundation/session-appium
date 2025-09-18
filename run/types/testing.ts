@@ -134,11 +134,15 @@ export type XPath =
   | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
   | `//*[@resource-id='network.loki.messenger.qa:id/callTitle' and contains(@text, ':')]`
   | `//*[starts-with(@content-desc, "Photo taken on")]`
+  | `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/layout_emoji_container"]`
+  | `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/reactions_pill_count"][@text="${string}"]`
   | `//android.widget.LinearLayout[.//android.widget.TextView[@content-desc="Conversation list item" and @text="${string}"]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/snippetTextView" and @text="${string}"]`
   | `//android.widget.TextView[@text="${string}"]`
   | `//XCUIElementTypeAlert//*//XCUIElementTypeButton`
   | `//XCUIElementTypeButton[@name="Continue"]`
   | `//XCUIElementTypeButton[@name="Settings"]`
+  | `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${string}"]]//XCUIElementTypeStaticText[@value="😂"]`
+  | `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${string}"]]//XCUIElementTypeStaticText[@value="${string}"]`
   | `//XCUIElementTypeCell[@name="${string}"]`
   | `//XCUIElementTypeCell[@name="Conversation list item" and @label="${string}"]//XCUIElementTypeStaticText[@name="${string}"]`
   | `//XCUIElementTypeCell[@name="Session"]`
@@ -164,7 +168,7 @@ export type UiAutomatorQuery =
   | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().textStartsWith("Version"))'
   | 'new UiSelector().text("Enter your display name")'
   | `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-text"))`
-  | `new UiSelector().text(${string})`;
+  | `new UiSelector().text(${string})`
 
 export type AccessibilityId =
   | DISAPPEARING_TIMES
