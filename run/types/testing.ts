@@ -168,7 +168,7 @@ export type UiAutomatorQuery =
   | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().textStartsWith("Version"))'
   | 'new UiSelector().text("Enter your display name")'
   | `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-text"))`
-  | `new UiSelector().text(${string})`
+  | `new UiSelector().text(${string})`;
 
 export type AccessibilityId =
   | DISAPPEARING_TIMES

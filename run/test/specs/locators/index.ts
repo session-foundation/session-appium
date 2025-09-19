@@ -388,7 +388,7 @@ export class BlockedContactsSettings extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Block contacts - Navigation'
+          selector: 'Block contacts - Navigation',
         };
     }
   }

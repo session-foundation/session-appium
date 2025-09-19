@@ -329,9 +329,7 @@ export class DeviceWrapper {
       { strategy: 'id' as Strategy, pattern: /resource-id="([^"]+)"/g },
     ];
 
-    const blacklist = [
-      { from: 'Voice message', to: 'New voice message'},
-    ]
+    const blacklist = [{ from: 'Voice message', to: 'New voice message' }];
 
     // System locators such as 'network.loki.messenger.qa:id' can cause false positives with too high similarity scores
     // Strip any known prefix patterns first
@@ -378,14 +376,14 @@ export class DeviceWrapper {
       const selectorConfidence = ((1 - result.score) * 100).toFixed(2);
 
       const isBlacklisted = blacklist.some(
-        pair => 
-        (selector.includes(pair.from) && match.originalSelector.includes(pair.to) || 
-          selector.includes(pair.to) && match.originalSelector.includes(pair.from))
+        pair =>
+          (selector.includes(pair.from) && match.originalSelector.includes(pair.to)) ||
+          (selector.includes(pair.to) && match.originalSelector.includes(pair.from))
       );
 
       // Don't heal blacklisted pairs
       if (isBlacklisted) {
-        continue; 
+        continue;
       }
 
       // Sometimes the element is just not on screen yet - skip
@@ -1638,7 +1636,7 @@ export class DeviceWrapper {
       throw new Error('Send button not found: Need to restart iOS emulator: Known issue');
     }
     // Might need to scroll down if the message is too long
-    // await this.scrollToBottom(); TODO temporarily disabling this to verify 
+    // await this.scrollToBottom(); TODO temporarily disabling this to verify
     // Wait for tick
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),

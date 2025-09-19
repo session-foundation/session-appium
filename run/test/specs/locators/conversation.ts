@@ -526,31 +526,37 @@ export class FirstEmojiReact extends LocatorsInterface {
   }
 }
 
-// Find the reactions pill underneath a specific message 
+// Find the reactions pill underneath a specific message
 export class EmojiReactsPill extends LocatorsInterface {
-  constructor(device: DeviceWrapper, private messageText: string) {
+  constructor(
+    device: DeviceWrapper,
+    private messageText: string
+  ) {
     super(device);
   }
 
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
-          return {
-            strategy: 'xpath',
-            selector:  `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${this.messageText}")]]//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/layout_emoji_container"]`
-          } as const;
+        return {
+          strategy: 'xpath',
+          selector: `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${this.messageText}")]]//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/layout_emoji_container"]`,
+        } as const;
       case 'ios':
         return {
           strategy: 'xpath',
-          selector: `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${this.messageText}"]]//XCUIElementTypeStaticText[@value="😂"]`
+          selector: `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${this.messageText}"]]//XCUIElementTypeStaticText[@value="😂"]`,
         } as const;
-      
     }
   }
-};
+}
 
 export class EmojiReactsCount extends LocatorsInterface {
-  constructor(device: DeviceWrapper, private messageText: string, private expectedCount: string = '2') {
+  constructor(
+    device: DeviceWrapper,
+    private messageText: string,
+    private expectedCount: string = '2'
+  ) {
     super(device);
   }
 
@@ -559,12 +565,12 @@ export class EmojiReactsCount extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'xpath',
-          selector: `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${this.messageText}")]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/reactions_pill_count"][@text="${this.expectedCount}"]`
+          selector: `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${this.messageText}")]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/reactions_pill_count"][@text="${this.expectedCount}"]`,
         } as const;
       case 'ios':
         return {
           strategy: 'xpath',
-          selector: `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${this.messageText}"]]//XCUIElementTypeStaticText[@value="${this.expectedCount}"]`
+          selector: `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${this.messageText}"]]//XCUIElementTypeStaticText[@value="${this.expectedCount}"]`,
         } as const;
     }
   }
