@@ -35,17 +35,7 @@ async function declineRequest(platform: SupportedPlatformsType, testInfo: TestIn
   await device3.waitForTextElementToBePresent(new MessageRequestItem(device3));
   // Click on decline button
   await device2.clickOnElementAll(new DeclineMessageRequestButton(device2));
-  // Are you sure you want to delete message request only for ios
-  await sleepFor(3000);
-  // TODO remove onIOS/onAndroid once SES-3846 has been completed
   await device2
-    .onIOS()
-    .checkModalStrings(
-      englishStrippedStr('delete').toString(),
-      englishStrippedStr('messageRequestsDelete').toString()
-    );
-  await device2
-    .onAndroid()
     .checkModalStrings(
       englishStrippedStr('delete').toString(),
       englishStrippedStr('messageRequestsContactDelete').toString()
