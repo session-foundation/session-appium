@@ -35,7 +35,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
   });
 
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
-  await alice1.sendImage(testMessage);
+  const sentTimestamp = await alice1.sendImage(testMessage);
   if (platform === 'ios') {
     await Promise.all(
       [alice1, bob1, charlie1].map(device =>
@@ -43,6 +43,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
           ...new MessageBody(device, testMessage).build(),
           maxWait,
           preventEarlyDeletion: true,
+          actualStartTime: sentTimestamp,
         })
       )
     );
@@ -61,6 +62,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
           selector: 'Untrusted attachment message',
           maxWait,
           preventEarlyDeletion: true,
+          actualStartTime: sentTimestamp,
         })
       ),
     ]);

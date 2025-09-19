@@ -1,7 +1,7 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { DISAPPEARING_TIMES } from '../../types/testing';
 import { MediaMessage, MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -24,7 +24,7 @@ const time = DISAPPEARING_TIMES.ONE_MINUTE;
 const timerType = 'Disappear after send option';
 const testMessage = 'Testing disappearing messages for videos';
 const initialMaxWait = 20_000; // Downloading the attachment can take a while
-const maxWait = 65_000; // 60s plus buffer
+const maxWait = 70_000; // 60s plus buffer
 
 async function disappearingVideoMessage1o1(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
@@ -35,9 +35,12 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType, tes
     testInfo,
   });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
-  await alice1.onIOS().sendVideoiOS(testMessage);
-  await alice1.onAndroid().sendVideoAndroid();
-  await bob1.trustAttachments(USERNAME.ALICE);
+  let sentTimestamp: number;
+  if (platform === 'ios') {
+    sentTimestamp = await alice1.onIOS().sendVideoiOS(testMessage);
+  } else {
+    sentTimestamp = await alice1.onAndroid().sendVideoAndroid();
+  }
   if (platform === 'ios') {
     await Promise.all(
       [alice1, bob1].map(device =>
@@ -46,6 +49,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType, tes
           initialMaxWait,
           maxWait,
           preventEarlyDeletion: true,
+          actualStartTime: sentTimestamp,
         })
       )
     );
@@ -57,6 +61,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType, tes
           initialMaxWait,
           maxWait,
           preventEarlyDeletion: true,
+          actualStartTime: sentTimestamp,
         })
       )
     );

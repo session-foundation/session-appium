@@ -52,7 +52,7 @@ async function disappearAfterSend(platform: SupportedPlatformsType, testInfo: Te
     controlMode
   );
   // Send message to verify that deletion is working
-  await alice1.sendMessage(testMessage);
+  const sentTimestamp = await alice1.sendMessage(testMessage);
   // Wait for message to disappear
   await Promise.all(
     [alice1, bob1].map(device =>
@@ -60,6 +60,7 @@ async function disappearAfterSend(platform: SupportedPlatformsType, testInfo: Te
         ...new MessageBody(device, testMessage).build(),
         maxWait,
         preventEarlyDeletion: true,
+        actualStartTime: sentTimestamp,
       })
     )
   );

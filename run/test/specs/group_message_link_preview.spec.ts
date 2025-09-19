@@ -108,7 +108,8 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType, testInfo: 
   ]);
   await bob1.longPressMessage(testLink);
   await bob1.clickOnByAccessibilityID('Reply to message');
-  const replyMessage = await bob1.sendMessage(`${alice.userName} message reply`);
+  const replyMessage = `${alice.userName} message reply`;
+  await bob1.sendMessage(replyMessage);
   await Promise.all(
     [alice1, charlie1].map(device =>
       device.waitForTextElementToBePresent(new MessageBody(device, replyMessage))

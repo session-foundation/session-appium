@@ -26,26 +26,24 @@ const maxWait = 35_000; // 30s plus buffer
 async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
+    prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
     testInfo,
   });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
-  await alice1.sendVoiceMessage();
-  await alice1.waitForTextElementToBePresent(new VoiceMessage(alice1));
-  await Promise.all([
-    alice1.hasElementBeenDeleted({
-      ...new VoiceMessage(alice1).build(),
-      maxWait,
-      preventEarlyDeletion: true,
-    }),
-    bob1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Untrusted attachment message',
-      maxWait,
-      preventEarlyDeletion: true,
-    }),
-  ]);
+  const sentTimestamp = await alice1.sendVoiceMessage();
+  await bob1.trustAttachments(alice.userName);
+  await Promise.all(
+    [alice1, bob1].map(device =>
+      device.hasElementBeenDeleted({
+        ...new VoiceMessage(device).build(),
+        maxWait,
+        preventEarlyDeletion: true,
+        actualStartTime: sentTimestamp,
+      })
+    )
+  );
   await closeApp(alice1, bob1);
 }

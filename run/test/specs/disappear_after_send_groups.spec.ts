@@ -53,13 +53,14 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType, testIn
     charlie1.waitForControlMessageToBePresent(disappearingMessagesSetControl),
   ]);
   // Check for test messages (should be deleted)
-  await alice1.sendMessage(testMessage);
+  const sentTimestamp = await alice1.sendMessage(testMessage);
   await Promise.all(
     [alice1, bob1, charlie1].map(device =>
       device.hasElementBeenDeleted({
         ...new MessageBody(device, testMessage).build(),
         maxWait,
         preventEarlyDeletion: true,
+        actualStartTime: sentTimestamp,
       })
     )
   );

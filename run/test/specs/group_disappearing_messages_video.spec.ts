@@ -23,7 +23,7 @@ bothPlatformsIt({
 const time = DISAPPEARING_TIMES.ONE_MINUTE;
 const timerType = 'Disappear after send option';
 const initialMaxWait = 20_000; // Downloading the attachment can take a while
-const maxWait = 65_000; // 60s plus buffer
+const maxWait = 70_000; // 60s plus buffer
 
 async function disappearingVideoMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testMessage = 'Testing disappearing messages for videos';
@@ -37,8 +37,12 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType, t
     testInfo,
   });
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
-  await alice1.onIOS().sendVideoiOS(testMessage);
-  await alice1.onAndroid().sendVideoAndroid();
+  let sentTimestamp: number;
+  if (platform === 'ios') {
+    sentTimestamp = await alice1.sendVideoiOS(testMessage);
+  } else {
+    sentTimestamp = await alice1.sendVideoAndroid();
+  }
   await Promise.all(
     [bob1, charlie1].map(device => device.onAndroid().trustAttachments(testGroupName))
   );
@@ -49,6 +53,7 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType, t
           ...new MessageBody(device, testMessage).build(),
           maxWait,
           preventEarlyDeletion: true,
+          actualStartTime: sentTimestamp,
         })
       )
     );
@@ -57,10 +62,10 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType, t
       [alice1, bob1, charlie1].map(device =>
         device.hasElementBeenDeleted({
           ...new MediaMessage(device).build(),
-
           initialMaxWait,
           maxWait,
           preventEarlyDeletion: true,
+          actualStartTime: sentTimestamp,
         })
       )
     );

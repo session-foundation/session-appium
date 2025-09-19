@@ -32,7 +32,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType, t
     testInfo,
   });
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
-  await alice1.sendVoiceMessage();
+  const sentTimestamp = await alice1.sendVoiceMessage();
   await Promise.all(
     [bob1, charlie1].map(device => device.onAndroid().trustAttachments(testGroupName))
   );
@@ -43,6 +43,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType, t
         selector: 'Voice message',
         maxWait,
         preventEarlyDeletion: true,
+        actualStartTime: sentTimestamp,
       })
     )
   );

@@ -37,6 +37,7 @@ bothPlatformsItSeparate({
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after read option';
 const maxWait = 35_000; // 30s plus buffer
+let sentTimestamp: number;
 
 async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
@@ -71,6 +72,7 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
       ...new OutgoingMessageStatusSent(alice1).build(),
       maxWait: 20000,
     });
+    sentTimestamp = Date.now();
   });
   // Wait for 30 seconds to disappear
   await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
@@ -80,6 +82,7 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
           ...new MessageBody(device, testLink).build(),
           maxWait,
           preventEarlyDeletion: true,
+          actualStartTime: sentTimestamp,
         })
       )
     );
@@ -122,11 +125,17 @@ async function disappearingLinkMessage1o1Android(
       ...new OutgoingMessageStatusSent(alice1).build(),
       maxWait: 20000,
     });
+    sentTimestamp = Date.now();
   });
   await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
     await Promise.all(
       [alice1, bob1].map(device =>
-        device.hasElementBeenDeleted({ ...new LinkPreviewMessage(device).build(), maxWait })
+        device.hasElementBeenDeleted({
+          ...new LinkPreviewMessage(device).build(),
+          maxWait,
+          preventEarlyDeletion: true,
+          actualStartTime: sentTimestamp,
+        })
       )
     );
   });

@@ -34,7 +34,7 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType, testI
     testInfo,
   });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
-  await alice1.sendGIF();
+  const sentTimestamp = await alice1.sendGIF();
   await bob1.trustAttachments(USERNAME.ALICE);
   await Promise.all(
     [alice1, bob1].map(device =>
@@ -43,6 +43,7 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType, testI
         initialMaxWait,
         maxWait,
         preventEarlyDeletion: true,
+        actualStartTime: sentTimestamp,
       })
     )
   );

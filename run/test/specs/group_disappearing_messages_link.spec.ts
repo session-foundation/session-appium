@@ -33,6 +33,7 @@ const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const maxWait = 35_000; // 30s plus buffer
 
 async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  let sentTimestamp: number;
   const testGroupName = 'Testing disappearing messages';
   const {
     devices: { alice1, bob1, charlie1 },
@@ -68,6 +69,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
       ...new OutgoingMessageStatusSent(alice1).build(),
       maxWait: 20000,
     });
+    sentTimestamp = Date.now();
   });
   // Wait for 30 seconds to disappear
   await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
@@ -78,6 +80,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
             ...new MessageBody(device, testLink).build(),
             maxWait,
             preventEarlyDeletion: true,
+            actualStartTime: sentTimestamp,
           })
         )
       );
@@ -88,6 +91,8 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
           device.hasElementBeenDeleted({
             ...new LinkPreviewMessage(device).build(),
             maxWait,
+            preventEarlyDeletion: true,
+            actualStartTime: sentTimestamp,
           })
         )
       );

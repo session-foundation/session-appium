@@ -37,7 +37,8 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType, tes
   });
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   // Click on attachments button
-  await alice1.sendGIF();
+  const sentTimestamp = await alice1.sendGIF();
+  console.log(`the sent timestamp is ${sentTimestamp}`);
   await Promise.all(
     [bob1, charlie1].map(device => device.onAndroid().trustAttachments(testGroupName))
   );
@@ -45,10 +46,10 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType, tes
     [alice1, bob1, charlie1].map(device =>
       device.hasElementBeenDeleted({
         ...new MediaMessage(device).build(),
-
         initialMaxWait,
         maxWait,
         preventEarlyDeletion: true,
+        actualStartTime: sentTimestamp,
       })
     )
   );

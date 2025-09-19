@@ -159,9 +159,9 @@ export async function verifyPageScreenshot(
 
   if (!equal) {
     const diffImagePath = await saveImage(diffImage, diffsDir, 'diff');
-      console.log(`Visual comparison failed. The diff has been saved to ${diffImagePath}`)
-      throw new Error(`The UI doesn't match expected appearance`);
-    }
+    console.log(`Visual comparison failed. The diff has been saved to ${diffImagePath}`);
+    throw new Error(`The UI doesn't match expected appearance`);
+  }
   // Cleanup of element screenshot file on success
   try {
     fs.unlinkSync(screenshotName);

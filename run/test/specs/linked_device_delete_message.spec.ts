@@ -22,13 +22,13 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType, test
 
   const testMessage = 'Howdy';
   // Send message from user a to user b
-  const sentMessage = await alice1.sendMessage(testMessage);
+  await alice1.sendMessage(testMessage);
   // Check message came through on linked device(3)
   // Enter conversation with user B on device 3
   await alice2.clickOnElementAll(new ConversationItem(alice2, bob.userName)); // Find message
-  await alice2.findMessageWithBody(sentMessage);
+  await alice2.findMessageWithBody(testMessage);
   // Select message on device 1, long press
-  await alice1.longPressMessage(sentMessage);
+  await alice1.longPressMessage(testMessage);
   // Select delete
   await alice1.clickOnByAccessibilityID('Delete message');
   await alice1.checkModalStrings(
@@ -41,7 +41,7 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType, test
   // Check device 2 and 3 for no change
   await Promise.all(
     [bob1, alice2].map(device =>
-      device.waitForTextElementToBePresent(new MessageBody(device, sentMessage))
+      device.waitForTextElementToBePresent(new MessageBody(device, testMessage))
     )
   );
   // Close app

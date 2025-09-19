@@ -1203,6 +1203,7 @@ export class DeviceWrapper {
    * @param args.initialMaxWait - Time to wait for element to initially appear (defaults to 10_000ms)
    * @param args.maxWait - Time to wait for deletion AFTER element is found (defaults to 30_000ms)
    * @param args.preventEarlyDeletion - If true, throws an error if the element disappears too early (% of maxWait)
+   * @param args.actualStartTime - Optional timestamp of when the timer should be considered to have started. If provided, total time is calculated from this timestamp rather than when this method is called. Useful for disappearing messages where the timer starts at send time.
    *
    * @throws Error if:
    * - The element is never found within initialMaxWait
@@ -1217,6 +1218,7 @@ export class DeviceWrapper {
       initialMaxWait?: number;
       maxWait?: number;
       preventEarlyDeletion?: boolean;
+      actualStartTime?: number;
     } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<void> {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
@@ -1227,7 +1229,7 @@ export class DeviceWrapper {
     const description = describeLocator({ ...locator, text: args.text });
 
     // Track total time from start - disappearing timers begin on send, not on display
-    const functionStartTime = Date.now();
+    const functionStartTime = args.actualStartTime ?? Date.now();
     // Phase 1: Wait for element to appear
     this.log(`Waiting for element with ${description} to be deleted...`);
     await this.waitForElementToAppear(locator, initialMaxWait, text);
@@ -1626,7 +1628,7 @@ export class DeviceWrapper {
   }
   // UTILITY FUNCTIONS
 
-  public async sendMessage(message: string) {
+  public async sendMessage(message: string): Promise<number> {
     await this.inputText(message, new MessageInput(this));
 
     // Click send
@@ -1642,8 +1644,8 @@ export class DeviceWrapper {
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 50000,
     });
-
-    return message;
+    const sentTimestamp = Date.now();
+    return sentTimestamp;
   }
 
   public async waitForSentConfirmation() {
@@ -1717,7 +1719,8 @@ export class DeviceWrapper {
     }
     // Select 'Reply' option
     // Send message
-    const replyMessage = await this.sendMessage(`${user.userName} replied to ${body}`);
+    const replyMessage = `${user.userName} replied to ${body}`;
+    await this.sendMessage(replyMessage);
 
     return replyMessage;
   }
@@ -1811,7 +1814,7 @@ export class DeviceWrapper {
     }
   }
 
-  public async sendImage(message: string, community?: boolean) {
+  public async sendImage(message: string, community?: boolean): Promise<number> {
     if (this.isIOS()) {
       // Push file first
       await this.pushMediaToDevice(testImage);
@@ -1861,8 +1864,10 @@ export class DeviceWrapper {
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
     });
+    const sentTimestamp = Date.now();
+    return sentTimestamp;
   }
-  public async sendVideoiOS(message: string) {
+  public async sendVideoiOS(message: string): Promise<number> {
     // Push first
     await this.pushMediaToDevice(testVideo);
     await this.clickOnElementAll(new AttachmentsButton(this));
@@ -1894,9 +1899,11 @@ export class DeviceWrapper {
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
     });
+    const sentTimestamp = Date.now();
+    return sentTimestamp;
   }
 
-  public async sendVideoAndroid() {
+  public async sendVideoAndroid(): Promise<number> {
     // Push first
     await this.pushMediaToDevice(testVideo);
     // Click on attachments button
@@ -1950,9 +1957,12 @@ export class DeviceWrapper {
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
     });
+    const sentTimestamp = Date.now();
+    this.log(`[DEBUG] sendVideoiOS returning timestamp: ${sentTimestamp}`);
+    return sentTimestamp;
   }
 
-  public async sendDocument() {
+  public async sendDocument(): Promise<number> {
     if (this.isIOS()) {
       const formattedFileName = 'test_file, pdf';
       const testMessage = 'Testing documents';
@@ -2039,9 +2049,11 @@ export class DeviceWrapper {
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
     });
+    const sentTimestamp = Date.now();
+    return sentTimestamp;
   }
 
-  public async sendGIF() {
+  public async sendGIF(): Promise<number> {
     await sleepFor(1000);
     await this.clickOnByAccessibilityID('Attachments button');
     if (this.isAndroid()) {
@@ -2064,9 +2076,16 @@ export class DeviceWrapper {
     if (this.isIOS()) {
       await this.clickOnElementAll(new SendButton(this));
     }
+    // Checking Sent status on both platforms
+    await this.waitForTextElementToBePresent({
+      ...new OutgoingMessageStatusSent(this).build(),
+      maxWait: 20000,
+    });
+    const sentTimestamp = Date.now();
+    return sentTimestamp;
   }
 
-  public async sendVoiceMessage() {
+  public async sendVoiceMessage(): Promise<number> {
     await this.longPress(new NewVoiceMessageButton(this));
 
     if (this.isAndroid()) {
@@ -2081,6 +2100,13 @@ export class DeviceWrapper {
     }
 
     await this.pressAndHold('New voice message');
+    // Checking Sent status on both platforms
+    await this.waitForTextElementToBePresent({
+      ...new OutgoingMessageStatusSent(this).build(),
+      maxWait: 20000,
+    });
+    const sentTimestamp = Date.now();
+    return sentTimestamp;
   }
 
   public async uploadProfilePicture() {

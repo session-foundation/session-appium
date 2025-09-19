@@ -35,11 +35,10 @@ async function declineRequest(platform: SupportedPlatformsType, testInfo: TestIn
   await device3.waitForTextElementToBePresent(new MessageRequestItem(device3));
   // Click on decline button
   await device2.clickOnElementAll(new DeclineMessageRequestButton(device2));
-  await device2
-    .checkModalStrings(
-      englishStrippedStr('delete').toString(),
-      englishStrippedStr('messageRequestsContactDelete').toString()
-    );
+  await device2.checkModalStrings(
+    englishStrippedStr('delete').toString(),
+    englishStrippedStr('messageRequestsContactDelete').toString()
+  );
   await device2.clickOnElementAll(new DeleteMesssageRequestConfirmation(device2));
   // "messageRequestsNonePending": "No pending message requests",
   const messageRequestsNonePending = englishStrippedStr('messageRequestsNonePending').toString();

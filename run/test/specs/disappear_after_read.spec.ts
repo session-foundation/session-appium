@@ -53,13 +53,15 @@ async function disappearAfterRead(platform: SupportedPlatformsType, testInfo: Te
     mode
   );
   // Send message to verify that deletion is working
-  await alice1.sendMessage(testMessage);
+  const sentTimestamp = await alice1.sendMessage(testMessage);
+  // NOTE  we're only sending a text message, both devices are open, DaS is practically the same as DaR
   await Promise.all(
     [alice1, bob1].map(device =>
       device.hasElementBeenDeleted({
         ...new MessageBody(device, testMessage).build(),
         maxWait,
         preventEarlyDeletion: true,
+        actualStartTime: sentTimestamp,
       })
     )
   );
