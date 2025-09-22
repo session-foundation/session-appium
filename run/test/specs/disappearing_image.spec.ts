@@ -2,7 +2,7 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
-import { MediaMessage } from './locators/conversation';
+import { MediaMessage, MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
@@ -36,6 +36,17 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType, tes
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   const sentTimestamp = await alice1.sendImage(testMessage);
   await bob1.trustAttachments(alice.userName);
+  if (platform === 'ios') {
+    await Promise.all(
+    [alice1, bob1].map(device =>
+      device.hasElementDisappeared({
+        ...new MessageBody(device, testMessage).build(),
+        maxWait,
+        actualStartTime: sentTimestamp,
+      })
+    )
+  );
+  } else {
   await Promise.all(
     [alice1, bob1].map(device =>
       device.hasElementDisappeared({
@@ -45,5 +56,6 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType, tes
       })
     )
   );
+}
   await closeApp(alice1, bob1);
 }
