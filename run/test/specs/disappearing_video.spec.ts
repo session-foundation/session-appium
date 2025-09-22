@@ -29,6 +29,7 @@ const maxWait = 70_000; // 60s plus buffer
 async function disappearingVideoMessage1o1(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
+    prebuilt: { alice }
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
@@ -41,6 +42,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType, tes
   } else {
     sentTimestamp = await alice1.onAndroid().sendVideoAndroid();
   }
+  await bob1.trustAttachments(alice.userName)
   if (platform === 'ios') {
     await Promise.all(
       [alice1, bob1].map(device =>
