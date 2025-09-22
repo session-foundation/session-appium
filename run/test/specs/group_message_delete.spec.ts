@@ -24,7 +24,7 @@ async function deleteMessageGroup(platform: SupportedPlatformsType, testInfo: Te
     focusGroupConvo: true,
     testInfo,
   });
-  const sentMessage = 'Checking local delete functionality ';
+  const sentMessage = 'Checking local delete functionality';
   await alice1.sendMessage(sentMessage);
   await Promise.all(
     [bob1, charlie1].map(device =>

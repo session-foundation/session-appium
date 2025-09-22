@@ -66,7 +66,6 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
     await alice1.deleteText(new MessageInput(alice1));
     await alice1.inputText(testLink, new MessageInput(alice1));
     await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
-
     await alice1.clickOnElementAll(new SendButton(alice1));
     await alice1.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(alice1).build(),
@@ -78,10 +77,9 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
   await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
     await Promise.all(
       [alice1, bob1].map(device =>
-        device.hasElementBeenDeleted({
+        device.hasElementDisappeared({
           ...new MessageBody(device, testLink).build(),
           maxWait,
-          preventEarlyDeletion: true,
           actualStartTime: sentTimestamp,
         })
       )
@@ -130,10 +128,9 @@ async function disappearingLinkMessage1o1Android(
   await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
     await Promise.all(
       [alice1, bob1].map(device =>
-        device.hasElementBeenDeleted({
+        device.hasElementDisappeared({
           ...new LinkPreviewMessage(device).build(),
           maxWait,
-          preventEarlyDeletion: true,
           actualStartTime: sentTimestamp,
         })
       )

@@ -39,10 +39,9 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
   if (platform === 'ios') {
     await Promise.all(
       [alice1, bob1, charlie1].map(device =>
-        device.hasElementBeenDeleted({
+        device.hasElementDisappeared({
           ...new MessageBody(device, testMessage).build(),
           maxWait,
-          preventEarlyDeletion: true,
           actualStartTime: sentTimestamp,
         })
       )
@@ -50,18 +49,17 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
   }
   if (platform === 'android') {
     await Promise.all([
-      alice1.hasElementBeenDeleted({
+      alice1.hasElementDisappeared({
         ...new MediaMessage(alice1).build(),
         maxWait,
-        preventEarlyDeletion: true,
+        actualStartTime: sentTimestamp,
       }),
       // Bob and Charlie haven't trusted the message
       ...[bob1, charlie1].map(device =>
-        device.hasElementBeenDeleted({
+        device.hasElementDisappeared({
           strategy: 'accessibility id',
           selector: 'Untrusted attachment message',
           maxWait,
-          preventEarlyDeletion: true,
           actualStartTime: sentTimestamp,
         })
       ),

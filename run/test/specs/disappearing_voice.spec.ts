@@ -37,10 +37,9 @@ async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType, tes
   await bob1.trustAttachments(alice.userName);
   await Promise.all(
     [alice1, bob1].map(device =>
-      device.hasElementBeenDeleted({
+      device.hasElementDisappeared({
         ...new VoiceMessage(device).build(),
         maxWait,
-        preventEarlyDeletion: true,
         actualStartTime: sentTimestamp,
       })
     )

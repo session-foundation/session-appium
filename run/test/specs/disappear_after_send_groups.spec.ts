@@ -56,10 +56,9 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType, testIn
   const sentTimestamp = await alice1.sendMessage(testMessage);
   await Promise.all(
     [alice1, bob1, charlie1].map(device =>
-      device.hasElementBeenDeleted({
+      device.hasElementDisappeared({
         ...new MessageBody(device, testMessage).build(),
         maxWait,
-        preventEarlyDeletion: true,
         actualStartTime: sentTimestamp,
       })
     )

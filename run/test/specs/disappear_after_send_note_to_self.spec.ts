@@ -49,10 +49,9 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, te
     `You set messages to disappear ${time} after they have been ${controlMode}.`
   );
   const sentTimestamp = await device.sendMessage(testMessage);
-  await device.hasElementBeenDeleted({
+  await device.hasElementDisappeared({
     ...new MessageBody(device, testMessage).build(),
     maxWait,
-    preventEarlyDeletion: true,
     actualStartTime: sentTimestamp,
   });
   // Great success

@@ -144,21 +144,22 @@ async function disappearingCallMessage1o1Android(
     maxWait: 5_000,
   });
   await alice1.clickOnElementById('network.loki.messenger.qa:id/endCallButton');
+  const callEndTimestamp = Date.now();
   // Wait for control message to disappear
   await Promise.all([
-    alice1.hasElementBeenDeleted({
+    alice1.hasElementDisappeared({
       strategy: 'id',
       selector: 'network.loki.messenger.qa:id/call_text_view',
       text: `You called ${bob.userName}`,
       maxWait,
-      preventEarlyDeletion: true,
+      actualStartTime: callEndTimestamp,
     }),
-    bob1.hasElementBeenDeleted({
+    bob1.hasElementDisappeared({
       strategy: 'id',
       selector: 'network.loki.messenger.qa:id/call_text_view',
       text: `Missed call from ${alice.userName}`,
       maxWait,
-      preventEarlyDeletion: true,
+      actualStartTime: callEndTimestamp,
     }),
   ]);
   await closeApp(alice1, bob1);

@@ -76,10 +76,9 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
     if (platform === 'ios') {
       await Promise.all(
         [alice1, bob1, charlie1].map(device =>
-          device.hasElementBeenDeleted({
+          device.hasElementDisappeared({
             ...new MessageBody(device, testLink).build(),
             maxWait,
-            preventEarlyDeletion: true,
             actualStartTime: sentTimestamp,
           })
         )
@@ -88,10 +87,9 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
     if (platform === 'android') {
       await Promise.all(
         [alice1, bob1, charlie1].map(device =>
-          device.hasElementBeenDeleted({
+          device.hasElementDisappeared({
             ...new LinkPreviewMessage(device).build(),
             maxWait,
-            preventEarlyDeletion: true,
             actualStartTime: sentTimestamp,
           })
         )

@@ -58,11 +58,12 @@ async function disappearingCommunityInviteMessage(
   await alice1.clickOnElementAll(new CommunityInviteConfirmButton(alice1));
   // The community invite process fails silently so we will check if the invite came through first
   await bob1.waitForTextElementToBePresent(new CommunityInvitation(bob1));
+  const communityInviteTimestamp = Date.now();
   // Bob already has the convo open so we can start checking for the disappearing message immediately
-  await bob1.hasElementBeenDeleted({
+  await bob1.hasElementDisappeared({
     ...new CommunityInvitation(bob1).build(),
     maxWait,
-    preventEarlyDeletion: true,
+    actualStartTime: communityInviteTimestamp,
   });
   // Leave Invite Contacts, Conversation Settings, Community, and open convo with Bob
   await alice1.navigateBack();

@@ -49,10 +49,9 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType, t
   if (platform === 'ios') {
     await Promise.all(
       [alice1, bob1, charlie1].map(device =>
-        device.hasElementBeenDeleted({
+        device.hasElementDisappeared({
           ...new MessageBody(device, testMessage).build(),
           maxWait,
-          preventEarlyDeletion: true,
           actualStartTime: sentTimestamp,
         })
       )
@@ -60,11 +59,10 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType, t
   } else if (platform === 'android') {
     await Promise.all(
       [alice1, bob1, charlie1].map(device =>
-        device.hasElementBeenDeleted({
+        device.hasElementDisappeared({
           ...new MediaMessage(device).build(),
           initialMaxWait,
           maxWait,
-          preventEarlyDeletion: true,
           actualStartTime: sentTimestamp,
         })
       )

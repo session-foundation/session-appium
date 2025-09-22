@@ -44,11 +44,10 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType, tes
   );
   await Promise.all(
     [alice1, bob1, charlie1].map(device =>
-      device.hasElementBeenDeleted({
+      device.hasElementDisappeared({
         ...new MediaMessage(device).build(),
         initialMaxWait,
         maxWait,
-        preventEarlyDeletion: true,
         actualStartTime: sentTimestamp,
       })
     )

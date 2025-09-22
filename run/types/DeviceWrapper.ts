@@ -329,7 +329,10 @@ export class DeviceWrapper {
       { strategy: 'id' as Strategy, pattern: /resource-id="([^"]+)"/g },
     ];
 
-    const blacklist = [{ from: 'Voice message', to: 'New voice message' }];
+    const blacklist = [
+      { from: 'Voice message', to: 'New voice message' },
+      { from: 'Message sent status: Sent', to: 'Message sent status: Sending' },
+    ];
 
     // System locators such as 'network.loki.messenger.qa:id' can cause false positives with too high similarity scores
     // Strip any known prefix patterns first
@@ -1202,23 +1205,16 @@ export class DeviceWrapper {
    * @param args.text - Optional text content to match within elements of the same type
    * @param args.initialMaxWait - Time to wait for element to initially appear (defaults to 10_000ms)
    * @param args.maxWait - Time to wait for deletion AFTER element is found (defaults to 30_000ms)
-   * @param args.preventEarlyDeletion - If true, throws an error if the element disappears too early (% of maxWait)
-   * @param args.actualStartTime - Optional timestamp of when the timer should be considered to have started. If provided, total time is calculated from this timestamp rather than when this method is called. Useful for disappearing messages where the timer starts at send time.
    *
    * @throws Error if:
    * - The element is never found within initialMaxWait
    * - The element still exists after maxWait
-   * - The element disappears suspiciously early (if preventEarlyDeletion is true)
-   * Note: For checks where you just need to ensure an element
-   * is not present (regardless of prior existence), use verifyElementNotPresent() instead.
    */
   public async hasElementBeenDeleted(
     args: {
       text?: string;
       initialMaxWait?: number;
       maxWait?: number;
-      preventEarlyDeletion?: boolean;
-      actualStartTime?: number;
     } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<void> {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
@@ -1229,7 +1225,56 @@ export class DeviceWrapper {
     const description = describeLocator({ ...locator, text: args.text });
 
     // Track total time from start - disappearing timers begin on send, not on display
-    const functionStartTime = args.actualStartTime ?? Date.now();
+    const functionStartTime = Date.now();
+    // Phase 1: Wait for element to appear
+    this.log(`Waiting for element with ${description} to be deleted...`);
+    await this.waitForElementToAppear(locator, initialMaxWait, text);
+    this.log(`Element with ${description} has been found, now waiting for deletion`);
+
+    // Phase 2: Wait for element to disappear
+    await this.waitForElementToDisappear(locator, maxWait, text);
+
+    // Always calculate total time for logging
+    const totalTime = (Date.now() - functionStartTime) / 1000;
+
+    this.log(
+      `Element with ${description} has been deleted after ${totalTime.toFixed(1)}s total time`
+    );
+  }
+
+  /**
+   * Waits for an element to disappear from screen (using the Disappearing Messages feature)
+   *
+   * @param args - Locator (LocatorsInterface or StrategyExtractionObj) with optional properties
+   * @param args.actualStartTime - Timestamp of when the timer should be considered to have started.
+   * @param args.text - Optional text content to match within elements of the same type
+   * @param args.initialMaxWait - Time to wait for element to initially appear (defaults to 10_000ms)
+   * @param args.maxWait - Time to wait for deletion AFTER element is found (defaults to 30_000ms)
+   *
+   * @throws Error if:
+   * - The element is never found within initialMaxWait
+   * - The element still exists after maxWait
+   * - The element disappears suspiciously early
+   *
+   * Note:
+   * - If you want to ensure an element was present but disappeared (without Disappearing Messages logic), use hasElementBeenDeleted().
+   * - If you want to ensure an element is no longer visible (regardless of prior existence), use verifyElementNotPresent().
+   */
+  public async hasElementDisappeared(
+    args: {
+      actualStartTime: number;
+      text?: string;
+      initialMaxWait?: number;
+      maxWait?: number;
+    } & (LocatorsInterface | StrategyExtractionObj)
+  ): Promise<void> {
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const text = args.text;
+    const initialMaxWait = args.initialMaxWait ?? 10_000;
+    const maxWait = args.maxWait ?? 30_000;
+
+    const description = describeLocator({ ...locator, text: args.text });
+
     // Phase 1: Wait for element to appear
     this.log(`Waiting for element with ${description} to be deleted...`);
     await this.waitForElementToAppear(locator, initialMaxWait, text);
@@ -1239,24 +1284,20 @@ export class DeviceWrapper {
     // Phase 2: Wait for element to disappear
     await this.waitForElementToDisappear(locator, maxWait, text);
 
-    // Always calculate total time for logging
-    const totalTime = (Date.now() - functionStartTime) / 1000;
+    // Elements should not disappear too early (could be a DM bug)
+    const totalTime = (Date.now() - args.actualStartTime) / 1000;
+    const deletionPhaseTime = (Date.now() - foundTime) / 1000;
+    const expectedTotalTime = maxWait / 1000;
+    const minAcceptableTotalTimeFactor = 0.65; // Catches egregiously early deletions but still enough leeway for sending/trusting/receiving
+    const minAcceptableTotalTime = expectedTotalTime * minAcceptableTotalTimeFactor;
 
-    // Sometimes an early deletion could indicate a bug (e.g. Disappearing Messages)
-    if (args.preventEarlyDeletion) {
-      const deletionPhaseTime = (Date.now() - foundTime) / 1000;
-      const expectedTotalTime = maxWait / 1000;
-      const minAcceptableTotalTimeFactor = 0.65; // Catches egregiously early deletions but still enough leeway for sending/trusting/receiving
-      const minAcceptableTotalTime = expectedTotalTime * minAcceptableTotalTimeFactor;
-
-      if (totalTime < minAcceptableTotalTime) {
-        throw new Error(
-          `Element with ${description} disappeared suspiciously early: ${totalTime.toFixed(1)}s total ` +
-            `(found after ${((foundTime - functionStartTime) / 1000).toFixed(1)}s, ` +
-            `deleted after ${deletionPhaseTime.toFixed(1)}s). ` +
-            `Expected ~${expectedTotalTime}s total.`
-        );
-      }
+    if (totalTime < minAcceptableTotalTime) {
+      throw new Error(
+        `Element with ${description} disappeared suspiciously early: ${totalTime.toFixed(1)}s total ` +
+          `(found after ${((foundTime - args.actualStartTime) / 1000).toFixed(1)}s, ` +
+          `deleted after ${deletionPhaseTime.toFixed(1)}s). ` +
+          `Expected ~${expectedTotalTime}s total.`
+      );
     }
 
     this.log(
@@ -2187,10 +2228,6 @@ export class DeviceWrapper {
   }
 
   public async trustAttachments(conversationName: string) {
-    await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Untrusted attachment message',
-    });
     await this.clickOnElementAll({
       strategy: 'accessibility id',
       selector: 'Untrusted attachment message',
