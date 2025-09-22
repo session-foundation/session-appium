@@ -38,24 +38,24 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType, tes
   await bob1.trustAttachments(alice.userName);
   if (platform === 'ios') {
     await Promise.all(
-    [alice1, bob1].map(device =>
-      device.hasElementDisappeared({
-        ...new MessageBody(device, testMessage).build(),
-        maxWait,
-        actualStartTime: sentTimestamp,
-      })
-    )
-  );
+      [alice1, bob1].map(device =>
+        device.hasElementDisappeared({
+          ...new MessageBody(device, testMessage).build(),
+          maxWait,
+          actualStartTime: sentTimestamp,
+        })
+      )
+    );
   } else {
-  await Promise.all(
-    [alice1, bob1].map(device =>
-      device.hasElementDisappeared({
-        ...new MediaMessage(device).build(),
-        maxWait,
-        actualStartTime: sentTimestamp,
-      })
-    )
-  );
-}
+    await Promise.all(
+      [alice1, bob1].map(device =>
+        device.hasElementDisappeared({
+          ...new MediaMessage(device).build(),
+          maxWait,
+          actualStartTime: sentTimestamp,
+        })
+      )
+    );
+  }
   await closeApp(alice1, bob1);
 }

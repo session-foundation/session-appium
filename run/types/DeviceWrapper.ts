@@ -1307,32 +1307,32 @@ export class DeviceWrapper {
   /**
    * Wait for an element to appear on screen
    */
-private async waitForElementToAppear(
-  locator: StrategyExtractionObj,
-  timeout: number,
-  text?: string
-): Promise<void> {
-  const desc = describeLocator({ ...locator, text });
-  
-  const element = await this.pollUntil(
-    async () => {
-      const foundElement = await this.findElementQuietly(locator, text);
-      return foundElement 
-        ? { success: true, data: foundElement }
-        : { success: false, error: `Element with ${desc} not found` };
-    },
-    {
-      maxWait: timeout,
-      pollInterval: 100,
-    }
-  );
+  private async waitForElementToAppear(
+    locator: StrategyExtractionObj,
+    timeout: number,
+    text?: string
+  ): Promise<void> {
+    const desc = describeLocator({ ...locator, text });
 
-  if (!element) {
-    throw new Error(
-      `Element with ${desc} was never found within ${timeout}ms - cannot verify deletion of non-existent element`
+    const element = await this.pollUntil(
+      async () => {
+        const foundElement = await this.findElementQuietly(locator, text);
+        return foundElement
+          ? { success: true, data: foundElement }
+          : { success: false, error: `Element with ${desc} not found` };
+      },
+      {
+        maxWait: timeout,
+        pollInterval: 100,
+      }
     );
+
+    if (!element) {
+      throw new Error(
+        `Element with ${desc} was never found within ${timeout}ms - cannot verify deletion of non-existent element`
+      );
+    }
   }
-}
 
   /**
    * Wait for an element to disappear with debouncing for flaky UI states.
