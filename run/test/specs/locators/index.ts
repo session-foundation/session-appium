@@ -112,7 +112,7 @@ export class UsernameDisplay extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'pro-badge-text',
+          selector: 'Display name',
           text: this.text,
         } as const;
       case 'ios':

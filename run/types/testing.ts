@@ -467,6 +467,7 @@ export type Id =
   | 'Disable disappearing messages'
   | 'disappearing-messages-menu-option'
   | 'Disappearing messages type and time'
+  | 'Display name'
   | 'donate-menu-item'
   | 'Download media'
   | 'edit-profile-icon'
