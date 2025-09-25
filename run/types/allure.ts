@@ -77,6 +77,7 @@ export const TestSteps = {
   },
   // Open/Navigate steps
   OPEN: {
+    NTS: 'Open Note to Self', 
     UPDATE_GROUP_INFO: `Open 'Update Group Information' modal`,
     PATH: 'Open Path screen',
     APPEARANCE: 'Open Appearance settings',

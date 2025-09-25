@@ -1,5 +1,6 @@
-import type { TestInfo } from '@playwright/test';
+import { test, type TestInfo } from '@playwright/test';
 
+import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { MessageBody } from './locators/conversation';
@@ -24,36 +25,49 @@ bothPlatformsIt({
 });
 
 async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   const testMessage = `Testing disappearing messages in Note to Self`;
-  const alice = await newUser(device, USERNAME.ALICE);
   const controlMode: DisappearActions = 'sent';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   const maxWait = 35_000; // 30s plus buffer
+  let sentTimestamp: number;
 
-  // Send message to self to bring up Note to Self conversation
-  await device.clickOnElementAll(new PlusButton(device));
-  await device.clickOnElementAll(new NewMessageOption(device));
-  await device.inputText(alice.accountID, new EnterAccountID(device));
-  await device.scrollDown();
-  await device.clickOnElementAll(new NextButton(device));
-  await device.sendMessage('Buy milk');
-  // Enable disappearing messages
-  await setDisappearingMessage(platform, device, [
-    'Note to Self',
-    'Disappear after send option',
-    time,
-  ]);
-  await sleepFor(1000);
-  await device.waitForControlMessageToBePresent(
-    `You set messages to disappear ${time} after they have been ${controlMode}.`
-  );
-  const sentTimestamp = await device.sendMessage(testMessage);
-  await device.hasElementDisappeared({
-    ...new MessageBody(device, testMessage).build(),
-    maxWait,
-    actualStartTime: sentTimestamp,
+  const { device, alice } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
+    const alice = await newUser(device, USERNAME.ALICE);
+    return { device, alice };
   });
-  // Great success
-  await closeApp(device);
+  // Send message to self to bring up Note to Self conversation
+  await test.step(TestSteps.OPEN.NTS, async () => {
+    await device.clickOnElementAll(new PlusButton(device));
+    await device.clickOnElementAll(new NewMessageOption(device));
+    await device.inputText(alice.accountID, new EnterAccountID(device));
+    await device.scrollDown();
+    await device.clickOnElementAll(new NextButton(device));
+  });
+  await test.step(TestSteps.DISAPPEARING_MESSAGES.SET(time), async () => {
+    // Enable disappearing messages
+    await setDisappearingMessage(platform, device, [
+      'Note to Self',
+      'Disappear after send option',
+      time,
+    ]);
+    await sleepFor(1000);
+    await device.waitForControlMessageToBePresent(
+      `You set messages to disappear ${time} after they have been ${controlMode}.`
+    );
+  });
+  await test.step(TestSteps.SEND.MESSAGE(alice.userName, 'Note to Self'), async () => {
+    sentTimestamp = await device.sendMessage(testMessage);
+  });
+  await test.step(TestSteps.VERIFY.DISAPPEARING_CONTROL_MESSAGES, async () => {
+    await device.hasElementDisappeared({
+      ...new MessageBody(device, testMessage).build(),
+      maxWait,
+      actualStartTime: sentTimestamp,
+    });
+  });
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    // Great success
+    await closeApp(device);
+  });
 }
