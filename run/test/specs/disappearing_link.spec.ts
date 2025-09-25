@@ -49,7 +49,7 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
       testInfo,
     });
   });
-  await test.step(TestSteps.DISAPPEARING_MESSAGES.SET_DISAPPEARING_MSG, async () => {
+  await test.step(TestSteps.DISAPPEARING_MESSAGES.SET(time), async () => {
     await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   });
   await test.step(TestSteps.SEND.LINK, async () => {
@@ -103,7 +103,7 @@ async function disappearingLinkMessage1o1Android(
       testInfo,
     });
   });
-  await test.step(TestSteps.DISAPPEARING_MESSAGES.SET_DISAPPEARING_MSG, async () => {
+  await test.step(TestSteps.DISAPPEARING_MESSAGES.SET(time), async () => {
     await setDisappearingMessage(platform, alice1, ['1:1', timerType, time]);
   });
   await test.step(TestSteps.SEND.LINK, async () => {
