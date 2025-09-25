@@ -26,9 +26,4 @@ runs:
     - name: Start Appium server
       shell: bash
       run: |
-        yarn "./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --allow-cors"
-
-    - name: Build the tests files
-      shell: bash
-      run: |
-        yarn tsc
+        yarn start-server
