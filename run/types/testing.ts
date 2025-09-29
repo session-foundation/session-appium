@@ -166,6 +166,7 @@ export type UiAutomatorQuery =
   | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().resourceId("path-menu-item"))'
   | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().text("Select app icon"))'
   | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().textStartsWith("Version"))'
+  | 'new UiSelector().resourceId("network.loki.messenger.qa:id/messageStatusTextView").text("Sent")'
   | 'new UiSelector().text("Enter your display name")'
   | `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-text"))`
   | `new UiSelector().text(${string})`;

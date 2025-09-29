@@ -693,23 +693,25 @@ export class DeviceWrapper {
   }
 
   public async longPressMessage(textToLookFor: string) {
-    const maxRetries = 3;
-    let attempt = 0;
-    let success = false;
+    const truncatedText =
+      textToLookFor.length > 50 ? textToLookFor.substring(0, 50) + '...' : textToLookFor;
 
-    while (attempt < maxRetries && !success) {
-      try {
+    const result = await this.pollUntil(
+      async () => {
+        // Find the message
         const el = await this.waitForTextElementToBePresent({
           ...new MessageBody(this, textToLookFor).build(),
           maxWait: 1_000,
         });
+
         if (!el) {
-          throw new Error(
-            `longPress on message: ${textToLookFor} unsuccessful, couldn't find message`
-          );
+          return { success: false, error: `Couldn't find message: ${truncatedText}` };
         }
 
-        await this.longClick(el, 4000);
+        // Attempt long click
+        await this.longClick(el, 2000);
+
+        // Check if context menu appeared
         const longPressSuccess = await this.waitForTextElementToBePresent({
           strategy: 'accessibility id',
           selector: 'Reply to message',
@@ -718,21 +720,22 @@ export class DeviceWrapper {
 
         if (longPressSuccess) {
           this.log('LongClick successful');
-          success = true; // Exit the loop if successful
-        } else {
-          throw new Error(`longPress on message: ${textToLookFor} unsuccessful`);
+          return { success: true, data: el };
         }
-      } catch (error) {
-        attempt++;
-        if (attempt >= maxRetries) {
-          throw new Error(
-            `Longpress on message: ${textToLookFor} unsuccessful after ${maxRetries} attempts, ${(error as Error).toString()}`
-          );
-        }
-        this.log(`Longpress attempt ${attempt} failed. Retrying...`);
-        await sleepFor(1000);
+
+        return {
+          success: false,
+          error: `Long press didn't show context menu for: ${truncatedText}`,
+        };
+      },
+      {
+        maxWait: 10_000,
+        pollInterval: 1000,
+        onAttempt: attempt => this.log(`Longpress attempt ${attempt}...`),
       }
-    }
+    );
+
+    return result; // or whatever you want to do with it
   }
 
   public async longPressConversation(userName: string) {
@@ -1695,24 +1698,6 @@ export class DeviceWrapper {
     });
     const sentTimestamp = Date.now();
     return sentTimestamp;
-  }
-
-  public async waitForSentConfirmation() {
-    let pendingStatus = await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message sent status: Sending',
-    });
-    const failedStatus = await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message sent status: Failed to send',
-    });
-    if (pendingStatus || failedStatus) {
-      await sleepFor(100);
-      pendingStatus = await this.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Message sent status: Sending',
-      });
-    }
   }
 
   public async sendNewMessage(user: Pick<User, 'accountID'>, message: string) {

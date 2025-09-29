@@ -34,7 +34,6 @@ async function sendLongMessageGroup(platform: SupportedPlatformsType, testInfo: 
   const replyMessage = await bob1.replyToMessage(alice, longText);
   await Promise.all(
     [alice1, charlie1].map(async device => {
-      await device.scrollToBottom();
       await device.waitForTextElementToBePresent(new MessageBody(device, replyMessage));
     })
   );

@@ -174,12 +174,22 @@ export class AttachmentsButton extends LocatorsInterface {
   }
 }
 
+// TODO tie this to the message whose status we want to check (similar to EmojiReactsPill)
 export class OutgoingMessageStatusSent extends LocatorsInterface {
   public build() {
-    return {
-      strategy: 'accessibility id',
-      selector: `Message sent status: Sent`,
-    } as const;
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: '-android uiautomator',
+          selector:
+            'new UiSelector().resourceId("network.loki.messenger.qa:id/messageStatusTextView").text("Sent")',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: `Message sent status: Sent`,
+        } as const;
+    }
   }
 }
 
