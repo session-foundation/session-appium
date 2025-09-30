@@ -576,8 +576,6 @@ export type TestRisk = 'high' | 'low' | 'medium';
 
 export type ElementStates = 'new_account' | 'restore_account';
 
-export type PageName = 'network_page' | 'staking_page';
-
 export type Suffix = 'diff' | 'screenshot';
 
 export type AppName = 'Session AQA' | 'Session QA';
