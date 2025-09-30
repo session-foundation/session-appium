@@ -585,3 +585,39 @@ export class EmojiReactsCount extends LocatorsInterface {
     }
   }
 }
+
+export class MessageLengthCountdown extends LocatorsInterface {
+  constructor(
+    device: DeviceWrapper,
+    private length?: string
+  ) {
+    super(device);
+  }
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger.qa:id/characterLimitText',
+          text: this.length,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'xpath',
+          selector: `//XCUIElementTypeStaticText[@name="${this.length}"]`,
+          text: this.length,
+        } as const;
+    }
+  }
+}
+
+export class MessageLengthOkayButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'Okay' } as const;
+      case 'ios':
+        return { strategy: 'xpath', selector: '//XCUIElementTypeButton[@name="Okay"]' } as const;
+    }
+  }
+}

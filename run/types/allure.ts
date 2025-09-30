@@ -25,7 +25,7 @@ export type AllureSuiteConfig =
   | { parent: 'In-App Review Prompt'; suite: 'Flows' | 'Triggers' }
   | { parent: 'Linkouts' }
   | { parent: 'New Conversation'; suite: 'Join Community' | 'New Message' }
-  | { parent: 'Sending Messages'; suite: 'Attachments' | 'Emoji reacts' }
+  | { parent: 'Sending Messages'; suite: 'Attachments' | 'Emoji reacts' | 'Rules' }
   | { parent: 'Settings'; suite: 'App Disguise' }
   | {
       parent: 'User Actions';
@@ -77,7 +77,7 @@ export const TestSteps = {
   },
   // Open/Navigate steps
   OPEN: {
-    NTS: 'Open Note to Self', 
+    NTS: 'Open Note to Self',
     UPDATE_GROUP_INFO: `Open 'Update Group Information' modal`,
     PATH: 'Open Path screen',
     APPEARANCE: 'Open Appearance settings',
