@@ -1017,7 +1017,7 @@ export class DeviceWrapper {
     // Find all candidate elements matching the locator
     const elements = await this.findElements(locator.strategy, locator.selector);
     this.info(
-      `[matchAndTapImage] Found ${elements.length} elements for ${locator.strategy} "${locator.selector}"`
+      `[matchAndTapImage] Starting image matching: ${elements.length} elements with ${locator.strategy} "${locator.selector}"`
     );
 
     // Load the reference image buffer from disk
@@ -1030,8 +1030,7 @@ export class DeviceWrapper {
     } | null = null;
 
     // Iterate over each candidate element
-    for (const [i, el] of elements.entries()) {
-      this.info(`[matchAndTapImage] Processing element ${i + 1}/${elements.length}`);
+    for (const el of elements) {
 
       // Take a screenshot of the element
       const base64 = await this.getElementScreenshot(el.ELEMENT);
@@ -1064,7 +1063,6 @@ export class DeviceWrapper {
         const { rect: matchRect, score } = await getImageOccurrence(elementBuffer, resizedRef, {
           threshold,
         });
-        this.info(`[matchAndTapImage] Match score for element ${i + 1}: ${score.toFixed(4)}`);
 
         /**
          * Matching is done on a resized reference image to account for device pixel density.
@@ -1097,7 +1095,7 @@ export class DeviceWrapper {
         // If earlyMatch is enabled and the score is high enough, tap immediately
         if (earlyMatch && score >= earlyMatchThreshold) {
           this.info(
-            `[matchAndTapImage] Tapping first match with ${(score * 100).toFixed(2)}% confidence`
+            `[matchAndTapImage] Tapping first high-confidence match (${(score * 100).toFixed(2)}%)`
           );
           await clickOnCoordinates(this, center);
           return;
@@ -1105,21 +1103,17 @@ export class DeviceWrapper {
         // Otherwise, keep track of the best match so far
         if (!bestMatch || score > bestMatch.score) {
           bestMatch = { center, score };
-          this.info(`[matchAndTapImage] New best match: ${(score * 100).toFixed(2)}% confidence`);
         }
-      } catch (err) {
-        // If matching fails for this element, log and continue to the next
-        this.info(
-          `[matchAndTapImage] Matching failed for element ${i + 1}:`,
-          err instanceof Error ? err.message : err
-        );
+      } catch {
+        continue; // No match in this element, try next
       }
     }
     // If no good match was found, throw an error
     if (!bestMatch) {
-      throw new Error(
+      console.log(
         `[matchAndTapImage] No matching image found among ${elements.length} elements for ${locator.strategy} "${locator.selector}"`
       );
+      throw new Error('Unable to find the expected UI element on screen');
     }
     // Tap the best match found
     this.info(
