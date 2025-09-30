@@ -2221,6 +2221,12 @@ export class DeviceWrapper {
   }
 
   public async trustAttachments(conversationName: string) {
+    // I kept getting stale element references on iOS in this method
+    // This is an attempt to let the UI settle before we look for the untrusted attachment
+    if (this.isIOS()) {
+      await sleepFor(2000);
+    }
+
     await this.clickOnElementAll({
       strategy: 'accessibility id',
       selector: 'Untrusted attachment message',
