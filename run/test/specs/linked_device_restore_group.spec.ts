@@ -34,11 +34,11 @@ async function restoreGroup(platform: SupportedPlatformsType, testInfo: TestInfo
   // Check the group name has loaded
   await device4.waitForTextElementToBePresent(new ConversationHeaderName(device4, testGroupName));
   // Check all messages are present
-  await Promise.all([
-    device4.waitForTextElementToBePresent(new MessageBody(device4, aliceMessage)),
-    device4.waitForTextElementToBePresent(new MessageBody(device4, bobMessage)),
-    device4.waitForTextElementToBePresent(new MessageBody(device4, charlieMessage)),
-  ]);
+  await Promise.all(
+    [aliceMessage, bobMessage, charlieMessage].map(message =>
+      device4.waitForTextElementToBePresent(new MessageBody(device4, message))
+    )
+  );
   const testMessage2 = 'Checking that message input is working';
   await device4.sendMessage(testMessage2);
   await Promise.all(

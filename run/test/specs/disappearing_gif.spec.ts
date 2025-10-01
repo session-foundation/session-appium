@@ -22,7 +22,7 @@ bothPlatformsIt({
 // The timing with 30 seconds was a bit tight in terms of the attachment downloading and becoming visible
 const time = DISAPPEARING_TIMES.ONE_MINUTE;
 const initialMaxWait = 15_000; // GIFs could be large so give them a bit more time to be found
-const maxWait = 70_000; // 70s plus buffer
+const maxWait = 70_000; // 60s plus buffer
 const timerType = 'Disappear after send option';
 
 async function disappearingGifMessage1o1(platform: SupportedPlatformsType, testInfo: TestInfo) {
