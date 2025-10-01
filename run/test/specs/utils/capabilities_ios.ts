@@ -95,10 +95,7 @@ function loadSimulators(): Simulator[] {
 const simulators = loadSimulators();
 
 if (simulators.length === 0) {
-  throw new Error(
-    'No iOS simulators found.\n' +
-      'Run: yarn create-sims 4'
-  );
+  throw new Error('No iOS Simulators found.\n' + 'Run: yarn create-simulators <number>');
 }
 
 console.log(`✓ Loaded ${simulators.length} iOS simulators`);

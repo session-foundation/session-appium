@@ -2,8 +2,8 @@
   "name": "session-appium",
   "version": "1.0.0",
   "scripts": {
-    "create-simulators": "ts-node ./scripts/create_ios_sims.ts",
-    "cleanup-simulators": "ts-node ./scripts/cleanup_ios_sims.ts",
+    "cleanup-simulators": "npx ts-node scripts/cleanup_ios_simulators.ts",
+    "create-simulators": "yarn cleanup-simulators && npx ts-node scripts/create_ios_simulators.ts",
     "lint": "yarn prettier . --write --cache && yarn eslint . --cache ",
     "lint-check": "yarn prettier . --check && yarn eslint .",
     "tsc": "tsc",
