@@ -309,7 +309,7 @@ export class DeviceWrapper {
 
   // ELEMENT INTERACTION
 
-  // Heal a broken locator by finding potential fuzzy matches with text as first-class criteria
+  // Heal a broken locator by finding potential fuzzy matches with text
   private async findBestMatch(
     strategy: Strategy,
     selector: string,
@@ -388,7 +388,7 @@ export class DeviceWrapper {
         continue;
       }
 
-      // Sometimes the element is just not on screen yet - skip
+      // Sometimes the element is just not on screen yet - proceed.
       if (match.strategy === strategy && match.originalSelector === selector) {
         continue;
       }
@@ -1681,8 +1681,6 @@ export class DeviceWrapper {
     if (!sendButton) {
       throw new Error('Send button not found: Need to restart iOS emulator: Known issue');
     }
-    // Might need to scroll down if the message is too long
-    // await this.scrollToBottom(); TODO temporarily disabling this to verify
     // Wait for tick
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
@@ -1976,7 +1974,6 @@ export class DeviceWrapper {
       maxWait: 20000,
     });
     const sentTimestamp = Date.now();
-    this.log(`[DEBUG] sendVideoiOS returning timestamp: ${sentTimestamp}`);
     return sentTimestamp;
   }
 

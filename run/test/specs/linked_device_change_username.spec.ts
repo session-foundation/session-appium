@@ -33,6 +33,10 @@ async function changeUsernameLinked(platform: SupportedPlatformsType, testInfo: 
   await alice1.onAndroid().clickOnElementAll(new ClearInputButton(alice1));
   await alice1.inputText(newUsername, new UsernameInput(alice1));
   await alice1.clickOnElementAll(new SaveNameChangeButton(alice1));
-  await alice2.waitForTextElementToBePresent(new UsernameDisplay(alice2, newUsername));
+  await Promise.all(
+    [alice1, alice2].map(device =>
+      device.waitForTextElementToBePresent(new UsernameDisplay(device, newUsername))
+    )
+  );
   await closeApp(alice1, alice2);
 }

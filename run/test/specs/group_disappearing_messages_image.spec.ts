@@ -48,22 +48,18 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
     );
   }
   if (platform === 'android') {
-    await Promise.all([
-      alice1.hasElementDisappeared({
-        ...new MediaMessage(alice1).build(),
-        maxWait,
-        actualStartTime: sentTimestamp,
-      }),
-      // Bob and Charlie haven't trusted the message
-      ...[bob1, charlie1].map(device =>
+    await Promise.all(
+      [bob1, charlie1].map(device => device.onAndroid().trustAttachments(testGroupName))
+    );
+    await Promise.all(
+      [alice1, bob1, charlie1].map(device =>
         device.hasElementDisappeared({
-          strategy: 'accessibility id',
-          selector: 'Untrusted attachment message',
+          ...new MediaMessage(device).build(),
           maxWait,
           actualStartTime: sentTimestamp,
         })
-      ),
-    ]);
+      )
+    );
   }
   await closeApp(alice1, bob1, charlie1);
 }

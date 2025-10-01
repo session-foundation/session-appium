@@ -43,22 +43,6 @@ on:
           - '2'
         default: '0'
 
-      PRINT_FAILED_TEST_LOGS:
-        description: 'print failed test logs (1 to enable) - DONT DO FOR FULL REGRESSION (it crashes github)'
-        required: true
-        type: choice
-        options:
-          - '0'
-          - '1'
-        default: '0'
-      PRINT_ONGOING_TEST_LOGS:
-        description: 'print ongoing test logs (1 to enable) - DONT DO FOR FULL REGRESSION (it crashes github)'
-        required: true
-        type: choice
-        options:
-          - '0'
-          - '1'
-        default: '0'
       PLAYWRIGHT_WORKERS_COUNT:
         description: 'number of workers to use (ios only)'
         required: true
@@ -68,14 +52,16 @@ on:
           - '2'
           - '3'
         default: '3'
-      HIDE_WEBDRIVER_LOGS:
-        description: 'print webdriver logs (1 to hide, 0 to show). PRINT_ONGOING_TEST_LOGS or PRINT_FAILED_TEST_LOGS must be 1'
+
+      LOG_LEVEL:
+        description: 'Test logging verbosity (WARNING: anything other than minimal mode may crash GitHub Actions on large test runs)'
         required: true
         type: choice
         options:
-          - '0'
-          - '1'
-        default: '1'
+          - 'minimal' # Recommended for full regressions
+          - 'failures' # Show failed test logs only
+          - 'verbose' # All test logs - use with caution!
+        default: 'minimal'
 
 jobs:
   ios-regression:
@@ -92,8 +78,9 @@ jobs:
       APPIUM_ADB_FULL_PATH: '<just_not_empty>'
       ANDROID_SDK_ROOT: '<just_not_empty>'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
-      PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
-      PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
+      _TESTING: 1 # Always hide webdriver logs (@appium/support/ flag)
+      PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL != 'minimal' && '1' || '0' }} # Show stdout/stderr if test fails (@session-foundation/playwright-reporter/ flag)
+      PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'verbose' && '1' || '0' }} # Show everything as it happens (@session-foundation/playwright-reporter/ flag)
       PLAYWRIGHT_WORKERS_COUNT: 3 # for iOS, this is the max we can have on our self-hosted runner
       SDK_MANAGER_FULL_PATH: '<just_not_empty>'
       AVD_MANAGER_FULL_PATH: '<just_not_empty>'
@@ -109,8 +96,8 @@ jobs:
         uses: ./github/actions/fetch-allure-history
         if: ${{ env.ALLURE_ENABLED == 'true' }}
         with:
-          PLATFORM: ${{env.PLATFORM}}
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          PLATFORM: ${{ env.PLATFORM }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download ipa and extract it
         run: |
@@ -146,9 +133,12 @@ jobs:
       - name: Run the iOS tests​​ (all device counts)
         env:
           DEVICES_PER_TEST_COUNT: 4
+          _TESTING: ${{ env._TESTING }}
+          PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
+          PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
         run: |
           pwd
-          _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
+          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
       - name: Generate and publish test report
         uses: ./github/actions/generate-publish-test-report
