@@ -71,18 +71,6 @@ jobs:
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL != 'minimal' && '1' || '0' }}
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'verbose' && '1' || '0' }}
       HIDE_WEBDRIVER_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'minimal' && '1' || '0' }}
-      IOS_1_SIMULATOR: '<just_not_empty>'
-      IOS_2_SIMULATOR: '<just_not_empty>'
-      IOS_3_SIMULATOR: '<just_not_empty>'
-      IOS_4_SIMULATOR: '<just_not_empty>'
-      IOS_5_SIMULATOR: '<just_not_empty>'
-      IOS_6_SIMULATOR: '<just_not_empty>'
-      IOS_7_SIMULATOR: '<just_not_empty>'
-      IOS_8_SIMULATOR: '<just_not_empty>'
-      IOS_9_SIMULATOR: '<just_not_empty>'
-      IOS_10_SIMULATOR: '<just_not_empty>'
-      IOS_11_SIMULATOR: '<just_not_empty>'
-      IOS_12_SIMULATOR: '<just_not_empty>'
 
     steps:
       - uses: actions/checkout@v4
