@@ -40,6 +40,7 @@ export type Simulator = {
   wdaPort: number;
   index: number;
 };
+
 // Define the device type and runtime to create
 const DEVICE_CONFIG = {
   type: 'iPhone 16 Pro Max',

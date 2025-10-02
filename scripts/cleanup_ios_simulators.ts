@@ -34,6 +34,12 @@ function deleteSimulator(udid: string): boolean {
 function cleanupFromJSON(): number {
   const jsonPath = 'ci-simulators.json';
 
+  // Only cleanup JSON on CI (it gets recreated there)
+  // On local dev, leave it alone (it's a tracked file for CI)
+  if (process.env.CI !== '1') {
+    return 0;
+  }
+  
   if (!existsSync(jsonPath)) {
     return 0;
   }
@@ -50,7 +56,7 @@ function cleanupFromJSON(): number {
   }
 
   unlinkSync(jsonPath);
-  console.log(`✓ Removed ios-simulators.json`);
+  console.log(`✓ Removed ${jsonPath}`);
 
   return deleted;
 }
