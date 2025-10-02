@@ -331,7 +331,7 @@ export class DeviceWrapper {
     const blacklist = [
       { from: 'Voice message', to: 'New voice message' },
       { from: 'Message sent status: Sent', to: 'Message sent status: Sending' },
-      { from: 'Done', to: 'Donate' }
+      { from: 'Done', to: 'Donate' },
     ];
 
     // System locators such as 'network.loki.messenger.qa:id' can cause false positives with too high similarity scores
@@ -735,7 +735,7 @@ export class DeviceWrapper {
       }
     );
 
-    return result; // or whatever you want to do with it
+    return result;
   }
 
   public async longPressConversation(userName: string) {

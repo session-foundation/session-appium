@@ -39,7 +39,7 @@ function cleanupFromJSON(): number {
   if (process.env.CI !== '1') {
     return 0;
   }
-  
+
   if (!existsSync(jsonPath)) {
     return 0;
   }
