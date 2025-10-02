@@ -3,6 +3,8 @@ import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 
 import type { Simulator } from './create_ios_simulators';
 
+import { shutdownSimulator } from './ios_shared';
+
 /**
  * iOS Simulator Cleanup Script
  *
@@ -17,12 +19,7 @@ import type { Simulator } from './create_ios_simulators';
  */
 
 function deleteSimulator(udid: string): boolean {
-  try {
-    execSync(`xcrun simctl shutdown ${udid}`, { stdio: 'pipe' });
-  } catch {
-    // Already shutdown
-  }
-
+  shutdownSimulator(udid);
   try {
     execSync(`xcrun simctl delete ${udid}`, { stdio: 'pipe' });
     return true;

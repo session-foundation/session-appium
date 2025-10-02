@@ -1,22 +1,9 @@
-import { execSync, spawnSync } from 'child_process';
+import { spawnSync } from 'child_process';
 
-import { getChunkedSimulators, isSimulatorBooted } from './ios_shared';
+import { bootSimulator, getChunkedSimulators, isSimulatorBooted } from './ios_shared';
 import { sleepSync } from './shared';
 
 const START_CHUNK = 12;
-
-function bootSimulator(udid: string, label: number) {
-  try {
-    console.log(`Booting simulator ${label}: ${udid}`);
-    execSync(`xcrun simctl boot ${udid}`, { stdio: 'inherit' });
-  } catch (error: any) {
-    console.error(`Error: Boot command failed for ${udid}`);
-    console.error(error.stderr?.toString() || error.message);
-    return false;
-  }
-
-  return true;
-}
 
 function startSimulatorsFromEnvIOS() {
   console.log('Starting iOS simulators from environment variables...');

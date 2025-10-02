@@ -5,7 +5,7 @@ import * as path from 'path';
 import type { DeviceWrapper } from '../run/types/DeviceWrapper';
 
 import { copyFileToSimulator } from '../run/test/specs/utils/copy_file_to_simulator';
-import { isSimulatorBooted } from './ios_shared';
+import { bootSimulator, isSimulatorBooted, shutdownSimulator } from './ios_shared';
 import { sleepSync } from './shared';
 
 /**
@@ -67,26 +67,6 @@ function cloneSimulator(sourceUdid: string, newName: string): string {
     encoding: 'utf-8',
   }).trim();
   return output;
-}
-
-function bootSimulator(udid: string): boolean {
-  try {
-    execSync(`xcrun simctl boot ${udid}`, { stdio: 'pipe' });
-    return true;
-  } catch (error: any) {
-    if (error.message?.includes('Unable to boot device in current state: Booted')) {
-      return true;
-    }
-    throw error;
-  }
-}
-
-function shutdownSimulator(udid: string): void {
-  try {
-    execSync(`xcrun simctl shutdown ${udid}`, { stdio: 'pipe' });
-  } catch {
-    // Already shutdown
-  }
 }
 
 function waitForBoot(udid: string): boolean {
