@@ -25,7 +25,7 @@ import { sleepSync } from './shared';
  *
  * Usage:
  *   yarn create-simulators 4   # Local: 4 Simulators
- *   yarn create-simulators 12  # CI: 12 Simulators
+ *   CI=1 yarn create-simulators 12  # For CI: 12 Simulators
  */
 
 type SimulatorConfig = {
@@ -209,8 +209,8 @@ function updateLocalEnvFile(simulators: Simulator[]): void {
 function saveSimulatorConfig(simulators: Simulator[]): void {
   // For running on CI, create a json file that GHA can read the UDIDs from
   if (process.env.CI === '1') {
-    writeFileSync('ios-simulators.json', JSON.stringify(simulators, null, 2));
-    console.log(`✓ Saved to ios-simulators.json`);
+    writeFileSync('ci-simulators.json', JSON.stringify(simulators, null, 2));
+    console.log(`✓ Saved to ci-simulators.json`);
   } else {
     // For local development, update the IOS_N_SIMULATOR variables in .env
     updateLocalEnvFile(simulators);

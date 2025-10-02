@@ -32,7 +32,7 @@ function deleteSimulator(udid: string): boolean {
 }
 
 function cleanupFromJSON(): number {
-  const jsonPath = 'ios-simulators.json';
+  const jsonPath = 'ci-simulators.json';
 
   if (!existsSync(jsonPath)) {
     return 0;

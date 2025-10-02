@@ -42,19 +42,9 @@ type Simulator = {
 };
 
 function loadSimulators(): Simulator[] {
-  const jsonPath = 'ios-simulators.json';
+  const jsonPath = 'ci-simulators.json';
 
-  // Try JSON first (CI with persistent simulators)
-  if (existsSync(jsonPath)) {
-    console.log('📱 Looking for iOS simulators from ios-simulators.json');
-    const content = readFileSync(jsonPath, 'utf-8');
-    const sims: Simulator[] = JSON.parse(content);
-    console.log(`   Found ${sims.length} simulators`);
-    return sims;
-  }
-
-  // Fallback to environment variables (local dev)
-  console.log('📱 Looking for iOS simulators from environment variables');
+  // Load from .env variables
   const envVars = [
     'IOS_1_SIMULATOR',
     'IOS_2_SIMULATOR',
@@ -74,31 +64,39 @@ function loadSimulators(): Simulator[] {
     .map((envVar, index) => {
       const udid = process.env[envVar];
       if (!udid) return null;
-
-      return {
-        name: `Sim-${index + 1}`,
-        udid,
-        wdaPort: 1253 + index,
-        index,
-      };
+      return { name: `Sim-${index + 1}`, udid, wdaPort: 1253 + index, index };
     })
     .filter((sim): sim is Simulator => sim !== null);
 
-  // Re-index to be contiguous
-  return simulators.map((sim, newIndex) => ({
-    ...sim,
-    wdaPort: 1253 + newIndex,
-    index: newIndex,
-  }));
-}
+  // If we have simulators from env, use them (local dev)
+  if (simulators.length > 0) {
+    console.log(`📱 Loaded ${simulators.length} simulators from .env`);
+    return simulators.map((sim, newIndex) => ({
+      ...sim,
+      wdaPort: 1253 + newIndex,
+      index: newIndex,
+    }));
+  }
 
+  // No env simulators - check if we're on CI
+  if (process.env.CI === '1') {
+    // CI should use JSON
+    if (existsSync(jsonPath)) {
+      console.log('📱 Loaded simulators from ios-simulators.json (CI)');
+      const sims: Simulator[] = JSON.parse(readFileSync(jsonPath, 'utf-8'));
+      return sims;
+    }
+    throw new Error('CI mode: ios-simulators.json not found');
+  }
+
+  // Local dev with no .env entries
+  throw new Error(
+    'No iOS simulators found in .env\n' +
+      'Run: yarn create-simulators <number>\n' +
+      'Example: yarn create-simulators 4'
+  );
+}
 const simulators = loadSimulators();
-
-if (simulators.length === 0) {
-  throw new Error('No iOS Simulators found.\n' + 'Run: yarn create-simulators <number>');
-}
-
-console.log(`✓ Loaded ${simulators.length} iOS simulators`);
 
 const capabilities = simulators.map(sim => ({
   ...sharediOSCapabilities,
