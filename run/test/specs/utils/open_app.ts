@@ -292,9 +292,21 @@ const openiOSApp = async (
 }> => {
   console.info('openiOSApp');
 
-  // Calculate the actual capabilities index for the current worker
-  const actualCapabilitiesIndex =
-    capabilitiesIndex + getDevicesPerTestCount() * parseInt(process.env.TEST_PARALLEL_INDEX || '0');
+  const parallelIndex = parseInt(process.env.TEST_PARALLEL_INDEX || '0');
+  const devicesPerWorker = getDevicesPerTestCount();
+
+  // Calculate base offset for this worker
+  const workerBaseOffset = devicesPerWorker * parallelIndex;
+
+  // Add retry offset, but wrap within the worker's device pool only
+  // This means when retrying, a alice/bob etc won't be the same device as before within a worker's pool
+  const retryOffset = testInfo.retry || 0;
+  const deviceIndexWithinWorker = (capabilitiesIndex + retryOffset) % devicesPerWorker;
+  const actualCapabilitiesIndex = workerBaseOffset + deviceIndexWithinWorker;
+
+  console.info(
+    `Worker ${parallelIndex}, Base Device ${capabilitiesIndex}, Retry ${retryOffset} -> Device ${actualCapabilitiesIndex}`
+  );
 
   const opts: XCUITestDriverOpts = {
     address: `http://localhost:${APPIUM_PORT}`,
