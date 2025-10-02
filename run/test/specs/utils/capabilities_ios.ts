@@ -3,6 +3,8 @@ import { W3CCapabilities } from '@wdio/types/build/Capabilities';
 import dotenv from 'dotenv';
 import { existsSync, readFileSync } from 'fs';
 
+import { IntRange } from '../../../types/RangeType';
+
 dotenv.config();
 
 const iosPathPrefix = process.env.IOS_APP_PATH_PREFIX;
@@ -104,13 +106,23 @@ const capabilities = simulators.map(sim => ({
   'appium:wdaLocalPort': sim.wdaPort,
 }));
 
-export const MAX_CAPABILITIES_INDEX = capabilities.length;
-export type CapabilitiesIndexType = number;
+// Use a constant max that matches the env vars array length for type safety
+const _MAX_CAPABILITIES_INDEX = 12 as const;
+
+// For runtime validation, we need to check against actual loaded simulators
+export const getMaxCapabilitiesIndex = () => capabilities.length;
+
+// Type is still based on the constant for compile-time safety
+export type CapabilitiesIndexType = IntRange<0, typeof _MAX_CAPABILITIES_INDEX>;
 
 export function capabilityIsValid(
   capabilitiesIndex: number
 ): capabilitiesIndex is CapabilitiesIndexType {
-  return capabilitiesIndex >= 0 && capabilitiesIndex < MAX_CAPABILITIES_INDEX;
+  // Runtime validation against actual loaded capabilities
+  if (capabilitiesIndex < 0 || capabilitiesIndex >= capabilities.length) {
+    return false;
+  }
+  return true;
 }
 
 export function getIosCapabilities(capabilitiesIndex: CapabilitiesIndexType): W3CCapabilities {
