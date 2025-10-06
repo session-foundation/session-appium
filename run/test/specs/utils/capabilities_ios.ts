@@ -65,14 +65,14 @@ function loadSimulators(): Simulator[] {
   const simulators = envVars
     .map((envVar, index) => {
       const udid = process.env[envVar];
-      if (!udid) return null;
+      if (!udid) return null; // No need for all 12 sim variables to be set
       return { name: `Sim-${index + 1}`, udid, wdaPort: 1253 + index, index };
     })
     .filter((sim): sim is Simulator => sim !== null);
 
   // If we have simulators from env, use them (local dev)
   if (simulators.length > 0) {
-    console.log(`📱 Loaded ${simulators.length} simulators from .env`);
+    console.log(`Using ${simulators.length} simulators from .env file`);
     return simulators.map((sim, newIndex) => ({
       ...sim,
       wdaPort: 1253 + newIndex,
@@ -84,7 +84,7 @@ function loadSimulators(): Simulator[] {
   if (process.env.CI === '1') {
     // CI should use JSON
     if (existsSync(jsonPath)) {
-      console.log('📱 Loaded simulators from ios-simulators.json (CI)');
+      console.log('Using simulators from ios-simulators.json (CI)');
       const sims: Simulator[] = JSON.parse(readFileSync(jsonPath, 'utf-8'));
       return sims;
     }
@@ -106,10 +106,10 @@ const capabilities = simulators.map(sim => ({
   'appium:wdaLocalPort': sim.wdaPort,
 }));
 
-// Use a constant max that matches the env vars array length for type safety
+// Use a constant max that matches the envVars array length for type safety
 const _MAX_CAPABILITIES_INDEX = 12 as const;
 
-// For runtime validation, we need to check against actual loaded simulators
+// For runtime validation, check against actual loaded simulators
 export const getMaxCapabilitiesIndex = () => capabilities.length;
 
 // Type is still based on the constant for compile-time safety

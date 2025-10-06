@@ -300,8 +300,10 @@ const openiOSApp = async (
   const devicesPerWorker = getDevicesPerTestCount();
   const workerBaseOffset = devicesPerWorker * parallelIndex;
 
-  // Add retry offset, but wrap within the worker's device pool only
+  // Apply retry offset, but wrap within the worker's device pool only
   // This means when retrying, alice/bob etc won't be the same device as before within a worker's pool
+  // This is to avoid any issues where a device might be in a bad state for some reason 
+  // (e.g. not accessing photo library on iOS)
   const retryOffset = testInfo.retry || 0;
   const deviceIndexWithinWorker = (capabilitiesIndex + retryOffset) % devicesPerWorker;
   const actualCapabilitiesIndex = workerBaseOffset + deviceIndexWithinWorker;
