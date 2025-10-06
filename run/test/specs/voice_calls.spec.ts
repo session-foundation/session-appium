@@ -82,8 +82,13 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
   // Alice tries again, call is created but Bob still hasn't enabled their calls perms so this will fail
   await test.step(TestSteps.CALLS.INITIATE_CALL(alice.userName), async () => {
     await alice1.clickOnElementAll(new CallButton(alice1));
-    // The Missed call modal is currently not exposed so the test just dismisses with a button press, see SES-4192
-    await bob1.clickOnElementXPath(`//XCUIElementTypeButton[@name="Settings"]`);
+    await bob1.checkModalStrings(
+      englishStrippedStr('callsMissedCallFrom').withArgs({ name: alice.userName }).toString(),
+      englishStrippedStr('callsYouMissedCallPermissions')
+        .withArgs({ name: alice.userName })
+        .toString()
+    );
+    await bob1.clickOnByAccessibilityID('Settings');
     await alice1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Ringing...',

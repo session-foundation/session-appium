@@ -166,7 +166,7 @@ export class ConversationsMenuItem extends LocatorsInterface {
         return {
           strategy: '-android uiautomator',
           selector:
-            'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().resourceId("Conversations"))',
+            'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("Conversations"))',
         } as const;
       case 'ios':
         return {
@@ -184,7 +184,7 @@ export class AppearanceMenuItem extends LocatorsInterface {
         return {
           strategy: '-android uiautomator',
           selector:
-            'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().resourceId("Appearance"))',
+            'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("Appearance"))',
         } as const;
       case 'ios':
         return {
@@ -219,7 +219,7 @@ export class SelectAppIcon extends LocatorsInterface {
         return {
           strategy: '-android uiautomator',
           selector:
-            'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().text("Select app icon"))',
+            'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text("Select app icon"))',
         } as const;
       case 'ios':
         return {
@@ -300,7 +300,7 @@ export class PathMenuItem extends LocatorsInterface {
         return {
           strategy: '-android uiautomator',
           selector:
-            'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().resourceId("path-menu-item"))',
+            'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("path-menu-item"))',
         } as const;
       case 'ios':
         return {
@@ -318,7 +318,7 @@ export class VersionNumber extends LocatorsInterface {
         return {
           strategy: '-android uiautomator',
           selector:
-            'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().textStartsWith("Version"))',
+            'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().textStartsWith("Version"))',
         } as const;
       case 'ios':
         return {
