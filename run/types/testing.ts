@@ -161,11 +161,11 @@ export type XPath =
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.TabHost/android.widget.LinearLayout/android.widget.FrameLayout/androidx.viewpager.widget.ViewPager/android.widget.RelativeLayout/android.widget.GridView/android.widget.LinearLayout/android.widget.LinearLayout[2]`;
 
 export type UiAutomatorQuery =
-  | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().resourceId("Appearance"))'
-  | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().resourceId("Conversations"))'
-  | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().resourceId("path-menu-item"))'
-  | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().text("Select app icon"))'
-  | 'new UiScrollable(new UiSelector().className("android.widget.ScrollView")).scrollIntoView(new UiSelector().textStartsWith("Version"))'
+  | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("Appearance"))'
+  | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("Conversations"))'
+  | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("path-menu-item"))'
+  | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text("Select app icon"))'
+  | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().textStartsWith("Version"))'
   | 'new UiSelector().resourceId("network.loki.messenger.qa:id/messageStatusTextView").text("Sent")'
   | 'new UiSelector().text("Enter your display name")'
   | `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-text"))`
