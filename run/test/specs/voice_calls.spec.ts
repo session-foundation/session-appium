@@ -84,7 +84,9 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
     await alice1.clickOnElementAll(new CallButton(alice1));
     await bob1.checkModalStrings(
       englishStrippedStr('callsMissedCallFrom').withArgs({ name: alice.userName }).toString(),
-      englishStrippedStr('callsYouMissedCallPermissions').withArgs({ name: alice.userName }).toString()
+      englishStrippedStr('callsYouMissedCallPermissions')
+        .withArgs({ name: alice.userName })
+        .toString()
     );
     await bob1.clickOnByAccessibilityID('Settings');
     await alice1.waitForTextElementToBePresent({
