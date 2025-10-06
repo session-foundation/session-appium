@@ -268,6 +268,10 @@ const openAndroidApp = async (
     `);
   await runScriptAndLog(`${getAdbFullPath()} -s ${targetName} shell settings put global animator_duration_scale 0
     `);
+  await runScriptAndLog(`${getAdbFullPath()} -s ${targetName} shell settings put global show_first_crash_dialog 0
+  `);
+  await runScriptAndLog(`${getAdbFullPath()} -s ${targetName} shell settings put secure anr_show_background 0
+`);
 
   await wrappedDevice.createSession(capabilities);
 

@@ -7,7 +7,7 @@ export class NoteToSelfOption extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/search_result_title',
+          selector: 'pro-badge-text',
           text: 'Note to Self',
         };
       case 'ios':

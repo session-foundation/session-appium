@@ -2,6 +2,7 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
+import { MediaMessage, MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
@@ -34,33 +35,28 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
   });
 
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
-  // await device1.navigateBack();
-  await alice1.sendImage(testMessage);
-  await Promise.all([
-    bob1.onAndroid().trustAttachments(testGroupName),
-    charlie1.onAndroid().trustAttachments(testGroupName),
-  ]);
+  const sentTimestamp = await alice1.sendImage(testMessage);
   if (platform === 'ios') {
     await Promise.all(
       [alice1, bob1, charlie1].map(device =>
-        device.hasElementBeenDeleted({
-          strategy: 'accessibility id',
-          selector: 'Message body',
+        device.hasElementDisappeared({
+          ...new MessageBody(device, testMessage).build(),
           maxWait,
-          text: testMessage,
-          preventEarlyDeletion: true,
+          actualStartTime: sentTimestamp,
         })
       )
     );
   }
   if (platform === 'android') {
     await Promise.all(
+      [bob1, charlie1].map(device => device.onAndroid().trustAttachments(testGroupName))
+    );
+    await Promise.all(
       [alice1, bob1, charlie1].map(device =>
-        device.hasElementBeenDeleted({
-          strategy: 'accessibility id',
-          selector: 'Media message',
+        device.hasElementDisappeared({
+          ...new MediaMessage(device).build(),
           maxWait,
-          preventEarlyDeletion: true,
+          actualStartTime: sentTimestamp,
         })
       )
     );

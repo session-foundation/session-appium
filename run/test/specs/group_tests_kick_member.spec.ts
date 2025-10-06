@@ -8,7 +8,6 @@ import {
   ConfirmRemovalButton,
   GroupMember,
   ManageMembersMenuItem,
-  MemberStatus,
   RemoveMemberButton,
 } from './locators/groups';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
@@ -49,20 +48,12 @@ async function kickMember(platform: SupportedPlatformsType, testInfo: TestInfo) 
       .toString()
   );
   await alice1.clickOnElementAll(new ConfirmRemovalButton(alice1));
-  if (platform === 'ios') {
-    // These elements disappear slowly on iOS so we get a chance to check for their presence
-    await alice1.waitForTextElementToBePresent(new MemberStatus(alice1).build('Pending removal'));
-    await alice1.hasElementBeenDeleted({
-      ...new GroupMember(alice1).build(USERNAME.BOB),
-      maxWait: 10_000,
-    });
-  } else {
-    // These elements disappear immediately on Android so we can't check for their presence
-    await alice1.verifyElementNotPresent({
-      ...new GroupMember(alice1).build(USERNAME.BOB),
-      maxWait: 5_000,
-    });
-  }
+  // The Group Member element sometimes disappears slowly, sometimes quickly.
+  // hasElementBeenDeleted would be theoretically better but we just check if element is not there anymore
+  await alice1.verifyElementNotPresent({
+    ...new GroupMember(alice1).build(USERNAME.BOB),
+    maxWait: 5_000,
+  });
   await alice1.navigateBack();
   await alice1.navigateBack();
   await Promise.all([

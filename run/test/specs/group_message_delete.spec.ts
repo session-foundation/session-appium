@@ -3,7 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DeleteMessageConfirmationModal, DeleteMessageLocally } from './locators';
-import { DeletedMessage } from './locators/conversation';
+import { DeletedMessage, MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
@@ -24,19 +24,13 @@ async function deleteMessageGroup(platform: SupportedPlatformsType, testInfo: Te
     focusGroupConvo: true,
     testInfo,
   });
-  const sentMessage = await alice1.sendMessage('Checking local delete functionality');
-  await Promise.all([
-    bob1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: sentMessage,
-    }),
-    charlie1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: sentMessage,
-    }),
-  ]);
+  const sentMessage = 'Checking local delete functionality';
+  await alice1.sendMessage(sentMessage);
+  await Promise.all(
+    [bob1, charlie1].map(device =>
+      device.waitForTextElementToBePresent(new MessageBody(device, sentMessage))
+    )
+  );
   // Select and long press on message to delete it
   await alice1.longPressMessage(sentMessage);
   // Select Delete icon
@@ -52,17 +46,10 @@ async function deleteMessageGroup(platform: SupportedPlatformsType, testInfo: Te
   await alice1.waitForTextElementToBePresent(new DeletedMessage(alice1));
   // Excellent
   // Check device 2 and 3 that message is still visible
-  await Promise.all([
-    bob1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: sentMessage,
-    }),
-    charlie1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: sentMessage,
-    }),
-  ]);
+  await Promise.all(
+    [bob1, charlie1].map(device =>
+      device.waitForTextElementToBePresent(new MessageBody(device, sentMessage))
+    )
+  );
   await closeApp(alice1, bob1, charlie1);
 }

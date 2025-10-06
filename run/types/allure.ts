@@ -25,7 +25,7 @@ export type AllureSuiteConfig =
   | { parent: 'In-App Review Prompt'; suite: 'Flows' | 'Triggers' }
   | { parent: 'Linkouts' }
   | { parent: 'New Conversation'; suite: 'Join Community' | 'New Message' }
-  | { parent: 'Sending Messages'; suite: 'Sending Attachments' }
+  | { parent: 'Sending Messages'; suite: 'Attachments' | 'Emoji reacts' }
   | { parent: 'Settings'; suite: 'App Disguise' }
   | {
       parent: 'User Actions';
@@ -34,6 +34,7 @@ export type AllureSuiteConfig =
         | 'Change Profile Picture'
         | 'Delete Contact'
         | 'Delete Conversation'
+        | 'Delete Message'
         | 'Hide Note to Self'
         | 'Set Nickname'
         | 'Share to Session';
@@ -68,21 +69,28 @@ export const TestSteps = {
   },
   // Sending things
   SEND: {
+    MESSAGE: (sender: UserNameType, recipient: string) =>
+      `${sender} sends a message to ${recipient}`,
     LINK: 'Send Link',
     IMAGE: 'Send Image',
+    EMOJI_REACT: `Send an emoji react`,
   },
   // Open/Navigate steps
   OPEN: {
+    NTS: 'Open Note to Self',
     UPDATE_GROUP_INFO: `Open 'Update Group Information' modal`,
     PATH: 'Open Path screen',
+    APPEARANCE: 'Open Appearance settings',
   },
   // User Actions
   USER_ACTIONS: {
     CHANGE_PROFILE_PICTURE: 'Change profile picture',
+    APP_DISGUISE: 'Set App Disguise',
+    DELETE_FOR_EVERYONE: 'Delete for everyone',
   },
   // Disappearing Messages
   DISAPPEARING_MESSAGES: {
-    SET_DISAPPEARING_MSG: 'Set Disappearing Messages',
+    SET: (time: string) => `Set Disappearing Messages (${time})`,
   },
   CALLS: {
     INITIATE_CALL: (userName: UserNameType) => `${userName} initiates voice call`,
@@ -90,14 +98,20 @@ export const TestSteps = {
   },
   // Verify steps
   VERIFY: {
+    ELEMENT_SCREENSHOT: (elementDesc: string) =>
+      `Verify ${elementDesc} element screenshot matches baseline`,
     GENERIC_MODAL: 'Verify modal strings',
     SPECIFIC_MODAL: (modalDesc: string) => `Verify ${modalDesc} modal strings`,
+    MESSAGE_SYNCED: 'Verify message synced to linked device',
     MESSAGE_RECEIVED: 'Verify message has been received',
     MESSAGE_DISAPPEARED: 'Verify message disappeared',
+    MESSAGE_DELETED: (context: string) => `Verify message deleted in/on ${context}`,
+    DISAPPEARING_CONTROL_MESSAGES: 'Verify the disappearing control messages for each user',
     CALLING: 'Verify call has been started',
     CALL_SUCCESSFUL: 'Verify call has been put through successfully',
     MISSED_CALL: 'Verify missed call',
     NICKNAME_CHANGED: (context: string) => `Verify nickname changed in/on ${context}`,
     PROFILE_PICTURE_CHANGED: 'Verify profile picture has been changed',
+    EMOJI_REACT: 'Verify emoji react appears for everyone',
   },
 };

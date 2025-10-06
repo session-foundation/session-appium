@@ -3,7 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DeleteMessageConfirmationModal } from './locators';
-import { DeletedMessage } from './locators/conversation';
+import { DeletedMessage, MessageBody } from './locators/conversation';
 import { ConversationItem } from './locators/home';
 import { open_Alice2_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -22,15 +22,13 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType, test
 
   const testMessage = 'Howdy';
   // Send message from user a to user b
-  const sentMessage = await alice1.sendMessage(testMessage);
+  await alice1.sendMessage(testMessage);
   // Check message came through on linked device(3)
   // Enter conversation with user B on device 3
-  await alice2.waitForTextElementToBePresent(new ConversationItem(alice2, bob.userName));
-  await alice2.selectByText('Conversation list item', bob.userName);
-  // Find message
-  await alice2.findMessageWithBody(sentMessage);
+  await alice2.clickOnElementAll(new ConversationItem(alice2, bob.userName)); // Find message
+  await alice2.findMessageWithBody(testMessage);
   // Select message on device 1, long press
-  await alice1.longPressMessage(sentMessage);
+  await alice1.longPressMessage(testMessage);
   // Select delete
   await alice1.clickOnByAccessibilityID('Delete message');
   await alice1.checkModalStrings(
@@ -41,18 +39,11 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType, test
   // Check linked device for deleted message
   await alice1.waitForTextElementToBePresent(new DeletedMessage(alice1));
   // Check device 2 and 3 for no change
-  await Promise.all([
-    bob1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: sentMessage,
-    }),
-    alice2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: sentMessage,
-    }),
-  ]);
+  await Promise.all(
+    [bob1, alice2].map(device =>
+      device.waitForTextElementToBePresent(new MessageBody(device, testMessage))
+    )
+  );
   // Close app
   await closeApp(alice1, bob1, alice2);
 }

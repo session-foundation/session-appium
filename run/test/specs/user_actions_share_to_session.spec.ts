@@ -5,8 +5,9 @@ import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ImageName, ShareExtensionIcon } from './locators';
-import { MessageInput, SendButton } from './locators/conversation';
+import { MessageBody, MessageInput, SendButton } from './locators/conversation';
 import { PhotoLibrary } from './locators/external';
+import { Contact } from './locators/global';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { handlePhotosFirstTimeOpen } from './utils/handle_first_open';
@@ -27,6 +28,7 @@ bothPlatformsIt({
 async function shareToSession(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
+    prebuilt: { bob },
   } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
     return open_Alice1_Bob1_friends({
       platform,
@@ -58,11 +60,7 @@ async function shareToSession(platform: SupportedPlatformsType, testInfo: TestIn
     await alice1.onAndroid().clickOnElementAll(new ImageName(alice1));
     await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Share' });
     await alice1.clickOnElementAll(new ShareExtensionIcon(alice1));
-    await alice1.clickOnElementAll({
-      strategy: 'accessibility id',
-      selector: 'Contact',
-      text: USERNAME.BOB,
-    });
+    await alice1.clickOnElementAll(new Contact(alice1, bob.userName));
     await alice1.inputText(testMessage, new MessageInput(alice1));
     await alice1.clickOnElementAll(new SendButton(alice1));
     // Loading screen...
@@ -72,11 +70,7 @@ async function shareToSession(platform: SupportedPlatformsType, testInfo: TestIn
   });
   await test.step(TestSteps.VERIFY.MESSAGE_RECEIVED, async () => {
     await bob1.trustAttachments(USERNAME.ALICE);
-    await bob1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: testMessage,
-    });
+    await bob1.waitForTextElementToBePresent(new MessageBody(bob1, testMessage));
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, bob1);

@@ -9,14 +9,19 @@ export enum LOCALE_DEFAULTS {
   token_name_short = 'SESH',
   usd_name_short = 'USD',
   app_pro = 'Session Pro',
+  session_foundation = 'Session Foundation',
+  pro = 'Pro',
 }
 
 export const rtlLocales = ['ar', 'fa', 'he', 'ps', 'ur'];
 
-export const crowdinLocales = ['en'] as const;
+export const crowdinLocales = [
+  'en',
+] as const;
 
 export type CrowdinLocale = (typeof crowdinLocales)[number];
 
 export function isCrowdinLocale(locale: string): locale is CrowdinLocale {
   return crowdinLocales.includes(locale as CrowdinLocale);
 }
+

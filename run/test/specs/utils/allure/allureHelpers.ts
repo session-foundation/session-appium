@@ -1,3 +1,4 @@
+import * as allure from 'allure-js-commons';
 import { execSync } from 'child_process';
 import fs from 'fs-extra';
 import { glob } from 'glob';
@@ -8,6 +9,7 @@ import {
   allureResultsDir,
   GH_PAGES_BASE_URL,
 } from '../../../../constants/allure';
+import { AllureSuiteConfig } from '../../../../types/allure';
 import { SupportedPlatformsType } from '../open_app';
 
 export interface ReportContext {
@@ -176,4 +178,50 @@ function getGitCommitSha(): string {
 
 function getGitBranch(): string {
   return execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
+}
+// Handle test-level metadata such as suites, test description or linked issues
+export async function setupAllureTestInfo({
+  suites,
+  description,
+  links,
+  platform,
+}: {
+  suites?: AllureSuiteConfig;
+  description?: string;
+  links?: {
+    all?: string[] | string; // Bugs affecting both platforms
+    android?: string[] | string; // Android only - won't appear in iOS reports
+    ios?: string[] | string; // iOS only - won't appear in Android reports
+  };
+  platform?: 'android' | 'ios';
+}) {
+  // Handle suites
+  if (suites) {
+    await allure.parentSuite(suites.parent);
+    if ('suite' in suites) {
+      await allure.suite(suites.suite);
+    }
+  }
+
+  // Handle description
+  if (description) {
+    await allure.description(description);
+  }
+
+  // Handle links (only process if platform is provided)
+  if (links && platform) {
+    const allLinks = links.all ? (Array.isArray(links.all) ? links.all : [links.all]) : [];
+
+    const platformLinks = links[platform]
+      ? Array.isArray(links[platform])
+        ? links[platform]
+        : [links[platform]]
+      : [];
+
+    const combinedLinks = [...allLinks, ...platformLinks];
+
+    for (const jiraKey of combinedLinks) {
+      await allure.link(`https://optf.atlassian.net/browse/${jiraKey}`, jiraKey, 'issue');
+    }
+  }
 }

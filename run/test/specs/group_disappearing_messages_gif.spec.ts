@@ -2,6 +2,7 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
+import { MediaMessage } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
@@ -18,10 +19,11 @@ bothPlatformsIt({
   allureDescription: 'Verifies that a GIF disappears as expected in a group conversation',
 });
 
-const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+// The timing with 30 seconds was a bit tight in terms of the attachment downloading and becoming visible
+const time = DISAPPEARING_TIMES.ONE_MINUTE;
 const timerType = 'Disappear after send option';
 const initialMaxWait = 15_000; // Downloading the attachment can take a while
-const maxWait = 35_000; // 30s plus buffer
+const maxWait = 70_000; // 60s plus buffer
 
 async function disappearingGifMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Disappear after sent test';
@@ -35,18 +37,17 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType, tes
   });
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   // Click on attachments button
-  await alice1.sendGIF();
+  const sentTimestamp = await alice1.sendGIF();
   await Promise.all(
     [bob1, charlie1].map(device => device.onAndroid().trustAttachments(testGroupName))
   );
   await Promise.all(
     [alice1, bob1, charlie1].map(device =>
-      device.hasElementBeenDeleted({
-        strategy: 'accessibility id',
-        selector: 'Media message',
+      device.hasElementDisappeared({
+        ...new MediaMessage(device).build(),
         initialMaxWait,
         maxWait,
-        preventEarlyDeletion: true,
+        actualStartTime: sentTimestamp,
       })
     )
   );

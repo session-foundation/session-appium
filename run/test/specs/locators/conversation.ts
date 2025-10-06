@@ -23,6 +23,77 @@ export class SendButton extends LocatorsInterface {
   }
 }
 
+export class NewVoiceMessageButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'New voice message',
+        } as const;
+    }
+  }
+}
+
+export class MessageBody extends LocatorsInterface {
+  public text: string | undefined;
+  constructor(device: DeviceWrapper, text?: string) {
+    super(device);
+    this.text = text;
+  }
+  public build() {
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Message body',
+          text: this.text,
+        } as const;
+    }
+  }
+}
+
+export class VoiceMessage extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Voice message',
+        } as const;
+    }
+  }
+}
+
+export class MediaMessage extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Media message',
+        } as const;
+    }
+  }
+}
+
+export class DocumentMessage extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Document',
+        } as const;
+    }
+  }
+}
+
 export class ScrollToBottomButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -103,12 +174,22 @@ export class AttachmentsButton extends LocatorsInterface {
   }
 }
 
+// TODO tie this to the message whose status we want to check (similar to EmojiReactsPill)
 export class OutgoingMessageStatusSent extends LocatorsInterface {
   public build() {
-    return {
-      strategy: 'accessibility id',
-      selector: `Message sent status: Sent`,
-    } as const;
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: '-android uiautomator',
+          selector:
+            'new UiSelector().resourceId("network.loki.messenger.qa:id/messageStatusTextView").text("Sent")',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: `Message sent status: Sent`,
+        } as const;
+    }
   }
 }
 
@@ -130,19 +211,24 @@ export class CallButton extends LocatorsInterface {
 }
 
 export class ConversationHeaderName extends LocatorsInterface {
-  public build(text?: string) {
+  public text: string | undefined;
+  constructor(device: DeviceWrapper, text?: string) {
+    super(device);
+    this.text = text;
+  }
+  public build() {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'Conversation header name',
-          text,
+          strategy: '-android uiautomator',
+          selector: `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-text"))`,
+          text: this.text,
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Conversation header name',
-          text,
+          text: this.text,
         } as const;
     }
   }
@@ -363,8 +449,8 @@ export class EditNicknameButton extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'edit-profile-icon',
+          strategy: 'accessibility id',
+          selector: 'Edit',
         } as const;
       case 'ios':
         return {
@@ -428,6 +514,73 @@ export class PreferredDisplayName extends LocatorsInterface {
           strategy: 'accessibility id',
           selector: 'Username',
           text: this.text,
+        } as const;
+    }
+  }
+}
+
+export class FirstEmojiReact extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger.qa:id/reaction_1',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: '😂',
+        } as const;
+    }
+  }
+}
+
+// Find the reactions pill underneath a specific message
+export class EmojiReactsPill extends LocatorsInterface {
+  constructor(
+    device: DeviceWrapper,
+    private messageText: string
+  ) {
+    super(device);
+  }
+
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'xpath',
+          selector: `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${this.messageText}")]]//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/layout_emoji_container"]`,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'xpath',
+          selector: `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${this.messageText}"]]//XCUIElementTypeStaticText[@value="😂"]`,
+        } as const;
+    }
+  }
+}
+
+export class EmojiReactsCount extends LocatorsInterface {
+  constructor(
+    device: DeviceWrapper,
+    private messageText: string,
+    private expectedCount: string = '2'
+  ) {
+    super(device);
+  }
+
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'xpath',
+          selector: `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${this.messageText}")]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/reactions_pill_count"][@text="${this.expectedCount}"]`,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'xpath',
+          selector: `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${this.messageText}"]]//XCUIElementTypeStaticText[@value="${this.expectedCount}"]`,
         } as const;
     }
   }

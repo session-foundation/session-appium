@@ -1,10 +1,10 @@
 // run/types/sessionIt.ts - Clean version matching original pattern
 import { test, type TestInfo } from '@playwright/test';
-import * as allure from 'allure-js-commons';
 import { omit } from 'lodash';
 
 import type { AppCountPerTest } from '../test/specs/state_builder';
 
+import { setupAllureTestInfo } from '../test/specs/utils/allure/allureHelpers';
 import { getNetworkTarget } from '../test/specs/utils/devnet';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 import {
@@ -24,6 +24,11 @@ type MobileItArgs = {
   shouldSkip?: boolean;
   allureSuites?: AllureSuiteConfig;
   allureDescription?: string;
+  allureLinks?: {
+    all?: string[] | string;
+    android?: string[] | string;
+    ios?: string[] | string;
+  };
 };
 
 export function androidIt(args: Omit<MobileItArgs, 'platform'>) {
@@ -43,6 +48,7 @@ function mobileIt({
   countOfDevicesNeeded,
   allureSuites,
   allureDescription,
+  allureLinks,
 }: MobileItArgs) {
   const testName = `${title} @${platform} @${risk ?? 'default'}-risk @${countOfDevicesNeeded}-devices`;
 
@@ -58,23 +64,27 @@ function mobileIt({
     getNetworkTarget(platform);
     console.info(`\n\n==========> Running "${testName}"\n\n`);
 
-    if (allureSuites) {
-      await allure.parentSuite(allureSuites.parent);
-      if ('suite' in allureSuites) {
-        await allure.suite(allureSuites.suite);
-      }
-    }
-    if (allureDescription) {
-      await allure.description(allureDescription);
-    }
+    // Handle Suites, Descriptions and Links
+    await setupAllureTestInfo({
+      suites: allureSuites,
+      description: allureDescription,
+      links: allureLinks,
+      platform,
+    });
+
     let testFailed = false;
 
     try {
       await testCb(platform, testInfo);
 
+      // If the test passed but used healing, fail loudly to be identified in the allure report
       const healedAnnotations = testInfo.annotations.filter(a => a.type === 'healed');
       if (healedAnnotations.length > 0) {
-        const details = healedAnnotations.map(a => `  ${a.description}`).join('\n');
+        // Deduplicate and sort for consistent error messages
+        const uniqueHealings = [...new Set(healedAnnotations.map(a => a.description))];
+        uniqueHealings.sort();
+
+        const details = uniqueHealings.join('\n');
         throw new Error(`Test passed but used healed locators:\n${details}`);
       }
     } catch (error) {

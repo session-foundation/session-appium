@@ -3,6 +3,7 @@ import { test, type TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
+import { CloseSettings } from './locators';
 import { CallButton, NotificationSettings, NotificationSwitch } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils/index';
@@ -77,12 +78,17 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
       );
     }
   });
-  await alice1.closeScreen();
+  await alice1.clickOnElementAll(new CloseSettings(alice1));
   // Alice tries again, call is created but Bob still hasn't enabled their calls perms so this will fail
   await test.step(TestSteps.CALLS.INITIATE_CALL(alice.userName), async () => {
     await alice1.clickOnElementAll(new CallButton(alice1));
-    // The Missed call modal is currently not exposed so the test just dismisses with a button press, see SES-4192
-    await bob1.clickOnElementXPath(`//XCUIElementTypeButton[@name="Settings"]`);
+    await bob1.checkModalStrings(
+      englishStrippedStr('callsMissedCallFrom').withArgs({ name: alice.userName }).toString(),
+      englishStrippedStr('callsYouMissedCallPermissions')
+        .withArgs({ name: alice.userName })
+        .toString()
+    );
+    await bob1.clickOnByAccessibilityID('Settings');
     await alice1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Ringing...',
@@ -118,7 +124,7 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
       Retrying won't help - use a real device where you can manually enable the permission.`
     );
   }
-  await bob1.closeScreen();
+  await bob1.clickOnElementAll(new CloseSettings(bob1));
   await alice1.clickOnElementAll(new CallButton(alice1));
   await bob1.clickOnByAccessibilityID('Answer call');
   await Promise.all(

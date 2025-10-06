@@ -2,7 +2,7 @@ import { test, type TestInfo } from '@playwright/test';
 
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { TestSteps } from '../../types/allure';
-import { androidIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import {
   ReviewPromptNeedsWorkButton,
@@ -14,7 +14,7 @@ import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { assertUrlIsReachable } from './utils/utilities';
 
-androidIt({
+bothPlatformsIt({
   title: 'Review prompt negative flow',
   risk: 'high',
   countOfDevicesNeeded: 1,
@@ -35,7 +35,8 @@ async function reviewPromptNegative(platform: SupportedPlatformsType, testInfo: 
   });
 
   const version = await device.getVersionNumber();
-  const url = `https://getsession.org/feedback?platform=${platform}&version=${version}`;
+  const platformParam = platform === 'ios' ? 'iOS' : 'android'; // we call it ios but the app prints iOS
+  const url = `https://getsession.org/feedback?platform=${platformParam}&version=${version}`;
 
   await test.step(TestSteps.OPEN.PATH, async () => {
     await device.clickOnElementAll(new PathMenuItem(device));

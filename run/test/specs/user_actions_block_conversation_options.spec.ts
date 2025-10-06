@@ -6,9 +6,10 @@ import {
   BlockedContactsSettings,
   BlockUser,
   BlockUserConfirmationModal,
-  ExitUserProfile,
+  CloseSettings,
 } from './locators';
-import { BlockedBanner, ConversationSettings } from './locators/conversation';
+import { BlockedBanner, ConversationSettings, MessageBody } from './locators/conversation';
+import { Contact } from './locators/global';
 import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
@@ -73,21 +74,15 @@ async function blockUserInConversationSettings(
   await alice1.clickOnElementAll(new ConversationsMenuItem(alice1));
   await alice1.clickOnElementAll(new BlockedContactsSettings(alice1));
   // Accessibility ID for Blocked Contact not present on iOS
-  await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Contact',
-    text: bob.userName,
-  });
+  await alice1.waitForTextElementToBePresent(new Contact(alice1, bob.userName));
   await alice1.navigateBack(false);
   await alice1.navigateBack(false);
-  await alice1.clickOnElementAll(new ExitUserProfile(alice1));
+  await alice1.clickOnElementAll(new CloseSettings(alice1));
   // Send message from Blocked User
   await bob1.sendMessage(blockedMessage);
   await alice1.verifyElementNotPresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: blockedMessage,
-    maxWait: 5000,
+    ...new MessageBody(alice1, blockedMessage).build(),
+    maxWait: 5_000,
   });
   // Close app
   await closeApp(alice1, bob1);

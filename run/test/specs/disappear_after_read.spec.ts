@@ -1,7 +1,9 @@
-import type { TestInfo } from '@playwright/test';
+import { test, type TestInfo } from '@playwright/test';
 
+import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, DisappearModes } from '../../types/testing';
+import { MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { checkDisappearingControlMessage } from './utils/disappearing_control_messages';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -23,10 +25,12 @@ async function disappearAfterRead(platform: SupportedPlatformsType, testInfo: Te
   const {
     devices: { alice1, bob1 },
     prebuilt: { alice, bob },
-  } = await open_Alice1_Bob1_friends({
-    platform,
-    testInfo,
-    focusFriendsConvo: true,
+  } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
+    return open_Alice1_Bob1_friends({
+      platform,
+      testInfo,
+      focusFriendsConvo: true,
+    });
   });
 
   const testMessage = 'Checking disappear after read is working';
@@ -34,41 +38,46 @@ async function disappearAfterRead(platform: SupportedPlatformsType, testInfo: Te
   // TODO: Consider refactoring DISAPPEARING_TIMES to include ms values
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   const maxWait = 35_000; // 30s plus buffer
+  let sentTimestamp: number;
   // Click conversation options menu (three dots)
-  await setDisappearingMessage(
-    platform,
-    alice1,
-    ['1:1', `Disappear after ${mode} option`, time],
-    bob1
-  );
+  await test.step(TestSteps.DISAPPEARING_MESSAGES.SET(time), async () => {
+    await setDisappearingMessage(
+      platform,
+      alice1,
+      ['1:1', `Disappear after ${mode} option`, time],
+      bob1
+    );
+  });
   // Check control message is correct on device 2
-  await checkDisappearingControlMessage(
-    platform,
-    alice.userName,
-    bob.userName,
-    alice1,
-    bob1,
-    time,
-    mode
-  );
+  await test.step(TestSteps.VERIFY.DISAPPEARING_CONTROL_MESSAGES, async () => {
+    await checkDisappearingControlMessage(
+      platform,
+      alice.userName,
+      bob.userName,
+      alice1,
+      bob1,
+      time,
+      mode
+    );
+  });
   // Send message to verify that deletion is working
-  await alice1.sendMessage(testMessage);
-  await Promise.all([
-    alice1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: testMessage,
-      maxWait,
-      preventEarlyDeletion: true,
-    }),
-    bob1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: testMessage,
-      maxWait,
-      preventEarlyDeletion: true,
-    }),
-  ]);
+  await test.step(TestSteps.SEND.MESSAGE(alice.userName, bob.userName), async () => {
+    sentTimestamp = await alice1.sendMessage(testMessage);
+  });
+  await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
+    // NOTE  we're only sending a text message, both devices are open, DaS is practically the same as DaR
+    await Promise.all(
+      [alice1, bob1].map(device =>
+        device.hasElementDisappeared({
+          ...new MessageBody(device, testMessage).build(),
+          maxWait,
+          actualStartTime: sentTimestamp,
+        })
+      )
+    );
+  });
   // Great success
-  await closeApp(alice1, bob1);
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(alice1, bob1);
+  });
 }

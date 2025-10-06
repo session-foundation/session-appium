@@ -4,7 +4,12 @@ import { testLink } from '../../constants';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { LinkPreview, LinkPreviewMessage } from './locators';
-import { MessageInput, OutgoingMessageStatusSent, SendButton } from './locators/conversation';
+import {
+  MessageBody,
+  MessageInput,
+  OutgoingMessageStatusSent,
+  SendButton,
+} from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -52,30 +57,20 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType, testInfo: Test
   await alice1.inputText(testLink, new MessageInput(alice1));
   await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
   await alice1.clickOnElementAll(new SendButton(alice1));
-  await bob1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: testLink,
-  });
-  await charlie1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: testLink,
-  });
+  await Promise.all(
+    [bob1, charlie1].map(device =>
+      device.waitForTextElementToBePresent(new MessageBody(device, testLink))
+    )
+  );
   // Reply to link
   await bob1.longPressMessage(testLink);
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);
-  await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: replyMessage,
-  });
-  await charlie1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: replyMessage,
-  });
+  await Promise.all(
+    [alice1, charlie1].map(device =>
+      device.waitForTextElementToBePresent(new MessageBody(device, replyMessage))
+    )
+  );
   await closeApp(alice1, bob1, charlie1);
 }
 
@@ -113,18 +108,12 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType, testInfo: 
   ]);
   await bob1.longPressMessage(testLink);
   await bob1.clickOnByAccessibilityID('Reply to message');
-  const replyMessage = await bob1.sendMessage(`${alice.userName} message reply`);
-  await Promise.all([
-    alice1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: replyMessage,
-    }),
-    charlie1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: replyMessage,
-    }),
-  ]);
+  const replyMessage = `${alice.userName} message reply`;
+  await bob1.sendMessage(replyMessage);
+  await Promise.all(
+    [alice1, charlie1].map(device =>
+      device.waitForTextElementToBePresent(new MessageBody(device, replyMessage))
+    )
+  );
   await closeApp(alice1, bob1, charlie1);
 }

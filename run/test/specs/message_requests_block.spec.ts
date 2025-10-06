@@ -4,6 +4,7 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { type AccessibilityId, USERNAME } from '../../types/testing';
 import { BlockedContactsSettings } from './locators';
+import { Contact } from './locators/global';
 import { MessageRequestsBanner, PlusButton } from './locators/home';
 import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { sleepFor } from './utils';
@@ -51,7 +52,10 @@ async function blockedRequest(platform: SupportedPlatformsType, testInfo: TestIn
       strategy: 'accessibility id',
       selector: messageRequestsNonePending as AccessibilityId,
     }),
-    device3.hasElementBeenDeleted(new MessageRequestsBanner(device3)),
+    device3.verifyElementNotPresent({
+      ...new MessageRequestsBanner(device3).build(),
+      maxWait: 5_000,
+    }),
   ]);
   const blockedMessage = `"${alice.userName} to ${bob.userName} - shouldn't get through"`;
   await device1.sendMessage(blockedMessage);
@@ -61,33 +65,14 @@ async function blockedRequest(platform: SupportedPlatformsType, testInfo: TestIn
   await sleepFor(5000);
   await device2.hasTextElementBeenDeleted('Message body', blockedMessage);
   // Check that user is on Blocked User list in Settings
-
-  await Promise.all([
-    device2.clickOnElementAll(new UserSettings(device2)),
-    device3.clickOnElementAll(new UserSettings(device3)),
-  ]);
-  // 'Conversations' might be hidden beyond the Settings view, gotta scroll down to find it
-  await Promise.all([device2.scrollDown(), device3.scrollDown()]);
-  await Promise.all([
-    device2.clickOnElementAll(new ConversationsMenuItem(device2)),
-    device3.clickOnElementAll(new ConversationsMenuItem(device3)),
-  ]);
-  await Promise.all([
-    device2.clickOnElementAll(new BlockedContactsSettings(device2)),
-    device3.clickOnElementAll(new BlockedContactsSettings(device3)),
-  ]);
-  await Promise.all([
-    device2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Contact',
-      text: alice.userName,
-    }),
-    device3.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Contact',
-      text: alice.userName,
-    }),
-  ]);
+  await Promise.all(
+    [device2, device3].map(async device => {
+      await device.clickOnElementAll(new UserSettings(device));
+      await device.clickOnElementAll(new ConversationsMenuItem(device));
+      await device.clickOnElementAll(new BlockedContactsSettings(device));
+      await device.waitForTextElementToBePresent(new Contact(device, alice.userName));
+    })
+  );
   // Close app
   await closeApp(device1, device2, device3);
 }

@@ -2,8 +2,8 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
+import { MediaMessage, MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
@@ -27,28 +27,35 @@ const maxWait = 35_000; // 30s plus buffer
 async function disappearingImageMessage1o1(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
+    prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
     testInfo,
   });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
-  await sleepFor(500);
-  await alice1.sendImage(testMessage);
-  await Promise.all([
-    alice1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      maxWait,
-      text: testMessage,
-      preventEarlyDeletion: true,
-    }),
-    bob1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Untrusted attachment message',
-      maxWait,
-      preventEarlyDeletion: true,
-    }),
-  ]);
+  const sentTimestamp = await alice1.sendImage(testMessage);
+  await bob1.trustAttachments(alice.userName);
+  if (platform === 'ios') {
+    await Promise.all(
+      [alice1, bob1].map(device =>
+        device.hasElementDisappeared({
+          ...new MessageBody(device, testMessage).build(),
+          maxWait,
+          actualStartTime: sentTimestamp,
+        })
+      )
+    );
+  } else {
+    await Promise.all(
+      [alice1, bob1].map(device =>
+        device.hasElementDisappeared({
+          ...new MediaMessage(device).build(),
+          maxWait,
+          actualStartTime: sentTimestamp,
+        })
+      )
+    );
+  }
   await closeApp(alice1, bob1);
 }

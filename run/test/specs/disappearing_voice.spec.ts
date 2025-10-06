@@ -1,7 +1,8 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { DISAPPEARING_TIMES } from '../../types/testing';
+import { VoiceMessage } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
@@ -25,31 +26,23 @@ const maxWait = 35_000; // 30s plus buffer
 async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
+    prebuilt: { alice },
   } = await open_Alice1_Bob1_friends({
     platform,
     focusFriendsConvo: true,
     testInfo,
   });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
-  await alice1.sendVoiceMessage();
-  await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Voice message',
-  });
-  await bob1.trustAttachments(USERNAME.ALICE);
-  await Promise.all([
-    alice1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Voice message',
-      maxWait,
-      preventEarlyDeletion: true,
-    }),
-    bob1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Voice message',
-      maxWait,
-      preventEarlyDeletion: true,
-    }),
-  ]);
+  const sentTimestamp = await alice1.sendVoiceMessage();
+  await bob1.trustAttachments(alice.userName);
+  await Promise.all(
+    [alice1, bob1].map(device =>
+      device.hasElementDisappeared({
+        ...new VoiceMessage(device).build(),
+        maxWait,
+        actualStartTime: sentTimestamp,
+      })
+    )
+  );
   await closeApp(alice1, bob1);
 }

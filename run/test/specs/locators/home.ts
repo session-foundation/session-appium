@@ -40,11 +40,62 @@ export class ConversationItem extends LocatorsInterface {
     this.text = text;
   }
   public build() {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: this.text,
-    } as const;
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Conversation list item',
+          text: this.text,
+        } as const;
+    }
+  }
+}
+
+export class MessageRequestItem extends LocatorsInterface {
+  public text?: string | undefined;
+  constructor(device: DeviceWrapper, text?: string) {
+    super(device);
+    this.text = text;
+  }
+  public build() {
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Message request',
+          text: this.text,
+        } as const;
+    }
+  }
+}
+
+// For identifying a conversation with a specific last message in it
+export class MessageSnippet extends LocatorsInterface {
+  public conversationName: string;
+  public messageText: string;
+
+  constructor(device: DeviceWrapper, conversationName: string, messageText: string) {
+    super(device);
+    this.conversationName = conversationName;
+    this.messageText = messageText;
+  }
+
+  public build() {
+    switch (this.platform) {
+      case 'ios':
+        return {
+          strategy: 'xpath', // For nested elements like this xpath is unfortunately the best choice
+          selector: `//XCUIElementTypeCell[@name="Conversation list item" and @label="${this.conversationName}"]//XCUIElementTypeStaticText[@name="${this.messageText}"]`,
+        } as const;
+
+      case 'android':
+        return {
+          strategy: 'xpath',
+          selector: `//android.widget.LinearLayout[.//android.widget.TextView[@content-desc="Conversation list item" and @text="${this.conversationName}"]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/snippetTextView" and @text="${this.messageText}"]`,
+        } as const;
+    }
   }
 }
 
@@ -96,7 +147,10 @@ export class ReviewPromptItsGreatButton extends LocatorsInterface {
           selector: 'enjoy-session-positive-button',
         };
       case 'ios':
-        throw new Error('Not implemented');
+        return {
+          strategy: 'accessibility id',
+          selector: 'enjoy-session-positive-button',
+        };
     }
   }
 }
@@ -110,7 +164,10 @@ export class ReviewPromptNeedsWorkButton extends LocatorsInterface {
           selector: 'enjoy-session-negative-button',
         };
       case 'ios':
-        throw new Error('Not implemented');
+        return {
+          strategy: 'accessibility id',
+          selector: 'enjoy-session-negative-button',
+        };
     }
   }
 }
@@ -124,7 +181,10 @@ export class ReviewPromptRateAppButton extends LocatorsInterface {
           selector: 'rate-app-button',
         };
       case 'ios':
-        throw new Error('Not implemented');
+        return {
+          strategy: 'accessibility id',
+          selector: 'rate-app-button',
+        };
     }
   }
 }
@@ -138,7 +198,10 @@ export class ReviewPromptNotNowButton extends LocatorsInterface {
           selector: 'not-now-button',
         };
       case 'ios':
-        throw new Error('Not implemented');
+        return {
+          strategy: 'accessibility id',
+          selector: 'not-now-button',
+        };
     }
   }
 }
@@ -152,7 +215,10 @@ export class ReviewPromptOpenSurveyButton extends LocatorsInterface {
           selector: 'open-survey-button',
         };
       case 'ios':
-        throw new Error('Not implemented');
+        return {
+          strategy: 'accessibility id',
+          selector: 'open-survey-button',
+        };
     }
   }
 }

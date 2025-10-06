@@ -3,7 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DeleteMessageConfirmationModal, DeleteMessageLocally } from './locators';
-import { DeletedMessage } from './locators/conversation';
+import { DeletedMessage, MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
@@ -22,12 +22,9 @@ async function deleteMessage(platform: SupportedPlatformsType, testInfo: TestInf
     testInfo,
   });
   // send message from User A to User B
-  const sentMessage = await alice1.sendMessage('Checking local deletetion functionality');
-  await bob1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: sentMessage,
-  });
+  const sentMessage = 'Checking local deletetion functionality';
+  await alice1.sendMessage(sentMessage);
+  await bob1.waitForTextElementToBePresent(new MessageBody(bob1, sentMessage));
   // Select and long press on message to delete it
   await alice1.longPressMessage(sentMessage);
   // Select Delete icon
@@ -44,11 +41,7 @@ async function deleteMessage(platform: SupportedPlatformsType, testInfo: TestInf
   await alice1.waitForTextElementToBePresent(new DeletedMessage(alice1));
 
   // Device 2 should show no change
-  await bob1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: sentMessage,
-  });
+  await bob1.waitForTextElementToBePresent(new MessageBody(bob1, sentMessage));
 
   // Excellent
   await closeApp(alice1, bob1);

@@ -57,7 +57,7 @@ export const InteractionPoints: Record<string, Coordinates> = {
   BackToSession: { x: 42, y: 42 },
 };
 
-export type Strategy = 'accessibility id' | 'class name' | 'id' | 'xpath';
+export type Strategy = '-android uiautomator' | 'accessibility id' | 'class name' | 'id' | 'xpath';
 
 export type ConversationType = '1:1' | 'Community' | 'Group' | 'Note to Self';
 
@@ -98,6 +98,11 @@ export type MergedOptions = DisappearOpts1o1 | DisappearOptsGroup;
 
 export type StrategyExtractionObj =
   | {
+      strategy: Extract<Strategy, '-android uiautomator'>;
+      selector: UiAutomatorQuery;
+      text?: string;
+    }
+  | {
       strategy: Extract<Strategy, 'accessibility id'>;
       selector: AccessibilityId;
       text?: string;
@@ -129,17 +134,24 @@ export type XPath =
   | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
   | `//*[@resource-id='network.loki.messenger.qa:id/callTitle' and contains(@text, ':')]`
   | `//*[starts-with(@content-desc, "Photo taken on")]`
+  | `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/layout_emoji_container"]`
+  | `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/reactions_pill_count"][@text="${string}"]`
+  | `//android.widget.LinearLayout[.//android.widget.TextView[@content-desc="Conversation list item" and @text="${string}"]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/snippetTextView" and @text="${string}"]`
   | `//android.widget.TextView[@text="${string}"]`
   | `//XCUIElementTypeAlert//*//XCUIElementTypeButton`
   | `//XCUIElementTypeButton[@name="Continue"]`
   | `//XCUIElementTypeButton[@name="Settings"]`
+  | `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${string}"]]//XCUIElementTypeStaticText[@value="😂"]`
+  | `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${string}"]]//XCUIElementTypeStaticText[@value="${string}"]`
   | `//XCUIElementTypeCell[@name="${string}"]`
+  | `//XCUIElementTypeCell[@name="Conversation list item" and @label="${string}"]//XCUIElementTypeStaticText[@name="${string}"]`
   | `//XCUIElementTypeCell[@name="Session"]`
   | `//XCUIElementTypeImage`
   | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`
   | `//XCUIElementTypeStaticText[@name="Paste"]`
   | `//XCUIElementTypeStaticText[@name="Videos"]`
   | `//XCUIElementTypeStaticText[contains(@name, '00:')]`
+  | `//XCUIElementTypeStaticText[contains(@name, "Version")]`
   | `//XCUIElementTypeSwitch[@name="Read Receipts, Send read receipts in one-to-one chats."]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`
@@ -148,9 +160,22 @@ export type XPath =
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/androidx.appcompat.widget.LinearLayoutCompat/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView[2]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.TabHost/android.widget.LinearLayout/android.widget.FrameLayout/androidx.viewpager.widget.ViewPager/android.widget.RelativeLayout/android.widget.GridView/android.widget.LinearLayout/android.widget.LinearLayout[2]`;
 
+export type UiAutomatorQuery =
+  | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("Appearance"))'
+  | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("Conversations"))'
+  | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("path-menu-item"))'
+  | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text("Select app icon"))'
+  | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().textStartsWith("Version"))'
+  | 'new UiSelector().resourceId("network.loki.messenger.qa:id/messageStatusTextView").text("Sent")'
+  | 'new UiSelector().text("Enter your display name")'
+  | `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-text"))`
+  | `new UiSelector().text(${string})`;
+
 export type AccessibilityId =
   | DISAPPEARING_TIMES
   | UserNameType
+  | '😂'
+  | '2'
   | 'Accept message request'
   | 'Accept name change'
   | 'Account ID'
@@ -171,20 +196,19 @@ export type AccessibilityId =
   | 'back'
   | 'Back'
   | 'Block'
+  | 'Block contacts - Navigation'
   | 'blocked-banner'
   | 'Blocked banner'
-  | 'Blocked contacts'
-  | 'Blocked Contacts'
   | 'Block message request'
   | 'Browse'
   | 'Call'
   | 'Call button'
   | 'Cancel'
+  | 'Classic Light'
   | 'Clear'
   | 'Clear all'
   | 'Close'
   | 'Close button'
-  | 'Community input'
   | 'Community invitation'
   | 'Configuration message'
   | 'Confirm'
@@ -204,6 +228,7 @@ export type AccessibilityId =
   | 'Conversations'
   | 'Copy'
   | 'Copy button'
+  | 'Copy URL'
   | 'Create account button'
   | 'Create group'
   | 'Decline message request'
@@ -243,6 +268,8 @@ export type AccessibilityId =
   | 'Empty state label'
   | 'Enable'
   | 'End call button'
+  | 'enjoy-session-negative-button'
+  | 'enjoy-session-positive-button'
   | 'Enter Community URL'
   | 'Enter display name'
   | 'Error message'
@@ -282,6 +309,7 @@ export type AccessibilityId =
   | 'Manage Members'
   | 'Media message'
   | 'MeetingSE'
+  | 'Meetings option'
   | 'Mentions list'
   | 'Message body'
   | 'Message composition'
@@ -306,12 +334,14 @@ export type AccessibilityId =
   | 'Nickname'
   | 'No'
   | 'No pending message requests'
+  | 'not-now-button'
   | 'Note to Self'
   | 'Notifications'
   | 'Off'
   | 'OK_BUTTON'
   | 'OK'
   | 'Okay'
+  | 'open-survey-button'
   | 'Open'
   | 'Open URL'
   | 'Path'
@@ -320,6 +350,8 @@ export type AccessibilityId =
   | 'Pin'
   | 'Please enter a shorter group name'
   | 'Privacy Policy'
+  | 'qa-blocked-contacts-settings-item'
+  | 'rate-app-button'
   | 'Read Receipts - Switch'
   | 'Recents'
   | 'Recovery password'
@@ -378,6 +410,7 @@ export type AccessibilityId =
   | 'Voice message'
   | 'X'
   | 'Yes'
+  | 'You have changed the icon for “Session”.'
   | 'Your message request has been accepted.'
   | `${DISAPPEARING_TIMES} - Radio`
   | `${GROUPNAME}`
@@ -386,9 +419,11 @@ export type AccessibilityId =
 export type Id =
   | DISAPPEARING_TIMES
   | 'Account ID'
+  | 'android:id/aerr_close'
+  | 'android:id/aerr_wait'
+  | 'android:id/alertTitle'
   | 'android:id/content_preview_text'
   | 'android:id/summary'
-  | 'android:id/text1'
   | 'android:id/title'
   | 'android.widget.TextView'
   | 'Appearance'
@@ -398,6 +433,7 @@ export type Id =
   | 'Call'
   | 'clear-input-button-description'
   | 'clear-input-button-name'
+  | 'clear-input-button'
   | 'Close button'
   | 'com.android.chrome:id/negative_button'
   | 'com.android.chrome:id/signin_fre_dismiss_button'
@@ -408,7 +444,7 @@ export type Id =
   | 'com.android.permissioncontroller:id/permission_deny_button'
   | 'com.android.settings:id/switch_text'
   | 'com.google.android.apps.photos:id/sign_in_button'
-  | 'com.google.android.apps.photos:id/text'
+  | 'Community input'
   | 'Confirm invite button'
   | 'Contact'
   | 'Contact status'
@@ -417,6 +453,7 @@ export type Id =
   | 'Conversation header name'
   | 'Conversations'
   | 'Copy button'
+  | 'Copy URL'
   | 'Create account button'
   | 'Create group'
   | 'delete-contact-confirm-button'
@@ -429,6 +466,7 @@ export type Id =
   | 'Disable disappearing messages'
   | 'disappearing-messages-menu-option'
   | 'Disappearing messages type and time'
+  | 'Display name'
   | 'donate-menu-item'
   | 'Download media'
   | 'edit-profile-icon'
@@ -438,7 +476,6 @@ export type Id =
   | 'Enter display name'
   | 'error-message'
   | 'group-description'
-  | 'group-name'
   | 'Group name'
   | 'Group name input'
   | 'hide-nts-confirm-button'
@@ -474,12 +511,15 @@ export type Id =
   | 'network.loki.messenger.qa:id/crop_image_menu_crop'
   | 'network.loki.messenger.qa:id/emptyStateContainer'
   | 'network.loki.messenger.qa:id/endCallButton'
+  | 'network.loki.messenger.qa:id/layout_emoji_container'
   | 'network.loki.messenger.qa:id/linkPreviewView'
   | 'network.loki.messenger.qa:id/mediapicker_folder_item_thumbnail'
   | 'network.loki.messenger.qa:id/mediapicker_image_item_thumbnail'
   | 'network.loki.messenger.qa:id/messageStatusTextView'
   | 'network.loki.messenger.qa:id/openGroupTitleTextView'
   | 'network.loki.messenger.qa:id/play_overlay'
+  | 'network.loki.messenger.qa:id/reaction_1'
+  | 'network.loki.messenger.qa:id/reactions_pill_count'
   | 'network.loki.messenger.qa:id/scrollToBottomButton'
   | 'network.loki.messenger.qa:id/search_cancel'
   | 'network.loki.messenger.qa:id/search_result_title'
@@ -501,6 +541,7 @@ export type Id =
   | 'preferred-display-name'
   | 'Privacy'
   | 'Privacy Policy'
+  | 'pro-badge-text'
   | 'Quit'
   | 'rate-app-button'
   | 'Recovery password container'
@@ -524,6 +565,8 @@ export type Id =
   | 'update-group-info-confirm-button'
   | 'update-group-info-description-input'
   | 'update-group-info-name-input'
+  | 'update-username-confirm-button'
+  | 'User settings'
   | 'Version warning banner'
   | 'Yes'
   | `All ${AppName} notifications`
@@ -532,8 +575,6 @@ export type Id =
 export type TestRisk = 'high' | 'low' | 'medium';
 
 export type ElementStates = 'new_account' | 'restore_account';
-
-export type PageName = 'network_page' | 'staking_page';
 
 export type Suffix = 'diff' | 'screenshot';
 

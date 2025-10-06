@@ -1,6 +1,7 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
+import { MediaMessage, MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
@@ -31,35 +32,19 @@ async function sendVideoGroupiOS(platform: SupportedPlatformsType, testInfo: Tes
   const testMessage = 'Testing-video-1';
   const replyMessage = `Replying to video from ${alice.userName} in ${testGroupName}`;
   await alice1.sendVideoiOS(testMessage);
-  await bob1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: testMessage,
-  });
-  await charlie1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: testMessage,
-  });
-  await bob1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: testMessage,
-    maxWait: 5000,
-  });
+  await Promise.all(
+    [bob1, charlie1].map(device =>
+      device.waitForTextElementToBePresent(new MessageBody(device, testMessage))
+    )
+  );
   await bob1.longPressMessage(testMessage);
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);
-  await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: replyMessage,
-  });
-  await charlie1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: replyMessage,
-  });
+  await Promise.all(
+    [alice1, charlie1].map(device =>
+      device.waitForTextElementToBePresent(new MessageBody(device, replyMessage))
+    )
+  );
   // Close server and devices
   await closeApp(alice1, bob1, charlie1);
 }
@@ -106,22 +91,15 @@ async function sendVideoGroupAndroid(platform: SupportedPlatformsType, testInfo:
     }),
   ]);
   // Reply to message on device 2
-  await bob1.longPress('Media message');
+  await bob1.longPress(new MediaMessage(bob1));
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);
   // Check reply appears in device 1 and device 3
-  await Promise.all([
-    alice1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: replyMessage,
-    }),
-    charlie1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: replyMessage,
-    }),
-  ]);
+  await Promise.all(
+    [alice1, charlie1].map(device =>
+      device.waitForTextElementToBePresent(new MessageBody(device, replyMessage))
+    )
+  );
   // Close app and server
   await closeApp(alice1, bob1, charlie1);
 }

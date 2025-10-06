@@ -6,7 +6,12 @@ import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { LinkPreview, LinkPreviewMessage } from './locators';
-import { MessageInput, OutgoingMessageStatusSent, SendButton } from './locators/conversation';
+import {
+  MessageBody,
+  MessageInput,
+  OutgoingMessageStatusSent,
+  SendButton,
+} from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -32,6 +37,7 @@ bothPlatformsItSeparate({
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after read option';
 const maxWait = 35_000; // 30s plus buffer
+let sentTimestamp: number;
 
 async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
@@ -43,7 +49,7 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
       testInfo,
     });
   });
-  await test.step(TestSteps.DISAPPEARING_MESSAGES.SET_DISAPPEARING_MSG, async () => {
+  await test.step(TestSteps.DISAPPEARING_MESSAGES.SET(time), async () => {
     await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   });
   await test.step(TestSteps.SEND.LINK, async () => {
@@ -60,23 +66,21 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
     await alice1.deleteText(new MessageInput(alice1));
     await alice1.inputText(testLink, new MessageInput(alice1));
     await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
-
     await alice1.clickOnElementAll(new SendButton(alice1));
     await alice1.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(alice1).build(),
       maxWait: 20000,
     });
+    sentTimestamp = Date.now();
   });
   // Wait for 30 seconds to disappear
   await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
     await Promise.all(
       [alice1, bob1].map(device =>
-        device.hasElementBeenDeleted({
-          strategy: 'accessibility id',
-          selector: 'Message body',
+        device.hasElementDisappeared({
+          ...new MessageBody(device, testLink).build(),
           maxWait,
-          text: testLink,
-          preventEarlyDeletion: true,
+          actualStartTime: sentTimestamp,
         })
       )
     );
@@ -99,7 +103,7 @@ async function disappearingLinkMessage1o1Android(
       testInfo,
     });
   });
-  await test.step(TestSteps.DISAPPEARING_MESSAGES.SET_DISAPPEARING_MSG, async () => {
+  await test.step(TestSteps.DISAPPEARING_MESSAGES.SET(time), async () => {
     await setDisappearingMessage(platform, alice1, ['1:1', timerType, time]);
   });
   await test.step(TestSteps.SEND.LINK, async () => {
@@ -119,11 +123,16 @@ async function disappearingLinkMessage1o1Android(
       ...new OutgoingMessageStatusSent(alice1).build(),
       maxWait: 20000,
     });
+    sentTimestamp = Date.now();
   });
   await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
     await Promise.all(
       [alice1, bob1].map(device =>
-        device.hasElementBeenDeleted({ ...new LinkPreviewMessage(device).build(), maxWait })
+        device.hasElementDisappeared({
+          ...new LinkPreviewMessage(device).build(),
+          maxWait,
+          actualStartTime: sentTimestamp,
+        })
       )
     );
   });

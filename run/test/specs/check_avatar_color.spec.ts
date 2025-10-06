@@ -4,7 +4,7 @@ import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { ConversationSettings } from './locators/conversation';
 import { ConversationItem } from './locators/home';
-import { UserSettings } from './locators/settings';
+import { UserAvatar, UserSettings } from './locators/settings';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { isSameColor } from './utils/check_colour';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -35,7 +35,7 @@ async function avatarColor(platform: SupportedPlatformsType, testInfo: TestInfo)
   });
   await test.step(`Get Alice's avatar color on their device from the Settings screen avatar`, async () => {
     await alice1.clickOnElementAll(new UserSettings(alice1));
-    alice1PixelColor = await alice1.getElementPixelColor(new UserSettings(alice1));
+    alice1PixelColor = await alice1.getElementPixelColor(new UserAvatar(alice1));
   });
   await test.step(`Get Alice's avatar color on bob's device from the Conversation Settings avatar`, async () => {
     await bob1.clickOnElementAll(new ConversationItem(bob1, alice.userName));

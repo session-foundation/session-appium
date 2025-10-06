@@ -31,24 +31,22 @@ export abstract class LocatorsInterface {
 
 export function describeLocator(locator: StrategyExtractionObj & { text?: string }): string {
   const { strategy, selector, text } = locator;
-  const base = `${strategy} "${selector}"`;
+
+  // Trim selector if its too long, show beginning and end
+  const maxSelectorLength = 80;
+  const halfLength = Math.floor(maxSelectorLength / 2);
+  const trimmedSelector =
+    selector.length > maxSelectorLength
+      ? `${selector.substring(0, halfLength)}…${selector.substring(selector.length - halfLength)}`
+      : selector;
+
+  const base = `${strategy} "${trimmedSelector}"`;
   return text ? `${base} and text "${text}"` : base;
 }
 
 // Returns the expected screenshot path for a locator, optionally varying by state
 export abstract class LocatorsInterfaceScreenshot extends LocatorsInterface {
   abstract screenshotFileName(state?: ElementStates): string;
-}
-// When applying a nickname or username change
-export class TickButton extends LocatorsInterface {
-  public build() {
-    switch (this.platform) {
-      case 'android':
-        return { strategy: 'accessibility id', selector: 'Set' } as const;
-      case 'ios':
-        return { strategy: 'accessibility id', selector: 'Done' } as const;
-    }
-  }
 }
 
 export class ApplyChanges extends LocatorsInterface {
@@ -86,13 +84,13 @@ export class ReadReceiptsButton extends LocatorsInterface {
   }
 }
 
-export class ExitUserProfile extends LocatorsInterface {
+export class CloseSettings extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'accessibility id',
-          selector: 'Navigate up',
+          selector: 'Close',
         } as const;
       case 'ios':
         return {
@@ -103,13 +101,37 @@ export class ExitUserProfile extends LocatorsInterface {
   }
 }
 
-export class UsernameSettings extends LocatorsInterface {
+export class UsernameDisplay extends LocatorsInterface {
+  public text: string | undefined;
+  constructor(device: DeviceWrapper, text?: string) {
+    super(device);
+    this.text = text;
+  }
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Display name',
+          text: this.text,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Username',
+          text: this.text,
+        } as const;
+    }
+  }
+}
+
+export class EditUsernameButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'accessibility id',
-          selector: 'Display name',
+          selector: 'Edit',
         } as const;
       case 'ios':
         return {
@@ -125,13 +147,30 @@ export class UsernameInput extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
-          selector: 'Enter display name',
+          strategy: 'class name',
+          selector: 'android.widget.EditText',
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Username input',
+        } as const;
+    }
+  }
+}
+
+export class ClearInputButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'clear-input-button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'id',
+          selector: 'clear-input-button',
         } as const;
     }
   }
@@ -154,22 +193,6 @@ export class FirstGif extends LocatorsInterface {
   }
 }
 
-export class MediaMessage extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Media message',
-        };
-      case 'ios':
-        return {
-          strategy: 'class name',
-          selector: 'XCUIElementTypeImage',
-        };
-    }
-  }
-}
 export class BlockUser extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -223,7 +246,7 @@ export class JoinCommunityButton extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
+          strategy: 'id',
           selector: 'Join community button',
         };
       case 'ios':
@@ -240,7 +263,7 @@ export class CommunityInput extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
+          strategy: 'id',
           selector: 'Community input',
         };
       case 'ios':
@@ -360,12 +383,12 @@ export class BlockedContactsSettings extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'accessibility id',
-          selector: 'Blocked contacts',
+          selector: 'qa-blocked-contacts-settings-item',
         };
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Blocked Contacts',
+          selector: 'Block contacts - Navigation',
         };
     }
   }
@@ -437,9 +460,8 @@ export class ShareExtensionIcon extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'com.google.android.apps.photos:id/text',
-          text: `${getAppDisplayName()}`, // Session QA or AQA
+          strategy: '-android uiautomator',
+          selector: `new UiSelector().text("${getAppDisplayName()}")`, // Session QA or AQA
         };
       case 'ios':
         return {

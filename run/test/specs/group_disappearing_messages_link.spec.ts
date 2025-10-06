@@ -6,7 +6,12 @@ import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { LinkPreviewMessage } from './locators';
-import { MessageInput, OutgoingMessageStatusSent, SendButton } from './locators/conversation';
+import {
+  MessageBody,
+  MessageInput,
+  OutgoingMessageStatusSent,
+  SendButton,
+} from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -28,6 +33,7 @@ const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const maxWait = 35_000; // 30s plus buffer
 
 async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  let sentTimestamp: number;
   const testGroupName = 'Testing disappearing messages';
   const {
     devices: { alice1, bob1, charlie1 },
@@ -39,7 +45,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
       testInfo,
     });
   });
-  await test.step(TestSteps.DISAPPEARING_MESSAGES.SET_DISAPPEARING_MSG, async () => {
+  await test.step(TestSteps.DISAPPEARING_MESSAGES.SET(time), async () => {
     await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   });
   await test.step(TestSteps.SEND.LINK, async () => {
@@ -63,18 +69,17 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
       ...new OutgoingMessageStatusSent(alice1).build(),
       maxWait: 20000,
     });
+    sentTimestamp = Date.now();
   });
   // Wait for 30 seconds to disappear
   await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
     if (platform === 'ios') {
       await Promise.all(
         [alice1, bob1, charlie1].map(device =>
-          device.hasElementBeenDeleted({
-            strategy: 'accessibility id',
-            selector: 'Message body',
+          device.hasElementDisappeared({
+            ...new MessageBody(device, testLink).build(),
             maxWait,
-            text: testLink,
-            preventEarlyDeletion: true,
+            actualStartTime: sentTimestamp,
           })
         )
       );
@@ -82,9 +87,10 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
     if (platform === 'android') {
       await Promise.all(
         [alice1, bob1, charlie1].map(device =>
-          device.hasElementBeenDeleted({
+          device.hasElementDisappeared({
             ...new LinkPreviewMessage(device).build(),
             maxWait,
+            actualStartTime: sentTimestamp,
           })
         )
       );

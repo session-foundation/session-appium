@@ -3,7 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
-import { DeletedMessage } from './locators/conversation';
+import { DeletedMessage, MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
@@ -25,14 +25,10 @@ async function unsendMessage(platform: SupportedPlatformsType, testInfo: TestInf
   const testMessage = 'Checking unsend functionality';
 
   // send message from User A to User B
-  const sentMessage = await alice1.sendMessage(testMessage);
+  await alice1.sendMessage(testMessage);
   // await sleepFor(1000);
-  await bob1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: sentMessage,
-  });
-  await alice1.longPressMessage(sentMessage);
+  await bob1.waitForTextElementToBePresent(new MessageBody(bob1, testMessage));
+  await alice1.longPressMessage(testMessage);
   // Select Delete icon
   await alice1.clickOnByAccessibilityID('Delete message');
   // Check modal is correct

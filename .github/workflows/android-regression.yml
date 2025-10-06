@@ -43,30 +43,15 @@ on:
           - '2'
         default: '0'
 
-      PRINT_FAILED_TEST_LOGS:
-        description: 'print failed test logs (1 to enable) - DONT DO FOR FULL REGRESSION (it crashes github)'
+      LOG_LEVEL:
+        description: 'Test logging verbosity (WARNING: anything other than minimal mode may crash GitHub Actions on large test runs)'
         required: true
         type: choice
         options:
-          - '0'
-          - '1'
-        default: '0'
-      PRINT_ONGOING_TEST_LOGS:
-        description: 'print ongoing test logs (1 to enable) - DONT DO FOR FULL REGRESSION (it crashes github)'
-        required: true
-        type: choice
-        options:
-          - '0'
-          - '1'
-        default: '0'
-      HIDE_WEBDRIVER_LOGS:
-        description: 'print webdriver logs (1 to hide, 0 to show). PRINT_ONGOING_TEST_LOGS or PRINT_FAILED_TEST_LOGS must be 1'
-        required: true
-        type: choice
-        options:
-          - '0'
-          - '1'
-        default: '1'
+          - 'minimal' # Recommended for full regressions
+          - 'failures' # Show failed test logs stdout/stderr
+          - 'verbose' # Ongoing and failed test logs
+        default: 'minimal'
 
 jobs:
   android-regression:
@@ -83,8 +68,9 @@ jobs:
       APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
       ANDROID_SDK_ROOT: '/opt/android'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
-      PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
-      PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
+      _TESTING: 1 # Always hide webdriver logs (@appium/support/ flag)
+      PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL != 'minimal' && '1' || '0' }} # Show stdout/stderr if test fails (@session-foundation/playwright-reporter/ flag)
+      PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'verbose' && '1' || '0' }} # Show everything as it happens (@session-foundation/playwright-reporter/ flag)
       IOS_1_SIMULATOR: '<just_not_empty>'
       IOS_2_SIMULATOR: '<just_not_empty>'
       IOS_3_SIMULATOR: '<just_not_empty>'
@@ -107,15 +93,15 @@ jobs:
         uses: ./github/actions/fetch-allure-history
         if: ${{ env.ALLURE_ENABLED == 'true' }}
         with:
-          PLATFORM: ${{env.PLATFORM}}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+          PLATFORM: ${{ env.PLATFORM }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: ./github/actions/print-runner-details
         with:
           APK_URL: ${{ github.event.inputs.APK_URL }}
           RISK: ${{ github.event.inputs.RISK }}
-          PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
-          PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
+          PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
+          PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
           PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
 
       - name: Download APK & extract it
@@ -166,9 +152,12 @@ jobs:
         env:
           PLAYWRIGHT_WORKERS_COUNT: 4
           DEVICES_PER_TEST_COUNT: 1
+          _TESTING: ${{ env._TESTING }}
+          PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
+          PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
         run: |
           pwd
-          TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
+          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results
@@ -182,9 +171,12 @@ jobs:
         env:
           PLAYWRIGHT_WORKERS_COUNT: 2
           DEVICES_PER_TEST_COUNT: 2
+          _TESTING: ${{ env._TESTING }}
+          PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
+          PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
         run: |
           pwd
-          _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
+          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results
@@ -192,15 +184,18 @@ jobs:
           PLATFORM: ${{ env.PLATFORM }}
           UPLOAD_IDENTIFIER: 'devices-2-test-run'
 
-      - name: Run the tests ​​other tests with 1 worker
+      - name: Run the other tests with 1 worker
         continue-on-error: true
         id: other-devices-test-run
         env:
           PLAYWRIGHT_WORKERS_COUNT: 1
           DEVICES_PER_TEST_COUNT: 4
+          _TESTING: ${{ env._TESTING }}
+          PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
+          PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
         run: |
           pwd
-          _TESTING=${{ github.event.inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
+          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
 
       - name: Generate and publish test report
         uses: ./github/actions/generate-publish-test-report
@@ -227,7 +222,7 @@ jobs:
           PLATFORM: ${{ env.PLATFORM }}
 
       - name: Check if any tests failed
-        if: steps.devices-1-test-run != 'success' || steps.devices-2-test-run != 'success' || steps.other-devices-test-run.outcome != 'success'
+        if: steps.devices-1-test-run.outcome != 'success' || steps.devices-2-test-run.outcome != 'success' || steps.other-devices-test-run.outcome != 'success'
         run: echo 'Some test failed, see above'; exit 1
 
       - name: Stop emulators
