@@ -329,6 +329,8 @@ export class DeviceWrapper {
       { strategy: 'id' as Strategy, pattern: /resource-id="([^"]+)"/g },
     ];
 
+
+    // If this list gets out of hand, consider lowering the threshold
     const blacklist = [
       { from: 'Voice message', to: 'New voice message' },
       { from: 'Message sent status: Sent', to: 'Message sent status: Sending' },
@@ -386,6 +388,7 @@ export class DeviceWrapper {
 
       // Don't heal blacklisted pairs
       if (isBlacklisted) {
+        this.log(`Skipping healing: prevented "${selector}" from healing to "${match.originalSelector}"`);
         continue;
       }
 
