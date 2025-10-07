@@ -16,7 +16,6 @@ import {
   describeLocator,
   DownloadMediaButton,
   FirstGif,
-  ImageName,
   ImagePermissionsModalAllow,
   LocatorsInterface,
   ReadReceiptsButton,
@@ -573,7 +572,7 @@ export class DeviceWrapper {
           skipHealing: true,
         });
       } catch (fallbackError) {
-        throw new Error(`Element ${primaryDescription} and ${fallbackDescription} not found.`);
+        throw new Error(`Element ${primaryDescription} or ${fallbackDescription} not found.`);
       }
     }
   }
@@ -2153,7 +2152,11 @@ export class DeviceWrapper {
         selector: 'Image button',
       });
       await sleepFor(500);
-      await this.clickOnElementAll(new ImageName(this));
+      await this.matchAndTapImage(
+        { strategy: 'xpath', selector: '//*[starts-with(@content-desc, "Photo taken on")]' },
+        profilePicture
+      );
+      // await this.clickOnElementAll(new ImageName(this));
       await this.clickOnElementById('network.loki.messenger.qa:id/crop_image_menu_crop');
     }
     await this.clickOnElementAll(new SaveProfilePictureButton(this));

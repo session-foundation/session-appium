@@ -1,11 +1,20 @@
 import { existsSync, lstatSync } from 'fs';
 import { toNumber } from 'lodash';
+import * as path from 'path';
 
 function existsAndFileOrThrow(path: string, id: string) {
   if (!existsSync(path) || !lstatSync(path).isFile()) {
-    throw new Error(`"${id}" does not exist at: ${path} or not a path`);
+    throw new Error(`"${id}" not found or not a file at: ${path}`);
   }
 }
+
+const getAndroidSdkRoot = () => {
+  const sdkRoot = process.env.ANDROID_SDK_ROOT;
+  if (!sdkRoot) {
+    throw new Error('env variable `ANDROID_SDK_ROOT` needs to be set');
+  }
+  return sdkRoot;
+};
 
 export function getAndroidApk() {
   const fromEnv = process.env.ANDROID_APK;
@@ -17,48 +26,53 @@ export function getAndroidApk() {
 }
 
 export const getAdbFullPath = () => {
-  const fromEnv = process.env.APPIUM_ADB_FULL_PATH;
-  if (!fromEnv) {
-    throw new Error('env variable `APPIUM_ADB_FULL_PATH` needs to be set');
-  }
-
-  existsAndFileOrThrow(fromEnv, 'adb');
-
-  return fromEnv;
+  const sdkRoot = getAndroidSdkRoot();
+  const adbPath = path.join(sdkRoot, 'platform-tools', 'adb');
+  existsAndFileOrThrow(adbPath, 'adb');
+  return adbPath;
 };
 
 export const getEmulatorFullPath = () => {
-  const fromEnv = process.env.EMULATOR_FULL_PATH;
-
-  if (!fromEnv) {
-    throw new Error('env variable `EMULATOR_FULL_PATH` needs to be set');
-  }
-  existsAndFileOrThrow(fromEnv, 'EMULATOR_FULL_PATH');
-
-  return fromEnv;
+  const sdkRoot = getAndroidSdkRoot();
+  const emulatorPath = path.join(sdkRoot, 'emulator', 'emulator');
+  existsAndFileOrThrow(emulatorPath, 'emulator');
+  return emulatorPath;
 };
 
 export const getAvdManagerFullPath = () => {
-  const fromEnv = process.env.AVD_MANAGER_FULL_PATH;
+  const sdkRoot = getAndroidSdkRoot();
+  // Try multiple possible locations
+  const possiblePaths = [
+    path.join(sdkRoot, 'cmdline-tools', 'latest', 'bin', 'avdmanager'),
+    path.join(sdkRoot, 'cmdline-tools', 'tools', 'bin', 'avdmanager'),
+    path.join(sdkRoot, 'tools', 'bin', 'avdmanager'),
+  ];
 
-  if (!fromEnv) {
-    throw new Error('env variable `AVD_MANAGER_FULL_PATH` needs to be set');
+  for (const path of possiblePaths) {
+    if (existsSync(path) && lstatSync(path).isFile()) {
+      return path;
+    }
   }
-  existsAndFileOrThrow(fromEnv, 'AVD_MANAGER_FULL_PATH');
 
-  return fromEnv;
+  throw new Error(`avdmanager not found in any expected location under ${sdkRoot}`);
 };
 
 export const getSdkManagerFullPath = () => {
-  const fromEnv = process.env.SDK_MANAGER_FULL_PATH;
+  const sdkRoot = getAndroidSdkRoot();
+  // Try multiple possible locations
+  const possiblePaths = [
+    path.join(sdkRoot, 'cmdline-tools', 'latest', 'bin', 'sdkmanager'),
+    path.join(sdkRoot, 'cmdline-tools', 'tools', 'bin', 'sdkmanager'),
+    path.join(sdkRoot, 'tools', 'bin', 'sdkmanager'),
+  ];
 
-  if (!fromEnv) {
-    throw new Error('env variable `SDK_MANAGER_FULL_PATH` needs to be set');
+  for (const path of possiblePaths) {
+    if (existsSync(path) && lstatSync(path).isFile()) {
+      return path;
+    }
   }
 
-  existsAndFileOrThrow(fromEnv, 'SDK_MANAGER_FULL_PATH');
-
-  return fromEnv;
+  throw new Error(`sdkmanager not found in any expected location under ${sdkRoot}`);
 };
 
 export const getAndroidSystemImageToUse = () => {

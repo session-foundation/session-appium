@@ -5,6 +5,7 @@ import { TestSteps } from '../../types/allure';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { CloseSettings } from './locators';
 import { CopyURLButton } from './locators/global';
 import {
   AppearanceMenuItem,
@@ -71,7 +72,7 @@ for (const { titleSnippet, descriptionSnippet, testStepName, trigger } of review
       await test.step(testStepName, async () => {
         await device.clickOnElementAll(new UserSettings(device));
         await trigger(device);
-        await device.back();
+        await device.clickOnElementAll(new CloseSettings(device));
       });
       await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('App Review'), async () => {
         await device.checkModalStrings(

@@ -1,93 +1,118 @@
-# Automation testing for Session
+# Automation Testing for Session
 
-This repository holds the code to do integration tests with Appium and Session on iOS and Android.
+Integration tests for Session app on iOS and Android using Playwright and Appium.
 
-# Setup
+## Quick Start
 
-## Android SDK & Emulators
+1. **Install dependencies:**
+   ```bash
+   nvm use
+   npm install -g yarn
+   yarn install --immutable
+   ```
 
-First, you need to download android studio at https://developer.android.com/studio.
+2. **Install Git LFS:**
+   ```bash
+   # macOS
+   brew install git-lfs
+   
+   # Linux
+   sudo apt install git-lfs
 
-Once installed, run it, open the SDK Manager and install the latest SDK tools.
+   # Then
+   git lfs install
+   git lfs pull  # Ensure all LFS files are downloaded
+   ```
+3. **Setup environment:**
+   ```bash
+   cp .env.sample .env
+   # Edit .env with your specific paths - see Environment Configuration below
+   ```
+4. **Run tests locally:**
+   ```bash
+   yarn start-server                        # Starts Appium server
+   yarn test                                # Run all tests
+   yarn test-android                        # Android tests only
+   yarn test-ios                            # iOS tests only
+   yarn test-one 'Test name'                # Run specific test (both platforms)
+   yarn test-one 'Test name @android'       # Run specific test on one platform
+   ```
 
-Once this is done, open up the AVD Manager, click on "Create Device" -> "Pixel 6" -> Next -> Select the System Image you want (I did my tests with **UpsideDownCake**), install it, select it, "Next" and "Finish".
+## Local Development
 
-Then, create a second emulator following the exact same steps (the tests need 2 different emulators to run).
+Note: The tests use devices with specific resolutions for visual regression testing - ensure you have these available (see below).
 
-Once done, you should be able to start each emulators and have them running at the same time. They will need to be running for the tests to work, because Appium won't start them.
+### Android
 
-## Environment variables needed
+Prerequisites: Android Studio installed with SDK tools available
+1. Create 3x Pixel 6 emulators via AVD Manager (minimum 3 emulators - tests require up to 3 devices simultaneously)
+    - Recommended system image is Android API 34 with Google Play services
+2. Download Session binaries from [the build repository](https://oxen.rocks)
+   - Choose the appropriate binary based on your network access:
+     - QA: Works on general networks
+     - AutomaticQA: Requires local devnet access
+3. Set environment variable: 
+   ```bash   
+   # In your .env file
+   ANDROID_APK=/path/to/session-android.apk
+   ```
+4. Start emulators manually - they need to be running before tests start (Appium won't launch them automatically)
+   ```bash
+   emulator @<your-emulator-name>
+   ```
 
-Before you can start the tests, you need to setup some environment variables. See the file .env.sample for an example.
+### iOS  
+Prerequisites: Xcode installed
 
-#### ANDROID_SDK_ROOT
+1. Create iOS simulators with preloaded media attachments:
+   ```bash   
+   # Local development (create 3 simulators to be able to run all tests)
+   yarn create-simulators 3
+   # Or specify custom count
+   yarn create-simulators <number>
+   ```
+2. Download Session binaries from the [the build repository](https://oxen.rocks)
+3. Extract .app file and copy Session.app to an easily accessible location
+4. Set environment variable:
 
-`ANDROID_SDK_ROOT` should point to the folder containing the sdks, so the folder containing folders like `platform-tools`, `system-images`, etc...
-`export ANDROID_SDK_ROOT=~/Android/Sdk`
+   ```bash   
+   # In your .env file
+   IOS_APP_PATH_PREFIX=/path/to/Session.app
+   ```
 
-#### APPIUM_ANDROID_BINARIES_ROOT
+### Environment Configuration
 
-`APPIUM_ANDROID_BINARIES_ROOT` should point to the file containing the apks to install for testing (such as `session-1.18.2-x86.apk`)
-`export APPIUM_ANDROID_BINARIES_ROOT=~/appium-binaries`
+Copy `.env.sample` to `.env` and configure the following:
 
-#### APPIUM_ADB_FULL_PATH
-
-`APPIUM_ADB_FULL_PATH` should point to the binary of adb inside the ANDROID_SDK folder
-`export APPIUM_ADB_FULL_PATH=~/Android/Sdk/platform-tools/adb`
-
-### Multiple adb binaries
-
-Having multiple adb on your system will make tests unreliable, because the server will be restarted by Appium.
-
-On linux, if running `which adb` does not point to the `adb` binary in the `ANDROID_SDK_ROOT` you will have issues.
-
-You can get rid of adb on linux by running
-
+**Required paths:**
+```bash
+ANDROID_SDK_ROOT=/path/to/Android/Sdk          # SDK tools auto-discovered from here
+ANDROID_APK=/path/to/session-android.apk       # Android APK for testing
+IOS_APP_PATH_PREFIX=/path/to/Session.app       # iOS app for testing
 ```
-sudo apt remove adb
-sudo apt remove android-tools-adb
+
+**Test configuration:**
+```bash
+_TESTING=1                           # Skip printing appium/wdio logs
+PLAYWRIGHT_RETRIES_COUNT=0           # Test retry attempts
+PLAYWRIGHT_REPEAT_COUNT=0            # Successful test repeat count
+PLAYWRIGHT_WORKERS_COUNT=1           # Parallel test workers
+CI=0                                 # Set to 1 to simulate CI (mostly for Allure reporting)
+ALLURE_ENABLED='false'               # Set to 'true' to generate Allure reports (in conjunction with CI=1)
 ```
 
-`which adb` should not return anything.
+### Multiple ADB Binaries Warning
 
-Somehow, Appium asks for the sdk tools but do not force the adb binary to come from the sdk tools folder. Making sure that there is no adb in your path should solve this.
+Having multiple adb installations can cause test instability. On Linux, ensure only the SDK version is available:
 
-## Running tests on iOS Emulators
-
-First you need to get correct branch of Session that you want to test from Github. See [(https://github.com/session-foundation/session-ios/releases/)] and download the latest **ipa** under **Assets**
-
-Then to access the **.app** file that Appium needs for testing you need to build in Xcode and then find .app in your **Derived Data** folder for Xcode.
-
-For Mac users this file will exist in:
-
-Macintosh HD > Username > Library > Developer > Xcode > Derived Data > (Then there will be a version of Session with a very long line of letters) > Build > Products > App store-iphonesimulator > Session.app
-
-Then Copy and Paste then app file onto Desktop (or anywhere you can access easily) then each time you build, navigate back to the file in Derived Data and copy and paste back to Desktop.
-Then set the path to Session.app in your ios capabilities file.
-
-## Appium & tests setup
-
-First, install nvm for your system (https://github.com/nvm-sh/nvm).
-For windows, head here: https://github.com/coreybutler/nvm-windows
-For Mac, https://github.com/nvm-sh/nvm
-
-```
-nvm install #install node version from the .nvmrc file, currently v16.13.0
-nvm use # use that same node version, currently v16.13.0
-npm install -g yarn
-yarn install --frozen # to install packages referenced from yarn.lock
+```bash
+sudo apt remove adb android-tools-adb
+which adb  # Should return nothing
 ```
 
-Then, choose an option:
+## Test Organization
 
-```
-yarn tsc # Build typescript files
-yarn run test # Run all the tests
-
-Platform specific
-yarn run test-android # To run just Android tests
-yarn run test-ios # To run just iOS tests
-
-yarn run test-one 'Name of test' # To run one test (on both platforms)
-yarn run test-one 'Name of test android/ios' # To run one test on either platform
-```
+Tests are tagged with device requirements and risk levels:
+- `@N-devices` - N-device tests (N = 1 || 2 || 3)
+- `@high-risk`, `@medium-risk`, `@low-risk` - Risk-based test categorization
+- `@android`, `@ios` - Platform-specific tests

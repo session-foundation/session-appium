@@ -4,6 +4,7 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { TestSteps } from '../../types/allure';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { CloseSettings } from './locators';
 import { ModalHeading } from './locators/global';
 import { PlusButton } from './locators/home';
 import { PathMenuItem, UserSettings } from './locators/settings';
@@ -32,7 +33,7 @@ async function reviewPromptOnce(platform: SupportedPlatformsType, testInfo: Test
     await device.clickOnElementAll(new UserSettings(device));
     await device.clickOnElementAll(new PathMenuItem(device));
     await device.back();
-    await device.back();
+    await device.clickOnElementAll(new CloseSettings(device));
   });
   await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
     await device.checkModalStrings(

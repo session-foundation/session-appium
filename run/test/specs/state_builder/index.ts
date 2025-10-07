@@ -203,23 +203,18 @@ export async function open_Alice1_Bob1_Charlie1_friends_group({
   };
 }
 
-/**
- * Open 4 devices, one for Alice, one for Bob, one for Charlie, and one extra, unlinked.
- * This function is used for testing that we can do a bunch of actions without having a linked device,
- * and then that linking a new device recovers the correct state.
- */
-export async function open_Alice1_Bob1_Charlie1_Unknown1({
+export async function open_Alice1_Bob1_friends_group_Unknown1({
   platform,
   groupName,
-  focusGroupConvo = true,
+  focusGroupConvo,
   testInfo,
 }: WithPlatform &
   WithFocusGroupConvo & {
     groupName: string;
     testInfo: TestInfo;
   }) {
-  const stateToBuildKey = '3friendsInGroup';
-  const appsToOpen = 4;
+  const stateToBuildKey = '2friendsInGroup';
+  const appsToOpen = 3;
   const result = await openAppsWithState({
     platform,
     appsToOpen,
@@ -229,8 +224,7 @@ export async function open_Alice1_Bob1_Charlie1_Unknown1({
   });
   result.devices[0].setDeviceIdentity('alice1');
   result.devices[1].setDeviceIdentity('bob1');
-  result.devices[2].setDeviceIdentity('charlie1');
-  result.devices[3].setDeviceIdentity('unknown1'); // this device will be linked later
+  result.devices[2].setDeviceIdentity('unknown1'); // this device will be linked later
   const seedPhrases = result.prebuilt.users.map(m => m.seedPhrase);
   await linkDevices(result.devices.slice(0, -1), seedPhrases);
 
@@ -238,21 +232,17 @@ export async function open_Alice1_Bob1_Charlie1_Unknown1({
 
   const alice1 = result.devices[0];
   const bob1 = result.devices[1];
-  const charlie1 = result.devices[2];
 
   const formattedDevices = {
     alice1,
     bob1,
-    charlie1,
-    unknown1: result.devices[3], // not assigned yet
+    unknown1: result.devices[2], // not assigned yet
   };
   const alice = result.prebuilt.users[0];
   const bob = result.prebuilt.users[1];
-  const charlie = result.prebuilt.users[2];
-  const formattedUsers: WithUsers<3> = {
+  const formattedUsers: WithUsers<2> = {
     alice,
     bob,
-    charlie,
   };
   if (focusGroupConvo) {
     await focusConvoOnDevices({
@@ -381,6 +371,61 @@ export async function open_Alice2_Bob1_friends({
       // alice1 opens convo with bob
       { device: alice1, convoName: bob.userName },
     ]);
+  }
+
+  return {
+    devices: {
+      // alice has two devices linked right away
+      alice1,
+      alice2,
+      bob1,
+    },
+    prebuilt: { ...formattedUsers },
+  };
+}
+
+export async function open_Alice2_Bob1_friends_group({
+  platform,
+  groupName,
+  focusGroupConvo = true,
+  testInfo,
+}: WithPlatform &
+  WithFocusGroupConvo & {
+    groupName: string;
+    testInfo: TestInfo;
+  }) {
+  const stateToBuildKey = '2friendsInGroup';
+  const appsToOpen = 3;
+  const result = await openAppsWithState({
+    platform,
+    appsToOpen,
+    stateToBuildKey,
+    groupName,
+    testInfo,
+  });
+  result.devices[0].setDeviceIdentity('alice1');
+  result.devices[1].setDeviceIdentity('alice2');
+  result.devices[2].setDeviceIdentity('bob1');
+  const alice = result.prebuilt.users[0];
+  const bob = result.prebuilt.users[1];
+  // we want the first user to have the first 2 devices linked
+  const seedPhrases = [alice.seedPhrase, alice.seedPhrase, bob.seedPhrase];
+  await linkDevices(result.devices, seedPhrases);
+
+  const alice1 = result.devices[0];
+  const alice2 = result.devices[1];
+  const bob1 = result.devices[2];
+
+  const formattedUsers: WithUsers<2> = {
+    alice,
+    bob,
+  };
+
+  if (focusGroupConvo) {
+    await focusConvoOnDevices({
+      devices: result.devices,
+      convoName: result.prebuilt.group.groupName,
+    });
   }
 
   return {

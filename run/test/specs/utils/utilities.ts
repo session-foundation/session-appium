@@ -20,7 +20,8 @@ export async function runScriptAndLog(toRun: string, verbose = false): Promise<s
     if (
       result &&
       result.stderr &&
-      !result.stderr.startsWith('All files should be loaded. Notifying the device')
+      !result.stderr.startsWith('All files should be loaded. Notifying the device') &&
+      !result.stderr.includes('file pushed')
     ) {
       if (verbose) {
         console.log(`cmd which failed: "${toRun}"`);

@@ -1,50 +1,56 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
 import { ConversationHeaderName, MessageBody } from './locators/conversation';
 import { ConversationItem } from './locators/home';
-import { newUser } from './utils/create_account';
-import { createGroup } from './utils/create_group';
-import { closeApp, openAppFourDevices, SupportedPlatformsType } from './utils/open_app';
+import { open_Alice1_Bob1_friends_group_Unknown1 } from './state_builder';
+import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { restoreAccount } from './utils/restore_account';
 
 bothPlatformsIt({
   title: 'Restore group',
   risk: 'high',
   testCb: restoreGroup,
-  countOfDevicesNeeded: 4,
+  countOfDevicesNeeded: 3,
 });
 async function restoreGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const testGroupName = 'Restore group';
-  const { device1, device2, device3, device4 } = await openAppFourDevices(platform, testInfo);
-  const [alice, bob, charlie] = await Promise.all([
-    newUser(device1, USERNAME.ALICE),
-    newUser(device2, USERNAME.BOB),
-    newUser(device3, USERNAME.CHARLIE),
-  ]);
-  await createGroup(platform, device1, alice, device2, bob, device3, charlie, testGroupName);
-
-  const aliceMessage = `${USERNAME.ALICE} to ${testGroupName}`;
-  const bobMessage = `${USERNAME.BOB} to ${testGroupName}`;
-  const charlieMessage = `${USERNAME.CHARLIE} to ${testGroupName}`;
-  await restoreAccount(device4, alice);
+  const testGroupName = 'Group to test adding contact';
+  const aliceMessage = 'Hello this is alice';
+  const bobMessage = 'Hello this is bob';
+  const {
+    devices: { alice1, bob1, unknown1 },
+    prebuilt,
+  } = await open_Alice1_Bob1_friends_group_Unknown1({
+    platform,
+    groupName: testGroupName,
+    focusGroupConvo: true,
+    testInfo: testInfo,
+  });
+  const alice = {
+    userName: prebuilt.alice.userName,
+    accountID: prebuilt.alice.sessionId,
+    recoveryPhrase: prebuilt.alice.seedPhrase,
+  };
+  await alice1.sendMessage(aliceMessage);
+  await bob1.sendMessage(bobMessage);
+  unknown1.setDeviceIdentity('alice2');
+  await restoreAccount(unknown1, alice);
   //   Check that group has loaded on linked device
-  await device4.clickOnElementAll(new ConversationItem(device4, testGroupName));
+  await unknown1.clickOnElementAll(new ConversationItem(unknown1, testGroupName));
   // Check the group name has loaded
-  await device4.waitForTextElementToBePresent(new ConversationHeaderName(device4, testGroupName));
+  await unknown1.waitForTextElementToBePresent(new ConversationHeaderName(unknown1, testGroupName));
   // Check all messages are present
   await Promise.all(
-    [aliceMessage, bobMessage, charlieMessage].map(message =>
-      device4.waitForTextElementToBePresent(new MessageBody(device4, message))
+    [aliceMessage, bobMessage].map(message =>
+      unknown1.waitForTextElementToBePresent(new MessageBody(unknown1, message))
     )
   );
   const testMessage2 = 'Checking that message input is working';
-  await device4.sendMessage(testMessage2);
+  await unknown1.sendMessage(testMessage2);
   await Promise.all(
-    [device1, device2, device3].map(device =>
+    [alice1, bob1, unknown1].map(device =>
       device.waitForTextElementToBePresent(new MessageBody(device, testMessage2))
     )
   );
-  await closeApp(device1, device2, device3, device4);
+  await closeApp(alice1, bob1, unknown1, unknown1);
 }

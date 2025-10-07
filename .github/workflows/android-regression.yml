@@ -4,6 +4,14 @@ run-name: '${{ inputs.RISK }} regressions on ${{ github.head_ref || github.ref }
 on:
   workflow_dispatch:
     inputs:
+      RUNNER:
+        description: 'Which runner to use'
+        required: true
+        type: choice
+        options:
+          - 'linux'
+          - 'mac'
+        default: 'linux'
       APK_URL:
         description: 'apk url to test (.tar.xz)'
         required: true
@@ -55,9 +63,13 @@ on:
 
 jobs:
   android-regression:
-    runs-on: [self-hosted, linux, X64, qa-android]
+    runs-on: ${{ github.event.inputs.RUNNER == 'mac' && fromJSON('["self-hosted", "macOS"]') || fromJSON('["self-hosted", "linux", "X64", "qa-android"]') }}
     env:
       PLATFORM: 'android'
+      EMULATOR_COUNT: ${{ github.event.inputs.RUNNER == 'mac' && '6' || '4' }} # macOS runner can support 6 emulators, linux runner only 4
+      WORKERS_1_DEVICE: ${{ github.event.inputs.RUNNER == 'mac' && '6' || '4' }} # 6 or 4 workers, 1 device each
+      WORKERS_2_DEVICE: ${{ github.event.inputs.RUNNER == 'mac' && '3' || '2' }} # 3 or 2 workers, 2 devices each
+      WORKERS_3_DEVICE: ${{ github.event.inputs.RUNNER == 'mac' && '2' || '1' }} # 2 or 1 worker(s), 3 devices each
       APK_URL: ${{ github.event.inputs.APK_URL }}
       BUILD_NUMBER: ${{ github.event.inputs.BUILD_NUMBER }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -65,8 +77,6 @@ jobs:
       ALLURE_ENABLED: ${{ github.event.inputs.ALLURE_ENABLED}}
       IOS_APP_PATH_PREFIX: '<just_not_empty>'
       ANDROID_APK: './extracted/session-android.apk'
-      APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
-      ANDROID_SDK_ROOT: '/opt/android'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
       _TESTING: 1 # Always hide webdriver logs (@appium/support/ flag)
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL != 'minimal' && '1' || '0' }} # Show stdout/stderr if test fails (@session-foundation/playwright-reporter/ flag)
@@ -76,6 +86,40 @@ jobs:
       - uses: actions/checkout@v4
         with:
           lfs: true
+
+      # This is necessary because the macOS runner was not always pulling the lfs files despite checkout with lfs: true
+      # Check if LFS files were actually pulled
+      - name: Verify LFS files
+        run: |
+          echo "Ensuring all LFS screenshot files are downloaded..."
+          git lfs pull --include="run/screenshots/**/*.png"
+
+          echo "=== Verifying screenshot files ==="
+          corrupted_files=0
+          total_files=0
+
+          for file in run/screenshots/**/*.png; do
+            if [[ -f "$file" ]]; then  # Make sure file exists (in case glob doesn't match anything)
+              ((total_files++))
+              if file "$file" | grep -q "PNG image"; then
+                echo "✅ $file"
+              else
+                echo "⚠️  WARNING: $file is not a PNG image - related tests may fail"
+                # Show what it actually is for debugging
+                echo "   File type: $(file "$file")"
+                ((corrupted_files++))
+              fi
+            fi
+          done
+
+          echo "📊 Screenshot verification: $((total_files - corrupted_files))/$total_files files valid"
+
+          if [ $corrupted_files -gt 0 ]; then
+            echo "⚠️ Found $corrupted_files corrupted screenshot files"
+            echo "📝 Tests using these files will be skipped or may fail"
+          else
+            echo "✅ All screenshot files are valid PNG images"
+          fi
 
       - name: Fetch result history from gh-pages
         uses: ./github/actions/fetch-allure-history
@@ -95,7 +139,7 @@ jobs:
       - name: Download APK & extract it
         run: |
           pwd
-          wget -q -O session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
+          curl -L -o session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
           tar xf session-android.apk.tar.xz
           mv session-android-*universal extracted
 
@@ -118,72 +162,79 @@ jobs:
         continue-on-error: true # just so we don't fail if adb wasn't already running
         run: |
           source ./scripts/ci.sh
+          echo "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT}" >> $GITHUB_ENV
           adb kill-server;
           adb start-server;
 
-      - name: Start emulators from snapshot
+      - name: Start emulators
         shell: bash
-        run: |
+        run: | # macOS can handle cold boot, linux cannot
           source ./scripts/ci.sh
-          start_with_snapshots
+          if [[ "${{ github.event.inputs.RUNNER }}" == "mac" ]]; then
+            start_for_snapshots 
+          else
+            start_with_snapshots
+          fi
           wait_for_emulators
-
       - name: List tests part of this run
         uses: ./github/actions/list-tests
         with:
           PLATFORM: ${{ env.PLATFORM }}
           RISK: ${{ github.event.inputs.RISK }}
 
-      - name: Run the 1-devices tests ​​with 4 workers
-        continue-on-error: true
-        id: devices-1-test-run
-        env:
-          PLAYWRIGHT_WORKERS_COUNT: 4
-          DEVICES_PER_TEST_COUNT: 1
+      - name: Run 1-device tests
+        id: test-1-device
+        uses: ./github/actions/run-tests
+        with:
+          PLATFORM: ${{ env.PLATFORM }}
+          RISK: ${{ github.event.inputs.RISK }}
+          WORKERS_COUNT: ${{ env.WORKERS_1_DEVICE }}
+          DEVICES_PER_TEST: 1
           _TESTING: ${{ env._TESTING }}
           PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
           PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
-        run: |
-          pwd
-          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
-      - name: Upload results of this run
+      - name: Upload 1-device test results
         uses: ./github/actions/upload-test-results
         with:
           PLATFORM: ${{ env.PLATFORM }}
-          UPLOAD_IDENTIFIER: 'devices-1-test-run'
+          UPLOAD_IDENTIFIER: devices-1-test-run
 
-      - name: Run the 2-devices tests ​​with 2 workers
-        continue-on-error: true
-        id: devices-2-test-run
-        env:
-          PLAYWRIGHT_WORKERS_COUNT: 2
-          DEVICES_PER_TEST_COUNT: 2
+      - name: Run 2-device tests
+        id: test-2-device
+        uses: ./github/actions/run-tests
+        with:
+          PLATFORM: ${{ env.PLATFORM }}
+          RISK: ${{ github.event.inputs.RISK }}
+          WORKERS_COUNT: ${{ env.WORKERS_2_DEVICE }}
+          DEVICES_PER_TEST: 2
           _TESTING: ${{ env._TESTING }}
           PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
           PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
-        run: |
-          pwd
-          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
 
-      - name: Upload results of this run
+      - name: Upload 2-device test results
         uses: ./github/actions/upload-test-results
         with:
           PLATFORM: ${{ env.PLATFORM }}
-          UPLOAD_IDENTIFIER: 'devices-2-test-run'
+          UPLOAD_IDENTIFIER: devices-2-test-run
 
-      - name: Run the other tests with 1 worker
-        continue-on-error: true
-        id: other-devices-test-run
-        env:
-          PLAYWRIGHT_WORKERS_COUNT: 1
-          DEVICES_PER_TEST_COUNT: 4
+      - name: Run 3-device tests
+        id: test-3-device
+        uses: ./github/actions/run-tests
+        with:
+          PLATFORM: ${{ env.PLATFORM }}
+          RISK: ${{ github.event.inputs.RISK }}
+          WORKERS_COUNT: ${{ env.WORKERS_3_DEVICE }}
+          DEVICES_PER_TEST: '3'
           _TESTING: ${{ env._TESTING }}
           PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
           PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
-        run: |
-          pwd
-          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
+
+      - name: Upload 3-device test results
+        uses: ./github/actions/upload-test-results
+        with:
+          PLATFORM: ${{ env.PLATFORM }}
+          UPLOAD_IDENTIFIER: devices-3-test-run
 
       - name: Generate and publish test report
         uses: ./github/actions/generate-publish-test-report
@@ -196,12 +247,6 @@ jobs:
           RISK: ${{github.event.inputs.RISK}}
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
           GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
-
-      - name: Upload results of this run
-        uses: ./github/actions/upload-test-results
-        with:
-          PLATFORM: ${{ env.PLATFORM }}
-          UPLOAD_IDENTIFIER: 'devices-other-test-run'
 
       - name: Upload csv of this whole run
         uses: ./github/actions/upload-csv-test-results
