@@ -11,14 +11,24 @@ Integration tests for Session app on iOS and Android using Playwright and Appium
    yarn install --immutable
    ```
 
-2. **Setup environment:**
+2. **Install Git LFS:**
+   ```bash
+   # macOS
+   brew install git-lfs
+   
+   # Linux
+   sudo apt install git-lfs
+
+   # Then
+   git lfs install
+   git lfs pull  # Ensure all LFS files are downloaded
+   ```
+3. **Setup environment:**
    ```bash
    cp .env.sample .env
    # Edit .env with your specific paths - see Environment Configuration below
    ```
-
-
-3. **Run tests locally:**
+4. **Run tests locally:**
    ```bash
    yarn start-server                        # Starts Appium server
    yarn test                                # Run all tests
@@ -34,26 +44,41 @@ Note: The tests use devices with specific resolutions for visual regression test
 
 ### Android
 
-Prerequisites: Android Studio installed with SDK tools
-1. Create Pixel 6 emulators via AVD Manager (minimum 3 emulators - tests require up to 3 devices simultaneously)
+Prerequisites: Android Studio installed with SDK tools available
+1. Create 3x Pixel 6 emulators via AVD Manager (minimum 3 emulators - tests require up to 3 devices simultaneously)
     - Recommended system image is Android API 34 with Google Play services
 2. Download Session binaries from [the build repository](https://oxen.rocks)
    - Choose the appropriate binary based on your network access:
      - QA: Works on general networks
      - AutomaticQA: Requires local devnet access
-3. **Start emulators manually** - they need to be running before tests start (Appium won't launch them automatically)
+3. Set environment variable: 
+   ```bash   
+   # In your .env file
+   ANDROID_APK=/path/to/session-android.apk
+   ```
+4. Start emulators manually - they need to be running before tests start (Appium won't launch them automatically)
+   ```bash
+   emulator @<your-emulator-name>
+   ```
 
 ### iOS  
-Prerequisites: Xcode installed with minimum 3 iPhone 16 Pro Max simulators. The recommended Simulator runtime is iOS 18.3 or higher 
-1. Download Session binaries from [the build repository](https://oxen.rocks)
-2. Extract .app file for Appium testing:
-   - If using pre-built binaries from the CI, use the .app directly
-   - Copy Session.app to an easily accessible location
-3. Get iOS simulator UUIDs:
-   ```bash
-   xcrun simctl list devices | grep "iPhone 16 Pro Max"
+Prerequisites: Xcode installed
+
+1. Create iOS simulators with preloaded media attachments:
+   ```bash   
+   # Local development (create 3 simulators to be able to run all tests)
+   yarn create-simulators 3
+   # Or specify custom count
+   yarn create-simulators <number>
    ```
-4. Update environment configuration with path to Session.app and device UUIDs
+2. Download Session binaries from the [the build repository](https://oxen.rocks)
+3. Extract .app file and copy Session.app to an easily accessible location
+4. Set environment variable:
+
+   ```bash   
+   # In your .env file
+   IOS_APP_PATH_PREFIX=/path/to/Session.app
+   ```
 
 ### Environment Configuration
 
@@ -68,7 +93,9 @@ IOS_APP_PATH_PREFIX=/path/to/Session.app       # iOS app for testing
 
 **Test configuration:**
 ```bash
+_TESTING=1                           # Skip printing appium/wdio logs
 PLAYWRIGHT_RETRIES_COUNT=0           # Test retry attempts
+PLAYWRIGHT_REPEAT_COUNT=0            # Successful test repeat count
 PLAYWRIGHT_WORKERS_COUNT=1           # Parallel test workers
 CI=0                                 # Set to 1 to simulate CI (mostly for Allure reporting)
 ALLURE_ENABLED='false'               # Set to 'true' to generate Allure reports (in conjunction with CI=1)
