@@ -1,7 +1,7 @@
 import { execSync } from 'child_process';
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 
-import type { Simulator } from './create_ios_simulators';
+import type { Simulator } from '../run/test/specs/utils/capabilities_ios';
 
 import { shutdownSimulator } from './ios_shared';
 
@@ -17,17 +17,22 @@ import { shutdownSimulator } from './ios_shared';
  * Usage:
  *   yarn cleanup-simulators
  */
+function deleteSimulator(udids: string[] | string): number {
+  const udidArray = Array.isArray(udids) ? udids : [udids];
+  let deleted = 0;
 
-function deleteSimulator(udid: string): boolean {
-  shutdownSimulator(udid);
-  try {
-    execSync(`xcrun simctl delete ${udid}`, { stdio: 'pipe' });
-    return true;
-  } catch {
-    return false;
+  for (const udid of udidArray) {
+    shutdownSimulator(udid);
+    try {
+      execSync(`xcrun simctl delete ${udid}`, { stdio: 'pipe' });
+      deleted++;
+    } catch {
+      console.warn(`Failed to delete: ${udid}`);
+    }
   }
-}
 
+  return deleted;
+}
 function cleanupFromJSON(): number {
   const jsonPath = 'ci-simulators.json';
 
@@ -42,15 +47,7 @@ function cleanupFromJSON(): number {
   }
 
   const simulators: Simulator[] = JSON.parse(readFileSync(jsonPath, 'utf-8'));
-  let deleted = 0;
-
-  for (const sim of simulators) {
-    if (deleteSimulator(sim.udid)) {
-      deleted++;
-    } else {
-      console.warn(`Failed to delete: ${sim.udid}`);
-    }
-  }
+  const deleted = deleteSimulator(simulators.map(sim => sim.udid));
 
   unlinkSync(jsonPath);
   console.log(`✓ Removed ${jsonPath}`);
@@ -68,10 +65,12 @@ function cleanupFromEnv(): number {
   const envContent = readFileSync(envPath, 'utf-8');
   const lines = envContent.split('\n');
 
+  const simulatorPattern = /^IOS_\d+_SIMULATOR=/;
+  const simulatorExtractPattern = /^IOS_\d+_SIMULATOR=(.+)/;
+
   const udids = lines
-    .filter(line => line.trim().startsWith('IOS_') && line.includes('_SIMULATOR='))
     .map(line => {
-      const match = line.match(/IOS_\d+_SIMULATOR=(.+)/);
+      const match = line.match(simulatorExtractPattern);
       return match ? match[1].trim() : null;
     })
     .filter((udid): udid is string => udid !== null);
@@ -80,23 +79,12 @@ function cleanupFromEnv(): number {
     return 0;
   }
 
-  let deleted = 0;
-  for (const udid of udids) {
-    if (deleteSimulator(udid)) {
-      deleted++;
-    } else {
-      console.warn(`Failed to delete: ${udid}`);
-    }
-  }
+  const deleted = deleteSimulator(udids);
 
   // Remove simulator lines from .env
   const cleanedEnv =
     lines
-      .filter(line => {
-        const isSimLine = line.trim().startsWith('IOS_') && line.includes('_SIMULATOR=');
-        const isSimComment = line.trim().startsWith('# iOS Simulators');
-        return !isSimLine && !isSimComment;
-      })
+      .filter(line => !simulatorPattern.test(line.trim()))
       .join('\n')
       .trim() + '\n';
 

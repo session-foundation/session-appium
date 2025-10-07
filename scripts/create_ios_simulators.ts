@@ -2,6 +2,7 @@ import { execSync } from 'child_process';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import * as path from 'path';
 
+import type { Simulator } from '../run/test/specs/utils/capabilities_ios';
 import type { DeviceWrapper } from '../run/types/DeviceWrapper';
 
 import { copyFileToSimulator } from '../run/test/specs/utils/copy_file_to_simulator';
@@ -32,13 +33,6 @@ type SimulatorConfig = {
   deviceType: string;
   runtime: string;
   totalSimulators: number;
-};
-
-export type Simulator = {
-  name: string;
-  udid: string;
-  wdaPort: number;
-  index: number;
 };
 
 // Define the device type and runtime to create
@@ -138,7 +132,6 @@ function createIOSSimulators(config: SimulatorConfig): Simulator[] {
     name: name0,
     udid: udid0,
     wdaPort: 1253,
-    index: 0,
   });
 
   console.log(`✓ ${name0} ready`);
@@ -154,7 +147,6 @@ function createIOSSimulators(config: SimulatorConfig): Simulator[] {
       name,
       udid,
       wdaPort: 1253 + index,
-      index,
     });
 
     console.log(`  [${index}/${config.totalSimulators - 1}] ${name}`);
@@ -172,12 +164,10 @@ function updateLocalEnvFile(simulators: Simulator[]): void {
   let envContent = existsSync(envPath) ? readFileSync(envPath, 'utf-8') : '';
 
   // Remove old simulator lines
+  const simulatorPattern = /^IOS_\d+_SIMULATOR=/;
   envContent = envContent
     .split('\n')
-    .filter(line => {
-      const isSimLine = line.trim().startsWith('IOS_') && line.includes('_SIMULATOR=');
-      return !isSimLine;
-    })
+    .filter(line => !simulatorPattern.test(line.trim()))
     .join('\n');
 
   // Add new simulator UDIDs

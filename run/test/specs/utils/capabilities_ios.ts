@@ -36,11 +36,10 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   },
 } as AppiumXCUITestCapabilities;
 
-type Simulator = {
+export type Simulator = {
   name: string;
   udid: string;
   wdaPort: number;
-  index: number;
 };
 
 function loadSimulators(): Simulator[] {
@@ -66,18 +65,14 @@ function loadSimulators(): Simulator[] {
     .map((envVar, index) => {
       const udid = process.env[envVar];
       if (!udid) return null; // No need for all 12 sim variables to be set
-      return { name: `Sim-${index + 1}`, udid, wdaPort: 1253 + index, index };
+      return { name: `Sim-${index + 1}`, udid, wdaPort: 1253 + index };
     })
     .filter((sim): sim is Simulator => sim !== null);
 
   // If we have simulators from env, use them (local dev)
   if (simulators.length > 0) {
     console.log(`Using ${simulators.length} simulators from .env file`);
-    return simulators.map((sim, newIndex) => ({
-      ...sim,
-      wdaPort: 1253 + newIndex,
-      index: newIndex,
-    }));
+    return simulators;
   }
 
   // No env simulators - check if we're on CI
