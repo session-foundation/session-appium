@@ -26,9 +26,6 @@ bothPlatformsIt({
     suite: 'Set Nickname',
   },
   allureDescription: `Verifies that a user can set a nickname for a contact and that it appears correctly in the conversation settings, conversation header and home screen.`,
-  allureLinks: {
-    android: 'SES-4424',
-  },
 });
 
 async function setNickname(platform: SupportedPlatformsType, testInfo: TestInfo) {

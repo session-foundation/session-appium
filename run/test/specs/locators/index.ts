@@ -112,7 +112,7 @@ export class UsernameDisplay extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'pro-badge-text',
+          selector: 'Display name',
           text: this.text,
         } as const;
       case 'ios':
@@ -460,9 +460,8 @@ export class ShareExtensionIcon extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'com.google.android.apps.photos:id/text',
-          text: `${getAppDisplayName()}`, // Session QA or AQA
+          strategy: '-android uiautomator',
+          selector: `new UiSelector().text("${getAppDisplayName()}")`, // Session QA or AQA
         };
       case 'ios':
         return {

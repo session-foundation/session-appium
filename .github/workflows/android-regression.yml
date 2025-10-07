@@ -56,9 +56,9 @@ on:
         required: true
         type: choice
         options:
-          - 'minimal'
-          - 'failures'
-          - 'verbose'
+          - 'minimal' # Recommended for full regressions
+          - 'failures' # Show failed test logs stdout/stderr
+          - 'verbose' # Ongoing and failed test logs
         default: 'minimal'
 
 jobs:
@@ -78,21 +78,9 @@ jobs:
       IOS_APP_PATH_PREFIX: '<just_not_empty>'
       ANDROID_APK: './extracted/session-android.apk'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
-      PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL != 'minimal' && '1' || '0' }}
-      PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'verbose' && '1' || '0' }}
-      HIDE_WEBDRIVER_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'minimal' && '1' || '0' }}
-      IOS_1_SIMULATOR: '<just_not_empty>'
-      IOS_2_SIMULATOR: '<just_not_empty>'
-      IOS_3_SIMULATOR: '<just_not_empty>'
-      IOS_4_SIMULATOR: '<just_not_empty>'
-      IOS_5_SIMULATOR: '<just_not_empty>'
-      IOS_6_SIMULATOR: '<just_not_empty>'
-      IOS_7_SIMULATOR: '<just_not_empty>'
-      IOS_8_SIMULATOR: '<just_not_empty>'
-      IOS_9_SIMULATOR: '<just_not_empty>'
-      IOS_10_SIMULATOR: '<just_not_empty>'
-      IOS_11_SIMULATOR: '<just_not_empty>'
-      IOS_12_SIMULATOR: '<just_not_empty>'
+      _TESTING: 1 # Always hide webdriver logs (@appium/support/ flag)
+      PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL != 'minimal' && '1' || '0' }} # Show stdout/stderr if test fails (@session-foundation/playwright-reporter/ flag)
+      PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'verbose' && '1' || '0' }} # Show everything as it happens (@session-foundation/playwright-reporter/ flag)
 
     steps:
       - uses: actions/checkout@v4
@@ -201,8 +189,10 @@ jobs:
           PLATFORM: ${{ env.PLATFORM }}
           RISK: ${{ github.event.inputs.RISK }}
           WORKERS_COUNT: ${{ env.WORKERS_1_DEVICE }}
-          DEVICES_PER_TEST: '1'
-          HIDE_WEBDRIVER_LOGS: ${{ env.HIDE_WEBDRIVER_LOGS }}
+          DEVICES_PER_TEST: 1
+          _TESTING: ${{ env._TESTING }}
+          PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
+          PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
 
       - name: Upload 1-device test results
         uses: ./github/actions/upload-test-results
@@ -217,8 +207,10 @@ jobs:
           PLATFORM: ${{ env.PLATFORM }}
           RISK: ${{ github.event.inputs.RISK }}
           WORKERS_COUNT: ${{ env.WORKERS_2_DEVICE }}
-          DEVICES_PER_TEST: '2'
-          HIDE_WEBDRIVER_LOGS: ${{ env.HIDE_WEBDRIVER_LOGS }}
+          DEVICES_PER_TEST: 2
+          _TESTING: ${{ env._TESTING }}
+          PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
+          PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
 
       - name: Upload 2-device test results
         uses: ./github/actions/upload-test-results
@@ -234,7 +226,9 @@ jobs:
           RISK: ${{ github.event.inputs.RISK }}
           WORKERS_COUNT: ${{ env.WORKERS_3_DEVICE }}
           DEVICES_PER_TEST: '3'
-          HIDE_WEBDRIVER_LOGS: ${{ env.HIDE_WEBDRIVER_LOGS }}
+          _TESTING: ${{ env._TESTING }}
+          PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
+          PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
 
       - name: Upload 3-device test results
         uses: ./github/actions/upload-test-results
@@ -261,11 +255,8 @@ jobs:
           PLATFORM: ${{ env.PLATFORM }}
 
       - name: Check if any tests failed
-        if: |
-          steps.test-1-device.outputs.test-result == 'failure' || 
-          steps.test-2-device.outputs.test-result == 'failure' || 
-          steps.test-3-device.outputs.test-result == 'failure'
-        run: echo 'Tests failed'; exit 1
+        if: steps.devices-1-test-run.outcome != 'success' || steps.devices-2-test-run.outcome != 'success' || steps.other-devices-test-run.outcome != 'success'
+        run: echo 'Some test failed, see above'; exit 1
 
       - name: Stop emulators
         if: always()

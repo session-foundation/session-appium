@@ -46,7 +46,7 @@ async function sendEmojiReaction(platform: SupportedPlatformsType, testInfo: Tes
   await test.step(TestSteps.VERIFY.EMOJI_REACT, async () => {
     await Promise.all(
       [alice1, bob1].map(device =>
-        device.waitForTextElementToBePresent(new EmojiReactsPill(device))
+        device.waitForTextElementToBePresent(new EmojiReactsPill(device, message))
       )
     );
   });

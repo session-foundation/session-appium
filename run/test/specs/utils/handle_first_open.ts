@@ -35,21 +35,20 @@ export async function handlePhotosFirstTimeOpen(device: DeviceWrapper) {
     }
   }
   // On Android, the Photos app shows a sign-in prompt the first time it's opened that needs to be dismissed
+  // I've seen two different kinds of sign in buttons on the same set of emulators
   if (device.isAndroid()) {
     let signInButton = null;
-    // API 34
     signInButton = await device.doesElementExist({
       strategy: 'id',
       selector: 'com.google.android.apps.photos:id/sign_in_button',
-      maxWait: 2_000,
+      maxWait: 1_000,
     });
 
     if (!signInButton) {
-      // API 35
       signInButton = await device.doesElementExist({
         strategy: '-android uiautomator',
         selector: 'new UiSelector().text("Sign in")',
-        maxWait: 2_000,
+        maxWait: 1_000,
       });
     }
     if (!signInButton) {

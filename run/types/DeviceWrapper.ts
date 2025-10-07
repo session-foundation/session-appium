@@ -56,7 +56,6 @@ import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
 import { getAdbFullPath } from '../test/specs/utils/binaries';
 import { parseDataImage } from '../test/specs/utils/check_colour';
 import { isSameColor } from '../test/specs/utils/check_colour';
-import { copyFileToSimulator } from '../test/specs/utils/copy_file_to_simulator';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/specs/utils/utilities';
 import {
@@ -309,7 +308,7 @@ export class DeviceWrapper {
 
   // ELEMENT INTERACTION
 
-  // Heal a broken locator by finding potential fuzzy matches with text as first-class criteria
+  // Heal a broken locator by finding potential fuzzy matches with text
   private async findBestMatch(
     strategy: Strategy,
     selector: string,
@@ -328,9 +327,11 @@ export class DeviceWrapper {
       { strategy: 'id' as Strategy, pattern: /resource-id="([^"]+)"/g },
     ];
 
+    // If this list gets out of hand, consider lowering the threshold
     const blacklist = [
       { from: 'Voice message', to: 'New voice message' },
-      { from: 'url_bar', to: 'status_bar' },
+      { from: 'Message sent status: Sent', to: 'Message sent status: Sending' },
+      { from: 'Done', to: 'Donate' },
     ];
 
     // System locators such as 'network.loki.messenger.qa:id' can cause false positives with too high similarity scores
@@ -385,10 +386,13 @@ export class DeviceWrapper {
 
       // Don't heal blacklisted pairs
       if (isBlacklisted) {
+        this.log(
+          `Skipping healing: prevented "${selector}" from healing to "${match.originalSelector}"`
+        );
         continue;
       }
 
-      // Sometimes the element is just not on screen yet - skip
+      // Sometimes the element is just not on screen yet - proceed.
       if (match.strategy === strategy && match.originalSelector === selector) {
         continue;
       }
@@ -692,23 +696,25 @@ export class DeviceWrapper {
   }
 
   public async longPressMessage(textToLookFor: string) {
-    const maxRetries = 3;
-    let attempt = 0;
-    let success = false;
+    const truncatedText =
+      textToLookFor.length > 50 ? textToLookFor.substring(0, 50) + '...' : textToLookFor;
 
-    while (attempt < maxRetries && !success) {
-      try {
+    const result = await this.pollUntil(
+      async () => {
+        // Find the message
         const el = await this.waitForTextElementToBePresent({
           ...new MessageBody(this, textToLookFor).build(),
           maxWait: 1_000,
         });
+
         if (!el) {
-          throw new Error(
-            `longPress on message: ${textToLookFor} unsuccessful, couldn't find message`
-          );
+          return { success: false, error: `Couldn't find message: ${truncatedText}` };
         }
 
-        await this.longClick(el, 4000);
+        // Attempt long click
+        await this.longClick(el, 2000);
+
+        // Check if context menu appeared
         const longPressSuccess = await this.waitForTextElementToBePresent({
           strategy: 'accessibility id',
           selector: 'Reply to message',
@@ -717,21 +723,22 @@ export class DeviceWrapper {
 
         if (longPressSuccess) {
           this.log('LongClick successful');
-          success = true; // Exit the loop if successful
-        } else {
-          throw new Error(`longPress on message: ${textToLookFor} unsuccessful`);
+          return { success: true, data: el };
         }
-      } catch (error) {
-        attempt++;
-        if (attempt >= maxRetries) {
-          throw new Error(
-            `Longpress on message: ${textToLookFor} unsuccessful after ${maxRetries} attempts, ${(error as Error).toString()}`
-          );
-        }
-        this.log(`Longpress attempt ${attempt} failed. Retrying...`);
-        await sleepFor(1000);
+
+        return {
+          success: false,
+          error: `Long press didn't show context menu for: ${truncatedText}`,
+        };
+      },
+      {
+        maxWait: 10_000,
+        pollInterval: 1000,
+        onAttempt: attempt => this.log(`Longpress attempt ${attempt}...`),
       }
-    }
+    );
+
+    return result;
   }
 
   public async longPressConversation(userName: string) {
@@ -1013,7 +1020,7 @@ export class DeviceWrapper {
     // Find all candidate elements matching the locator
     const elements = await this.findElements(locator.strategy, locator.selector);
     this.info(
-      `[matchAndTapImage] Found ${elements.length} elements for ${locator.strategy} "${locator.selector}"`
+      `[matchAndTapImage] Starting image matching: ${elements.length} elements with ${locator.strategy} "${locator.selector}"`
     );
 
     // Load the reference image buffer from disk
@@ -1026,9 +1033,7 @@ export class DeviceWrapper {
     } | null = null;
 
     // Iterate over each candidate element
-    for (const [i, el] of elements.entries()) {
-      this.info(`[matchAndTapImage] Processing element ${i + 1}/${elements.length}`);
-
+    for (const el of elements) {
       // Take a screenshot of the element
       const base64 = await this.getElementScreenshot(el.ELEMENT);
       const elementBuffer = Buffer.from(base64, 'base64');
@@ -1060,7 +1065,6 @@ export class DeviceWrapper {
         const { rect: matchRect, score } = await getImageOccurrence(elementBuffer, resizedRef, {
           threshold,
         });
-        this.info(`[matchAndTapImage] Match score for element ${i + 1}: ${score.toFixed(4)}`);
 
         /**
          * Matching is done on a resized reference image to account for device pixel density.
@@ -1093,7 +1097,7 @@ export class DeviceWrapper {
         // If earlyMatch is enabled and the score is high enough, tap immediately
         if (earlyMatch && score >= earlyMatchThreshold) {
           this.info(
-            `[matchAndTapImage] Tapping first match with ${(score * 100).toFixed(2)}% confidence`
+            `[matchAndTapImage] Tapping first high-confidence match (${(score * 100).toFixed(2)}%)`
           );
           await clickOnCoordinates(this, center);
           return;
@@ -1101,21 +1105,17 @@ export class DeviceWrapper {
         // Otherwise, keep track of the best match so far
         if (!bestMatch || score > bestMatch.score) {
           bestMatch = { center, score };
-          this.info(`[matchAndTapImage] New best match: ${(score * 100).toFixed(2)}% confidence`);
         }
-      } catch (err) {
-        // If matching fails for this element, log and continue to the next
-        this.info(
-          `[matchAndTapImage] Matching failed for element ${i + 1}:`,
-          err instanceof Error ? err.message : err
-        );
+      } catch {
+        continue; // No match in this element, try next
       }
     }
     // If no good match was found, throw an error
     if (!bestMatch) {
-      throw new Error(
+      console.log(
         `[matchAndTapImage] No matching image found among ${elements.length} elements for ${locator.strategy} "${locator.selector}"`
       );
+      throw new Error('Unable to find the expected UI element on screen');
     }
     // Tap the best match found
     this.info(
@@ -1204,21 +1204,16 @@ export class DeviceWrapper {
    * @param args.text - Optional text content to match within elements of the same type
    * @param args.initialMaxWait - Time to wait for element to initially appear (defaults to 10_000ms)
    * @param args.maxWait - Time to wait for deletion AFTER element is found (defaults to 30_000ms)
-   * @param args.preventEarlyDeletion - If true, throws an error if the element disappears too early (% of maxWait)
    *
    * @throws Error if:
    * - The element is never found within initialMaxWait
    * - The element still exists after maxWait
-   * - The element disappears suspiciously early (if preventEarlyDeletion is true)
-   * Note: For checks where you just need to ensure an element
-   * is not present (regardless of prior existence), use verifyElementNotPresent() instead.
    */
   public async hasElementBeenDeleted(
     args: {
       text?: string;
       initialMaxWait?: number;
       maxWait?: number;
-      preventEarlyDeletion?: boolean;
     } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<void> {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
@@ -1233,7 +1228,6 @@ export class DeviceWrapper {
     // Phase 1: Wait for element to appear
     this.log(`Waiting for element with ${description} to be deleted...`);
     await this.waitForElementToAppear(locator, initialMaxWait, text);
-    const foundTime = Date.now();
     this.log(`Element with ${description} has been found, now waiting for deletion`);
 
     // Phase 2: Wait for element to disappear
@@ -1242,21 +1236,67 @@ export class DeviceWrapper {
     // Always calculate total time for logging
     const totalTime = (Date.now() - functionStartTime) / 1000;
 
-    // Sometimes an early deletion could indicate a bug (e.g. Disappearing Messages)
-    if (args.preventEarlyDeletion) {
-      const deletionPhaseTime = (Date.now() - foundTime) / 1000;
-      const expectedTotalTime = maxWait / 1000;
-      const minAcceptableTotalTimeFactor = 0.65; // Catches egregiously early deletions but still enough leeway for sending/trusting/receiving
-      const minAcceptableTotalTime = expectedTotalTime * minAcceptableTotalTimeFactor;
+    this.log(
+      `Element with ${description} has been deleted after ${totalTime.toFixed(1)}s total time`
+    );
+  }
 
-      if (totalTime < minAcceptableTotalTime) {
-        throw new Error(
-          `Element with ${description} disappeared suspiciously early: ${totalTime.toFixed(1)}s total ` +
-            `(found after ${((foundTime - functionStartTime) / 1000).toFixed(1)}s, ` +
-            `deleted after ${deletionPhaseTime.toFixed(1)}s). ` +
-            `Expected ~${expectedTotalTime}s total.`
-        );
-      }
+  /**
+   * Waits for an element to disappear from screen (using the Disappearing Messages feature)
+   *
+   * @param args - Locator (LocatorsInterface or StrategyExtractionObj) with optional properties
+   * @param args.actualStartTime - Timestamp of when the timer should be considered to have started.
+   * @param args.text - Optional text content to match within elements of the same type
+   * @param args.initialMaxWait - Time to wait for element to initially appear (defaults to 10_000ms)
+   * @param args.maxWait - Time to wait for deletion AFTER element is found (defaults to 30_000ms)
+   *
+   * @throws Error if:
+   * - The element is never found within initialMaxWait
+   * - The element still exists after maxWait
+   * - The element disappears suspiciously early
+   *
+   * Note:
+   * - If you want to ensure an element was present but disappeared (without Disappearing Messages logic), use hasElementBeenDeleted().
+   * - If you want to ensure an element is no longer visible (regardless of prior existence), use verifyElementNotPresent().
+   */
+  public async hasElementDisappeared(
+    args: {
+      actualStartTime: number;
+      text?: string;
+      initialMaxWait?: number;
+      maxWait?: number;
+    } & (LocatorsInterface | StrategyExtractionObj)
+  ): Promise<void> {
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const text = args.text;
+    const initialMaxWait = args.initialMaxWait ?? 10_000;
+    const maxWait = args.maxWait ?? 30_000;
+
+    const description = describeLocator({ ...locator, text: args.text });
+
+    // Phase 1: Wait for element to appear
+    this.log(`Waiting for element with ${description} to be deleted...`);
+    await this.waitForElementToAppear(locator, initialMaxWait, text);
+    const foundTime = Date.now();
+    this.log(`Element with ${description} has been found, now waiting for deletion`);
+
+    // Phase 2: Wait for element to disappear
+    await this.waitForElementToDisappear(locator, maxWait, text);
+
+    // Elements should not disappear too early (could be a DM bug)
+    const totalTime = (Date.now() - args.actualStartTime) / 1000;
+    const deletionPhaseTime = (Date.now() - foundTime) / 1000;
+    const expectedTotalTime = maxWait / 1000;
+    const minAcceptableTotalTimeFactor = 0.65; // Catches egregiously early deletions but still enough leeway for sending/trusting/receiving
+    const minAcceptableTotalTime = expectedTotalTime * minAcceptableTotalTimeFactor;
+
+    if (totalTime < minAcceptableTotalTime) {
+      throw new Error(
+        `Element with ${description} disappeared suspiciously early: ${totalTime.toFixed(1)}s total ` +
+          `(found after ${((foundTime - args.actualStartTime) / 1000).toFixed(1)}s, ` +
+          `deleted after ${deletionPhaseTime.toFixed(1)}s). ` +
+          `Expected ~${expectedTotalTime}s total.`
+      );
     }
 
     this.log(
@@ -1271,18 +1311,26 @@ export class DeviceWrapper {
     timeout: number,
     text?: string
   ): Promise<void> {
-    const start = Date.now();
-
-    while (Date.now() - start < timeout) {
-      const element = await this.findElementQuietly(locator, text);
-      if (element) return;
-      await sleepFor(100);
-    }
-
     const desc = describeLocator({ ...locator, text });
-    throw new Error(
-      `Element with ${desc} was never found within ${timeout}ms - cannot verify deletion of non-existent element`
+
+    const element = await this.pollUntil(
+      async () => {
+        const foundElement = await this.findElementQuietly(locator, text);
+        return foundElement
+          ? { success: true, data: foundElement }
+          : { success: false, error: `Element with ${desc} not found` };
+      },
+      {
+        maxWait: timeout,
+        pollInterval: 100,
+      }
     );
+
+    if (!element) {
+      throw new Error(
+        `Element with ${desc} was never found within ${timeout}ms - cannot verify deletion of non-existent element`
+      );
+    }
   }
 
   /**
@@ -1628,7 +1676,7 @@ export class DeviceWrapper {
   }
   // UTILITY FUNCTIONS
 
-  public async sendMessage(message: string) {
+  public async sendMessage(message: string): Promise<number> {
     await this.inputText(message, new MessageInput(this));
 
     // Click send
@@ -1637,33 +1685,13 @@ export class DeviceWrapper {
     if (!sendButton) {
       throw new Error('Send button not found: Need to restart iOS emulator: Known issue');
     }
-    // Might need to scroll down if the message is too long
-    await this.scrollToBottom();
     // Wait for tick
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 50000,
     });
-
-    return message;
-  }
-
-  public async waitForSentConfirmation() {
-    let pendingStatus = await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message sent status: Sending',
-    });
-    const failedStatus = await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message sent status: Failed to send',
-    });
-    if (pendingStatus || failedStatus) {
-      await sleepFor(100);
-      pendingStatus = await this.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Message sent status: Sending',
-      });
-    }
+    const sentTimestamp = Date.now();
+    return sentTimestamp;
   }
 
   public async sendNewMessage(user: Pick<User, 'accountID'>, message: string) {
@@ -1719,7 +1747,8 @@ export class DeviceWrapper {
     }
     // Select 'Reply' option
     // Send message
-    const replyMessage = await this.sendMessage(`${user.userName} replied to ${body}`);
+    const replyMessage = `${user.userName} replied to ${body}`;
+    await this.sendMessage(replyMessage);
 
     return replyMessage;
   }
@@ -1813,10 +1842,9 @@ export class DeviceWrapper {
     }
   }
 
-  public async sendImage(message: string, community?: boolean) {
+  public async sendImage(message: string, community?: boolean): Promise<number> {
+    // iOS files are pre-loaded on simulator creation, no need to push
     if (this.isIOS()) {
-      // Push file first
-      await this.pushMediaToDevice(testImage);
       await this.clickOnElementAll(new AttachmentsButton(this));
       await sleepFor(5000);
       const keyboard = await this.isKeyboardVisible();
@@ -1863,13 +1891,12 @@ export class DeviceWrapper {
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
     });
+    const sentTimestamp = Date.now();
+    return sentTimestamp;
   }
-  public async sendVideoiOS(message: string) {
-    // Push first
-    await this.pushMediaToDevice(testVideo);
+  public async sendVideoiOS(message: string): Promise<number> {
+    // iOS files are pre-loaded on simulator creation, no need to push
     await this.clickOnElementAll(new AttachmentsButton(this));
-    // Select images button/tab
-    await sleepFor(5000);
     const keyboard = await this.isKeyboardVisible();
     if (keyboard) {
       await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardOpen);
@@ -1880,11 +1907,7 @@ export class DeviceWrapper {
     await this.modalPopup({
       strategy: 'accessibility id',
       selector: 'Allow Full Access',
-      maxWait: 2_000,
     });
-    await sleepFor(2000); // Appium needs a moment, matchAndTapImage sometimes finds 0 elements otherwise
-    // For some reason video gets added to the top of the Recents folder so it's best to scroll up
-    await this.scrollUp();
     await sleepFor(2000); // Appium needs a moment, matchAndTapImage sometimes finds 0 elements otherwise
     // A video can't be matched by its thumbnail so we use a video thumbnail file
     await this.matchAndTapImage(
@@ -1896,9 +1919,11 @@ export class DeviceWrapper {
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
     });
+    const sentTimestamp = Date.now();
+    return sentTimestamp;
   }
 
-  public async sendVideoAndroid() {
+  public async sendVideoAndroid(): Promise<number> {
     // Push first
     await this.pushMediaToDevice(testVideo);
     // Click on attachments button
@@ -1952,13 +1977,15 @@ export class DeviceWrapper {
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
     });
+    const sentTimestamp = Date.now();
+    return sentTimestamp;
   }
 
-  public async sendDocument() {
+  public async sendDocument(): Promise<number> {
+    // iOS files are pre-loaded on simulator creation, no need to push
     if (this.isIOS()) {
       const formattedFileName = 'test_file, pdf';
       const testMessage = 'Testing documents';
-      copyFileToSimulator(this, testFile);
       await this.clickOnElementAll(new AttachmentsButton(this));
       const keyboard = await this.isKeyboardVisible();
       if (keyboard) {
@@ -2041,9 +2068,11 @@ export class DeviceWrapper {
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
     });
+    const sentTimestamp = Date.now();
+    return sentTimestamp;
   }
 
-  public async sendGIF() {
+  public async sendGIF(): Promise<number> {
     await sleepFor(1000);
     await this.clickOnByAccessibilityID('Attachments button');
     if (this.isAndroid()) {
@@ -2066,9 +2095,16 @@ export class DeviceWrapper {
     if (this.isIOS()) {
       await this.clickOnElementAll(new SendButton(this));
     }
+    // Checking Sent status on both platforms
+    await this.waitForTextElementToBePresent({
+      ...new OutgoingMessageStatusSent(this).build(),
+      maxWait: 20000,
+    });
+    const sentTimestamp = Date.now();
+    return sentTimestamp;
   }
 
-  public async sendVoiceMessage() {
+  public async sendVoiceMessage(): Promise<number> {
     await this.longPress(new NewVoiceMessageButton(this));
 
     if (this.isAndroid()) {
@@ -2083,6 +2119,13 @@ export class DeviceWrapper {
     }
 
     await this.pressAndHold('New voice message');
+    // Checking Sent status on both platforms
+    await this.waitForTextElementToBePresent({
+      ...new OutgoingMessageStatusSent(this).build(),
+      maxWait: 20000,
+    });
+    const sentTimestamp = Date.now();
+    return sentTimestamp;
   }
 
   public async uploadProfilePicture() {
@@ -2090,9 +2133,8 @@ export class DeviceWrapper {
     // Click on Profile picture
     await this.clickOnElementAll(new UserAvatar(this));
     await this.clickOnElementAll(new ChangeProfilePictureButton(this));
+    // iOS files are pre-loaded on simulator creation, no need to push
     if (this.isIOS()) {
-      // Push file first
-      await this.pushMediaToDevice(profilePicture);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
       await sleepFor(5000); // sometimes Appium doesn't recognize the XPATH immediately
       await this.matchAndTapImage(
@@ -2167,10 +2209,12 @@ export class DeviceWrapper {
   }
 
   public async trustAttachments(conversationName: string) {
-    await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Untrusted attachment message',
-    });
+    // I kept getting stale element references on iOS in this method
+    // This is an attempt to let the UI settle before we look for the untrusted attachment
+    if (this.isIOS()) {
+      await sleepFor(2000);
+    }
+
     await this.clickOnElementAll({
       strategy: 'accessibility id',
       selector: 'Untrusted attachment message',
@@ -2402,13 +2446,12 @@ export class DeviceWrapper {
       // Execute the action in the home screen context
       const iosPermissions = await this.doesElementExist({
         ...args,
-        maxWait: 1000,
+        maxWait: 3_000,
       });
-      this.info('iosPermissions', iosPermissions);
       if (iosPermissions) {
         await this.clickOnElementAll({ ...args, maxWait });
       } else {
-        this.info('No iosPermissions', iosPermissions);
+        this.info('No iOS Permissions modal visible to Appium');
       }
     } catch (e) {
       this.info('FAILED WITH', e);

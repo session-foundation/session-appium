@@ -23,7 +23,7 @@ bothPlatformsIt({
 const time = DISAPPEARING_TIMES.ONE_MINUTE;
 const timerType = 'Disappear after send option';
 const initialMaxWait = 15_000; // Downloading the attachment can take a while
-const maxWait = 70_000; // 70s plus buffer
+const maxWait = 70_000; // 60s plus buffer
 
 async function disappearingGifMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Disappear after sent test';
@@ -37,18 +37,17 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType, tes
   });
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   // Click on attachments button
-  await alice1.sendGIF();
+  const sentTimestamp = await alice1.sendGIF();
   await Promise.all(
     [bob1, charlie1].map(device => device.onAndroid().trustAttachments(testGroupName))
   );
   await Promise.all(
     [alice1, bob1, charlie1].map(device =>
-      device.hasElementBeenDeleted({
+      device.hasElementDisappeared({
         ...new MediaMessage(device).build(),
-
         initialMaxWait,
         maxWait,
-        preventEarlyDeletion: true,
+        actualStartTime: sentTimestamp,
       })
     )
   );

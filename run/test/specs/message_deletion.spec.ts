@@ -22,7 +22,8 @@ async function deleteMessage(platform: SupportedPlatformsType, testInfo: TestInf
     testInfo,
   });
   // send message from User A to User B
-  const sentMessage = await alice1.sendMessage('Checking local deletetion functionality');
+  const sentMessage = 'Checking local deletetion functionality';
+  await alice1.sendMessage(sentMessage);
   await bob1.waitForTextElementToBePresent(new MessageBody(bob1, sentMessage));
   // Select and long press on message to delete it
   await alice1.longPressMessage(sentMessage);

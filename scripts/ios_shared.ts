@@ -6,6 +6,27 @@ export function getSimulatorUDID(index: number) {
   return process.env[envVar];
 }
 
+export function bootSimulator(udid: string, label?: number | string): boolean {
+  try {
+    if (label !== undefined) {
+      console.log(`Booting simulator ${label}: ${udid}`);
+    }
+    execSync(`xcrun simctl boot ${udid}`, { stdio: 'pipe' });
+    return true;
+  } catch (error: any) {
+    if (error.message?.includes('Unable to boot device in current state: Booted')) {
+      if (label !== undefined) {
+        console.log(`Simulator ${label} already booted: ${udid}`);
+      }
+      return true;
+    }
+
+    console.error(`Failed to boot simulator ${label || udid}`);
+    console.error(error.stderr?.toString() || error.message);
+    return false;
+  }
+}
+
 export function isSimulatorBooted(udid: string) {
   try {
     const result = execSync(`xcrun simctl list devices booted`).toString();
@@ -42,4 +63,12 @@ export function getAllSimulators() {
 
 export function getChunkedSimulators(chunkSize: number) {
   return chunk(getAllSimulators(), chunkSize);
+}
+
+export function shutdownSimulator(udid: string): void {
+  try {
+    execSync(`xcrun simctl shutdown ${udid}`, { stdio: 'pipe' });
+  } catch {
+    // Already shutdown or doesn't exist - this is fine
+  }
 }

@@ -33,6 +33,7 @@ const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const maxWait = 35_000; // 30s plus buffer
 
 async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  let sentTimestamp: number;
   const testGroupName = 'Testing disappearing messages';
   const {
     devices: { alice1, bob1, charlie1 },
@@ -44,7 +45,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
       testInfo,
     });
   });
-  await test.step(TestSteps.DISAPPEARING_MESSAGES.SET_DISAPPEARING_MSG, async () => {
+  await test.step(TestSteps.DISAPPEARING_MESSAGES.SET(time), async () => {
     await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
   });
   await test.step(TestSteps.SEND.LINK, async () => {
@@ -68,16 +69,17 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
       ...new OutgoingMessageStatusSent(alice1).build(),
       maxWait: 20000,
     });
+    sentTimestamp = Date.now();
   });
   // Wait for 30 seconds to disappear
   await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
     if (platform === 'ios') {
       await Promise.all(
         [alice1, bob1, charlie1].map(device =>
-          device.hasElementBeenDeleted({
+          device.hasElementDisappeared({
             ...new MessageBody(device, testLink).build(),
             maxWait,
-            preventEarlyDeletion: true,
+            actualStartTime: sentTimestamp,
           })
         )
       );
@@ -85,9 +87,10 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
     if (platform === 'android') {
       await Promise.all(
         [alice1, bob1, charlie1].map(device =>
-          device.hasElementBeenDeleted({
+          device.hasElementDisappeared({
             ...new LinkPreviewMessage(device).build(),
             maxWait,
+            actualStartTime: sentTimestamp,
           })
         )
       );

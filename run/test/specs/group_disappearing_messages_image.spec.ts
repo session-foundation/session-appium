@@ -35,35 +35,31 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
   });
 
   await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
-  await alice1.sendImage(testMessage);
+  const sentTimestamp = await alice1.sendImage(testMessage);
   if (platform === 'ios') {
     await Promise.all(
       [alice1, bob1, charlie1].map(device =>
-        device.hasElementBeenDeleted({
+        device.hasElementDisappeared({
           ...new MessageBody(device, testMessage).build(),
           maxWait,
-          preventEarlyDeletion: true,
+          actualStartTime: sentTimestamp,
         })
       )
     );
   }
   if (platform === 'android') {
-    await Promise.all([
-      alice1.hasElementBeenDeleted({
-        ...new MediaMessage(alice1).build(),
-        maxWait,
-        preventEarlyDeletion: true,
-      }),
-      // Bob and Charlie haven't trusted the message
-      ...[bob1, charlie1].map(device =>
-        device.hasElementBeenDeleted({
-          strategy: 'accessibility id',
-          selector: 'Untrusted attachment message',
+    await Promise.all(
+      [bob1, charlie1].map(device => device.onAndroid().trustAttachments(testGroupName))
+    );
+    await Promise.all(
+      [alice1, bob1, charlie1].map(device =>
+        device.hasElementDisappeared({
+          ...new MediaMessage(device).build(),
           maxWait,
-          preventEarlyDeletion: true,
+          actualStartTime: sentTimestamp,
         })
-      ),
-    ]);
+      )
+    );
   }
   await closeApp(alice1, bob1, charlie1);
 }

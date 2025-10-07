@@ -25,10 +25,10 @@ async function unsendMessage(platform: SupportedPlatformsType, testInfo: TestInf
   const testMessage = 'Checking unsend functionality';
 
   // send message from User A to User B
-  const sentMessage = await alice1.sendMessage(testMessage);
+  await alice1.sendMessage(testMessage);
   // await sleepFor(1000);
-  await bob1.waitForTextElementToBePresent(new MessageBody(bob1, sentMessage));
-  await alice1.longPressMessage(sentMessage);
+  await bob1.waitForTextElementToBePresent(new MessageBody(bob1, testMessage));
+  await alice1.longPressMessage(testMessage);
   // Select Delete icon
   await alice1.clickOnByAccessibilityID('Delete message');
   // Check modal is correct

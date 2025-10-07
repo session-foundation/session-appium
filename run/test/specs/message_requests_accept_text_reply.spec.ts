@@ -3,7 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { MessageInput, SendButton } from './locators/conversation';
+import { MessageInput, OutgoingMessageStatusSent, SendButton } from './locators/conversation';
 import { PlusButton } from './locators/home';
 import { MessageRequestsBanner } from './locators/home';
 import { EnterAccountID, NewMessageOption, NextButton } from './locators/start_conversation';
@@ -54,11 +54,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType, testInfo:
   // Click send
   await device1.clickOnElementAll(new SendButton(device1));
   // Wait for tick
-  await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: `Message sent status: Sent`,
-    maxWait: 50000,
-  });
+  await device1.waitForTextElementToBePresent(new OutgoingMessageStatusSent(device1));
   // Wait for banner to appear
   // Bob clicks on message request banner
   await device2.clickOnElementAll(new MessageRequestsBanner(device2));

@@ -25,7 +25,8 @@ async function unsendMessageGroup(platform: SupportedPlatformsType, testInfo: Te
     focusGroupConvo: true,
     testInfo,
   });
-  const sentMessage = await alice1.sendMessage('Checking unsend functionality');
+  const sentMessage = 'Checking unsend functionality';
+  await alice1.sendMessage(sentMessage);
   await Promise.all(
     [bob1, charlie1].map(device =>
       device.waitForTextElementToBePresent(new MessageBody(device, sentMessage))

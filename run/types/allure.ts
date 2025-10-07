@@ -77,6 +77,7 @@ export const TestSteps = {
   },
   // Open/Navigate steps
   OPEN: {
+    NTS: 'Open Note to Self',
     UPDATE_GROUP_INFO: `Open 'Update Group Information' modal`,
     PATH: 'Open Path screen',
     APPEARANCE: 'Open Appearance settings',
@@ -89,7 +90,7 @@ export const TestSteps = {
   },
   // Disappearing Messages
   DISAPPEARING_MESSAGES: {
-    SET_DISAPPEARING_MSG: 'Set Disappearing Messages',
+    SET: (time: string) => `Set Disappearing Messages (${time})`,
   },
   CALLS: {
     INITIATE_CALL: (userName: UserNameType) => `${userName} initiates voice call`,
@@ -101,9 +102,11 @@ export const TestSteps = {
       `Verify ${elementDesc} element screenshot matches baseline`,
     GENERIC_MODAL: 'Verify modal strings',
     SPECIFIC_MODAL: (modalDesc: string) => `Verify ${modalDesc} modal strings`,
+    MESSAGE_SYNCED: 'Verify message synced to linked device',
     MESSAGE_RECEIVED: 'Verify message has been received',
     MESSAGE_DISAPPEARED: 'Verify message disappeared',
     MESSAGE_DELETED: (context: string) => `Verify message deleted in/on ${context}`,
+    DISAPPEARING_CONTROL_MESSAGES: 'Verify the disappearing control messages for each user',
     CALLING: 'Verify call has been started',
     CALL_SUCCESSFUL: 'Verify call has been put through successfully',
     MISSED_CALL: 'Verify missed call',

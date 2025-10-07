@@ -53,8 +53,8 @@ async function sendEmojiReactionGroup(platform: SupportedPlatformsType, testInfo
     // All clients witness emoji and "2" count
     await Promise.all(
       [alice1, bob1, charlie1].map(async device => {
-        await device.waitForTextElementToBePresent(new EmojiReactsPill(device));
-        await device.waitForTextElementToBePresent(new EmojiReactsCount(device));
+        await device.waitForTextElementToBePresent(new EmojiReactsPill(device, message));
+        await device.waitForTextElementToBePresent(new EmojiReactsCount(device, message, '2'));
       })
     );
   });
