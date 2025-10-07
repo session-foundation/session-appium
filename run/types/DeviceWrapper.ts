@@ -57,7 +57,6 @@ import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
 import { getAdbFullPath } from '../test/specs/utils/binaries';
 import { parseDataImage } from '../test/specs/utils/check_colour';
 import { isSameColor } from '../test/specs/utils/check_colour';
-import { copyFileToSimulator } from '../test/specs/utils/copy_file_to_simulator';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/specs/utils/utilities';
 import {
@@ -333,6 +332,7 @@ export class DeviceWrapper {
     const blacklist = [
       { from: 'Voice message', to: 'New voice message' },
       { from: 'Message sent status: Sent', to: 'Message sent status: Sending' },
+      { from: 'Done', to: 'Donate' },
     ];
 
     // System locators such as 'network.loki.messenger.qa:id' can cause false positives with too high similarity scores
@@ -739,7 +739,7 @@ export class DeviceWrapper {
       }
     );
 
-    return result; // or whatever you want to do with it
+    return result;
   }
 
   public async longPressConversation(userName: string) {
@@ -1844,9 +1844,8 @@ export class DeviceWrapper {
   }
 
   public async sendImage(message: string, community?: boolean): Promise<number> {
+    // iOS files are pre-loaded on simulator creation, no need to push
     if (this.isIOS()) {
-      // Push file first
-      await this.pushMediaToDevice(testImage);
       await this.clickOnElementAll(new AttachmentsButton(this));
       await sleepFor(5000);
       const keyboard = await this.isKeyboardVisible();
@@ -1897,11 +1896,8 @@ export class DeviceWrapper {
     return sentTimestamp;
   }
   public async sendVideoiOS(message: string): Promise<number> {
-    // Push first
-    await this.pushMediaToDevice(testVideo);
+    // iOS files are pre-loaded on simulator creation, no need to push
     await this.clickOnElementAll(new AttachmentsButton(this));
-    // Select images button/tab
-    await sleepFor(5000);
     const keyboard = await this.isKeyboardVisible();
     if (keyboard) {
       await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardOpen);
@@ -1912,11 +1908,7 @@ export class DeviceWrapper {
     await this.modalPopup({
       strategy: 'accessibility id',
       selector: 'Allow Full Access',
-      maxWait: 2_000,
     });
-    await sleepFor(2000); // Appium needs a moment, matchAndTapImage sometimes finds 0 elements otherwise
-    // For some reason video gets added to the top of the Recents folder so it's best to scroll up
-    await this.scrollUp();
     await sleepFor(2000); // Appium needs a moment, matchAndTapImage sometimes finds 0 elements otherwise
     // A video can't be matched by its thumbnail so we use a video thumbnail file
     await this.matchAndTapImage(
@@ -1991,10 +1983,10 @@ export class DeviceWrapper {
   }
 
   public async sendDocument(): Promise<number> {
+    // iOS files are pre-loaded on simulator creation, no need to push
     if (this.isIOS()) {
       const formattedFileName = 'test_file, pdf';
       const testMessage = 'Testing documents';
-      copyFileToSimulator(this, testFile);
       await this.clickOnElementAll(new AttachmentsButton(this));
       const keyboard = await this.isKeyboardVisible();
       if (keyboard) {
@@ -2142,9 +2134,8 @@ export class DeviceWrapper {
     // Click on Profile picture
     await this.clickOnElementAll(new UserAvatar(this));
     await this.clickOnElementAll(new ChangeProfilePictureButton(this));
+    // iOS files are pre-loaded on simulator creation, no need to push
     if (this.isIOS()) {
-      // Push file first
-      await this.pushMediaToDevice(profilePicture);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
       await sleepFor(5000); // sometimes Appium doesn't recognize the XPATH immediately
       await this.matchAndTapImage(
@@ -2452,13 +2443,12 @@ export class DeviceWrapper {
       // Execute the action in the home screen context
       const iosPermissions = await this.doesElementExist({
         ...args,
-        maxWait: 1000,
+        maxWait: 3_000,
       });
-      this.info('iosPermissions', iosPermissions);
       if (iosPermissions) {
         await this.clickOnElementAll({ ...args, maxWait });
       } else {
-        this.info('No iosPermissions', iosPermissions);
+        this.info('No iOS Permissions modal visible to Appium');
       }
     } catch (e) {
       this.info('FAILED WITH', e);

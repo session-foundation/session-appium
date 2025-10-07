@@ -71,18 +71,6 @@ jobs:
       _TESTING: 1 # Always hide webdriver logs (@appium/support/ flag)
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL != 'minimal' && '1' || '0' }} # Show stdout/stderr if test fails (@session-foundation/playwright-reporter/ flag)
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'verbose' && '1' || '0' }} # Show everything as it happens (@session-foundation/playwright-reporter/ flag)
-      IOS_1_SIMULATOR: '<just_not_empty>'
-      IOS_2_SIMULATOR: '<just_not_empty>'
-      IOS_3_SIMULATOR: '<just_not_empty>'
-      IOS_4_SIMULATOR: '<just_not_empty>'
-      IOS_5_SIMULATOR: '<just_not_empty>'
-      IOS_6_SIMULATOR: '<just_not_empty>'
-      IOS_7_SIMULATOR: '<just_not_empty>'
-      IOS_8_SIMULATOR: '<just_not_empty>'
-      IOS_9_SIMULATOR: '<just_not_empty>'
-      IOS_10_SIMULATOR: '<just_not_empty>'
-      IOS_11_SIMULATOR: '<just_not_empty>'
-      IOS_12_SIMULATOR: '<just_not_empty>'
 
     steps:
       - uses: actions/checkout@v4
