@@ -2,12 +2,8 @@ import { exec as execNotPromised } from 'child_process';
 import * as fs from 'fs';
 import { pick } from 'lodash';
 import path from 'path';
-import sharp from 'sharp';
 import * as util from 'util';
-import { v4 as uuidv4 } from 'uuid';
 
-import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { Suffix } from '../../../types/testing';
 const exec = util.promisify(execNotPromised);
 
 export async function runScriptAndLog(toRun: string, verbose = false): Promise<string> {
@@ -67,40 +63,6 @@ export function hexToRgbObject(hex: string): { R: number; G: number; B: number }
 
 export function ensureHttpsURL(url: string): string {
   return url.startsWith('https://') ? url : `https://${url}`;
-}
-
-export async function cropScreenshot(device: DeviceWrapper, screenshotBuffer: Buffer) {
-  const { width, height } = await device.getWindowRect();
-  const cropTop = 250;
-  const cropLeft = 0;
-  const cropWidth = width;
-  const cropHeight = height - 250;
-
-  const croppedBuf = await sharp(screenshotBuffer)
-    .extract({ left: cropLeft, top: cropTop, width: cropWidth, height: cropHeight })
-    .png()
-    .toBuffer();
-
-  return croppedBuf;
-}
-
-export async function saveImage(
-  source: Buffer | { save: (fullPath: string) => Promise<void> },
-  directory: string,
-  suffix: Suffix,
-  customFileName?: string
-) {
-  const name = customFileName ?? `${uuidv4()}_${suffix}.png`;
-  const fullPath = path.join(directory, name);
-
-  fs.mkdirSync(path.dirname(fullPath), { recursive: true });
-
-  if (Buffer.isBuffer(source)) {
-    fs.writeFileSync(fullPath, source);
-  } else {
-    await source.save(fullPath);
-  }
-  return fullPath;
 }
 
 export function getDiffDirectory() {

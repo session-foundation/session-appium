@@ -1,5 +1,6 @@
 import path from 'path';
 
+import { MessageBody } from '../locators/conversation';
 import { EmptyLandingPage } from '../locators/home';
 import { AppDisguisePage } from '../locators/settings';
 
@@ -16,5 +17,18 @@ export class EmptyLandingPageScreenshot extends EmptyLandingPage {
 export class AppDisguisePageScreenshot extends AppDisguisePage {
   public screenshotFileName(): string {
     return path.join('run', 'screenshots', this.platform, 'app_disguise.png');
+  }
+}
+
+export class MessageBodyScreenshot extends MessageBody {
+  // The message body locator can appear in different states depending on the message content
+  public screenshotFileName(
+    state:
+      | 'incoming_reply_message'
+      | 'incoming_short_message'
+      | 'outgoing_reply_message'
+      | 'outgoing_short_message'
+  ): string {
+    return path.join('run', 'screenshots', this.platform, `messagebody_${state}.png`);
   }
 }

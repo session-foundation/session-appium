@@ -9,10 +9,15 @@ import { EmptyLandingPageScreenshot } from './utils/screenshot_paths';
 import { verifyElementScreenshot } from './utils/verify_screenshots';
 
 bothPlatformsIt({
-  title: 'Landing page restore account',
+  title: 'Check landing page (restored account) layout',
   risk: 'low',
   testCb: landingPageRestoreAccount,
   countOfDevicesNeeded: 2,
+  allureSuites: {
+    parent: 'Visual Checks',
+    suite: 'Onboarding',
+  },
+  allureDescription: `Verifies that the landing page for a restored account matches the expected baseline`,
 });
 
 async function landingPageRestoreAccount(platform: SupportedPlatformsType, testInfo: TestInfo) {

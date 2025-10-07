@@ -39,7 +39,7 @@ export type AllureSuiteConfig =
         | 'Set Nickname'
         | 'Share to Session';
     }
-  | { parent: 'Visual Checks' }
+  | { parent: 'Visual Checks'; suite: 'Conversation' | 'Onboarding' | 'Settings' }
   | { parent: 'Voice Calls' };
 
 /**
@@ -71,12 +71,14 @@ export const TestSteps = {
   SEND: {
     MESSAGE: (sender: UserNameType, recipient: string) =>
       `${sender} sends a message to ${recipient}`,
+    REPLY: (sender: UserNameType, recipient: string) => `${sender} replies to ${recipient}`,
     LINK: 'Send Link',
     IMAGE: 'Send Image',
     EMOJI_REACT: `Send an emoji react`,
   },
   // Open/Navigate steps
   OPEN: {
+    GENERIC: (string: string) => `Open ${string}`,
     NTS: 'Open Note to Self',
     UPDATE_GROUP_INFO: `Open 'Update Group Information' modal`,
     PATH: 'Open Path screen',
@@ -98,8 +100,7 @@ export const TestSteps = {
   },
   // Verify steps
   VERIFY: {
-    ELEMENT_SCREENSHOT: (elementDesc: string) =>
-      `Verify ${elementDesc} element screenshot matches baseline`,
+    SCREENSHOT: (desc: string) => `Verify ${desc} screenshot matches baseline`,
     GENERIC_MODAL: 'Verify modal strings',
     SPECIFIC_MODAL: (modalDesc: string) => `Verify ${modalDesc} modal strings`,
     MESSAGE_SYNCED: 'Verify message synced to linked device',

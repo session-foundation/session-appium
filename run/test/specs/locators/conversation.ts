@@ -236,10 +236,18 @@ export class ConversationHeaderName extends LocatorsInterface {
 
 export class NotificationSettings extends LocatorsInterface {
   public build() {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Notifications',
-    } as const;
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Notifications',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Notifications',
+        } as const;
+    }
   }
 }
 

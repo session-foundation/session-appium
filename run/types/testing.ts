@@ -574,8 +574,12 @@ export type Id =
 
 export type TestRisk = 'high' | 'low' | 'medium';
 
-export type ElementStates = 'new_account' | 'restore_account';
-
-export type Suffix = 'diff' | 'screenshot';
+export type ElementStates =
+  | 'incoming_reply_message'
+  | 'incoming_short_message'
+  | 'new_account'
+  | 'outgoing_reply_message'
+  | 'outgoing_short_message'
+  | 'restore_account';
 
 export type AppName = 'Session AQA' | 'Session QA';

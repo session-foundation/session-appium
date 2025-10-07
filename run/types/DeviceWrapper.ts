@@ -2375,7 +2375,7 @@ export class DeviceWrapper {
     if (this.isAndroid()) {
       const permissions = await this.doesElementExist({
         ...locatorConfig,
-        maxWait: 2_000,
+        maxWait: 5_000,
       });
 
       if (permissions) {

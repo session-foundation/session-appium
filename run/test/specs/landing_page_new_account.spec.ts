@@ -8,10 +8,15 @@ import { EmptyLandingPageScreenshot } from './utils/screenshot_paths';
 import { verifyElementScreenshot } from './utils/verify_screenshots';
 
 bothPlatformsIt({
-  title: 'Landing page new account',
+  title: 'Check landing page (new account) layout',
   risk: 'low',
   testCb: landingPageNewAccount,
   countOfDevicesNeeded: 1,
+  allureSuites: {
+    parent: 'Visual Checks',
+    suite: 'Onboarding',
+  },
+  allureDescription: `Verifies that the landing page for a new account matches the expected baseline`,
 });
 
 async function landingPageNewAccount(platform: SupportedPlatformsType, testInfo: TestInfo) {

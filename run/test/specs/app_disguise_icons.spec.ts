@@ -10,7 +10,7 @@ import { AppDisguisePageScreenshot } from './utils/screenshot_paths';
 import { verifyElementScreenshot } from './utils/verify_screenshots';
 
 bothPlatformsIt({
-  title: 'App disguise icons',
+  title: 'Check app disguise icon layout',
   risk: 'medium',
   countOfDevicesNeeded: 1,
   testCb: appDisguiseIcons,
@@ -31,7 +31,7 @@ async function appDisguiseIcons(platform: SupportedPlatformsType, testInfo: Test
     await device.clickOnElementAll(new UserSettings(device));
     await device.clickOnElementAll(new AppearanceMenuItem(device));
   });
-  await test.step(TestSteps.VERIFY.ELEMENT_SCREENSHOT('app disguise icons'), async () => {
+  await test.step(TestSteps.VERIFY.SCREENSHOT('app disguise icons'), async () => {
     await device.clickOnElementAll(new SelectAppIcon(device));
     await verifyElementScreenshot(device, new AppDisguisePageScreenshot(device), testInfo);
   });
