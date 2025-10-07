@@ -14,9 +14,6 @@ inputs:
   DEVICES_PER_TEST:
     description: 'Number of devices per test'
     required: true
-  HIDE_WEBDRIVER_LOGS:
-    description: 'Hide webdriver logs (1 to hide, 0 to show)'
-    required: true
 
 runs:
   using: 'composite'
@@ -27,13 +24,16 @@ runs:
       env:
         PLAYWRIGHT_WORKERS_COUNT: ${{ inputs.WORKERS_COUNT }}
         DEVICES_PER_TEST_COUNT: ${{ inputs.DEVICES_PER_TEST }}
+        _TESTING: ${{ env._TESTING }}
+        PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
+        PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
       run: |
         echo "Running ${{ inputs.DEVICES_PER_TEST }} tests with ${{ inputs.WORKERS_COUNT }} workers"
 
         grep="(?=.*@${{ inputs.PLATFORM }})(?=.*@${{ inputs.DEVICES_PER_TEST }}-devices)"
         [[ "${{ inputs.RISK }}" != "" ]] && grep="${grep}(?=.*@${{ inputs.RISK }})"
 
-        _TESTING=${{ inputs.HIDE_WEBDRIVER_LOGS }} npx playwright test --grep "$grep"
+        npx playwright test --grep "$grep"
 
 outputs:
   test-result:
