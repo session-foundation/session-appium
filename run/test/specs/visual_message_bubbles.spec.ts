@@ -55,11 +55,12 @@ async function messageBubbleAppearance(platform: SupportedPlatformsType, testInf
       maxWait: 20_000,
     });
   });
-  await alice1.waitForTextElementToBePresent(new MessageBody(alice1, replyMessage));
   await test.step(TestSteps.VERIFY.SCREENSHOT('conversation screen (Alice)'), async () => {
+    await alice1.waitForTextElementToBePresent(new MessageBody(alice1, replyMessage));
     await verifyPageScreenshot(alice1, platform, 'conversation_alice', testInfo);
   });
   await test.step(TestSteps.VERIFY.SCREENSHOT('conversation screen (Bob)'), async () => {
+    await bob1.onAndroid().back(); // dismiss keyboard
     await verifyPageScreenshot(bob1, platform, 'conversation_bob', testInfo);
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

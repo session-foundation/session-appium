@@ -99,7 +99,7 @@ jobs:
           # Check if devnet is accessible before choosing APK
           echo "Checking devnet accessibility for APK selection..."
           DEVNET_ACCESSIBLE=false
-          
+
           # Retry logic matching your TypeScript function
           for attempt in 1 2 3; do
             echo "Devnet check attempt $attempt/3..."
@@ -115,7 +115,7 @@ jobs:
               fi
             fi
           done
-          
+
           if [ "$DEVNET_ACCESSIBLE" = "false" ]; then
             echo "Devnet is not accessible after 3 attempts"
           fi

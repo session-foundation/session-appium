@@ -8,7 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { SupportedPlatformsType } from './open_app';
-import { getDiffDirectory, runScriptAndLog } from './utilities';
+import { getDiffDirectory } from './utilities';
+import { clearStatusBarOverrides, setConsistentStatusBar } from './utilities';
 
 type Attachment = {
   name: string;
@@ -22,62 +23,7 @@ interface ImageData {
   height: number;
 }
 
-/**
- * Eliminate any potential mismatches by mocking the status bar to always be the same
- */
-async function setConsistentStatusBar(device: DeviceWrapper): Promise<void> {
-  if (device.isIOS()) {
-    // Time: 4:20, 100% battery, full wifi signal
-    await runScriptAndLog(
-      `xcrun simctl status_bar ${device.udid} override --time "04:20" --batteryLevel 100 --batteryState charged --wifiBars 3`,
-      true
-    );
-  } else if (device.isAndroid()) {
-    // Enable demo mode to set consistent status bar elements
-    await runScriptAndLog(
-      `adb -s ${device.udid} shell settings put global sysui_demo_allowed 1`,
-      true
-    );
-    // Dismiss notifications
-    await runScriptAndLog(
-      `adb -s ${device.udid} shell am broadcast -a com.android.systemui.demo -e command notifications -e visible false`,
-      true
-    );
-    // Time: 4:20
-    await runScriptAndLog(
-      `adb -s ${device.udid} shell am broadcast -a com.android.systemui.demo -e command clock -e hhmm 0420`,
-      true
-    );
-    // 100% battery
-    await runScriptAndLog(
-      `adb -s ${device.udid} shell am broadcast -a com.android.systemui.demo -e command battery -e level 100 -e plugged false`,
-      true
-    );
-    // Full wifi (for some reason shows an ! next to the icon but that's fine)
-    await runScriptAndLog(
-      `adb -s ${device.udid} shell am broadcast -a com.android.systemui.demo -e command network -e wifi show -e level 4`,
-      true
-    );
-  }
-}
-
-async function clearStatusBarOverrides(device: DeviceWrapper): Promise<void> {
-  try {
-    if (device.isIOS()) {
-      await runScriptAndLog(`xcrun simctl status_bar ${device.udid} clear`, true);
-    } else if (device.isAndroid()) {
-      await runScriptAndLog(
-        `adb -s ${device.udid} shell am broadcast -a com.android.systemui.demo -e command exit`,
-        true
-      );
-    }
-  } catch (error) {
-    console.warn('Failed to clear status bar overrides:', error);
-    // Don't throw - this is cleanup, shouldn't fail the test
-  }
-}
-
-export async function pushAttachmentsToReport(
+async function pushAttachmentsToReport(
   testInfo: TestInfo,
   attachments: Attachment[]
 ): Promise<void> {
@@ -124,9 +70,9 @@ async function fileToImageData(filePath: string): Promise<ImageData> {
 async function compareWithSSIM(
   actualBuffer: Buffer,
   baselineImagePath: string,
-  testInfo: TestInfo,
+  testInfo: TestInfo
 ): Promise<void> {
-  const threshold = 0.99 // Very strict matching since this doesn't rely on pixelmatching anymore
+  const threshold = 0.99; // Very strict matching since this doesn't rely on pixelmatching anymore
   const actualImageData = await bufferToImageData(actualBuffer);
   const baselineImageData = await fileToImageData(baselineImagePath);
 
@@ -241,7 +187,6 @@ export async function verifyPageScreenshot(
     // Get full page screenshot and crop it
     const pageScreenshotBase64 = await device.getScreenshot();
     const screenshotBuffer = Buffer.from(pageScreenshotBase64, 'base64');
-    // const croppedBuffer = await cropScreenshot(device, screenshotBuffer);
 
     // Get baseline path and ensure it exists
     const baselineScreenshotPath = path.join(

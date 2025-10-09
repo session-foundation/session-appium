@@ -4,6 +4,8 @@ import { pick } from 'lodash';
 import path from 'path';
 import * as util from 'util';
 
+import { DeviceWrapper } from '../../../types/DeviceWrapper';
+
 const exec = util.promisify(execNotPromised);
 
 export async function runScriptAndLog(toRun: string, verbose = false): Promise<string> {
@@ -75,5 +77,51 @@ export async function assertUrlIsReachable(url: string): Promise<void> {
   const response = await fetch(url);
   if (response.status !== 200) {
     throw new Error(`Expected status 200 but got ${response.status} for URL: ${url}`);
+  }
+}
+
+/**
+ * Eliminate any potential mismatches by mocking the status bar to always be the same
+ */
+export async function setConsistentStatusBar(device: DeviceWrapper): Promise<void> {
+  if (device.isIOS()) {
+    // Time: 4:20, 100% battery, full wifi signal
+    await runScriptAndLog(
+      `xcrun simctl status_bar ${device.udid} override --time "04:20" --batteryLevel 100 --batteryState charged --wifiBars 3`
+    );
+  } else if (device.isAndroid()) {
+    // Enable demo mode to set consistent status bar elements
+    await runScriptAndLog(`adb -s ${device.udid} shell settings put global sysui_demo_allowed 1`);
+    // Dismiss notifications
+    await runScriptAndLog(
+      `adb -s ${device.udid} shell am broadcast -a com.android.systemui.demo -e command notifications -e visible false`
+    );
+    // Time: 4:20
+    await runScriptAndLog(
+      `adb -s ${device.udid} shell am broadcast -a com.android.systemui.demo -e command clock -e hhmm 0420`
+    );
+    // 100% battery
+    await runScriptAndLog(
+      `adb -s ${device.udid} shell am broadcast -a com.android.systemui.demo -e command battery -e level 100 -e plugged false`
+    );
+    // Full wifi (for some reason shows an ! next to the icon but that's fine)
+    await runScriptAndLog(
+      `adb -s ${device.udid} shell am broadcast -a com.android.systemui.demo -e command network -e wifi show -e level 4`
+    );
+  }
+}
+
+export async function clearStatusBarOverrides(device: DeviceWrapper): Promise<void> {
+  try {
+    if (device.isIOS()) {
+      await runScriptAndLog(`xcrun simctl status_bar ${device.udid} clear`);
+    } else if (device.isAndroid()) {
+      await runScriptAndLog(
+        `adb -s ${device.udid} shell am broadcast -a com.android.systemui.demo -e command exit`
+      );
+    }
+  } catch (error) {
+    console.warn('Failed to clear status bar overrides:', error);
+    // Don't throw - this is cleanup, shouldn't fail the test
   }
 }
