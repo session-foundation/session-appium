@@ -180,9 +180,10 @@ export class OutgoingMessageStatusSent extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: '-android uiautomator',
+          strategy: 'id',
           selector:
-            'new UiSelector().resourceId("network.loki.messenger.qa:id/messageStatusTextView").text("Sent")',
+            'network.loki.messenger.qa:id/messageStatusTextView',
+          text: 'Sent'
         } as const;
       case 'ios':
         return {
