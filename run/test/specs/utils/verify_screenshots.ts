@@ -125,8 +125,8 @@ async function compareWithSSIM(
   actualBuffer: Buffer,
   baselineImagePath: string,
   testInfo: TestInfo,
-  threshold: number = 0.95
 ): Promise<void> {
+  const threshold = 0.99 // Very strict matching since this doesn't rely on pixelmatching anymore
   const actualImageData = await bufferToImageData(actualBuffer);
   const baselineImageData = await fileToImageData(baselineImagePath);
 
@@ -253,7 +253,7 @@ export async function verifyPageScreenshot(
     ensureBaseline(screenshotBuffer, baselineScreenshotPath);
 
     // Perform SSIM comparison
-    await compareWithSSIM(screenshotBuffer, baselineScreenshotPath, testInfo, 0.99);
+    await compareWithSSIM(screenshotBuffer, baselineScreenshotPath, testInfo);
   } finally {
     await clearStatusBarOverrides(device);
   }
