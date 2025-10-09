@@ -4,7 +4,7 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { CloseSettings } from './locators';
-import { CallButton, NotificationSettings, NotificationSwitch } from './locators/conversation';
+import { CallButton, NotificationsModalButton, NotificationSwitch } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils/index';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -194,7 +194,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: Test
         englishStrippedStr('sessionNotifications').toString(),
         englishStrippedStr('callsNotificationsRequired').toString()
       );
-      await alice1.clickOnElementAll(new NotificationSettings(alice1));
+      await alice1.clickOnElementAll(new NotificationsModalButton(alice1));
       await alice1.clickOnElementAll(new NotificationSwitch(alice1));
     });
     await alice1.navigateBack(false);
@@ -241,7 +241,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: Test
     await bob1.clickOnElementById(
       'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
     );
-    await bob1.clickOnElementAll(new NotificationSettings(bob1));
+    await bob1.clickOnElementAll(new NotificationsModalButton(bob1));
     await bob1.clickOnElementAll(new NotificationSwitch(bob1));
     await bob1.navigateBack(false);
     await bob1.navigateBack(false);

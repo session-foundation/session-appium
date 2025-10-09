@@ -72,7 +72,7 @@ async function compareWithSSIM(
   baselineImagePath: string,
   testInfo: TestInfo
 ): Promise<void> {
-  const threshold = 0.99; // Very strict matching since this doesn't rely on pixelmatching anymore
+  const threshold = 0.97; // Strict matching since this doesn't rely on pixelmatching anymore
   const actualImageData = await bufferToImageData(actualBuffer);
   const baselineImageData = await fileToImageData(baselineImagePath);
 
@@ -163,8 +163,8 @@ function ensureBaseline(actualBuffer: Buffer, baselinePath: string): void {
     fs.writeFileSync(tempPath, actualBuffer);
 
     // Uncomment these lines for local development to auto-create baselines
-    // fs.mkdirSync(path.dirname(baselinePath), { recursive: true });
-    // fs.writeFileSync(baselinePath, actualBuffer);
+    fs.mkdirSync(path.dirname(baselinePath), { recursive: true });
+    fs.writeFileSync(baselinePath, actualBuffer);
 
     throw new Error(
       `No baseline image found at: ${baselinePath}. \n

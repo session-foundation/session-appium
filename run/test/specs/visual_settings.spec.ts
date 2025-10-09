@@ -4,7 +4,7 @@ import { TestSteps } from '../../types/allure';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { NotificationSettings } from './locators/conversation';
+import { NotificationsMenuItem } from './locators/settings';
 import {
   AppearanceMenuItem,
   ConversationsMenuItem,
@@ -17,6 +17,13 @@ import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from 
 import { verifyPageScreenshot } from './utils/verify_screenshots';
 
 const testCases = [
+  {
+    screenName: 'Settings page',
+    screenshotFile: 'settings',
+    navigation: async (device: DeviceWrapper) => {
+      await device.clickOnElementAll(new UserSettings(device));
+    },
+  },
   {
     screenName: 'Privacy settings',
     screenshotFile: 'settings_privacy',
@@ -38,7 +45,7 @@ const testCases = [
     screenshotFile: 'settings_notifications',
     navigation: async (device: DeviceWrapper) => {
       await device.clickOnElementAll(new UserSettings(device));
-      await device.clickOnElementAll(new NotificationSettings(device));
+      await device.clickOnElementAll(new NotificationsMenuItem(device));
       await sleepFor(1_000); // This one otherwise captures a black screen
     },
   },
