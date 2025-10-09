@@ -6,8 +6,7 @@ import { USERNAME } from '../../types/testing';
 import { AppearanceMenuItem, SelectAppIcon, UserSettings } from './locators/settings';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { AppDisguisePageScreenshot } from './utils/screenshot_paths';
-import { verifyElementScreenshot } from './utils/verify_screenshots';
+import { verifyPageScreenshot } from './utils/verify_screenshots';
 
 bothPlatformsIt({
   title: 'Check app disguise icon layout',
@@ -33,7 +32,7 @@ async function appDisguiseIcons(platform: SupportedPlatformsType, testInfo: Test
   });
   await test.step(TestSteps.VERIFY.SCREENSHOT('app disguise icons'), async () => {
     await device.clickOnElementAll(new SelectAppIcon(device));
-    await verifyElementScreenshot(device, new AppDisguisePageScreenshot(device), testInfo);
+    await verifyPageScreenshot(device, platform, 'app_disguise', testInfo);
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);

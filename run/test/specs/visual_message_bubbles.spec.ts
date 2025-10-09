@@ -10,8 +10,7 @@ import {
 } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
-import { MessageBodyScreenshot } from './utils/screenshot_paths';
-import { verifyElementScreenshot } from './utils/verify_screenshots';
+import { verifyPageScreenshot } from './utils/verify_screenshots';
 
 bothPlatformsIt({
   title: 'Check message bubble layout',
@@ -44,24 +43,6 @@ async function messageBubbleAppearance(platform: SupportedPlatformsType, testInf
 
   await test.step(TestSteps.SEND.MESSAGE(alice.userName, bob.userName), async () => {
     await alice1.sendMessage(shortMessage);
-    await alice1.waitForTextElementToBePresent(new MessageBody(alice1, shortMessage));
-  });
-  await test.step(TestSteps.VERIFY.SCREENSHOT('outgoing one-line message bubble'), async () => {
-    await verifyElementScreenshot(
-      alice1,
-      new MessageBodyScreenshot(alice1, shortMessage),
-      testInfo,
-      'outgoing_short_message'
-    );
-  });
-  await test.step(TestSteps.VERIFY.SCREENSHOT('incoming one-line message bubble'), async () => {
-    await bob1.waitForTextElementToBePresent(new MessageBody(bob1, shortMessage));
-    await verifyElementScreenshot(
-      bob1,
-      new MessageBodyScreenshot(bob1, shortMessage),
-      testInfo,
-      'incoming_short_message'
-    );
   });
   await test.step(TestSteps.SEND.REPLY(bob.userName, alice.userName), async () => {
     // Bob replies with a longer message
@@ -74,30 +55,13 @@ async function messageBubbleAppearance(platform: SupportedPlatformsType, testInf
       maxWait: 20_000,
     });
   });
-  await test.step(
-    TestSteps.VERIFY.SCREENSHOT('outgoing multiline reply message bubble'),
-    async () => {
-      await bob1.waitForTextElementToBePresent(new MessageBody(bob1, replyMessage)); // Otherwise there were stale element errors
-      await verifyElementScreenshot(
-        bob1,
-        new MessageBodyScreenshot(bob1, replyMessage),
-        testInfo,
-        'outgoing_reply_message'
-      );
-    }
-  );
-  await test.step(
-    TestSteps.VERIFY.SCREENSHOT('incoming multiline reply message bubble'),
-    async () => {
-      await alice1.waitForTextElementToBePresent(new MessageBody(alice1, replyMessage));
-      await verifyElementScreenshot(
-        alice1,
-        new MessageBodyScreenshot(alice1, replyMessage),
-        testInfo,
-        'incoming_reply_message'
-      );
-    }
-  );
+  await alice1.waitForTextElementToBePresent(new MessageBody(alice1, replyMessage));
+  await test.step(TestSteps.VERIFY.SCREENSHOT('conversation screen (Alice)'), async () => {
+    await verifyPageScreenshot(alice1, platform, 'conversation_alice', testInfo);
+  });
+  await test.step(TestSteps.VERIFY.SCREENSHOT('conversation screen (Bob)'), async () => {
+    await verifyPageScreenshot(bob1, platform, 'conversation_bob', testInfo);
+  });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, bob1);
   });
