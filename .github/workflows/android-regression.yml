@@ -95,18 +95,58 @@ jobs:
       - name: Download APK & extract it
         run: |
           pwd
+
+          # Check if devnet is accessible before choosing APK
+          echo "Checking devnet accessibility for APK selection..."
+          DEVNET_ACCESSIBLE=false
+          
+          # Retry logic matching your TypeScript function
+          for attempt in 1 2 3; do
+            echo "Devnet check attempt $attempt/3..."
+            if curl -s --connect-timeout 5 --max-time 10 http://sesh-net.local:1280 >/dev/null 2>&1; then
+              echo "Devnet is accessible on attempt $attempt"
+              DEVNET_ACCESSIBLE=true
+              break
+            else
+              echo "Attempt $attempt failed"
+              if [ $attempt -lt 3 ]; then
+                echo "Waiting ${attempt}s before retry..."
+                sleep $attempt
+              fi
+            fi
+          done
+          
+          if [ "$DEVNET_ACCESSIBLE" = "false" ]; then
+            echo "Devnet is not accessible after 3 attempts"
+          fi
+
+          # Download and extract APK 
           wget -q -O session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
           tar xf session-android.apk.tar.xz
           mv session-android-*universal extracted
 
-          if ls extracted/*automaticQa.apk; then
-            mv extracted/*automaticQa.apk extracted/session-android.apk
-            echo "IS_AUTOMATIC_QA=true" >> $GITHUB_ENV
-          elif ls extracted/*qa.apk; then
+          # Choose APK based on devnet accessibility
+          if ls extracted/*automaticQa.apk 1>/dev/null 2>&1; then
+            if [ "$DEVNET_ACCESSIBLE" = "true" ]; then
+              echo "Using AQA build (devnet accessible)"
+              mv extracted/*automaticQa.apk extracted/session-android.apk
+              echo "IS_AUTOMATIC_QA=true" >> $GITHUB_ENV
+            else
+              echo "AQA build available but devnet not accessible - falling back to regular QA build"
+              if ls extracted/*qa.apk 1>/dev/null 2>&1; then
+                mv extracted/*qa.apk extracted/session-android.apk
+                echo "IS_AUTOMATIC_QA=false" >> $GITHUB_ENV
+              else
+                echo "No regular QA build found as fallback"
+                exit 1
+              fi
+            fi
+          elif ls extracted/*qa.apk 1>/dev/null 2>&1; then
+            echo "Using regular QA build"
             mv extracted/*qa.apk extracted/session-android.apk
             echo "IS_AUTOMATIC_QA=false" >> $GITHUB_ENV
           else
-            echo "Error: No .qa APK found (only .qa builds are supported)"
+            echo "No suitable APK found"
             exit 1
           fi
 
