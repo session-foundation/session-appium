@@ -57,7 +57,7 @@ const testCases = [
       await device.clickOnElementAll(new AppearanceMenuItem(device));
     },
   },
-];
+] as const;
 
 for (const { screenName, screenshotFile, navigation } of testCases) {
   bothPlatformsIt({

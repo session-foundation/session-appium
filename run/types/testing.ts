@@ -579,3 +579,15 @@ export type Id =
 export type TestRisk = 'high' | 'low' | 'medium';
 
 export type AppName = 'Session AQA' | 'Session QA';
+
+export type ScreenshotFileNames =
+  | 'app_disguise'
+  | 'conversation_alice'
+  | 'conversation_bob'
+  | 'landingpage_new_account'
+  | 'landingpage_restore_account'
+  | 'settings_appearance'
+  | 'settings_conversations'
+  | 'settings_notifications'
+  | 'settings_privacy'
+  | 'settings';

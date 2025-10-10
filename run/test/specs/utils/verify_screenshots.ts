@@ -7,6 +7,7 @@ import { ssim } from 'ssim.js';
 import { v4 as uuidv4 } from 'uuid';
 
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
+import { ScreenshotFileNames } from '../../../types/testing';
 import { SupportedPlatformsType } from './open_app';
 import { getDiffDirectory } from './utilities';
 import { clearStatusBarOverrides, setConsistentStatusBar } from './utilities';
@@ -70,9 +71,9 @@ async function fileToImageData(filePath: string): Promise<ImageData> {
 async function compareWithSSIM(
   actualBuffer: Buffer,
   baselineImagePath: string,
-  testInfo: TestInfo
+  testInfo: TestInfo,
+  threshold: number
 ): Promise<void> {
-  const threshold = 0.97; // Strict matching since this doesn't rely on pixelmatching anymore
   const actualImageData = await bufferToImageData(actualBuffer);
   const baselineImageData = await fileToImageData(baselineImagePath);
 
@@ -179,9 +180,14 @@ function ensureBaseline(actualBuffer: Buffer, baselinePath: string): void {
 export async function verifyPageScreenshot(
   device: DeviceWrapper,
   platform: SupportedPlatformsType,
-  screenshotName: string,
-  testInfo: TestInfo
+  screenshotName: ScreenshotFileNames,
+  testInfo: TestInfo,
+  threshold: number = 0.97 // Strict tolerance by default
 ): Promise<void> {
+  // Validate threshold range
+  if (threshold < 0 || threshold > 1) {
+    throw new Error(`SSIM threshold must be between 0 and 1, got: ${threshold}`);
+  }
   await setConsistentStatusBar(device);
   try {
     // Get full page screenshot and crop it
@@ -198,7 +204,7 @@ export async function verifyPageScreenshot(
     ensureBaseline(screenshotBuffer, baselineScreenshotPath);
 
     // Perform SSIM comparison
-    await compareWithSSIM(screenshotBuffer, baselineScreenshotPath, testInfo);
+    await compareWithSSIM(screenshotBuffer, baselineScreenshotPath, testInfo, threshold);
   } finally {
     await clearStatusBarOverrides(device);
   }

@@ -181,9 +181,8 @@ export class OutgoingMessageStatusSent extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector:
-            'network.loki.messenger.qa:id/messageStatusTextView',
-          text: 'Sent'
+          selector: 'network.loki.messenger.qa:id/messageStatusTextView',
+          text: 'Sent',
         } as const;
       case 'ios':
         return {

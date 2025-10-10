@@ -44,7 +44,6 @@ export function describeLocator(locator: StrategyExtractionObj & { text?: string
   return text ? `${base} and text "${text}"` : base;
 }
 
-
 export class ApplyChanges extends LocatorsInterface {
   public build() {
     switch (this.platform) {
