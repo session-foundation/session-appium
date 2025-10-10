@@ -544,7 +544,7 @@ export type Id =
   | 'Open URL'
   | 'preferred-display-name'
   | 'Privacy'
-  | 'Privacy policy button'
+  | 'Privacy Policy'
   | 'pro-badge-text'
   | 'Quit'
   | 'rate-app-button'
@@ -565,7 +565,7 @@ export type Id =
   | 'show-nts-confirm-button'
   | 'Show'
   | 'Slow mode notifications button'
-  | 'Terms of service button'
+  | 'Terms of Service'
   | 'update-group-info-confirm-button'
   | 'update-group-info-description-input'
   | 'update-group-info-name-input'
@@ -577,13 +577,5 @@ export type Id =
   | `Disappear after ${DisappearModes} option`;
 
 export type TestRisk = 'high' | 'low' | 'medium';
-
-export type ElementStates =
-  | 'incoming_reply_message'
-  | 'incoming_short_message'
-  | 'new_account'
-  | 'outgoing_reply_message'
-  | 'outgoing_short_message'
-  | 'restore_account';
 
 export type AppName = 'Session AQA' | 'Session QA';

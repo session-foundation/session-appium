@@ -1,6 +1,6 @@
 import { ANDROID_XPATHS, IOS_XPATHS } from '../../../constants';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { ElementStates, StrategyExtractionObj } from '../../../types/testing';
+import { StrategyExtractionObj } from '../../../types/testing';
 import { getAppDisplayName } from '../utils/devnet';
 import { SupportedPlatformsType } from '../utils/open_app';
 
@@ -44,10 +44,6 @@ export function describeLocator(locator: StrategyExtractionObj & { text?: string
   return text ? `${base} and text "${text}"` : base;
 }
 
-// Returns the expected screenshot path for a locator, optionally varying by state
-export abstract class LocatorsInterfaceScreenshot extends LocatorsInterface {
-  abstract screenshotFileName(state?: ElementStates): string;
-}
 
 export class ApplyChanges extends LocatorsInterface {
   public build() {
