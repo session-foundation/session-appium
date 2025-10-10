@@ -291,27 +291,30 @@ const openiOSApp = async (
   device: DeviceWrapper;
 }> => {
   console.info('openiOSApp');
-
+  let actualCapabilitiesIndex: number;
   const parallelIndex = parseInt(process.env.TEST_PARALLEL_INDEX || '0');
+  if (process.env.CI === '1') {
+    // NOTE: This assumes DEVICES_PER_TEST_COUNT=4 is set in CI for iOS (not applicable to Android)
+    // Worker pools are fixed at 4 devices each regardless of actual test size:
+    // Worker 0: devices 0-3, Worker 1: devices 4-7, Worker 2: devices 8-11
+    const devicesPerWorker = getDevicesPerTestCount();
+    const workerBaseOffset = devicesPerWorker * parallelIndex;
 
-  // NOTE: This assumes DEVICES_PER_TEST_COUNT=4 is set in CI for iOS (not applicable to Android)
-  // Worker pools are fixed at 4 devices each regardless of actual test size:
-  // Worker 0: devices 0-3, Worker 1: devices 4-7, Worker 2: devices 8-11
-  const devicesPerWorker = getDevicesPerTestCount();
-  const workerBaseOffset = devicesPerWorker * parallelIndex;
+    // Apply retry offset, but wrap within the worker's device pool only
+    // This means when retrying, alice/bob etc won't be the same device as before within a worker's pool
+    // This is to avoid any issues where a device might be in a bad state for some reason
+    // (e.g. not accessing photo library on iOS)
+    const retryOffset = testInfo.retry || 0;
+    const deviceIndexWithinWorker = (capabilitiesIndex + retryOffset) % devicesPerWorker;
+    actualCapabilitiesIndex = workerBaseOffset + deviceIndexWithinWorker;
 
-  // Apply retry offset, but wrap within the worker's device pool only
-  // This means when retrying, alice/bob etc won't be the same device as before within a worker's pool
-  // This is to avoid any issues where a device might be in a bad state for some reason
-  // (e.g. not accessing photo library on iOS)
-  const retryOffset = testInfo.retry || 0;
-  const deviceIndexWithinWorker = (capabilitiesIndex + retryOffset) % devicesPerWorker;
-  const actualCapabilitiesIndex = workerBaseOffset + deviceIndexWithinWorker;
-
-  if (retryOffset > 0) {
-    console.info(
-      `Retry offset applied (#${retryOffset}), rotating device allocations within worker`
-    );
+    if (retryOffset > 0) {
+      console.info(
+        `Retry offset applied (#${retryOffset}), rotating device allocations within worker`
+      );
+    }
+  } else {
+    actualCapabilitiesIndex = capabilitiesIndex;
   }
 
   const opts: XCUITestDriverOpts = {

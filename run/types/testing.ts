@@ -140,6 +140,7 @@ export type XPath =
   | `//android.widget.TextView[@text="${string}"]`
   | `//XCUIElementTypeAlert//*//XCUIElementTypeButton`
   | `//XCUIElementTypeButton[@name="Continue"]`
+  | `//XCUIElementTypeButton[@name="Okay"]`
   | `//XCUIElementTypeButton[@name="Settings"]`
   | `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${string}"]]//XCUIElementTypeStaticText[@value="😂"]`
   | `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${string}"]]//XCUIElementTypeStaticText[@value="${string}"]`
@@ -148,6 +149,7 @@ export type XPath =
   | `//XCUIElementTypeCell[@name="Session"]`
   | `//XCUIElementTypeImage`
   | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`
+  | `//XCUIElementTypeStaticText[@name="${string}"]`
   | `//XCUIElementTypeStaticText[@name="Paste"]`
   | `//XCUIElementTypeStaticText[@name="Videos"]`
   | `//XCUIElementTypeStaticText[contains(@name, '00:')]`
@@ -508,6 +510,7 @@ export type Id =
   | 'network.loki.messenger.qa:id/callInProgress'
   | 'network.loki.messenger.qa:id/callSubtitle'
   | 'network.loki.messenger.qa:id/callTitle'
+  | 'network.loki.messenger.qa:id/characterLimitText'
   | 'network.loki.messenger.qa:id/crop_image_menu_crop'
   | 'network.loki.messenger.qa:id/emptyStateContainer'
   | 'network.loki.messenger.qa:id/endCallButton'
@@ -535,6 +538,7 @@ export type Id =
   | 'nickname-input'
   | 'not-now-button'
   | 'Notifications'
+  | 'Okay'
   | 'open-survey-button'
   | 'Open'
   | 'Open URL'
@@ -574,8 +578,16 @@ export type Id =
 
 export type TestRisk = 'high' | 'low' | 'medium';
 
-export type ElementStates = 'new_account' | 'restore_account';
-
-export type Suffix = 'diff' | 'screenshot';
-
 export type AppName = 'Session AQA' | 'Session QA';
+
+export type ScreenshotFileNames =
+  | 'app_disguise'
+  | 'conversation_alice'
+  | 'conversation_bob'
+  | 'landingpage_new_account'
+  | 'landingpage_restore_account'
+  | 'settings_appearance'
+  | 'settings_conversations'
+  | 'settings_notifications'
+  | 'settings_privacy'
+  | 'settings';

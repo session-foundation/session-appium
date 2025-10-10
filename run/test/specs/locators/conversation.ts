@@ -180,9 +180,9 @@ export class OutgoingMessageStatusSent extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: '-android uiautomator',
-          selector:
-            'new UiSelector().resourceId("network.loki.messenger.qa:id/messageStatusTextView").text("Sent")',
+          strategy: 'id',
+          selector: 'network.loki.messenger.qa:id/messageStatusTextView',
+          text: 'Sent',
         } as const;
       case 'ios':
         return {
@@ -234,12 +234,20 @@ export class ConversationHeaderName extends LocatorsInterface {
   }
 }
 
-export class NotificationSettings extends LocatorsInterface {
+export class NotificationsModalButton extends LocatorsInterface {
   public build() {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Notifications',
-    } as const;
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Notifications',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Notifications',
+        } as const;
+    }
   }
 }
 
@@ -582,6 +590,42 @@ export class EmojiReactsCount extends LocatorsInterface {
           strategy: 'xpath',
           selector: `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${this.messageText}"]]//XCUIElementTypeStaticText[@value="${this.expectedCount}"]`,
         } as const;
+    }
+  }
+}
+
+export class MessageLengthCountdown extends LocatorsInterface {
+  constructor(
+    device: DeviceWrapper,
+    private length?: string
+  ) {
+    super(device);
+  }
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger.qa:id/characterLimitText',
+          text: this.length,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'xpath',
+          selector: `//XCUIElementTypeStaticText[@name="${this.length}"]`,
+          text: this.length,
+        } as const;
+    }
+  }
+}
+
+export class MessageLengthOkayButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'Okay' } as const;
+      case 'ios':
+        return { strategy: 'xpath', selector: '//XCUIElementTypeButton[@name="Okay"]' } as const;
     }
   }
 }

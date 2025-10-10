@@ -2,7 +2,7 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
-import { CallButton, NotificationSettings, NotificationSwitch } from './locators/conversation';
+import { CallButton, NotificationsModalButton, NotificationSwitch } from './locators/conversation';
 import { ContinueButton } from './locators/global';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
@@ -123,7 +123,7 @@ async function disappearingCallMessage1o1Android(
   await alice1.clickOnElementById(
     'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   );
-  await alice1.clickOnElementAll(new NotificationSettings(alice1));
+  await alice1.clickOnElementAll(new NotificationsModalButton(alice1));
   await alice1.clickOnElementAll(new NotificationSwitch(alice1));
   // Return to conversation
   await alice1.navigateBack(false);
