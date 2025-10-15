@@ -420,6 +420,7 @@ export type AccessibilityId =
 
 export type Id =
   | DISAPPEARING_TIMES
+  | 'account-id'
   | 'Account ID'
   | 'android:id/aerr_close'
   | 'android:id/aerr_wait'
@@ -590,4 +591,5 @@ export type ScreenshotFileNames =
   | 'settings_conversations'
   | 'settings_notifications'
   | 'settings_privacy'
-  | 'settings';
+  | 'settings'
+  | 'upm_home';

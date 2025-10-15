@@ -64,6 +64,14 @@ export function getNetworkTarget(platform: SupportedPlatformsType): NetworkType 
 
   const apkPath = getAndroidApk();
   const isAQA = isAutomaticQABuildAndroid(apkPath);
+
+  // Early exit for non AQA builds - no need to check devnet
+  if (!isAQA) {
+    process.env.DETECTED_NETWORK_TARGET = 'mainnet';
+    console.log('Network target: mainnet');
+    return 'mainnet';
+  }
+
   const canAccessDevnet = canReachDevnet();
   // If you pass an AQA build in the .env but can't access devnet, tests will fail
   if (isAQA && !canAccessDevnet) {
