@@ -24,6 +24,12 @@ bothPlatformsItSeparate({
   android: {
     testCb: sendLinkGroupAndroid,
   },
+  allureSuites: {
+    parent: 'Sending Messages',
+    suite: 'Message types',
+  },
+  allureDescription:
+    'Verifies that a link with preview can be sent to a group, all members receive the document, and replying to a document works as expected',
 });
 
 async function sendLinkGroupiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {

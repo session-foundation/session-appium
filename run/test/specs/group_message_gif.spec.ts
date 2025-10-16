@@ -16,6 +16,12 @@ bothPlatformsItSeparate({
   android: {
     testCb: sendGifGroupAndroid,
   },
+  allureSuites: {
+    parent: 'Sending Messages',
+    suite: 'Message types',
+  },
+  allureDescription:
+    'Verifies that a GIF can be sent to a group, all members receive the document, and replying to a document works as expected',
 });
 
 async function sendGifGroupiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {

@@ -22,6 +22,11 @@ bothPlatformsItSeparate({
   android: {
     testCb: changeGroupNameAndroid,
   },
+  allureSuites: {
+    parent: 'Groups',
+    suite: 'Edit Group',
+  },
+  allureDescription: 'Verifies that a group name change syncs to every member.',
 });
 
 async function changeGroupNameIos(platform: SupportedPlatformsType, testInfo: TestInfo) {

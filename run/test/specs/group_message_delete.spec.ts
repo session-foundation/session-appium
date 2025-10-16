@@ -8,10 +8,16 @@ import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
-  title: 'Delete message in group',
+  title: 'Delete message locally in group',
   risk: 'high',
   countOfDevicesNeeded: 3,
   testCb: deleteMessageGroup,
+  allureSuites: {
+    parent: 'User Actions',
+    suite: 'Delete Message',
+  },
+  allureDescription:
+    'Verifies that local deletion in a group does not delete a message for other participants.',
 });
 
 async function deleteMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {

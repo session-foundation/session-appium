@@ -16,6 +16,12 @@ bothPlatformsItSeparate({
   android: {
     testCb: sendImageGroupAndroid,
   },
+  allureSuites: {
+    parent: 'Sending Messages',
+    suite: 'Message types',
+  },
+  allureDescription:
+    'Verifies that an image can be sent to a group, all members receive the document, and replying to a document works as expected',
 });
 
 async function sendImageGroupiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {

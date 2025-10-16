@@ -16,6 +16,12 @@ bothPlatformsItSeparate({
   android: {
     testCb: sendDocumentGroupAndroid,
   },
+  allureSuites: {
+    parent: 'Sending Messages',
+    suite: 'Message types',
+  },
+  allureDescription:
+    'Verifies that a PDF can be sent to a group, all members receive the document, and replying to a document works as expected',
 });
 
 async function sendDocumentGroupiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {

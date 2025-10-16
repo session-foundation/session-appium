@@ -8,10 +8,16 @@ import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
-  title: 'Unsend message in group',
+  title: 'Delete message for all in group',
   risk: 'high',
   countOfDevicesNeeded: 3,
   testCb: unsendMessageGroup,
+  allureSuites: {
+    parent: 'User Actions',
+    suite: 'Delete Message',
+  },
+  allureDescription:
+    'Verifies that global deletion in a group deletes a message for every participant.',
 });
 
 async function unsendMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {

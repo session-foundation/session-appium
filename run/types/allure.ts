@@ -25,7 +25,7 @@ export type AllureSuiteConfig =
   | { parent: 'In-App Review Prompt'; suite: 'Flows' | 'Triggers' }
   | { parent: 'Linkouts' }
   | { parent: 'New Conversation'; suite: 'Join Community' | 'New Message' }
-  | { parent: 'Sending Messages'; suite: 'Attachments' | 'Emoji reacts' | 'Rules' }
+  | { parent: 'Sending Messages'; suite: 'Emoji reacts' | 'Message types' | 'Rules' }
   | { parent: 'Settings'; suite: 'App Disguise' }
   | {
       parent: 'User Actions';

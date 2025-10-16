@@ -32,6 +32,8 @@ bothPlatformsItSeparate({
     parent: 'Groups',
     suite: 'Edit Group',
   },
+  allureDescription:
+    'Verifies that a group description can be at most 200 chars and that every member can see a valid change.',
 });
 
 // Setup
