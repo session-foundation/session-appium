@@ -134,16 +134,19 @@ export type XPath =
   | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
   | `//*[@resource-id='network.loki.messenger.qa:id/callTitle' and contains(@text, ':')]`
   | `//*[starts-with(@content-desc, "Photo taken on")]`
+  | `//android.view.ViewGroup[@resource-id='network.loki.messenger.qa:id/mainContainer'][.//android.widget.TextView[contains(@text,'${string}')]]//androidx.compose.ui.platform.ComposeView[@resource-id='network.loki.messenger.qa:id/profilePictureView']`
   | `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/layout_emoji_container"]`
   | `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/reactions_pill_count"][@text="${string}"]`
   | `//android.widget.LinearLayout[.//android.widget.TextView[@content-desc="Conversation list item" and @text="${string}"]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/snippetTextView" and @text="${string}"]`
   | `//android.widget.TextView[@text="${string}"]`
+  | `//android.widget.TextView[@text="Message"]/parent::android.view.View`
   | `//XCUIElementTypeAlert//*//XCUIElementTypeButton`
   | `//XCUIElementTypeButton[@name="Continue"]`
   | `//XCUIElementTypeButton[@name="Okay"]`
   | `//XCUIElementTypeButton[@name="Settings"]`
   | `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${string}"]]//XCUIElementTypeStaticText[@value="😂"]`
   | `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${string}"]]//XCUIElementTypeStaticText[@value="${string}"]`
+  | `//XCUIElementTypeCell[.//XCUIElementTypeOther[@name='Message body' and contains(@label,'${string}')]]//XCUIElementTypeStaticText[contains(@value,'(15')]`
   | `//XCUIElementTypeCell[@name="${string}"]`
   | `//XCUIElementTypeCell[@name="Conversation list item" and @label="${string}"]//XCUIElementTypeStaticText[@name="${string}"]`
   | `//XCUIElementTypeCell[@name="Session"]`
@@ -197,6 +200,7 @@ export type AccessibilityId =
   | 'Awaiting Recipient Answer... 4/6'
   | 'back'
   | 'Back'
+  | 'Blinded ID'
   | 'Block'
   | 'Block contacts - Navigation'
   | 'blocked-banner'
@@ -212,6 +216,7 @@ export type AccessibilityId =
   | 'Close'
   | 'Close button'
   | 'Community invitation'
+  | 'Community Message Requests'
   | 'Configuration message'
   | 'Confirm'
   | 'Confirm block'
@@ -313,6 +318,7 @@ export type AccessibilityId =
   | 'MeetingSE'
   | 'Meetings option'
   | 'Mentions list'
+  | 'Message'
   | 'Message body'
   | 'Message composition'
   | 'Message input box'
