@@ -8,7 +8,7 @@ import { joinCommunity } from './utils/join_community';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
-  title: 'Blinded message request off',
+  title: 'Community message requests off',
   risk: 'medium',
   testCb: blindedMessageRequests,
   countOfDevicesNeeded: 2,

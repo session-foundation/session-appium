@@ -13,7 +13,7 @@ import { joinCommunity } from './utils/join_community';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
-  title: 'Blinded message request',
+  title: 'Community message requests on',
   risk: 'medium',
   testCb: blindedMessageRequests,
   countOfDevicesNeeded: 2,

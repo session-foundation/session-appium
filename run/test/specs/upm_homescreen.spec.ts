@@ -48,10 +48,11 @@ async function upmHomeScreen(platform: SupportedPlatformsType, testInfo: TestInf
     });
     const eltext = await alice1.getTextFromElement(el);
     const normalized = eltext.replace(/\s+/g, ''); // account id comes in two lines
-    if (eltext !== bob.sessionId) {
-      throw new Error(`Account ID does not match.
-    Expected: ${bob.sessionId}
-    Observed: ${normalized}`);
+    const expected = bob.sessionId.trim();
+    if (normalized !== expected) {
+      console.log(`Expected: ${expected}
+        Observed: ${normalized}`);
+      throw new Error('Incorrect Account ID in the User Profile Modal');
     }
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
