@@ -86,9 +86,11 @@ export async function assertUrlIsReachable(url: string): Promise<void> {
 export async function setConsistentStatusBar(device: DeviceWrapper): Promise<void> {
   if (device.isIOS()) {
     // Time: 4:20, 100% battery, full wifi signal
+    device.log(`[DEBUG]: Attempting to set fake status bar`);
     await runScriptAndLog(
-      `xcrun simctl status_bar ${device.udid} override --time "04:20" --batteryLevel 100 --batteryState charged --wifiBars 3`
+      `xcrun simctl status_bar ${device.udid} override --time "04:20" --batteryLevel 100 --batteryState charged --wifiBars 3`, true
     );
+    device.log(`[DEBUG]: Fake status bar command has been sent`);
   } else if (device.isAndroid()) {
     // Enable demo mode to set consistent status bar elements
     await runScriptAndLog(`adb -s ${device.udid} shell settings put global sysui_demo_allowed 1`);

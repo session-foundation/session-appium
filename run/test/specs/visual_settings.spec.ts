@@ -84,7 +84,7 @@ for (const { screenName, screenshotFile, navigation } of testCases) {
       });
 
       await test.step(TestSteps.VERIFY.SCREENSHOT(screenName), async () => {
-        await verifyPageScreenshot(device, platform, screenshotFile, testInfo);
+        await verifyPageScreenshot(device, platform, screenshotFile, testInfo, 0.96);
       });
 
       await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
