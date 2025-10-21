@@ -1641,7 +1641,8 @@ export class DeviceWrapper {
 
   public async waitForElementColorMatch(
     args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj),
-    expectedColor: string
+    expectedColor: string,
+    tolerance?: number
   ): Promise<void> {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
     const description = describeLocator({ ...locator, text: args.text });
@@ -1661,7 +1662,7 @@ export class DeviceWrapper {
 
         const base64 = await this.getElementScreenshot(element.ELEMENT);
         const actualColor = await parseDataImage(base64);
-        const matches = isSameColor(expectedColor, actualColor);
+        const matches = isSameColor(expectedColor, actualColor, tolerance);
 
         return {
           success: matches,
