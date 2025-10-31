@@ -196,6 +196,38 @@ export class LeaveGroupConfirm extends LocatorsInterface {
     }
   }
 }
+export class DeleteGroupMenuItem extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'delete-group-menu-option',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Leave group', // yep this is leave even for the delete option
+        } as const;
+    }
+  }
+}
+export class DeleteGroupConfirm extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'delete-group-confirm-button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Delete',
+        } as const;
+    }
+  }
+}
 export class LatestReleaseBanner extends LocatorsInterface {
   public build() {
     switch (this.platform) {

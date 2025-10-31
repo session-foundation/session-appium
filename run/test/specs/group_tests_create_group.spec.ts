@@ -11,6 +11,11 @@ bothPlatformsIt({
   risk: 'high',
   testCb: groupCreation,
   countOfDevicesNeeded: 3,
+  allureSuites: {
+    parent: 'Groups',
+    suite: 'Create Group',
+  },
+  allureDescription: 'Verifies that a group of 3 can be created successfully via the UI',
 });
 
 async function groupCreation(platform: SupportedPlatformsType, testInfo: TestInfo) {

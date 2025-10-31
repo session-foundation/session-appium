@@ -14,6 +14,11 @@ bothPlatformsIt({
   risk: 'high',
   testCb: leaveGroup,
   countOfDevicesNeeded: 3,
+  allureSuites: {
+    parent: 'Groups',
+    suite: 'Leave/Delete Group',
+  },
+  allureDescription: 'Verifies that a non-admin member can leave a group successfully via the UI',
 });
 
 async function leaveGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {

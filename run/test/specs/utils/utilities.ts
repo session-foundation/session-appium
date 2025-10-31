@@ -88,7 +88,8 @@ export async function setConsistentStatusBar(device: DeviceWrapper): Promise<voi
     // Time: 4:20, 100% battery, full wifi signal
     device.log(`[DEBUG]: Attempting to set fake status bar`);
     await runScriptAndLog(
-      `xcrun simctl status_bar ${device.udid} override --time "04:20" --batteryLevel 100 --batteryState charged --wifiBars 3`, true
+      `xcrun simctl status_bar ${device.udid} override --time "04:20" --batteryLevel 100 --batteryState charged --wifiBars 3`,
+      true
     );
     device.log(`[DEBUG]: Fake status bar command has been sent`);
   } else if (device.isAndroid()) {
