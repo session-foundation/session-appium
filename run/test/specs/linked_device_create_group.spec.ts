@@ -26,6 +26,12 @@ bothPlatformsItSeparate({
   android: {
     testCb: linkedGroupAndroid,
   },
+  allureSuites: {
+    parent: 'Groups',
+    suite: 'Create Group',
+  },
+  allureDescription:
+    'Verifies that a group created on one device appears on a linked device, and that a group name change syncs to all members.',
 });
 
 async function linkedGroupiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {

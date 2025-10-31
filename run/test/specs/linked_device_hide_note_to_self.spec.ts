@@ -18,6 +18,7 @@ bothPlatformsIt({
     parent: 'User Actions',
     suite: 'Hide Note to Self',
   },
+  allureDescription: 'Verifies that Hide Note To Self syncs to a linked device.',
 });
 
 async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestInfo) {

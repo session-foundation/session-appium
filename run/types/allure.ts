@@ -24,7 +24,7 @@ export type AllureSuiteConfig =
   | { parent: 'Groups'; suite: 'Create Group' | 'Edit Group' | 'Leave/Delete Group' }
   | { parent: 'In-App Review Prompt'; suite: 'Flows' | 'Triggers' }
   | { parent: 'Linkouts' }
-  | { parent: 'New Conversation'; suite: 'Join Community' | 'New Message' }
+  | { parent: 'New Conversation'; suite: 'Invite a Friend' | 'Join Community' | 'New Message' }
   | { parent: 'Sending Messages'; suite: 'Emoji reacts' | 'Message types' | 'Rules' }
   | { parent: 'Settings'; suite: 'App Disguise' }
   | {
@@ -32,6 +32,7 @@ export type AllureSuiteConfig =
       suite:
         | 'Block/Unblock'
         | 'Change Profile Picture'
+        | 'Change Username'
         | 'Delete Contact'
         | 'Delete Conversation'
         | 'Delete Message'

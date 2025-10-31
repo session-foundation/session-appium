@@ -11,11 +11,15 @@ bothPlatformsIt({
   risk: 'medium',
   testCb: avatarColorLinkedDevice,
   countOfDevicesNeeded: 2,
+  allureSuites: {
+    parent: 'Visual Checks',
+    suite: 'Onboarding',
+  },
+  allureDescription: `Verifies that a user's avatar color is consistent across linked devices.`,
 });
 async function avatarColorLinkedDevice(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, alice2 },
-    prebuilt: { alice },
   } = await open_Alice2({ platform, testInfo });
 
   // Get Alice's avatar color on device 1 (Home Screen avatar) and turn it into a hex value
@@ -25,9 +29,9 @@ async function avatarColorLinkedDevice(platform: SupportedPlatformsType, testInf
   // Color matching devices 1 and 2
   const colorMatch = isSameColor(alice1PixelColor, alice2PixelColor);
   if (!colorMatch) {
-    throw new Error(
-      `The avatar color of ${alice.userName} does not match across devices. The colors are ${alice1PixelColor} and ${alice2PixelColor}`
-    );
+    console.log(`Device 1 pixel color: ${alice1PixelColor}`);
+    console.log(`Device 2 pixel color: ${alice2PixelColor}`);
+    throw new Error(`The user's placeholder avatar color does not match across linked devices.`);
   }
   await closeApp(alice1, alice2);
 }

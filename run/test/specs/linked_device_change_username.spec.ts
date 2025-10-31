@@ -12,6 +12,11 @@ bothPlatformsIt({
   risk: 'medium',
   countOfDevicesNeeded: 2,
   testCb: changeUsernameLinked,
+  allureSuites: {
+    parent: 'User Actions',
+    suite: 'Change Username',
+  },
+  allureDescription: `Verifies that a username change syncs to a linked device.`,
 });
 
 async function changeUsernameLinked(platform: SupportedPlatformsType, testInfo: TestInfo) {
