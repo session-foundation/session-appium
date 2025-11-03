@@ -203,6 +203,67 @@ export async function open_Alice1_Bob1_Charlie1_friends_group({
   };
 }
 
+export async function open_Alice2_Bob1_Charlie1_friends_group({
+  platform,
+  groupName,
+  focusGroupConvo,
+  testInfo,
+}: WithPlatform &
+  WithFocusGroupConvo & {
+    groupName: string;
+    testInfo: TestInfo;
+  }) {
+  const stateToBuildKey = '3friendsInGroup';
+  const appsToOpen = 4;
+  const result = await openAppsWithState({
+    platform,
+    appsToOpen,
+    stateToBuildKey,
+    groupName,
+    testInfo,
+  });
+  result.devices[0].setDeviceIdentity('alice1');
+  result.devices[1].setDeviceIdentity('bob1');
+  result.devices[2].setDeviceIdentity('charlie1');
+  result.devices[3].setDeviceIdentity('alice2'); 
+
+  const alice = result.prebuilt.users[0];
+  const bob = result.prebuilt.users[1];
+  const charlie = result.prebuilt.users[2];
+
+  const seedPhrases = [alice.seedPhrase, bob.seedPhrase, charlie.seedPhrase, alice.seedPhrase];
+  await linkDevices(result.devices, seedPhrases);
+
+  const alice1 = result.devices[0];
+  const bob1 = result.devices[1];
+  const charlie1 = result.devices[2];
+  const alice2 = result.devices[3];
+
+  const formattedGroup = { group: result.prebuilt.group };
+  const formattedDevices = {
+    alice1,
+    bob1,
+    charlie1,
+    alice2,
+  };
+  const formattedUsers: WithUsers<3> = {
+    alice,
+    bob,
+    charlie,
+  };
+  if (focusGroupConvo) {
+    await focusConvoOnDevices({
+      devices: result.devices,
+      convoName: result.prebuilt.group.groupName,
+    });
+  }
+
+  return {
+    devices: formattedDevices,
+    prebuilt: { ...formattedUsers, ...formattedGroup },
+  };
+}
+
 /**
  * Open 4 devices, one for Alice, one for Bob, one for Charlie, and one extra, unlinked.
  * This function is used for testing that we can do a bunch of actions without having a linked device,

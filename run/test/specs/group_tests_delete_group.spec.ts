@@ -5,29 +5,29 @@ import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { ConversationSettings } from './locators/conversation';
 import { DeleteGroupConfirm, DeleteGroupMenuItem } from './locators/groups';
-import { ConversationItem } from './locators/home';
-import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
+import { ConversationItem, PlusButton } from './locators/home';
+import { open_Alice2_Bob1_Charlie1_friends_group } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
-  title: 'Delete group',
+  title: 'Delete group linked device',
   risk: 'high',
   testCb: deleteGroup,
-  countOfDevicesNeeded: 3,
+  countOfDevicesNeeded: 4,
   allureSuites: {
     parent: 'Groups',
     suite: 'Leave/Delete Group',
   },
   allureDescription: `Verifies that an admin can delete a group successfully via the UI.
-  The group members see the empty state control message, and the admin's conversation disappears from the home screen.`,
+  The group members see the empty state control message, and the admin's conversation disappears from the home screen, even on a linked device.`,
 });
 
 async function deleteGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Delete group';
   const {
-    devices: { alice1, bob1, charlie1 },
+    devices: { alice1, bob1, charlie1, alice2},
   } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
-    return open_Alice1_Bob1_Charlie1_friends_group({
+    return open_Alice2_Bob1_Charlie1_friends_group({
       platform,
       groupName: testGroupName,
       focusGroupConvo: true,
@@ -48,6 +48,7 @@ async function deleteGroup(platform: SupportedPlatformsType, testInfo: TestInfo)
     await alice1.clickOnElementAll(new DeleteGroupConfirm(alice1));
   });
   await test.step('Verify group is deleted for all members', async () => {
+    // Members
     if (platform === 'ios') {
       await Promise.all(
         [bob1, charlie1].map(device =>
@@ -72,9 +73,15 @@ async function deleteGroup(platform: SupportedPlatformsType, testInfo: TestInfo)
         )
       );
     }
-    await alice1.verifyElementNotPresent(new ConversationItem(alice1, testGroupName).build());
+    // Admins
+    await Promise.all(
+      [alice1, alice2].map(async device => {
+        await device.waitForTextElementToBePresent(new PlusButton(device)); // Ensure we're on the home screen
+        await device.verifyElementNotPresent(new ConversationItem(device, testGroupName).build());
+      })
+    );
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
-    await closeApp(alice1, bob1, charlie1);
+    await closeApp(alice1, bob1, charlie1, alice2);
   });
 }
