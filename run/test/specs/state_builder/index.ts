@@ -225,7 +225,7 @@ export async function open_Alice2_Bob1_Charlie1_friends_group({
   result.devices[0].setDeviceIdentity('alice1');
   result.devices[1].setDeviceIdentity('bob1');
   result.devices[2].setDeviceIdentity('charlie1');
-  result.devices[3].setDeviceIdentity('alice2'); 
+  result.devices[3].setDeviceIdentity('alice2');
 
   const alice = result.prebuilt.users[0];
   const bob = result.prebuilt.users[1];

@@ -25,7 +25,7 @@ bothPlatformsIt({
 async function deleteGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Delete group';
   const {
-    devices: { alice1, bob1, charlie1, alice2},
+    devices: { alice1, bob1, charlie1, alice2 },
   } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
     return open_Alice2_Bob1_Charlie1_friends_group({
       platform,
