@@ -2,7 +2,12 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { MarketCapAmount, SESHPrice, SessionNetworkMenuItem, StakingRewardPoolAmount } from './locators/network_page';
+import {
+  MarketCapAmount,
+  SESHPrice,
+  SessionNetworkMenuItem,
+  StakingRewardPoolAmount,
+} from './locators/network_page';
 import { UserSettings } from './locators/settings';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
@@ -42,12 +47,12 @@ async function networkPageValues(platform: SupportedPlatformsType, testInfo: Tes
 
   // SESH Price
   await device.waitForTextElementToBePresent(new SESHPrice(device, data.price.usd));
-  
+
   // Staking Reward Pool
   await device.waitForTextElementToBePresent(
     new StakingRewardPoolAmount(device, data.token.staking_reward_pool)
   );
-  
+
   // Market Cap
   await device.waitForTextElementToBePresent(
     new MarketCapAmount(device, data.price.usd_market_cap)

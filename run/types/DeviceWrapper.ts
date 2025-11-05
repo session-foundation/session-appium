@@ -333,6 +333,7 @@ export class DeviceWrapper {
       { from: 'Voice message', to: 'New voice message' },
       { from: 'Message sent status: Sent', to: 'Message sent status: Sending' },
       { from: 'Done', to: 'Donate' },
+      { from: 'New conversation button', to: 'conversation-options-avatar' },
     ];
 
     // System locators such as 'network.loki.messenger.qa:id' can cause false positives with too high similarity scores
