@@ -20,6 +20,11 @@ bothPlatformsIt({
   risk: 'medium',
   testCb: networkPageLearnMore,
   countOfDevicesNeeded: 1,
+  allureSuites: {
+    parent: 'Network Page',
+  },
+  allureDescription:
+    'Verifies that the "Learn More" link on the Network Page for Staking opens the correct URL in the device browser.',
 });
 
 async function networkPageLearnMore(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -51,8 +56,6 @@ async function networkPageLearnMore(platform: SupportedPlatformsType, testInfo: 
     throw new Error(
       `The retrieved URL does not match the expected. The retrieved URL is ${fullRetrievedURL}`
     );
-  } else {
-    device.log('The URLs match.');
   }
   await assertUrlIsReachable(linkURL);
   // Close browser and app

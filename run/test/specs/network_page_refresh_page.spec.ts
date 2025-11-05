@@ -12,6 +12,10 @@ bothPlatformsIt({
   risk: 'low',
   testCb: refreshNetworkPage,
   countOfDevicesNeeded: 1,
+  allureSuites: {
+    parent: 'Network Page',
+  },
+  allureDescription: `Verifies that the Network Page refreshes and updates the "Last updated" timestamp correctly.`,
 });
 
 async function refreshNetworkPage(platform: SupportedPlatformsType, testInfo: TestInfo) {

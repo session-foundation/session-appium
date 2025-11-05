@@ -24,6 +24,7 @@ export type AllureSuiteConfig =
   | { parent: 'Groups'; suite: 'Create Group' | 'Edit Group' | 'Leave/Delete Group' }
   | { parent: 'In-App Review Prompt'; suite: 'Flows' | 'Triggers' }
   | { parent: 'Linkouts' }
+  | { parent: 'Network Page' }
   | { parent: 'New Conversation'; suite: 'Invite a Friend' | 'Join Community' | 'New Message' }
   | { parent: 'Sending Messages'; suite: 'Emoji reacts' | 'Message types' | 'Rules' }
   | { parent: 'Settings'; suite: 'App Disguise' }
