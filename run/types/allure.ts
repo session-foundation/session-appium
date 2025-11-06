@@ -27,7 +27,7 @@ export type AllureSuiteConfig =
   | { parent: 'Network Page' }
   | { parent: 'New Conversation'; suite: 'Invite a Friend' | 'Join Community' | 'New Message' }
   | { parent: 'Sending Messages'; suite: 'Emoji reacts' | 'Message types' | 'Rules' }
-  | { parent: 'Settings'; suite: 'App Disguise' }
+  | { parent: 'Settings'; suite: 'App Disguise' | 'Community Message Requests' }
   | {
       parent: 'User Actions';
       suite:

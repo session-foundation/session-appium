@@ -100,7 +100,7 @@ jobs:
           echo "Checking devnet accessibility for APK selection..."
           DEVNET_ACCESSIBLE=false
 
-          # Retry logic matching your TypeScript function
+          # Retry logic 
           for attempt in 1 2 3; do
             echo "Devnet check attempt $attempt/3..."
             if curl -s --connect-timeout 5 --max-time 10 http://sesh-net.local:1280 >/dev/null 2>&1; then
