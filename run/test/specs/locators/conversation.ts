@@ -239,10 +239,6 @@ export class NotificationsModalButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Notifications',
-        } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',

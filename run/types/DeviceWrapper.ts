@@ -2310,20 +2310,9 @@ export class DeviceWrapper {
       this.info('Scroll button not found, continuing');
     }
   }
-  public async pullToRefresh() {
-    if (this.isAndroid()) {
-      await this.pressCoordinates(
-        InteractionPoints.NetworkPageAndroid.x,
-        InteractionPoints.NetworkPageAndroid.y,
-        true
-      );
-    } else {
-      await this.pressCoordinates(
-        InteractionPoints.NetworkPageIOS.x,
-        InteractionPoints.NetworkPageIOS.y,
-        true
-      );
-    }
+  public async pullToRefresh(): Promise<void> {
+    const { width, height } = await this.getWindowRect();
+    await this.scroll({ x: width / 2, y: height * 0.15 }, { x: width / 2, y: height * 0.55 }, 200);
   }
 
   public async navigateBack(newAndroid: boolean = true) {

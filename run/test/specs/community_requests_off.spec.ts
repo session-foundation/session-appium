@@ -41,13 +41,15 @@ async function blindedMessageRequests(platform: SupportedPlatformsType, testInfo
   });
   await device1.clickOnElementAll(new CommunityMessageAuthor(device1, message));
   await test.step(`Verify the 'Message' button in the User Profile Modal is disabled`, async () => {
-  const messageButton = await device1.waitForTextElementToBePresent(new UPMMessageButton(device1));
-  const attr = await device1.getAttribute('enabled', messageButton.ELEMENT);
-  if (attr !== 'false') {
-    device1.log(`Message button attribute is 'enabled = ${attr}'`);
-    throw new Error(`Message button should be disabled but it is not`);
-  }
-});
+    const messageButton = await device1.waitForTextElementToBePresent(
+      new UPMMessageButton(device1)
+    );
+    const attr = await device1.getAttribute('enabled', messageButton.ELEMENT);
+    if (attr !== 'false') {
+      device1.log(`Message button attribute is 'enabled = ${attr}'`);
+      throw new Error(`Message button should be disabled but it is not`);
+    }
+  });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device1, device2);
   });

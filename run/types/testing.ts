@@ -52,8 +52,6 @@ export const InteractionPoints: Record<string, Coordinates> = {
   GifButtonKeyboardClosed: { x: 36, y: 689 },
   DocumentKeyboardOpen: { x: 36, y: 476 },
   DocumentKeyboardClosed: { x: 36, y: 740 },
-  NetworkPageAndroid: { x: 880, y: 1150 },
-  NetworkPageIOS: { x: 308, y: 220 },
   BackToSession: { x: 42, y: 42 },
 };
 

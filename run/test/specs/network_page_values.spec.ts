@@ -11,6 +11,7 @@ import {
 } from './locators/network_page';
 import { UserSettings } from './locators/settings';
 import { newUser } from './utils/create_account';
+import { validateNetworkData } from './utils/network_api';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
@@ -24,19 +25,6 @@ bothPlatformsIt({
   allureDescription:
     'Verifies that the Session Network Page displays the values fetched from the network API correctly.',
 });
-
-function validateNetworkData(data: any): asserts data is {
-  price: { usd: number; usd_market_cap: number };
-  token: { staking_reward_pool: number };
-} {
-  if (
-    typeof data?.price?.usd !== 'number' ||
-    typeof data?.token?.staking_reward_pool !== 'number' ||
-    typeof data?.price?.usd_market_cap !== 'number'
-  ) {
-    throw new Error('Network API response missing or invalid numeric fields');
-  }
-}
 
 async function networkPageValues(platform: SupportedPlatformsType, testInfo: TestInfo) {
   let data: {

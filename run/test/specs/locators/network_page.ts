@@ -1,4 +1,5 @@
 import { LocatorsInterface } from '.';
+import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 
 export class SessionNetworkMenuItem extends LocatorsInterface {
@@ -53,17 +54,25 @@ export class SessionNetworkLearnMoreStaking extends LocatorsInterface {
 }
 
 export class LastUpdatedTimeStamp extends LocatorsInterface {
+  private expectedText: string;
+
+  constructor(device: DeviceWrapper, relative_time: string) {
+    super(device);
+    this.expectedText = englishStrippedStr('updated').withArgs({ relative_time }).toString();
+  }
   public build() {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'id',
           selector: 'Last updated timestamp',
+          text: this.expectedText,
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Last updated timestamp',
+          text: this.expectedText,
         } as const;
     }
   }
