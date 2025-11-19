@@ -52,8 +52,6 @@ export const InteractionPoints: Record<string, Coordinates> = {
   GifButtonKeyboardClosed: { x: 36, y: 689 },
   DocumentKeyboardOpen: { x: 36, y: 476 },
   DocumentKeyboardClosed: { x: 36, y: 740 },
-  NetworkPageAndroid: { x: 880, y: 1150 },
-  NetworkPageIOS: { x: 308, y: 220 },
   BackToSession: { x: 42, y: 42 },
 };
 
@@ -134,20 +132,25 @@ export type XPath =
   | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
   | `//*[@resource-id='network.loki.messenger.qa:id/callTitle' and contains(@text, ':')]`
   | `//*[starts-with(@content-desc, "Photo taken on")]`
+  | `//android.view.ViewGroup[@resource-id='network.loki.messenger.qa:id/mainContainer'][.//android.widget.TextView[contains(@text,'${string}')]]//androidx.compose.ui.platform.ComposeView[@resource-id='network.loki.messenger.qa:id/profilePictureView']`
   | `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/layout_emoji_container"]`
   | `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/reactions_pill_count"][@text="${string}"]`
   | `//android.widget.LinearLayout[.//android.widget.TextView[@content-desc="Conversation list item" and @text="${string}"]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/snippetTextView" and @text="${string}"]`
   | `//android.widget.TextView[@text="${string}"]`
+  | `//android.widget.TextView[@text="Message"]/parent::android.view.View`
   | `//XCUIElementTypeAlert//*//XCUIElementTypeButton`
   | `//XCUIElementTypeButton[@name="Continue"]`
+  | `//XCUIElementTypeButton[@name="Okay"]`
   | `//XCUIElementTypeButton[@name="Settings"]`
   | `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${string}"]]//XCUIElementTypeStaticText[@value="😂"]`
   | `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${string}"]]//XCUIElementTypeStaticText[@value="${string}"]`
+  | `//XCUIElementTypeCell[.//XCUIElementTypeOther[@name='Message body' and contains(@label,'${string}')]]//XCUIElementTypeStaticText[contains(@value,'(15')]`
   | `//XCUIElementTypeCell[@name="${string}"]`
   | `//XCUIElementTypeCell[@name="Conversation list item" and @label="${string}"]//XCUIElementTypeStaticText[@name="${string}"]`
   | `//XCUIElementTypeCell[@name="Session"]`
   | `//XCUIElementTypeImage`
   | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`
+  | `//XCUIElementTypeStaticText[@name="${string}"]`
   | `//XCUIElementTypeStaticText[@name="Paste"]`
   | `//XCUIElementTypeStaticText[@name="Videos"]`
   | `//XCUIElementTypeStaticText[contains(@name, '00:')]`
@@ -195,6 +198,7 @@ export type AccessibilityId =
   | 'Awaiting Recipient Answer... 4/6'
   | 'back'
   | 'Back'
+  | 'Blinded ID'
   | 'Block'
   | 'Block contacts - Navigation'
   | 'blocked-banner'
@@ -210,6 +214,7 @@ export type AccessibilityId =
   | 'Close'
   | 'Close button'
   | 'Community invitation'
+  | 'Community Message Requests'
   | 'Configuration message'
   | 'Confirm'
   | 'Confirm block'
@@ -238,6 +243,7 @@ export type AccessibilityId =
   | 'Deleted message'
   | 'Delete for everyone'
   | 'Delete for me'
+  | 'Delete group'
   | 'Delete just for me'
   | 'Delete message'
   | 'Delete message request'
@@ -307,10 +313,12 @@ export type AccessibilityId =
   | 'Loading animation'
   | 'Local Network Permission - Switch'
   | 'Manage Members'
+  | 'Market cap amount'
   | 'Media message'
   | 'MeetingSE'
   | 'Meetings option'
   | 'Mentions list'
+  | 'Message'
   | 'Message body'
   | 'Message composition'
   | 'Message input box'
@@ -377,6 +385,7 @@ export type AccessibilityId =
   | 'Select alternate app icon'
   | 'Send'
   | 'Send message button'
+  | 'SENT price'
   | 'Session'
   | 'Session | Send Messages, Not Metadata. | Private Messenger'
   | 'Session ID generated'
@@ -393,6 +402,7 @@ export type AccessibilityId =
   | 'Show roots'
   | 'Slow mode notifications button'
   | 'space'
+  | 'Staking reward pool amount'
   | 'TabBarItemTitle'
   | 'Terms of Service'
   | 'test_file, pdf'
@@ -418,6 +428,7 @@ export type AccessibilityId =
 
 export type Id =
   | DISAPPEARING_TIMES
+  | 'account-id'
   | 'Account ID'
   | 'android:id/aerr_close'
   | 'android:id/aerr_wait'
@@ -461,6 +472,8 @@ export type Id =
   | 'delete-conversation-confirm-button'
   | 'delete-conversation-menu-option'
   | 'delete-for-everyone'
+  | 'delete-group-confirm-button'
+  | 'delete-group-menu-option'
   | 'delete-only-on-this-device'
   | 'Delete'
   | 'Disable disappearing messages'
@@ -497,6 +510,7 @@ export type Id =
   | 'Leave'
   | 'Loading animation'
   | 'manage-members-menu-option'
+  | 'Market cap amount'
   | 'MeetingSE option'
   | 'Modal description'
   | 'Modal heading'
@@ -508,6 +522,7 @@ export type Id =
   | 'network.loki.messenger.qa:id/callInProgress'
   | 'network.loki.messenger.qa:id/callSubtitle'
   | 'network.loki.messenger.qa:id/callTitle'
+  | 'network.loki.messenger.qa:id/characterLimitText'
   | 'network.loki.messenger.qa:id/crop_image_menu_crop'
   | 'network.loki.messenger.qa:id/emptyStateContainer'
   | 'network.loki.messenger.qa:id/endCallButton'
@@ -535,6 +550,7 @@ export type Id =
   | 'nickname-input'
   | 'not-now-button'
   | 'Notifications'
+  | 'Okay'
   | 'open-survey-button'
   | 'Open'
   | 'Open URL'
@@ -553,6 +569,7 @@ export type Id =
   | 'Reveal recovery phrase button'
   | 'Save'
   | 'Select All'
+  | 'SESH price'
   | 'session-network-menu-item'
   | 'Session id input box'
   | 'set-nickname-confirm-button'
@@ -561,6 +578,7 @@ export type Id =
   | 'show-nts-confirm-button'
   | 'Show'
   | 'Slow mode notifications button'
+  | 'Staking reward pool amount'
   | 'Terms of Service'
   | 'update-group-info-confirm-button'
   | 'update-group-info-description-input'
@@ -574,8 +592,17 @@ export type Id =
 
 export type TestRisk = 'high' | 'low' | 'medium';
 
-export type ElementStates = 'new_account' | 'restore_account';
-
-export type Suffix = 'diff' | 'screenshot';
-
 export type AppName = 'Session AQA' | 'Session QA';
+
+export type ScreenshotFileNames =
+  | 'app_disguise'
+  | 'conversation_alice'
+  | 'conversation_bob'
+  | 'landingpage_new_account'
+  | 'landingpage_restore_account'
+  | 'settings_appearance'
+  | 'settings_conversations'
+  | 'settings_notifications'
+  | 'settings_privacy'
+  | 'settings'
+  | 'upm_home';

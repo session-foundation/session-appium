@@ -12,6 +12,11 @@ androidIt({
   risk: 'medium',
   testCb: editGroupBanner,
   countOfDevicesNeeded: 3,
+  allureSuites: {
+    parent: 'Groups',
+    suite: 'Edit Group',
+  },
+  allureDescription: 'Verifies that the latest release banner is present on the Edit Group screen',
 });
 
 async function editGroupBanner(platform: SupportedPlatformsType, testInfo: TestInfo) {

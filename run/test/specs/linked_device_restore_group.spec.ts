@@ -14,6 +14,12 @@ bothPlatformsIt({
   risk: 'high',
   testCb: restoreGroup,
   countOfDevicesNeeded: 4,
+  allureSuites: {
+    parent: 'Groups',
+    suite: 'Create Group',
+  },
+  allureDescription:
+    'Verifies that a group (and its messages) created on one device appears when restoring on a second device.',
 });
 async function restoreGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Restore group';

@@ -105,7 +105,7 @@ export class TermsOfServiceButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Terms of Service',
+          selector: 'Terms of Service', // will be Terms of service *button* past 1.29.0
         } as const;
       case 'ios':
         return {
@@ -122,7 +122,7 @@ export class PrivacyPolicyButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Privacy Policy',
+          selector: 'Privacy Policy', // will be Privacy policy *button* past 1.29.0
         } as const;
       case 'ios':
         return {

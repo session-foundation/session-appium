@@ -10,6 +10,12 @@ bothPlatformsIt({
   risk: 'high',
   countOfDevicesNeeded: 3,
   testCb: sendVoiceMessageGroup,
+  allureSuites: {
+    parent: 'Sending Messages',
+    suite: 'Message types',
+  },
+  allureDescription:
+    'Verifies that a voice message can be sent to a group, all members receive the document, and replying to a document works as expected',
 });
 
 async function sendVoiceMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {

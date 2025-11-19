@@ -13,6 +13,12 @@ androidIt({
   risk: 'medium',
   testCb: inviteContactGroupBanner,
   countOfDevicesNeeded: 3,
+  allureSuites: {
+    parent: 'Groups',
+    suite: 'Edit Group',
+  },
+  allureDescription:
+    'Verifies that the latest release banner is present on the Invite Contacts screen',
 });
 
 async function inviteContactGroupBanner(platform: SupportedPlatformsType, testInfo: TestInfo) {

@@ -21,17 +21,19 @@ import { UserNameType } from '@session-foundation/qa-seeder';
 
 export type AllureSuiteConfig =
   | { parent: 'Disappearing Messages'; suite: 'Conversation Types' | 'Message Types' | 'Rules' }
-  | { parent: 'Groups'; suite: 'Edit Group' }
+  | { parent: 'Groups'; suite: 'Create Group' | 'Edit Group' | 'Leave/Delete Group' }
   | { parent: 'In-App Review Prompt'; suite: 'Flows' | 'Triggers' }
   | { parent: 'Linkouts' }
-  | { parent: 'New Conversation'; suite: 'Join Community' | 'New Message' }
-  | { parent: 'Sending Messages'; suite: 'Attachments' | 'Emoji reacts' }
-  | { parent: 'Settings'; suite: 'App Disguise' }
+  | { parent: 'Network Page' }
+  | { parent: 'New Conversation'; suite: 'Invite a Friend' | 'Join Community' | 'New Message' }
+  | { parent: 'Sending Messages'; suite: 'Emoji reacts' | 'Message types' | 'Rules' }
+  | { parent: 'Settings'; suite: 'App Disguise' | 'Community Message Requests' }
   | {
       parent: 'User Actions';
       suite:
         | 'Block/Unblock'
         | 'Change Profile Picture'
+        | 'Change Username'
         | 'Delete Contact'
         | 'Delete Conversation'
         | 'Delete Message'
@@ -39,7 +41,7 @@ export type AllureSuiteConfig =
         | 'Set Nickname'
         | 'Share to Session';
     }
-  | { parent: 'Visual Checks' }
+  | { parent: 'Visual Checks'; suite: 'Conversation' | 'Onboarding' | 'Settings' }
   | { parent: 'Voice Calls' };
 
 /**
@@ -71,12 +73,14 @@ export const TestSteps = {
   SEND: {
     MESSAGE: (sender: UserNameType, recipient: string) =>
       `${sender} sends a message to ${recipient}`,
+    REPLY: (sender: UserNameType, recipient: string) => `${sender} replies to ${recipient}`,
     LINK: 'Send Link',
     IMAGE: 'Send Image',
     EMOJI_REACT: `Send an emoji react`,
   },
   // Open/Navigate steps
   OPEN: {
+    GENERIC: (string: string) => `Open ${string}`,
     NTS: 'Open Note to Self',
     UPDATE_GROUP_INFO: `Open 'Update Group Information' modal`,
     PATH: 'Open Path screen',
@@ -98,8 +102,7 @@ export const TestSteps = {
   },
   // Verify steps
   VERIFY: {
-    ELEMENT_SCREENSHOT: (elementDesc: string) =>
-      `Verify ${elementDesc} element screenshot matches baseline`,
+    SCREENSHOT: (desc: string) => `Verify ${desc} screenshot matches baseline`,
     GENERIC_MODAL: 'Verify modal strings',
     SPECIFIC_MODAL: (modalDesc: string) => `Verify ${modalDesc} modal strings`,
     MESSAGE_SYNCED: 'Verify message synced to linked device',

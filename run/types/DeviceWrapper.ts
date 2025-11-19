@@ -333,6 +333,7 @@ export class DeviceWrapper {
       { from: 'Voice message', to: 'New voice message' },
       { from: 'Message sent status: Sent', to: 'Message sent status: Sending' },
       { from: 'Done', to: 'Donate' },
+      { from: 'New conversation button', to: 'conversation-options-avatar' },
     ];
 
     // System locators such as 'network.loki.messenger.qa:id' can cause false positives with too high similarity scores
@@ -1641,7 +1642,8 @@ export class DeviceWrapper {
 
   public async waitForElementColorMatch(
     args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj),
-    expectedColor: string
+    expectedColor: string,
+    tolerance?: number
   ): Promise<void> {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
     const description = describeLocator({ ...locator, text: args.text });
@@ -1661,7 +1663,7 @@ export class DeviceWrapper {
 
         const base64 = await this.getElementScreenshot(element.ELEMENT);
         const actualColor = await parseDataImage(base64);
-        const matches = isSameColor(expectedColor, actualColor);
+        const matches = isSameColor(expectedColor, actualColor, tolerance);
 
         return {
           success: matches,
@@ -2308,20 +2310,9 @@ export class DeviceWrapper {
       this.info('Scroll button not found, continuing');
     }
   }
-  public async pullToRefresh() {
-    if (this.isAndroid()) {
-      await this.pressCoordinates(
-        InteractionPoints.NetworkPageAndroid.x,
-        InteractionPoints.NetworkPageAndroid.y,
-        true
-      );
-    } else {
-      await this.pressCoordinates(
-        InteractionPoints.NetworkPageIOS.x,
-        InteractionPoints.NetworkPageIOS.y,
-        true
-      );
-    }
+  public async pullToRefresh(): Promise<void> {
+    const { width, height } = await this.getWindowRect();
+    await this.scroll({ x: width / 2, y: height * 0.15 }, { x: width / 2, y: height * 0.55 }, 200);
   }
 
   public async navigateBack(newAndroid: boolean = true) {
@@ -2375,7 +2366,7 @@ export class DeviceWrapper {
     if (this.isAndroid()) {
       const permissions = await this.doesElementExist({
         ...locatorConfig,
-        maxWait: 2_000,
+        maxWait: 5_000,
       });
 
       if (permissions) {

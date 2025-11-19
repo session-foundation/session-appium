@@ -15,6 +15,12 @@ bothPlatformsItSeparate({
   android: {
     testCb: sendVideoGroupAndroid,
   },
+  allureSuites: {
+    parent: 'Sending Messages',
+    suite: 'Message types',
+  },
+  allureDescription:
+    'Verifies that a video can be sent to a group, all members receive the document, and replying to a document works as expected',
 });
 
 async function sendVideoGroupiOS(platform: SupportedPlatformsType, testInfo: TestInfo) {

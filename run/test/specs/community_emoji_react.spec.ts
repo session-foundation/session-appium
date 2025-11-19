@@ -18,6 +18,9 @@ bothPlatformsIt({
     suite: 'Emoji reacts',
   },
   allureDescription: 'Verifies that an emoji reaction can be sent and is received in a community',
+  allureLinks: {
+    android: 'SES-4608',
+  },
 });
 
 async function sendEmojiReactionCommunity(platform: SupportedPlatformsType, testInfo: TestInfo) {

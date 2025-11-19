@@ -1,6 +1,7 @@
 import type { DeviceWrapper } from '../../../types/DeviceWrapper';
 
 import { testCommunityName } from '../../../constants/community';
+import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
 import { StrategyExtractionObj } from '../../../types/testing';
 import { getAppDisplayName } from '../utils/devnet';
 import { LocatorsInterface } from './index';
@@ -180,9 +181,9 @@ export class OutgoingMessageStatusSent extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: '-android uiautomator',
-          selector:
-            'new UiSelector().resourceId("network.loki.messenger.qa:id/messageStatusTextView").text("Sent")',
+          strategy: 'id',
+          selector: 'network.loki.messenger.qa:id/messageStatusTextView',
+          text: 'Sent',
         } as const;
       case 'ios':
         return {
@@ -234,12 +235,16 @@ export class ConversationHeaderName extends LocatorsInterface {
   }
 }
 
-export class NotificationSettings extends LocatorsInterface {
+export class NotificationsModalButton extends LocatorsInterface {
   public build() {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Notifications',
-    } as const;
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Notifications',
+        } as const;
+    }
   }
 }
 
@@ -581,6 +586,127 @@ export class EmojiReactsCount extends LocatorsInterface {
         return {
           strategy: 'xpath',
           selector: `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${this.messageText}"]]//XCUIElementTypeStaticText[@value="${this.expectedCount}"]`,
+        } as const;
+    }
+  }
+}
+
+export class MessageLengthCountdown extends LocatorsInterface {
+  constructor(
+    device: DeviceWrapper,
+    private length?: string
+  ) {
+    super(device);
+  }
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger.qa:id/characterLimitText',
+          text: this.length,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'xpath',
+          selector: `//XCUIElementTypeStaticText[@name="${this.length}"]`,
+          text: this.length,
+        } as const;
+    }
+  }
+}
+
+export class MessageLengthOkayButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'Okay' } as const;
+      case 'ios':
+        return { strategy: 'xpath', selector: '//XCUIElementTypeButton[@name="Okay"]' } as const;
+    }
+  }
+}
+
+export class CommunityMessageAuthor extends LocatorsInterface {
+  public text: string;
+  constructor(device: DeviceWrapper, text: string) {
+    super(device);
+    this.text = text;
+  }
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        // Identify the profile picture of a message with a specific text
+        return {
+          strategy: 'xpath',
+          selector: `//android.view.ViewGroup[@resource-id='network.loki.messenger.qa:id/mainContainer'][.//android.widget.TextView[contains(@text,'${this.text}')]]//androidx.compose.ui.platform.ComposeView[@resource-id='network.loki.messenger.qa:id/profilePictureView']`,
+        } as const;
+      case 'ios':
+        // Identify the display name of a blinded sender of a message with a specific text
+        return {
+          strategy: 'xpath',
+          selector: `//XCUIElementTypeCell[.//XCUIElementTypeOther[@name='Message body' and contains(@label,'${this.text}')]]//XCUIElementTypeStaticText[contains(@value,'(15')]`,
+        } as const;
+    }
+  }
+}
+
+export class UPMMessageButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'xpath',
+          selector: `//android.widget.TextView[@text="Message"]/parent::android.view.View`,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Message',
+        } as const;
+    }
+  }
+}
+
+export class MessageRequestPendingDescription extends LocatorsInterface {
+  public build() {
+    const messageRequestPendingDescription = englishStrippedStr(
+      'messageRequestPendingDescription'
+    ).toString();
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger.qa:id/textSendAfterApproval',
+          text: messageRequestPendingDescription,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Control message',
+          text: messageRequestPendingDescription,
+        } as const;
+    }
+  }
+}
+
+export class MessageRequestAcceptDescription extends LocatorsInterface {
+  public build() {
+    const messageRequestsAcceptDescription = englishStrippedStr(
+      'messageRequestsAcceptDescription'
+    ).toString();
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger.qa:id/sendAcceptsTextView',
+          text: messageRequestsAcceptDescription,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Control message',
+          text: messageRequestsAcceptDescription,
         } as const;
     }
   }

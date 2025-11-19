@@ -10,12 +10,13 @@ import { isSameColor } from './utils/check_colour';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
-  title: 'Avatar color',
+  title: 'Check placeholder avatar color',
   risk: 'medium',
   countOfDevicesNeeded: 2,
   testCb: avatarColor,
   allureSuites: {
     parent: 'Visual Checks',
+    suite: 'Settings',
   },
   allureDescription: `Verifies that a user's placeholder avatar color appears the same to a contact`,
 });

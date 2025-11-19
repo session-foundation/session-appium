@@ -112,6 +112,23 @@ export class RecoveryPhraseContainer extends LocatorsInterface {
   }
 }
 
+export class CommunityMessageRequestSwitch extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: '-android uiautomator',
+          selector: 'new UiSelector().text("Community Message Requests")',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Community Message Requests',
+        } as const;
+    }
+  }
+}
+
 export class SaveProfilePictureButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -172,6 +189,23 @@ export class ConversationsMenuItem extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'Conversations',
+        } as const;
+    }
+  }
+}
+
+export class NotificationsMenuItem extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Notifications',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Notifications',
         } as const;
     }
   }

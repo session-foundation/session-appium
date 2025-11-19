@@ -11,6 +11,10 @@ bothPlatformsIt({
   risk: 'low',
   countOfDevicesNeeded: 3,
   testCb: sendLongMessageGroup,
+  allureSuites: {
+    parent: 'Sending Messages',
+    suite: 'Message types',
+  },
   allureDescription: 'Verifies that a long message can be sent to a group',
 });
 

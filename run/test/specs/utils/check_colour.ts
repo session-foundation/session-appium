@@ -38,13 +38,15 @@ export async function parseDataImage(base64: string) {
 
   return hexColor;
 }
-
 // Determines if two colors look "the same" for humans even if they are not an exact match
-export function isSameColor(hex1: string, hex2: string) {
+export function isSameColor(hex1: string, hex2: string, tolerance?: number) {
   // Convert the hex strings to RGB objects
   const rgb1 = hexToRgbObject(hex1);
   const rgb2 = hexToRgbObject(hex2);
-  // Perform the color comparison using the looks-same library
-  const isSameColor = colors(rgb1, rgb2);
-  return isSameColor;
+  // Only pass options if tolerance is provided
+  if (tolerance !== undefined) {
+    return colors(rgb1, rgb2, { tolerance });
+  }
+  // Call without options for default behavior
+  return colors(rgb1, rgb2);
 }

@@ -19,6 +19,11 @@ bothPlatformsIt({
   risk: 'high',
   testCb: addContactToGroup,
   countOfDevicesNeeded: 4,
+  allureSuites: {
+    parent: 'Groups',
+    suite: 'Edit Group',
+  },
+  allureDescription: 'Create four accounts, create a group with three, add the fourth member',
 });
 async function addContactToGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Group to test adding contact';

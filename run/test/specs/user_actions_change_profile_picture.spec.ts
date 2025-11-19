@@ -22,6 +22,7 @@ bothPlatformsIt({
 
 async function changeProfilePicture(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const expectedPixelHexColor = '04cbfe'; // This is the color of the profile picture image stored in the repo
+  const tolerance = 5; // Slightly higher than default tolerance because of jpeg compression
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
@@ -33,7 +34,8 @@ async function changeProfilePicture(platform: SupportedPlatformsType, testInfo: 
   await test.step(TestSteps.VERIFY.PROFILE_PICTURE_CHANGED, async () => {
     await device.waitForElementColorMatch(
       { ...new UserAvatar(device).build(), maxWait: 10_000 },
-      expectedPixelHexColor
+      expectedPixelHexColor,
+      tolerance
     );
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

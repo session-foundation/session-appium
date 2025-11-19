@@ -13,6 +13,12 @@ bothPlatformsIt({
   risk: 'high',
   testCb: deletedMessageLinkedDevice,
   countOfDevicesNeeded: 3,
+  allureSuites: {
+    parent: 'User Actions',
+    suite: 'Delete Message',
+  },
+  allureDescription:
+    'Verifies that when a message is deleted on one device, it shows as deleted on a linked device too.',
 });
 async function deletedMessageLinkedDevice(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {

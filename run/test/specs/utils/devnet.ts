@@ -1,4 +1,5 @@
 import { buildStateForTest } from '@session-foundation/qa-seeder';
+import { execSync } from 'child_process';
 import request from 'sync-request-curl';
 
 import type { SupportedPlatformsType } from './open_app';
@@ -14,18 +15,32 @@ type NetworkType = Parameters<typeof buildStateForTest>[2];
 // Using sync HTTP here to avoid cascading async changes through test init
 // This runs at test startup, so blocking is acceptable
 function canReachDevnet(): boolean {
+  const isCI = process.env.CI === '1';
+  const maxAttempts = isCI ? 3 : 1;
+  const timeout = isCI ? 10_000 : 2_000;
   // Check if devnet is available
-  try {
-    const response = request('GET', DEVNET_URL, {
-      timeout: 2000,
-    });
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      if (maxAttempts > 1) {
+        console.log(`Checking devnet accessibility (attempt ${attempt}/${maxAttempts})...`);
+      }
 
-    console.log(`Internal devnet is accessible (HTTP ${response.statusCode})`);
-    return true;
-  } catch {
-    console.log('Internal devnet is not accessible');
-    return false;
+      const response = request('GET', DEVNET_URL, { timeout });
+      console.log(`Internal devnet is accessible (HTTP ${response.statusCode})`);
+      return true;
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+
+      if (attempt === maxAttempts) {
+        console.log(`Internal devnet is not accessible: ${errorMsg}`);
+      } else {
+        console.log(`Attempt ${attempt} failed: ${errorMsg}, retrying...`);
+        execSync(`sleep ${attempt}`);
+      }
+    }
   }
+
+  return false;
 }
 function isAutomaticQABuildAndroid(apkPath: string): boolean {
   // Check env var first (for CI), then filename (for local)
@@ -49,6 +64,14 @@ export function getNetworkTarget(platform: SupportedPlatformsType): NetworkType 
 
   const apkPath = getAndroidApk();
   const isAQA = isAutomaticQABuildAndroid(apkPath);
+
+  // Early exit for non AQA builds - no need to check devnet
+  if (!isAQA) {
+    process.env.DETECTED_NETWORK_TARGET = 'mainnet';
+    console.log('Network target: mainnet');
+    return 'mainnet';
+  }
+
   const canAccessDevnet = canReachDevnet();
   // If you pass an AQA build in the .env but can't access devnet, tests will fail
   if (isAQA && !canAccessDevnet) {

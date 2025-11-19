@@ -14,7 +14,7 @@ bothPlatformsIt({
   risk: 'medium',
   countOfDevicesNeeded: 2,
   testCb: sendImageCommunity,
-  allureSuites: { parent: 'Sending Messages', suite: 'Attachments' },
+  allureSuites: { parent: 'Sending Messages', suite: 'Message types' },
   allureDescription: 'Verifies that an image can be sent and received in a community',
 });
 

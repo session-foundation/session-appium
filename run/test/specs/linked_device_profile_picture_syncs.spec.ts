@@ -21,6 +21,7 @@ bothPlatformsIt({
 
 async function avatarRestored(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const expectedPixelHexColor = '04cbfe'; // This is the color of the profile picture image stored in the repo
+  const tolerance = 5; // Slightly higher than default tolerance because of jpeg compression
   const {
     devices: { alice1, alice2 },
   } = await open_Alice2({ platform, testInfo });
@@ -29,7 +30,8 @@ async function avatarRestored(platform: SupportedPlatformsType, testInfo: TestIn
   await test.step(TestSteps.VERIFY.PROFILE_PICTURE_CHANGED, async () => {
     await alice2.waitForElementColorMatch(
       { ...new UserAvatar(alice2).build(), maxWait: 20_000 },
-      expectedPixelHexColor
+      expectedPixelHexColor,
+      tolerance
     );
   });
   await closeApp(alice1, alice2);

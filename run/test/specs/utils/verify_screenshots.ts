@@ -2,11 +2,15 @@ import { TestInfo } from '@playwright/test';
 import * as fs from 'fs';
 import looksSame from 'looks-same';
 import * as path from 'path';
+import sharp from 'sharp';
+import { ssim } from 'ssim.js';
 import { v4 as uuidv4 } from 'uuid';
 
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { LocatorsInterfaceScreenshot } from '../locators';
+import { ScreenshotFileNames } from '../../../types/testing';
+import { SupportedPlatformsType } from './open_app';
 import { getDiffDirectory } from './utilities';
+import { clearStatusBarOverrides, setConsistentStatusBar } from './utilities';
 
 type Attachment = {
   name: string;
@@ -14,7 +18,13 @@ type Attachment = {
   contentType: string;
 };
 
-export async function pushAttachmentsToReport(
+interface ImageData {
+  data: Uint8ClampedArray;
+  width: number;
+  height: number;
+}
+
+async function pushAttachmentsToReport(
   testInfo: TestInfo,
   attachments: Attachment[]
 ): Promise<void> {
@@ -24,105 +34,178 @@ export async function pushAttachmentsToReport(
 }
 
 /**
- * Takes a screenshot of a UI element and verifies it against a saved baseline image.
- *
- * Requires Playwright's `testInfo` for attaching visual comparison artifacts to the test report.
- * Supports locators with multiple states; enforces correct state usage via type constraints.
- * If no baseline image exists, the element screenshot is saved and an error is thrown.
- * On mismatch, a pixel-by-pixel comparison is performed and a visual diff is attached (when CI + ALLURE_ENABLED).
- * Baseline screenshots are assumed to have been taken on:Pixel 6 (1080x2061) and iPhone 16 Pro Max (1320x2868)
- *
- * Example usage:
- * // Locator with multiple states:
- * await verifyElementScreenshot(device, new EmptyLandingPageScreenshot(device), testInfo, 'new_account');
- *
- * // Locator with a single state:
- * await verifyElementScreenshot(device, new SomeSimpleLocatorScreenshot(device), testInfo);
+ * Converts image buffer to SSIM-compatible ImageData format
  */
+async function bufferToImageData(imageBuffer: Buffer): Promise<ImageData> {
+  const image = sharp(imageBuffer);
+  const { width, height } = await image.metadata();
+  const rawBuffer = await image.raw().toBuffer();
 
-export async function verifyElementScreenshot<
-  T extends LocatorsInterfaceScreenshot & { screenshotFileName: (...args: any[]) => string },
->(
-  device: DeviceWrapper,
-  element: T,
+  return {
+    data: new Uint8ClampedArray(rawBuffer),
+    width: width,
+    height: height,
+  };
+}
+
+/**
+ * Converts file path to SSIM-compatible ImageData format
+ */
+async function fileToImageData(filePath: string): Promise<ImageData> {
+  const image = sharp(filePath);
+  const { width, height } = await image.metadata();
+  const rawBuffer = await image.raw().toBuffer();
+
+  return {
+    data: new Uint8ClampedArray(rawBuffer),
+    width: width,
+    height: height,
+  };
+}
+
+/**
+ * Performs SSIM comparison with optional fallback to looks-same for diff generation
+ * SSIM focuses on structural similarity rather than pixel-perfect matching, making it
+ * robust to minor rendering differences while still catching layout changes
+ */
+async function compareWithSSIM(
+  actualBuffer: Buffer,
+  baselineImagePath: string,
   testInfo: TestInfo,
-  ...args: Parameters<T['screenshotFileName']> // Enforces states when mandatory
+  threshold: number
 ): Promise<void> {
-  // Declaring a UUID in advance so that the diff and screenshot files are matched alphanumerically
-  const uuid = uuidv4();
-  // Using Playwright's default test-results folder ensures cleanup at the beginning of each run
-  const diffsDir = getDiffDirectory();
-  // Get the element screenshot as base64
-  const elementToScreenshot = await device.waitForTextElementToBePresent(element);
-  const elementScreenshotBase64: string = await device.getElementScreenshot(
-    elementToScreenshot.ELEMENT
-  );
-  // Convert the base64 string to a Buffer and save it to disk as a png
-  const elementScreenshotPath = path.join(diffsDir, `${uuid}_screenshot.png`);
-  const screenshotBuffer = Buffer.from(elementScreenshotBase64, 'base64');
-  fs.writeFileSync(elementScreenshotPath, screenshotBuffer);
-  // Check if baseline screenshot exists
-  const baselineScreenshotPath = element.screenshotFileName(...args);
-  if (!fs.existsSync(baselineScreenshotPath)) {
+  const actualImageData = await bufferToImageData(actualBuffer);
+  const baselineImageData = await fileToImageData(baselineImagePath);
+
+  // Check dimensions match
+  if (
+    actualImageData.width !== baselineImageData.width ||
+    actualImageData.height !== baselineImageData.height
+  ) {
     throw new Error(
-      `No baseline image found at: ${baselineScreenshotPath}. A new screenshot has been saved at: ${elementScreenshotPath}`
+      `Image dimensions don't match: actual ${actualImageData.width}x${actualImageData.height}, \n
+      baseline ${baselineImageData.width}x${baselineImageData.height}`
     );
   }
-  // Use looks-same to verify the element screenshot against the baseline
-  const { equal, diffImage } = await looksSame(elementScreenshotPath, baselineScreenshotPath, {
-    createDiffImage: true,
-  });
-  if (!equal) {
-    const diffImagePath = path.join(diffsDir, `${uuid}_diffImage.png`);
-    await diffImage.save(diffImagePath);
 
-    // For the CI, create a visual diff that renders in the Allure report
-    if (process.env.ALLURE_ENABLED === 'true' && process.env.CI === '1') {
-      // Load baseline and diff images
-      const baselineBase64 = fs.readFileSync(baselineScreenshotPath).toString('base64');
-      const diffBase64 = fs.readFileSync(diffImagePath).toString('base64');
+  const { mssim } = ssim(actualImageData, baselineImageData);
+  console.log(`SSIM similarity score: ${mssim.toFixed(4)}`);
 
-      // Wrap them in the Allure visual diff format
-      const visualDiffPayload = {
-        actual: `data:image/png;base64,${elementScreenshotBase64}`,
-        expected: `data:image/png;base64,${baselineBase64}`,
-        diff: `data:image/png;base64,${diffBase64}`,
-      };
+  if (mssim < threshold) {
+    // Generate visual diff for debugging
+    const uuid = uuidv4();
+    const diffsDir = getDiffDirectory();
+    const actualPath = path.join(diffsDir, `${uuid}_actual.png`);
+    const diffPath = path.join(diffsDir, `${uuid}_diff.png`);
 
-      await pushAttachmentsToReport(testInfo, [
-        {
-          name: 'Visual Comparison',
-          body: Buffer.from(JSON.stringify(visualDiffPayload), 'utf-8'),
-          contentType: 'application/vnd.allure.image.diff',
-        },
-        {
-          name: 'Baseline Screenshot',
-          body: Buffer.from(baselineBase64, 'base64'),
-          contentType: 'image/png',
-        },
-        {
-          name: 'Actual Screenshot',
-          body: Buffer.from(elementScreenshotBase64, 'base64'),
-          contentType: 'image/png',
-        },
-        {
-          name: 'Diff Screenshot',
-          body: Buffer.from(diffBase64, 'base64'),
-          contentType: 'image/png',
-        },
-      ]);
-      console.log(`Visual comparison failed. The diff has been saved to ${diffImagePath}`);
-      throw new Error(`The UI doesn't match expected appearance`);
-    }
+    fs.writeFileSync(actualPath, actualBuffer);
 
-    // Cleanup of element screenshot file on success
     try {
-      fs.unlinkSync(elementScreenshotPath);
-      console.log('Temporary screenshot deleted successfully');
-    } catch (err) {
-      if (err instanceof Error) {
-        console.error(`Error deleting file: ${err.message}`);
+      const { diffImage } = await looksSame(actualPath, baselineImagePath, {
+        createDiffImage: true,
+      });
+
+      if (diffImage) {
+        await diffImage.save(diffPath);
+        console.log(`Visual diff saved to: ${diffPath}`);
       }
+
+      // Attach artifacts to report
+      if (process.env.ALLURE_ENABLED === 'true' && process.env.CI === '1') {
+        const baselineBase64 = fs.readFileSync(baselineImagePath).toString('base64');
+        const diffBase64 = fs.readFileSync(diffPath).toString('base64');
+        const actualBase64 = actualBuffer.toString('base64');
+        const visualDiffPayload = {
+          actual: `data:image/png;base64,${actualBase64}`,
+          expected: `data:image/png;base64,${baselineBase64}`,
+          diff: `data:image/png;base64,${diffBase64}`,
+        };
+
+        await pushAttachmentsToReport(testInfo, [
+          {
+            name: 'Visual Comparison',
+            body: Buffer.from(JSON.stringify(visualDiffPayload), 'utf-8'),
+            contentType: 'application/vnd.allure.image.diff',
+          },
+          {
+            name: 'Baseline Screenshot',
+            body: Buffer.from(baselineBase64, 'base64'),
+            contentType: 'image/png',
+          },
+          {
+            name: 'Actual Screenshot',
+            body: Buffer.from(actualBase64, 'base64'),
+            contentType: 'image/png',
+          },
+          {
+            name: 'Diff Screenshot',
+            body: Buffer.from(diffBase64, 'base64'),
+            contentType: 'image/png',
+          },
+        ]);
+      }
+    } catch (error) {
+      console.warn('Error processing visual diff', error);
     }
+
+    console.log(`SSIM similarity score ${mssim.toFixed(4)} below threshold ${threshold}`);
+    throw new Error('The observed UI does not match the expected baseline');
+  }
+}
+
+/**
+ * Handles baseline creation for development
+ */
+function ensureBaseline(actualBuffer: Buffer, baselinePath: string): void {
+  if (!fs.existsSync(baselinePath)) {
+    const diffsDir = getDiffDirectory();
+    const uuid = uuidv4();
+    const tempPath = path.join(diffsDir, `${uuid}_new_baseline.png`);
+    fs.writeFileSync(tempPath, actualBuffer);
+
+    // Uncomment these lines for local development to auto-create baselines
+    // fs.mkdirSync(path.dirname(baselinePath), { recursive: true });
+    // fs.writeFileSync(baselinePath, actualBuffer);
+
+    throw new Error(
+      `No baseline image found at: ${baselinePath}. \n
+      A new screenshot has been saved at: ${tempPath}`
+    );
+  }
+}
+
+/**
+ * Takes a full page screenshot and verifies it against a saved baseline image using SSIM.
+ */
+export async function verifyPageScreenshot(
+  device: DeviceWrapper,
+  platform: SupportedPlatformsType,
+  screenshotName: ScreenshotFileNames,
+  testInfo: TestInfo,
+  threshold: number = 0.97 // Strict tolerance by default
+): Promise<void> {
+  // Validate threshold range
+  if (threshold < 0 || threshold > 1) {
+    throw new Error(`SSIM threshold must be between 0 and 1, got: ${threshold}`);
+  }
+  await setConsistentStatusBar(device);
+  try {
+    // Get full page screenshot and crop it
+    const pageScreenshotBase64 = await device.getScreenshot();
+    const screenshotBuffer = Buffer.from(pageScreenshotBase64, 'base64');
+
+    // Get baseline path and ensure it exists
+    const baselineScreenshotPath = path.join(
+      'run',
+      'screenshots',
+      platform,
+      `${screenshotName}.png`
+    );
+    ensureBaseline(screenshotBuffer, baselineScreenshotPath);
+
+    // Perform SSIM comparison
+    await compareWithSSIM(screenshotBuffer, baselineScreenshotPath, testInfo, threshold);
+  } finally {
+    await clearStatusBarOverrides(device);
   }
 }

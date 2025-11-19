@@ -1,0 +1,42 @@
+name: Roll-back Allure Report
+
+# This workflow removes (unpublishes) the last Allure report from gh-pages.
+#
+# When to use:
+# - Did not intend to create a new report (e.g. accidentally published a debug run)
+# - Incorrect inputs (wrong build, metadta, Appium branch, etc.)
+# - Test is corrupted by any other reason, don't want to muddy the result history
+
+on:
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          lfs: true
+          fetch-depth: 0 # Need full history for other workflows that rely on file ages
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Reset, force push and prune
+        run: |
+          echo "Resetting gh-pages by 1 commit..."
+          git reset HEAD~1
+          git push --force-with-lease
+          git lfs prune --verify-remote || echo "LFS prune failed (non-fatal)"
+
+      - name: Summary
+        run: |
+          echo "Successfully removed last commit from gh-pages" >> $GITHUB_STEP_SUMMARY
+          echo "Pruned orphaned LFS objects" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Triggered by: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "Current HEAD: $(git rev-parse HEAD)" >> $GITHUB_STEP_SUMMARY

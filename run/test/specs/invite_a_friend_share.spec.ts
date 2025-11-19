@@ -14,6 +14,11 @@ bothPlatformsIt({
   risk: 'medium',
   testCb: inviteAFriend,
   countOfDevicesNeeded: 1,
+  allureSuites: {
+    parent: 'New Conversation',
+    suite: 'Invite a Friend',
+  },
+  allureDescription: `Verifies that the 'Invite a Friend' share functionality opens the native share sheet and the user's Account ID is present in the message.`,
 });
 
 async function inviteAFriend(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -43,12 +48,10 @@ async function inviteAFriend(platform: SupportedPlatformsType, testInfo: TestInf
   }
   // Retrieve the Share message and validate that it contains the user's Account ID
   const retrievedShareMessage = await device.getTextFromElement(messageElement);
-  if (retrievedShareMessage.includes(user.accountID)) {
-    device.log("The Invite a Friend message snippet contains the user's Account ID");
-  } else {
-    throw new Error(
-      `The Invite a Friend message snippet does not contain the user's Account ID\nThe message goes ${retrievedShareMessage}`
-    );
+  if (!retrievedShareMessage.includes(user.accountID)) {
+    console.log(`Expected Share Message to contain Account ID: ${user.accountID}`);
+    console.log(`Actual Share Message: ${retrievedShareMessage}`);
+    throw new Error(`The Invite a Friend message snippet does not contain the user's Account ID.`);
   }
   await closeApp(device);
 }

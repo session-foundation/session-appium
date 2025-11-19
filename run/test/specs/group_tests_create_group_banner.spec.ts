@@ -13,6 +13,12 @@ androidIt({
   risk: 'high',
   testCb: createGroupBanner,
   countOfDevicesNeeded: 2,
+  allureSuites: {
+    parent: 'Groups',
+    suite: 'Create Group',
+  },
+  allureDescription:
+    'Verifies that the latest release banner is present on the Create Group screen',
 });
 
 async function createGroupBanner(platform: SupportedPlatformsType, testInfo: TestInfo) {
