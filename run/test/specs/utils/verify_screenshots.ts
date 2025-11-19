@@ -164,8 +164,8 @@ function ensureBaseline(actualBuffer: Buffer, baselinePath: string): void {
     fs.writeFileSync(tempPath, actualBuffer);
 
     // Uncomment these lines for local development to auto-create baselines
-    fs.mkdirSync(path.dirname(baselinePath), { recursive: true });
-    fs.writeFileSync(baselinePath, actualBuffer);
+    // fs.mkdirSync(path.dirname(baselinePath), { recursive: true });
+    // fs.writeFileSync(baselinePath, actualBuffer);
 
     throw new Error(
       `No baseline image found at: ${baselinePath}. \n
