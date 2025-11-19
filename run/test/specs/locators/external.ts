@@ -1,14 +1,5 @@
 import { LocatorsInterface } from '.';
 
-export class PhotoLibrary extends LocatorsInterface {
-  public build() {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Photos',
-    } as const;
-  }
-}
-
 export class DisguisedApp extends LocatorsInterface {
   public build() {
     return {
@@ -18,28 +9,17 @@ export class DisguisedApp extends LocatorsInterface {
     } as const;
   }
 }
-export class IOSSaveToFiles extends LocatorsInterface {
+
+export class iOSPhotosContinuebutton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
         throw new Error('Unsupported platform');
       case 'ios':
         return {
-          strategy: 'accessibility id',
-          selector: 'Save to Files',
-        } as const;
-    }
-  }
-}
-export class IOSSaveButton extends LocatorsInterface {
-  public build() {
-    switch (this.platform) {
-      case 'android':
-        throw new Error('Unsupported platform');
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Save',
+          strategy: 'xpath',
+          selector: `//XCUIElementTypeButton[@name="Continue"]`,
+          maxWait: 5000,
         } as const;
     }
   }
@@ -57,18 +37,38 @@ export class IOSReplaceButton extends LocatorsInterface {
     }
   }
 }
-
-export class iOSPhotosContinuebutton extends LocatorsInterface {
+export class IOSSaveButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
         throw new Error('Unsupported platform');
       case 'ios':
         return {
-          strategy: 'xpath',
-          selector: `//XCUIElementTypeButton[@name="Continue"]`,
-          maxWait: 5000,
+          strategy: 'accessibility id',
+          selector: 'Save',
         } as const;
     }
+  }
+}
+export class IOSSaveToFiles extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        throw new Error('Unsupported platform');
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Save to Files',
+        } as const;
+    }
+  }
+}
+
+export class PhotoLibrary extends LocatorsInterface {
+  public build() {
+    return {
+      strategy: 'accessibility id',
+      selector: 'Photos',
+    } as const;
   }
 }

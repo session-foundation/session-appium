@@ -1,63 +1,44 @@
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { LocatorsInterface } from './index';
 
-export class ModalHeading extends LocatorsInterface {
+export class AccountIDDisplay extends LocatorsInterface {
+  public text: string | undefined;
+  constructor(device: DeviceWrapper, text?: string) {
+    super(device);
+    this.text = text;
+  }
   public build() {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Modal heading',
+          selector: 'Account ID',
+          text: this.text,
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Modal heading',
+          selector: 'Account ID',
+          text: this.text,
         } as const;
     }
   }
 }
 
-export class ModalDescription extends LocatorsInterface {
+export class AllowPermissionLocator extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Modal description',
+          selector: 'com.android.permissioncontroller:id/permission_allow_button',
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Modal description',
+          selector: 'Allow',
         } as const;
     }
-  }
-}
-
-export class ContinueButton extends LocatorsInterface {
-  public build() {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: 'Continue',
-        } as const;
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Continue',
-        } as const;
-    }
-  }
-}
-
-export class EnableLinkPreviewsModalButton extends LocatorsInterface {
-  public build() {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Enable',
-    } as const;
   }
 }
 
@@ -85,18 +66,35 @@ export class Contact extends LocatorsInterface {
   }
 }
 
-export class AllowPermissionLocator extends LocatorsInterface {
+export class ContinueButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'com.android.permissioncontroller:id/permission_allow_button',
+          selector: 'Continue',
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Allow',
+          selector: 'Continue',
+        } as const;
+    }
+  }
+}
+
+export class CopyURLButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Copy URL',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Copy URL',
         } as const;
     }
   }
@@ -119,42 +117,44 @@ export class DenyPermissionLocator extends LocatorsInterface {
   }
 }
 
-export class AccountIDDisplay extends LocatorsInterface {
-  public text: string | undefined;
-  constructor(device: DeviceWrapper, text?: string) {
-    super(device);
-    this.text = text;
+export class EnableLinkPreviewsModalButton extends LocatorsInterface {
+  public build() {
+    return {
+      strategy: 'accessibility id',
+      selector: 'Enable',
+    } as const;
   }
+}
+
+export class ModalDescription extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Account ID',
-          text: this.text,
+          selector: 'Modal description',
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Account ID',
-          text: this.text,
+          selector: 'Modal description',
         } as const;
     }
   }
 }
 
-export class CopyURLButton extends LocatorsInterface {
+export class ModalHeading extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Copy URL',
+          selector: 'Modal heading',
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Copy URL',
+          selector: 'Modal heading',
         } as const;
     }
   }
