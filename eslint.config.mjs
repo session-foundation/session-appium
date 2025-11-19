@@ -89,5 +89,11 @@ export default tseslint.config(
       'perfectionist/sort-named-imports': 'off',
       'perfectionist/sort-union-types': 'off',
     },
+  },
+  {
+    files: ['run/test/specs/locators/*'],
+    rules: {
+      'perfectionist/sort-modules': 'error',
+    },
   }
 );
