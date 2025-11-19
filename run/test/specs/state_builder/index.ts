@@ -227,17 +227,12 @@ export async function open_Alice2_Bob1_Charlie1_friends_group({
   result.devices[2].setDeviceIdentity('charlie1');
   result.devices[3].setDeviceIdentity('alice2');
 
-  const alice = result.prebuilt.users[0];
-  const bob = result.prebuilt.users[1];
-  const charlie = result.prebuilt.users[2];
+  const [alice, bob, charlie] = result.prebuilt.users;
 
   const seedPhrases = [alice.seedPhrase, bob.seedPhrase, charlie.seedPhrase, alice.seedPhrase];
   await linkDevices(result.devices, seedPhrases);
 
-  const alice1 = result.devices[0];
-  const bob1 = result.devices[1];
-  const charlie1 = result.devices[2];
-  const alice2 = result.devices[3];
+  const [alice1, bob1, charlie1, alice2] = result.devices;
 
   const formattedGroup = { group: result.prebuilt.group };
   const formattedDevices = {
