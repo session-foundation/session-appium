@@ -32,7 +32,7 @@ async function appDisguiseIcons(platform: SupportedPlatformsType, testInfo: Test
   });
   await test.step(TestSteps.VERIFY.SCREENSHOT('app disguise icons'), async () => {
     await device.clickOnElementAll(new SelectAppIcon(device));
-    await verifyPageScreenshot(device, platform, 'app_disguise', testInfo, 0.99);
+    await verifyPageScreenshot(device, platform, 'app_disguise', testInfo, 0.99); // Higher-than-standard tolerance for near perfect match
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);

@@ -84,7 +84,7 @@ for (const { screenName, screenshotFile, navigation } of testCases) {
       });
 
       await test.step(TestSteps.VERIFY.SCREENSHOT(screenName), async () => {
-        await verifyPageScreenshot(device, platform, screenshotFile, testInfo, 0.96);
+        await verifyPageScreenshot(device, platform, screenshotFile, testInfo, 0.96); // Lower-than-standard tolerance to account for variable elements out of our control (e.g. Account ID)
       });
 
       await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
