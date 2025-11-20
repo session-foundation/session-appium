@@ -9,7 +9,7 @@ export class EmptyLandingPage extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/emptyStateContainer',
+          selector: 'network.loki.messenger:id/emptyStateContainer',
         } as const;
       case 'ios':
         return {
@@ -93,7 +93,7 @@ export class MessageSnippet extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'xpath',
-          selector: `//android.widget.LinearLayout[.//android.widget.TextView[@content-desc="Conversation list item" and @text="${this.conversationName}"]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/snippetTextView" and @text="${this.messageText}"]`,
+          selector: `//android.widget.LinearLayout[.//android.widget.TextView[@content-desc="Conversation list item" and @text="${this.conversationName}"]]//android.widget.TextView[@resource-id="network.loki.messenger:id/snippetTextView" and @text="${this.messageText}"]`,
         } as const;
     }
   }

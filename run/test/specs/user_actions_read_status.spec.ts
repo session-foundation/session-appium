@@ -36,7 +36,7 @@ async function readStatus(platform: SupportedPlatformsType, testInfo: TestInfo) 
   // Check read status on device 1
   await alice1.onAndroid().waitForTextElementToBePresent({
     strategy: 'id',
-    selector: 'network.loki.messenger.qa:id/messageStatusTextView',
+    selector: 'network.loki.messenger:id/messageStatusTextView',
     text: 'Read',
   });
 

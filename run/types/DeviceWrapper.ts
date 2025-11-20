@@ -336,7 +336,7 @@ export class DeviceWrapper {
       { from: 'New conversation button', to: 'conversation-options-avatar' },
     ];
 
-    // System locators such as 'network.loki.messenger.qa:id' can cause false positives with too high similarity scores
+    // System locators such as 'network.loki.messenger:id' can cause false positives with too high similarity scores
     // Strip any known prefix patterns first
     const stripPrefix = (selector: string) => {
       return selector
@@ -1559,7 +1559,7 @@ export class DeviceWrapper {
       async () => {
         const element = await this.findElementQuietly({
           strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/thumbnail_load_indicator',
+          selector: 'network.loki.messenger:id/thumbnail_load_indicator',
         });
 
         // Success when element is GONE
@@ -1877,12 +1877,12 @@ export class DeviceWrapper {
       await sleepFor(500);
       await this.clickOnElementAll({
         strategy: 'id',
-        selector: 'network.loki.messenger.qa:id/mediapicker_folder_item_thumbnail',
+        selector: 'network.loki.messenger:id/mediapicker_folder_item_thumbnail',
       });
       await sleepFor(100);
       await this.clickOnElementAll({
         strategy: 'id',
-        selector: 'network.loki.messenger.qa:id/mediapicker_image_item_thumbnail',
+        selector: 'network.loki.messenger:id/mediapicker_image_item_thumbnail',
       });
     }
     await this.inputText(message, new MessageInput(this));
@@ -2156,7 +2156,7 @@ export class DeviceWrapper {
       });
       await sleepFor(500);
       await this.clickOnElementAll(new ImageName(this));
-      await this.clickOnElementById('network.loki.messenger.qa:id/crop_image_menu_crop');
+      await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
     }
     await this.clickOnElementAll(new SaveProfilePictureButton(this));
   }

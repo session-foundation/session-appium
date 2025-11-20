@@ -63,7 +63,7 @@ async function sendVideoAndroid(platform: SupportedPlatformsType, testInfo: Test
   await bob1.trustAttachments(alice.userName);
   await bob1.waitForTextElementToBePresent({
     strategy: 'id',
-    selector: 'network.loki.messenger.qa:id/play_overlay',
+    selector: 'network.loki.messenger:id/play_overlay',
   });
   await bob1.longPress(new MediaMessage(bob1));
   await bob1.clickOnByAccessibilityID('Reply to message');

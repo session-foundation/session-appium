@@ -101,7 +101,7 @@ export class ScrollToBottomButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/scrollToBottomButton',
+          selector: 'network.loki.messenger:id/scrollToBottomButton',
         } as const;
       case 'ios':
         return {
@@ -182,7 +182,7 @@ export class OutgoingMessageStatusSent extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/messageStatusTextView',
+          selector: 'network.loki.messenger:id/messageStatusTextView',
           text: 'Sent',
         } as const;
       case 'ios':
@@ -436,7 +436,7 @@ export class CommunityInvitation extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/openGroupTitleTextView',
+          selector: 'network.loki.messenger:id/openGroupTitleTextView',
           text: testCommunityName,
         } as const;
       case 'ios':
@@ -530,7 +530,7 @@ export class FirstEmojiReact extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/reaction_1',
+          selector: 'network.loki.messenger:id/reaction_1',
         } as const;
       case 'ios':
         return {
@@ -555,7 +555,7 @@ export class EmojiReactsPill extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'xpath',
-          selector: `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${this.messageText}")]]//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/layout_emoji_container"]`,
+          selector: `//android.view.ViewGroup[@resource-id="network.loki.messenger:id/mainContainer"][.//android.widget.TextView[contains(@text,"${this.messageText}")]]//android.view.ViewGroup[@resource-id="network.loki.messenger:id/layout_emoji_container"]`,
         } as const;
       case 'ios':
         return {
@@ -580,7 +580,7 @@ export class EmojiReactsCount extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'xpath',
-          selector: `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${this.messageText}")]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/reactions_pill_count"][@text="${this.expectedCount}"]`,
+          selector: `//android.view.ViewGroup[@resource-id="network.loki.messenger:id/mainContainer"][.//android.widget.TextView[contains(@text,"${this.messageText}")]]//android.widget.TextView[@resource-id="network.loki.messenger:id/reactions_pill_count"][@text="${this.expectedCount}"]`,
         } as const;
       case 'ios':
         return {
@@ -603,7 +603,7 @@ export class MessageLengthCountdown extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/characterLimitText',
+          selector: 'network.loki.messenger:id/characterLimitText',
           text: this.length,
         } as const;
       case 'ios':
@@ -639,7 +639,7 @@ export class CommunityMessageAuthor extends LocatorsInterface {
         // Identify the profile picture of a message with a specific text
         return {
           strategy: 'xpath',
-          selector: `//android.view.ViewGroup[@resource-id='network.loki.messenger.qa:id/mainContainer'][.//android.widget.TextView[contains(@text,'${this.text}')]]//androidx.compose.ui.platform.ComposeView[@resource-id='network.loki.messenger.qa:id/profilePictureView']`,
+          selector: `//android.view.ViewGroup[@resource-id='network.loki.messenger:id/mainContainer'][.//android.widget.TextView[contains(@text,'${this.text}')]]//androidx.compose.ui.platform.ComposeView[@resource-id='network.loki.messenger:id/profilePictureView']`,
         } as const;
       case 'ios':
         // Identify the display name of a blinded sender of a message with a specific text
@@ -677,7 +677,7 @@ export class MessageRequestPendingDescription extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/textSendAfterApproval',
+          selector: 'network.loki.messenger:id/textSendAfterApproval',
           text: messageRequestPendingDescription,
         } as const;
       case 'ios':
@@ -699,7 +699,7 @@ export class MessageRequestAcceptDescription extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/sendAcceptsTextView',
+          selector: 'network.loki.messenger:id/sendAcceptsTextView',
           text: messageRequestsAcceptDescription,
         } as const;
       case 'ios':

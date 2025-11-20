@@ -127,15 +127,15 @@ export type StrategyExtractionObj =
 
 export type XPath =
   | '//XCUIElementTypeCell'
-  | `(//android.widget.ImageView[@resource-id="network.loki.messenger.qa:id/thumbnail"])[1]`
+  | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
-  | `//*[@resource-id='network.loki.messenger.qa:id/callTitle' and contains(@text, ':')]`
+  | `//*[@resource-id='network.loki.messenger:id/callTitle' and contains(@text, ':')]`
   | `//*[starts-with(@content-desc, "Photo taken on")]`
-  | `//android.view.ViewGroup[@resource-id='network.loki.messenger.qa:id/mainContainer'][.//android.widget.TextView[contains(@text,'${string}')]]//androidx.compose.ui.platform.ComposeView[@resource-id='network.loki.messenger.qa:id/profilePictureView']`
-  | `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/layout_emoji_container"]`
-  | `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/reactions_pill_count"][@text="${string}"]`
-  | `//android.widget.LinearLayout[.//android.widget.TextView[@content-desc="Conversation list item" and @text="${string}"]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/snippetTextView" and @text="${string}"]`
+  | `//android.view.ViewGroup[@resource-id='network.loki.messenger:id/mainContainer'][.//android.widget.TextView[contains(@text,'${string}')]]//androidx.compose.ui.platform.ComposeView[@resource-id='network.loki.messenger:id/profilePictureView']`
+  | `//android.view.ViewGroup[@resource-id="network.loki.messenger:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.view.ViewGroup[@resource-id="network.loki.messenger:id/layout_emoji_container"]`
+  | `//android.view.ViewGroup[@resource-id="network.loki.messenger:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.widget.TextView[@resource-id="network.loki.messenger:id/reactions_pill_count"][@text="${string}"]`
+  | `//android.widget.LinearLayout[.//android.widget.TextView[@content-desc="Conversation list item" and @text="${string}"]]//android.widget.TextView[@resource-id="network.loki.messenger:id/snippetTextView" and @text="${string}"]`
   | `//android.widget.TextView[@text="${string}"]`
   | `//android.widget.TextView[@text="Message"]/parent::android.view.View`
   | `//XCUIElementTypeAlert//*//XCUIElementTypeButton`
@@ -169,7 +169,7 @@ export type UiAutomatorQuery =
   | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("path-menu-item"))'
   | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text("Select app icon"))'
   | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().textStartsWith("Version"))'
-  | 'new UiSelector().resourceId("network.loki.messenger.qa:id/messageStatusTextView").text("Sent")'
+  | 'new UiSelector().resourceId("network.loki.messenger:id/messageStatusTextView").text("Sent")'
   | 'new UiSelector().text("Enter your display name")'
   | `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-text"))`
   | `new UiSelector().text(${string})`;
@@ -515,36 +515,36 @@ export type Id =
   | 'Modal description'
   | 'Modal heading'
   | 'Navigate back'
-  | 'network.loki.messenger.qa:id/acceptCallButton'
-  | 'network.loki.messenger.qa:id/action_apply'
-  | 'network.loki.messenger.qa:id/back_button'
-  | 'network.loki.messenger.qa:id/call_text_view'
-  | 'network.loki.messenger.qa:id/callInProgress'
-  | 'network.loki.messenger.qa:id/callSubtitle'
-  | 'network.loki.messenger.qa:id/callTitle'
-  | 'network.loki.messenger.qa:id/characterLimitText'
-  | 'network.loki.messenger.qa:id/crop_image_menu_crop'
-  | 'network.loki.messenger.qa:id/emptyStateContainer'
-  | 'network.loki.messenger.qa:id/endCallButton'
-  | 'network.loki.messenger.qa:id/layout_emoji_container'
-  | 'network.loki.messenger.qa:id/linkPreviewView'
-  | 'network.loki.messenger.qa:id/mediapicker_folder_item_thumbnail'
-  | 'network.loki.messenger.qa:id/mediapicker_image_item_thumbnail'
-  | 'network.loki.messenger.qa:id/messageStatusTextView'
-  | 'network.loki.messenger.qa:id/openGroupTitleTextView'
-  | 'network.loki.messenger.qa:id/play_overlay'
-  | 'network.loki.messenger.qa:id/reaction_1'
-  | 'network.loki.messenger.qa:id/reactions_pill_count'
-  | 'network.loki.messenger.qa:id/scrollToBottomButton'
-  | 'network.loki.messenger.qa:id/search_cancel'
-  | 'network.loki.messenger.qa:id/search_result_title'
-  | 'network.loki.messenger.qa:id/sendAcceptsTextView'
-  | 'network.loki.messenger.qa:id/singleModeImageView'
-  | 'network.loki.messenger.qa:id/system_settings_app_icon'
-  | 'network.loki.messenger.qa:id/textSendAfterApproval'
-  | 'network.loki.messenger.qa:id/theme_option_classic_light'
-  | 'network.loki.messenger.qa:id/thumbnail_load_indicator'
-  | 'network.loki.messenger.qa:id/title'
+  | 'network.loki.messenger:id/acceptCallButton'
+  | 'network.loki.messenger:id/action_apply'
+  | 'network.loki.messenger:id/back_button'
+  | 'network.loki.messenger:id/call_text_view'
+  | 'network.loki.messenger:id/callInProgress'
+  | 'network.loki.messenger:id/callSubtitle'
+  | 'network.loki.messenger:id/callTitle'
+  | 'network.loki.messenger:id/characterLimitText'
+  | 'network.loki.messenger:id/crop_image_menu_crop'
+  | 'network.loki.messenger:id/emptyStateContainer'
+  | 'network.loki.messenger:id/endCallButton'
+  | 'network.loki.messenger:id/layout_emoji_container'
+  | 'network.loki.messenger:id/linkPreviewView'
+  | 'network.loki.messenger:id/mediapicker_folder_item_thumbnail'
+  | 'network.loki.messenger:id/mediapicker_image_item_thumbnail'
+  | 'network.loki.messenger:id/messageStatusTextView'
+  | 'network.loki.messenger:id/openGroupTitleTextView'
+  | 'network.loki.messenger:id/play_overlay'
+  | 'network.loki.messenger:id/reaction_1'
+  | 'network.loki.messenger:id/reactions_pill_count'
+  | 'network.loki.messenger:id/scrollToBottomButton'
+  | 'network.loki.messenger:id/search_cancel'
+  | 'network.loki.messenger:id/search_result_title'
+  | 'network.loki.messenger:id/sendAcceptsTextView'
+  | 'network.loki.messenger:id/singleModeImageView'
+  | 'network.loki.messenger:id/system_settings_app_icon'
+  | 'network.loki.messenger:id/textSendAfterApproval'
+  | 'network.loki.messenger:id/theme_option_classic_light'
+  | 'network.loki.messenger:id/thumbnail_load_indicator'
+  | 'network.loki.messenger:id/title'
   | 'New direct message'
   | 'Next'
   | 'nickname-input'

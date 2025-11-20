@@ -106,7 +106,7 @@ async function appDisguiseSetIconAndroid(platform: SupportedPlatformsType, testI
       await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
         await closeApp(device);
         await runScriptAndLog(
-          `${getAdbFullPath()} -s ${device.udid} uninstall network.loki.messenger.qa`,
+          `${getAdbFullPath()} -s ${device.udid} uninstall network.loki.messenger`,
           true
         );
       });

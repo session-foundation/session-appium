@@ -206,29 +206,29 @@ async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: Test
     await test.step(TestSteps.VERIFY.CALLING, async () => {
       await alice1.waitForTextElementToBePresent({
         strategy: 'id',
-        selector: 'network.loki.messenger.qa:id/callTitle',
+        selector: 'network.loki.messenger:id/callTitle',
         text: 'Ringing...',
         maxWait: 5_000,
       });
       await alice1.waitForTextElementToBePresent({
         strategy: 'id',
-        selector: 'network.loki.messenger.qa:id/callSubtitle',
+        selector: 'network.loki.messenger:id/callSubtitle',
         text: 'Sending Call Offer 2/5',
         maxWait: 5_000,
       });
     });
-    await alice1.clickOnElementById('network.loki.messenger.qa:id/endCallButton');
+    await alice1.clickOnElementById('network.loki.messenger:id/endCallButton');
   });
   // Bob sees the missed call and also jumps through all the hoops
   await test.step(TestSteps.VERIFY.MISSED_CALL, async () => {
     await bob1.waitForTextElementToBePresent({
       strategy: 'id',
-      selector: 'network.loki.messenger.qa:id/call_text_view',
+      selector: 'network.loki.messenger:id/call_text_view',
       text: `Missed call from ${alice.userName}`,
     });
     await bob1.clickOnElementAll({
       strategy: 'id',
-      selector: 'network.loki.messenger.qa:id/call_text_view',
+      selector: 'network.loki.messenger:id/call_text_view',
       text: `Missed call from ${alice.userName}`,
     });
   });
@@ -250,30 +250,30 @@ async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: Test
   await test.step(TestSteps.CALLS.INITIATE_CALL(bob.userName), async () => {
     await bob1.clickOnElementAll(new CallButton(bob1));
   });
-  await alice1.clickOnElementById('network.loki.messenger.qa:id/callInProgress');
-  await alice1.clickOnElementById('network.loki.messenger.qa:id/acceptCallButton');
+  await alice1.clickOnElementById('network.loki.messenger:id/callInProgress');
+  await alice1.clickOnElementById('network.loki.messenger:id/acceptCallButton');
   await test.step(TestSteps.VERIFY.CALL_SUCCESSFUL, async () => {
     await Promise.all(
       [alice1, bob1].map(device =>
         // If the text contains a colon it means its showing the call duration (ergo the call connected)
         device.waitForTextElementToBePresent({
           strategy: 'xpath',
-          selector: `//*[@resource-id='network.loki.messenger.qa:id/callTitle' and contains(@text, ':')]`,
+          selector: `//*[@resource-id='network.loki.messenger:id/callTitle' and contains(@text, ':')]`,
           maxWait: 15_000,
         })
       )
     );
-    await alice1.clickOnElementById('network.loki.messenger.qa:id/endCallButton');
+    await alice1.clickOnElementById('network.loki.messenger:id/endCallButton');
     await Promise.all([
       alice1.waitForTextElementToBePresent({
         strategy: 'id',
-        selector: 'network.loki.messenger.qa:id/call_text_view',
+        selector: 'network.loki.messenger:id/call_text_view',
         text: `${bob.userName} called you`,
         maxWait: 15_000,
       }),
       bob1.waitForTextElementToBePresent({
         strategy: 'id',
-        selector: 'network.loki.messenger.qa:id/call_text_view',
+        selector: 'network.loki.messenger:id/call_text_view',
         text: `You called ${alice.userName}`,
         maxWait: 15_000,
       }),
