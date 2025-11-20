@@ -5,6 +5,7 @@ import { testCommunityLink, testCommunityName } from '../../constants/community'
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { CommunityMessageAuthor, UPMMessageButton } from './locators/conversation';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { joinCommunity } from './utils/join_community';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
@@ -41,6 +42,8 @@ async function blindedMessageRequests(platform: SupportedPlatformsType, testInfo
   });
   await device1.clickOnElementAll(new CommunityMessageAuthor(device1, message));
   await test.step(`Verify the 'Message' button in the User Profile Modal is disabled`, async () => {
+    // brief sleep to let the UI settle 
+    await sleepFor(1000);
     const messageButton = await device1.waitForTextElementToBePresent(
       new UPMMessageButton(device1)
     );
