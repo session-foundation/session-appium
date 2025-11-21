@@ -497,7 +497,7 @@ export type Id =
   | 'Hide recovery password button'
   | 'Image button'
   | 'Image picker'
-  | 'invite-contacts-button'
+  | 'qa-collapsing-footer-action_invite'
   | 'invite-contacts-menu-option'
   | 'Invite button'
   | 'Invite friend button'
