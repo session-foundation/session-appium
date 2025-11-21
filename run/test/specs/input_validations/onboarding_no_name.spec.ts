@@ -11,6 +11,11 @@ bothPlatformsIt({
   risk: 'low',
   testCb: onboardingNoName,
   countOfDevicesNeeded: 1,
+  allureSuites: {
+    parent: 'Onboarding',
+    suite: 'Input validations',
+  },
+  allureDescription: `Verifies that an empty display name throws the 'please enter a display name' error as expected.`,
 });
 
 async function onboardingNoName(platform: SupportedPlatformsType, testInfo: TestInfo) {

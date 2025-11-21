@@ -26,7 +26,11 @@ export type AllureSuiteConfig =
   | { parent: 'Linkouts' }
   | { parent: 'Network Page' }
   | { parent: 'New Conversation'; suite: 'Invite a Friend' | 'Join Community' | 'New Message' }
-  | { parent: 'Sending Messages'; suite: 'Emoji reacts' | 'Message types' | 'Rules' }
+  | { parent: 'Onboarding'; suite: 'Input validations' | 'Restore account' }
+  | {
+      parent: 'Sending Messages';
+      suite: 'Emoji reacts' | 'Mentions' | 'Message types' | 'Performance' | 'Rules';
+    }
   | { parent: 'Settings'; suite: 'App Disguise' | 'Community Message Requests' }
   | {
       parent: 'User Actions';

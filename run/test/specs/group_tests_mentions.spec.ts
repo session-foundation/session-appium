@@ -10,6 +10,12 @@ bothPlatformsIt({
   risk: 'medium',
   testCb: mentionsForGroups,
   countOfDevicesNeeded: 3,
+  allureSuites: {
+    parent: 'Sending Messages',
+    suite: 'Mentions',
+  },
+  allureDescription:
+    'Verifies that mentions can be sent to a group, and that all participants see them correctly.',
 });
 
 async function mentionsForGroups(platform: SupportedPlatformsType, testInfo: TestInfo) {
