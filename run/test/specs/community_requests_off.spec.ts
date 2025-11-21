@@ -42,7 +42,7 @@ async function blindedMessageRequests(platform: SupportedPlatformsType, testInfo
   });
   await device1.clickOnElementAll(new CommunityMessageAuthor(device1, message));
   await test.step(`Verify the 'Message' button in the User Profile Modal is disabled`, async () => {
-    // brief sleep to let the UI settle 
+    // brief sleep to let the UI settle
     await sleepFor(1000);
     const messageButton = await device1.waitForTextElementToBePresent(
       new UPMMessageButton(device1)

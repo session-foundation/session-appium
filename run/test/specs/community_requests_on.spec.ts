@@ -61,7 +61,7 @@ async function blindedMessageRequests(platform: SupportedPlatformsType, testInfo
   });
 
   await test.step(TestSteps.SEND.MESSAGE(bob.userName, testCommunityName), async () => {
-    // brief sleep to let the UI settle 
+    // brief sleep to let the UI settle
     await sleepFor(1000);
     await device2.sendMessage(message);
     await device2.navigateBack();

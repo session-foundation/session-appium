@@ -13,8 +13,8 @@ export const joinCommunity = async (
   await device.clickOnElementAll(new JoinCommunityOption(device));
   await device.inputText(communityLink, new CommunityInput(device));
   await device.clickOnElementAll(new JoinCommunityButton(device));
-  // iOS lets us limit the number of community messages 
+  // iOS lets us limit the number of community messages
   // so checking the messages are there (empty state disappeared) is not an issue
-  await device.onAndroid().hasElementBeenDeleted(new EmptyConversation(device)); 
+  await device.onAndroid().hasElementBeenDeleted(new EmptyConversation(device));
   await device.waitForTextElementToBePresent(new ConversationHeaderName(device, communityName));
 };
