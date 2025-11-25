@@ -17,6 +17,9 @@ bothPlatformsIt({
     parent: 'Network Page',
   },
   allureDescription: `Verifies that the Network Page refreshes and updates the "Last updated" timestamp correctly.`,
+  allureLinks: {
+    android: 'SES-4884',
+  },
 });
 
 async function refreshNetworkPage(platform: SupportedPlatformsType, testInfo: TestInfo) {
