@@ -94,7 +94,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType, testInfo
   // Click on Edit group option
   await sleepFor(1000);
   await alice1.clickOnElementAll(new UpdateGroupInformation(alice1));
-  await alice1.clickOnElementAll({strategy: 'id', selector: 'clear-input-button-name'});
+  await alice1.clickOnElementAll({ strategy: 'id', selector: 'clear-input-button-name' });
   await alice1.clickOnElementAll(new EditGroupNameInput(alice1));
   await alice1.inputText(newGroupName, new EditGroupNameInput(alice1));
   // Click done/apply
