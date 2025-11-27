@@ -3,6 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { MediaMessage, MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
+import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
@@ -45,6 +46,7 @@ async function sendVideoGroupiOS(platform: SupportedPlatformsType, testInfo: Tes
   );
   await bob1.longPressMessage(testMessage);
   await bob1.clickOnByAccessibilityID('Reply to message');
+  await sleepFor(500); // Let the UI settle before finding message input and typing
   await bob1.sendMessage(replyMessage);
   await Promise.all(
     [alice1, charlie1].map(device =>

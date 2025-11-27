@@ -9,6 +9,7 @@ import {
   SendButton,
 } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
+import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { verifyPageScreenshot } from './utils/verify_screenshots';
 
@@ -48,6 +49,7 @@ async function messageBubbleAppearance(platform: SupportedPlatformsType, testInf
     // Bob replies with a longer message
     await bob1.longPressMessage(shortMessage);
     await bob1.clickOnByAccessibilityID('Reply to message');
+    await sleepFor(500); // Let the UI settle before finding message input and typing
     await bob1.inputText(replyMessage, new MessageInput(bob1));
     await bob1.clickOnElementAll(new SendButton(bob1));
     await bob1.waitForTextElementToBePresent({

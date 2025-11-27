@@ -50,6 +50,7 @@ async function sendGifGroupiOS(platform: SupportedPlatformsType, testInfo: TestI
   await bob1.longPress(new MediaMessage(bob1));
   // Check reply came through on alice1
   await bob1.clickOnByAccessibilityID('Reply to message');
+  await sleepFor(500); // Let the UI settle before finding message input and typing
   await bob1.sendMessage(replyMessage);
   await Promise.all(
     [alice1, charlie1].map(device =>

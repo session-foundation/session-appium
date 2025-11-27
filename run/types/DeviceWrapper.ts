@@ -1733,7 +1733,8 @@ export class DeviceWrapper {
     this.log(`Message received by ${receiver.userName} from ${sender.userName}`);
     return message;
   }
-
+  // TODO instead of blind sleeping, check presence of reply preview
+  // Remove blind sleep from other tests that reply as well
   public async replyToMessage(user: Pick<User, 'userName'>, body: string) {
     // Reply to media message from user B
     // Long press on imageSent element
@@ -1748,6 +1749,7 @@ export class DeviceWrapper {
     } else {
       throw new Error(`Long press failed on ${body}`);
     }
+    await sleepFor(500); // Let the UI settle back into composition mode
     // Select 'Reply' option
     // Send message
     const replyMessage = `${user.userName} replied to ${body}`;

@@ -46,6 +46,7 @@ async function sendDocumentGroupiOS(platform: SupportedPlatformsType, testInfo: 
   );
   await bob1.longPressMessage(testMessage);
   await bob1.clickOnByAccessibilityID('Reply to message');
+  await sleepFor(500); // Let the UI settle before finding message input and typing
   await bob1.sendMessage(replyMessage);
   await alice1.waitForTextElementToBePresent(new MessageBody(alice1, replyMessage));
   await closeApp(alice1, bob1, charlie1);

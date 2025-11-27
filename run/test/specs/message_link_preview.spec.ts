@@ -59,6 +59,7 @@ async function sendLinkIos(platform: SupportedPlatformsType, testInfo: TestInfo)
   await bob1.waitForTextElementToBePresent(new MessageBody(bob1, testLink));
   await bob1.longPressMessage(testLink);
   await bob1.clickOnByAccessibilityID('Reply to message');
+  await sleepFor(500); // Let the UI settle before finding message input and typin
   await bob1.sendMessage(replyMessage);
   await alice1.waitForTextElementToBePresent(new MessageBody(alice1, replyMessage));
   await closeApp(alice1, bob1);

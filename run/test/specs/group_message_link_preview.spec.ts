@@ -71,6 +71,7 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType, testInfo: Test
   // Reply to link
   await bob1.longPressMessage(testLink);
   await bob1.clickOnByAccessibilityID('Reply to message');
+  await sleepFor(500); // Let the UI settle before finding message input and typing
   await bob1.sendMessage(replyMessage);
   await Promise.all(
     [alice1, charlie1].map(device =>
