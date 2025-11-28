@@ -1898,7 +1898,7 @@ export class DeviceWrapper {
   public async sendVideoiOS(message: string): Promise<number> {
     // iOS files are pre-loaded on simulator creation, no need to push
     await this.clickOnElementAll(new AttachmentsButton(this));
-    await this.clickOnElementAll(new DocumentsFolderButton(this));
+    await this.clickOnElementAll(new ImagesFolderButton(this));
     await sleepFor(100);
     await this.modalPopup({
       strategy: 'accessibility id',
