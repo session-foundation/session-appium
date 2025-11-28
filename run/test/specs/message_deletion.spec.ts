@@ -26,7 +26,7 @@ async function deleteMessage(platform: SupportedPlatformsType, testInfo: TestInf
   await alice1.sendMessage(sentMessage);
   await bob1.waitForTextElementToBePresent(new MessageBody(bob1, sentMessage));
   // Select and long press on message to delete it
-  await alice1.longPressMessage(sentMessage);
+  await alice1.longPressMessage(new MessageBody(alice1, sentMessage));
   // Select Delete icon
   await alice1.clickOnByAccessibilityID('Delete message');
   await alice1.checkModalStrings(

@@ -3,7 +3,12 @@ import { test, type TestInfo } from '@playwright/test';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { GROUPNAME } from '../../types/testing';
-import { EmojiReactsCount, EmojiReactsPill, FirstEmojiReact } from './locators/conversation';
+import {
+  EmojiReactsCount,
+  EmojiReactsPill,
+  FirstEmojiReact,
+  MessageBody,
+} from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
@@ -39,7 +44,7 @@ async function sendEmojiReactionGroup(platform: SupportedPlatformsType, testInfo
   await test.step(TestSteps.SEND.EMOJI_REACT, async () => {
     await Promise.all(
       [bob1, charlie1].map(async device => {
-        await device.longPressMessage(message);
+        await device.longPressMessage(new MessageBody(device, message));
         await device.clickOnElementAll(new FirstEmojiReact(device));
         // Verify long press menu disappeared (so next found emoji is in convo and not in react bar)
         await device.verifyElementNotPresent({

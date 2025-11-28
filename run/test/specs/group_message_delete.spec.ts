@@ -38,7 +38,7 @@ async function deleteMessageGroup(platform: SupportedPlatformsType, testInfo: Te
     )
   );
   // Select and long press on message to delete it
-  await alice1.longPressMessage(sentMessage);
+  await alice1.longPressMessage(new MessageBody(alice1, sentMessage));
   // Select Delete icon
   await alice1.clickOnByAccessibilityID('Delete message');
   // Check modal is correct

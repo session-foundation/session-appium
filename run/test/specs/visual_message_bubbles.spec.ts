@@ -47,7 +47,7 @@ async function messageBubbleAppearance(platform: SupportedPlatformsType, testInf
   });
   await test.step(TestSteps.SEND.REPLY(bob.userName, alice.userName), async () => {
     // Bob replies with a longer message
-    await bob1.longPressMessage(shortMessage);
+    await bob1.longPressMessage(new MessageBody(bob1, shortMessage));
     await bob1.clickOnByAccessibilityID('Reply to message');
     await sleepFor(500); // Let the UI settle before finding message input and typing
     await bob1.inputText(replyMessage, new MessageInput(bob1));

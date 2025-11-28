@@ -44,7 +44,7 @@ async function sendVideoGroupiOS(platform: SupportedPlatformsType, testInfo: Tes
       device.waitForTextElementToBePresent(new MessageBody(device, testMessage))
     )
   );
-  await bob1.longPressMessage(testMessage);
+  await bob1.longPressMessage(new MessageBody(bob1, testMessage));
   await bob1.clickOnByAccessibilityID('Reply to message');
   await sleepFor(500); // Let the UI settle before finding message input and typing
   await bob1.sendMessage(replyMessage);
@@ -99,7 +99,7 @@ async function sendVideoGroupAndroid(platform: SupportedPlatformsType, testInfo:
     }),
   ]);
   // Reply to message on device 2
-  await bob1.longPress(new MediaMessage(bob1));
+  await bob1.longPressMessage(new MediaMessage(bob1));
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);
   // Check reply appears in device 1 and device 3

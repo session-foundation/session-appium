@@ -34,7 +34,7 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType, test
   await alice2.clickOnElementAll(new ConversationItem(alice2, bob.userName)); // Find message
   await alice2.findMessageWithBody(testMessage);
   // Select message on device 1, long press
-  await alice1.longPressMessage(testMessage);
+  await alice1.longPressMessage(new MessageBody(alice1, testMessage));
   // Select delete
   await alice1.clickOnByAccessibilityID('Delete message');
   await alice1.checkModalStrings(

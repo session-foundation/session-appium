@@ -700,20 +700,34 @@ export class DeviceWrapper {
     await this.longClick(el, duration);
   }
 
-  public async longPressMessage(textToLookFor: string) {
-    const truncatedText =
-      textToLookFor.length > 50 ? textToLookFor.substring(0, 50) + '...' : textToLookFor;
+  /**
+   * Long presses a message and waits for the context menu to appear.
+   * Retries until successful or timeout is reached.
+   *
+   * @throws if message not found or context menu fails to appear within maxWait
+   */
+  public async longPressMessage(
+    args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
+  ): Promise<void> {
+    const { text, maxWait = 10_000 } = args;
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
 
-    const result = await this.pollUntil(
+    // Merge text if provided
+    const finalLocator = text ? { ...locator, text } : locator;
+
+    const displayText = describeLocator(finalLocator);
+    this.log(`Attempting long press on ${displayText}`);
+
+    await this.pollUntil(
       async () => {
         // Find the message
         const el = await this.waitForTextElementToBePresent({
-          ...new MessageBody(this, textToLookFor).build(),
+          ...finalLocator,
           maxWait: 1_000,
         });
 
         if (!el) {
-          return { success: false, error: `Couldn't find message: ${truncatedText}` };
+          return { success: false, error: `Message not found: ${displayText}` };
         }
 
         // Attempt long click
@@ -727,23 +741,21 @@ export class DeviceWrapper {
         });
 
         if (longPressSuccess) {
-          this.log('LongClick successful');
+          this.log('Long press successful, context menu opened');
           return { success: true, data: el };
         }
 
         return {
           success: false,
-          error: `Long press didn't show context menu for: ${truncatedText}`,
+          error: `Long press didn't show context menu for ${displayText}`,
         };
       },
       {
-        maxWait: 10_000,
+        maxWait,
         pollInterval: 1000,
-        onAttempt: attempt => this.log(`Longpress attempt ${attempt}...`),
+        onAttempt: attempt => this.log(`Long press attempt ${attempt}...`),
       }
     );
-
-    return result;
   }
 
   public async longPressConversation(userName: string) {
@@ -1741,17 +1753,11 @@ export class DeviceWrapper {
   public async replyToMessage(user: Pick<User, 'userName'>, body: string) {
     // Reply to media message from user B
     // Long press on imageSent element
-    await this.longPressMessage(body);
-    const longPressSuccess = await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Reply to message',
-      maxWait: 1000,
-    });
-    if (longPressSuccess) {
-      await this.clickOnByAccessibilityID('Reply to message');
-    } else {
-      throw new Error(`Long press failed on ${body}`);
-    }
+    await this.longPressMessage(new MessageBody(this, body));
+
+    // Context menu is already open, just click Reply
+    await this.clickOnByAccessibilityID('Reply to message');
+
     await sleepFor(500); // Let the UI settle back into composition mode
     // Select 'Reply' option
     // Send message

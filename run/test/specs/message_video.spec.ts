@@ -65,7 +65,7 @@ async function sendVideoAndroid(platform: SupportedPlatformsType, testInfo: Test
     strategy: 'id',
     selector: 'network.loki.messenger:id/play_overlay',
   });
-  await bob1.longPress(new MediaMessage(bob1));
+  await bob1.longPressMessage(new MediaMessage(bob1));
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);
   await sleepFor(2000);

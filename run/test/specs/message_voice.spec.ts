@@ -29,7 +29,7 @@ async function sendVoiceMessage(platform: SupportedPlatformsType, testInfo: Test
   await alice1.waitForTextElementToBePresent(new VoiceMessage(alice1));
   await bob1.trustAttachments(alice.userName);
   await sleepFor(500);
-  await bob1.longPress(new VoiceMessage(bob1));
+  await bob1.longPressMessage(new VoiceMessage(bob1));
   await bob1.clickOnByAccessibilityID('Reply to message');
   await sleepFor(500); // Let the UI settle before finding message input and typing
   await bob1.sendMessage(replyMessage);

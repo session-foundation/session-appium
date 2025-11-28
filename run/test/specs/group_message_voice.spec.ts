@@ -40,7 +40,7 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType, testInfo:
       device.waitForTextElementToBePresent(new VoiceMessage(device))
     )
   );
-  await bob1.longPress(new VoiceMessage(bob1));
+  await bob1.longPressMessage(new VoiceMessage(bob1));
   await bob1.clickOnByAccessibilityID('Reply to message');
   await sleepFor(500); // Let the UI settle before finding message input and typing
   await bob1.sendMessage(replyMessage);
