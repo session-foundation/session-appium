@@ -32,16 +32,26 @@ async function mentionsForGroups(platform: SupportedPlatformsType, testInfo: Tes
 
   await alice1.mentionContact(platform, bob);
   // Check format on User B's device
-  await bob1.waitForTextElementToBePresent(new MessageBody(bob1, '@You'));
+  await Promise.all([
+    alice1.waitForTextElementToBePresent(new MessageBody(alice1, `@${bob.userName}`)),
+    bob1.waitForTextElementToBePresent(new MessageBody(bob1, '@You')),
+    charlie1.waitForTextElementToBePresent(new MessageBody(charlie1, `@${bob.userName}`)),
+  ]);
   // await device2.findMessageWithBody(`@You`);
   // Bob to Select User C
   await bob1.mentionContact(platform, charlie);
   // Check Charlies device(3) for correct format
-  await charlie1.findMessageWithBody(`@You`);
-  //  Check User A format works
+  await Promise.all([
+    alice1.waitForTextElementToBePresent(new MessageBody(alice1, `@${charlie.userName}`)),
+    bob1.waitForTextElementToBePresent(new MessageBody(bob1, `@${charlie.userName}`)),
+    charlie1.waitForTextElementToBePresent(new MessageBody(charlie1, '@You')),
+  ]); //  Check User A format works
   await charlie1.mentionContact(platform, alice);
   // Check device 1 that correct format is shown (Alice's device)
-  await alice1.findMessageWithBody(`@You`);
-  // Close app
+  await Promise.all([
+    alice1.waitForTextElementToBePresent(new MessageBody(alice1, '@You')),
+    bob1.waitForTextElementToBePresent(new MessageBody(bob1, `@${alice.userName}`)),
+    charlie1.waitForTextElementToBePresent(new MessageBody(charlie1, `@${alice.userName}`)),
+  ]); // Close app
   await closeApp(alice1, bob1, charlie1);
 }
