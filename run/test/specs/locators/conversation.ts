@@ -175,6 +175,33 @@ export class AttachmentsButton extends LocatorsInterface {
   }
 }
 
+export class GIFButton extends LocatorsInterface {
+  public build() {
+    return {
+      strategy: 'accessibility id',
+      selector: 'GIF button',
+    } as const;
+  }
+}
+
+export class DocumentsFolderButton extends LocatorsInterface {
+  public build() {
+    return {
+      strategy: 'accessibility id',
+      selector: 'Documents folder',
+    } as const;
+  }
+}
+
+export class ImagesFolderButton extends LocatorsInterface {
+  public build() {
+    return {
+      strategy: 'accessibility id',
+      selector: 'Images folder',
+    } as const;
+  }
+}
+
 // TODO tie this to the message whose status we want to check (similar to EmojiReactsPill)
 export class OutgoingMessageStatusSent extends LocatorsInterface {
   public build() {

@@ -42,12 +42,12 @@ async function mentionsForGroups(platform: SupportedPlatformsType, testInfo: Tes
     alice1.waitForTextElementToBePresent(new MessageBody(alice1, `@${charlie.userName}`)),
     bob1.waitForTextElementToBePresent(new MessageBody(bob1, `@${charlie.userName}`)),
     charlie1.waitForTextElementToBePresent(new MessageBody(charlie1, '@You')),
-  ]); 
+  ]);
   await charlie1.mentionContact(platform, alice);
   await Promise.all([
     alice1.waitForTextElementToBePresent(new MessageBody(alice1, '@You')),
     bob1.waitForTextElementToBePresent(new MessageBody(bob1, `@${alice.userName}`)),
     charlie1.waitForTextElementToBePresent(new MessageBody(charlie1, `@${alice.userName}`)),
-  ]); 
+  ]);
   await closeApp(alice1, bob1, charlie1);
 }

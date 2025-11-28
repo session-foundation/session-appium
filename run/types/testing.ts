@@ -46,12 +46,6 @@ export type Coordinates = {
 };
 
 export const InteractionPoints: Record<string, Coordinates> = {
-  ImagesFolderKeyboardOpen: { x: 36, y: 527 },
-  ImagesFolderKeyboardClosed: { x: 36, y: 792 },
-  GifButtonKeyboardOpen: { x: 36, y: 420 },
-  GifButtonKeyboardClosed: { x: 36, y: 689 },
-  DocumentKeyboardOpen: { x: 36, y: 476 },
-  DocumentKeyboardClosed: { x: 36, y: 740 },
   BackToSession: { x: 42, y: 42 },
 };
 

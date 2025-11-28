@@ -31,6 +31,9 @@ import {
 import { englishStrippedStr } from '../localizer/englishStrippedStr';
 import {
   AttachmentsButton,
+  DocumentsFolderButton,
+  GIFButton,
+  ImagesFolderButton,
   MessageBody,
   MessageInput,
   NewVoiceMessageButton,
@@ -1851,13 +1854,7 @@ export class DeviceWrapper {
     // iOS files are pre-loaded on simulator creation, no need to push
     if (this.isIOS()) {
       await this.clickOnElementAll(new AttachmentsButton(this));
-      await sleepFor(5000);
-      const keyboard = await this.isKeyboardVisible();
-      if (keyboard) {
-        await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardOpen);
-      } else {
-        await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardClosed);
-      }
+      await this.clickOnElementAll(new ImagesFolderButton(this));
       await sleepFor(1000);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
       await sleepFor(2000); // Appium needs a moment, matchAndTapImage sometimes finds 0 elements otherwise
@@ -1869,8 +1866,7 @@ export class DeviceWrapper {
       // Push file first
       await this.pushMediaToDevice(testImage);
       await this.clickOnElementAll(new AttachmentsButton(this));
-      await sleepFor(100);
-      await this.clickOnByAccessibilityID('Images folder');
+      await this.clickOnElementAll(new ImagesFolderButton(this));
       await this.clickOnElementAll({
         strategy: 'id',
         selector: 'com.android.permissioncontroller:id/permission_allow_all_button',
@@ -1902,12 +1898,7 @@ export class DeviceWrapper {
   public async sendVideoiOS(message: string): Promise<number> {
     // iOS files are pre-loaded on simulator creation, no need to push
     await this.clickOnElementAll(new AttachmentsButton(this));
-    const keyboard = await this.isKeyboardVisible();
-    if (keyboard) {
-      await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardOpen);
-    } else {
-      await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardClosed);
-    }
+    await this.clickOnElementAll(new DocumentsFolderButton(this));
     await sleepFor(100);
     await this.modalPopup({
       strategy: 'accessibility id',
@@ -1935,7 +1926,7 @@ export class DeviceWrapper {
     await this.clickOnElementAll(new AttachmentsButton(this));
     await sleepFor(100);
     // Select images button/tab
-    await this.clickOnByAccessibilityID('Documents folder');
+    await this.clickOnElementAll(new DocumentsFolderButton(this));
     await this.clickOnByAccessibilityID('Continue');
     // First you allow access then you allow full access
     await this.clickOnElementAll({
@@ -1992,12 +1983,7 @@ export class DeviceWrapper {
       const formattedFileName = 'test_file, pdf';
       const testMessage = 'Testing documents';
       await this.clickOnElementAll(new AttachmentsButton(this));
-      const keyboard = await this.isKeyboardVisible();
-      if (keyboard) {
-        await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardOpen);
-      } else {
-        await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardClosed);
-      }
+      await this.clickOnElementAll(new DocumentsFolderButton(this));
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
       // This flow is to ensure the file is found even if the simulator has been completely reset or started for the first time
       // The file is copied to the "Downloads" folder but the file picker UI might open in an empty "Recents" folder
@@ -2019,12 +2005,12 @@ export class DeviceWrapper {
         }
       }
       await this.clickOnByAccessibilityID(formattedFileName);
-      await sleepFor(500);
+      await sleepFor(1_000); // Flaky UI doing flaky things
       await this.sendMessage(testMessage);
     } else if (this.isAndroid()) {
       await this.pushMediaToDevice(testFile);
       await this.clickOnElementAll(new AttachmentsButton(this));
-      await this.clickOnByAccessibilityID('Documents folder');
+      await this.clickOnElementAll(new DocumentsFolderButton(this));
       await this.clickOnByAccessibilityID('Continue');
       // First you allow access then you allow full access
       await this.clickOnElementAll({
@@ -2078,19 +2064,8 @@ export class DeviceWrapper {
   }
 
   public async sendGIF(): Promise<number> {
-    await sleepFor(1000);
-    await this.clickOnByAccessibilityID('Attachments button');
-    if (this.isAndroid()) {
-      await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'GIF button' });
-    }
-    if (this.isIOS()) {
-      const keyboard = await this.isKeyboardVisible();
-      if (keyboard) {
-        await clickOnCoordinates(this, InteractionPoints.GifButtonKeyboardOpen);
-      } else {
-        await clickOnCoordinates(this, InteractionPoints.GifButtonKeyboardClosed);
-      }
-    }
+    await this.clickOnElementAll(new AttachmentsButton(this));
+    await this.clickOnElementAll(new GIFButton(this));
     await this.checkModalStrings(
       englishStrippedStr('giphyWarning').toString(),
       englishStrippedStr('giphyWarningDescription').toString()
