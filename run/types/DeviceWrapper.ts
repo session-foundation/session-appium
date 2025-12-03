@@ -724,6 +724,7 @@ export class DeviceWrapper {
         const el = await this.waitForTextElementToBePresent({
           ...finalLocator,
           maxWait: 1_000,
+          skipHealing: true,
         });
 
         if (!el) {
