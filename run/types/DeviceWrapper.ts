@@ -402,38 +402,52 @@ export class DeviceWrapper {
         continue;
       }
 
-      // If we need text validation, check it as part of matching criteria
-      let textMatches = true;
-      if (text) {
-        try {
-          const healedElements = await (this.toShared().findElements(
-            match.strategy,
-            match.originalSelector
-          ) as Promise<Array<AppiumNextElementType>>);
+      // Validate the candidate element
+      let isValidCandidate = true;
 
-          if (healedElements && healedElements.length > 0) {
-            textMatches = false; // Assume no match until proven otherwise
-            for (const element of healedElements) {
-              try {
-                const elementText = await this.getTextFromElement(element);
-                if (elementText.includes(text)) {
-                  textMatches = true;
-                  break;
-                }
-              } catch (e) {
-                continue; // Skip elements that can't provide text
+      // Always check visibility first
+      try {
+        const healedElements = await (this.toShared().findElements(
+          match.strategy,
+          match.originalSelector
+        ) as Promise<Array<AppiumNextElementType>>);
+
+        if (!healedElements || healedElements.length === 0) {
+          isValidCandidate = false;
+        } else {
+          // Check if ANY element is visible and (if text provided) contains the text
+          isValidCandidate = false; // Assume invalid until proven otherwise
+          
+          for (const element of healedElements) {
+            try {
+              // Check visibility first
+              const isVisible = await this.isVisible(element.ELEMENT);
+              if (!isVisible) {
+                continue; // Skip invisible elements
               }
+              
+              // If text is required, check it
+              if (text) {
+                const elementText = await this.getTextFromElement(element);
+                if (!elementText.includes(text)) {
+                  continue; // Text doesn't match
+                }
+              }
+              
+              // Passed all checks
+              isValidCandidate = true;
+              break;
+            } catch (e) {
+              continue; // Skip elements that error
             }
-          } else {
-            textMatches = false; // No elements found
           }
-        } catch (e) {
-          textMatches = false; // Error getting elements
         }
+      } catch (e) {
+        isValidCandidate = false;
       }
 
-      // Only accept candidates that pass BOTH selector similarity AND text content
-      if (textMatches) {
+      // Only accept valid candidates
+      if (isValidCandidate) {
         // Check if we've already logged this exact healing
         // Only log new healing signatures
         const healingSignature = `${strategy} "${selector}" ➡ ${match.strategy} "${match.originalSelector}"`;
@@ -456,9 +470,12 @@ export class DeviceWrapper {
           selector: match.originalSelector,
         };
       } else if (text) {
-        // Log why this candidate was rejected
         this.log(
           `Candidate ${match.strategy} "${match.originalSelector}" (${selectorConfidence}% match) rejected: missing text "${text}"`
+        );
+      } else {
+        this.log(
+          `Candidate ${match.strategy} "${match.originalSelector}" (${selectorConfidence}% match) rejected: not visible`
         );
       }
     }
@@ -721,10 +738,10 @@ export class DeviceWrapper {
     await this.pollUntil(
       async () => {
         // Find the message
+        this.log(`Looking for: ${JSON.stringify(finalLocator)}`);
         const el = await this.waitForTextElementToBePresent({
           ...finalLocator,
           maxWait: 1_000,
-          skipHealing: true,
         });
 
         if (!el) {
