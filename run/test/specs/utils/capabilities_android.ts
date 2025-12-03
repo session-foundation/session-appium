@@ -14,14 +14,17 @@ dotenv.config();
 // Concatenate the environment variable with the fixed part of the path
 const androidAppFullPath = getAndroidApk();
 
+export const androidAppPackage = 'network.loki.messenger';
+export const androidAppActivity = 'network.loki.messenger.RoutingActivity';
+
 console.log(`Android app full path: ${androidAppFullPath}`);
 
 const sharedCapabilities: AppiumAndroidCapabilities & AppiumCapabilities = {
   'appium:app': androidAppFullPath,
   'appium:platformName': 'Android',
   'appium:platformVersion': '14',
-  'appium:appPackage': 'network.loki.messenger',
-  'appium:appActivity': 'network.loki.messenger.RoutingActivity',
+  'appium:appPackage': androidAppPackage,
+  'appium:appActivity': androidAppActivity,
   'appium:automationName': 'UiAutomator2',
   'appium:newCommandTimeout': 300000,
   'appium:eventTimings': false,

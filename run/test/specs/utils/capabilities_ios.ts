@@ -9,6 +9,8 @@ dotenv.config();
 
 const iosPathPrefix = process.env.IOS_APP_PATH_PREFIX;
 
+export const iOSBundleId = 'com.loki-project.loki-messenger';
+
 if (!iosPathPrefix) {
   throw new Error('IOS_APP_PATH_PREFIX environment variable is not set');
 }
@@ -22,7 +24,7 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   'appium:platformVersion': '18.3',
   'appium:deviceName': 'iPhone 16 Pro Max',
   'appium:automationName': 'XCUITest',
-  'appium:bundleId': 'com.loki-project.loki-messenger',
+  'appium:bundleId': iOSBundleId,
   'appium:newCommandTimeout': 300000,
   'appium:useNewWDA': false,
   'appium:showXcodeLog': false,
