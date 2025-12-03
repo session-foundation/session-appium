@@ -41,7 +41,16 @@ import {
   ScrollToBottomButton,
   SendButton,
 } from '../test/specs/locators/conversation';
-import { Contact, ModalDescription, ModalHeading } from '../test/specs/locators/global';
+import {
+  Contact,
+  CTABody,
+  CTAButtonNegative,
+  CTAButtonPositive,
+  CTAFeature,
+  CTAHeading,
+  ModalDescription,
+  ModalHeading,
+} from '../test/specs/locators/global';
 import { ConversationItem, PlusButton } from '../test/specs/locators/home';
 import { LoadingAnimation } from '../test/specs/locators/onboarding';
 import {
@@ -2454,6 +2463,29 @@ export class DeviceWrapper {
     return;
   }
 
+  // Sanitize strings by removing new lines and whitespace sequences
+  private sanitizeString(input: string): string {
+    // Handle space + newlines as a unit
+    return input.replace(/\s*\n+/g, ' ').trim();
+  }
+
+  /**
+   * Asserts that actual text matches expected text.
+   * @throws Error with detailed message if texts don't match
+   */
+  private assertTextMatches(actual: string, expected: string, fieldName: string): void {
+    const sanitizedActual = this.sanitizeString(actual);
+    const sanitizedExpected = this.sanitizeString(expected);
+
+    if (sanitizedExpected === sanitizedActual) {
+      this.log(`${fieldName} is correct`);
+    } else {
+      throw new Error(
+        `${fieldName} is incorrect.\nExpected: ${sanitizedExpected}\nActual: ${sanitizedActual}`
+      );
+    }
+  }
+
   /**
    * Checks modal heading and description text against expected values.
    * Uses fallback locators to support both new (id) and legacy (accessibility id) variants on Android.
@@ -2462,12 +2494,6 @@ export class DeviceWrapper {
    * @throws Error if heading or description doesn't match expected text
    */
   public async checkModalStrings(expectedHeading: string, expectedDescription: string) {
-    // Sanitize
-    function removeNewLines(input: string): string {
-      // Handle space + newlines as a unit
-      return input.replace(/\s*\n+/g, ' ').trim();
-    }
-
     // Always try new first, fall back to legacy
     const newHeading = new ModalHeading(this).build();
     const legacyHeading = {
@@ -2481,28 +2507,73 @@ export class DeviceWrapper {
       selector: 'Modal description',
     } as StrategyExtractionObj;
 
-    // New → legacy fallback
+    // Locators
     const elHeading = await this.findWithFallback(newHeading, legacyHeading);
     const elDescription = await this.findWithFallback(newDescription, legacyDescription);
 
-    // Modal Heading
-    const actualHeading = removeNewLines(await this.getTextFromElement(elHeading));
-    if (expectedHeading === actualHeading) {
-      this.log('Modal heading is correct');
-    } else {
-      throw new Error(
-        `Modal heading is incorrect.\nExpected: ${expectedHeading}\nActual: ${actualHeading}`
-      );
+    // Actual text
+    const actualHeading = await this.getTextFromElement(elHeading);
+    const actualDescription = await this.getTextFromElement(elDescription);
+
+    this.assertTextMatches(actualHeading, expectedHeading, 'Modal heading');
+    this.assertTextMatches(actualDescription, expectedDescription, 'Modal description');
+  }
+
+  /**
+   * Checks CTA component text against expected values.
+   * CTAs contain: heading, body, 0-3 features, 1-2 buttons.
+   * @param heading - Expected CTA heading text
+   * @param body - Expected CTA body text
+   * @param buttons - Expected button text(s). First is positive, second (if present) is negative
+   * @param features - Optional array of expected feature text (0-3 items)
+   * @throws Error if any text element doesn't match expected value
+   */
+  public async checkCTAStrings(
+    heading: string,
+    body: string,
+    buttons: string[],
+    features?: string[]
+  ): Promise<void> {
+    // Validate input
+    if (features && features.length > 3) {
+      throw new Error('CTAs support maximum 3 features');
+    }
+    if (buttons.length < 1 || buttons.length > 2) {
+      throw new Error('CTAs must have 1-2 buttons');
     }
 
-    // Modal Description
-    const actualDescription = removeNewLines(await this.getTextFromElement(elDescription));
-    if (expectedDescription === actualDescription) {
-      this.log('Modal description is correct');
-    } else {
-      throw new Error(
-        `Modal description is incorrect.\nExpected: ${expectedDescription}\nActual: ${actualDescription}`
-      );
+    // Find and check heading
+    const elHeading = await this.waitForTextElementToBePresent(new CTAHeading(this));
+    const actualHeading = await this.getTextFromElement(elHeading);
+    this.log(actualHeading);
+    this.assertTextMatches(actualHeading, heading, 'CTA heading');
+
+    // Find and check body
+    const elBody = await this.waitForTextElementToBePresent(new CTABody(this));
+    const actualBody = await this.getTextFromElement(elBody);
+    this.assertTextMatches(actualBody, body, 'CTA body');
+
+    // Check features if expected
+    if (features && features.length > 0) {
+      for (let i = 0; i < features.length; i++) {
+        const featureLocator = new CTAFeature(this, i + 1);
+        const elFeature = await this.waitForTextElementToBePresent(featureLocator);
+        const actualFeature = await this.getTextFromElement(elFeature);
+        this.assertTextMatches(actualFeature, features[i], `CTA feature ${i + 1}`);
+      }
+    }
+
+    // Check buttons
+    const positiveLocator = new CTAButtonPositive(this);
+    const elPositive = await this.waitForTextElementToBePresent(positiveLocator);
+    const actualPositive = await this.getTextFromElement(elPositive);
+    this.assertTextMatches(actualPositive, buttons[0], 'CTA positive button');
+
+    if (buttons.length === 2) {
+      const negativeLocator = new CTAButtonNegative(this);
+      const elNegative = await this.waitForTextElementToBePresent(negativeLocator);
+      const actualNegative = await this.getTextFromElement(elNegative);
+      this.assertTextMatches(actualNegative, buttons[1], 'CTA negative button');
     }
   }
 

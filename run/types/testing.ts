@@ -149,6 +149,7 @@ export type XPath =
   | `//XCUIElementTypeStaticText[@name="Videos"]`
   | `//XCUIElementTypeStaticText[contains(@name, '00:')]`
   | `//XCUIElementTypeStaticText[contains(@name, "Version")]`
+  | `//XCUIElementTypeStaticText[starts-with(@name,'${string}')]`
   | `//XCUIElementTypeSwitch[@name="Read Receipts, Send read receipts in one-to-one chats."]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`
@@ -163,6 +164,8 @@ export type UiAutomatorQuery =
   | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("path-menu-item"))'
   | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text("Select app icon"))'
   | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().textStartsWith("Version"))'
+  | 'new UiSelector().resourceId("cta-button-negative").childSelector(new UiSelector().className("android.widget.TextView"))'
+  | 'new UiSelector().resourceId("cta-button-positive").childSelector(new UiSelector().className("android.widget.TextView"))'
   | 'new UiSelector().resourceId("network.loki.messenger:id/messageStatusTextView").text("Sent")'
   | 'new UiSelector().text("Enter your display name")'
   | `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-text"))`
@@ -309,6 +312,7 @@ export type AccessibilityId =
   | 'Local Network Permission - Switch'
   | 'Manage Members'
   | 'Market cap amount'
+  | 'Maybe Later'
   | 'Media message'
   | 'MeetingSE'
   | 'Meetings option'
@@ -462,6 +466,9 @@ export type Id =
   | 'Copy URL'
   | 'Create account button'
   | 'Create group'
+  | 'cta-body'
+  | 'cta-button-negative'
+  | 'cta-button-positive'
   | 'delete-contact-confirm-button'
   | 'delete-contact-menu-option'
   | 'delete-conversation-confirm-button'
@@ -584,6 +591,7 @@ export type Id =
   | 'Version warning banner'
   | 'Yes'
   | `All ${AppName} notifications`
+  | `cta-feature-${number}`
   | `Disappear after ${DisappearModes} option`;
 
 export type TestRisk = 'high' | 'low' | 'medium';
@@ -594,6 +602,7 @@ export type ScreenshotFileNames =
   | 'app_disguise'
   | 'conversation_alice'
   | 'conversation_bob'
+  | 'cta_donate'
   | 'landingpage_new_account'
   | 'landingpage_restore_account'
   | 'settings_appearance'

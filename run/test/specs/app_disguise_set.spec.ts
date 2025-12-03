@@ -67,10 +67,7 @@ async function appDisguiseSetIconIOS(platform: SupportedPlatformsType, testInfo:
       // The disguised app must be uninstalled otherwise every following test will fail
       await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
         await closeApp(device);
-        await runScriptAndLog(
-          `xcrun simctl uninstall ${device.udid} ${iOSBundleId}`,
-          true
-        );
+        await runScriptAndLog(`xcrun simctl uninstall ${device.udid} ${iOSBundleId}`, true);
       });
     }
   });
