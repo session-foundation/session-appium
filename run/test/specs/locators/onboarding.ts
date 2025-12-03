@@ -173,6 +173,23 @@ export class SeedPhraseInput extends LocatorsInterface {
 
 // MESSAGE NOTIFICATIONS
 
+export class FastModeRadio extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Fast mode notifications button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Fast mode notifications button',
+        } as const;
+    }
+  }
+}
+
 export class SlowModeRadio extends LocatorsInterface {
   public build() {
     switch (this.platform) {

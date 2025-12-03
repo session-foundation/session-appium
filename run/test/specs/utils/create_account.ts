@@ -4,7 +4,7 @@ import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
 import { CloseSettings } from '../locators';
 import { AccountIDDisplay, ContinueButton } from '../locators/global';
-import { CreateAccountButton, DisplayNameInput, SlowModeRadio } from '../locators/onboarding';
+import { CreateAccountButton, DisplayNameInput, FastModeRadio } from '../locators/onboarding';
 import { RecoveryPhraseContainer, RevealRecoveryPhraseButton } from '../locators/settings';
 import { UserSettings } from '../locators/settings';
 import { CopyButton } from '../locators/start_conversation';
@@ -31,9 +31,9 @@ export async function newUser(
   await device.inputText(userName, new DisplayNameInput(device));
   // Click continue
   await device.clickOnElementAll(new ContinueButton(device));
-  // Choose message notification options
-  // Want to choose 'Slow Mode' so notifications don't interrupt test
-  await device.clickOnElementAll(new SlowModeRadio(device));
+  // Choose message notification options (Fast mode by default)
+  // TODO: Add option to choose slow mode and handle bg perms on Android (SES-4975)
+  await device.clickOnElementAll(new FastModeRadio(device));
   // Select Continue to save notification settings
   await device.clickOnElementAll(new ContinueButton(device));
   // Handle permissions based on the flag
