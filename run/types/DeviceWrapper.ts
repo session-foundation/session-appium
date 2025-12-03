@@ -417,7 +417,7 @@ export class DeviceWrapper {
         } else {
           // Check if ANY element is visible and (if text provided) contains the text
           isValidCandidate = false; // Assume invalid until proven otherwise
-          
+
           for (const element of healedElements) {
             try {
               // Check visibility first
@@ -425,7 +425,7 @@ export class DeviceWrapper {
               if (!isVisible) {
                 continue; // Skip invisible elements
               }
-              
+
               // If text is required, check it
               if (text) {
                 const elementText = await this.getTextFromElement(element);
@@ -433,7 +433,7 @@ export class DeviceWrapper {
                   continue; // Text doesn't match
                 }
               }
-              
+
               // Passed all checks
               isValidCandidate = true;
               break;
