@@ -33,7 +33,7 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   'appium:processArguments': {
     env: {
       debugDisappearingMessageDurations: 'true',
-      communityPollLimit: 3,
+      communityPollLimit: '3',
     },
   },
 } as AppiumXCUITestCapabilities;
@@ -129,11 +129,28 @@ export function getIosCapabilities(capabilitiesIndex: CapabilitiesIndexType): W3
     );
   }
 
-  const caps = capabilities[capabilitiesIndex];
+  // Deep clone the capabilities object so we never mutate the shared global template.
+  // Appium caps contain nested objects, so shallow clone ({...obj}) is not safe.
+  const caps = structuredClone(capabilities[capabilitiesIndex]);
+
+  // Extract the existing env block inside appium:processArguments.
+  const baseEnv =
+    (caps['appium:processArguments'] as { env?: Record<string, string> } | undefined)?.env ?? {};
+
+  // Optional per-test override:
+  // Some tests set IOS_CUSTOM_FIRST_INSTALL_DATE_TIME before starting Appium.
+  // If present, inject it into the processArguments.env. Otherwise inject nothing.
+  const custom = process.env.IOS_CUSTOM_FIRST_INSTALL_DATE_TIME;
+  const customEnv = custom ? { customFirstInstallDateTime: custom } : {};
+
+  // Rebuild the processArguments block with merged env vars
+  caps['appium:processArguments'] = {
+    env: { ...baseEnv, ...customEnv },
+  };
 
   return {
     firstMatch: [{}],
-    alwaysMatch: { ...caps },
+    alwaysMatch: caps,
   };
 }
 
