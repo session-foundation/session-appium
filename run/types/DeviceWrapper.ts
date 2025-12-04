@@ -2545,7 +2545,6 @@ export class DeviceWrapper {
     // Find and check heading
     const elHeading = await this.waitForTextElementToBePresent(new CTAHeading(this));
     const actualHeading = await this.getTextFromElement(elHeading);
-    this.log(actualHeading);
     this.assertTextMatches(actualHeading, heading, 'CTA heading');
 
     // Find and check body
