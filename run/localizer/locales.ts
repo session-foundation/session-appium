@@ -56,6 +56,7 @@ export type TokenSimpleNoArgs =
     'accountIdYoursDescription' |
     'actualSize' |
     'add' |
+    'addAdminSingular' |
     'addAdminsDescription' |
     'adminCannotBeDemoted' |
     'adminCannotBeRemoved' |
@@ -974,6 +975,8 @@ export type TokenSimpleNoArgs =
     'shareExtensionNoAccountError' |
     'shareGroupMessageHistory' |
     'shareToSession' |
+    'sharingSupportMultipleMedia' |
+    'sharingSupportMultipleMediaExcluded' |
     'show' |
     'showAll' |
     'showLess' |
@@ -1670,6 +1673,9 @@ export const simpleDictionaryNoArgs: Record<
   },
   add: {
       en: "Add",
+  },
+  addAdminSingular: {
+      en: "Add Admin",
   },
   addAdminsDescription: {
       en: "Enter the Account ID of the user you are promoting to admin.<br/><br/>To add multiple users, enter each Account ID separated by a comma. Up to 20 Account IDs can be specified at a time.",
@@ -4424,6 +4430,12 @@ export const simpleDictionaryNoArgs: Record<
   },
   shareToSession: {
       en: "Share to Session",
+  },
+  sharingSupportMultipleMedia: {
+      en: "Sorry, Session only supports sharing multiple images and videos at once",
+  },
+  sharingSupportMultipleMediaExcluded: {
+      en: "Sharing only supports media. Non-media files have been excluded",
   },
   show: {
       en: "Show",
