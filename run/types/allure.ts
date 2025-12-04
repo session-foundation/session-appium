@@ -21,9 +21,9 @@ import { UserNameType } from '@session-foundation/qa-seeder';
 
 export type AllureSuiteConfig =
   | { parent: 'Disappearing Messages'; suite: 'Conversation Types' | 'Message Types' | 'Rules' }
+  | { parent: 'Donations' }
   | { parent: 'Groups'; suite: 'Create Group' | 'Edit Group' | 'Leave/Delete Group' }
   | { parent: 'In-App Review Prompt'; suite: 'Flows' | 'Triggers' }
-  | { parent: 'Linkouts' }
   | { parent: 'Network Page' }
   | { parent: 'New Conversation'; suite: 'Invite a Friend' | 'Join Community' | 'New Message' }
   | { parent: 'Onboarding'; suite: 'Input validations' | 'Restore account' }

@@ -12,15 +12,15 @@ import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from 
 import { assertUrlIsReachable, ensureHttpsURL } from './utils/utilities';
 
 bothPlatformsIt({
-  title: 'Donate linkout',
+  title: 'Donate Settings menu item',
   risk: 'high',
   testCb: donateLinkout,
   countOfDevicesNeeded: 1,
   allureSuites: {
-    parent: 'Linkouts',
+    parent: 'Donations',
   },
   allureDescription:
-    'Verifies that the STF donation link is correct and that the HTTP request is successful (200)',
+    'Verifies that the Settings donation link is correct and that the HTTP request is successful (200)',
 });
 
 async function donateLinkout(platform: SupportedPlatformsType, testInfo: TestInfo) {

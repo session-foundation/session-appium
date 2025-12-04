@@ -14,12 +14,12 @@ import { forceStopAndRestart as forceStopAndRestartApp } from './utils/utilities
 import { verifyPageScreenshot } from './utils/verify_screenshots';
 
 bothPlatformsIt({
-  title: 'Donate CTA after review',
+  title: 'Donate CTA shows after positive review',
   risk: 'high',
   testCb: donateCTAReview,
   countOfDevicesNeeded: 1,
   allureSuites: {
-    parent: 'Linkouts',
+    parent: 'Donations',
   },
   allureDescription:
     'Verifies that the Donate CTA is shown after dismissing the positive review prompt; verifies modal strings and screenshot; and that the Donate button shows the correct Open URL modal.',
