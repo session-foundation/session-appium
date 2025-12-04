@@ -11,6 +11,11 @@ bothPlatformsIt({
   risk: 'low',
   testCb: onboardingIncorrectSeed,
   countOfDevicesNeeded: 1,
+  allureSuites: {
+    parent: 'Onboarding',
+    suite: 'Input validations',
+  },
+  allureDescription: `Verifies that a seed phrase with a word not on the mnemonic list throws the 'some words are incorrect' error as expected.`,
 });
 
 async function onboardingIncorrectSeed(platform: SupportedPlatformsType, testInfo: TestInfo) {

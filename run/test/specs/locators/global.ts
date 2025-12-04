@@ -159,3 +159,104 @@ export class CopyURLButton extends LocatorsInterface {
     }
   }
 }
+
+// NOTE: This is meant to be a generic locator for all CTAs but for the time being the iOS implementation is limited to the Donate CTA
+// See SES-4930
+export class CTAHeading extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'pro-badge-text',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'xpath',
+          selector: `//XCUIElementTypeStaticText[starts-with(@name,'Session Needs')]`,
+        } as const;
+    }
+  }
+}
+
+// NOTE: This is meant to be a generic locator for all CTAs but for the time being the iOS implementation is limited to the Donate CTA
+// See SES-4930
+export class CTABody extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'cta-body',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'xpath',
+          selector: `//XCUIElementTypeStaticText[starts-with(@name,'Powerful forces are trying to')]`,
+        } as const;
+    }
+  }
+}
+
+// NOTE: This is meant to be a generic locator for all CTAs but for the time being the iOS implementation is not available
+// See SES-4930
+export class CTAFeature extends LocatorsInterface {
+  private index: number;
+
+  constructor(device: DeviceWrapper, index: number) {
+    super(device);
+    this.index = index;
+  }
+
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: `cta-feature-${this.index}`,
+        } as const;
+      case 'ios':
+        throw new Error('CTAFeature locator is not available on iOS');
+    }
+  }
+}
+
+// NOTE: This is meant to be a generic locator for all CTAs but for the time being the iOS implementation is limited to the Donate CTA
+// See SES-4930
+export class CTAButtonPositive extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: '-android uiautomator',
+          selector:
+            'new UiSelector().resourceId("cta-button-positive").childSelector(new UiSelector().className("android.widget.TextView"))', // The text is not exposed to the top level selector
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Donate',
+        } as const;
+    }
+  }
+}
+
+// NOTE: This is meant to be a generic locator for all CTAs but for the time being the iOS implementation is limited to the Donate CTA
+// See SES-4930
+export class CTAButtonNegative extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: '-android uiautomator',
+          selector:
+            'new UiSelector().resourceId("cta-button-negative").childSelector(new UiSelector().className("android.widget.TextView"))', // The text is not exposed to the top level selector
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Maybe Later',
+        } as const;
+    }
+  }
+}

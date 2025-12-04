@@ -2,15 +2,16 @@ import { test, type TestInfo } from '@playwright/test';
 
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { TestSteps } from '../../types/allure';
-import { androidIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { CloseSettings } from './locators';
 import { ModalHeading } from './locators/global';
 import { PlusButton } from './locators/home';
 import { PathMenuItem, UserSettings } from './locators/settings';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
-androidIt({
+bothPlatformsIt({
   title: 'Review prompt only once',
   risk: 'medium',
   countOfDevicesNeeded: 1,
@@ -39,7 +40,7 @@ async function reviewPromptOnce(platform: SupportedPlatformsType, testInfo: Test
       englishStrippedStr('enjoyingSession').toString(),
       englishStrippedStr('enjoyingSessionDescription').toString()
     );
-    await device.clickOnByAccessibilityID('back'); // Yes this is lowercase to close the modal
+    await device.clickOnElementAll(new CloseSettings(device));
   });
   await test.step(TestSteps.OPEN.PATH, async () => {
     await device.clickOnElementAll(new UserSettings(device));

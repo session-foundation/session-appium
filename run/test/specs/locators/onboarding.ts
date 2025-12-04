@@ -28,7 +28,7 @@ export class BackButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/back_button',
+          selector: 'network.loki.messenger:id/back_button',
         } as const;
       case 'ios':
         return {
@@ -105,7 +105,7 @@ export class TermsOfServiceButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Terms of Service', // will be Terms of service *button* past 1.29.0
+          selector: 'Terms of service button',
         } as const;
       case 'ios':
         return {
@@ -122,7 +122,7 @@ export class PrivacyPolicyButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Privacy Policy', // will be Privacy policy *button* past 1.29.0
+          selector: 'Privacy policy button',
         } as const;
       case 'ios':
         return {
@@ -172,6 +172,23 @@ export class SeedPhraseInput extends LocatorsInterface {
 }
 
 // MESSAGE NOTIFICATIONS
+
+export class FastModeRadio extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Fast mode notifications button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Fast mode notifications button',
+        } as const;
+    }
+  }
+}
 
 export class SlowModeRadio extends LocatorsInterface {
   public build() {

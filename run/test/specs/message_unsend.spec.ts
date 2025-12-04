@@ -28,7 +28,7 @@ async function unsendMessage(platform: SupportedPlatformsType, testInfo: TestInf
   await alice1.sendMessage(testMessage);
   // await sleepFor(1000);
   await bob1.waitForTextElementToBePresent(new MessageBody(bob1, testMessage));
-  await alice1.longPressMessage(testMessage);
+  await alice1.longPressMessage(new MessageBody(alice1, testMessage));
   // Select Delete icon
   await alice1.clickOnByAccessibilityID('Delete message');
   // Check modal is correct

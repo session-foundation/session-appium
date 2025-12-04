@@ -46,12 +46,6 @@ export type Coordinates = {
 };
 
 export const InteractionPoints: Record<string, Coordinates> = {
-  ImagesFolderKeyboardOpen: { x: 36, y: 527 },
-  ImagesFolderKeyboardClosed: { x: 36, y: 792 },
-  GifButtonKeyboardOpen: { x: 36, y: 420 },
-  GifButtonKeyboardClosed: { x: 36, y: 689 },
-  DocumentKeyboardOpen: { x: 36, y: 476 },
-  DocumentKeyboardClosed: { x: 36, y: 740 },
   BackToSession: { x: 42, y: 42 },
 };
 
@@ -127,15 +121,15 @@ export type StrategyExtractionObj =
 
 export type XPath =
   | '//XCUIElementTypeCell'
-  | `(//android.widget.ImageView[@resource-id="network.loki.messenger.qa:id/thumbnail"])[1]`
+  | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
-  | `//*[@resource-id='network.loki.messenger.qa:id/callTitle' and contains(@text, ':')]`
+  | `//*[@resource-id='network.loki.messenger:id/callTitle' and contains(@text, ':')]`
   | `//*[starts-with(@content-desc, "Photo taken on")]`
-  | `//android.view.ViewGroup[@resource-id='network.loki.messenger.qa:id/mainContainer'][.//android.widget.TextView[contains(@text,'${string}')]]//androidx.compose.ui.platform.ComposeView[@resource-id='network.loki.messenger.qa:id/profilePictureView']`
-  | `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/layout_emoji_container"]`
-  | `//android.view.ViewGroup[@resource-id="network.loki.messenger.qa:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/reactions_pill_count"][@text="${string}"]`
-  | `//android.widget.LinearLayout[.//android.widget.TextView[@content-desc="Conversation list item" and @text="${string}"]]//android.widget.TextView[@resource-id="network.loki.messenger.qa:id/snippetTextView" and @text="${string}"]`
+  | `//android.view.ViewGroup[@resource-id='network.loki.messenger:id/mainContainer'][.//android.widget.TextView[contains(@text,'${string}')]]//androidx.compose.ui.platform.ComposeView[@resource-id='network.loki.messenger:id/profilePictureView']`
+  | `//android.view.ViewGroup[@resource-id="network.loki.messenger:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.view.ViewGroup[@resource-id="network.loki.messenger:id/layout_emoji_container"]`
+  | `//android.view.ViewGroup[@resource-id="network.loki.messenger:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.widget.TextView[@resource-id="network.loki.messenger:id/reactions_pill_count"][@text="${string}"]`
+  | `//android.widget.LinearLayout[.//android.widget.TextView[@content-desc="Conversation list item" and @text="${string}"]]//android.widget.TextView[@resource-id="network.loki.messenger:id/snippetTextView" and @text="${string}"]`
   | `//android.widget.TextView[@text="${string}"]`
   | `//android.widget.TextView[@text="Message"]/parent::android.view.View`
   | `//XCUIElementTypeAlert//*//XCUIElementTypeButton`
@@ -155,6 +149,7 @@ export type XPath =
   | `//XCUIElementTypeStaticText[@name="Videos"]`
   | `//XCUIElementTypeStaticText[contains(@name, '00:')]`
   | `//XCUIElementTypeStaticText[contains(@name, "Version")]`
+  | `//XCUIElementTypeStaticText[starts-with(@name,'${string}')]`
   | `//XCUIElementTypeSwitch[@name="Read Receipts, Send read receipts in one-to-one chats."]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`
@@ -169,7 +164,9 @@ export type UiAutomatorQuery =
   | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("path-menu-item"))'
   | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text("Select app icon"))'
   | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().textStartsWith("Version"))'
-  | 'new UiSelector().resourceId("network.loki.messenger.qa:id/messageStatusTextView").text("Sent")'
+  | 'new UiSelector().resourceId("cta-button-negative").childSelector(new UiSelector().className("android.widget.TextView"))'
+  | 'new UiSelector().resourceId("cta-button-positive").childSelector(new UiSelector().className("android.widget.TextView"))'
+  | 'new UiSelector().resourceId("network.loki.messenger:id/messageStatusTextView").text("Sent")'
   | 'new UiSelector().text("Enter your display name")'
   | `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-text"))`
   | `new UiSelector().text(${string})`;
@@ -279,6 +276,7 @@ export type AccessibilityId =
   | 'Enter Community URL'
   | 'Enter display name'
   | 'Error message'
+  | 'Fast mode notifications button'
   | 'Follow setting'
   | 'GIF button'
   | 'Group description text field'
@@ -314,6 +312,7 @@ export type AccessibilityId =
   | 'Local Network Permission - Switch'
   | 'Manage Members'
   | 'Market cap amount'
+  | 'Maybe Later'
   | 'Media message'
   | 'MeetingSE'
   | 'Meetings option'
@@ -467,6 +466,9 @@ export type Id =
   | 'Copy URL'
   | 'Create account button'
   | 'Create group'
+  | 'cta-body'
+  | 'cta-button-negative'
+  | 'cta-button-positive'
   | 'delete-contact-confirm-button'
   | 'delete-contact-menu-option'
   | 'delete-conversation-confirm-button'
@@ -488,6 +490,7 @@ export type Id =
   | 'enjoy-session-positive-button'
   | 'Enter display name'
   | 'error-message'
+  | 'Fast mode notifications button'
   | 'group-description'
   | 'Group name'
   | 'Group name input'
@@ -497,7 +500,6 @@ export type Id =
   | 'Hide recovery password button'
   | 'Image button'
   | 'Image picker'
-  | 'invite-contacts-button'
   | 'invite-contacts-menu-option'
   | 'Invite button'
   | 'Invite friend button'
@@ -515,36 +517,36 @@ export type Id =
   | 'Modal description'
   | 'Modal heading'
   | 'Navigate back'
-  | 'network.loki.messenger.qa:id/acceptCallButton'
-  | 'network.loki.messenger.qa:id/action_apply'
-  | 'network.loki.messenger.qa:id/back_button'
-  | 'network.loki.messenger.qa:id/call_text_view'
-  | 'network.loki.messenger.qa:id/callInProgress'
-  | 'network.loki.messenger.qa:id/callSubtitle'
-  | 'network.loki.messenger.qa:id/callTitle'
-  | 'network.loki.messenger.qa:id/characterLimitText'
-  | 'network.loki.messenger.qa:id/crop_image_menu_crop'
-  | 'network.loki.messenger.qa:id/emptyStateContainer'
-  | 'network.loki.messenger.qa:id/endCallButton'
-  | 'network.loki.messenger.qa:id/layout_emoji_container'
-  | 'network.loki.messenger.qa:id/linkPreviewView'
-  | 'network.loki.messenger.qa:id/mediapicker_folder_item_thumbnail'
-  | 'network.loki.messenger.qa:id/mediapicker_image_item_thumbnail'
-  | 'network.loki.messenger.qa:id/messageStatusTextView'
-  | 'network.loki.messenger.qa:id/openGroupTitleTextView'
-  | 'network.loki.messenger.qa:id/play_overlay'
-  | 'network.loki.messenger.qa:id/reaction_1'
-  | 'network.loki.messenger.qa:id/reactions_pill_count'
-  | 'network.loki.messenger.qa:id/scrollToBottomButton'
-  | 'network.loki.messenger.qa:id/search_cancel'
-  | 'network.loki.messenger.qa:id/search_result_title'
-  | 'network.loki.messenger.qa:id/sendAcceptsTextView'
-  | 'network.loki.messenger.qa:id/singleModeImageView'
-  | 'network.loki.messenger.qa:id/system_settings_app_icon'
-  | 'network.loki.messenger.qa:id/textSendAfterApproval'
-  | 'network.loki.messenger.qa:id/theme_option_classic_light'
-  | 'network.loki.messenger.qa:id/thumbnail_load_indicator'
-  | 'network.loki.messenger.qa:id/title'
+  | 'network.loki.messenger:id/acceptCallButton'
+  | 'network.loki.messenger:id/action_apply'
+  | 'network.loki.messenger:id/back_button'
+  | 'network.loki.messenger:id/call_text_view'
+  | 'network.loki.messenger:id/callInProgress'
+  | 'network.loki.messenger:id/callSubtitle'
+  | 'network.loki.messenger:id/callTitle'
+  | 'network.loki.messenger:id/characterLimitText'
+  | 'network.loki.messenger:id/crop_image_menu_crop'
+  | 'network.loki.messenger:id/emptyStateContainer'
+  | 'network.loki.messenger:id/endCallButton'
+  | 'network.loki.messenger:id/layout_emoji_container'
+  | 'network.loki.messenger:id/linkPreviewView'
+  | 'network.loki.messenger:id/mediapicker_folder_item_thumbnail'
+  | 'network.loki.messenger:id/mediapicker_image_item_thumbnail'
+  | 'network.loki.messenger:id/messageStatusTextView'
+  | 'network.loki.messenger:id/openGroupTitleTextView'
+  | 'network.loki.messenger:id/play_overlay'
+  | 'network.loki.messenger:id/reaction_1'
+  | 'network.loki.messenger:id/reactions_pill_count'
+  | 'network.loki.messenger:id/scrollToBottomButton'
+  | 'network.loki.messenger:id/search_cancel'
+  | 'network.loki.messenger:id/search_result_title'
+  | 'network.loki.messenger:id/sendAcceptsTextView'
+  | 'network.loki.messenger:id/singleModeImageView'
+  | 'network.loki.messenger:id/system_settings_app_icon'
+  | 'network.loki.messenger:id/textSendAfterApproval'
+  | 'network.loki.messenger:id/theme_option_classic_light'
+  | 'network.loki.messenger:id/thumbnail_load_indicator'
+  | 'network.loki.messenger:id/title'
   | 'New direct message'
   | 'Next'
   | 'nickname-input'
@@ -556,8 +558,9 @@ export type Id =
   | 'Open URL'
   | 'preferred-display-name'
   | 'Privacy'
-  | 'Privacy Policy'
+  | 'Privacy policy button'
   | 'pro-badge-text'
+  | 'qa-collapsing-footer-action_invite'
   | 'Quit'
   | 'rate-app-button'
   | 'Recovery password container'
@@ -579,7 +582,7 @@ export type Id =
   | 'Show'
   | 'Slow mode notifications button'
   | 'Staking reward pool amount'
-  | 'Terms of Service'
+  | 'Terms of service button'
   | 'update-group-info-confirm-button'
   | 'update-group-info-description-input'
   | 'update-group-info-name-input'
@@ -588,6 +591,7 @@ export type Id =
   | 'Version warning banner'
   | 'Yes'
   | `All ${AppName} notifications`
+  | `cta-feature-${number}`
   | `Disappear after ${DisappearModes} option`;
 
 export type TestRisk = 'high' | 'low' | 'medium';
@@ -598,6 +602,7 @@ export type ScreenshotFileNames =
   | 'app_disguise'
   | 'conversation_alice'
   | 'conversation_bob'
+  | 'cta_donate'
   | 'landingpage_new_account'
   | 'landingpage_restore_account'
   | 'settings_appearance'

@@ -50,7 +50,7 @@ export class ApplyChanges extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/action_apply',
+          selector: 'network.loki.messenger:id/action_apply',
         } as const;
       case 'ios':
         return {
@@ -486,7 +486,7 @@ export class LinkPreviewMessage extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/linkPreviewView',
+          selector: 'network.loki.messenger:id/linkPreviewView',
         };
       case 'ios':
         throw new Error(`No such element on iOS`);

@@ -11,6 +11,11 @@ bothPlatformsIt({
   risk: 'low',
   testCb: onboardingNoSeed,
   countOfDevicesNeeded: 1,
+  allureSuites: {
+    parent: 'Onboarding',
+    suite: 'Input validations',
+  },
+  allureDescription: `Verifies that an empty seed phrase throws the 'not long enough' error as expected.`,
 });
 
 async function onboardingNoSeed(platform: SupportedPlatformsType, testInfo: TestInfo) {

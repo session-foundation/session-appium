@@ -5,6 +5,7 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ConversationSettings } from './locators/conversation';
 import { LeaveGroupConfirm, LeaveGroupMenuItem } from './locators/groups';
+import { ConversationItem } from './locators/home';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -16,6 +17,11 @@ bothPlatformsIt({
   risk: 'high',
   testCb: leaveGroupLinkedDevice,
   countOfDevicesNeeded: 4,
+  allureSuites: {
+    parent: 'Groups',
+    suite: 'Leave/Delete Group',
+  },
+  allureDescription: 'Verifies that leaving a group syncs to a linked device',
 });
 
 async function leaveGroupLinkedDevice(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -39,9 +45,11 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType, testInfo
   );
   // Modal with Leave/Cancel
   await device3.clickOnElementAll(new LeaveGroupConfirm(device3));
-  // Check for control message
-  await sleepFor(5000);
-  await device4.onIOS().hasTextElementBeenDeleted('Conversation list item', testGroupName);
+  // Check for group disappearing
+  await Promise.all([
+    device3.verifyElementNotPresent(new ConversationItem(device3, testGroupName)),
+    device4.hasElementBeenDeleted(new ConversationItem(device4, testGroupName)),
+  ]);
   // Create control message for user leaving group
   const groupMemberLeft = englishStrippedStr('groupMemberLeft')
     .withArgs({ name: charlie.userName })

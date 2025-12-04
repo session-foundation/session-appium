@@ -235,7 +235,7 @@ export class ClassicLightThemeOption extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/theme_option_classic_light',
+          selector: 'network.loki.messenger:id/theme_option_classic_light',
         } as const;
       case 'ios':
         return {

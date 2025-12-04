@@ -11,6 +11,11 @@ bothPlatformsIt({
   risk: 'low',
   testCb: onboardingIncorrectSeed,
   countOfDevicesNeeded: 1,
+  allureSuites: {
+    parent: 'Onboarding',
+    suite: 'Input validations',
+  },
+  allureDescription: `Verifies that a too long seed phrase throws the 'check your recovery password' error as expected.`,
 });
 
 async function onboardingIncorrectSeed(platform: SupportedPlatformsType, testInfo: TestInfo) {

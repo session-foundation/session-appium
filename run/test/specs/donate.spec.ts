@@ -12,20 +12,20 @@ import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from 
 import { assertUrlIsReachable, ensureHttpsURL } from './utils/utilities';
 
 bothPlatformsIt({
-  title: 'Donate linkout',
+  title: 'Donate Settings menu item',
   risk: 'high',
   testCb: donateLinkout,
   countOfDevicesNeeded: 1,
   allureSuites: {
-    parent: 'Linkouts',
+    parent: 'Donations',
   },
   allureDescription:
-    'Verifies that the STF donation link is correct and that the HTTP request is successful (200)',
+    'Verifies that the Settings donation link is correct and that the HTTP request is successful (200)',
 });
 
 async function donateLinkout(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
-  const linkURL = 'https://session.foundation/donate#app';
+  const linkURL = 'https://getsession.org/donate#app';
   await newUser(device, USERNAME.ALICE, { saveUserData: false });
   await device.clickOnElementAll(new UserSettings(device));
   await device.clickOnElementAll(new DonationsMenuItem(device));

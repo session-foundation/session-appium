@@ -1,25 +1,25 @@
-import type { TestInfo } from '@playwright/test';
+import { test, type TestInfo } from '@playwright/test';
 
+import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
+import { CloseSettings } from './locators';
 import { CallButton, NotificationsModalButton, NotificationSwitch } from './locators/conversation';
-import { ContinueButton } from './locators/global';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
 bothPlatformsItSeparate({
-  title: 'Disappearing call message 1o1',
+  title: 'Disappearing call message 1:1',
   risk: 'low',
   countOfDevicesNeeded: 2,
   ios: {
     testCb: disappearingCallMessage1o1Ios,
-    shouldSkip: true, // Calls are still unreliable on iOS
   },
   android: {
     testCb: disappearingCallMessage1o1Android,
-    shouldSkip: false,
   },
   allureSuites: {
     parent: 'Disappearing Messages',
@@ -33,6 +33,7 @@ const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 const maxWait = 35_000; // 30s plus buffer
 
+// TODO: abstract call logic into utils since they're reused in multiple tests
 async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
@@ -44,66 +45,83 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType, t
   });
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   await alice1.clickOnElementAll(new CallButton(alice1));
-  // Enabled voice calls in privacy settings
-  await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Settings',
-  });
+  // Alice turns on all calls perms necessary (without checking every modal string)
   await alice1.clickOnByAccessibilityID('Settings');
-  // Scroll to bottom of page to voice and video calls
-  // Toggle voice settings on
-  // Click enable on exposure IP address warning
-  await alice1.modalPopup({
+  await alice1.clickOnByAccessibilityID('Continue');
+  // Need to allow microphone access
+  await alice1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
+  await sleepFor(1_000);
+  // Need to allow camera access
+  await alice1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
+  await sleepFor(10_000); // Wait a bit for the toggles to turn to TRUE
+  const aliceLocalNetworkSwitch = await alice1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
-    selector: 'Allow voice and video calls',
+    selector: 'Local Network Permission - Switch',
   });
-  await alice1.clickOnElementAll(new ContinueButton(alice1));
-  // Navigate back to conversation
-  await sleepFor(500);
-  await alice1.clickOnByAccessibilityID('Close button');
-  // Enable voice calls on device 2 for User B
-  await bob1.clickOnByAccessibilityID('Call');
-  await bob1.clickOnByAccessibilityID('Settings');
-  await bob1.scrollDown();
-  await bob1.modalPopup({
-    strategy: 'accessibility id',
-    selector: 'Allow voice and video calls',
-  });
-  await bob1.clickOnByAccessibilityID('Enable');
-  await sleepFor(500, true);
-  await bob1.clickOnByAccessibilityID('Close button');
-  // Make call on device 1 (alice)
+  const aliceAttr = await alice1.getAttribute('value', aliceLocalNetworkSwitch.ELEMENT);
+  if (aliceAttr !== '1') {
+    throw new Error(
+      `Local Network Permission was not enabled automatically.
+      This is a known Simulator bug that fails randomly with no pattern or fix.
+      Retrying won't help - use a real device where you can manually enable the permission.`
+    );
+  }
+  await alice1.clickOnElementAll(new CloseSettings(alice1));
+  // Alice tries again, call is put through even though Bob has not activated their settings
+  let callEndTimestamp!: number;
   await alice1.clickOnElementAll(new CallButton(alice1));
-  // Answer call on device 2
-  await bob1.clickOnByAccessibilityID('Answer call');
-  // Wait 30 seconds
-  // Hang up
-  await alice1.clickOnByAccessibilityID('End call button');
-  // Check for config message 'Called User B' on device 1
-  await alice1.waitForControlMessageToBePresent(`You called ${bob.userName}`);
-  await alice1.waitForControlMessageToBePresent(`${alice.userName} called you`);
-  // Wait 30 seconds for control message to be deleted
-  await sleepFor(30000);
-  await alice1.hasElementBeenDeleted({
-    strategy: 'accessibility id',
-    selector: 'Control message',
-    text: `You called ${bob.userName}`,
-    maxWait: 1000,
+  await Promise.all([
+    (async () => {
+      await alice1.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Ringing...',
+        maxWait: 5_000,
+      });
+      await alice1.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Awaiting Recipient Answer... 4/6',
+        maxWait: 5_000,
+      });
+      await alice1.clickOnByAccessibilityID('End call button');
+      callEndTimestamp = Date.now();
+    })(),
+    (async () => {
+      await bob1.clickOnByAccessibilityID('Settings');
+      await bob1.clickOnByAccessibilityID('Cancel');
+      await bob1.clickOnElementAll(new CloseSettings(bob1));
+    })(),
+  ]);
+  const callsYouCalled = englishStrippedStr('callsYouCalled')
+    .withArgs({ name: bob.userName })
+    .toString();
+  const callsMissedCallFrom = englishStrippedStr('callsMissedCallFrom')
+    .withArgs({ name: alice.userName })
+    .toString();
+  await Promise.all([
+    alice1.hasElementDisappeared({
+      strategy: 'accessibility id',
+      selector: 'Control message',
+      text: callsYouCalled,
+      maxWait,
+      actualStartTime: callEndTimestamp,
+    }),
+    bob1.hasElementDisappeared({
+      strategy: 'accessibility id',
+      selector: 'Control message',
+      text: callsMissedCallFrom,
+      maxWait,
+      actualStartTime: callEndTimestamp,
+    }),
+  ]);
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(alice1, bob1);
   });
-  await bob1.hasElementBeenDeleted({
-    strategy: 'accessibility id',
-    selector: 'Control message',
-    text: `${alice.userName} called you`,
-    maxWait: 1000,
-  });
-  await closeApp(alice1, bob1);
 }
 
 async function disappearingCallMessage1o1Android(
   platform: SupportedPlatformsType,
   testInfo: TestInfo
 ) {
-  const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   const {
     devices: { alice1, bob1 },
     prebuilt: { alice, bob },
@@ -133,30 +151,30 @@ async function disappearingCallMessage1o1Android(
   // Confirm call is put through
   await alice1.waitForTextElementToBePresent({
     strategy: 'id',
-    selector: 'network.loki.messenger.qa:id/callTitle',
+    selector: 'network.loki.messenger:id/callTitle',
     text: 'Ringing...',
     maxWait: 5_000,
   });
   await alice1.waitForTextElementToBePresent({
     strategy: 'id',
-    selector: 'network.loki.messenger.qa:id/callSubtitle',
+    selector: 'network.loki.messenger:id/callSubtitle',
     text: 'Sending Call Offer 2/5',
     maxWait: 5_000,
   });
-  await alice1.clickOnElementById('network.loki.messenger.qa:id/endCallButton');
+  await alice1.clickOnElementById('network.loki.messenger:id/endCallButton');
   const callEndTimestamp = Date.now();
   // Wait for control message to disappear
   await Promise.all([
     alice1.hasElementDisappeared({
       strategy: 'id',
-      selector: 'network.loki.messenger.qa:id/call_text_view',
+      selector: 'network.loki.messenger:id/call_text_view',
       text: `You called ${bob.userName}`,
       maxWait,
       actualStartTime: callEndTimestamp,
     }),
     bob1.hasElementDisappeared({
       strategy: 'id',
-      selector: 'network.loki.messenger.qa:id/call_text_view',
+      selector: 'network.loki.messenger:id/call_text_view',
       text: `Missed call from ${alice.userName}`,
       maxWait,
       actualStartTime: callEndTimestamp,

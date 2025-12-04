@@ -15,6 +15,7 @@ import {
 } from './locators/conversation';
 import { MessageRequestsBanner } from './locators/home';
 import { CommunityMessageRequestSwitch, PrivacyMenuItem, UserSettings } from './locators/settings';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { joinCommunity } from './utils/join_community';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
@@ -60,6 +61,8 @@ async function blindedMessageRequests(platform: SupportedPlatformsType, testInfo
   });
 
   await test.step(TestSteps.SEND.MESSAGE(bob.userName, testCommunityName), async () => {
+    // brief sleep to let the UI settle
+    await sleepFor(1000);
     await device2.sendMessage(message);
     await device2.navigateBack();
   });

@@ -14,6 +14,12 @@ bothPlatformsIt({
   risk: 'high',
   testCb: linkDevice,
   countOfDevicesNeeded: 2,
+  allureSuites: {
+    parent: 'Onboarding',
+    suite: 'Restore account',
+  },
+  allureDescription:
+    'Verifies that restoring an account works as expected: Display Name and Account ID match, no Recovery password banner on home screen.',
 });
 
 async function linkDevice(platform: SupportedPlatformsType, testInfo: TestInfo) {

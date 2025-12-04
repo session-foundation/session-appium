@@ -61,7 +61,7 @@ async function sendLongMessageAndroid(platform: SupportedPlatformsType, testInfo
   // Send a long message from User A to User B
   await alice1.sendMessage(longText);
   // Bob replies
-  await bob1.longPressMessage(longText);
+  await bob1.longPressMessage(new MessageBody(bob1, longText));
   await bob1.clickOnByAccessibilityID('Reply to message');
 
   const replyMessage = `${bob.userName} replied to ${longText}`;

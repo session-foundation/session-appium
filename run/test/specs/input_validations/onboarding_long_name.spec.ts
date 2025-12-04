@@ -11,6 +11,11 @@ bothPlatformsIt({
   risk: 'low',
   testCb: onboardingLongName,
   countOfDevicesNeeded: 1,
+  allureSuites: {
+    parent: 'Onboarding',
+    suite: 'Input validations',
+  },
+  allureDescription: `Verifies that a too long display name (101 bytes) throws the 'shorter display name' error as expected.`,
 });
 
 async function onboardingLongName(platform: SupportedPlatformsType, testInfo: TestInfo) {

@@ -69,8 +69,9 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType, testInfo: Test
     )
   );
   // Reply to link
-  await bob1.longPressMessage(testLink);
+  await bob1.longPressMessage(new MessageBody(bob1, testLink));
   await bob1.clickOnByAccessibilityID('Reply to message');
+  await sleepFor(500); // Let the UI settle before finding message input and typing
   await bob1.sendMessage(replyMessage);
   await Promise.all(
     [alice1, charlie1].map(device =>
@@ -112,7 +113,7 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType, testInfo: 
     bob1.waitForTextElementToBePresent(new LinkPreviewMessage(bob1)),
     charlie1.waitForTextElementToBePresent(new LinkPreviewMessage(charlie1)),
   ]);
-  await bob1.longPressMessage(testLink);
+  await bob1.longPressMessage(new MessageBody(bob1, testLink));
   await bob1.clickOnByAccessibilityID('Reply to message');
   const replyMessage = `${alice.userName} message reply`;
   await bob1.sendMessage(replyMessage);

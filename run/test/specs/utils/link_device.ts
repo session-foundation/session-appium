@@ -7,8 +7,8 @@ import { PlusButton } from '../locators/home';
 import {
   AccountRestoreButton,
   DisplayNameInput,
+  FastModeRadio,
   SeedPhraseInput,
-  SlowModeRadio,
 } from '../locators/onboarding';
 import { newUser } from './create_account';
 import { BaseSetupOptions } from './create_account';
@@ -33,7 +33,7 @@ export const linkedDevice = async (
   // Continue with recovery phrase
   await device2.clickOnElementAll(new ContinueButton(device2));
   // Wait for any notifications to disappear
-  await device2.clickOnElementAll(new SlowModeRadio(device2));
+  await device2.clickOnElementAll(new FastModeRadio(device2));
   // Click continue on message notification settings
   await device2.clickOnElementAll(new ContinueButton(device2));
   // Wait for loading animation to look for display name

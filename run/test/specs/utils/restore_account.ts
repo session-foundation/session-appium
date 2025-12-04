@@ -6,8 +6,8 @@ import { PlusButton } from '../locators/home';
 import {
   AccountRestoreButton,
   DisplayNameInput,
+  FastModeRadio,
   SeedPhraseInput,
-  SlowModeRadio,
 } from '../locators/onboarding';
 import { BaseSetupOptions } from './create_account';
 import { handlePermissions } from './permissions';
@@ -25,7 +25,7 @@ export const restoreAccount = async (
   // Continue with recovery phrase
   await device.clickOnElementAll(new ContinueButton(device));
   // Wait for any notifications to disappear
-  await device.clickOnElementAll(new SlowModeRadio(device));
+  await device.clickOnElementAll(new FastModeRadio(device));
   // Click continue on message notification settings
   await device.clickOnElementAll(new ContinueButton(device));
   // Wait for loading animation to look for display name
@@ -63,7 +63,7 @@ export const restoreAccountNoFallback = async (
   // Continue with recovery phrase
   await device.clickOnElementAll(new ContinueButton(device));
   // Wait for any notifications to disappear
-  await device.clickOnElementAll(new SlowModeRadio(device));
+  await device.clickOnElementAll(new FastModeRadio(device));
   // Click continue on message notification settings
   await device.clickOnElementAll(new ContinueButton(device));
   // Wait for loading animation to look for display name

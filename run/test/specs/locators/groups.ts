@@ -46,7 +46,7 @@ export class InviteContactConfirm extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'invite-contacts-button',
+          selector: 'qa-collapsing-footer-action_invite',
         } as const;
       case 'ios':
         return {

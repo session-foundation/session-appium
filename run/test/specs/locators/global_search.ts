@@ -25,7 +25,7 @@ export class CancelSearchButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/search_cancel',
+          selector: 'network.loki.messenger:id/search_cancel',
           text: 'Cancel',
         };
       case 'ios':

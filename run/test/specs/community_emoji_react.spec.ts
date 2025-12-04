@@ -3,7 +3,7 @@ import { test, type TestInfo } from '@playwright/test';
 import { testCommunityLink, testCommunityName } from '../../constants/community';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { EmojiReactsPill, FirstEmojiReact } from './locators/conversation';
+import { EmojiReactsPill, FirstEmojiReact, MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { joinCommunity } from './utils/join_community';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -43,7 +43,7 @@ async function sendEmojiReactionCommunity(platform: SupportedPlatformsType, test
   });
   await test.step(TestSteps.SEND.EMOJI_REACT, async () => {
     await bob1.scrollToBottom();
-    await bob1.longPressMessage(message);
+    await bob1.longPressMessage(new MessageBody(bob1, message));
     await bob1.clickOnElementAll(new FirstEmojiReact(bob1));
     // Verify long press menu disappeared (so next found emoji is in convo and not in react bar)
     await bob1.verifyElementNotPresent({

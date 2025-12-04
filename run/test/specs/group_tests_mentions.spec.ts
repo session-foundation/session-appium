@@ -10,6 +10,12 @@ bothPlatformsIt({
   risk: 'medium',
   testCb: mentionsForGroups,
   countOfDevicesNeeded: 3,
+  allureSuites: {
+    parent: 'Sending Messages',
+    suite: 'Mentions',
+  },
+  allureDescription:
+    'Verifies that mentions can be sent to a group, and that all participants see them correctly.',
 });
 
 async function mentionsForGroups(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -23,19 +29,25 @@ async function mentionsForGroups(platform: SupportedPlatformsType, testInfo: Tes
     focusGroupConvo: true,
     testInfo,
   });
-
+  // Each user mentions the next user in the group
+  // Verify: recipient sees @You, others see @username
   await alice1.mentionContact(platform, bob);
-  // Check format on User B's device
-  await bob1.waitForTextElementToBePresent(new MessageBody(bob1, '@You'));
-  // await device2.findMessageWithBody(`@You`);
-  // Bob to Select User C
+  await Promise.all([
+    alice1.waitForTextElementToBePresent(new MessageBody(alice1, `@${bob.userName}`)),
+    bob1.waitForTextElementToBePresent(new MessageBody(bob1, '@You')),
+    charlie1.waitForTextElementToBePresent(new MessageBody(charlie1, `@${bob.userName}`)),
+  ]);
   await bob1.mentionContact(platform, charlie);
-  // Check Charlies device(3) for correct format
-  await charlie1.findMessageWithBody(`@You`);
-  //  Check User A format works
+  await Promise.all([
+    alice1.waitForTextElementToBePresent(new MessageBody(alice1, `@${charlie.userName}`)),
+    bob1.waitForTextElementToBePresent(new MessageBody(bob1, `@${charlie.userName}`)),
+    charlie1.waitForTextElementToBePresent(new MessageBody(charlie1, '@You')),
+  ]);
   await charlie1.mentionContact(platform, alice);
-  // Check device 1 that correct format is shown (Alice's device)
-  await alice1.findMessageWithBody(`@You`);
-  // Close app
+  await Promise.all([
+    alice1.waitForTextElementToBePresent(new MessageBody(alice1, '@You')),
+    bob1.waitForTextElementToBePresent(new MessageBody(bob1, `@${alice.userName}`)),
+    charlie1.waitForTextElementToBePresent(new MessageBody(charlie1, `@${alice.userName}`)),
+  ]);
   await closeApp(alice1, bob1, charlie1);
 }

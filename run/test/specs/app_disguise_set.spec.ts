@@ -14,6 +14,8 @@ import {
 } from './locators/settings';
 import { sleepFor } from './utils';
 import { getAdbFullPath } from './utils/binaries';
+import { androidAppPackage } from './utils/capabilities_android';
+import { iOSBundleId } from './utils/capabilities_ios';
 import { newUser } from './utils/create_account';
 import { openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { closeApp } from './utils/open_app';
@@ -65,10 +67,7 @@ async function appDisguiseSetIconIOS(platform: SupportedPlatformsType, testInfo:
       // The disguised app must be uninstalled otherwise every following test will fail
       await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
         await closeApp(device);
-        await runScriptAndLog(
-          `xcrun simctl uninstall ${device.udid} com.loki-project.loki-messenger`,
-          true
-        );
+        await runScriptAndLog(`xcrun simctl uninstall ${device.udid} ${iOSBundleId}`, true);
       });
     }
   });
@@ -106,7 +105,7 @@ async function appDisguiseSetIconAndroid(platform: SupportedPlatformsType, testI
       await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
         await closeApp(device);
         await runScriptAndLog(
-          `${getAdbFullPath()} -s ${device.udid} uninstall network.loki.messenger.qa`,
+          `${getAdbFullPath()} -s ${device.udid} uninstall ${androidAppPackage}`,
           true
         );
       });

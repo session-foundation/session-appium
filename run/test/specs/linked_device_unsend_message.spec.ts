@@ -52,7 +52,7 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType, testI
 
   // alice1 deletes message for everyone
   await test.step(TestSteps.USER_ACTIONS.DELETE_FOR_EVERYONE, async () => {
-    await alice1.longPressMessage(secondMessage);
+    await alice1.longPressMessage(new MessageBody(alice1, secondMessage));
     await alice1.clickOnByAccessibilityID('Delete message');
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Delete message'), async () => {
       await alice1.checkModalStrings(

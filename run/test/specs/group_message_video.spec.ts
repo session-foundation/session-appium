@@ -3,6 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { MediaMessage, MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
+import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsItSeparate({
@@ -43,8 +44,9 @@ async function sendVideoGroupiOS(platform: SupportedPlatformsType, testInfo: Tes
       device.waitForTextElementToBePresent(new MessageBody(device, testMessage))
     )
   );
-  await bob1.longPressMessage(testMessage);
+  await bob1.longPressMessage(new MessageBody(bob1, testMessage));
   await bob1.clickOnByAccessibilityID('Reply to message');
+  await sleepFor(500); // Let the UI settle before finding message input and typing
   await bob1.sendMessage(replyMessage);
   await Promise.all(
     [alice1, charlie1].map(device =>
@@ -83,7 +85,7 @@ async function sendVideoGroupAndroid(platform: SupportedPlatformsType, testInfo:
     bob1.waitForLoadingMedia(),
     bob1.waitForTextElementToBePresent({
       strategy: 'id',
-      selector: 'network.loki.messenger.qa:id/play_overlay',
+      selector: 'network.loki.messenger:id/play_overlay',
       maxWait: 8000,
     }),
   ]);
@@ -92,12 +94,12 @@ async function sendVideoGroupAndroid(platform: SupportedPlatformsType, testInfo:
     charlie1.waitForLoadingMedia(),
     charlie1.waitForTextElementToBePresent({
       strategy: 'id',
-      selector: 'network.loki.messenger.qa:id/play_overlay',
+      selector: 'network.loki.messenger:id/play_overlay',
       maxWait: 8000,
     }),
   ]);
   // Reply to message on device 2
-  await bob1.longPress(new MediaMessage(bob1));
+  await bob1.longPressMessage(new MediaMessage(bob1));
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);
   // Check reply appears in device 1 and device 3

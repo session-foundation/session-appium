@@ -3,6 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DocumentMessage, MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
+import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
@@ -25,9 +26,10 @@ async function sendDocument(platform: SupportedPlatformsType, testInfo: TestInfo
 
   await alice1.sendDocument();
   await bob1.trustAttachments(alice.userName);
-  await bob1.onIOS().longPressMessage(testMessage);
-  await bob1.onAndroid().longPress(new DocumentMessage(bob1));
+  await bob1.onIOS().longPressMessage(new MessageBody(bob1, testMessage));
+  await bob1.onAndroid().longPressMessage(new DocumentMessage(bob1));
   await bob1.clickOnByAccessibilityID('Reply to message');
+  await sleepFor(500); // Let the UI settle before finding message input and typing
   await bob1.sendMessage(replyMessage);
   await alice1.waitForTextElementToBePresent(new MessageBody(alice1, replyMessage));
   // Close app and server

@@ -44,8 +44,9 @@ async function sendDocumentGroupiOS(platform: SupportedPlatformsType, testInfo: 
       device.waitForTextElementToBePresent(new MessageBody(device, testMessage))
     )
   );
-  await bob1.longPressMessage(testMessage);
+  await bob1.longPressMessage(new MessageBody(bob1, testMessage));
   await bob1.clickOnByAccessibilityID('Reply to message');
+  await sleepFor(500); // Let the UI settle before finding message input and typing
   await bob1.sendMessage(replyMessage);
   await alice1.waitForTextElementToBePresent(new MessageBody(alice1, replyMessage));
   await closeApp(alice1, bob1, charlie1);
@@ -80,7 +81,7 @@ async function sendDocumentGroupAndroid(platform: SupportedPlatformsType, testIn
   // Reply to image - user B
   // Sleep for is waiting for image to load
   await sleepFor(1000);
-  await bob1.longPress(new DocumentMessage(bob1));
+  await bob1.longPressMessage(new DocumentMessage(bob1));
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);
   // Check reply from device 2 came through on alice1 and charlie1

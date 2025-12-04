@@ -9,6 +9,11 @@ bothPlatformsIt({
   risk: 'low',
   testCb: checkPerformance,
   countOfDevicesNeeded: 2,
+  allureSuites: {
+    parent: 'Sending Messages',
+    suite: 'Performance',
+  },
+  allureDescription: 'Sends a message 10 times in a 1-1 and logs the sending time',
 });
 
 async function checkPerformance(platform: SupportedPlatformsType, testInfo: TestInfo) {

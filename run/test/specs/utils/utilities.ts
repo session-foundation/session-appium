@@ -5,6 +5,9 @@ import path from 'path';
 import * as util from 'util';
 
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
+import { androidAppActivity, androidAppPackage } from './capabilities_android';
+import { iOSBundleId } from './capabilities_ios';
+import { sleepFor } from './sleep_for';
 
 const exec = util.promisify(execNotPromised);
 
@@ -124,5 +127,22 @@ export async function clearStatusBarOverrides(device: DeviceWrapper): Promise<vo
   } catch (error) {
     console.warn('Failed to clear status bar overrides:', error);
     // Don't throw - this is cleanup, shouldn't fail the test
+  }
+}
+
+export async function forceStopAndRestart(device: DeviceWrapper): Promise<void> {
+  if (device.isAndroid()) {
+    await runScriptAndLog(`adb -s ${device.udid} shell am force-stop ${androidAppPackage}`, true);
+    await sleepFor(1_000);
+    await runScriptAndLog(
+      `adb -s ${device.udid} shell am start -n ${androidAppPackage}/${androidAppActivity}`,
+      true
+    );
+    await sleepFor(1_000);
+  } else if (device.isIOS()) {
+    await runScriptAndLog(`xcrun simctl terminate ${device.udid} ${iOSBundleId}`, true);
+    await sleepFor(1_000);
+    await runScriptAndLog(`xcrun simctl launch ${device.udid} ${iOSBundleId}`, true);
+    await sleepFor(1_000);
   }
 }

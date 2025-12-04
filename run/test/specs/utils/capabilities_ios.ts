@@ -9,6 +9,8 @@ dotenv.config();
 
 const iosPathPrefix = process.env.IOS_APP_PATH_PREFIX;
 
+export const iOSBundleId = 'com.loki-project.loki-messenger';
+
 if (!iosPathPrefix) {
   throw new Error('IOS_APP_PATH_PREFIX environment variable is not set');
 }
@@ -22,7 +24,7 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   'appium:platformVersion': '18.3',
   'appium:deviceName': 'iPhone 16 Pro Max',
   'appium:automationName': 'XCUITest',
-  'appium:bundleId': 'com.loki-project.loki-messenger',
+  'appium:bundleId': iOSBundleId,
   'appium:newCommandTimeout': 300000,
   'appium:useNewWDA': false,
   'appium:showXcodeLog': false,
@@ -31,7 +33,7 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   'appium:processArguments': {
     env: {
       debugDisappearingMessageDurations: 'true',
-      communityPollLimit: 3,
+      communityPollLimit: '3',
     },
   },
 } as AppiumXCUITestCapabilities;
@@ -120,18 +122,37 @@ export function capabilityIsValid(
   return true;
 }
 
-export function getIosCapabilities(capabilitiesIndex: CapabilitiesIndexType): W3CCapabilities {
+export function getIosCapabilities(
+  capabilitiesIndex: CapabilitiesIndexType,
+  customInstallTime?: string
+): W3CCapabilities {
   if (capabilitiesIndex >= capabilities.length) {
     throw new Error(
       `Asked invalid ios cap index: ${capabilitiesIndex}. Number of iOS capabilities: ${capabilities.length}.`
     );
   }
 
-  const caps = capabilities[capabilitiesIndex];
+  // Deep clone the capabilities object so we never mutate the shared global template.
+  // Appium caps contain nested objects, so shallow clone ({...obj}) is not safe.
+  const caps = structuredClone(capabilities[capabilitiesIndex]);
+
+  // Extract the existing env block inside appium:processArguments.
+  const baseEnv =
+    (caps['appium:processArguments'] as { env?: Record<string, string> } | undefined)?.env ?? {};
+
+  // Optional per-test override:
+  // Some tests set IOS_CUSTOM_FIRST_INSTALL_DATE_TIME before starting Appium.
+  // If present, inject it into the processArguments.env. Otherwise inject nothing.
+  const customEnv = customInstallTime ? { customFirstInstallDateTime: customInstallTime } : {};
+
+  // Rebuild the processArguments block with merged env vars
+  caps['appium:processArguments'] = {
+    env: { ...baseEnv, ...customEnv },
+  };
 
   return {
     firstMatch: [{}],
-    alwaysMatch: { ...caps },
+    alwaysMatch: caps,
   };
 }
 

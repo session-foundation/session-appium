@@ -31,6 +31,9 @@ import {
 import { englishStrippedStr } from '../localizer/englishStrippedStr';
 import {
   AttachmentsButton,
+  DocumentsFolderButton,
+  GIFButton,
+  ImagesFolderButton,
   MessageBody,
   MessageInput,
   NewVoiceMessageButton,
@@ -38,7 +41,16 @@ import {
   ScrollToBottomButton,
   SendButton,
 } from '../test/specs/locators/conversation';
-import { Contact, ModalDescription, ModalHeading } from '../test/specs/locators/global';
+import {
+  Contact,
+  CTABody,
+  CTAButtonNegative,
+  CTAButtonPositive,
+  CTAFeature,
+  CTAHeading,
+  ModalDescription,
+  ModalHeading,
+} from '../test/specs/locators/global';
 import { ConversationItem, PlusButton } from '../test/specs/locators/home';
 import { LoadingAnimation } from '../test/specs/locators/onboarding';
 import {
@@ -336,7 +348,7 @@ export class DeviceWrapper {
       { from: 'New conversation button', to: 'conversation-options-avatar' },
     ];
 
-    // System locators such as 'network.loki.messenger.qa:id' can cause false positives with too high similarity scores
+    // System locators such as 'network.loki.messenger:id' can cause false positives with too high similarity scores
     // Strip any known prefix patterns first
     const stripPrefix = (selector: string) => {
       return selector
@@ -399,38 +411,52 @@ export class DeviceWrapper {
         continue;
       }
 
-      // If we need text validation, check it as part of matching criteria
-      let textMatches = true;
-      if (text) {
-        try {
-          const healedElements = await (this.toShared().findElements(
-            match.strategy,
-            match.originalSelector
-          ) as Promise<Array<AppiumNextElementType>>);
+      // Validate the candidate element
+      let isValidCandidate = true;
 
-          if (healedElements && healedElements.length > 0) {
-            textMatches = false; // Assume no match until proven otherwise
-            for (const element of healedElements) {
-              try {
-                const elementText = await this.getTextFromElement(element);
-                if (elementText.includes(text)) {
-                  textMatches = true;
-                  break;
-                }
-              } catch (e) {
-                continue; // Skip elements that can't provide text
+      // Always check visibility first
+      try {
+        const healedElements = await (this.toShared().findElements(
+          match.strategy,
+          match.originalSelector
+        ) as Promise<Array<AppiumNextElementType>>);
+
+        if (!healedElements || healedElements.length === 0) {
+          isValidCandidate = false;
+        } else {
+          // Check if ANY element is visible and (if text provided) contains the text
+          isValidCandidate = false; // Assume invalid until proven otherwise
+
+          for (const element of healedElements) {
+            try {
+              // Check visibility first
+              const isVisible = await this.isVisible(element.ELEMENT);
+              if (!isVisible) {
+                continue; // Skip invisible elements
               }
+
+              // If text is required, check it
+              if (text) {
+                const elementText = await this.getTextFromElement(element);
+                if (!elementText.includes(text)) {
+                  continue; // Text doesn't match
+                }
+              }
+
+              // Passed all checks
+              isValidCandidate = true;
+              break;
+            } catch (e) {
+              continue; // Skip elements that error
             }
-          } else {
-            textMatches = false; // No elements found
           }
-        } catch (e) {
-          textMatches = false; // Error getting elements
         }
+      } catch (e) {
+        isValidCandidate = false;
       }
 
-      // Only accept candidates that pass BOTH selector similarity AND text content
-      if (textMatches) {
+      // Only accept valid candidates
+      if (isValidCandidate) {
         // Check if we've already logged this exact healing
         // Only log new healing signatures
         const healingSignature = `${strategy} "${selector}" ➡ ${match.strategy} "${match.originalSelector}"`;
@@ -453,9 +479,12 @@ export class DeviceWrapper {
           selector: match.originalSelector,
         };
       } else if (text) {
-        // Log why this candidate was rejected
         this.log(
           `Candidate ${match.strategy} "${match.originalSelector}" (${selectorConfidence}% match) rejected: missing text "${text}"`
+        );
+      } else {
+        this.log(
+          `Candidate ${match.strategy} "${match.originalSelector}" (${selectorConfidence}% match) rejected: not visible`
         );
       }
     }
@@ -697,20 +726,35 @@ export class DeviceWrapper {
     await this.longClick(el, duration);
   }
 
-  public async longPressMessage(textToLookFor: string) {
-    const truncatedText =
-      textToLookFor.length > 50 ? textToLookFor.substring(0, 50) + '...' : textToLookFor;
+  /**
+   * Long presses a message and waits for the context menu to appear.
+   * Retries until successful or timeout is reached.
+   *
+   * @throws if message not found or context menu fails to appear within maxWait
+   */
+  public async longPressMessage(
+    args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
+  ): Promise<void> {
+    const { text, maxWait = 10_000 } = args;
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
 
-    const result = await this.pollUntil(
+    // Merge text if provided
+    const finalLocator = text ? { ...locator, text } : locator;
+
+    const displayText = describeLocator(finalLocator);
+    this.log(`Attempting long press on ${displayText}`);
+
+    await this.pollUntil(
       async () => {
         // Find the message
+        this.log(`Looking for: ${JSON.stringify(finalLocator)}`);
         const el = await this.waitForTextElementToBePresent({
-          ...new MessageBody(this, textToLookFor).build(),
+          ...finalLocator,
           maxWait: 1_000,
         });
 
         if (!el) {
-          return { success: false, error: `Couldn't find message: ${truncatedText}` };
+          return { success: false, error: `Message not found: ${displayText}` };
         }
 
         // Attempt long click
@@ -724,23 +768,21 @@ export class DeviceWrapper {
         });
 
         if (longPressSuccess) {
-          this.log('LongClick successful');
+          this.log('Long press successful, context menu opened');
           return { success: true, data: el };
         }
 
         return {
           success: false,
-          error: `Long press didn't show context menu for: ${truncatedText}`,
+          error: `Long press didn't show context menu for ${displayText}`,
         };
       },
       {
-        maxWait: 10_000,
+        maxWait,
         pollInterval: 1000,
-        onAttempt: attempt => this.log(`Longpress attempt ${attempt}...`),
+        onAttempt: attempt => this.log(`Long press attempt ${attempt}...`),
       }
     );
-
-    return result;
   }
 
   public async longPressConversation(userName: string) {
@@ -1559,7 +1601,7 @@ export class DeviceWrapper {
       async () => {
         const element = await this.findElementQuietly({
           strategy: 'id',
-          selector: 'network.loki.messenger.qa:id/thumbnail_load_indicator',
+          selector: 'network.loki.messenger:id/thumbnail_load_indicator',
         });
 
         // Success when element is GONE
@@ -1733,21 +1775,17 @@ export class DeviceWrapper {
     this.log(`Message received by ${receiver.userName} from ${sender.userName}`);
     return message;
   }
-
+  // TODO instead of blind sleeping, check presence of reply preview
+  // Remove blind sleep from other tests that reply as well
   public async replyToMessage(user: Pick<User, 'userName'>, body: string) {
     // Reply to media message from user B
     // Long press on imageSent element
-    await this.longPressMessage(body);
-    const longPressSuccess = await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Reply to message',
-      maxWait: 1000,
-    });
-    if (longPressSuccess) {
-      await this.clickOnByAccessibilityID('Reply to message');
-    } else {
-      throw new Error(`Long press failed on ${body}`);
-    }
+    await this.longPressMessage(new MessageBody(this, body));
+
+    // Context menu is already open, just click Reply
+    await this.clickOnByAccessibilityID('Reply to message');
+
+    await sleepFor(500); // Let the UI settle back into composition mode
     // Select 'Reply' option
     // Send message
     const replyMessage = `${user.userName} replied to ${body}`;
@@ -1849,13 +1887,7 @@ export class DeviceWrapper {
     // iOS files are pre-loaded on simulator creation, no need to push
     if (this.isIOS()) {
       await this.clickOnElementAll(new AttachmentsButton(this));
-      await sleepFor(5000);
-      const keyboard = await this.isKeyboardVisible();
-      if (keyboard) {
-        await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardOpen);
-      } else {
-        await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardClosed);
-      }
+      await this.clickOnElementAll(new ImagesFolderButton(this));
       await sleepFor(1000);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
       await sleepFor(2000); // Appium needs a moment, matchAndTapImage sometimes finds 0 elements otherwise
@@ -1867,8 +1899,7 @@ export class DeviceWrapper {
       // Push file first
       await this.pushMediaToDevice(testImage);
       await this.clickOnElementAll(new AttachmentsButton(this));
-      await sleepFor(100);
-      await this.clickOnByAccessibilityID('Images folder');
+      await this.clickOnElementAll(new ImagesFolderButton(this));
       await this.clickOnElementAll({
         strategy: 'id',
         selector: 'com.android.permissioncontroller:id/permission_allow_all_button',
@@ -1877,12 +1908,12 @@ export class DeviceWrapper {
       await sleepFor(500);
       await this.clickOnElementAll({
         strategy: 'id',
-        selector: 'network.loki.messenger.qa:id/mediapicker_folder_item_thumbnail',
+        selector: 'network.loki.messenger:id/mediapicker_folder_item_thumbnail',
       });
       await sleepFor(100);
       await this.clickOnElementAll({
         strategy: 'id',
-        selector: 'network.loki.messenger.qa:id/mediapicker_image_item_thumbnail',
+        selector: 'network.loki.messenger:id/mediapicker_image_item_thumbnail',
       });
     }
     await this.inputText(message, new MessageInput(this));
@@ -1900,12 +1931,7 @@ export class DeviceWrapper {
   public async sendVideoiOS(message: string): Promise<number> {
     // iOS files are pre-loaded on simulator creation, no need to push
     await this.clickOnElementAll(new AttachmentsButton(this));
-    const keyboard = await this.isKeyboardVisible();
-    if (keyboard) {
-      await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardOpen);
-    } else {
-      await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardClosed);
-    }
+    await this.clickOnElementAll(new ImagesFolderButton(this));
     await sleepFor(100);
     await this.modalPopup({
       strategy: 'accessibility id',
@@ -1933,7 +1959,7 @@ export class DeviceWrapper {
     await this.clickOnElementAll(new AttachmentsButton(this));
     await sleepFor(100);
     // Select images button/tab
-    await this.clickOnByAccessibilityID('Documents folder');
+    await this.clickOnElementAll(new DocumentsFolderButton(this));
     await this.clickOnByAccessibilityID('Continue');
     // First you allow access then you allow full access
     await this.clickOnElementAll({
@@ -1990,12 +2016,7 @@ export class DeviceWrapper {
       const formattedFileName = 'test_file, pdf';
       const testMessage = 'Testing documents';
       await this.clickOnElementAll(new AttachmentsButton(this));
-      const keyboard = await this.isKeyboardVisible();
-      if (keyboard) {
-        await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardOpen);
-      } else {
-        await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardClosed);
-      }
+      await this.clickOnElementAll(new DocumentsFolderButton(this));
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
       // This flow is to ensure the file is found even if the simulator has been completely reset or started for the first time
       // The file is copied to the "Downloads" folder but the file picker UI might open in an empty "Recents" folder
@@ -2017,12 +2038,12 @@ export class DeviceWrapper {
         }
       }
       await this.clickOnByAccessibilityID(formattedFileName);
-      await sleepFor(500);
+      await sleepFor(1_000); // Flaky UI doing flaky things
       await this.sendMessage(testMessage);
     } else if (this.isAndroid()) {
       await this.pushMediaToDevice(testFile);
       await this.clickOnElementAll(new AttachmentsButton(this));
-      await this.clickOnByAccessibilityID('Documents folder');
+      await this.clickOnElementAll(new DocumentsFolderButton(this));
       await this.clickOnByAccessibilityID('Continue');
       // First you allow access then you allow full access
       await this.clickOnElementAll({
@@ -2076,19 +2097,8 @@ export class DeviceWrapper {
   }
 
   public async sendGIF(): Promise<number> {
-    await sleepFor(1000);
-    await this.clickOnByAccessibilityID('Attachments button');
-    if (this.isAndroid()) {
-      await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'GIF button' });
-    }
-    if (this.isIOS()) {
-      const keyboard = await this.isKeyboardVisible();
-      if (keyboard) {
-        await clickOnCoordinates(this, InteractionPoints.GifButtonKeyboardOpen);
-      } else {
-        await clickOnCoordinates(this, InteractionPoints.GifButtonKeyboardClosed);
-      }
-    }
+    await this.clickOnElementAll(new AttachmentsButton(this));
+    await this.clickOnElementAll(new GIFButton(this));
     await this.checkModalStrings(
       englishStrippedStr('giphyWarning').toString(),
       englishStrippedStr('giphyWarningDescription').toString()
@@ -2156,7 +2166,7 @@ export class DeviceWrapper {
       });
       await sleepFor(500);
       await this.clickOnElementAll(new ImageName(this));
-      await this.clickOnElementById('network.loki.messenger.qa:id/crop_image_menu_crop');
+      await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
     }
     await this.clickOnElementAll(new SaveProfilePictureButton(this));
   }
@@ -2453,6 +2463,29 @@ export class DeviceWrapper {
     return;
   }
 
+  // Sanitize strings by removing new lines and whitespace sequences
+  private sanitizeString(input: string): string {
+    // Handle space + newlines as a unit
+    return input.replace(/\s*\n+/g, ' ').trim();
+  }
+
+  /**
+   * Asserts that actual text matches expected text.
+   * @throws Error with detailed message if texts don't match
+   */
+  private assertTextMatches(actual: string, expected: string, fieldName: string): void {
+    const sanitizedActual = this.sanitizeString(actual);
+    const sanitizedExpected = this.sanitizeString(expected);
+
+    if (sanitizedExpected === sanitizedActual) {
+      this.log(`${fieldName} is correct`);
+    } else {
+      throw new Error(
+        `${fieldName} is incorrect.\nExpected: ${sanitizedExpected}\nActual: ${sanitizedActual}`
+      );
+    }
+  }
+
   /**
    * Checks modal heading and description text against expected values.
    * Uses fallback locators to support both new (id) and legacy (accessibility id) variants on Android.
@@ -2461,12 +2494,6 @@ export class DeviceWrapper {
    * @throws Error if heading or description doesn't match expected text
    */
   public async checkModalStrings(expectedHeading: string, expectedDescription: string) {
-    // Sanitize
-    function removeNewLines(input: string): string {
-      // Handle space + newlines as a unit
-      return input.replace(/\s*\n+/g, ' ').trim();
-    }
-
     // Always try new first, fall back to legacy
     const newHeading = new ModalHeading(this).build();
     const legacyHeading = {
@@ -2480,28 +2507,72 @@ export class DeviceWrapper {
       selector: 'Modal description',
     } as StrategyExtractionObj;
 
-    // New → legacy fallback
+    // Locators
     const elHeading = await this.findWithFallback(newHeading, legacyHeading);
     const elDescription = await this.findWithFallback(newDescription, legacyDescription);
 
-    // Modal Heading
-    const actualHeading = removeNewLines(await this.getTextFromElement(elHeading));
-    if (expectedHeading === actualHeading) {
-      this.log('Modal heading is correct');
-    } else {
-      throw new Error(
-        `Modal heading is incorrect.\nExpected: ${expectedHeading}\nActual: ${actualHeading}`
-      );
+    // Actual text
+    const actualHeading = await this.getTextFromElement(elHeading);
+    const actualDescription = await this.getTextFromElement(elDescription);
+
+    this.assertTextMatches(actualHeading, expectedHeading, 'Modal heading');
+    this.assertTextMatches(actualDescription, expectedDescription, 'Modal description');
+  }
+
+  /**
+   * Checks CTA component text against expected values.
+   * CTAs contain: heading, body, 0-3 features, 1-2 buttons.
+   * @param heading - Expected CTA heading text
+   * @param body - Expected CTA body text
+   * @param buttons - Expected button text(s). First is positive, second (if present) is negative
+   * @param features - Optional array of expected feature text (0-3 items)
+   * @throws Error if any text element doesn't match expected value
+   */
+  public async checkCTAStrings(
+    heading: string,
+    body: string,
+    buttons: string[],
+    features?: string[]
+  ): Promise<void> {
+    // Validate input
+    if (features && features.length > 3) {
+      throw new Error('CTAs support maximum 3 features');
+    }
+    if (buttons.length < 1 || buttons.length > 2) {
+      throw new Error('CTAs must have 1-2 buttons');
     }
 
-    // Modal Description
-    const actualDescription = removeNewLines(await this.getTextFromElement(elDescription));
-    if (expectedDescription === actualDescription) {
-      this.log('Modal description is correct');
-    } else {
-      throw new Error(
-        `Modal description is incorrect.\nExpected: ${expectedDescription}\nActual: ${actualDescription}`
-      );
+    // Find and check heading
+    const elHeading = await this.waitForTextElementToBePresent(new CTAHeading(this));
+    const actualHeading = await this.getTextFromElement(elHeading);
+    this.assertTextMatches(actualHeading, heading, 'CTA heading');
+
+    // Find and check body
+    const elBody = await this.waitForTextElementToBePresent(new CTABody(this));
+    const actualBody = await this.getTextFromElement(elBody);
+    this.assertTextMatches(actualBody, body, 'CTA body');
+
+    // Check features if expected
+    if (features) {
+      for (let i = 0; i < features.length; i++) {
+        const featureLocator = new CTAFeature(this, i + 1);
+        const elFeature = await this.waitForTextElementToBePresent(featureLocator);
+        const actualFeature = await this.getTextFromElement(elFeature);
+        this.assertTextMatches(actualFeature, features[i], `CTA feature ${i + 1}`);
+      }
+    }
+
+    // Check buttons
+    const positiveLocator = new CTAButtonPositive(this);
+    const elPositive = await this.waitForTextElementToBePresent(positiveLocator);
+    const actualPositive = await this.getTextFromElement(elPositive);
+    this.assertTextMatches(actualPositive, buttons[0], 'CTA positive button');
+
+    if (buttons.length === 2) {
+      const negativeLocator = new CTAButtonNegative(this);
+      const elNegative = await this.waitForTextElementToBePresent(negativeLocator);
+      const actualNegative = await this.getTextFromElement(elNegative);
+      this.assertTextMatches(actualNegative, buttons[1], 'CTA negative button');
     }
   }
 
