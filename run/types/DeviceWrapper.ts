@@ -2554,7 +2554,7 @@ export class DeviceWrapper {
     this.assertTextMatches(actualBody, body, 'CTA body');
 
     // Check features if expected
-    if (features && features.length > 0) {
+    if (features) {
       for (let i = 0; i < features.length; i++) {
         const featureLocator = new CTAFeature(this, i + 1);
         const elFeature = await this.waitForTextElementToBePresent(featureLocator);
