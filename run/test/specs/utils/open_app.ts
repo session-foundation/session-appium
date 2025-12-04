@@ -24,14 +24,19 @@ const APPIUM_PORT = 4728;
 
 export type SupportedPlatformsType = 'android' | 'ios';
 
+export type IOSTestContext = {
+  customInstallTime?: string;
+};
+
 export const openAppMultipleDevices = async (
   platform: SupportedPlatformsType,
   numberOfDevices: number,
-  testInfo: TestInfo
+  testInfo: TestInfo,
+  iOSContext?: IOSTestContext
 ): Promise<DeviceWrapper[]> => {
   // Create an array of promises for each device
   const devicePromises = Array.from({ length: numberOfDevices }, (_, index) =>
-    openAppOnPlatform(platform, index as CapabilitiesIndexType, testInfo)
+    openAppOnPlatform(platform, index as CapabilitiesIndexType, testInfo, iOSContext)
   );
 
   // Use Promise.all to wait for all device apps to open
@@ -48,23 +53,25 @@ export const openAppMultipleDevices = async (
 const openAppOnPlatform = async (
   platform: SupportedPlatformsType,
   capabilitiesIndex: CapabilitiesIndexType,
-  testInfo: TestInfo
+  testInfo: TestInfo,
+  iOSContext?: IOSTestContext
 ): Promise<{
   device: DeviceWrapper;
 }> => {
   console.info('starting capabilitiesIndex', capabilitiesIndex, platform);
   return platform === 'ios'
-    ? openiOSApp(capabilitiesIndex, testInfo)
+    ? openiOSApp(capabilitiesIndex, testInfo, iOSContext)
     : openAndroidApp(capabilitiesIndex, testInfo);
 };
 
 export const openAppOnPlatformSingleDevice = async (
   platform: SupportedPlatformsType,
-  testInfo: TestInfo
+  testInfo: TestInfo,
+  iOSContext?: IOSTestContext
 ): Promise<{
   device: DeviceWrapper;
 }> => {
-  const result = await openAppOnPlatform(platform, 0, testInfo);
+  const result = await openAppOnPlatform(platform, 0, testInfo, iOSContext);
 
   registerDevicesForTest(testInfo, [result.device], platform);
 
@@ -73,14 +80,15 @@ export const openAppOnPlatformSingleDevice = async (
 
 export const openAppTwoDevices = async (
   platform: SupportedPlatformsType,
-  testInfo: TestInfo
+  testInfo: TestInfo,
+  iOSContext?: IOSTestContext
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
 }> => {
   const [app1, app2] = await Promise.all([
-    openAppOnPlatform(platform, 0, testInfo),
-    openAppOnPlatform(platform, 1, testInfo),
+    openAppOnPlatform(platform, 0, testInfo, iOSContext),
+    openAppOnPlatform(platform, 1, testInfo, iOSContext),
   ]);
 
   const result = { device1: app1.device, device2: app2.device };
@@ -92,16 +100,17 @@ export const openAppTwoDevices = async (
 
 export const openAppThreeDevices = async (
   platform: SupportedPlatformsType,
-  testInfo: TestInfo
+  testInfo: TestInfo,
+  iOSContext?: IOSTestContext
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
   device3: DeviceWrapper;
 }> => {
   const [app1, app2, app3] = await Promise.all([
-    openAppOnPlatform(platform, 0, testInfo),
-    openAppOnPlatform(platform, 1, testInfo),
-    openAppOnPlatform(platform, 2, testInfo),
+    openAppOnPlatform(platform, 0, testInfo, iOSContext),
+    openAppOnPlatform(platform, 1, testInfo, iOSContext),
+    openAppOnPlatform(platform, 2, testInfo, iOSContext),
   ]);
 
   const result = {
@@ -117,7 +126,8 @@ export const openAppThreeDevices = async (
 
 export const openAppFourDevices = async (
   platform: SupportedPlatformsType,
-  testInfo: TestInfo
+  testInfo: TestInfo,
+  iOSContext?: IOSTestContext
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
@@ -125,10 +135,10 @@ export const openAppFourDevices = async (
   device4: DeviceWrapper;
 }> => {
   const [app1, app2, app3, app4] = await Promise.all([
-    openAppOnPlatform(platform, 0, testInfo),
-    openAppOnPlatform(platform, 1, testInfo),
-    openAppOnPlatform(platform, 2, testInfo),
-    openAppOnPlatform(platform, 3, testInfo),
+    openAppOnPlatform(platform, 0, testInfo, iOSContext),
+    openAppOnPlatform(platform, 1, testInfo, iOSContext),
+    openAppOnPlatform(platform, 2, testInfo, iOSContext),
+    openAppOnPlatform(platform, 3, testInfo, iOSContext),
   ]);
 
   const result = {
@@ -286,7 +296,8 @@ const openAndroidApp = async (
 
 const openiOSApp = async (
   capabilitiesIndex: CapabilitiesIndexType,
-  testInfo: TestInfo
+  testInfo: TestInfo,
+  iOSContext?: IOSTestContext
 ): Promise<{
   device: DeviceWrapper;
 }> => {
@@ -321,7 +332,10 @@ const openiOSApp = async (
     address: `http://localhost:${APPIUM_PORT}`,
   } as XCUITestDriverOpts;
 
-  const capabilities = getIosCapabilities(actualCapabilitiesIndex as CapabilitiesIndexType);
+  const capabilities = getIosCapabilities(
+    actualCapabilitiesIndex as CapabilitiesIndexType,
+    iOSContext?.customInstallTime
+  );
   const udid = capabilities.alwaysMatch['appium:udid'] as string;
 
   const { device: wrappedDevice } = await cleanPermissions(opts, udid, capabilities, testInfo);

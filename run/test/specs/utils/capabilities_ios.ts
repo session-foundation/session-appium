@@ -122,7 +122,10 @@ export function capabilityIsValid(
   return true;
 }
 
-export function getIosCapabilities(capabilitiesIndex: CapabilitiesIndexType): W3CCapabilities {
+export function getIosCapabilities(
+  capabilitiesIndex: CapabilitiesIndexType,
+  customInstallTime?: string
+): W3CCapabilities {
   if (capabilitiesIndex >= capabilities.length) {
     throw new Error(
       `Asked invalid ios cap index: ${capabilitiesIndex}. Number of iOS capabilities: ${capabilities.length}.`
@@ -140,8 +143,7 @@ export function getIosCapabilities(capabilitiesIndex: CapabilitiesIndexType): W3
   // Optional per-test override:
   // Some tests set IOS_CUSTOM_FIRST_INSTALL_DATE_TIME before starting Appium.
   // If present, inject it into the processArguments.env. Otherwise inject nothing.
-  const custom = process.env.IOS_CUSTOM_FIRST_INSTALL_DATE_TIME;
-  const customEnv = custom ? { customFirstInstallDateTime: custom } : {};
+  const customEnv = customInstallTime ? { customFirstInstallDateTime: customInstallTime } : {};
 
   // Rebuild the processArguments block with merged env vars
   caps['appium:processArguments'] = {

@@ -7,8 +7,13 @@ import { USERNAME } from '../../types/testing';
 import { CTAButtonPositive } from './locators/global';
 import { PlusButton } from './locators/home';
 import { newUser } from './utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { clearIOSCustomTimes, setIOSFirstInstallDate } from './utils/time_travel';
+import {
+  closeApp,
+  IOSTestContext,
+  openAppOnPlatformSingleDevice,
+  SupportedPlatformsType,
+} from './utils/open_app';
+import { setIOSFirstInstallDate } from './utils/time_travel';
 
 // iOS uses app-level time override (customFirstInstallDateTime capability).
 // Android would require system-level time manipulation (`adb root` + `toybox date`), which
@@ -28,26 +33,24 @@ iosIt({
 });
 
 async function donateCTAShowsSevenDaysAgo(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  setIOSFirstInstallDate({ days: -7, minutes: -2 }); // 7 days and 2 minutes ago
-  try {
-    const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-      const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
-      await newUser(device, USERNAME.ALICE, { saveUserData: false });
-      return { device };
-    });
-    await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Donate CTA'), async () => {
-      await device.checkCTAStrings(
-        englishStrippedStr('donateSessionHelp').toString(),
-        englishStrippedStr('donateSessionDescription').toString(),
-        [englishStrippedStr('donate').toString(), englishStrippedStr('maybeLater').toString()]
-      );
-    });
-    await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
-      await closeApp(device);
-    });
-  } finally {
-    clearIOSCustomTimes();
-  }
+  const iosContext: IOSTestContext = {
+    customInstallTime: setIOSFirstInstallDate({ days: -7, minutes: -2 }),
+  };
+  const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, iosContext);
+    await newUser(device, USERNAME.ALICE, { saveUserData: false });
+    return { device };
+  });
+  await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Donate CTA'), async () => {
+    await device.checkCTAStrings(
+      englishStrippedStr('donateSessionHelp').toString(),
+      englishStrippedStr('donateSessionDescription').toString(),
+      [englishStrippedStr('donate').toString(), englishStrippedStr('maybeLater').toString()]
+    );
+  });
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(device);
+  });
 }
 
 iosIt({
@@ -63,23 +66,21 @@ iosIt({
 });
 
 async function donateCTADoesntShowSixDaysAgo(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  setIOSFirstInstallDate({ days: -6, hours: -23, minutes: -58 }); // 6 days, 23 hours, and 58 minutes ago
-  try {
-    const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-      const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
-      await newUser(device, USERNAME.ALICE, { saveUserData: false });
-      return { device };
-    });
-    await test.step('Verify Donate CTA does not show', async () => {
-      await Promise.all([
-        device.waitForTextElementToBePresent(new PlusButton(device)),
-        device.verifyElementNotPresent(new CTAButtonPositive(device)),
-      ]);
-    });
-    await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
-      await closeApp(device);
-    });
-  } finally {
-    clearIOSCustomTimes();
-  }
+  const iosContext: IOSTestContext = {
+    customInstallTime: setIOSFirstInstallDate({ days: -6, hours: -23, minutes: -58 }),
+  };
+  const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, iosContext);
+    await newUser(device, USERNAME.ALICE, { saveUserData: false });
+    return { device };
+  });
+  await test.step('Verify Donate CTA does not show', async () => {
+    await Promise.all([
+      device.waitForTextElementToBePresent(new PlusButton(device)),
+      device.verifyElementNotPresent(new CTAButtonPositive(device)),
+    ]);
+  });
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(device);
+  });
 }

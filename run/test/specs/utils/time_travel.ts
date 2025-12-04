@@ -27,16 +27,6 @@ function applyTimeOffset(offset: TimeOffset): { date: Date; timestamp: string } 
  */
 export function setIOSFirstInstallDate(offset: TimeOffset): string {
   const { date, timestamp } = applyTimeOffset(offset);
-  process.env.IOS_CUSTOM_FIRST_INSTALL_DATE_TIME = timestamp;
-
   console.log(`Mocking iOS first install date: ${timestamp} (${date.toLocaleString('en-AU')})`);
   return timestamp;
-}
-
-/**
- * Clear both custom time environment variables
- */
-export function clearIOSCustomTimes(): void {
-  delete process.env.IOS_CUSTOM_FIRST_INSTALL_DATE_TIME;
-  console.log('iOS custom install time cleared');
 }
