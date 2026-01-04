@@ -56,6 +56,7 @@ export type TokenSimpleNoArgs =
     'accountIdYoursDescription' |
     'actualSize' |
     'add' |
+    'addAdminSingular' |
     'addAdminsDescription' |
     'adminCannotBeDemoted' |
     'adminCannotBeRemoved' |
@@ -864,6 +865,7 @@ export type TokenSimpleNoArgs =
     'quitButton' |
     'rateSession' |
     'rateSessionApp' |
+    'rateUs' |
     'read' |
     'readReceipts' |
     'readReceiptsDescription' |
@@ -974,6 +976,8 @@ export type TokenSimpleNoArgs =
     'shareExtensionNoAccountError' |
     'shareGroupMessageHistory' |
     'shareToSession' |
+    'sharingSupportMultipleMedia' |
+    'sharingSupportMultipleMediaExcluded' |
     'show' |
     'showAll' |
     'showLess' |
@@ -1270,6 +1274,7 @@ export type TokensSimpleAndArgs = {
    proUpgradingTosPrivacy: WithIcon,
    processingRefundRequest: { platform: string },
    rateSessionModalDescription: WithStoreVariant,
+   rateSessionModalDescriptionUpdated: WithStoreVariant,
    refundNonOriginatorApple: { platform_account: string },
    remainingCharactersOverTooltip: WithCount,
    requestRefundPlatformWebsite: { platform: string, platform_account: string },
@@ -1558,6 +1563,7 @@ export type TokenSimpleWithArgs =
     'proUpgradingTosPrivacy' |
     'processingRefundRequest' |
     'rateSessionModalDescription' |
+    'rateSessionModalDescriptionUpdated' |
     'refundNonOriginatorApple' |
     'remainingCharactersOverTooltip' |
     'requestRefundPlatformWebsite' |
@@ -1670,6 +1676,9 @@ export const simpleDictionaryNoArgs: Record<
   },
   add: {
       en: "Add",
+  },
+  addAdminSingular: {
+      en: "Add Admin",
   },
   addAdminsDescription: {
       en: "Enter the Account ID of the user you are promoting to admin.<br/><br/>To add multiple users, enter each Account ID separated by a comma. Up to 20 Account IDs can be specified at a time.",
@@ -4095,6 +4104,9 @@ export const simpleDictionaryNoArgs: Record<
   rateSessionApp: {
       en: "Rate App",
   },
+  rateUs: {
+      en: "Rate Us",
+  },
   read: {
       en: "Read",
   },
@@ -4424,6 +4436,12 @@ export const simpleDictionaryNoArgs: Record<
   },
   shareToSession: {
       en: "Share to Session",
+  },
+  sharingSupportMultipleMedia: {
+      en: "Sorry, Session only supports sharing multiple images and videos at once",
+  },
+  sharingSupportMultipleMediaExcluded: {
+      en: "Sharing only supports media. Non-media files have been excluded",
   },
   show: {
       en: "Show",
@@ -5313,6 +5331,9 @@ export const simpleDictionaryWithArgs: Record<
  },
   rateSessionModalDescription: {
       en: "We're glad you're enjoying Session, if you have a moment, rating us in the {storevariant} helps others discover private, secure messaging!",
+ },
+  rateSessionModalDescriptionUpdated: {
+      en: "Session runs no ads, sells no data, and answers only to its users. Your {storevariant} rating helps more people find messaging that actually respects their privacy.",
  },
   refundNonOriginatorApple: {
       en: "Because you originally signed up for Session Pro via a different {platform_account}, you'll need to use that <b><span>{platform_account}</span></b> to update your Pro access.",
