@@ -561,6 +561,7 @@ export type Id =
   | 'Privacy policy button'
   | 'pro-badge-text'
   | 'qa-collapsing-footer-action_invite'
+  | 'qa-collapsing-footer-action_remove'
   | 'Quit'
   | 'rate-app-button'
   | 'Recovery password container'

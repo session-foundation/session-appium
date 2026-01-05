@@ -310,7 +310,7 @@ export class RemoveMemberButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Remove contact button',
+          selector: 'qa-collapsing-footer-action_remove',
         } as const;
       case 'ios':
         return {
