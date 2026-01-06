@@ -50,13 +50,21 @@ async function addContactToGroup(platform: SupportedPlatformsType, testInfo: Tes
   await sleepFor(1000);
   // Add contact to group
   await alice1.onIOS().clickOnElementAll(new InviteContactsMenuItem(alice1));
-  await alice1.onAndroid().clickOnElementAll(new InviteContactsButton(alice1));
+  // await alice1.onAndroid().clickOnElementAll(new InviteContactsButton(alice1)); // This is temporarily broken, SES-5049
+  await alice1.onAndroid().clickOnElementAll({
+    strategy: '-android uiautomator', 
+    selector: 'new UiSelector().text("Invite Contacts")'
+  })
   // Select new user
   await alice1.clickOnElementAll({
     ...new Contact(alice1).build(),
     text: USERNAME.DRACULA,
   });
   await alice1.clickOnElementAll(new InviteContactConfirm(alice1));
+  await alice1.onAndroid().clickOnElementAll({
+    strategy: 'id', 
+    selector: 'Send Invite'
+  });
   // Leave Manage Members
   await alice1.navigateBack();
   // Leave Conversation Settings

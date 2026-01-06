@@ -573,6 +573,7 @@ export type Id =
   | 'Reveal recovery phrase button'
   | 'Save'
   | 'Select All'
+  | 'Send Invite'
   | 'SESH price'
   | 'session-network-menu-item'
   | 'Session id input box'
