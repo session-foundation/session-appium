@@ -270,23 +270,6 @@ export class CommunityInput extends LocatorsInterface {
   }
 }
 
-export class InviteContactsButton extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: 'Invite button',
-        };
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Invite button',
-        };
-    }
-  }
-}
-
 export class InviteContactsMenuItem extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {

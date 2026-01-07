@@ -202,7 +202,8 @@ export class DeleteGroupMenuItem extends LocatorsInterface {
       case 'android':
         return {
           strategy: '-android uiautomator',
-          selector: 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("delete-group-menu-option"))'
+          selector:
+            'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("delete-group-menu-option"))',
         } as const;
       case 'ios':
         return {

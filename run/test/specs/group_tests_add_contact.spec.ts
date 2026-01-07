@@ -3,7 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { InviteContactsButton, InviteContactsMenuItem } from './locators';
+import { InviteContactsMenuItem } from './locators';
 import { ConversationSettings } from './locators/conversation';
 import { Contact } from './locators/global';
 import { InviteContactConfirm, ManageMembersMenuItem } from './locators/groups';
@@ -49,12 +49,7 @@ async function addContactToGroup(platform: SupportedPlatformsType, testInfo: Tes
   await alice1.clickOnElementAll(new ManageMembersMenuItem(alice1));
   await sleepFor(1000);
   // Add contact to group
-  await alice1.onIOS().clickOnElementAll(new InviteContactsMenuItem(alice1));
-  // await alice1.onAndroid().clickOnElementAll(new InviteContactsButton(alice1)); // This is temporarily broken, SES-5049
-  await alice1.onAndroid().clickOnElementAll({
-    strategy: '-android uiautomator', 
-    selector: 'new UiSelector().text("Invite Contacts")'
-  })
+  await alice1.clickOnElementAll(new InviteContactsMenuItem(alice1));
   // Select new user
   await alice1.clickOnElementAll({
     ...new Contact(alice1).build(),
@@ -62,8 +57,8 @@ async function addContactToGroup(platform: SupportedPlatformsType, testInfo: Tes
   });
   await alice1.clickOnElementAll(new InviteContactConfirm(alice1));
   await alice1.onAndroid().clickOnElementAll({
-    strategy: 'id', 
-    selector: 'Send Invite'
+    strategy: 'id',
+    selector: 'Send Invite',
   });
   // Leave Manage Members
   await alice1.navigateBack();
