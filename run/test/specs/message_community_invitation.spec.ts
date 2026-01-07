@@ -3,7 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { testCommunityLink, testCommunityName } from './../../constants/community';
-import { InviteContactsMenuItem } from './locators';
+import { InviteContactsMenuItem, JoinCommunityModalButton } from './locators';
 import {
   CommunityInvitation,
   CommunityInviteConfirmButton,
@@ -49,7 +49,7 @@ async function sendCommunityInvitation(platform: SupportedPlatformsType, testInf
       .withArgs({ community_name: testCommunityName })
       .toString()
   );
-  await bob1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Join' });
+  await bob1.clickOnElementAll(new JoinCommunityModalButton(bob1));
   await bob1.navigateBack();
   await bob1.waitForTextElementToBePresent(new ConversationItem(bob1, testCommunityName));
   await closeApp(alice1, bob1);

@@ -54,10 +54,18 @@ export class ContinueButton extends LocatorsInterface {
 
 export class EnableLinkPreviewsModalButton extends LocatorsInterface {
   public build() {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Enable',
-    } as const;
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Enable',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Enable',
+        } as const;
+    }
   }
 }
 

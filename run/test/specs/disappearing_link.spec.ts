@@ -12,6 +12,7 @@ import {
   OutgoingMessageStatusSent,
   SendButton,
 } from './locators/conversation';
+import { EnableLinkPreviewsModalButton } from './locators/global';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -61,7 +62,7 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
         englishStrippedStr('linkPreviewsFirstDescription').toString()
       );
     });
-    await alice1.clickOnByAccessibilityID('Enable');
+    await alice1.clickOnElementAll(new EnableLinkPreviewsModalButton(alice1));
     // On iOS, Appium doesn't paste but type, and the link preview modal interrupts typing the link, the text must be deleted and typed again
     await alice1.deleteText(new MessageInput(alice1));
     await alice1.inputText(testLink, new MessageInput(alice1));
@@ -115,7 +116,7 @@ async function disappearingLinkMessage1o1Android(
         englishStrippedStr('linkPreviewsFirstDescription').toString()
       );
     });
-    await alice1.clickOnByAccessibilityID('Enable');
+    await alice1.clickOnElementAll(new EnableLinkPreviewsModalButton(alice1));
     // Preview takes a while to load
     await sleepFor(5000);
     await alice1.clickOnElementAll(new SendButton(alice1));
