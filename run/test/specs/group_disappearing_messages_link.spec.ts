@@ -12,6 +12,7 @@ import {
   OutgoingMessageStatusSent,
   SendButton,
 } from './locators/conversation';
+import { EnableLinkPreviewsModalButton } from './locators/global';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -58,7 +59,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
       );
     });
     // Accept link preview modal
-    await alice1.clickOnByAccessibilityID('Enable');
+    await alice1.clickOnElementAll(new EnableLinkPreviewsModalButton(alice1));
     // On iOS, Appium types so the link preview modal interrupts typing the link, must be deleted and typed again
     await alice1.onIOS().deleteText(new MessageInput(alice1));
     await alice1.onIOS().inputText(testLink, new MessageInput(alice1));

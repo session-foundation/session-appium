@@ -253,6 +253,23 @@ export class JoinCommunityButton extends LocatorsInterface {
   }
 }
 
+export class JoinCommunityModalButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Join',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Join',
+        };
+    }
+  }
+}
+
 export class CommunityInput extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -421,7 +438,7 @@ export class DownloadMediaButton extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
+          strategy: 'id',
           selector: 'Download',
         };
       case 'ios':
