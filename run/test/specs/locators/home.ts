@@ -3,36 +3,6 @@ import type { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { StrategyExtractionObj } from '../../../types/testing';
 import { LocatorsInterface } from './index';
 
-export class EmptyLandingPage extends LocatorsInterface {
-  public build() {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: 'network.loki.messenger:id/emptyStateContainer',
-        } as const;
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Empty list',
-        } as const;
-    }
-  }
-}
-
-export class MessageRequestsBanner extends LocatorsInterface {
-  public build() {
-    switch (this.platform) {
-      case 'android':
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Message requests banner',
-        } as const;
-    }
-  }
-}
-
 export class ConversationItem extends LocatorsInterface {
   public text: string | undefined;
   constructor(device: DeviceWrapper, text?: string) {
@@ -52,6 +22,37 @@ export class ConversationItem extends LocatorsInterface {
   }
 }
 
+export class EmptyLandingPage extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/emptyStateContainer',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Empty list',
+        } as const;
+    }
+  }
+}
+
+export class LongPressBlockOption extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Block',
+        };
+      case 'ios':
+        throw new Error('Not implemented');
+    }
+  }
+}
+
 export class MessageRequestItem extends LocatorsInterface {
   public text?: string | undefined;
   constructor(device: DeviceWrapper, text?: string) {
@@ -66,6 +67,19 @@ export class MessageRequestItem extends LocatorsInterface {
           strategy: 'accessibility id',
           selector: 'Message request',
           text: this.text,
+        } as const;
+    }
+  }
+}
+
+export class MessageRequestsBanner extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Message requests banner',
         } as const;
     }
   }
@@ -107,37 +121,6 @@ export class PlusButton extends LocatorsInterface {
     } as const;
   }
 }
-
-export class SearchButton extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: `Search icon`,
-        };
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Search button',
-        };
-    }
-  }
-}
-export class LongPressBlockOption extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Block',
-        };
-      case 'ios':
-        throw new Error('Not implemented');
-    }
-  }
-}
-
 export class ReviewPromptItsGreatButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -172,23 +155,6 @@ export class ReviewPromptNeedsWorkButton extends LocatorsInterface {
   }
 }
 
-export class ReviewPromptRateAppButton extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: 'rate-app-button',
-        };
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'rate-app-button',
-        };
-    }
-  }
-}
-
 export class ReviewPromptNotNowButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -218,6 +184,40 @@ export class ReviewPromptOpenSurveyButton extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'open-survey-button',
+        };
+    }
+  }
+}
+
+export class ReviewPromptRateAppButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'rate-app-button',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'rate-app-button',
+        };
+    }
+  }
+}
+
+export class SearchButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: `Search icon`,
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Search button',
         };
     }
   }
