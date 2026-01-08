@@ -21,7 +21,7 @@ export const newContact = async (
   await device2.clickOnByAccessibilityID('Message request');
   await device2.onAndroid().clickOnByAccessibilityID('Accept message request');
   // Type into message input box
-  const replyMessage = `Reply-message-${receiver.userName}-to-${sender.userName}`;
+  const replyMessage = `${receiver.userName} to ${sender.userName}`;
   await device2.sendMessage(replyMessage);
 
   // Verify config message states message request was accepted

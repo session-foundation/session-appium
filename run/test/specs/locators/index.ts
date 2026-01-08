@@ -304,6 +304,20 @@ export class InviteContactsMenuItem extends LocatorsInterface {
   }
 }
 
+export class InviteAccountIDOrONS extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'invite-accountid-menu-option',
+        } as const;
+      case 'ios':
+        throw new Error('Manage Members not implemented yet on iOS');
+    }
+  }
+}
+
 export class DeleteMessageLocally extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {

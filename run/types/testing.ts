@@ -500,6 +500,7 @@ export type Id =
   | 'Hide recovery password button'
   | 'Image button'
   | 'Image picker'
+  | 'invite-accountid-menu-option'
   | 'invite-contacts-menu-option'
   | 'Invite button'
   | 'Invite friend button'

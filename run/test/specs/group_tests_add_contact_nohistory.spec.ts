@@ -1,7 +1,7 @@
 import type { TestInfo } from '@playwright/test';
 
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
-import { androidIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { InviteContactsMenuItem } from './locators';
 import { ConversationSettings, MessageBody } from './locators/conversation';
@@ -14,8 +14,8 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
-androidIt({
-  title: 'Invite contact to group with chat history',
+bothPlatformsIt({
+  title: 'Invite contact to group without chat history',
   risk: 'high',
   testCb: addContactToGroup,
   countOfDevicesNeeded: 4,
@@ -24,7 +24,7 @@ androidIt({
     suite: 'Edit Group',
   },
   allureDescription:
-    'Verifies that inviting a contact to a group with message history works as expected.',
+    'Verifies that inviting a contact (Android: without chat history) works as expected.',
 });
 async function addContactToGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Group to test adding contact';
@@ -64,14 +64,16 @@ async function addContactToGroup(platform: SupportedPlatformsType, testInfo: Tes
     text: USERNAME.DRACULA,
   });
   await alice1.clickOnElementAll(new InviteContactConfirm(alice1));
-  await alice1.clickOnElementAll({
-    strategy: '-android uiautomator',
-    selector: `new UiSelector().text("${englishStrippedStr('membersInviteShareMessageHistoryDays').toString()}")`,
-  });
-  await alice1.clickOnElementAll({
-    strategy: 'id',
-    selector: 'Send Invite',
-  });
+  if (platform === 'android') {
+    await alice1.clickOnElementAll({
+      strategy: '-android uiautomator',
+      selector: `new UiSelector().text("${englishStrippedStr('membersInviteShareNewMessagesOnly').toString()}")`,
+    });
+    await alice1.clickOnElementAll({
+      strategy: 'id',
+      selector: 'Send Invite',
+    });
+  }
   // Leave Manage Members
   await alice1.navigateBack();
   // Leave Conversation Settings
@@ -86,10 +88,10 @@ async function addContactToGroup(platform: SupportedPlatformsType, testInfo: Tes
   );
   // Leave conversation
   await unknown1.navigateBack();
-  // Leave Message Requests screen
-  await unknown1.navigateBack();
+  // Leave Message Requests screen (Android)
+  await unknown1.onAndroid().navigateBack();
   await unknown1.clickOnElementAll(new ConversationItem(unknown1, group.groupName)); // Check for control message on device 4
-  await unknown1.waitForTextElementToBePresent(new MessageBody(unknown1, historicMsg));
+  await unknown1.verifyElementNotPresent(new MessageBody(unknown1, historicMsg));
   await unknown1.waitForControlMessageToBePresent(englishStrippedStr('groupInviteYou').toString());
   await closeApp(alice1, bob1, charlie1, unknown1);
 }
