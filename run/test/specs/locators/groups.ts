@@ -6,18 +6,18 @@ import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { StrategyExtractionObj } from '../../../types/testing';
 import { GROUPNAME } from '../../../types/testing';
 
-export class GroupNameInput extends LocatorsInterface {
+export class ConfirmRemovalButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Group name input',
+          selector: 'Remove',
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Group name input',
+          selector: 'Remove',
         } as const;
     }
   }
@@ -40,49 +40,71 @@ export class CreateGroupButton extends LocatorsInterface {
   }
 }
 
-export class InviteContactConfirm extends LocatorsInterface {
+export class DeleteGroupConfirm extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'qa-collapsing-footer-action_invite',
+          selector: 'delete-group-confirm-button',
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Confirm invite button',
+          selector: 'Delete',
         } as const;
     }
   }
 }
 
-export class UpdateGroupInformation extends LocatorsInterface {
-  private groupName?: GROUPNAME;
-
-  // Receives a group name argument so that one locator can handle all possible group names
-  constructor(device: DeviceWrapper, groupName?: GROUPNAME) {
-    super(device);
-    this.groupName = groupName;
-  }
-
+export class DeleteGroupMenuItem extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
-          selector: 'Edit',
-        };
-      case 'ios': {
-        const groupName = this.groupName;
-        if (!groupName) {
-          throw new Error('groupName must be provided for iOS');
-        }
+          strategy: '-android uiautomator',
+          selector:
+            'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("delete-group-menu-option"))',
+        } as const;
+      case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: groupName,
-        };
-      }
+          selector: 'Leave group', // yep this is leave even for the delete option
+        } as const;
+    }
+  }
+}
+
+export class EditGroupDescriptionInput extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'update-group-info-description-input',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Group description text field',
+        } as const;
+    }
+  }
+}
+
+export class EditGroupNameInput extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'update-group-info-name-input',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Group name text field',
+        } as const;
     }
   }
 }
@@ -113,118 +135,53 @@ export class GroupDescription extends LocatorsInterface {
   }
 }
 
-export class EditGroupNameInput extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
+export class GroupMember extends LocatorsInterface {
+  public build(username?: UserNameType): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'update-group-info-name-input',
+          selector: 'pro-badge-text',
+          text: `${username}`,
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Group name text field',
+          selector: 'Contact',
+          text: `${username}`,
         } as const;
     }
   }
 }
 
-export class EditGroupDescriptionInput extends LocatorsInterface {
+export class GroupNameInput extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'update-group-info-description-input',
+          selector: 'Group name input',
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Group description text field',
+          selector: 'Group name input',
         } as const;
     }
   }
 }
-
-export class SaveGroupNameChangeButton extends LocatorsInterface {
+export class InviteContactConfirm extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'update-group-info-confirm-button',
+          selector: 'qa-collapsing-footer-action_invite',
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Save',
-        } as const;
-    }
-  }
-}
-
-export class LeaveGroupMenuItem extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: 'leave-group-menu-option',
-        } as const;
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Leave group',
-        } as const;
-    }
-  }
-}
-export class LeaveGroupConfirm extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: 'leave-group-confirm-button',
-        } as const;
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Leave',
-        } as const;
-    }
-  }
-}
-export class DeleteGroupMenuItem extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: '-android uiautomator',
-          selector:
-            'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("delete-group-menu-option"))',
-        } as const;
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Leave group', // yep this is leave even for the delete option
-        } as const;
-    }
-  }
-}
-export class DeleteGroupConfirm extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: 'delete-group-confirm-button',
-        } as const;
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Delete',
+          selector: 'Confirm invite button',
         } as const;
     }
   }
@@ -249,6 +206,74 @@ export class LatestReleaseBanner extends LocatorsInterface {
     }
   }
 }
+export class LeaveGroupConfirm extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'leave-group-confirm-button',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Leave',
+        } as const;
+    }
+  }
+}
+export class LeaveGroupMenuItem extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'leave-group-menu-option',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Leave group',
+        } as const;
+    }
+  }
+}
+export class ManageMembersMenuItem extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'manage-members-menu-option',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Manage Members',
+        };
+    }
+  }
+}
+
+export class MemberStatus extends LocatorsInterface {
+  public build(text?: string): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Contact status',
+          text,
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Contact status',
+          text,
+        } as const;
+    }
+  }
+}
+
 export class RecreateGroupBannerAdmin extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     return {
@@ -286,25 +311,6 @@ export class RecreateGroupButton extends LocatorsInterface {
   }
 }
 
-export class GroupMember extends LocatorsInterface {
-  public build(username?: UserNameType): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: 'pro-badge-text',
-          text: `${username}`,
-        } as const;
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Contact',
-          text: `${username}`,
-        } as const;
-    }
-  }
-}
-
 export class RemoveMemberButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -322,54 +328,48 @@ export class RemoveMemberButton extends LocatorsInterface {
   }
 }
 
-export class ConfirmRemovalButton extends LocatorsInterface {
+export class SaveGroupNameChangeButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Remove',
+          selector: 'update-group-info-confirm-button',
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Remove',
+          selector: 'Save',
         } as const;
     }
   }
 }
+export class UpdateGroupInformation extends LocatorsInterface {
+  private groupName?: GROUPNAME;
 
-export class MemberStatus extends LocatorsInterface {
-  public build(text?: string): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: 'Contact status',
-          text,
-        } as const;
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Contact status',
-          text,
-        } as const;
-    }
+  // Receives a group name argument so that one locator can handle all possible group names
+  constructor(device: DeviceWrapper, groupName?: GROUPNAME) {
+    super(device);
+    this.groupName = groupName;
   }
-}
-export class ManageMembersMenuItem extends LocatorsInterface {
+
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'manage-members-menu-option',
+          strategy: 'accessibility id',
+          selector: 'Edit',
         };
-      case 'ios':
+      case 'ios': {
+        const groupName = this.groupName;
+        if (!groupName) {
+          throw new Error('groupName must be provided for iOS');
+        }
         return {
           strategy: 'accessibility id',
-          selector: 'Manage Members',
+          selector: groupName,
         };
+      }
     }
   }
 }
