@@ -10,6 +10,7 @@ import {
   OutgoingMessageStatusSent,
   SendButton,
 } from './locators/conversation';
+import { EnableLinkPreviewsModalButton } from './locators/global';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
@@ -45,7 +46,7 @@ async function sendLinkIos(platform: SupportedPlatformsType, testInfo: TestInfo)
     englishStrippedStr('linkPreviewsEnable').toString(),
     englishStrippedStr('linkPreviewsFirstDescription').toString()
   );
-  await alice1.clickOnByAccessibilityID('Enable');
+  await alice1.clickOnElementAll(new EnableLinkPreviewsModalButton(alice1));
   await alice1.clickOnElementAll(new SendButton(alice1));
   await alice1.waitForTextElementToBePresent({
     ...new OutgoingMessageStatusSent(alice1).build(),
@@ -81,10 +82,7 @@ async function sendLinkAndroid(platform: SupportedPlatformsType, testInfo: TestI
     englishStrippedStr('linkPreviewsEnable').toString(),
     englishStrippedStr('linkPreviewsFirstDescription').toString()
   );
-  await alice1.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Enable',
-  });
+  await alice1.clickOnElementAll(new EnableLinkPreviewsModalButton(alice1));
   //wait for preview to generate
   await sleepFor(5000);
   await alice1.clickOnElementAll(new SendButton(alice1));

@@ -6,6 +6,7 @@ import { ConversationSettings } from './locators/conversation';
 import { ConversationItem } from './locators/home';
 import { UserAvatar, UserSettings } from './locators/settings';
 import { open_Alice1_Bob1_friends } from './state_builder';
+import { sleepFor } from './utils';
 import { isSameColor } from './utils/check_colour';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
@@ -40,6 +41,7 @@ async function avatarColor(platform: SupportedPlatformsType, testInfo: TestInfo)
   });
   await test.step(`Get Alice's avatar color on bob's device from the Conversation Settings avatar`, async () => {
     await bob1.clickOnElementAll(new ConversationItem(bob1, alice.userName));
+    await sleepFor(500); // Wait for conversation to open
     bob1PixelColor = await bob1.getElementPixelColor(new ConversationSettings(bob1));
   });
   await test.step('Compare the avatar colors', () => {

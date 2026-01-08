@@ -28,6 +28,13 @@ bothPlatformsIt({
 
 async function reviewPromptPositive(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const storevariant = platform === 'android' ? 'Google Play Store' : 'App Store';
+  // Platform specific string for the Rate Session modal
+  const rateModalDescriptionString =
+    platform === 'android'
+      ? englishStrippedStr('rateSessionModalDescription').withArgs({ storevariant }).toString()
+      : englishStrippedStr('rateSessionModalDescriptionUpdated')
+          .withArgs({ storevariant })
+          .toString();
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
@@ -49,10 +56,10 @@ async function reviewPromptPositive(platform: SupportedPlatformsType, testInfo: 
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Rate Session'), async () => {
     await device.checkModalStrings(
       englishStrippedStr('rateSession').toString(),
-      englishStrippedStr('rateSessionModalDescription').withArgs({ storevariant }).toString()
+      rateModalDescriptionString
     );
     await device.waitForTextElementToBePresent(new ReviewPromptRateAppButton(device));
-    await device.waitForTextElementToBePresent(new ReviewPromptNotNowButton(device));
+    await device.onAndroid().waitForTextElementToBePresent(new ReviewPromptNotNowButton(device)); // On iOS the modal only has the Rate button
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);

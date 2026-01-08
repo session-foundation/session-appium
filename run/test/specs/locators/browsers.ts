@@ -1,24 +1,19 @@
 import { LocatorsInterface } from '.';
 
-// SHARED LOCATORS
-export class URLInputField extends LocatorsInterface {
+export class ChromeNotificationsNegativeButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'com.android.chrome:id/url_bar',
+          selector: 'com.android.chrome:id/negative_button',
         } as const;
       case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'URL',
-        } as const;
+        throw new Error('Unsupported platform');
     }
   }
 }
 
-// ANDROID ONLY
 export class ChromeUseWithoutAnAccount extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -34,21 +29,6 @@ export class ChromeUseWithoutAnAccount extends LocatorsInterface {
   }
 }
 
-export class ChromeNotificationsNegativeButton extends LocatorsInterface {
-  public build() {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: 'com.android.chrome:id/negative_button',
-        } as const;
-      case 'ios':
-        throw new Error('Unsupported platform');
-    }
-  }
-}
-
-// iOS ONLY
 export class SafariAddressBar extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -62,6 +42,7 @@ export class SafariAddressBar extends LocatorsInterface {
     }
   }
 }
+
 export class SafariShareButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -71,6 +52,22 @@ export class SafariShareButton extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'ShareButton',
+        } as const;
+    }
+  }
+}
+export class URLInputField extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'com.android.chrome:id/url_bar',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'URL',
         } as const;
     }
   }
