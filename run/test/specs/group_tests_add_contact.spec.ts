@@ -17,7 +17,7 @@ import { closeApp, SupportedPlatformsType } from './utils/open_app';
 androidIt({
   title: 'Invite contact to group with chat history',
   risk: 'high',
-  testCb: addContactToGroup,
+  testCb: addContactToGroupHistory,
   countOfDevicesNeeded: 4,
   allureSuites: {
     parent: 'Groups',
@@ -26,7 +26,9 @@ androidIt({
   allureDescription:
     'Verifies that inviting a contact to a group with message history works as expected.',
 });
-async function addContactToGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
+
+// TODO proper locator classes, test.steps
+async function addContactToGroupHistory(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Group to test adding contact';
   const {
     devices: { alice1, bob1, charlie1, unknown1 },
@@ -65,8 +67,8 @@ async function addContactToGroup(platform: SupportedPlatformsType, testInfo: Tes
   });
   await alice1.clickOnElementAll(new InviteContactConfirm(alice1));
   await alice1.clickOnElementAll({
-    strategy: '-android uiautomator',
-    selector: `new UiSelector().text("${englishStrippedStr('membersInviteShareMessageHistoryDays').toString()}")`,
+    strategy: 'id',
+    selector: 'share-message-history-option',
   });
   await alice1.clickOnElementAll({
     strategy: 'id',

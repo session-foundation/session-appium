@@ -22,17 +22,18 @@ import { SupportedPlatformsType } from './utils/open_app';
 androidIt({
   title: 'Kick and remove messages',
   risk: 'medium',
-  testCb: kickMember,
+  testCb: kickMemberDeleteMsg,
   countOfDevicesNeeded: 3,
   allureSuites: {
     parent: 'Groups',
     suite: 'Edit Group',
   },
   allureDescription:
-    'Verifies that a group member can be kicked from a group and that the kicked member is removed from the group.',
+    'Verifies that a group member can be kicked from a group and that the kicked member is removed from the group (with their messages deleted).',
 });
 
-async function kickMember(platform: SupportedPlatformsType, testInfo: TestInfo) {
+// TODO proper locator classes, test.steps
+async function kickMemberDeleteMsg(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Kick member';
 
   const {
@@ -59,8 +60,8 @@ async function kickMember(platform: SupportedPlatformsType, testInfo: TestInfo) 
       .toString()
   );
   await alice1.clickOnElementAll({
-    strategy: '-android uiautomator',
-    selector: `new UiSelector().text("${englishStrippedStr('removeMemberMessages').withArgs({ count: 1 }).toString()}")`,
+    strategy: 'id',
+    selector: 'remove-member-messages-option',
   });
   await alice1.clickOnElementAll(new ConfirmRemovalButton(alice1));
   // The Group Member element sometimes disappears slowly, sometimes quickly.

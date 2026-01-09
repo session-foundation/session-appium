@@ -17,7 +17,7 @@ import { closeApp, SupportedPlatformsType } from './utils/open_app';
 bothPlatformsIt({
   title: 'Invite contact to group without chat history',
   risk: 'high',
-  testCb: addContactToGroup,
+  testCb: addContactToGroupNoHistory,
   countOfDevicesNeeded: 4,
   allureSuites: {
     parent: 'Groups',
@@ -26,7 +26,9 @@ bothPlatformsIt({
   allureDescription:
     'Verifies that inviting a contact (Android: without chat history) works as expected.',
 });
-async function addContactToGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
+
+// TODO proper locator classes, test.steps
+async function addContactToGroupNoHistory(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Group to test adding contact';
   const {
     devices: { alice1, bob1, charlie1, unknown1 },
@@ -66,8 +68,8 @@ async function addContactToGroup(platform: SupportedPlatformsType, testInfo: Tes
   await alice1.clickOnElementAll(new InviteContactConfirm(alice1));
   if (platform === 'android') {
     await alice1.clickOnElementAll({
-      strategy: '-android uiautomator',
-      selector: `new UiSelector().text("${englishStrippedStr('membersInviteShareNewMessagesOnly').toString()}")`,
+      strategy: 'id',
+      selector: 'share-new-messages-option',
     });
     await alice1.clickOnElementAll({
       strategy: 'id',

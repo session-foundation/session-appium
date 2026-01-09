@@ -26,6 +26,7 @@ bothPlatformsIt({
     'Verifies that a group member can be kicked from a group and that the kicked member is removed from the group.',
 });
 
+// TODO proper locator classes, test.steps
 async function kickMember(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Kick member';
 

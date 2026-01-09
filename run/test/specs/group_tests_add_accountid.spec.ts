@@ -17,7 +17,7 @@ import { closeApp, SupportedPlatformsType } from './utils/open_app';
 androidIt({
   title: 'Invite Account ID to group',
   risk: 'high',
-  testCb: addContactToGroup,
+  testCb: addAccountIDToGroup,
   countOfDevicesNeeded: 4,
   allureSuites: {
     parent: 'Groups',
@@ -26,7 +26,9 @@ androidIt({
   allureDescription:
     'Verifies that inviting a non-contact Account ID (without chat history) works as expected.',
 });
-async function addContactToGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
+
+// TODO proper locator classes, test.steps
+async function addAccountIDToGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Group to test adding contact';
   const {
     devices: { alice1, bob1, charlie1, unknown1 },

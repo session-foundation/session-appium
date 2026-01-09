@@ -24,7 +24,7 @@ androidIt({
 const time = DISAPPEARING_TIMES.ONE_MINUTE;
 const timerType = 'Disappear after send option';
 
-// TODO tidy this up with locators
+// TODO proper locator classes, test.steps
 async function promoteToAdmin(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Test group';
   const {
