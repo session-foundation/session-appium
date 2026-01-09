@@ -20,11 +20,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        submodules: 'recursive'
         with:
           ref: gh-pages
           lfs: true
           fetch-depth: 0 # Get full history to check file ages
+          submodules: 'recursive'
         env:
           GIT_LFS_SKIP_SMUDGE: 1 # Don't actually download LFS content
 

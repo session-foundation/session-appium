@@ -16,11 +16,11 @@ jobs:
     steps:
       - name: Checkout gh-pages branch
         uses: actions/checkout@v4
-        submodules: 'recursive'
         with:
           ref: gh-pages
           lfs: true
           fetch-depth: 0 # Need full history for other workflows that rely on file ages
+          submodules: 'recursive'
 
       - name: Configure git
         run: |
