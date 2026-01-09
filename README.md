@@ -71,11 +71,14 @@ First, install nvm for your system (https://github.com/nvm-sh/nvm).
 For windows, head here: https://github.com/coreybutler/nvm-windows
 For Mac, https://github.com/nvm-sh/nvm
 
+You can check the current node version in `.tool-versions`
 ```
-nvm install #install node version from the .nvmrc file, currently v16.13.0
-nvm use # use that same node version, currently v16.13.0
-npm install -g yarn
-yarn install --frozen # to install packages referenced from yarn.lock
+nvm install
+nvm use
+git lfs install
+git lfs pull
+git submodule update --init --recursive 
+yarn install --immutable
 ```
 
 Then, choose an option:

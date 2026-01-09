@@ -76,6 +76,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           lfs: true
+          submodules: 'recursive'
 
       - name: Fetch result history from gh-pages
         uses: ./github/actions/fetch-allure-history
