@@ -20,6 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        submodules: 'recursive'
         with:
           ref: gh-pages
           lfs: true
