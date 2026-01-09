@@ -9,9 +9,6 @@ runs:
       with:
         node-version-file: '.nvmrc'
 
-    - name: Install dependencies for native modules
-      run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev build-essential python3
- 
     - name: Install yarn
       shell: bash
       run: |
