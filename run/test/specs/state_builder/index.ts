@@ -93,7 +93,7 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
 }) {
   const [devices, prebuilt] = await Promise.all([
     openAppMultipleDevices(platform, appsToOpen, testInfo),
-    buildStateForTest(stateToBuildKey, groupName, getNetworkTarget(platform)),
+    buildStateForTest(stateToBuildKey, groupName, await getNetworkTarget(platform)),
   ]);
 
   return { devices, prebuilt };

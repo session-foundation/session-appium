@@ -24,6 +24,7 @@ jobs:
           ref: gh-pages
           lfs: true
           fetch-depth: 0 # Get full history to check file ages
+          submodules: 'recursive'
         env:
           GIT_LFS_SKIP_SMUDGE: 1 # Don't actually download LFS content
 
