@@ -34,7 +34,7 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
     env: {
       debugDisappearingMessageDurations: 'true',
       communityPollLimit: '3',
-      animationsEnabled: 'false',
+      animationsEnabled: 'true', // App crashes on some un-animated transitions, see SES-5064
     },
   },
 } as AppiumXCUITestCapabilities;

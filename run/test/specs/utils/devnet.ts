@@ -1,23 +1,21 @@
 import { buildStateForTest } from '@session-foundation/qa-seeder';
-import { execSync } from 'child_process';
-import request from 'sync-request-curl';
 
 import type { SupportedPlatformsType } from './open_app';
 
 import { DEVNET_URL } from '../../../constants';
 import { AppName } from '../../../types/testing';
 import { getAndroidApk } from './binaries';
+import { sleepFor } from './sleep_for';
 
 // NOTE this currently only applies to Android as iOS doesn't supply AQA builds yet
-
 type NetworkType = Parameters<typeof buildStateForTest>[2];
 
-// Using sync HTTP here to avoid cascading async changes through test init
-// This runs at test startup, so blocking is acceptable
-function canReachDevnet(): boolean {
+// Using native fetch to check devnet accessibility
+async function isDevnetReachable(): Promise<boolean> {
   const isCI = process.env.CI === '1';
   const maxAttempts = isCI ? 3 : 1;
   const timeout = isCI ? 10_000 : 2_000;
+
   // Check if devnet is available
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
@@ -25,23 +23,27 @@ function canReachDevnet(): boolean {
         console.log(`Checking devnet accessibility (attempt ${attempt}/${maxAttempts})...`);
       }
 
-      const response = request('GET', DEVNET_URL, { timeout });
-      console.log(`Internal devnet is accessible (HTTP ${response.statusCode})`);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+      const response = await fetch(DEVNET_URL, { signal: controller.signal });
+      clearTimeout(timeoutId);
+
+      console.log(`Internal devnet is accessible (HTTP ${response.status})`);
       return true;
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-
       if (attempt === maxAttempts) {
         console.log(`Internal devnet is not accessible: ${errorMsg}`);
       } else {
         console.log(`Attempt ${attempt} failed: ${errorMsg}, retrying...`);
-        execSync(`sleep ${attempt}`);
+        await sleepFor(attempt * 1000);
       }
     }
   }
-
   return false;
 }
+
 function isAutomaticQABuildAndroid(apkPath: string): boolean {
   // Check env var first (for CI), then filename (for local)
   const isAutomaticQA = process.env.IS_AUTOMATIC_QA === 'true' || apkPath.includes('automaticQa');
@@ -50,7 +52,7 @@ function isAutomaticQABuildAndroid(apkPath: string): boolean {
 
   return isAutomaticQA;
 }
-export function getNetworkTarget(platform: SupportedPlatformsType): NetworkType {
+export async function getNetworkTarget(platform: SupportedPlatformsType): Promise<NetworkType> {
   if (process.env.DETECTED_NETWORK_TARGET) {
     return process.env.DETECTED_NETWORK_TARGET as NetworkType;
   }
@@ -72,7 +74,7 @@ export function getNetworkTarget(platform: SupportedPlatformsType): NetworkType 
     return 'mainnet';
   }
 
-  const canAccessDevnet = canReachDevnet();
+  const canAccessDevnet = await isDevnetReachable();
   // If you pass an AQA build in the .env but can't access devnet, tests will fail
   if (isAQA && !canAccessDevnet) {
     throw new Error('Cannot use AQA build without internal network access');

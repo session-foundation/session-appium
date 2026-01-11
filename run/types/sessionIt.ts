@@ -61,7 +61,7 @@ function mobileIt({
 
   // eslint-disable-next-line no-empty-pattern
   test(testName, async ({}, testInfo) => {
-    getNetworkTarget(platform);
+    await getNetworkTarget(platform);
     console.info(`\n\n==========> Running "${testName}"\n\n`);
 
     // Handle Suites, Descriptions and Links
