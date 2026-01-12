@@ -2,7 +2,7 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ConversationItem, MessageRequestsBanner } from './locators/home';
+import { ConversationItem, MessageRequestItem, MessageRequestsBanner } from './locators/home';
 import { newUser } from './utils/create_account';
 import { retryMsgSentForBanner } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
@@ -29,7 +29,7 @@ async function createContact(platform: SupportedPlatformsType, testInfo: TestInf
   await runOnlyOnIOS(platform, () => retryMsgSentForBanner(platform, device1, device2, 30000)); // this runOnlyOnIOS is needed
 
   await device2.clickOnElementAll(new MessageRequestsBanner(device2));
-  await device2.clickOnByAccessibilityID('Message request');
+  await device2.clickOnElementAll(new MessageRequestItem(device2));
   await device2.clickOnByAccessibilityID('Accept message request');
 
   // Type into message input box

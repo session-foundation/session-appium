@@ -3,7 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ConversationItem, MessageRequestsBanner } from './locators/home';
+import { ConversationItem, MessageRequestItem, MessageRequestsBanner } from './locators/home';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
@@ -29,7 +29,7 @@ async function acceptRequest(platform: SupportedPlatformsType, testInfo: TestInf
   // Bob clicks on message request banner
   await device2.clickOnElementAll(new MessageRequestsBanner(device2));
   // Bob clicks on request conversation item
-  await device2.clickOnByAccessibilityID('Message request');
+  await device2.clickOnElementAll(new MessageRequestItem(device2));
   // Bob clicks accept button on device 2 (original device)
   await device2.clickOnByAccessibilityID('Accept message request');
   // Check control message for message request acceptance

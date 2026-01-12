@@ -5,7 +5,7 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { type AccessibilityId, USERNAME } from '../../types/testing';
 import { BlockedContactsSettings } from './locators';
 import { Contact } from './locators/global';
-import { MessageRequestsBanner, PlusButton } from './locators/home';
+import { MessageRequestItem, MessageRequestsBanner, PlusButton } from './locators/home';
 import { ConversationsMenuItem, UserSettings } from './locators/settings';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -35,7 +35,7 @@ async function blockedRequest(platform: SupportedPlatformsType, testInfo: TestIn
   // Bob clicks on message request banner
   await device2.clickOnElementAll(new MessageRequestsBanner(device2));
   // Bob clicks on request conversation item
-  await device2.clickOnByAccessibilityID('Message request');
+  await device2.clickOnElementAll(new MessageRequestItem(device2));
   // Bob clicks on block option
   await device2.clickOnByAccessibilityID('Block message request');
   // Confirm block on android
