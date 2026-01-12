@@ -6,6 +6,15 @@ import { StrategyExtractionObj } from '../../../types/testing';
 import { getAppDisplayName } from '../utils/devnet';
 import { LocatorsInterface } from './index';
 
+export class AcceptMessageRequestButton extends LocatorsInterface {
+  public build() {
+    return {
+      strategy: 'accessibility id',
+      selector: 'Accept message request',
+    } as const;
+  }
+}
+
 export class AttachmentsButton extends LocatorsInterface {
   public build() {
     return {
@@ -14,7 +23,6 @@ export class AttachmentsButton extends LocatorsInterface {
     } as const;
   }
 }
-
 export class BlockedBanner extends LocatorsInterface {
   public build() {
     switch (this.platform) {

@@ -2,7 +2,7 @@ import { runOnlyOnIOS, sleepFor } from '.';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
 import { MessageBody } from '../locators/conversation';
-import { MessageRequestItem, MessageRequestsBanner } from '../locators/home';
+import { MessageRequestsBanner } from '../locators/home';
 import { SupportedPlatformsType } from './open_app';
 
 export const newContact = async (
@@ -17,9 +17,7 @@ export const newContact = async (
   await sleepFor(100);
   await runOnlyOnIOS(platform, () => retryMsgSentForBanner(platform, device1, device2, 30000)); // this runOnlyOnIOS is needed
 
-  await device2.clickOnElementAll(new MessageRequestsBanner(device2));
-  await device2.clickOnElementAll(new MessageRequestItem(device2));
-  await device2.onAndroid().clickOnByAccessibilityID('Accept message request');
+  await device2.acceptMessageRequestWithButton();
   // Type into message input box
   const replyMessage = `${receiver.userName} to ${sender.userName}`;
   await device2.sendMessage(replyMessage);

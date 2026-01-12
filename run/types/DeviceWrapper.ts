@@ -30,6 +30,7 @@ import {
 } from '../constants/testfiles';
 import { englishStrippedStr } from '../localizer/englishStrippedStr';
 import {
+  AcceptMessageRequestButton,
   AttachmentsButton,
   DocumentsFolderButton,
   GIFButton,
@@ -51,7 +52,12 @@ import {
   ModalDescription,
   ModalHeading,
 } from '../test/specs/locators/global';
-import { ConversationItem, PlusButton } from '../test/specs/locators/home';
+import {
+  ConversationItem,
+  MessageRequestItem,
+  MessageRequestsBanner,
+  PlusButton,
+} from '../test/specs/locators/home';
 import { LoadingAnimation } from '../test/specs/locators/onboarding';
 import {
   PrivacyMenuItem,
@@ -1765,6 +1771,12 @@ export class DeviceWrapper {
     });
 
     return message;
+  }
+
+  public async acceptMessageRequestWithButton() {
+    await this.clickOnElementAll(new MessageRequestsBanner(this));
+    await this.clickOnElementAll(new MessageRequestItem(this));
+    await this.onAndroid().clickOnElementAll(new AcceptMessageRequestButton(this));
   }
 
   public async sendMessageTo(sender: User, receiver: Group | User) {

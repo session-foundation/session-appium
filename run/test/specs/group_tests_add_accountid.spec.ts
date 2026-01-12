@@ -4,7 +4,11 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { InviteAccountIDOrONS } from './locators';
-import { ConversationSettings, MessageBody } from './locators/conversation';
+import {
+  AcceptMessageRequestButton,
+  ConversationSettings,
+  MessageBody,
+} from './locators/conversation';
 import { ManageMembersMenuItem, ShareNewMessagesRadial } from './locators/groups';
 import { MessageRequestItem, MessageRequestsBanner } from './locators/home';
 import { EnterAccountID, NextButton } from './locators/start_conversation';
@@ -84,7 +88,7 @@ async function addAccountIDToGroup(platform: SupportedPlatformsType, testInfo: T
       .withArgs({ name: aliceTruncatedPubkey, group_name: testGroupName })
       .toString()
   );
-  await unknown1.clickOnByAccessibilityID('Accept message request');
+  await unknown1.clickOnElementAll(new AcceptMessageRequestButton(unknown1));
   await unknown1.waitForControlMessageToBePresent(englishStrippedStr('groupInviteYou').toString());
   await unknown1.verifyElementNotPresent(new MessageBody(unknown1, historicMsg));
   await unknown1.sendMessage(userDMsg);
