@@ -14,6 +14,7 @@ import {
   GroupMember,
   ManageMembersMenuItem,
   RemoveMemberButton,
+  RemoveMemberMessagesRadial,
 } from './locators/groups';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
 import { SupportedPlatformsType } from './utils/open_app';
@@ -59,10 +60,7 @@ async function kickMemberDeleteMsg(platform: SupportedPlatformsType, testInfo: T
       .withArgs({ name: USERNAME.BOB, group_name: testGroupName })
       .toString()
   );
-  await alice1.clickOnElementAll({
-    strategy: 'id',
-    selector: 'remove-member-messages-option',
-  });
+  await alice1.clickOnElementAll(new RemoveMemberMessagesRadial(alice1));
   await alice1.clickOnElementAll(new ConfirmRemovalButton(alice1));
   // The Group Member element sometimes disappears slowly, sometimes quickly.
   // hasElementBeenDeleted would be theoretically better but we just check if element is not there anymore

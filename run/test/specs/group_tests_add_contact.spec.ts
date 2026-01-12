@@ -6,7 +6,11 @@ import { USERNAME } from '../../types/testing';
 import { InviteContactsMenuItem } from './locators';
 import { ConversationSettings, MessageBody } from './locators/conversation';
 import { Contact } from './locators/global';
-import { InviteContactConfirm, ManageMembersMenuItem } from './locators/groups';
+import {
+  InviteContactConfirm,
+  ManageMembersMenuItem,
+  ShareMessageHistoryRadial,
+} from './locators/groups';
 import { ConversationItem } from './locators/home';
 import { open_Alice1_Bob1_Charlie1_Unknown1 } from './state_builder';
 import { sleepFor } from './utils';
@@ -66,10 +70,7 @@ async function addContactToGroupHistory(platform: SupportedPlatformsType, testIn
     text: USERNAME.DRACULA,
   });
   await alice1.clickOnElementAll(new InviteContactConfirm(alice1));
-  await alice1.clickOnElementAll({
-    strategy: 'id',
-    selector: 'share-message-history-option',
-  });
+  await alice1.clickOnElementAll(new ShareMessageHistoryRadial(alice1));
   await alice1.clickOnElementAll({
     strategy: 'id',
     selector: 'Send Invite',

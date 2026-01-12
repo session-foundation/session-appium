@@ -274,43 +274,6 @@ export class MemberStatus extends LocatorsInterface {
   }
 }
 
-export class RecreateGroupBannerAdmin extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Legacy group banner',
-      text: englishStrippedStr('legacyGroupAfterDeprecationAdmin').toString(),
-    } as const;
-  }
-}
-
-export class RecreateGroupBannerMember extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    return {
-      strategy: 'accessibility id',
-      selector: 'Legacy group banner',
-      text: englishStrippedStr('legacyGroupAfterDeprecationMember').toString(),
-    } as const;
-  }
-}
-
-export class RecreateGroupButton extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Legacy Groups Recreate Button',
-        } as const;
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Accept message request',
-        } as const;
-    }
-  }
-}
-
 export class RemoveMemberButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -328,6 +291,32 @@ export class RemoveMemberButton extends LocatorsInterface {
   }
 }
 
+export class RemoveMemberMessagesRadial extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'remove-member-messages-option',
+        } as const;
+      case 'ios':
+        throw new Error('Manage Members not available on iOS');
+    }
+  }
+}
+export class RemoveMemberRadial extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'remove-member-option',
+        } as const;
+      case 'ios':
+        throw new Error('Manage Members not available on iOS');
+    }
+  }
+}
 export class SaveGroupNameChangeButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -344,6 +333,35 @@ export class SaveGroupNameChangeButton extends LocatorsInterface {
     }
   }
 }
+
+export class ShareMessageHistoryRadial extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'share-message-history-option',
+        } as const;
+      case 'ios':
+        throw new Error('Manage Members not available on iOS');
+    }
+  }
+}
+
+export class ShareNewMessagesRadial extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'share-new-messages-option',
+        } as const;
+      case 'ios':
+        throw new Error('Manage Members not available on iOS');
+    }
+  }
+}
+
 export class UpdateGroupInformation extends LocatorsInterface {
   private groupName?: GROUPNAME;
 
