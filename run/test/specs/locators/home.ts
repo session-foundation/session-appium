@@ -3,6 +3,34 @@ import type { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { StrategyExtractionObj } from '../../../types/testing';
 import { LocatorsInterface } from './index';
 
+export class BackgroundPermsAllowButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'whitelist-confirm-button',
+        } as const;
+      case 'ios':
+        throw new Error('Not implemented');
+    }
+  }
+}
+
+export class BackgroundPermsCancelButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'whitelist-cancel-button',
+        } as const;
+      case 'ios':
+        throw new Error('Not implemented');
+    }
+  }
+}
+
 export class ConversationItem extends LocatorsInterface {
   public text: string | undefined;
   constructor(device: DeviceWrapper, text?: string) {
@@ -112,7 +140,6 @@ export class MessageSnippet extends LocatorsInterface {
     }
   }
 }
-
 export class PlusButton extends LocatorsInterface {
   public build() {
     return {
@@ -121,6 +148,7 @@ export class PlusButton extends LocatorsInterface {
     } as const;
   }
 }
+
 export class ReviewPromptItsGreatButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {

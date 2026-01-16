@@ -4,18 +4,39 @@ import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
 import { CloseSettings } from '../locators';
 import { AccountIDDisplay, ContinueButton } from '../locators/global';
-import { CreateAccountButton, DisplayNameInput, FastModeRadio } from '../locators/onboarding';
+import {
+  CreateAccountButton,
+  DisplayNameInput,
+  FastModeRadio,
+  SlowModeRadio,
+} from '../locators/onboarding';
 import { RecoveryPhraseContainer, RevealRecoveryPhraseButton } from '../locators/settings';
 import { UserSettings } from '../locators/settings';
 import { CopyButton } from '../locators/start_conversation';
-import { handlePermissions } from './permissions';
+import { handleBackgroundPermissions, handleNotificationPermissions } from './permissions';
 
 export type BaseSetupOptions = {
   allowNotificationPermissions?: boolean;
 };
 
+/**
+ * Setup options for account creation specifically
+ *
+ * By default, new accounts will:
+ * - set fast mode
+ * - deny notification permissions
+ *
+ * If fast mode is `false` and allowBackgroundPermissions is not explicitly set,
+ * the test will have to handle the background permissions modal on Android.
+ * Tests that *do* grant background permissions must clean up with a try/finally uninstall
+ * to avoid state pollution in following tests.
+ *
+ * Note that this is all theoretically possible in restore account as well, we just don't bother to do it.
+ */
 export type NewUserSetupOptions = BaseSetupOptions & {
   saveUserData?: boolean;
+  fastMode?: boolean;
+  allowBackgroundPermissions?: boolean;
 };
 
 export async function newUser(
@@ -23,39 +44,43 @@ export async function newUser(
   userName: UserNameType,
   options?: NewUserSetupOptions
 ): Promise<User> {
-  const { saveUserData = true, allowNotificationPermissions = false } = options || {};
+  const {
+    saveUserData = true,
+    allowNotificationPermissions = false,
+    allowBackgroundPermissions,
+    fastMode = true,
+  } = options || {};
   device.setDeviceIdentity(`${userName.toLowerCase()}1`);
-  // Click create session ID
   await device.clickOnElementAll(new CreateAccountButton(device));
-  // Input username
   await device.inputText(userName, new DisplayNameInput(device));
-  // Click continue
   await device.clickOnElementAll(new ContinueButton(device));
   // Choose message notification options (Fast mode by default)
-  // TODO: Add option to choose slow mode and handle bg perms on Android (SES-4975)
-  await device.clickOnElementAll(new FastModeRadio(device));
-  // Select Continue to save notification settings
+  if (fastMode) {
+    await device.clickOnElementAll(new FastModeRadio(device));
+  } else await device.clickOnElementAll(new SlowModeRadio(device));
   await device.clickOnElementAll(new ContinueButton(device));
   // Handle permissions based on the flag
-  await handlePermissions(device, allowNotificationPermissions);
+  await handleNotificationPermissions(device, allowNotificationPermissions);
+  if (!fastMode) {
+    await handleBackgroundPermissions(device, allowBackgroundPermissions);
+  }
   // Some tests don't need to save the Account ID and Recovery Password
   if (!saveUserData) {
     return { userName, accountID: 'not_needed', recoveryPhrase: 'not_needed' };
   }
 
-  // Click on 'continue' button to open recovery phrase modal
+  // Open recovery phrase modal and save recovery phrase
   await device.waitForTextElementToBePresent(new RevealRecoveryPhraseButton(device));
   await device.clickOnElementAll(new RevealRecoveryPhraseButton(device));
-  //Save recovery password
   const recoveryPhraseContainer = await device.clickOnElementAll(
     new RecoveryPhraseContainer(device)
   );
   await device.onAndroid().clickOnElementAll(new CopyButton(device));
-  // Save recovery phrase as variable
   const recoveryPhrase = await device.getTextFromElement(recoveryPhraseContainer);
   device.log(`${userName}s recovery phrase is "${recoveryPhrase}"`);
-  // Exit Modal
   await device.navigateBack(false);
+
+  // Get Account ID from User Settings
   await device.clickOnElementAll(new UserSettings(device));
   const el = await device.waitForTextElementToBePresent(new AccountIDDisplay(device));
   const accountID = await device.getTextFromElement(el);

@@ -13,8 +13,13 @@ import {
   getEmulatorFullPath,
   getSdkManagerFullPath,
 } from './binaries';
-import { getAndroidCapabilities, getAndroidUdid } from './capabilities_android';
-import { CapabilitiesIndexType, capabilityIsValid, getIosCapabilities } from './capabilities_ios';
+import { androidAppPackage, getAndroidCapabilities, getAndroidUdid } from './capabilities_android';
+import {
+  CapabilitiesIndexType,
+  capabilityIsValid,
+  getIosCapabilities,
+  iOSBundleId,
+} from './capabilities_ios';
 import { cleanPermissions } from './permissions';
 import { registerDevicesForTest } from './screenshot_helper';
 import { sleepFor } from './sleep_for';
@@ -346,4 +351,13 @@ export const closeApp = async (...devices: Array<DeviceWrapper>) => {
   await Promise.all(compact(devices).map(d => d.deleteSession()));
 
   console.info('sessions closed');
+};
+
+export const uninstallApp = async (device: DeviceWrapper, platform: SupportedPlatformsType) => {
+  const command =
+    platform === 'android'
+      ? `${getAdbFullPath()} -s ${device.udid} uninstall ${androidAppPackage}`
+      : `xcrun simctl uninstall ${device.udid} ${iOSBundleId}`;
+
+  await runScriptAndLog(command, true);
 };
