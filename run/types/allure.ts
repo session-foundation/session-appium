@@ -95,6 +95,7 @@ export const TestSteps = {
     CHANGE_PROFILE_PICTURE: 'Change profile picture',
     APP_DISGUISE: 'Set App Disguise',
     DELETE_FOR_EVERYONE: 'Delete for everyone',
+    GROUPS_ADD_CONTACT: (name: string) => `Invite ${name} to group`
   },
   // Disappearing Messages
   DISAPPEARING_MESSAGES: {

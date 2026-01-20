@@ -1,6 +1,7 @@
-import type { TestInfo } from '@playwright/test';
+import { test, type TestInfo } from '@playwright/test';
 
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { TestSteps } from '../../types/allure';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { InviteAccountIDOrONS } from './locators';
@@ -41,39 +42,48 @@ async function addAccountIDToGroup(platform: SupportedPlatformsType, testInfo: T
   const {
     devices: { alice1, bob1, charlie1, unknown1 },
     prebuilt: { alice },
-  } = await open_Alice1_Bob1_Charlie1_Unknown1({
-    platform,
-    groupName: testGroupName,
-    focusGroupConvo: true,
-    testInfo: testInfo,
+  } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
+    return open_Alice1_Bob1_Charlie1_Unknown1({
+      platform,
+      groupName: testGroupName,
+      focusGroupConvo: true,
+      testInfo: testInfo,
+    });
+  });
+  const userD = await test.step(TestSteps.SETUP.NEW_USER, async () => {
+    return newUser(unknown1, USERNAME.DRACULA);
   });
   const aliceTruncatedPubkey = truncatePubkey(alice.sessionId, platform);
   const historicMsg = `Hello from ${alice.userName}`;
-  await alice1.sendMessage(historicMsg);
-  await Promise.all(
-    [alice1, bob1, charlie1].map(device =>
-      device.waitForTextElementToBePresent(new MessageBody(device, historicMsg))
-    )
-  );
-  const userD = await newUser(unknown1, USERNAME.DRACULA);
   const userDTruncatedPubkey = truncatePubkey(userD.accountID, platform);
   const userDMsg = `Hello from ${userD.userName}`;
-  // Click more options
-  await alice1.clickOnElementAll(new ConversationSettings(alice1));
-  // Select edit group
-  await alice1.clickOnElementAll(new ManageMembersMenuItem(alice1));
-  await sleepFor(1000);
-  // Add contact to group
-  await alice1.clickOnElementAll(new InviteAccountIDOrONS(alice1));
-  await alice1.inputText(userD.accountID, new EnterAccountID(alice1));
-  await alice1.clickOnElementAll(new NextButton(alice1));
-  await alice1.clickOnElementAll(new ShareNewMessagesRadial(alice1));
-  await alice1.clickOnElementAll(new InviteContactSendInviteButton(alice1));
+  await test.step(TestSteps.SEND.MESSAGE(alice.userName, 'group'), async () => {
+    await alice1.sendMessage(historicMsg);
+    await Promise.all(
+      [alice1, bob1, charlie1].map(device =>
+        device.waitForTextElementToBePresent(new MessageBody(device, historicMsg))
+      )
+    );
+  });
+  await test.step(TestSteps.USER_ACTIONS.GROUPS_ADD_CONTACT(userD.userName), async () => {
+    // Click more options
+    await alice1.clickOnElementAll(new ConversationSettings(alice1));
+    // Select edit group
+    await alice1.clickOnElementAll(new ManageMembersMenuItem(alice1));
+    await sleepFor(1000);
+    // Add contact to group
+    await alice1.clickOnElementAll(new InviteAccountIDOrONS(alice1));
+    await alice1.inputText(userD.accountID, new EnterAccountID(alice1));
+    await alice1.clickOnElementAll(new NextButton(alice1));
+    await alice1.clickOnElementAll(new ShareNewMessagesRadial(alice1));
+    await alice1.clickOnElementAll(new InviteContactSendInviteButton(alice1));
+  });
   // Leave Manage Members
   await alice1.navigateBack();
   // Leave Conversation Settings
   await alice1.navigateBack();
   // Check control messages
+  await test.step('Verify group invite control message for all members', async () => {
   await Promise.all(
     [alice1, bob1, charlie1].map(device =>
       device.waitForControlMessageToBePresent(
@@ -82,6 +92,8 @@ async function addAccountIDToGroup(platform: SupportedPlatformsType, testInfo: T
       )
     )
   );
+});
+  
   await unknown1.clickOnElementAll(new MessageRequestsBanner(unknown1));
   await unknown1.clickOnElementAll(new MessageRequestItem(unknown1));
   await unknown1.waitForControlMessageToBePresent(

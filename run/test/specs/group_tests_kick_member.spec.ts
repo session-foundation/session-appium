@@ -65,14 +65,10 @@ async function kickMember(platform: SupportedPlatformsType, testInfo: TestInfo) 
       englishStrippedStr('groupRemoved').withArgs({ name: USERNAME.BOB }).toString()
     ),
   ]);
-  await bob1
-    .onAndroid()
-    .waitForTextElementToBePresent({
-      ...new EmptyConversation(bob1).build(),
-      text: englishStrippedStr('groupRemovedYou')
-        .withArgs({ group_name: testGroupName })
-        .toString(),
-    });
+  await bob1.onAndroid().waitForTextElementToBePresent({
+    ...new EmptyConversation(bob1).build(),
+    text: englishStrippedStr('groupRemovedYou').withArgs({ group_name: testGroupName }).toString(),
+  });
   await bob1.onIOS().waitForTextElementToBePresent(new EmptyConversation(bob1));
   // Message input should not be present after being kicked
   await bob1.verifyElementNotPresent({ ...new MessageInput(bob1).build(), maxWait: 1000 });
