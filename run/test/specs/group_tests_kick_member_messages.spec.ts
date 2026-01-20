@@ -6,6 +6,7 @@ import { USERNAME } from '../../types/testing';
 import {
   ConversationSettings,
   DeletedMessage,
+  EmptyConversation,
   MessageBody,
   MessageInput,
 } from './locators/conversation';
@@ -85,8 +86,7 @@ async function kickMemberDeleteMsg(platform: SupportedPlatformsType, testInfo: T
   );
   await Promise.all([
     bob1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Empty list',
+      ...new EmptyConversation(bob1).build(),
       text: englishStrippedStr('groupRemovedYou')
         .withArgs({ group_name: testGroupName })
         .toString(),

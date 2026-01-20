@@ -9,7 +9,11 @@ import {
   ConversationSettings,
   MessageBody,
 } from './locators/conversation';
-import { ManageMembersMenuItem, ShareNewMessagesRadial } from './locators/groups';
+import {
+  InviteContactSendInviteButton,
+  ManageMembersMenuItem,
+  ShareNewMessagesRadial,
+} from './locators/groups';
 import { MessageRequestItem, MessageRequestsBanner } from './locators/home';
 import { EnterAccountID, NextButton } from './locators/start_conversation';
 import { open_Alice1_Bob1_Charlie1_Unknown1 } from './state_builder';
@@ -64,10 +68,7 @@ async function addAccountIDToGroup(platform: SupportedPlatformsType, testInfo: T
   await alice1.inputText(userD.accountID, new EnterAccountID(alice1));
   await alice1.clickOnElementAll(new NextButton(alice1));
   await alice1.clickOnElementAll(new ShareNewMessagesRadial(alice1));
-  await alice1.clickOnElementAll({
-    strategy: 'id',
-    selector: 'Send Invite',
-  });
+  await alice1.clickOnElementAll(new InviteContactSendInviteButton(alice1));
   // Leave Manage Members
   await alice1.navigateBack();
   // Leave Conversation Settings

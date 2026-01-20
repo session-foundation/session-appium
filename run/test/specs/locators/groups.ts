@@ -6,6 +6,20 @@ import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { StrategyExtractionObj } from '../../../types/testing';
 import { GROUPNAME } from '../../../types/testing';
 
+export class ConfirmPromotionModalButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Confirm',
+        } as const;
+      case 'ios':
+        throw new Error('Manage Members not available on iOS');
+    }
+  }
+}
+
 export class ConfirmRemovalButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -153,7 +167,6 @@ export class GroupMember extends LocatorsInterface {
     }
   }
 }
-
 export class GroupNameInput extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -183,6 +196,19 @@ export class InviteContactConfirm extends LocatorsInterface {
           strategy: 'accessibility id',
           selector: 'Confirm invite button',
         } as const;
+    }
+  }
+}
+export class InviteContactSendInviteButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Send Invite',
+        } as const;
+      case 'ios':
+        throw new Error('Manage Members not available on iOS');
     }
   }
 }
@@ -222,6 +248,7 @@ export class LeaveGroupConfirm extends LocatorsInterface {
     }
   }
 }
+
 export class LeaveGroupMenuItem extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -238,6 +265,21 @@ export class LeaveGroupMenuItem extends LocatorsInterface {
     }
   }
 }
+
+export class ManageAdminsMenuItem extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'manage-admins-menu-option',
+        } as const;
+      case 'ios':
+        throw new Error('Manage Members not available on iOS');
+    }
+  }
+}
+
 export class ManageMembersMenuItem extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -274,6 +316,47 @@ export class MemberStatus extends LocatorsInterface {
   }
 }
 
+export class PromoteMemberFooterButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'qa-collapsing-footer-action_promote',
+        } as const;
+      case 'ios':
+        throw new Error('Manage Members not available on iOS');
+    }
+  }
+}
+
+export class PromoteMemberModalConfirm extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Promote',
+        } as const;
+      case 'ios':
+        throw new Error('Manage Members not available on iOS');
+    }
+  }
+}
+export class PromoteMembersMenuItem extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'promote-members-menu-option',
+        } as const;
+      case 'ios':
+        throw new Error('Manage Members not available on iOS');
+    }
+  }
+}
+
 export class RemoveMemberButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -290,7 +373,6 @@ export class RemoveMemberButton extends LocatorsInterface {
     }
   }
 }
-
 export class RemoveMemberMessagesRadial extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -317,6 +399,7 @@ export class RemoveMemberRadial extends LocatorsInterface {
     }
   }
 }
+
 export class SaveGroupNameChangeButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {

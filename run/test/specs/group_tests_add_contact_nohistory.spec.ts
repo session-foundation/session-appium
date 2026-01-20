@@ -8,6 +8,7 @@ import { ConversationSettings, MessageBody } from './locators/conversation';
 import { Contact } from './locators/global';
 import {
   InviteContactConfirm,
+  InviteContactSendInviteButton,
   ManageMembersMenuItem,
   ShareNewMessagesRadial,
 } from './locators/groups';
@@ -72,10 +73,7 @@ async function addContactToGroupNoHistory(platform: SupportedPlatformsType, test
   await alice1.clickOnElementAll(new InviteContactConfirm(alice1));
   if (platform === 'android') {
     await alice1.clickOnElementAll(new ShareNewMessagesRadial(alice1));
-    await alice1.clickOnElementAll({
-      strategy: 'id',
-      selector: 'Send Invite',
-    });
+    await alice1.clickOnElementAll(new InviteContactSendInviteButton(alice1));
   }
   // Leave Manage Members
   await alice1.navigateBack();

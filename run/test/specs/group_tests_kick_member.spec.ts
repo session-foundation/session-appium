@@ -3,7 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ConversationSettings, MessageInput } from './locators/conversation';
+import { ConversationSettings, EmptyConversation, MessageInput } from './locators/conversation';
 import {
   ConfirmRemovalButton,
   GroupMember,
@@ -65,15 +65,15 @@ async function kickMember(platform: SupportedPlatformsType, testInfo: TestInfo) 
       englishStrippedStr('groupRemoved').withArgs({ name: USERNAME.BOB }).toString()
     ),
   ]);
-  await bob1.onAndroid().waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Empty list',
-    text: englishStrippedStr('groupRemovedYou').withArgs({ group_name: testGroupName }).toString(),
-  });
-  await bob1.onIOS().waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Empty list',
-  });
+  await bob1
+    .onAndroid()
+    .waitForTextElementToBePresent({
+      ...new EmptyConversation(bob1).build(),
+      text: englishStrippedStr('groupRemovedYou')
+        .withArgs({ group_name: testGroupName })
+        .toString(),
+    });
+  await bob1.onIOS().waitForTextElementToBePresent(new EmptyConversation(bob1));
   // Message input should not be present after being kicked
   await bob1.verifyElementNotPresent({ ...new MessageInput(bob1).build(), maxWait: 1000 });
 }
