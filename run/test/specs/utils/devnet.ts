@@ -5,6 +5,7 @@ import type { SupportedPlatformsType } from './open_app';
 import { DEVNET_URL } from '../../../constants';
 import { AppName } from '../../../types/testing';
 import { getAndroidApk } from './binaries';
+import { sleepFor } from './sleep_for';
 
 // NOTE this currently only applies to Android as iOS doesn't supply AQA builds yet
 type NetworkType = Parameters<typeof buildStateForTest>[2];
@@ -36,7 +37,7 @@ async function isDevnetReachable(): Promise<boolean> {
         console.log(`Internal devnet is not accessible: ${errorMsg}`);
       } else {
         console.log(`Attempt ${attempt} failed: ${errorMsg}, retrying...`);
-        await new Promise(resolve => setTimeout(resolve, attempt * 1000));
+        await sleepFor(attempt * 1000);
       }
     }
   }

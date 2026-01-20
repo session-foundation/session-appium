@@ -430,6 +430,7 @@ export type Id =
   | 'android:id/aerr_close'
   | 'android:id/aerr_wait'
   | 'android:id/alertTitle'
+  | 'android:id/button1'
   | 'android:id/content_preview_text'
   | 'android:id/summary'
   | 'android:id/title'
@@ -602,6 +603,8 @@ export type Id =
   | 'update-username-confirm-button'
   | 'User settings'
   | 'Version warning banner'
+  | 'whitelist-cancel-button'
+  | 'whitelist-confirm-button'
   | 'Yes'
   | `All ${AppName} notifications`
   | `cta-feature-${number}`

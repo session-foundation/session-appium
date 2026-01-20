@@ -83,7 +83,7 @@ export class DeleteGroupMenuItem extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Leave group', // yep this is leave even for the delete option
+          selector: 'Delete group',
         } as const;
     }
   }

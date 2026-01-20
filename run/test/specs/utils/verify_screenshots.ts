@@ -167,10 +167,7 @@ function ensureBaseline(actualBuffer: Buffer, baselinePath: string): void {
     // fs.mkdirSync(path.dirname(baselinePath), { recursive: true });
     // fs.writeFileSync(baselinePath, actualBuffer);
 
-    throw new Error(
-      `No baseline image found at: ${baselinePath}. \n
-      A new screenshot has been saved at: ${tempPath}`
-    );
+    throw new Error(`No baseline image found. A new screenshot has been saved at: ${baselinePath}`);
   }
 }
 

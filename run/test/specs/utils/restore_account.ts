@@ -10,7 +10,7 @@ import {
   SeedPhraseInput,
 } from '../locators/onboarding';
 import { BaseSetupOptions } from './create_account';
-import { handlePermissions } from './permissions';
+import { handleNotificationPermissions } from './permissions';
 
 export const restoreAccount = async (
   device: DeviceWrapper,
@@ -41,7 +41,7 @@ export const restoreAccount = async (
     device.info('Display name found: Loading account');
   }
   // Wait for permissions modal to pop up
-  await handlePermissions(device, allowNotificationPermissions);
+  await handleNotificationPermissions(device, allowNotificationPermissions);
   // Check that we're on the home screen
   await device.waitForTextElementToBePresent(new PlusButton(device));
 };
@@ -79,7 +79,7 @@ export const restoreAccountNoFallback = async (
 
   // Wait for permissions modal to pop up
   await sleepFor(500);
-  await handlePermissions(device, allowNotificationPermissions);
+  await handleNotificationPermissions(device, allowNotificationPermissions);
   await sleepFor(1000);
   // Check that we're on the home screen
   await device.waitForTextElementToBePresent(new PlusButton(device));
