@@ -83,8 +83,7 @@ async function compareWithSSIM(
     actualImageData.height !== baselineImageData.height
   ) {
     throw new Error(
-      `Image dimensions don't match: actual ${actualImageData.width}x${actualImageData.height}, \n
-      baseline ${baselineImageData.width}x${baselineImageData.height}`
+      `Image dimensions don't match: baseline ${baselineImageData.width}x${baselineImageData.height}, actual ${actualImageData.width}x${actualImageData.height}`
     );
   }
 
