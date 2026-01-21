@@ -37,9 +37,9 @@ type SimulatorConfig = {
 
 // Define the device type and runtime to create
 const DEVICE_CONFIG = {
-  type: 'iPhone 16 Pro Max',
-  name: '16PM',
-  runtime: 'com.apple.CoreSimulator.SimRuntime.iOS-18-3', // xcrun simctl list runtimes
+  type: 'iPhone 17',
+  name: '17',
+  runtime: 'com.apple.CoreSimulator.SimRuntime.iOS-26-2', // xcrun simctl list runtimes
 };
 
 const MEDIA_ROOT = path.join('run', 'test', 'specs', 'media');
