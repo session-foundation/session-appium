@@ -139,11 +139,11 @@ export type XPath =
   | `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${string}"]]//XCUIElementTypeStaticText[@value="😂"]`
   | `//XCUIElementTypeCell[.//XCUIElementTypeOther[@label="${string}"]]//XCUIElementTypeStaticText[@value="${string}"]`
   | `//XCUIElementTypeCell[.//XCUIElementTypeOther[@name='Message body' and contains(@label,'${string}')]]//XCUIElementTypeStaticText[contains(@value,'(15')]`
+  | `//XCUIElementTypeCell[@label="Session"]`
   | `//XCUIElementTypeCell[@name="${string}"]`
   | `//XCUIElementTypeCell[@name="Conversation list item" and @label="${string}"]//XCUIElementTypeStaticText[@name="${string}"]`
-  | `//XCUIElementTypeCell[@name="Session"]`
   | `//XCUIElementTypeImage`
-  | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`
+  | `//XCUIElementTypeOther[contains(@label, "Hey,")][1]`
   | `//XCUIElementTypeStaticText[@name="${string}"]`
   | `//XCUIElementTypeStaticText[@name="Paste"]`
   | `//XCUIElementTypeStaticText[@name="Videos"]`

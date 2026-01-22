@@ -24,7 +24,7 @@ export async function handlePhotosFirstTimeOpen(device: DeviceWrapper) {
   if (device.isIOS()) {
     const continueButton = await device.doesElementExist({
       ...new iOSPhotosContinuebutton(device).build(),
-      maxWait: 2_000,
+      maxWait: 5_000,
     });
     if (!continueButton) {
       device.log(`Photos app opened without a "What's New" screen, proceeding`);

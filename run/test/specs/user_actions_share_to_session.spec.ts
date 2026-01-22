@@ -44,7 +44,7 @@ async function shareToSession(platform: SupportedPlatformsType, testInfo: TestIn
     await sleepFor(2000);
     await alice1.onAndroid().pushMediaToDevice(testImage); // iOS is preloaded
     //  Photo app is on different page than Session
-    await alice1.onIOS().swipeRightAny('Session');
+    await alice1.onIOS().swipeRight();
     await alice1.clickOnElementAll(new PhotoLibrary(alice1));
     await sleepFor(2000);
   });

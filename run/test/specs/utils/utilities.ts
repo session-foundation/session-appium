@@ -88,7 +88,7 @@ export async function assertUrlIsReachable(url: string): Promise<void> {
  */
 export async function setConsistentStatusBar(device: DeviceWrapper): Promise<void> {
   if (device.isIOS()) {
-    // Time: 4:20, full wifi signal 
+    // Time: 4:20, full wifi signal
     // Manipulating the battery status is not always reliable (charged/charging can flicker)
     await runScriptAndLog(
       `xcrun simctl status_bar ${device.udid} override --time "04:20" --wifiBars 3`,

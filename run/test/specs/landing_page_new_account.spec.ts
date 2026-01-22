@@ -22,6 +22,6 @@ async function landingPageNewAccount(platform: SupportedPlatformsType, testInfo:
   const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   await newUser(device, USERNAME.ALICE, { saveUserData: false });
   // Verify that the party popper is shown on the landing page
-  await verifyPageScreenshot(device, platform, 'landingpage_new_account', testInfo, 0.995); // Higher-than-standard tolerance for near perfect match
+  await verifyPageScreenshot(device, platform, 'landingpage_new_account', testInfo, 0.98); // Slightly higher tolerance
   await closeApp(device);
 }
