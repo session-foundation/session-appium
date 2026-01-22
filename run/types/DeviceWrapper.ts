@@ -2327,7 +2327,7 @@ export class DeviceWrapper {
 
   public async navigateBack(newAndroid: boolean = true) {
     if (this.isIOS()) {
-      await this.clickOnByAccessibilityID('Back');
+      await this.clickOnByAccessibilityID('BackButton');
       return;
     } else if (this.isAndroid()) {
       const newLocator = {

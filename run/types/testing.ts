@@ -195,6 +195,7 @@ export type AccessibilityId =
   | 'Awaiting Recipient Answer... 4/6'
   | 'back'
   | 'Back'
+  | 'BackButton'
   | 'Blinded ID'
   | 'Block'
   | 'Block contacts - Navigation'
