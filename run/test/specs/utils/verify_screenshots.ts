@@ -162,13 +162,14 @@ function ensureBaseline(actualBuffer: Buffer, baselinePath: string): void {
     const tempPath = path.join(diffsDir, `${uuid}_new_baseline.png`);
     fs.writeFileSync(tempPath, actualBuffer);
 
-    // Uncomment these lines for local development to auto-create baselines
-    // fs.mkdirSync(path.dirname(baselinePath), { recursive: true });
-    // fs.writeFileSync(baselinePath, actualBuffer);
+    if (process.env.UPDATE_BASELINES === 'true') {
+      fs.mkdirSync(path.dirname(baselinePath), { recursive: true });
+      fs.writeFileSync(baselinePath, actualBuffer);
+      throw new Error(`No baseline image found. Auto-saved new baseline at: ${baselinePath}`);
+    }
 
     throw new Error(
-      `No baseline image found at: ${baselinePath}. \n
-      A new screenshot has been saved at: ${tempPath}`
+      `No baseline image found. Screenshot saved at: ${tempPath}.\nSet UPDATE_BASELINES=true to auto-save baselines.`
     );
   }
 }
