@@ -1,3 +1,9 @@
+import { Agent, setGlobalDispatcher } from 'undici';
+
+// Force IPv4 connections to work around Node.js fetch/undici lacking "Happy Eyeballs" (RFC 6555)
+// https://github.com/node-fetch/node-fetch/issues/1297
+setGlobalDispatcher(new Agent({ connect: { family: 4 } }));
+
 import type { TestInfo } from '@playwright/test';
 
 import {
