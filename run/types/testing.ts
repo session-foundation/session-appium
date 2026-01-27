@@ -13,7 +13,6 @@ export const USERNAME = usernameFromSeeder;
 export type GROUPNAME =
   | 'Disappear after send test'
   | 'Disappear after sent test'
-  | 'Group to test adding contact'
   | 'Kick member'
   | 'Leave group'
   | 'Leave group linked device'
@@ -159,14 +158,13 @@ export type XPath =
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.TabHost/android.widget.LinearLayout/android.widget.FrameLayout/androidx.viewpager.widget.ViewPager/android.widget.RelativeLayout/android.widget.GridView/android.widget.LinearLayout/android.widget.LinearLayout[2]`;
 
 export type UiAutomatorQuery =
-  | 'new UiSelector().resourceId("cta-button-negative").childSelector(new UiSelector().className("android.widget.TextView"))'
-  | 'new UiSelector().resourceId("cta-button-positive").childSelector(new UiSelector().className("android.widget.TextView"))'
   | 'new UiSelector().resourceId("network.loki.messenger:id/messageStatusTextView").text("Sent")'
   | 'new UiSelector().text("Enter your display name")'
   | `new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId(${string}))`
   | `new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text(${string}))`
   | `new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().textStartsWith(${string}))`
   | `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-text"))`
+  | `new UiSelector().resourceId(${string}).childSelector(new UiSelector().className("android.widget.TextView"))`
   | `new UiSelector().text(${string})`;
 
 export type AccessibilityId =
@@ -511,6 +509,7 @@ export type Id =
   | 'Last updated timestamp'
   | 'Learn about staking link'
   | 'Learn more link'
+  | 'leave-group-cancel-button'
   | 'leave-group-confirm-button'
   | 'leave-group-menu-option'
   | 'Leave'

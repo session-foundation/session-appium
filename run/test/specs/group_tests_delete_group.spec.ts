@@ -3,7 +3,7 @@ import { test, type TestInfo } from '@playwright/test';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { ConversationSettings } from './locators/conversation';
+import { ConversationSettings, EmptyConversation } from './locators/conversation';
 import { DeleteGroupConfirm, DeleteGroupMenuItem } from './locators/groups';
 import { ConversationItem, PlusButton } from './locators/home';
 import { open_Alice2_Bob1_Charlie1_friends_group } from './state_builder';
@@ -47,7 +47,7 @@ async function deleteGroup(platform: SupportedPlatformsType, testInfo: TestInfo)
     });
     await alice1.clickOnElementAll(new DeleteGroupConfirm(alice1));
   });
-  await test.step('Verify group is deleted for all members', async () => {
+  await test.step(TestSteps.VERIFY.GROUP_DELETED, async () => {
     // Members
     if (platform === 'ios') {
       await Promise.all(
@@ -64,8 +64,7 @@ async function deleteGroup(platform: SupportedPlatformsType, testInfo: TestInfo)
       await Promise.all(
         [bob1, charlie1].map(device =>
           device.waitForTextElementToBePresent({
-            strategy: 'accessibility id',
-            selector: 'Empty list',
+            ...new EmptyConversation(device).build(),
             text: englishStrippedStr('groupDeletedMemberDescription')
               .withArgs({ group_name: testGroupName })
               .toString(),

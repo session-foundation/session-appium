@@ -36,7 +36,6 @@ androidIt({
     'Verifies that inviting a non-contact Account ID (without chat history) works as expected.',
 });
 
-// TODO proper locator classes, test.steps
 async function addAccountIDToGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Group to test adding contact';
   const {
@@ -84,31 +83,36 @@ async function addAccountIDToGroup(platform: SupportedPlatformsType, testInfo: T
   await alice1.navigateBack();
   // Check control messages
   await test.step('Verify group invite control message for all members', async () => {
-  await Promise.all(
-    [alice1, bob1, charlie1].map(device =>
-      device.waitForControlMessageToBePresent(
-        englishStrippedStr('groupMemberNew').withArgs({ name: userDTruncatedPubkey }).toString(),
-        20_000
+    await Promise.all(
+      [alice1, bob1, charlie1].map(device =>
+        device.waitForControlMessageToBePresent(
+          englishStrippedStr('groupMemberNew').withArgs({ name: userDTruncatedPubkey }).toString(),
+          20_000
+        )
       )
-    )
-  );
-});
-  
-  await unknown1.clickOnElementAll(new MessageRequestsBanner(unknown1));
-  await unknown1.clickOnElementAll(new MessageRequestItem(unknown1));
-  await unknown1.waitForControlMessageToBePresent(
-    englishStrippedStr('messageRequestGroupInvite')
-      .withArgs({ name: aliceTruncatedPubkey, group_name: testGroupName })
-      .toString()
-  );
-  await unknown1.clickOnElementAll(new AcceptMessageRequestButton(unknown1));
-  await unknown1.waitForControlMessageToBePresent(englishStrippedStr('groupInviteYou').toString());
-  await unknown1.verifyElementNotPresent(new MessageBody(unknown1, historicMsg));
-  await unknown1.sendMessage(userDMsg);
-  await Promise.all(
-    [alice1, bob1, charlie1, unknown1].map(device =>
-      device.waitForTextElementToBePresent(new MessageBody(device, userDMsg))
-    )
-  );
-  await closeApp(alice1, bob1, charlie1, unknown1);
+    );
+  });
+  await test.step(`${userD.userName} accepts group invite and sends a message`, async () => {
+    await unknown1.clickOnElementAll(new MessageRequestsBanner(unknown1));
+    await unknown1.clickOnElementAll(new MessageRequestItem(unknown1));
+    await unknown1.waitForControlMessageToBePresent(
+      englishStrippedStr('messageRequestGroupInvite')
+        .withArgs({ name: aliceTruncatedPubkey, group_name: testGroupName })
+        .toString()
+    );
+    await unknown1.clickOnElementAll(new AcceptMessageRequestButton(unknown1));
+    await unknown1.waitForControlMessageToBePresent(
+      englishStrippedStr('groupInviteYou').toString()
+    );
+    await unknown1.verifyElementNotPresent(new MessageBody(unknown1, historicMsg));
+    await unknown1.sendMessage(userDMsg);
+    await Promise.all(
+      [alice1, bob1, charlie1, unknown1].map(device =>
+        device.waitForTextElementToBePresent(new MessageBody(device, userDMsg))
+      )
+    );
+  });
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(alice1, bob1, charlie1, unknown1);
+  });
 }

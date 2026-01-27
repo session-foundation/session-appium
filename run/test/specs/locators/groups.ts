@@ -232,13 +232,32 @@ export class LatestReleaseBanner extends LocatorsInterface {
     }
   }
 }
+export class LeaveGroupCancel extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: '-android uiautomator',
+          selector:
+            'new UiSelector().resourceId("leave-group-cancel-button").childSelector(new UiSelector().className("android.widget.TextView"))',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Cancel',
+        };
+    }
+  }
+}
+
 export class LeaveGroupConfirm extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'leave-group-confirm-button',
+          strategy: '-android uiautomator',
+          selector:
+            'new UiSelector().resourceId("leave-group-confirm-button").childSelector(new UiSelector().className("android.widget.TextView"))',
         } as const;
       case 'ios':
         return {
