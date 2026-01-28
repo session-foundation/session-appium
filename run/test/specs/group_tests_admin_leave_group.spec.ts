@@ -4,11 +4,17 @@ import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { TestSteps } from '../../types/allure';
 import { androidIt } from '../../types/sessionIt';
 import { ConversationSettings, EmptyConversation } from './locators/conversation';
+import { Contact } from './locators/global';
 import {
+  ConfirmPromotionModalButton,
   DeleteGroupConfirm,
   LeaveGroupCancel,
   LeaveGroupConfirm,
   LeaveGroupMenuItem,
+  ManageAdminsMenuItem,
+  PromoteMemberFooterButton,
+  PromoteMemberModalConfirm,
+  PromoteMembersMenuItem,
 } from './locators/groups';
 import { ConversationItem, PlusButton } from './locators/home';
 import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
@@ -17,16 +23,30 @@ import { closeApp, SupportedPlatformsType } from './utils/open_app';
 androidIt({
   title: 'Leave group as the only admin',
   risk: 'high',
-  testCb: deleteGroup,
+  testCb: soloAdminLeave,
   countOfDevicesNeeded: 3,
   allureSuites: {
     parent: 'Groups',
     suite: 'Leave/Delete Group',
   },
-  allureDescription: `Verifies that a solo admin can't leave a group but is instead prompted to add admins or delete the group.`,
+  allureDescription:
+    "Verifies that a solo admin can't leave a group but is instead prompted to add admins or delete the group.",
 });
 
-async function deleteGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
+androidIt({
+  title: 'Leave group with more than one admin',
+  risk: 'medium',
+  testCb: multiAdminLeave,
+  countOfDevicesNeeded: 3,
+  allureSuites: {
+    parent: 'Groups',
+    suite: 'Leave/Delete Group',
+  },
+  allureDescription:
+    'Verifies that an admin can leave a group if there is more than one admin in the group.',
+});
+
+async function soloAdminLeave(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Leave group';
   const {
     devices: { alice1, bob1, charlie1 },
@@ -85,6 +105,68 @@ async function deleteGroup(platform: SupportedPlatformsType, testInfo: TestInfo)
     await alice1.verifyElementNotPresent(new ConversationItem(alice1, testGroupName).build());
   });
 
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(alice1, bob1, charlie1);
+  });
+}
+
+async function multiAdminLeave(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const testGroupName = 'Test group';
+  const {
+    devices: { alice1, bob1, charlie1 },
+    prebuilt: { alice, bob },
+  } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
+    return open_Alice1_Bob1_Charlie1_friends_group({
+      platform,
+      groupName: testGroupName,
+      focusGroupConvo: true,
+      testInfo,
+    });
+  });
+  await test.step(`${alice.userName} promotes ${bob.userName}`, async () => {
+    // Navigate to Promote Members screen
+    await alice1.sendMessage(`Gonna promote ${bob.userName} now`);
+    await alice1.clickOnElementAll(new ConversationSettings(alice1));
+    await alice1.clickOnElementAll(new ManageAdminsMenuItem(alice1));
+    await alice1.clickOnElementAll(new PromoteMembersMenuItem(alice1));
+    await alice1.clickOnElementAll(new Contact(alice1, 'Bob'));
+    await alice1.clickOnElementAll(new PromoteMemberFooterButton(alice1));
+    await alice1.clickOnElementAll(new PromoteMemberModalConfirm(alice1));
+    await alice1.clickOnElementAll(new ConfirmPromotionModalButton(alice1));
+  });
+  await alice1.navigateBack();
+  await alice1.navigateBack();
+  await test.step('Verify every member sees the promotion control message', async () => {
+    await Promise.all(
+      [alice1, charlie1].map(device =>
+        device.waitForControlMessageToBePresent(
+          englishStrippedStr('adminPromotedToAdmin').withArgs({ name: bob.userName }).toString(),
+          30_000
+        )
+      )
+    );
+    await bob1.waitForControlMessageToBePresent(englishStrippedStr('groupPromotedYou').toString());
+  });
+  await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Leave Group'), async () => {
+    await alice1.clickOnElementAll(new ConversationSettings(alice1));
+    await alice1.clickOnElementAll(new LeaveGroupMenuItem(alice1));
+    await alice1.checkModalStrings(
+      englishStrippedStr('groupLeave').toString(),
+      englishStrippedStr('groupLeaveDescription').withArgs({ group_name: testGroupName }).toString()
+    );
+  });
+  await alice1.clickOnElementAll(new LeaveGroupConfirm(alice1));
+
+  await Promise.all(
+    [bob1, charlie1].map(device =>
+      device.waitForControlMessageToBePresent(
+        englishStrippedStr('groupMemberLeft').withArgs({ name: alice.userName }).toString(),
+        30_000
+      )
+    )
+  );
+  await alice1.waitForTextElementToBePresent(new PlusButton(alice1));
+  await alice1.verifyElementNotPresent(new ConversationItem(alice1, testGroupName).build());
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, bob1, charlie1);
   });
