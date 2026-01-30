@@ -19,7 +19,7 @@ jobs:
       - run: git config --global core.autocrlf false
 
       - name: Checkout git repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           lfs: true
           submodules: 'recursive'
@@ -33,22 +33,25 @@ jobs:
         id: cache-appium-modules
         with:
           path: node_modules
-          key: ${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package.json', 'yarn.lock', 'patches/**') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package.json', 'pnpm-lock.yaml', 'patches/**') }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
 
       - name: Install dependencies
         shell: bash
         if: steps.cache-appium-modules.outputs.cache-hit != 'true'
-        run: yarn install --immutable
+        run: pnpm install --frozen-lockfile
 
       - uses: actions/cache/save@v4
         id: cache-appium-modules-save
         with:
           path: node_modules
-          key: ${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package.json', 'yarn.lock', 'patches/**') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package.json', 'pnpm-lock.yaml', 'patches/**') }}
 
       - name: Lint Files
-        run: yarn lint-check
+        run: pnpm lint-check
 
       - name: Compile typescript files
         shell: bash
-        run: yarn tsc
+        run: pnpm tsc

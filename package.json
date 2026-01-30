@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "cleanup-simulators": "npx ts-node scripts/cleanup_ios_simulators.ts",
-    "create-simulators": "yarn cleanup-simulators && npx ts-node scripts/create_ios_simulators.ts",
-    "lint": "yarn prettier . --write --cache && yarn eslint . --cache ",
-    "lint-check": "yarn prettier . --check && yarn eslint .",
+    "create-simulators": "pnpm cleanup-simulators && npx ts-node scripts/create_ios_simulators.ts",
+    "lint": "pnpm prettier . --write --cache && pnpm eslint . --cache ",
+    "lint-check": "pnpm prettier . --check && pnpm eslint .",
     "tsc": "tsc",
     "tsc-watch": "tsc -w",
     "test": "npx playwright test --grep ",
@@ -59,25 +59,28 @@
   "license": "MIT",
   "engines": {
     "node": ">=24",
-    "pnpm": "use yarn",
-    "yarn": ">=4",
-    "npm": "use yarn"
+    "pnpm": ">=10",
+    "yarn": "use pnpm",
+    "npm": "use pnpm"
   },
   "dependencies": {
     "@playwright/test": "^1.45.1",
     "@session-foundation/playwright-reporter": "^0.0.7",
     "@session-foundation/qa-seeder": "^0.1.20",
     "appium": "^2.4.1",
-    "appium-uiautomator2-driver": "patch:appium-uiautomator2-driver@npm%3A3.8.2#~/patches/appium-uiautomator2-driver-npm-3.8.2-1ce2a0f39e.patch",
+    "appium-uiautomator2-driver": "3.8.2",
     "appium-xcuitest-driver": "^7.26.0",
     "dotenv": "^16.4.5"
   },
-  "packageManager": "yarn@4.1.1",
-  "resolutions": {
-    "@appium/support@npm:^5.1.6": "patch:@appium/support@npm%3A5.1.2#~/patches/@appium-support-npm-5.1.2-0c5ea57d71.patch",
-    "@appium/support@npm:^5.1.2": "patch:@appium/support@npm%3A5.1.2#~/patches/@appium-support-npm-5.1.2-0c5ea57d71.patch",
-    "@appium/support@npm:^5.0.3": "patch:@appium/support@npm%3A5.1.2#~/patches/@appium-support-npm-5.1.2-0c5ea57d71.patch",
-    "@appium/support@npm:^5.1.1": "patch:@appium/support@npm%3A5.1.2#~/patches/@appium-support-npm-5.1.2-0c5ea57d71.patch",
-    "sharp": "^0.34.1"
+  "packageManager": "pnpm@10.28.1",
+  "pnpm": {
+    "patchedDependencies": {
+      "appium-uiautomator2-driver@3.8.2": "patches/appium-uiautomator2-driver-npm-3.8.2-1ce2a0f39e.patch",
+      "@appium/support@5.1.2": "patches/@appium-support-npm-5.1.2-0c5ea57d71.patch"
+    },
+    "overrides": {
+      "@appium/support": "5.1.2",
+      "sharp": "^0.34.1"
+    }
   }
 }
