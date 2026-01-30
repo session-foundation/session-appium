@@ -29,7 +29,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
 
-      - uses: actions/cache/restore@v4
+      - uses: actions/cache/restore@v5
         id: cache-appium-modules
         with:
           path: node_modules
@@ -43,7 +43,7 @@ jobs:
         if: steps.cache-appium-modules.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile
 
-      - uses: actions/cache/save@v4
+      - uses: actions/cache/save@v5
         id: cache-appium-modules-save
         with:
           path: node_modules

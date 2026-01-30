@@ -12,7 +12,7 @@ runs:
   using: 'composite'
   steps:
     - name: Upload condensed csv of results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: test-results-${{ inputs.PLATFORM }}.csv
         path: test-results.csv
