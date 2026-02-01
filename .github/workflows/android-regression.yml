@@ -251,6 +251,7 @@ jobs:
           RISK: ${{github.event.inputs.RISK}}
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
           GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
+          NETWORK_TARGET: ${{ github.event.inputs.NETWORK_TARGET }}
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results

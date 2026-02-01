@@ -78,6 +78,7 @@ jobs:
       APPIUM_ADB_FULL_PATH: '<just_not_empty>'
       ANDROID_SDK_ROOT: '<just_not_empty>'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
+      NETWORK_TARGET: 'mainnet' # iOS only supports mainnet for now
       _TESTING: 1 # Always hide webdriver logs (@appium/support/ flag)
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL != 'minimal' && '1' || '0' }} # Show stdout/stderr if test fails (@session-foundation/playwright-reporter/ flag)
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'verbose' && '1' || '0' }} # Show everything as it happens (@session-foundation/playwright-reporter/ flag)
@@ -152,6 +153,7 @@ jobs:
           RISK: ${{github.event.inputs.RISK}}
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
           GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
+          NETWORK_TARGET: ${{ env.NETWORK_TARGET }}
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results
