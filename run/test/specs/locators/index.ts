@@ -465,7 +465,7 @@ export class ShareExtensionIcon extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'xpath',
-          selector: `//XCUIElementTypeCell[@name="Session"]`,
+          selector: `//XCUIElementTypeCell[@label="Session"]`,
         };
     }
   }
