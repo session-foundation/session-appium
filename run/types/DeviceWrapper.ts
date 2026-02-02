@@ -259,7 +259,7 @@ export class DeviceWrapper {
       return;
     }
     if (this.isAndroid()) {
-      await this.toAndroid().mobileClickGesture({ x: xCoOrdinates, y: yCoOrdinates });
+      await this.toAndroid().mobileClickGesture(undefined, xCoOrdinates, yCoOrdinates);
       return;
     }
   }
@@ -614,10 +614,7 @@ export class DeviceWrapper {
       const duration = Math.floor(durationMs / 1000);
       return this.toIOS().mobileTouchAndHold(duration, undefined, undefined, element.ELEMENT);
     }
-    return this.toAndroid().mobileLongClickGesture({
-      elementId: element.ELEMENT,
-      duration: durationMs,
-    });
+    return this.toAndroid().mobileLongClickGesture(element.ELEMENT, undefined, undefined, durationMs);
   }
 
   public async clickOnByAccessibilityID(
