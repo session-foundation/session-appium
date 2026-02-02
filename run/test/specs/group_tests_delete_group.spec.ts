@@ -20,6 +20,9 @@ bothPlatformsIt({
   },
   allureDescription: `Verifies that an admin can delete a group successfully via the UI.
   The group members see the empty state control message, and the admin's conversation disappears from the home screen, even on a linked device.`,
+  allureLinks: {
+    android: 'SES-4883',
+  },
 });
 
 async function deleteGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {

@@ -173,8 +173,8 @@ export class CTAFeature extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: `cta-feature-${this.index}`,
+          strategy: '-android uiautomator',
+          selector: `new UiSelector().resourceId("cta-feature-${this.index}").childSelector(new UiSelector().className("android.widget.TextView"))`,
         } as const;
       case 'ios':
         throw new Error('CTAFeature locator is not available on iOS');

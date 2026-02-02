@@ -11,6 +11,7 @@ import {
   MessageLengthOkayButton,
   SendButton,
 } from './locators/conversation';
+import { CTAButtonNegative } from './locators/global';
 import { PlusButton } from './locators/home';
 import { EnterAccountID, NewMessageOption, NextButton } from './locators/start_conversation';
 import { newUser } from './utils/create_account';
@@ -84,8 +85,8 @@ for (const testCase of messageLengthTestCases) {
         // Is the message short enough to send?
         if (testCase.shouldSend) {
           await device.waitForTextElementToBePresent(new MessageBody(device, message));
-        } else {
-          // Modal appears, verify and dismiss
+        } else if (platform === 'ios') {
+          // iOS: Modal appears, verify and dismiss
           await device.checkModalStrings(
             englishStrippedStr('modalMessageTooLongTitle').toString(),
             englishStrippedStr('modalMessageTooLongDescription')
@@ -93,6 +94,22 @@ for (const testCase of messageLengthTestCases) {
               .toString()
           );
           await device.clickOnElementAll(new MessageLengthOkayButton(device));
+          await device.verifyElementNotPresent(new MessageBody(device, message));
+        } else {
+          // Android: CTA appears, verify and dismiss
+          // Post-Pro is active on debug/qa builds by default
+          // This will be the default for both platforms once Pro is live
+          await device.checkCTAStrings(
+            englishStrippedStr('upgradeTo').toString(),
+            englishStrippedStr('proCallToActionLongerMessages').toString(),
+            [englishStrippedStr('theContinue').toString(), englishStrippedStr('cancel').toString()],
+            [
+              englishStrippedStr('proFeatureListLongerMessages').toString(),
+              englishStrippedStr('proFeatureListPinnedConversations').toString(),
+              englishStrippedStr('proFeatureListLoadsMore').toString(),
+            ]
+          );
+          await device.clickOnElementAll(new CTAButtonNegative(device));
           await device.verifyElementNotPresent(new MessageBody(device, message));
         }
       });

@@ -2568,10 +2568,10 @@ export class DeviceWrapper {
     // Check features if expected
     if (features) {
       for (let i = 0; i < features.length; i++) {
-        const featureLocator = new CTAFeature(this, i + 1);
+        const featureLocator = new CTAFeature(this, i);
         const elFeature = await this.waitForTextElementToBePresent(featureLocator);
         const actualFeature = await this.getTextFromElement(elFeature);
-        this.assertTextMatches(actualFeature, features[i], `CTA feature ${i + 1}`);
+        this.assertTextMatches(actualFeature, features[i], `CTA feature ${i}`);
       }
     }
 
