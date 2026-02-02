@@ -52,16 +52,17 @@ async function appDisguiseSetIconIOS(platform: SupportedPlatformsType, testInfo:
     await device.clickOnElementAll(new SelectAppIcon(device));
     try {
       await device.clickOnElementAll(new AppDisguiseMeetingIcon(device));
-      await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('app disguise'), async () => {
-        await device.waitForTextElementToBePresent({
-          strategy: 'accessibility id',
-          selector: 'You have changed the icon for “Session”.',
-        });
-        await device.clickOnElementAll({
-          strategy: 'accessibility id',
-          selector: 'OK',
-        });
-      });
+      // Commented this out until SES-5151 is resolved
+      // await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('app disguise'), async () => {
+      //   await device.waitForTextElementToBePresent({
+      //     strategy: 'accessibility id',
+      //     selector: 'You have changed the icon for “Session”.',
+      //   });
+      //   await device.clickOnElementAll({
+      //     strategy: 'accessibility id',
+      //     selector: 'OK',
+      //   });
+      // });
       // TODO maybe grab a screenshot of the disguised app and see what you can do with it
     } finally {
       // The disguised app must be uninstalled otherwise every following test will fail

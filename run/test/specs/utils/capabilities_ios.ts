@@ -21,8 +21,8 @@ console.log(`iOS app full path: ${iosAppFullPath}`);
 const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   'appium:app': iosAppFullPath,
   'appium:platformName': 'iOS',
-  'appium:platformVersion': '18.3',
-  'appium:deviceName': 'iPhone 16 Pro Max',
+  'appium:platformVersion': '26.2',
+  'appium:deviceName': 'iPhone 17',
   'appium:automationName': 'XCUITest',
   'appium:bundleId': iOSBundleId,
   'appium:newCommandTimeout': 300000,

@@ -334,7 +334,7 @@ export class DeviceWrapper {
     text?: string
   ): Promise<{ strategy: Strategy; selector: string } | null> {
     const pageSource = await this.getPageSource();
-    const threshold = 0.35; // 0.0 = exact, 1.0 = match anything
+    const threshold = 0.3; // 0.0 = exact, 1.0 = match anything
 
     // Identify common element patterns and map them to our strategies
     const candidateStrategies = [
@@ -2271,25 +2271,10 @@ export class DeviceWrapper {
 
     this.info('Swiped left on ', selector);
   }
-  public async swipeRightAny(selector: AccessibilityId) {
-    const el = await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector,
-    });
-
-    const loc = await this.getElementRect(el.ELEMENT);
-    this.log(loc);
-
-    if (!loc) {
-      throw new Error('did not find element rectangle');
-    }
-    await this.scroll(
-      { x: loc.x + loc.width * 2, y: loc.y + loc.height / 2 },
-      { x: loc.x + loc.width * 8, y: loc.y + loc.height / 2 },
-      500
-    );
-
-    this.info('Swiped right on ', selector);
+  public async swipeRight() {
+    const { width, height } = await this.getWindowRect();
+    // Swipe horizontally from 20% to 80% of screen width at the vertical center
+    await this.scroll({ x: width * 0.2, y: height / 2 }, { x: width * 0.8, y: height / 2 }, 100);
   }
   public async swipeLeft(accessibilityId: AccessibilityId, text: string) {
     const el = await this.findMatchingTextAndAccessibilityId(accessibilityId, text);
@@ -2340,7 +2325,7 @@ export class DeviceWrapper {
 
   public async navigateBack(newAndroid: boolean = true) {
     if (this.isIOS()) {
-      await this.clickOnByAccessibilityID('Back');
+      await this.clickOnByAccessibilityID('BackButton');
       return;
     } else if (this.isAndroid()) {
       const newLocator = {
