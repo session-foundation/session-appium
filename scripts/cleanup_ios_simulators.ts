@@ -15,7 +15,7 @@ import { shutdownSimulator } from './ios_shared';
  * - CI: Deletes Simulators listed in ios-simulators.json and removes the file
  *
  * Usage:
- *   yarn cleanup-simulators
+ *   pnpm cleanup-simulators
  */
 function deleteSimulator(udids: string[] | string): number {
   const udidArray = Array.isArray(udids) ? udids : [udids];

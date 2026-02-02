@@ -89,7 +89,7 @@ jobs:
       EMULATOR_FULL_PATH: '<just_not_empty>'
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           lfs: true
           submodules: 'recursive'

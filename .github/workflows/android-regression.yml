@@ -82,7 +82,7 @@ jobs:
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'verbose' && '1' || '0' }} # Show everything as it happens (@session-foundation/playwright-reporter/ flag)
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           lfs: true
           submodules: 'recursive'
