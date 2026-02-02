@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "scripts": {
     "cleanup-simulators": "npx ts-node scripts/cleanup_ios_simulators.ts",
-    "create-simulators": "yarn cleanup-simulators && npx ts-node scripts/create_ios_simulators.ts",
-    "lint": "yarn prettier . --write --cache && yarn eslint . --cache ",
-    "lint-check": "yarn prettier . --check && yarn eslint .",
+    "create-simulators": "pnpm cleanup-simulators && npx ts-node scripts/create_ios_simulators.ts",
+    "lint": "pnpm prettier . --write --cache && pnpm eslint . --cache ",
+    "lint-check": "pnpm prettier . --check && pnpm eslint .",
     "tsc": "tsc",
-    "tsc-watch": "tsc -w",
+    "watch": "tsc -w",
     "test": "npx playwright test --grep ",
     "test-no-retry": "_TESTING=1 npx playwright test --grep ",
     "test-one": "_TESTING=1 _FORCE_LOGS=0 npx playwright test --grep",
@@ -35,6 +35,7 @@
     "@typescript-eslint/parser": "^5.59.5",
     "@wdio/types": "^8.1.2",
     "allure-commandline": "^2.34.0",
+    "allure-js-commons": "^3.4.5",
     "allure-playwright": "^3.2.2",
     "eslint": "^9.14.0",
     "eslint-plugin-perfectionist": "^4.15.0",
@@ -54,31 +55,33 @@
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.15.0",
     "undici": "^7.19.1",
+    "uuid": "^13.0.0",
     "wd": "^1.14.0",
     "wdio-wait-for": "^2.2.6"
   },
   "license": "MIT",
   "engines": {
-    "node": ">=24",
-    "pnpm": "use yarn",
-    "yarn": ">=4",
-    "npm": "use yarn"
+    "node": "24.12.0",
+    "pnpm": "10.28.1"
   },
   "dependencies": {
     "@playwright/test": "^1.45.1",
-    "@session-foundation/playwright-reporter": "^0.0.7",
-    "@session-foundation/qa-seeder": "^0.1.20",
+    "@session-foundation/playwright-reporter": "^0.0.8",
+    "@session-foundation/qa-seeder": "0.1.20",
     "appium": "^2.4.1",
-    "appium-uiautomator2-driver": "patch:appium-uiautomator2-driver@npm%3A3.8.2#~/patches/appium-uiautomator2-driver-npm-3.8.2-1ce2a0f39e.patch",
+    "appium-uiautomator2-driver": "3.8.2",
     "appium-xcuitest-driver": "^7.26.0",
     "dotenv": "^16.4.5"
   },
-  "packageManager": "yarn@4.1.1",
-  "resolutions": {
-    "@appium/support@npm:^5.1.6": "patch:@appium/support@npm%3A5.1.2#~/patches/@appium-support-npm-5.1.2-0c5ea57d71.patch",
-    "@appium/support@npm:^5.1.2": "patch:@appium/support@npm%3A5.1.2#~/patches/@appium-support-npm-5.1.2-0c5ea57d71.patch",
-    "@appium/support@npm:^5.0.3": "patch:@appium/support@npm%3A5.1.2#~/patches/@appium-support-npm-5.1.2-0c5ea57d71.patch",
-    "@appium/support@npm:^5.1.1": "patch:@appium/support@npm%3A5.1.2#~/patches/@appium-support-npm-5.1.2-0c5ea57d71.patch",
-    "sharp": "^0.34.1"
+  "packageManager": "pnpm@10.28.1",
+  "pnpm": {
+    "patchedDependencies": {
+      "appium-uiautomator2-driver@3.8.2": "patches/appium-uiautomator2-driver-npm-3.8.2-1ce2a0f39e.patch",
+      "@appium/support@5.1.2": "patches/@appium-support-npm-5.1.2-0c5ea57d71.patch"
+    },
+    "overrides": {
+      "@appium/support": "5.1.2",
+      "sharp": "^0.34.1"
+    }
   }
 }

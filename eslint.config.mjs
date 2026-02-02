@@ -15,13 +15,14 @@ export default tseslint.config(
   {
     ignores: [
       '**/node_modules/**',
-      '.yarn/',
+      '.pnpm-store/',
       'eslint.config.mjs',
       'run/**/*.js',
       'scripts/*.js',
       'avd/',
       'allure*/',
       'run/localizer/*',
+      'pnpm-lock.yaml',
     ],
   },
   eslint.configs.recommended,

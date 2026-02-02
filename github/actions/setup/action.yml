@@ -5,30 +5,28 @@ description: Setup environment for both platforms (node,deps,start appium)
 runs:
   using: 'composite'
   steps:
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+
     - uses: actions/setup-node@v4
       with:
         node-version-file: '.nvmrc'
-
-    - name: Install yarn
-      shell: bash
-      run: |
-        npm install -g yarn
-        corepack enable
-        yarn set version 4.1.1
+        cache: 'pnpm'
 
     - name: Install test dependencies
       shell: bash
       run: |
         ls
         git status
-        yarn install --immutable
+        pnpm install --frozen-lockfile
 
     - name: Start Appium server
       shell: bash
       run: |
-        yarn "./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --allow-cors"
+        pnpm start-server &
+        sleep 5
 
     - name: Build the tests files
       shell: bash
       run: |
-        yarn tsc
+        pnpm tsc

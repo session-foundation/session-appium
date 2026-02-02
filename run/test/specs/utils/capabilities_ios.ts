@@ -91,8 +91,8 @@ function loadSimulators(): Simulator[] {
   // Local dev with no .env entries
   throw new Error(
     'No iOS simulators found in .env\n' +
-      'Run: yarn create-simulators <number>\n' +
-      'Example: yarn create-simulators 4'
+      'Run: pnpm create-simulators <number>\n' +
+      'Example: pnpm create-simulators 4'
   );
 }
 const simulators = loadSimulators();
