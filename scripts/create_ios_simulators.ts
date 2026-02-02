@@ -25,8 +25,8 @@ import { sleepSync } from './shared';
  * - CI: Creates ios-simulators.json for persistent Simulator tracking
  *
  * Usage:
- *   yarn create-simulators 4   # Local: 4 Simulators
- *   CI=1 yarn create-simulators 12  # For CI: 12 Simulators
+ *   pnpm create-simulators 4   # Local: 4 Simulators
+ *   CI=1 pnpm create-simulators 12  # For CI: 12 Simulators
  */
 
 type SimulatorConfig = {
@@ -194,7 +194,7 @@ const numSimulatorsArg = process.argv[2];
 
 if (!numSimulatorsArg) {
   console.error('Error: Number of Simulators required');
-  console.error('Usage: yarn create-simulators <number>');
+  console.error('Usage: pnpm create-simulators <number>');
   process.exit(1);
 }
 
@@ -202,7 +202,7 @@ const numSimulators = parseInt(numSimulatorsArg);
 
 if (isNaN(numSimulators) || numSimulators < 1) {
   console.error('Error: Invalid number of Simulators');
-  console.error('Usage: yarn create-simulators <number>');
+  console.error('Usage: pnpm create-simulators <number>');
   process.exit(1);
 }
 
