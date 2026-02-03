@@ -29,27 +29,28 @@
     "@types/fs-extra": "^11",
     "@types/gh-pages": "^6",
     "@types/lodash": "^4.14.191",
-    "@types/node": "24",
-    "@types/sinon": "^17.0.3",
-    "@typescript-eslint/eslint-plugin": "^5.51.0",
-    "@typescript-eslint/parser": "^5.59.5",
-    "@wdio/types": "^8.1.2",
+    "@types/node": "^25.2.0",
+    "@types/sinon": "^21.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
+    "@wdio/types": "^9.23.3",
     "allure-commandline": "^2.34.0",
     "allure-js-commons": "^3.4.5",
     "allure-playwright": "^3.2.2",
     "eslint": "^9.14.0",
-    "eslint-plugin-perfectionist": "^4.15.0",
+    "eslint-plugin-perfectionist": "^5.4.0",
     "fs-extra": "^11.3.0",
     "fuse.js": "^7.1.0",
     "gh-pages": "^6.3.0",
-    "glob": "^11.0.3",
-    "globals": "^15.12.0",
+    "glob": "^13.0.0",
+    "globals": "^17.3.0",
     "lodash": "^4.17.21",
     "looks-same": "^9.0.1",
     "png-js": "^1.0.0",
     "prettier": "^3.3.3",
     "sharp": "^0.34.2",
-    "sinon": "^19.0.2",
+    "sinon": "^21.0.1",
+    "source-map-support": "^0.5.21",
     "ssim.js": "^3.5.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.6.3",
@@ -63,23 +64,31 @@
     "pnpm": "10.28.1"
   },
   "dependencies": {
+    "@appium/support": "^7.0.5",
     "@playwright/test": "^1.58.1",
     "@session-foundation/playwright-reporter": "^0.0.8",
     "@session-foundation/qa-seeder": "0.1.20",
     "appium": "^3.2.0",
     "appium-uiautomator2-driver": "^6.7.13",
     "appium-xcuitest-driver": "^10.19.1",
-    "dotenv": "^16.4.5"
+    "dotenv": "^17.2.3"
   },
   "packageManager": "pnpm@10.28.1",
   "pnpm": {
     "patchedDependencies": {
-      "@appium/support@5.1.2": "patches/@appium-support-npm-5.1.2-0c5ea57d71.patch",
       "appium-uiautomator2-driver": "patches/appium-uiautomator2-driver.patch"
     },
     "overrides": {
-      "@appium/support": "5.1.2",
       "sharp": "^0.34.1"
-    }
+    },
+    "ignoredBuiltDependencies": [
+      "appium-ios-tuntap",
+      "edgedriver",
+      "geckodriver"
+    ],
+    "onlyBuiltDependencies": [
+      "appium",
+      "sharp"
+    ]
   }
 }

@@ -5,7 +5,7 @@ import { existsSync, readFileSync } from 'fs';
 
 import { IntRange } from '../../../types/RangeType';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const iosPathPrefix = process.env.IOS_APP_PATH_PREFIX;
 

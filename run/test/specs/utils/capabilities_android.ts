@@ -8,7 +8,7 @@ import { isString } from 'lodash';
 
 import { getAndroidApk } from './binaries';
 import { CapabilitiesIndexType } from './capabilities_ios';
-dotenv.config();
+dotenv.config({ quiet: true });
 // Access the environment variable
 
 // Concatenate the environment variable with the fixed part of the path
