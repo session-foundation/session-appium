@@ -1230,19 +1230,24 @@ export class DeviceWrapper {
 
     if (element) {
       // Elements can disappear in the GUI but still be present in the DOM
+      let isVisible: boolean;
       try {
-        const isVisible = await this.isVisible(element.ELEMENT);
-        if (isVisible) {
-          throw new Error(
-            `Element with ${description} is visible after ${maxWait}ms when it should not be`
-          );
-        }
-        // Element exists but not visible - that's okay
-        this.log(`Element with ${description} exists but is not visible`);
+        isVisible = await this.isVisible(element.ELEMENT);
       } catch (e) {
-        // Stale element or other error - element is gone, that's okay
-        this.log(`Element with ${description} is not present (stale reference)`);
+        // Stale reference or other error checking visibility
+        const errorMsg = e instanceof Error ? e.message : String(e);
+        throw new Error(
+          `Element with ${description} has stale reference or error checking visibility: ${errorMsg}`
+        );
       }
+
+      if (isVisible) {
+        throw new Error(
+          `Element with ${description} is visible after ${maxWait}ms when it should not be`
+        );
+      }
+      // Element exists but not visible - that's okay
+      this.log(`Element with ${description} exists but is not visible`);
     } else {
       this.log(`Verified no element with ${description} is present`);
     }
