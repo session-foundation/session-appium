@@ -367,7 +367,7 @@ export class UpdateGroupInformation extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'Username',
-          text: groupName
+          text: groupName,
         };
       }
     }
