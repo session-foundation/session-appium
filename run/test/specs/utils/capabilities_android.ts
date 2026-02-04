@@ -1,8 +1,8 @@
 import {
   AppiumAndroidCapabilities,
   AppiumCapabilities,
-  W3CCapabilities,
 } from '@wdio/types/build/Capabilities';
+import { W3CUiautomator2DriverCaps } from 'appium-uiautomator2-driver/build/lib/types';
 import dotenv from 'dotenv';
 import { isString } from 'lodash';
 
@@ -84,7 +84,7 @@ function getAllCaps() {
   return emulatorCaps;
 }
 
-export function getAndroidCapabilities(capabilitiesIndex: CapabilitiesIndexType): W3CCapabilities {
+export function getAndroidCapabilities(capabilitiesIndex: CapabilitiesIndexType): W3CUiautomator2DriverCaps {
   const allCaps = getAllCaps();
   if (capabilitiesIndex >= allCaps.length) {
     throw new Error(`Asked invalid android capability index: ${capabilitiesIndex}`);
@@ -93,7 +93,7 @@ export function getAndroidCapabilities(capabilitiesIndex: CapabilitiesIndexType)
   return {
     firstMatch: [{}, {}],
     alwaysMatch: { ...cap },
-  };
+  } as W3CUiautomator2DriverCaps;
 }
 export function getAndroidUdid(udidIndex: CapabilitiesIndexType): string {
   const allCaps = getAllCaps();
