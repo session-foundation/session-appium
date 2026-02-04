@@ -68,6 +68,7 @@ async function blindedMessageRequests(platform: SupportedPlatformsType, testInfo
   });
   await test.step(TestSteps.SEND.MESSAGE(alice.userName, bob.userName), async () => {
     await device1.clickOnElementAll(new CommunityMessageAuthor(device1, message));
+    await sleepFor(500); // brief sleep to let the UI settle
     await device1.clickOnElementAll(new UPMMessageButton(device1));
     await device1.clickOnElementAll(new ConversationHeaderName(device1, bob.userName));
     await device1.waitForTextElementToBePresent(new MessageRequestPendingDescription(device1));

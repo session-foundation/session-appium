@@ -34,6 +34,7 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
     env: {
       debugDisappearingMessageDurations: 'true',
       communityPollLimit: '3',
+      animationsEnabled: 'false',
     },
   },
 } as AppiumXCUITestCapabilities;

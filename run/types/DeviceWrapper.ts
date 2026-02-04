@@ -2282,11 +2282,13 @@ export class DeviceWrapper {
 
     this.info('Swiped left on ', selector);
   }
+
+  // Swipe horizontally from 20% to 80% of screen width at the vertical center
   public async swipeRight() {
     const { width, height } = await this.getWindowRect();
-    // Swipe horizontally from 20% to 80% of screen width at the vertical center
     await this.scroll({ x: width * 0.2, y: height / 2 }, { x: width * 0.8, y: height / 2 }, 100);
   }
+
   public async swipeLeft(accessibilityId: AccessibilityId, text: string) {
     const el = await this.findMatchingTextAndAccessibilityId(accessibilityId, text);
 
@@ -2306,14 +2308,19 @@ export class DeviceWrapper {
     // let some time for swipe action to happen and UI to update
   }
 
+  // Swipe vertically from 70% to 30% of screen height at the horizontal center
   public async scrollDown() {
-    await this.scroll({ x: 760, y: 1500 }, { x: 760, y: 710 }, 100);
+    const { width, height } = await this.getWindowRect();
+    await this.scroll({ x: width / 2, y: height * 0.7 }, { x: width / 2, y: height * 0.3 }, 100);
   }
 
+  // Swipe vertically from 30% to 70% of screen height at the horizontal center
   public async scrollUp() {
-    await this.scroll({ x: 760, y: 710 }, { x: 760, y: 1500 }, 100);
+    const { width, height } = await this.getWindowRect();
+    await this.scroll({ x: width / 2, y: height * 0.3 }, { x: width / 2, y: height * 0.7 }, 100);
   }
 
+  // Swipe vertically from 95% to 35% of screen height at the horizontal center
   public async swipeFromBottom(): Promise<void> {
     const { width, height } = await this.getWindowRect();
 
