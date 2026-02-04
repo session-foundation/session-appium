@@ -1,8 +1,10 @@
+import type { Constraints, DefaultCreateSessionResult } from '@appium/types';
+
 import { getImageOccurrence } from '@appium/opencv';
 import { TestInfo } from '@playwright/test';
-import { W3CCapabilities } from '@wdio/types/build/Capabilities';
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
-import { XCUITestDriver } from 'appium-xcuitest-driver/build/lib/driver';
+import { W3CUiautomator2DriverCaps } from 'appium-uiautomator2-driver/build/lib/types';
+import { W3CXCUITestDriverCaps, XCUITestDriver } from 'appium-xcuitest-driver/build/lib/driver';
 import fs from 'fs/promises';
 import Fuse from 'fuse.js';
 import { isArray, isEmpty } from 'lodash';
@@ -259,7 +261,7 @@ export class DeviceWrapper {
       return;
     }
     if (this.isAndroid()) {
-      await this.toAndroid().mobileClickGesture({ x: xCoOrdinates, y: yCoOrdinates });
+      await this.toAndroid().mobileClickGesture(undefined, xCoOrdinates, yCoOrdinates);
       return;
     }
   }
@@ -304,9 +306,11 @@ export class DeviceWrapper {
   }
 
   // Session management
-  public async createSession(caps: W3CCapabilities): Promise<[string, Record<string, any>]> {
-    const createSession: string = await this.toShared().createSession(caps);
-    return [createSession, caps];
+  public async createSession(
+    caps: W3CUiautomator2DriverCaps | W3CXCUITestDriverCaps
+  ): Promise<DefaultCreateSessionResult<Constraints>> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- Driver's createSession is typed as Promise<any>, but actually returns the correct tuple
+    return this.toShared().createSession(caps);
   }
 
   public async deleteSession(): Promise<void> {
@@ -615,10 +619,12 @@ export class DeviceWrapper {
       const duration = Math.floor(durationMs / 1000);
       return this.toIOS().mobileTouchAndHold(duration, undefined, undefined, element.ELEMENT);
     }
-    return this.toAndroid().mobileLongClickGesture({
-      elementId: element.ELEMENT,
-      duration: durationMs,
-    });
+    return this.toAndroid().mobileLongClickGesture(
+      element.ELEMENT,
+      undefined,
+      undefined,
+      durationMs
+    );
   }
 
   public async clickOnByAccessibilityID(
