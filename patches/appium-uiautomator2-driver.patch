@@ -1,9 +1,9 @@
 diff --git a/build/lib/driver.js b/build/lib/driver.js
-index 4287b4fc525093dee083bd37869947902bcc0398..8635fd3d871c55d7e54e22246f9b4b90fbd5686a 100644
+index 2c41640be82d900b75177b49f7a24f4d3c0d5e58..2e7efb2641be7dfad5eb031c1a6734c6f34168c2 100644
 --- a/build/lib/driver.js
 +++ b/build/lib/driver.js
-@@ -60,7 +60,7 @@ const screenshot_1 = require("./commands/screenshot");
- const viewport_1 = require("./commands/viewport");
+@@ -36,7 +36,7 @@ const viewport_1 = require("./commands/viewport");
+ const execute_method_map_1 = require("./execute-method-map");
  // The range of ports we can use on the system for communicating to the
  // UiAutomator2 HTTP server on the device
 -const DEVICE_PORT_RANGE = [8200, 8299];
