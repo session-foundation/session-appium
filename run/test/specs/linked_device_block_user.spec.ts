@@ -35,6 +35,7 @@ async function blockUserInConversationOptions(
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   // Select Block option
   await sleepFor(500);
+  await alice1.onIOS().scrollDown(); // Blind scroll because Block option is obscured by system UI on iOS
   await alice1.clickOnElementAll(new BlockUser(alice1));
   await alice1.checkModalStrings(
     englishStrippedStr('block').toString(),
