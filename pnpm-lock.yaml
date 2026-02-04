@@ -27,8 +27,8 @@ importers:
         specifier: ^0.0.8
         version: 0.0.8
       '@session-foundation/qa-seeder':
-        specifier: ^0.1.26
-        version: 0.1.26
+        specifier: 0.1.25
+        version: 0.1.25
       appium:
         specifier: ^2.4.1
         version: 2.19.0
@@ -138,6 +138,9 @@ importers:
       typescript-eslint:
         specifier: ^8.15.0
         version: 8.54.0(eslint@9.39.2)(typescript@5.9.3)
+      undici:
+        specifier: ^7.19.1
+        version: 7.20.0
       uuid:
         specifier: ^13.0.0
         version: 13.0.0
@@ -487,8 +490,8 @@ packages:
   '@session-foundation/playwright-reporter@0.0.8':
     resolution: {integrity: sha512-VvEWcl1JgQBqTdiSxhsL/RKZziuXHa+5uginn6F2LDAnKxidNUcB6SnCfXfyr+C0+9YQqQjmkBhYtxYJMJWcWw==}
 
-  '@session-foundation/qa-seeder@0.1.26':
-    resolution: {integrity: sha512-VkwcDJPjaO79xYMZ/fc3aJxbYMKmNf7JxW7IoFfvhWL+1oI1D5FWC8SbC+rEFaxc7wU/bf8wR9QJZ1pHusXwIA==}
+  '@session-foundation/qa-seeder@0.1.25':
+    resolution: {integrity: sha512-VSVrjLhZPt+l4luNNd38RilFmWRaWysRd0kAq7s+Zq+W6ZnUAAI7lU6WD82TsBWa+b545kzr8XyKryp4MuLwjw==}
 
   '@session-foundation/sodium@0.0.6':
     resolution: {integrity: sha512-PDecdG3LR9rOinPHGVlTaJc1E0e2SS6ctfFhfgrEbEW3ZWymLXO5D36oAfNY1yuxM2QyiXCO+L99IPv4biGZgw==}
@@ -3255,6 +3258,10 @@ packages:
   undici-types@7.16.0:
     resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
 
+  undici@7.20.0:
+    resolution: {integrity: sha512-MJZrkjyd7DeC+uPZh+5/YaMDxFiiEEaDgbUSVMXayofAkDWF1088CDo+2RPg7B1BuS1qf1vgNE7xqwPxE0DuSQ==}
+    engines: {node: '>=20.18.1'}
+
   universalify@0.1.2:
     resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}
     engines: {node: '>= 4.0.0'}
@@ -3958,7 +3965,7 @@ snapshots:
     dependencies:
       lodash: 4.17.23
 
-  '@session-foundation/qa-seeder@0.1.26':
+  '@session-foundation/qa-seeder@0.1.25':
     dependencies:
       '@session-foundation/basic-types': 0.0.6
       '@session-foundation/libsession-wasm': 0.0.10
@@ -7158,6 +7165,8 @@ snapshots:
   undici-types@6.21.0: {}
 
   undici-types@7.16.0: {}
+
+  undici@7.20.0: {}
 
   universalify@0.1.2: {}
 
