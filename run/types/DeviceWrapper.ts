@@ -306,7 +306,9 @@ export class DeviceWrapper {
   }
 
   // Session management
-  public async createSession(caps: W3CUiautomator2DriverCaps | W3CXCUITestDriverCaps): Promise<DefaultCreateSessionResult<Constraints>> {
+  public async createSession(
+    caps: W3CUiautomator2DriverCaps | W3CXCUITestDriverCaps
+  ): Promise<DefaultCreateSessionResult<Constraints>> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- Driver's createSession is typed as Promise<any>, but actually returns the correct tuple
     return this.toShared().createSession(caps);
   }

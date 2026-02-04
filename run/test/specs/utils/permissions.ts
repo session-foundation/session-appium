@@ -1,5 +1,9 @@
 import { TestInfo } from '@playwright/test';
-import { W3CXCUITestDriverCaps, XCUITestDriver, XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
+import {
+  W3CXCUITestDriverCaps,
+  XCUITestDriver,
+  XCUITestDriverOpts,
+} from 'appium-xcuitest-driver/build/lib/driver';
 
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { AllowPermissionLocator, DenyPermissionLocator } from '../locators/global';
