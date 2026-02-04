@@ -1,11 +1,11 @@
 import { AppiumXCUITestCapabilities } from '@wdio/types/build/Capabilities';
-import { W3CCapabilities } from '@wdio/types/build/Capabilities';
+import { W3CXCUITestDriverCaps } from 'appium-xcuitest-driver/build/lib/driver';
 import dotenv from 'dotenv';
 import { existsSync, readFileSync } from 'fs';
 
 import { IntRange } from '../../../types/RangeType';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const iosPathPrefix = process.env.IOS_APP_PATH_PREFIX;
 
@@ -125,7 +125,7 @@ export function capabilityIsValid(
 export function getIosCapabilities(
   capabilitiesIndex: CapabilitiesIndexType,
   customInstallTime?: string
-): W3CCapabilities {
+): W3CXCUITestDriverCaps {
   if (capabilitiesIndex >= capabilities.length) {
     throw new Error(
       `Asked invalid ios cap index: ${capabilitiesIndex}. Number of iOS capabilities: ${capabilities.length}.`
@@ -153,7 +153,7 @@ export function getIosCapabilities(
   return {
     firstMatch: [{}],
     alwaysMatch: caps,
-  };
+  } as W3CXCUITestDriverCaps;
 }
 
 export function getCapabilitiesForWorker(workerId: number) {
