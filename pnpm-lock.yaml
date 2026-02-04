@@ -26,8 +26,8 @@ importers:
         specifier: ^0.0.8
         version: 0.0.8
       '@session-foundation/qa-seeder':
-        specifier: 0.1.25
-        version: 0.1.25
+        specifier: ^0.1.26
+        version: 0.1.26
       appium:
         specifier: ^3.2.0
         version: 3.2.0
@@ -143,9 +143,6 @@ importers:
       typescript-eslint:
         specifier: ^8.15.0
         version: 8.54.0(eslint@9.39.2)(typescript@5.9.3)
-      undici:
-        specifier: ^7.19.1
-        version: 7.20.0
       uuid:
         specifier: ^13.0.0
         version: 13.0.0
@@ -489,8 +486,8 @@ packages:
   '@session-foundation/playwright-reporter@0.0.8':
     resolution: {integrity: sha512-VvEWcl1JgQBqTdiSxhsL/RKZziuXHa+5uginn6F2LDAnKxidNUcB6SnCfXfyr+C0+9YQqQjmkBhYtxYJMJWcWw==}
 
-  '@session-foundation/qa-seeder@0.1.25':
-    resolution: {integrity: sha512-VSVrjLhZPt+l4luNNd38RilFmWRaWysRd0kAq7s+Zq+W6ZnUAAI7lU6WD82TsBWa+b545kzr8XyKryp4MuLwjw==}
+  '@session-foundation/qa-seeder@0.1.26':
+    resolution: {integrity: sha512-VkwcDJPjaO79xYMZ/fc3aJxbYMKmNf7JxW7IoFfvhWL+1oI1D5FWC8SbC+rEFaxc7wU/bf8wR9QJZ1pHusXwIA==}
 
   '@session-foundation/sodium@0.0.6':
     resolution: {integrity: sha512-PDecdG3LR9rOinPHGVlTaJc1E0e2SS6ctfFhfgrEbEW3ZWymLXO5D36oAfNY1yuxM2QyiXCO+L99IPv4biGZgw==}
@@ -3508,7 +3505,7 @@ snapshots:
     dependencies:
       lodash: 4.17.23
 
-  '@session-foundation/qa-seeder@0.1.25':
+  '@session-foundation/qa-seeder@0.1.26':
     dependencies:
       '@session-foundation/basic-types': 0.0.6
       '@session-foundation/libsession-wasm': 0.0.10
