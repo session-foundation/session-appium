@@ -35,6 +35,7 @@ export type AllureSuiteConfig =
   | {
       parent: 'User Actions';
       suite:
+        | 'Ban/Unban'
         | 'Block/Unblock'
         | 'Change Profile Picture'
         | 'Change Username'
