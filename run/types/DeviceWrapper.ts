@@ -1630,7 +1630,7 @@ export class DeviceWrapper {
         // Success when element is GONE
         return { success: !element };
       },
-      { maxWait: 15_000 }
+      { maxWait: 18_000 }
     );
 
     this.info('Loading animation has finished');

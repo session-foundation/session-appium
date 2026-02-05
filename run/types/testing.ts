@@ -530,6 +530,7 @@ export type Id =
   | 'network.loki.messenger:id/callSubtitle'
   | 'network.loki.messenger:id/callTitle'
   | 'network.loki.messenger:id/characterLimitText'
+  | 'network.loki.messenger:id/context_menu_item_title'
   | 'network.loki.messenger:id/crop_image_menu_crop'
   | 'network.loki.messenger:id/emptyStateContainer'
   | 'network.loki.messenger:id/endCallButton'
