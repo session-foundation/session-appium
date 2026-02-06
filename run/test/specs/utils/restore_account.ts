@@ -15,9 +15,11 @@ import { handleNotificationPermissions } from './permissions';
 export const restoreAccount = async (
   device: DeviceWrapper,
   user: User,
+  deviceIdentity: string,
   options?: BaseSetupOptions
 ) => {
   const { allowNotificationPermissions = false } = options || {};
+  device.setDeviceIdentity(deviceIdentity);
   await device.clickOnElementAll(new AccountRestoreButton(device));
   await device.inputText(user.recoveryPhrase, new SeedPhraseInput(device));
   // Wait for continue button to become active
