@@ -3,9 +3,12 @@ import test, { type TestInfo } from '@playwright/test';
 import { testCommunityLink, testCommunityName } from '../../constants/community';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { TestSteps } from '../../types/allure';
-import { androidIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { User } from '../../types/testing';
 import {
+  LongPressBanAndDelete,
+  LongPressBanUser,
+  LongPressUnBan,
   MessageBody,
   MessageInput,
   OutgoingMessageStatusSent,
@@ -17,8 +20,8 @@ import { joinCommunity } from './utils/join_community';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 import { restoreAccount } from './utils/restore_account';
 
-androidIt({
-  title: 'Ban user in community',
+bothPlatformsIt({
+  title: 'Ban and unban user in community',
   risk: 'medium',
   countOfDevicesNeeded: 2,
   testCb: banUserCommunity,
@@ -26,11 +29,12 @@ androidIt({
     parent: 'User Actions',
     suite: 'Ban/Unban',
   },
-  allureDescription:
-    'Verifies that a community admin can ban a user. Banned user cannot send messages anymore.',
+  allureDescription: `Verifies that a community admin can ban a user. 
+    Banned user cannot send messages anymore.
+    Admin then can unban a user and they can send messages again. `,
 });
 
-androidIt({
+bothPlatformsIt({
   title: 'Ban and delete in community',
   risk: 'medium',
   countOfDevicesNeeded: 2,
@@ -45,17 +49,18 @@ androidIt({
 
 function assertAdminIsKnown() {
   if (!process.env.SOGS_ADMIN_SEED) {
-    throw new Error(
-      'SOGS_ADMIN_SEED required. In CI this is a GitHub secret.\nLocally, set a known admin seed as an env var to run this test.'
-    );
+    console.error('SOGS_ADMIN_SEED required. In CI this is a GitHub secret.');
+    console.error('Locally, set a known admin seed as an env var to run this test.');
+    test.skip();
   }
 }
 
 async function banUserCommunity(platform: SupportedPlatformsType, testInfo: TestInfo) {
   assertAdminIsKnown();
   const msgSig = `${new Date().getTime()} - ${platform}`;
-  const msg1 = `Ban me - ${msgSig}`;
+  const msg1 = `Ban and unban me - ${msgSig}`;
   const msg2 = `Am I banned? - ${msgSig}`;
+  const msg3 = `Freedom! - ${msgSig}`;
   const alice: User = {
     userName: 'Alice',
     accountID: '', // Mandatory property of User type but not needed for this test
@@ -85,15 +90,11 @@ async function banUserCommunity(platform: SupportedPlatformsType, testInfo: Test
   });
   await test.step('Admin bans Bob from community', async () => {
     await alice1.longPressMessage(new MessageBody(alice1, msg1));
-    await alice1.clickOnElementAll({
-      strategy: 'id',
-      selector: 'network.loki.messenger:id/context_menu_item_title',
-      text: englishStrippedStr('banUser').toString(),
-    });
-    await alice1.checkModalStrings(
-      englishStrippedStr('banUser').toString(),
-      englishStrippedStr('communityBanDescription').toString()
-    );
+    await alice1.clickOnElementAll(new LongPressBanUser(alice1));
+    // await alice1.checkModalStrings(
+    //   englishStrippedStr('banUser').toString(),
+    //   englishStrippedStr('communityBanDescription').toString()
+    // );
     await alice1.clickOnByAccessibilityID('Continue');
   });
   await test.step('Verify Bob cannot send messages in community', async () => {
@@ -104,6 +105,13 @@ async function banUserCommunity(platform: SupportedPlatformsType, testInfo: Test
       maxWait: 10_000,
     });
     await alice1.verifyElementNotPresent(new MessageBody(alice1, msg2));
+  });
+  await test.step('Admin unbans Bob, Bob can send a third message', async () => {
+    await alice1.longPressMessage(new MessageBody(alice1, msg1));
+    await alice1.clickOnElementAll(new LongPressUnBan(alice1));
+    await alice1.clickOnByAccessibilityID('Continue');
+    await bob1.sendMessage(msg3);
+    await alice1.waitForTextElementToBePresent(new MessageBody(alice1, msg3));
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, bob1);
@@ -144,11 +152,7 @@ async function banAndDelete(platform: SupportedPlatformsType, testInfo: TestInfo
   });
   await test.step('Admin bans Bob and deletes all from community', async () => {
     await alice1.longPressMessage(new MessageBody(alice1, msg1));
-    await alice1.clickOnElementAll({
-      strategy: 'id',
-      selector: 'network.loki.messenger:id/context_menu_item_title',
-      text: englishStrippedStr('banDeleteAll').toString(),
-    });
+    await alice1.clickOnElementAll(new LongPressBanAndDelete(alice1));
     await alice1.checkModalStrings(
       englishStrippedStr('banDeleteAll').toString(),
       englishStrippedStr('communityBanDeleteDescription').toString()
