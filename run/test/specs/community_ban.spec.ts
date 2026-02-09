@@ -83,10 +83,10 @@ async function banUserCommunity(platform: SupportedPlatformsType, testInfo: Test
   await test.step('Admin bans Bob from community', async () => {
     await alice1.longPressMessage(new MessageBody(alice1, msg1));
     await alice1.clickOnElementAll(new LongPressBanUser(alice1));
-    // await alice1.checkModalStrings(
-    //   englishStrippedStr('banUser').toString(),
-    //   englishStrippedStr('communityBanDescription').toString()
-    // );
+    await alice1.checkModalStrings(
+      englishStrippedStr('banUser').toString(),
+      englishStrippedStr('communityBanDescription').toString()
+    );
     await alice1.clickOnByAccessibilityID('Continue');
   });
   await test.step('Verify Bob cannot send messages in community', async () => {

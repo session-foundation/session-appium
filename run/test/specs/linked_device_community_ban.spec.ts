@@ -32,7 +32,7 @@ bothPlatformsIt({
   },
   allureDescription: `Verifies that a community admin can ban a user. 
     The banned user cannot send a message.
-    The unbanned account is restored on a second device. 
+    The banned account is restored on a second device. 
     Admin then unbans the user, and they can send messages on both devices.`,
 });
 
@@ -105,7 +105,7 @@ async function banUnbanLinked(platform: SupportedPlatformsType, testInfo: TestIn
     await restoreAccount(bob2, bob, 'bob2');
     await bob2.clickOnElementAll(new ConversationItem(alice1, 'testing-all-the-things')); // Since we're banned we don't get the "real" name
     await bob2.waitForTextElementToBePresent(new EmptyConversation(bob2));
-    await bob2.waitForTextElementToBePresent({
+    await bob2.onIOS().waitForTextElementToBePresent({
       strategy: 'xpath',
       selector: `//XCUIElementTypeStaticText`,
       text: englishStrippedStr('permissionsWriteCommunity').toString(),
