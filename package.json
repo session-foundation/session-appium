@@ -4,6 +4,7 @@
   "scripts": {
     "cleanup-simulators": "npx ts-node scripts/cleanup_ios_simulators.ts",
     "create-simulators": "pnpm cleanup-simulators && npx ts-node scripts/create_ios_simulators.ts",
+    "recover-emulators": "npx ts-node scripts/emulator_health.ts",
     "lint": "pnpm prettier . --write --cache && pnpm eslint . --cache ",
     "lint-check": "pnpm prettier . --check && pnpm eslint .",
     "tsc": "tsc",
