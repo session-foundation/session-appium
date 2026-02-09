@@ -105,7 +105,7 @@ async function banUnbanLinked(platform: SupportedPlatformsType, testInfo: TestIn
     await restoreAccount(bob2, bob, 'bob2');
     await bob2.clickOnElementAll(new ConversationItem(alice1, 'testing-all-the-things')); // Since we're banned we don't get the "real" name
     await bob2.waitForTextElementToBePresent(new EmptyConversation(bob2));
-    await bob2.waitForTextElementToBePresent({
+    await bob2.onIOS().waitForTextElementToBePresent({
       strategy: 'xpath',
       selector: `//XCUIElementTypeStaticText`,
       text: englishStrippedStr('permissionsWriteCommunity').toString(),
