@@ -6,8 +6,8 @@ import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { CommunityMessageAuthor, UPMMessageButton } from './locators/conversation';
 import { sleepFor } from './utils';
+import { joinCommunity } from './utils/community';
 import { newUser } from './utils/create_account';
-import { joinCommunity } from './utils/join_community';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({

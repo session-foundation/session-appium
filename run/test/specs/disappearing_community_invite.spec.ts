@@ -13,7 +13,7 @@ import { GroupMember } from './locators/groups';
 import { ConversationItem } from './locators/home';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
-import { joinCommunity } from './utils/join_community';
+import { joinCommunity } from './utils/community';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
