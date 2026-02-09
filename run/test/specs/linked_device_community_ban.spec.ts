@@ -32,7 +32,7 @@ bothPlatformsIt({
   },
   allureDescription: `Verifies that a community admin can ban a user. 
     The banned user cannot send a message.
-    The unbanned account is restored on a second device. 
+    The banned account is restored on a second device. 
     Admin then unbans the user, and they can send messages on both devices.`,
 });
 
