@@ -92,7 +92,7 @@ async function banUnbanLinked(platform: SupportedPlatformsType, testInfo: TestIn
     await alice1.clickOnElementAll(new LongPressBanUser(alice1));
     await alice1.clickOnByAccessibilityID('Continue');
   });
-  await test.step('Verify Bob cannot send messages in community on either device', async () => {
+  await test.step('Verify Bob cannot send messages to community', async () => {
     await bob1.inputText(msg2, new MessageInput(bob1));
     await bob1.clickOnElementAll(new SendButton(bob1));
     await bob1.verifyElementNotPresent({

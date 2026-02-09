@@ -83,10 +83,12 @@ async function banUserCommunity(platform: SupportedPlatformsType, testInfo: Test
   await test.step('Admin bans Bob from community', async () => {
     await alice1.longPressMessage(new MessageBody(alice1, msg1));
     await alice1.clickOnElementAll(new LongPressBanUser(alice1));
-    await alice1.checkModalStrings(
-      englishStrippedStr('banUser').toString(),
-      englishStrippedStr('communityBanDescription').toString()
-    );
+    await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Ban User'), async () => {
+      await alice1.checkModalStrings(
+        englishStrippedStr('banUser').toString(),
+        englishStrippedStr('communityBanUserDescription').toString()
+      );
+    });
     await alice1.clickOnByAccessibilityID('Continue');
   });
   await test.step('Verify Bob cannot send messages in community', async () => {
@@ -101,6 +103,12 @@ async function banUserCommunity(platform: SupportedPlatformsType, testInfo: Test
   await test.step('Admin unbans Bob, Bob can send a third message', async () => {
     await alice1.longPressMessage(new MessageBody(alice1, msg1));
     await alice1.clickOnElementAll(new LongPressUnBan(alice1));
+    await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Unban User'), async () => {
+      await alice1.checkModalStrings(
+        englishStrippedStr('banUser').toString(),
+        englishStrippedStr('communityUnbanUserDescription').toString()
+      );
+    });
     await alice1.clickOnByAccessibilityID('Continue');
     await bob1.sendMessage(msg3);
     await alice1.waitForTextElementToBePresent(new MessageBody(alice1, msg3));
