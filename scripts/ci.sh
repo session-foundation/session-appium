@@ -92,7 +92,7 @@ function start_with_snapshots() {
     # Set window position
     sed -i "s/^window.x.*/window.x=$(( 100 + (i-1) * 400))/" "$EMU_CONFIG_FILE"
 
-    DISPLAY=:0 emulator @emulator$i -no-window -gpu swiftshader_indirect -accel on -no-snapshot-save -snapshot plop.snapshot -force-snapshot-load &
+    DISPLAY=:0 emulator @emulator$i -gpu host -accel on -no-snapshot-save -snapshot plop.snapshot -force-snapshot-load &
 
     sleep 5
   done
