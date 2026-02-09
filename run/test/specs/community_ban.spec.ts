@@ -15,8 +15,8 @@ import {
   SendButton,
 } from './locators/conversation';
 import { ConversationItem } from './locators/home';
+import { assertAdminIsKnown, joinCommunity } from './utils/community';
 import { newUser } from './utils/create_account';
-import { joinCommunity } from './utils/join_community';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 import { restoreAccount } from './utils/restore_account';
 
@@ -46,14 +46,6 @@ bothPlatformsIt({
   allureDescription:
     'Verifies that a community admin can ban a user and delete their messages. Banned user cannot send messages anymore.',
 });
-
-function assertAdminIsKnown() {
-  if (!process.env.SOGS_ADMIN_SEED) {
-    console.error('SOGS_ADMIN_SEED required. In CI this is a GitHub secret.');
-    console.error('Locally, set a known admin seed as an env var to run this test.');
-    test.skip();
-  }
-}
 
 async function banUserCommunity(platform: SupportedPlatformsType, testInfo: TestInfo) {
   assertAdminIsKnown();

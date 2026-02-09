@@ -6,7 +6,7 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { MessageBody } from './locators/conversation';
 import { open_Alice1_Bob1_friends } from './state_builder';
 import { sleepFor } from './utils';
-import { joinCommunity } from './utils/join_community';
+import { joinCommunity } from './utils/community';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({

@@ -6,7 +6,7 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { ConversationItem } from './locators/home';
 import { open_Alice2 } from './state_builder';
 import { sleepFor } from './utils';
-import { joinCommunity } from './utils/join_community';
+import { joinCommunity } from './utils/community';
 import { closeApp, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({
