@@ -68,6 +68,7 @@ export const TestSteps = {
     NEW_USER: 'Create new account',
     QA_SEEDER: 'Restore pre-seeded accounts',
     CLOSE_APP: 'Close app(s)',
+    RESTORE_ACCOUNT: (name: UserNameType) => `Restore ${name} on another device`,
   },
   // Plus Button options
   NEW_CONVERSATION: {

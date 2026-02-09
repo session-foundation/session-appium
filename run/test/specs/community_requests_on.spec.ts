@@ -16,8 +16,8 @@ import {
 import { MessageRequestsBanner } from './locators/home';
 import { CommunityMessageRequestSwitch, PrivacyMenuItem, UserSettings } from './locators/settings';
 import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
 import { joinCommunity } from './utils/community';
+import { newUser } from './utils/create_account';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 
 bothPlatformsIt({

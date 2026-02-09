@@ -150,6 +150,7 @@ export type XPath =
   | `//XCUIElementTypeStaticText[contains(@name, '00:')]`
   | `//XCUIElementTypeStaticText[contains(@name, "Version")]`
   | `//XCUIElementTypeStaticText[starts-with(@name,'${string}')]`
+  | `//XCUIElementTypeStaticText`
   | `//XCUIElementTypeSwitch[@name="Read Receipts, Send read receipts in one-to-one chats."]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`
@@ -196,7 +197,7 @@ export type AccessibilityId =
   | 'back'
   | 'Back'
   | 'BackButton'
-  | 'Ban and Delete'
+  | 'Ban and Delete All'
   | 'Ban User'
   | 'Blinded ID'
   | 'Block'

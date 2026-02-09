@@ -424,7 +424,7 @@ export class LongPressBanAndDelete extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Ban and Delete',
+          selector: 'Ban and Delete All',
         } as const;
     }
   }
