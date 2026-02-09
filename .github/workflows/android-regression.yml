@@ -209,6 +209,9 @@ jobs:
           PLATFORM: ${{ env.PLATFORM }}
           UPLOAD_IDENTIFIER: 'devices-1-test-run'
 
+      - name: Recover emulators if needed
+        run: pnpm recover-emulators
+
       - name: Run the 2-devices tests ​​with 2 workers
         continue-on-error: true
         id: devices-2-test-run
@@ -227,6 +230,9 @@ jobs:
         with:
           PLATFORM: ${{ env.PLATFORM }}
           UPLOAD_IDENTIFIER: 'devices-2-test-run'
+
+      - name: Recover emulators if needed
+        run: pnpm recover-emulators
 
       - name: Run the other tests with 1 worker
         continue-on-error: true
