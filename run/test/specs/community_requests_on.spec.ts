@@ -13,7 +13,7 @@ import {
   MessageRequestPendingDescription,
   UPMMessageButton,
 } from './locators/conversation';
-import { MessageRequestsBanner } from './locators/home';
+import { MessageRequestItem, MessageRequestsBanner } from './locators/home';
 import { CommunityMessageRequestSwitch, PrivacyMenuItem, UserSettings } from './locators/settings';
 import { sleepFor } from './utils';
 import { joinCommunity } from './utils/community';
@@ -77,7 +77,7 @@ async function blindedMessageRequests(platform: SupportedPlatformsType, testInfo
   await test.step(`${bob.userName} accepts message request from ${alice.userName}`, async () => {
     await device2.clickOnElementAll(new MessageRequestsBanner(device2));
     // Bob clicks on request conversation item
-    await device2.clickOnByAccessibilityID('Message request');
+    await device2.clickOnElementAll(new MessageRequestItem(device2));
     await device2.waitForTextElementToBePresent(
       new ConversationHeaderName(device2, alice.userName)
     );

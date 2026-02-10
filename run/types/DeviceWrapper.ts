@@ -32,6 +32,7 @@ import {
 } from '../constants/testfiles';
 import { englishStrippedStr } from '../localizer/englishStrippedStr';
 import {
+  AcceptMessageRequestButton,
   AttachmentsButton,
   DocumentsFolderButton,
   GIFButton,
@@ -53,7 +54,12 @@ import {
   ModalDescription,
   ModalHeading,
 } from '../test/specs/locators/global';
-import { ConversationItem, PlusButton } from '../test/specs/locators/home';
+import {
+  ConversationItem,
+  MessageRequestItem,
+  MessageRequestsBanner,
+  PlusButton,
+} from '../test/specs/locators/home';
 import { LoadingAnimation } from '../test/specs/locators/onboarding';
 import {
   PrivacyMenuItem,
@@ -1230,19 +1236,24 @@ export class DeviceWrapper {
 
     if (element) {
       // Elements can disappear in the GUI but still be present in the DOM
+      let isVisible: boolean;
       try {
-        const isVisible = await this.isVisible(element.ELEMENT);
-        if (isVisible) {
-          throw new Error(
-            `Element with ${description} is visible after ${maxWait}ms when it should not be`
-          );
-        }
-        // Element exists but not visible - that's okay
-        this.log(`Element with ${description} exists but is not visible`);
+        isVisible = await this.isVisible(element.ELEMENT);
       } catch (e) {
-        // Stale element or other error - element is gone, that's okay
-        this.log(`Element with ${description} is not present (stale reference)`);
+        // Stale reference or other error checking visibility
+        const errorMsg = e instanceof Error ? e.message : String(e);
+        throw new Error(
+          `Element with ${description} has stale reference or error checking visibility: ${errorMsg}`
+        );
       }
+
+      if (isVisible) {
+        throw new Error(
+          `Element with ${description} is visible after ${maxWait}ms when it should not be`
+        );
+      }
+      // Element exists but not visible - that's okay
+      this.log(`Element with ${description} exists but is not visible`);
     } else {
       this.log(`Verified no element with ${description} is present`);
     }
@@ -1772,6 +1783,12 @@ export class DeviceWrapper {
     });
 
     return message;
+  }
+
+  public async acceptMessageRequestWithButton() {
+    await this.clickOnElementAll(new MessageRequestsBanner(this));
+    await this.clickOnElementAll(new MessageRequestItem(this));
+    await this.onAndroid().clickOnElementAll(new AcceptMessageRequestButton(this));
   }
 
   public async sendMessageTo(sender: User, receiver: Group | User) {
@@ -2554,10 +2571,10 @@ export class DeviceWrapper {
     // Check features if expected
     if (features) {
       for (let i = 0; i < features.length; i++) {
-        const featureLocator = new CTAFeature(this, i + 1);
+        const featureLocator = new CTAFeature(this, i);
         const elFeature = await this.waitForTextElementToBePresent(featureLocator);
         const actualFeature = await this.getTextFromElement(elFeature);
-        this.assertTextMatches(actualFeature, features[i], `CTA feature ${i + 1}`);
+        this.assertTextMatches(actualFeature, features[i], `CTA feature ${i}`);
       }
     }
 

@@ -17,11 +17,9 @@ export const newContact = async (
   await sleepFor(100);
   await runOnlyOnIOS(platform, () => retryMsgSentForBanner(platform, device1, device2, 30000)); // this runOnlyOnIOS is needed
 
-  await device2.clickOnElementAll(new MessageRequestsBanner(device2));
-  await device2.clickOnByAccessibilityID('Message request');
-  await device2.onAndroid().clickOnByAccessibilityID('Accept message request');
+  await device2.acceptMessageRequestWithButton();
   // Type into message input box
-  const replyMessage = `Reply-message-${receiver.userName}-to-${sender.userName}`;
+  const replyMessage = `${receiver.userName} to ${sender.userName}`;
   await device2.sendMessage(replyMessage);
 
   // Verify config message states message request was accepted
