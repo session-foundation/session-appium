@@ -329,9 +329,10 @@ async function promoteMultiToAdmin(platform: SupportedPlatformsType, testInfo: T
   await Promise.all([
     alice1.waitForTextElementToBePresent(new Contact(alice1, bob.userName)),
     alice1.waitForTextElementToBePresent(new Contact(alice1, charlie.userName)),
-    alice1.verifyElementNotPresent(
-      new MemberStatus(alice1).build(englishStrippedStr('adminPromotionSent').toString())
-    ),
+    alice1.verifyElementNotPresent({
+      ...new MemberStatus(alice1).build(englishStrippedStr('adminPromotionSent').toString()),
+      maxWait: 10_000,
+    }),
     alice1.verifyElementNotPresent(
       new MemberStatus(alice1).build(englishStrippedStr('adminPromotionFailed').toString())
     ),

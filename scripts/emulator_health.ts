@@ -32,7 +32,10 @@ async function getMissingEmulators(): Promise<number[]> {
   return allNums.filter(n => !runningNums.includes(n));
 }
 
-async function waitForEmulatorBoot(emulatorNum: number, timeoutMs: number = 30_0000): Promise<boolean> {
+async function waitForEmulatorBoot(
+  emulatorNum: number,
+  timeoutMs: number = 30_0000
+): Promise<boolean> {
   const port = EMULATOR_CONFIG[emulatorNum as keyof typeof EMULATOR_CONFIG];
   const startTime = Date.now();
   const maxAttempts = Math.floor(timeoutMs / 5_000);
@@ -88,10 +91,7 @@ async function restartMissingEmulators(): Promise<void> {
     const configFile = `$HOME/.android/avd/emulator${num}.avd/emulator-user.ini`;
     const windowX = 100 + (num - 1) * 400;
 
-    await runScriptAndLog(
-      `sed -i "s/^window.x.*/window.x=${windowX}/" ${configFile}`,
-      false
-    );
+    await runScriptAndLog(`sed -i "s/^window.x.*/window.x=${windowX}/" ${configFile}`, false);
 
     await runScriptAndLog(
       `DISPLAY=:0 emulator @emulator${num} -gpu host -accel on -no-snapshot-save -snapshot plop.snapshot -force-snapshot-load &`,
@@ -106,7 +106,8 @@ async function restartMissingEmulators(): Promise<void> {
   const bootResults = await Promise.all(missing.map(num => waitForEmulatorBoot(num)));
 
   if (bootResults.every(result => result)) {
-    console.log(`\nEmulators restarted and booted successfully`);  } else {
+    console.log(`\nEmulators restarted and booted successfully`);
+  } else {
     console.log(`\nSome emulators failed to boot`);
     throw new Error('Emulator recovery failed');
   }
