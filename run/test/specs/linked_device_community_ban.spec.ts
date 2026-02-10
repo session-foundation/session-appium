@@ -1,6 +1,10 @@
 import test, { type TestInfo } from '@playwright/test';
 
-import { testCommunityLink, testCommunityName } from '../../constants/community';
+import {
+  testCommunityLink,
+  testCommunityName,
+  unresolvedTestcommunityName,
+} from '../../constants/community';
 import { englishStrippedStr } from '../../localizer/englishStrippedStr';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
@@ -92,7 +96,7 @@ async function banUnbanLinked(platform: SupportedPlatformsType, testInfo: TestIn
     await alice1.clickOnElementAll(new LongPressBanUser(alice1));
     await alice1.clickOnByAccessibilityID('Continue');
   });
-  await test.step('Verify Bob cannot send messages in community on either device', async () => {
+  await test.step('Verify Bob cannot send messages to community', async () => {
     await bob1.inputText(msg2, new MessageInput(bob1));
     await bob1.clickOnElementAll(new SendButton(bob1));
     await bob1.verifyElementNotPresent({
@@ -103,7 +107,7 @@ async function banUnbanLinked(platform: SupportedPlatformsType, testInfo: TestIn
   });
   await test.step(TestSteps.SETUP.RESTORE_ACCOUNT('Bob'), async () => {
     await restoreAccount(bob2, bob, 'bob2');
-    await bob2.clickOnElementAll(new ConversationItem(alice1, 'testing-all-the-things')); // Since we're banned we don't get the "real" name
+    await bob2.clickOnElementAll(new ConversationItem(alice1, unresolvedTestcommunityName)); // Since we're banned we don't get the "real" name
     await bob2.waitForTextElementToBePresent(new EmptyConversation(bob2));
     await bob2.onIOS().waitForTextElementToBePresent({
       strategy: 'xpath',
@@ -174,7 +178,7 @@ async function banAndDeleteLinked(platform: SupportedPlatformsType, testInfo: Te
   });
   await test.step(TestSteps.SETUP.RESTORE_ACCOUNT('Bob'), async () => {
     await restoreAccount(bob2, bob, 'bob2');
-    await bob2.clickOnElementAll(new ConversationItem(alice1, 'testing-all-the-things')); // Since we're banned we don't get the "real" name
+    await bob2.clickOnElementAll(new ConversationItem(alice1, unresolvedTestcommunityName)); // Since we're banned we don't get the "real" name
     await bob2.waitForTextElementToBePresent(new EmptyConversation(bob2));
   });
   await test.step('Verify Bob cannot send messages in community on either device', async () => {
