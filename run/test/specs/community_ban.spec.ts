@@ -59,12 +59,13 @@ async function banUserCommunity(platform: SupportedPlatformsType, testInfo: Test
     recoveryPhrase: process.env.SOGS_ADMIN_SEED!,
   };
   const { device1: alice1, device2: bob1 } = await openAppTwoDevices(platform, testInfo);
-  await test.step('Restore admin account, create new account to be banned', async () => {
-    await Promise.all([
-      restoreAccount(alice1, alice, 'alice1'),
-      newUser(bob1, 'Bob', { saveUserData: false }),
-    ]);
-  });
+  const [, bob] =
+    await test.step('Restore admin account, create new account to be banned', async () => {
+      return Promise.all([
+        restoreAccount(alice1, alice, 'alice1'),
+        newUser(bob1, 'Bob', { saveUserData: false }),
+      ]);
+    });
   await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
     const adminJoined = await alice1.doesElementExist(
       new ConversationItem(alice1, testCommunityName)
@@ -86,7 +87,9 @@ async function banUserCommunity(platform: SupportedPlatformsType, testInfo: Test
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Ban User'), async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('banUser').toString(),
-        englishStrippedStr('communityBanUserDescription').toString()
+        englishStrippedStr('communityBanUserDescription')
+          .withArgs({ name: bob.userName })
+          .toString()
       );
     });
     await alice1.clickOnByAccessibilityID('Continue');
@@ -106,7 +109,9 @@ async function banUserCommunity(platform: SupportedPlatformsType, testInfo: Test
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Unban User'), async () => {
       await alice1.checkModalStrings(
         englishStrippedStr('banUser').toString(),
-        englishStrippedStr('communityUnbanUserDescription').toString()
+        englishStrippedStr('communityUnbanUserDescription')
+          .withArgs({ name: bob.userName })
+          .toString()
       );
     });
     await alice1.clickOnByAccessibilityID('Continue');
