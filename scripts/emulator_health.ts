@@ -94,7 +94,7 @@ async function restartMissingEmulators(): Promise<void> {
     await runScriptAndLog(`sed -i "s/^window.x.*/window.x=${windowX}/" ${configFile}`, false);
 
     await runScriptAndLog(
-      `DISPLAY=:0 emulator @emulator${num} -gpu host -accel on -no-snapshot-save -snapshot plop.snapshot -force-snapshot-load &`,
+      `DISPLAY=:0 nohup emulator @emulator${num} -gpu host -accel on -no-snapshot-save -snapshot plop.snapshot -force-snapshot-load > /dev/null 2>&1 &`,
       false
     );
 
@@ -113,13 +113,22 @@ async function restartMissingEmulators(): Promise<void> {
   }
 }
 
+const SCRIPT_TIMEOUT_MS = 5 * 60_000; // 5 minutes
+
 async function main(): Promise<void> {
+  const timeout = setTimeout(() => {
+    console.error(`Script timed out after ${SCRIPT_TIMEOUT_MS / 1000}s`);
+    process.exit(1);
+  }, SCRIPT_TIMEOUT_MS);
+
   try {
     await restartMissingEmulators();
     process.exit(0);
   } catch (error) {
     console.error('Recovery failed:', error);
     process.exit(1);
+  } finally {
+    clearTimeout(timeout);
   }
 }
 
