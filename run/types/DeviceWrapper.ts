@@ -423,7 +423,7 @@ export class DeviceWrapper {
       }
 
       // Validate the candidate element
-      let isValidCandidate = true;
+      let isValidCandidate: boolean;
 
       // Always check visibility first
       try {
@@ -614,7 +614,9 @@ export class DeviceWrapper {
           skipHealing: true,
         });
       } catch (fallbackError) {
-        throw new Error(`Element ${primaryDescription} and ${fallbackDescription} not found.`);
+        throw new Error(`Element ${primaryDescription} and ${fallbackDescription} not found.`, {
+          cause: fallbackError,
+        });
       }
     }
   }
@@ -666,10 +668,8 @@ export class DeviceWrapper {
   public async clickOnElementAll(
     args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
   ) {
-    let el: AppiumNextElementType | null = null;
     const locator = args instanceof LocatorsInterface ? args.build() : args;
-
-    el = await this.waitForTextElementToBePresent({ ...locator });
+    const el = await this.waitForTextElementToBePresent({ ...locator });
     await this.click(el.ELEMENT);
     return el;
   }
@@ -880,10 +880,8 @@ export class DeviceWrapper {
   public async deleteText(
     args: LocatorsInterface | ({ text?: string; maxWait?: number } & StrategyExtractionObj)
   ) {
-    let el: AppiumNextElementType | null = null;
     const locator = args instanceof LocatorsInterface ? args.build() : args;
-
-    el = await this.waitForTextElementToBePresent({ ...locator });
+    const el = await this.waitForTextElementToBePresent({ ...locator });
     await this.click(el.ELEMENT);
     await sleepFor(100);
     const maxRetries = 3;
@@ -1242,6 +1240,7 @@ export class DeviceWrapper {
       } catch (e) {
         // Stale reference or other error checking visibility
         const errorMsg = e instanceof Error ? e.message : String(e);
+        // eslint-disable-next-line preserve-caught-error -- error message already included above
         throw new Error(
           `Element with ${description} has stale reference or error checking visibility: ${errorMsg}`
         );
@@ -1662,7 +1661,7 @@ export class DeviceWrapper {
     } = {}
   ): Promise<T | undefined> {
     const start = Date.now();
-    let elapsed = 0;
+    let elapsed: number;
     let attempt = 0;
     let lastError: string | undefined;
 
@@ -1835,12 +1834,11 @@ export class DeviceWrapper {
     textToInput: string,
     args: LocatorsInterface | ({ maxWait?: number } & StrategyExtractionObj)
   ) {
-    let el: AppiumNextElementType | null = null;
     const locator = args instanceof LocatorsInterface ? args.build() : args;
 
     this.log('Locator being used:', locator);
 
-    el = await this.waitForTextElementToBePresent({ ...locator });
+    const el = await this.waitForTextElementToBePresent({ ...locator });
     if (!el) {
       throw new Error(`inputText: Did not find element with locator: ${JSON.stringify(locator)}`);
     }
