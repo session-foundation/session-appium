@@ -62,6 +62,9 @@ on:
           - 'verbose' # Ongoing and failed test logs
         default: 'minimal'
 
+permissions:
+  contents: write
+
 jobs:
   android-regression:
     runs-on: [self-hosted, linux, X64, qa-android]

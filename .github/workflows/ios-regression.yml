@@ -63,6 +63,9 @@ on:
           - 'verbose' # All test logs - use with caution!
         default: 'minimal'
 
+permissions:
+  contents: write
+
 jobs:
   ios-regression:
     runs-on: [self-hosted, macOS]
