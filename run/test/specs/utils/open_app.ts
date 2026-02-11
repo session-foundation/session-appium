@@ -194,7 +194,7 @@ async function isEmulatorRunning(emulatorName: string) {
 
 async function waitForEmulatorToBeRunning(emulatorName: string) {
   let start = Date.now();
-  let found = false;
+  let found: boolean;
 
   do {
     found = await isEmulatorRunning(emulatorName);
