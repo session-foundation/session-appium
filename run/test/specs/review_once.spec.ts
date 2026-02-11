@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -37,8 +37,8 @@ async function reviewPromptOnce(platform: SupportedPlatformsType, testInfo: Test
   });
   await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
     await device.checkModalStrings(
-      englishStrippedStr('enjoyingSession').toString(),
-      englishStrippedStr('enjoyingSessionDescription').toString()
+      tStripped('enjoyingSession'),
+      tStripped('enjoyingSessionDescription')
     );
     await device.clickOnElementAll(new CloseSettings(device));
   });

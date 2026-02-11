@@ -1,6 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { type AccessibilityId, USERNAME } from '../../types/testing';
 import { BlockedContactsSettings } from './locators';
@@ -41,12 +41,12 @@ async function blockedRequest(platform: SupportedPlatformsType, testInfo: TestIn
   // Confirm block on android
   await sleepFor(1000);
   await device2.checkModalStrings(
-    englishStrippedStr('block').toString(),
-    englishStrippedStr('blockDescription').withArgs({ name: alice.userName }).toString()
+    tStripped('block'),
+    tStripped('blockDescription', { name: alice.userName })
   );
   await device2.clickOnByAccessibilityID('Block'); // This is an old Android modal so can't use the modern locator class
   // "messageRequestsNonePending": "No pending message requests",
-  const messageRequestsNonePending = englishStrippedStr('messageRequestsNonePending').toString();
+  const messageRequestsNonePending = tStripped('messageRequestsNonePending');
   await Promise.all([
     device2.waitForTextElementToBePresent({
       strategy: 'accessibility id',

@@ -1,6 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ConversationSettings } from './locators/conversation';
@@ -40,8 +40,8 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType, testInfo
   await sleepFor(1000);
   await device3.clickOnElementAll(new LeaveGroupMenuItem(device3));
   await device3.checkModalStrings(
-    englishStrippedStr('groupLeave').toString(),
-    englishStrippedStr('groupLeaveDescription').withArgs({ group_name: testGroupName }).toString()
+    tStripped('groupLeave'),
+    tStripped('groupLeaveDescription', { group_name: testGroupName })
   );
   // Modal with Leave/Cancel
   await device3.clickOnElementAll(new LeaveGroupConfirm(device3));
@@ -51,9 +51,7 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType, testInfo
     device4.hasElementBeenDeleted(new ConversationItem(device4, testGroupName)),
   ]);
   // Create control message for user leaving group
-  const groupMemberLeft = englishStrippedStr('groupMemberLeft')
-    .withArgs({ name: charlie.userName })
-    .toString();
+  const groupMemberLeft = tStripped('groupMemberLeft', { name: charlie.userName });
   await Promise.all([
     device1.waitForControlMessageToBePresent(groupMemberLeft),
     device2.waitForControlMessageToBePresent(groupMemberLeft),

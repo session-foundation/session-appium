@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -44,10 +44,8 @@ async function deleteConversation(platform: SupportedPlatformsType, testInfo: Te
     });
     await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('conversationsDelete').toString(),
-        englishStrippedStr('deleteConversationDescription')
-          .withArgs({ name: USERNAME.BOB })
-          .toString()
+        tStripped('conversationsDelete'),
+        tStripped('deleteConversationDescription', { name: USERNAME.BOB })
       );
     });
     await alice1.clickOnByAccessibilityID('Delete');

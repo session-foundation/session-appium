@@ -1,6 +1,6 @@
 import test, { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -45,9 +45,9 @@ async function donateCTAReview(platform: SupportedPlatformsType, testInfo: TestI
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Donate CTA'), async () => {
     await device.checkCTAStrings(
-      englishStrippedStr('donateSessionHelp').toString(),
-      englishStrippedStr('donateSessionDescription').toString(),
-      [englishStrippedStr('donate').toString(), englishStrippedStr('maybeLater').toString()]
+      tStripped('donateSessionHelp'),
+      tStripped('donateSessionDescription'),
+      [tStripped('donate'), tStripped('maybeLater')]
     );
   });
   // There *is* supposed to be a blur on Android but there is a bug on API 34 emulators preventing it from showing
@@ -57,8 +57,8 @@ async function donateCTAReview(platform: SupportedPlatformsType, testInfo: TestI
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Open URL'), async () => {
     await device.clickOnElementAll(new CTAButtonPositive(device));
     await device.checkModalStrings(
-      englishStrippedStr('urlOpen').toString(),
-      englishStrippedStr('urlOpenDescription').withArgs({ url: donateURL }).toString()
+      tStripped('urlOpen'),
+      tStripped('urlOpenDescription', { url: donateURL })
     );
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

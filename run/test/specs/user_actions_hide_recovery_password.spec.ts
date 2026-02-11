@@ -1,6 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { AccountIDDisplay, ContinueButton } from './locators/global';
@@ -30,15 +30,15 @@ async function hideRecoveryPassword(platform: SupportedPlatformsType, testInfo: 
   // Wait for modal to appear
   // Check modal is correct
   await device1.checkModalStrings(
-    englishStrippedStr('recoveryPasswordHidePermanently').toString(),
-    englishStrippedStr('recoveryPasswordHidePermanentlyDescription1').toString()
+    tStripped('recoveryPasswordHidePermanently'),
+    tStripped('recoveryPasswordHidePermanentlyDescription1')
   );
   // Click on continue
   await device1.clickOnElementAll(new ContinueButton(device1));
   // Check confirmation modal
   await device1.checkModalStrings(
-    englishStrippedStr('recoveryPasswordHidePermanently').toString(),
-    englishStrippedStr('recoveryPasswordHidePermanentlyDescription2').toString()
+    tStripped('recoveryPasswordHidePermanently'),
+    tStripped('recoveryPasswordHidePermanentlyDescription2')
   );
   // Click on Yes
   await device1.clickOnElementAll(new YesButton(device1));

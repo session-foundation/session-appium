@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -32,7 +32,7 @@ bothPlatformsIt({
 });
 
 async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const noteToSelf = englishStrippedStr('noteToSelf').toString();
+  const noteToSelf = tStripped('noteToSelf');
 
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
@@ -53,8 +53,8 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
 
     await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await device.checkModalStrings(
-        englishStrippedStr('noteToSelfHide').toString(),
-        englishStrippedStr('hideNoteToSelfDescription').toString()
+        tStripped('noteToSelfHide'),
+        tStripped('hideNoteToSelfDescription')
       );
     });
     await device.clickOnElementAll(new HideNoteToSelfConfirmButton(device));
@@ -79,8 +79,8 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
 
     await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await device.checkModalStrings(
-        englishStrippedStr('showNoteToSelf').toString(),
-        englishStrippedStr('showNoteToSelfDescription').toString()
+        tStripped('showNoteToSelf'),
+        tStripped('showNoteToSelfDescription')
       );
     });
     await device.clickOnElementAll(new ShowNoteToSelfConfirmButton(device));

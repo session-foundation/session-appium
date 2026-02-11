@@ -1,6 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { SafariAddressBar, URLInputField } from './locators/browsers';
@@ -36,8 +36,8 @@ async function networkPageLearnMore(platform: SupportedPlatformsType, testInfo: 
   await device.clickOnElementAll(new SessionNetworkMenuItem(device));
   await device.clickOnElementAll(new SessionNetworkLearnMoreStaking(device));
   await device.checkModalStrings(
-    englishStrippedStr('urlOpen').toString(),
-    englishStrippedStr('urlOpenDescription').withArgs({ url: linkURL }).toString()
+    tStripped('urlOpen'),
+    tStripped('urlOpenDescription', { url: linkURL })
   );
   await device.clickOnElementAll(new OpenLinkButton(device));
   if (platform === 'ios') {

@@ -1,7 +1,7 @@
 import type { TestInfo } from '@playwright/test';
 
 import { testLink } from '../../constants';
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { LinkPreview, LinkPreviewMessage } from './locators';
 import {
@@ -50,8 +50,8 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType, testInfo: Test
   await alice1.inputText(testLink, new MessageInput(alice1));
   // Accept dialog for link preview
   await alice1.checkModalStrings(
-    englishStrippedStr('linkPreviewsEnable').toString(),
-    englishStrippedStr('linkPreviewsFirstDescription').toString()
+    tStripped('linkPreviewsEnable'),
+    tStripped('linkPreviewsFirstDescription')
   );
   await alice1.clickOnElementAll(new EnableLinkPreviewsModalButton(alice1));
   // No preview on first send
@@ -98,8 +98,8 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType, testInfo: 
   await alice1.inputText(testLink, new MessageInput(alice1));
   // Accept dialog for link preview
   await alice1.checkModalStrings(
-    englishStrippedStr('linkPreviewsEnable').toString(),
-    englishStrippedStr('linkPreviewsFirstDescription').toString()
+    tStripped('linkPreviewsEnable'),
+    tStripped('linkPreviewsFirstDescription')
   );
   await alice1.clickOnElementAll(new EnableLinkPreviewsModalButton(alice1));
   //wait for preview to generate

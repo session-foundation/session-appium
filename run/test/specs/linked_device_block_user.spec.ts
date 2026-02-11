@@ -1,6 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { BlockedContactsSettings, BlockUser, BlockUserConfirmationModal } from './locators';
 import { BlockedBanner, ConversationSettings } from './locators/conversation';
@@ -37,8 +37,8 @@ async function blockUserInConversationOptions(
   await sleepFor(500);
   await alice1.clickOnElementAll(new BlockUser(alice1));
   await alice1.checkModalStrings(
-    englishStrippedStr('block').toString(),
-    englishStrippedStr('blockDescription').withArgs({ name: bob.userName }).toString()
+    tStripped('block'),
+    tStripped('blockDescription', { name: bob.userName })
   );
   // Confirm block option
   await alice1.clickOnElementAll(new BlockUserConfirmationModal(alice1));
