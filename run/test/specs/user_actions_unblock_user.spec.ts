@@ -1,6 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { BlockUser, BlockUserConfirmationModal } from './locators';
 import { BlockedBanner, ConversationSettings, MessageBody } from './locators/conversation';
@@ -32,8 +32,8 @@ async function unblockUser(platform: SupportedPlatformsType, testInfo: TestInfo)
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   await alice1.clickOnElementAll(new BlockUser(alice1));
   await alice1.checkModalStrings(
-    englishStrippedStr('block').toString(),
-    englishStrippedStr('blockDescription').withArgs({ name: bob.userName }).toString()
+    tStripped('block'),
+    tStripped('blockDescription', { name: bob.userName })
   );
   await alice1.clickOnElementAll(new BlockUserConfirmationModal(alice1));
   await alice1.navigateBack();
@@ -55,8 +55,8 @@ async function unblockUser(platform: SupportedPlatformsType, testInfo: TestInfo)
   // Now that user is blocked, unblock them
   await alice1.clickOnElementAll(new BlockedBanner(alice1));
   await alice1.checkModalStrings(
-    englishStrippedStr('blockUnblock').toString(),
-    englishStrippedStr('blockUnblockName').withArgs({ name: bob.userName }).toString()
+    tStripped('blockUnblock'),
+    tStripped('blockUnblockName', { name: bob.userName })
   );
   await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Unblock' });
   await alice1.verifyElementNotPresent({ ...new BlockedBanner(alice1).build(), maxWait: 2000 });

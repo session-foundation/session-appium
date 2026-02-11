@@ -1,5 +1,5 @@
 import { LocatorsInterface } from '.';
-import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
+import { tStripped } from '../../../localizer/lib';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 
 export class LastUpdatedTimeStamp extends LocatorsInterface {
@@ -7,7 +7,7 @@ export class LastUpdatedTimeStamp extends LocatorsInterface {
 
   constructor(device: DeviceWrapper, relative_time: string) {
     super(device);
-    this.expectedText = englishStrippedStr('updated').withArgs({ relative_time }).toString();
+    this.expectedText = tStripped('updated', { relative_time });
   }
   public build() {
     switch (this.platform) {

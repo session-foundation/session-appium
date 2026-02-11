@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { CloseSettings } from './locators';
@@ -47,15 +47,15 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
   await test.step(TestSteps.CALLS.ACCEPT_PERMS(alice.userName), async () => {
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('enable calls permission'), async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('callsPermissionsRequired').toString(),
-        englishStrippedStr('callsPermissionsRequiredDescription').toString()
+        tStripped('callsPermissionsRequired'),
+        tStripped('callsPermissionsRequiredDescription')
       );
     });
     await alice1.clickOnByAccessibilityID('Settings');
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('beta calls'), async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('callsVoiceAndVideoBeta').toString(),
-        englishStrippedStr('callsVoiceAndVideoModalDescription').toString()
+        tStripped('callsVoiceAndVideoBeta'),
+        tStripped('callsVoiceAndVideoModalDescription')
       );
     });
     await alice1.clickOnByAccessibilityID('Continue');
@@ -83,10 +83,8 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
   await test.step(TestSteps.CALLS.INITIATE_CALL(alice.userName), async () => {
     await alice1.clickOnElementAll(new CallButton(alice1));
     await bob1.checkModalStrings(
-      englishStrippedStr('callsMissedCallFrom').withArgs({ name: alice.userName }).toString(),
-      englishStrippedStr('callsYouMissedCallPermissions')
-        .withArgs({ name: alice.userName })
-        .toString()
+      tStripped('callsMissedCallFrom', { name: alice.userName }),
+      tStripped('callsYouMissedCallPermissions', { name: alice.userName })
     );
     await bob1.clickOnByAccessibilityID('Settings');
     await alice1.waitForTextElementToBePresent({
@@ -102,8 +100,8 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
     await alice1.clickOnByAccessibilityID('End call button');
   });
   await bob1.checkModalStrings(
-    englishStrippedStr('callsVoiceAndVideoBeta').toString(),
-    englishStrippedStr('callsVoiceAndVideoModalDescription').toString()
+    tStripped('callsVoiceAndVideoBeta'),
+    tStripped('callsVoiceAndVideoModalDescription')
   );
   await bob1.clickOnByAccessibilityID('Continue');
   // Need to allow microphone access
@@ -140,13 +138,9 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
   );
   await alice1.clickOnByAccessibilityID('End call button');
   // Check for control messages on both devices
-  const callsYouCalled = englishStrippedStr('callsYouCalled')
-    .withArgs({ name: bob.userName })
-    .toString();
+  const callsYouCalled = tStripped('callsYouCalled', { name: bob.userName });
   await alice1.waitForControlMessageToBePresent(callsYouCalled);
-  const callsCalledYou = englishStrippedStr('callsCalledYou')
-    .withArgs({ name: alice.userName })
-    .toString();
+  const callsCalledYou = tStripped('callsCalledYou', { name: alice.userName });
   await bob1.waitForControlMessageToBePresent(callsCalledYou);
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, bob1);
@@ -171,8 +165,8 @@ async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: Test
     // Alice turns on all calls perms necessary
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('enable calls permission'), async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('callsPermissionsRequired').toString(),
-        englishStrippedStr('callsPermissionsRequiredDescription').toString()
+        tStripped('callsPermissionsRequired'),
+        tStripped('callsPermissionsRequiredDescription')
       );
       await alice1.clickOnElementAll({
         strategy: 'accessibility id',
@@ -181,8 +175,8 @@ async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: Test
     });
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('beta calls'), async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('callsVoiceAndVideoBeta').toString(),
-        englishStrippedStr('callsVoiceAndVideoModalDescription').toString()
+        tStripped('callsVoiceAndVideoBeta'),
+        tStripped('callsVoiceAndVideoModalDescription')
       );
       await alice1.clickOnByAccessibilityID('Enable');
     });
@@ -191,8 +185,8 @@ async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: Test
     );
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('notifications permission'), async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('sessionNotifications').toString(),
-        englishStrippedStr('callsNotificationsRequired').toString()
+        tStripped('sessionNotifications'),
+        tStripped('callsNotificationsRequired')
       );
       await alice1.clickOnElementAll(new NotificationsModalButton(alice1));
       await alice1.clickOnElementAll(new NotificationSwitch(alice1));

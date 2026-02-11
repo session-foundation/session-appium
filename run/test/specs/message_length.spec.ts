@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -87,10 +87,8 @@ for (const testCase of messageLengthTestCases) {
         } else {
           // Modal appears, verify and dismiss
           await device.checkModalStrings(
-            englishStrippedStr('modalMessageTooLongTitle').toString(),
-            englishStrippedStr('modalMessageTooLongDescription')
-              .withArgs({ limit: maxChars.toString() })
-              .toString()
+            tStripped('modalMessageTooLongTitle'),
+            tStripped('modalMessageTooLongDescription', { limit: maxChars.toString() })
           );
           await device.clickOnElementAll(new MessageLengthOkayButton(device));
           await device.verifyElementNotPresent(new MessageBody(device, message));

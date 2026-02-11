@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -31,10 +31,8 @@ async function reviewPromptPositive(platform: SupportedPlatformsType, testInfo: 
   // Platform specific string for the Rate Session modal
   const rateModalDescriptionString =
     platform === 'android'
-      ? englishStrippedStr('rateSessionModalDescription').withArgs({ storevariant }).toString()
-      : englishStrippedStr('rateSessionModalDescriptionUpdated')
-          .withArgs({ storevariant })
-          .toString();
+      ? tStripped('rateSessionModalDescription', { storevariant })
+      : tStripped('rateSessionModalDescriptionUpdated', { storevariant });
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
@@ -48,16 +46,13 @@ async function reviewPromptPositive(platform: SupportedPlatformsType, testInfo: 
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Enjoying Session'), async () => {
     await device.checkModalStrings(
-      englishStrippedStr('enjoyingSession').toString(),
-      englishStrippedStr('enjoyingSessionDescription').toString()
+      tStripped('enjoyingSession'),
+      tStripped('enjoyingSessionDescription')
     );
     await device.clickOnElementAll(new ReviewPromptItsGreatButton(device));
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Rate Session'), async () => {
-    await device.checkModalStrings(
-      englishStrippedStr('rateSession').toString(),
-      rateModalDescriptionString
-    );
+    await device.checkModalStrings(tStripped('rateSession'), rateModalDescriptionString);
     await device.waitForTextElementToBePresent(new ReviewPromptRateAppButton(device));
     await device.onAndroid().waitForTextElementToBePresent(new ReviewPromptNotNowButton(device)); // On iOS the modal only has the Rate button
   });

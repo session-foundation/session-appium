@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -90,8 +90,8 @@ async function appDisguiseSetIconAndroid(platform: SupportedPlatformsType, testI
       await device.clickOnElementAll(new AppDisguiseMeetingIcon(device));
       await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('app disgusie'), async () => {
         await device.checkModalStrings(
-          englishStrippedStr('appIconAndNameChange').toString(),
-          englishStrippedStr('appIconAndNameChangeConfirmation').toString()
+          tStripped('appIconAndNameChange'),
+          tStripped('appIconAndNameChangeConfirmation')
         );
       });
       await test.step('Verify app icon changed', async () => {

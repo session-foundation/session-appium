@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { EmptyConversation, Hide } from './locators/conversation';
@@ -27,7 +27,7 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
   });
   const { alice1, alice2 } = devices;
 
-  const noteToSelf = englishStrippedStr('noteToSelf').toString();
+  const noteToSelf = tStripped('noteToSelf');
   await test.step('Open Note to Self and send a message', async () => {
     await alice1.clickOnElementAll(new SearchButton(alice1));
     await alice1.clickOnElementAll(new NoteToSelfOption(alice1));
@@ -46,8 +46,8 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
     await alice1.clickOnElementAll(new Hide(alice1));
     await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('noteToSelfHide').toString(),
-        englishStrippedStr('hideNoteToSelfDescription').toString() // This one fails on iOS, see SES-4144
+        tStripped('noteToSelfHide'),
+        tStripped('hideNoteToSelfDescription') // This one fails on iOS, see SES-4144
       );
     });
     await alice1.clickOnByAccessibilityID('Hide');

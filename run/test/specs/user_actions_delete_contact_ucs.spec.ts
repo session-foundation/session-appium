@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -49,8 +49,8 @@ async function deleteContactCS(platform: SupportedPlatformsType, testInfo: TestI
     await alice1.clickOnElementAll(new DeleteContactMenuItem(alice1));
     await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('contactDelete').toString(),
-        englishStrippedStr('deleteContactDescription').withArgs({ name: USERNAME.BOB }).toString()
+        tStripped('contactDelete'),
+        tStripped('deleteContactDescription', { name: USERNAME.BOB })
       );
     });
     await alice1.clickOnElementAll(new DeleteContactConfirmButton(alice1));

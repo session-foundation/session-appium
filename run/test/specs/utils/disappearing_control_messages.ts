@@ -1,6 +1,6 @@
 import type { UserNameType } from '@session-foundation/qa-seeder';
 
-import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
+import { tStripped } from '../../../localizer/lib';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { DisappearActions, DISAPPEARING_TIMES } from '../../../types/testing';
 import { ConversationItem } from '../locators/home';
@@ -18,16 +18,21 @@ export const checkDisappearingControlMessage = async (
 ) => {
   // Two control messages to check - You have set and other user has set
   // "disappearingMessagesSet": "<b>{name}</b> has set messages to disappear {time} after they have been {disappearing_messages_type}.",
-  const disappearingMessagesSetAlice = englishStrippedStr('disappearingMessagesSet')
-    .withArgs({ name: userNameA, time, disappearing_messages_type: mode })
-    .toString();
-  const disappearingMessagesSetBob = englishStrippedStr('disappearingMessagesSet')
-    .withArgs({ name: userNameB, time, disappearing_messages_type: mode })
-    .toString();
+  const disappearingMessagesSetAlice = tStripped('disappearingMessagesSet', {
+    name: userNameA,
+    time,
+    disappearing_messages_type: mode,
+  });
+  const disappearingMessagesSetBob = tStripped('disappearingMessagesSet', {
+    name: userNameB,
+    time,
+    disappearing_messages_type: mode,
+  });
   // "disappearingMessagesSetYou": "<b>You</b> set messages to disappear {time} after they have been {disappearing_messages_type}.",
-  const disappearingMessagesSetYou = englishStrippedStr('disappearingMessagesSetYou')
-    .withArgs({ time, disappearing_messages_type: mode })
-    .toString();
+  const disappearingMessagesSetYou = tStripped('disappearingMessagesSetYou', {
+    time,
+    disappearing_messages_type: mode,
+  });
   // Check device 1
   if (platform === 'android') {
     await Promise.all([

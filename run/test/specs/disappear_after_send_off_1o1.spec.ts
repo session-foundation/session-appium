@@ -1,6 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES, DisappearModes } from '../../types/testing';
 import { ConversationSettings } from './locators/conversation';
@@ -66,13 +66,11 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType, testIn
   await alice1.navigateBack();
   // Check control message for turning off disappearing messages
   // Check USER A'S CONTROL MESSAGE on device 1 and 3 (linked device)
-  const disappearingMessagesTurnedOffYou = englishStrippedStr(
-    'disappearingMessagesTurnedOffYou'
-  ).toString();
+  const disappearingMessagesTurnedOffYou = tStripped('disappearingMessagesTurnedOffYou');
   // Check USER B'S CONTROL MESSAGE
-  const disappearingMessagesTurnedOff = englishStrippedStr('disappearingMessagesTurnedOff')
-    .withArgs({ name: alice.userName })
-    .toString();
+  const disappearingMessagesTurnedOff = tStripped('disappearingMessagesTurnedOff', {
+    name: alice.userName,
+  });
   await Promise.all([
     alice1.waitForControlMessageToBePresent(disappearingMessagesTurnedOffYou),
     bob1.waitForControlMessageToBePresent(disappearingMessagesTurnedOff),
@@ -82,8 +80,8 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType, testIn
   await bob1.clickOnElementAll(new FollowSettingsButton(bob1));
   await sleepFor(500);
   await bob1.checkModalStrings(
-    englishStrippedStr('disappearingMessagesFollowSetting').toString(),
-    englishStrippedStr('disappearingMessagesFollowSettingOff').toString()
+    tStripped('disappearingMessagesFollowSetting'),
+    tStripped('disappearingMessagesFollowSettingOff')
   );
   await bob1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Confirm' });
   // Check conversation subtitle?

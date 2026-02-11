@@ -1,6 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { type AccessibilityId, USERNAME } from '../../types/testing';
 import { DeleteMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
@@ -30,13 +30,10 @@ async function deleteRequest(platform: SupportedPlatformsType, testInfo: TestInf
   await device2.onIOS().swipeLeftAny('Message request');
   await device2.onAndroid().longPress(new MessageRequestItem(device2));
   await device2.clickOnElementAll(new DeleteMessageRequestButton(device2));
-  await device2.checkModalStrings(
-    englishStrippedStr('delete').toString(),
-    englishStrippedStr('messageRequestsContactDelete').toString()
-  );
+  await device2.checkModalStrings(tStripped('delete'), tStripped('messageRequestsContactDelete'));
   await device2.clickOnElementAll(new DeleteMesssageRequestConfirmation(device2));
   // "messageRequestsNonePending": "No pending message requests",
-  const messageRequestsNonePending = englishStrippedStr('messageRequestsNonePending').toString();
+  const messageRequestsNonePending = tStripped('messageRequestsNonePending');
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: messageRequestsNonePending as AccessibilityId,

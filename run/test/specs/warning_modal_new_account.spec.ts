@@ -1,6 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ContinueButton } from '../specs/locators/global';
@@ -34,10 +34,7 @@ async function warningModalNewAccount(platform: SupportedPlatformsType, testInfo
   await device.waitForTextElementToBePresent(new DisplayNameInput(device));
   // Pressing Back on the Display Name screen to trigger the Warning modal
   await device.clickOnElementAll(new BackButton(device));
-  await device.checkModalStrings(
-    englishStrippedStr('warning').toString(),
-    englishStrippedStr('onboardingBackAccountCreation').toString()
-  );
+  await device.checkModalStrings(tStripped('warning'), tStripped('onboardingBackAccountCreation'));
   await device.clickOnElementAll(new WarningModalQuitButton(device));
   await closeApp(device);
 }

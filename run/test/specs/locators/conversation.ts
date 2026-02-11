@@ -1,7 +1,7 @@
 import type { DeviceWrapper } from '../../../types/DeviceWrapper';
 
 import { testCommunityName } from '../../../constants/community';
-import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
+import { tStripped } from '../../../localizer/lib';
 import { StrategyExtractionObj } from '../../../types/testing';
 import { getAppDisplayName } from '../utils/devnet';
 import { LocatorsInterface } from './index';
@@ -489,9 +489,7 @@ export class MessageLengthOkayButton extends LocatorsInterface {
 
 export class MessageRequestAcceptDescription extends LocatorsInterface {
   public build() {
-    const messageRequestsAcceptDescription = englishStrippedStr(
-      'messageRequestsAcceptDescription'
-    ).toString();
+    const messageRequestsAcceptDescription = tStripped('messageRequestsAcceptDescription');
     switch (this.platform) {
       case 'android':
         return {
@@ -511,9 +509,7 @@ export class MessageRequestAcceptDescription extends LocatorsInterface {
 
 export class MessageRequestPendingDescription extends LocatorsInterface {
   public build() {
-    const messageRequestPendingDescription = englishStrippedStr(
-      'messageRequestPendingDescription'
-    ).toString();
+    const messageRequestPendingDescription = tStripped('messageRequestPendingDescription');
     switch (this.platform) {
       case 'android':
         return {

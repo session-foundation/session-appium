@@ -1,6 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
+import { tStripped } from '../../../localizer/lib';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { ContinueButton } from '../locators/global';
 import { AccountRestoreButton, ErrorMessage, SeedPhraseInput } from '../locators/onboarding';
@@ -25,7 +25,7 @@ async function onboardingIncorrectSeed(platform: SupportedPlatformsType, testInf
   const incorrectSeed =
     'ruby bakery illness push rift reef nabbing bawled hope zork silk lobster hope';
   // the expected error is 'Some words are incorrect' which is represented by the following localized string
-  const expectedError = englishStrippedStr('recoveryPasswordErrorMessageIncorrect').toString();
+  const expectedError = tStripped('recoveryPasswordErrorMessageIncorrect');
   await device.inputText(incorrectSeed, new SeedPhraseInput(device));
   // Trigger the validation by pressing Continue
   await device.clickOnElementAll(new ContinueButton(device));

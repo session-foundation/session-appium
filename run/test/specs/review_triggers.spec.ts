@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { bothPlatformsIt } from '../../types/sessionIt';
@@ -75,8 +75,8 @@ for (const { titleSnippet, descriptionSnippet, testStepName, trigger } of review
       });
       await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('App Review'), async () => {
         await device.checkModalStrings(
-          englishStrippedStr('enjoyingSession').toString(),
-          englishStrippedStr('enjoyingSessionDescription').toString()
+          tStripped('enjoyingSession'),
+          tStripped('enjoyingSessionDescription')
         );
       });
       await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

@@ -37,7 +37,7 @@ async function createContact(platform: SupportedPlatformsType, testInfo: TestInf
   // NOTE: This appears to be broken on both platforms:
   // Verify config message states message request was accepted
   // "messageRequestsAccepted": "Your message request has been accepted.",
-  // const messageRequestsAccepted = englishStrippedStr('messageRequestsAccepted').toString();
+  // const messageRequestsAccepted = tStripped('messageRequestsAccepted');
   // await device1.waitForTextElementToBePresent({
   //   strategy: 'accessibility id',
   //   selector: 'Control message',
