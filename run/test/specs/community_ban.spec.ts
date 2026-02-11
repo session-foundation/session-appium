@@ -108,7 +108,7 @@ async function banUserCommunity(platform: SupportedPlatformsType, testInfo: Test
     await alice1.clickOnElementAll(new LongPressUnBan(alice1));
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Unban User'), async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('banUser').toString(),
+        englishStrippedStr('banUnbanUser').toString(),
         englishStrippedStr('communityUnbanUserDescription')
           .withArgs({ name: bob.userName })
           .toString()
