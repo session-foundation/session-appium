@@ -43,7 +43,7 @@ async function blockUserInConversationOptions(
   );
   // Confirm block option
   await alice1.clickOnElementAll(new BlockUserConfirmationModal(alice1));
-  await alice2.hasElementBeenDeleted(new ConversationItem(alice2, bob.userName))
+  await alice2.hasElementBeenDeleted(new ConversationItem(alice2, bob.userName));
   await alice1.navigateBack();
   await alice1.waitForTextElementToBePresent(new BlockedBanner(alice1));
   // Check settings for blocked user
