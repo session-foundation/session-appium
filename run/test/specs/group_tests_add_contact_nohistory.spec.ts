@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -94,7 +94,7 @@ async function addContactToGroupNoHistory(platform: SupportedPlatformsType, test
     await Promise.all(
       [alice1, bob1, charlie1].map(device =>
         device.waitForControlMessageToBePresent(
-          englishStrippedStr('groupMemberNew').withArgs({ name: USERNAME.DRACULA }).toString()
+          tStripped('groupMemberNew', { name: USERNAME.DRACULA })
         )
       )
     );
@@ -104,9 +104,7 @@ async function addContactToGroupNoHistory(platform: SupportedPlatformsType, test
     await unknown1.onAndroid().navigateBack();
     await unknown1.clickOnElementAll(new ConversationItem(unknown1, group.groupName)); // Check for control message on device 4
     await unknown1.verifyElementNotPresent(new MessageBody(unknown1, historicMsg));
-    await unknown1.waitForControlMessageToBePresent(
-      englishStrippedStr('groupInviteYou').toString()
-    );
+    await unknown1.waitForControlMessageToBePresent(tStripped('groupInviteYou'));
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, bob1, charlie1, unknown1);

@@ -1,7 +1,7 @@
 import test, { type TestInfo } from '@playwright/test';
 
 import { testCommunityLink, testCommunityName } from '../../constants/community';
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { User } from '../../types/testing';
@@ -86,10 +86,8 @@ async function banUserCommunity(platform: SupportedPlatformsType, testInfo: Test
     await alice1.clickOnElementAll(new LongPressBanUser(alice1));
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Ban User'), async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('banUser').toString(),
-        englishStrippedStr('communityBanUserDescription')
-          .withArgs({ name: bob.userName })
-          .toString()
+        tStripped('banUser'),
+        tStripped('communityBanUserDescription', { name: bob.userName })
       );
     });
     await alice1.clickOnByAccessibilityID('Continue');
@@ -108,10 +106,8 @@ async function banUserCommunity(platform: SupportedPlatformsType, testInfo: Test
     await alice1.clickOnElementAll(new LongPressUnBan(alice1));
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Unban User'), async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('banUnbanUser').toString(),
-        englishStrippedStr('communityUnbanUserDescription')
-          .withArgs({ name: bob.userName })
-          .toString()
+        tStripped('banUnbanUser'),
+        tStripped('communityUnbanUserDescription', { name: bob.userName })
       );
     });
     await alice1.clickOnByAccessibilityID('Continue');
@@ -159,8 +155,8 @@ async function banAndDelete(platform: SupportedPlatformsType, testInfo: TestInfo
     await alice1.longPressMessage(new MessageBody(alice1, msg1));
     await alice1.clickOnElementAll(new LongPressBanAndDelete(alice1));
     await alice1.checkModalStrings(
-      englishStrippedStr('banDeleteAll').toString(),
-      englishStrippedStr('communityBanDeleteDescription').toString()
+      tStripped('banDeleteAll'),
+      tStripped('communityBanDeleteDescription')
     );
     await alice1.clickOnByAccessibilityID('Continue');
   });

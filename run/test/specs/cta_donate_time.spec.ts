@@ -1,6 +1,6 @@
 import test, { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -43,9 +43,9 @@ async function donateCTAShowsSevenDaysAgo(platform: SupportedPlatformsType, test
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Donate CTA'), async () => {
     await device.checkCTAStrings(
-      englishStrippedStr('donateSessionHelp').toString(),
-      englishStrippedStr('donateSessionDescription').toString(),
-      [englishStrippedStr('donate').toString(), englishStrippedStr('maybeLater').toString()]
+      tStripped('donateSessionHelp'),
+      tStripped('donateSessionDescription'),
+      [tStripped('donate'), tStripped('maybeLater')]
     );
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

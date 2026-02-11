@@ -1,6 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ConversationItem } from './locators/home';
@@ -28,10 +28,10 @@ async function acceptRequest(platform: SupportedPlatformsType, testInfo: TestInf
   await device2.acceptMessageRequestWithButton();
   // Check control message for message request acceptance
   // "messageRequestsAccepted": "Your message request has been accepted.",
-  const messageRequestsAccepted = englishStrippedStr('messageRequestsAccepted').toString();
-  const messageRequestYouHaveAccepted = englishStrippedStr('messageRequestYouHaveAccepted')
-    .withArgs({ name: alice.userName })
-    .toString();
+  const messageRequestsAccepted = tStripped('messageRequestsAccepted');
+  const messageRequestYouHaveAccepted = tStripped('messageRequestYouHaveAccepted', {
+    name: alice.userName,
+  });
   await Promise.all([
     device1.waitForControlMessageToBePresent(messageRequestsAccepted),
     device2.waitForControlMessageToBePresent(messageRequestYouHaveAccepted),

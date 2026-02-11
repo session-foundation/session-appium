@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -67,10 +67,8 @@ async function kickMemberDeleteMsg(platform: SupportedPlatformsType, testInfo: T
     await alice1.clickOnElementAll(new RemoveMemberButton(alice1));
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Remove Member'), async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('remove').toString(),
-        englishStrippedStr('groupRemoveDescription')
-          .withArgs({ name: USERNAME.BOB, group_name: testGroupName })
-          .toString()
+        tStripped('remove'),
+        tStripped('groupRemoveDescription', { name: USERNAME.BOB, group_name: testGroupName })
       );
     });
     await alice1.clickOnElementAll(new RemoveMemberMessagesRadial(alice1));
@@ -88,7 +86,7 @@ async function kickMemberDeleteMsg(platform: SupportedPlatformsType, testInfo: T
     await Promise.all(
       [alice1, charlie1].map(async device => {
         await device.waitForControlMessageToBePresent(
-          englishStrippedStr('groupRemoved').withArgs({ name: USERNAME.BOB }).toString()
+          tStripped('groupRemoved', { name: USERNAME.BOB })
         );
         await device.waitForTextElementToBePresent(new MessageBody(device, aliceMsg));
         await device.verifyElementNotPresent({
@@ -101,9 +99,7 @@ async function kickMemberDeleteMsg(platform: SupportedPlatformsType, testInfo: T
     await Promise.all([
       bob1.waitForTextElementToBePresent({
         ...new EmptyConversation(bob1).build(),
-        text: englishStrippedStr('groupRemovedYou')
-          .withArgs({ group_name: testGroupName })
-          .toString(),
+        text: tStripped('groupRemovedYou', { group_name: testGroupName }),
       }),
       bob1.verifyElementNotPresent(new MessageBody(bob1, aliceMsg)),
       bob1.verifyElementNotPresent(new MessageBody(bob1, bobMsg)),

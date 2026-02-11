@@ -30,7 +30,7 @@ import {
   testVideo,
   testVideoThumbnail,
 } from '../constants/testfiles';
-import { englishStrippedStr } from '../localizer/englishStrippedStr';
+import { tStripped } from '../localizer/lib';
 import {
   AcceptMessageRequestButton,
   AttachmentsButton,
@@ -2123,10 +2123,7 @@ export class DeviceWrapper {
   public async sendGIF(): Promise<number> {
     await this.clickOnElementAll(new AttachmentsButton(this));
     await this.clickOnElementAll(new GIFButton(this));
-    await this.checkModalStrings(
-      englishStrippedStr('giphyWarning').toString(),
-      englishStrippedStr('giphyWarningDescription').toString()
-    );
+    await this.checkModalStrings(tStripped('giphyWarning'), tStripped('giphyWarningDescription'));
     await this.clickOnByAccessibilityID('Continue', 5000);
     await this.clickOnElementAll(new FirstGif(this));
     if (this.isIOS()) {
@@ -2253,10 +2250,8 @@ export class DeviceWrapper {
       selector: 'Untrusted attachment message',
     });
     await this.checkModalStrings(
-      englishStrippedStr(`attachmentsAutoDownloadModalTitle`).toString(),
-      englishStrippedStr(`attachmentsAutoDownloadModalDescription`)
-        .withArgs({ conversation_name: conversationName })
-        .toString()
+      tStripped(`attachmentsAutoDownloadModalTitle`),
+      tStripped(`attachmentsAutoDownloadModalDescription`, { conversation_name: conversationName })
     );
     await this.clickOnElementAll(new DownloadMediaButton(this));
   }

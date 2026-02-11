@@ -1,6 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { ConversationSettings } from './locators/conversation';
 import {
@@ -48,8 +48,8 @@ async function changeGroupNameIos(platform: SupportedPlatformsType, testInfo: Te
   // Click on current group name
   await alice1.clickOnElementAll(new UpdateGroupInformation(alice1, testGroupName));
   await alice1.checkModalStrings(
-    englishStrippedStr(`updateGroupInformation`).toString(),
-    englishStrippedStr(`updateGroupInformationDescription`).toString()
+    tStripped(`updateGroupInformation`),
+    tStripped(`updateGroupInformationDescription`)
   );
   await alice1.deleteText(new EditGroupNameInput(alice1));
   await alice1.inputText('   ', new EditGroupNameInput(alice1));
@@ -72,7 +72,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType, testInfo: Te
   await alice1.clickOnElementAll(new SaveGroupNameChangeButton(alice1));
   await alice1.navigateBack();
   await alice1.waitForControlMessageToBePresent(
-    englishStrippedStr('groupNameNew').withArgs({ group_name: newGroupName }).toString()
+    tStripped('groupNameNew', { group_name: newGroupName })
   );
   await closeApp(alice1, bob1, charlie1);
 }
@@ -102,7 +102,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType, testInfo
   await alice1.navigateBack();
   // Check control message for changed name
   await alice1.waitForControlMessageToBePresent(
-    englishStrippedStr('groupNameNew').withArgs({ group_name: newGroupName }).toString()
+    tStripped('groupNameNew', { group_name: newGroupName })
   );
   await closeApp(alice1, bob1, charlie1);
 }

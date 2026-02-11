@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -46,10 +46,11 @@ async function kickMember(platform: SupportedPlatformsType, testInfo: TestInfo) 
     await alice1.clickOnElementAll({ ...new GroupMember(alice1).build(USERNAME.BOB) });
     await alice1.clickOnElementAll(new RemoveMemberButton(alice1));
     await alice1.checkModalStrings(
-      englishStrippedStr('remove').toString(),
-      englishStrippedStr('groupRemoveDescription')
-        .withArgs({ name: USERNAME.BOB, group_name: testGroupName })
-        .toString()
+      tStripped('remove'),
+      tStripped('groupRemoveDescription', {
+        name: USERNAME.BOB,
+        group_name: testGroupName,
+      })
     );
     await alice1.clickOnElementAll(new ConfirmRemovalButton(alice1));
     // The Group Member element sometimes disappears slowly, sometimes quickly.
@@ -63,18 +64,12 @@ async function kickMember(platform: SupportedPlatformsType, testInfo: TestInfo) 
   await alice1.navigateBack();
   await test.step(`Verify ${bob.userName} has been kicked`, async () => {
     await Promise.all([
-      alice1.waitForControlMessageToBePresent(
-        englishStrippedStr('groupRemoved').withArgs({ name: USERNAME.BOB }).toString()
-      ),
-      charlie1.waitForControlMessageToBePresent(
-        englishStrippedStr('groupRemoved').withArgs({ name: USERNAME.BOB }).toString()
-      ),
+      alice1.waitForControlMessageToBePresent(tStripped('groupRemoved', { name: USERNAME.BOB })),
+      charlie1.waitForControlMessageToBePresent(tStripped('groupRemoved', { name: USERNAME.BOB })),
     ]);
     await bob1.onAndroid().waitForTextElementToBePresent({
       ...new EmptyConversation(bob1).build(),
-      text: englishStrippedStr('groupRemovedYou')
-        .withArgs({ group_name: testGroupName })
-        .toString(),
+      text: tStripped('groupRemovedYou', { group_name: testGroupName }),
     });
     await bob1.onIOS().waitForTextElementToBePresent(new EmptyConversation(bob1));
     // Message input should not be present after being kicked

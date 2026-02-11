@@ -5,7 +5,7 @@ import {
   testCommunityName,
   unresolvedTestcommunityName,
 } from '../../constants/community';
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { User } from '../../types/testing';
@@ -112,7 +112,7 @@ async function banUnbanLinked(platform: SupportedPlatformsType, testInfo: TestIn
     await bob2.onIOS().waitForTextElementToBePresent({
       strategy: 'xpath',
       selector: `//XCUIElementTypeStaticText`,
-      text: englishStrippedStr('permissionsWriteCommunity').toString(),
+      text: tStripped('permissionsWriteCommunity'),
     });
   });
   await test.step('Admin unbans Bob, Bob can send a third message from both devices', async () => {
@@ -203,7 +203,7 @@ async function banAndDeleteLinked(platform: SupportedPlatformsType, testInfo: Te
       await bob2.waitForTextElementToBePresent({
         strategy: 'xpath',
         selector: `//XCUIElementTypeStaticText`,
-        text: englishStrippedStr('permissionsWriteCommunity').toString(),
+        text: tStripped('permissionsWriteCommunity'),
       });
     }
     await alice1.verifyElementNotPresent(new MessageBody(alice1, msg2));

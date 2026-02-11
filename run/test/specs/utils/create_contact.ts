@@ -25,7 +25,7 @@ export const newContact = async (
   // Verify config message states message request was accepted
   // "messageRequestsAccepted": "Your message request has been accepted.",
   // TO DO - ADD BACK IN ONCE IOS AND ANDROID HAS FIXED THIS ISSUE
-  // const messageRequestsAccepted = englishStrippedStr('messageRequestsAccepted').toString();
+  // const messageRequestsAccepted = tStripped('messageRequestsAccepted');
   // await device1.onAndroid().waitForControlMessageToBePresent(messageRequestsAccepted);
   await device1.waitForTextElementToBePresent(new MessageBody(device1, replyMessage));
   console.info(`${sender.userName} and ${receiver.userName} are now contacts`);

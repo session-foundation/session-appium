@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -86,7 +86,7 @@ async function addAccountIDToGroup(platform: SupportedPlatformsType, testInfo: T
     await Promise.all(
       [alice1, bob1, charlie1].map(device =>
         device.waitForControlMessageToBePresent(
-          englishStrippedStr('groupMemberNew').withArgs({ name: userDTruncatedPubkey }).toString(),
+          tStripped('groupMemberNew', { name: userDTruncatedPubkey }),
           20_000
         )
       )
@@ -96,14 +96,13 @@ async function addAccountIDToGroup(platform: SupportedPlatformsType, testInfo: T
     await unknown1.clickOnElementAll(new MessageRequestsBanner(unknown1));
     await unknown1.clickOnElementAll(new MessageRequestItem(unknown1));
     await unknown1.waitForControlMessageToBePresent(
-      englishStrippedStr('messageRequestGroupInvite')
-        .withArgs({ name: aliceTruncatedPubkey, group_name: testGroupName })
-        .toString()
+      tStripped('messageRequestGroupInvite', {
+        name: aliceTruncatedPubkey,
+        group_name: testGroupName,
+      })
     );
     await unknown1.clickOnElementAll(new AcceptMessageRequestButton(unknown1));
-    await unknown1.waitForControlMessageToBePresent(
-      englishStrippedStr('groupInviteYou').toString()
-    );
+    await unknown1.waitForControlMessageToBePresent(tStripped('groupInviteYou'));
     await unknown1.verifyElementNotPresent(new MessageBody(unknown1, historicMsg));
     await unknown1.sendMessage(userDMsg);
     await Promise.all(

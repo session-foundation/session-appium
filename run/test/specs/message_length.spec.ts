@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -88,10 +88,8 @@ for (const testCase of messageLengthTestCases) {
         } else if (platform === 'ios') {
           // iOS: Modal appears, verify and dismiss
           await device.checkModalStrings(
-            englishStrippedStr('modalMessageTooLongTitle').toString(),
-            englishStrippedStr('modalMessageTooLongDescription')
-              .withArgs({ limit: maxChars.toString() })
-              .toString()
+            tStripped('modalMessageTooLongTitle'),
+            tStripped('modalMessageTooLongDescription', { limit: maxChars.toString() })
           );
           await device.clickOnElementAll(new MessageLengthOkayButton(device));
           await device.verifyElementNotPresent(new MessageBody(device, message));
@@ -100,13 +98,13 @@ for (const testCase of messageLengthTestCases) {
           // Post-Pro is active on debug/qa builds by default
           // This will be the default for both platforms once Pro is live
           await device.checkCTAStrings(
-            englishStrippedStr('upgradeTo').toString(),
-            englishStrippedStr('proCallToActionLongerMessages').toString(),
-            [englishStrippedStr('theContinue').toString(), englishStrippedStr('cancel').toString()],
+            tStripped('upgradeTo'),
+            tStripped('proCallToActionLongerMessages'),
+            [tStripped('theContinue'), tStripped('cancel')],
             [
-              englishStrippedStr('proFeatureListLongerMessages').toString(),
-              englishStrippedStr('proFeatureListPinnedConversations').toString(),
-              englishStrippedStr('proFeatureListLoadsMore').toString(),
+              tStripped('proFeatureListLongerMessages'),
+              tStripped('proFeatureListPinnedConversations'),
+              tStripped('proFeatureListLoadsMore'),
             ]
           );
           await device.clickOnElementAll(new CTAButtonNegative(device));

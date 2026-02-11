@@ -1,7 +1,7 @@
 import type { DeviceWrapper } from '../../../types/DeviceWrapper';
 
 import { testCommunityName } from '../../../constants/community';
-import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
+import { tStripped } from '../../../localizer/lib';
 import { StrategyExtractionObj } from '../../../types/testing';
 import { getAppDisplayName } from '../utils/devnet';
 import { LocatorsInterface } from './index';
@@ -427,7 +427,7 @@ export class LongPressBanAndDelete extends LocatorsInterface {
         return {
           strategy: 'id',
           selector: 'network.loki.messenger:id/context_menu_item_title',
-          text: englishStrippedStr('banDeleteAll').toString(),
+          text: tStripped('banDeleteAll'),
         } as const;
       case 'ios':
         return {
@@ -445,7 +445,7 @@ export class LongPressBanUser extends LocatorsInterface {
         return {
           strategy: 'id',
           selector: 'network.loki.messenger:id/context_menu_item_title',
-          text: englishStrippedStr('banUser').toString(),
+          text: tStripped('banUser'),
         } as const;
       case 'ios':
         return {
@@ -463,7 +463,7 @@ export class LongPressUnBan extends LocatorsInterface {
         return {
           strategy: 'id',
           selector: 'network.loki.messenger:id/context_menu_item_title',
-          text: englishStrippedStr('banUnbanUser').toString(),
+          text: tStripped('banUnbanUser'),
         } as const;
       case 'ios':
         return {
@@ -551,9 +551,7 @@ export class MessageLengthOkayButton extends LocatorsInterface {
 
 export class MessageRequestAcceptDescription extends LocatorsInterface {
   public build() {
-    const messageRequestsAcceptDescription = englishStrippedStr(
-      'messageRequestsAcceptDescription'
-    ).toString();
+    const messageRequestsAcceptDescription = tStripped('messageRequestsAcceptDescription');
     switch (this.platform) {
       case 'android':
         return {
@@ -573,9 +571,7 @@ export class MessageRequestAcceptDescription extends LocatorsInterface {
 
 export class MessageRequestPendingDescription extends LocatorsInterface {
   public build() {
-    const messageRequestPendingDescription = englishStrippedStr(
-      'messageRequestPendingDescription'
-    ).toString();
+    const messageRequestPendingDescription = tStripped('messageRequestPendingDescription');
     switch (this.platform) {
       case 'android':
         return {

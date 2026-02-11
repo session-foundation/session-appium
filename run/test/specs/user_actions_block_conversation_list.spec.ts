@@ -1,6 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { BlockedContactsSettings } from './locators';
@@ -37,8 +37,8 @@ async function blockUserInConversationList(platform: SupportedPlatformsType, tes
   await alice1.longPressConversation(bob.userName);
   await alice1.clickOnElementAll(new LongPressBlockOption(alice1));
   await alice1.checkModalStrings(
-    englishStrippedStr('block').toString(),
-    englishStrippedStr('blockDescription').withArgs({ name: USERNAME.BOB }).toString()
+    tStripped('block'),
+    tStripped('blockDescription', { name: USERNAME.BOB })
   );
   await alice1.clickOnByAccessibilityID('Block');
   // Once you block the conversation disappears from the home screen

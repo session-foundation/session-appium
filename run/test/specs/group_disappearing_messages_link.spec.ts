@@ -1,7 +1,7 @@
 import { test, type TestInfo } from '@playwright/test';
 
 import { testLink } from '../../constants';
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
@@ -54,8 +54,8 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
     // Enable link preview modal appears as soon as link is typed on android but on iOS it appears after
     await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('linkPreviewsEnable').toString(),
-        englishStrippedStr('linkPreviewsFirstDescription').toString()
+        tStripped('linkPreviewsEnable'),
+        tStripped('linkPreviewsFirstDescription')
       );
     });
     // Accept link preview modal

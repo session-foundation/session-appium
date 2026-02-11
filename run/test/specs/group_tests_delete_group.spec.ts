@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { ConversationSettings, EmptyConversation } from './locators/conversation';
@@ -42,10 +42,8 @@ async function deleteGroup(platform: SupportedPlatformsType, testInfo: TestInfo)
     await alice1.clickOnElementAll(new DeleteGroupMenuItem(alice1));
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Delete Group'), async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('groupDelete').toString(),
-        englishStrippedStr('groupDeleteDescription')
-          .withArgs({ group_name: testGroupName })
-          .toString()
+        tStripped('groupDelete'),
+        tStripped('groupDeleteDescription', { group_name: testGroupName })
       );
     });
     await alice1.clickOnElementAll(new DeleteGroupConfirm(alice1));
@@ -56,9 +54,7 @@ async function deleteGroup(platform: SupportedPlatformsType, testInfo: TestInfo)
       await Promise.all(
         [bob1, charlie1].map(device =>
           device.waitForControlMessageToBePresent(
-            englishStrippedStr('groupDeletedMemberDescription')
-              .withArgs({ group_name: testGroupName })
-              .toString()
+            tStripped('groupDeletedMemberDescription', { group_name: testGroupName })
           )
         )
       );
@@ -68,9 +64,9 @@ async function deleteGroup(platform: SupportedPlatformsType, testInfo: TestInfo)
         [bob1, charlie1].map(device =>
           device.waitForTextElementToBePresent({
             ...new EmptyConversation(device).build(),
-            text: englishStrippedStr('groupDeletedMemberDescription')
-              .withArgs({ group_name: testGroupName })
-              .toString(),
+            text: tStripped('groupDeletedMemberDescription', {
+              group_name: testGroupName,
+            }),
           })
         )
       );

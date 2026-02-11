@@ -1,6 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { MessageInput, OutgoingMessageStatusSent, SendButton } from './locators/conversation';
@@ -36,9 +36,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType, testInfo:
   await device1.scrollDown();
   await device1.clickOnElementAll(new NextButton(device1));
   //messageRequestPendingDescription: "You will be able to send voice messages and attachments once the recipient has approved this message request."
-  const messageRequestPendingDescription = englishStrippedStr(
-    'messageRequestPendingDescription'
-  ).toString();
+  const messageRequestPendingDescription = tStripped('messageRequestPendingDescription');
   await device1.onIOS().waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Control message',
@@ -62,9 +60,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType, testInfo:
   await device2.clickOnElementAll(new MessageRequestItem(device2));
   // Check control message warning of sending message request reply
   // "messageRequestsAcceptDescription": "Sending a message to this user will automatically accept their message request and reveal your Account ID."
-  const messageRequestsAcceptDescription = englishStrippedStr(
-    'messageRequestsAcceptDescription'
-  ).toString();
+  const messageRequestsAcceptDescription = tStripped('messageRequestsAcceptDescription');
   await device2.onIOS().waitForControlMessageToBePresent(messageRequestsAcceptDescription);
 
   await device2.onAndroid().waitForTextElementToBePresent({
@@ -77,10 +73,10 @@ async function acceptRequestWithText(platform: SupportedPlatformsType, testInfo:
   await device2.sendMessage(`${bob.userName} to ${alice.userName}`);
   // Check control message for message request acceptance
   // "messageRequestsAccepted": "Your message request has been accepted.",
-  const messageRequestsAccepted = englishStrippedStr('messageRequestsAccepted').toString();
-  const messageRequestYouHaveAccepted = englishStrippedStr('messageRequestYouHaveAccepted')
-    .withArgs({ name: alice.userName })
-    .toString();
+  const messageRequestsAccepted = tStripped('messageRequestsAccepted');
+  const messageRequestYouHaveAccepted = tStripped('messageRequestYouHaveAccepted', {
+    name: alice.userName,
+  });
   await Promise.all([
     device1.waitForControlMessageToBePresent(messageRequestsAccepted),
     device2.waitForControlMessageToBePresent(messageRequestYouHaveAccepted),

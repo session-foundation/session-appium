@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { androidIt } from '../../types/sessionIt';
 import { ConversationSettings, EmptyConversation, MessageBody } from './locators/conversation';
@@ -65,17 +65,17 @@ async function soloAdminLeave(platform: SupportedPlatformsType, testInfo: TestIn
     await alice1.clickOnElementAll(new LeaveGroupMenuItem(alice1));
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Leave Group'), async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('groupLeave').toString(),
-        englishStrippedStr('groupOnlyAdminLeave').withArgs({ group_name: testGroupName }).toString()
+        tStripped('groupLeave'),
+        tStripped('groupOnlyAdminLeave', { group_name: testGroupName })
       );
       // Seems like this modal still has the leave group qa-tags so we're making sure they're the right text
       await alice1.waitForTextElementToBePresent({
         ...new LeaveGroupConfirm(alice1).build(),
-        text: englishStrippedStr('addAdmin').withArgs({ count: 1 }).toString(),
+        text: tStripped('addAdmin', { count: 1 }),
       });
       await alice1.waitForTextElementToBePresent({
         ...new LeaveGroupCancel(alice1).build(),
-        text: englishStrippedStr('groupDelete').toString(),
+        text: tStripped('groupDelete'),
       });
     });
     await alice1.clickOnElementAll(new LeaveGroupCancel(alice1));
@@ -83,10 +83,8 @@ async function soloAdminLeave(platform: SupportedPlatformsType, testInfo: TestIn
   await test.step('Admin deletes group from Leave Group modal', async () => {
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Delete Group'), async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('groupDelete').toString(),
-        englishStrippedStr('groupDeleteDescription')
-          .withArgs({ group_name: testGroupName })
-          .toString()
+        tStripped('groupDelete'),
+        tStripped('groupDeleteDescription', { group_name: testGroupName })
       );
     });
     await alice1.clickOnElementAll(new DeleteGroupConfirm(alice1));
@@ -97,9 +95,7 @@ async function soloAdminLeave(platform: SupportedPlatformsType, testInfo: TestIn
       [bob1, charlie1].map(device =>
         device.waitForTextElementToBePresent({
           ...new EmptyConversation(device).build(),
-          text: englishStrippedStr('groupDeletedMemberDescription')
-            .withArgs({ group_name: testGroupName })
-            .toString(),
+          text: tStripped('groupDeletedMemberDescription', { group_name: testGroupName }),
         })
       )
     );
@@ -143,7 +139,7 @@ async function multiAdminLeave(platform: SupportedPlatformsType, testInfo: TestI
     await alice1.clickOnElementAll(new ConfirmPromotionModalButton(alice1));
     // This is not tied to Bob but they're the only admin this status can apply to
     await alice1.waitForTextElementToBePresent(
-      new MemberStatus(alice1).build(englishStrippedStr('adminPromotionSent').toString())
+      new MemberStatus(alice1).build(tStripped('adminPromotionSent'))
     );
   });
   await alice1.navigateBack();
@@ -153,18 +149,18 @@ async function multiAdminLeave(platform: SupportedPlatformsType, testInfo: TestI
     await Promise.all(
       [alice1, charlie1].map(device =>
         device.waitForControlMessageToBePresent(
-          englishStrippedStr('adminPromotedToAdmin').withArgs({ name: bob.userName }).toString(),
+          tStripped('adminPromotedToAdmin', { name: bob.userName }),
           30_000
         )
       )
     );
-    await bob1.waitForControlMessageToBePresent(englishStrippedStr('groupPromotedYou').toString());
+    await bob1.waitForControlMessageToBePresent(tStripped('groupPromotedYou'));
   });
   await test.step('Verify promotion status is correct', async () => {
     await alice1.clickOnElementAll(new ConversationSettings(alice1));
     await alice1.clickOnElementAll(new ManageAdminsMenuItem(alice1));
     await alice1.verifyElementNotPresent(
-      new MemberStatus(alice1).build(englishStrippedStr('adminPromotionSent').toString())
+      new MemberStatus(alice1).build(tStripped('adminPromotionSent'))
     );
     await sleepFor(1_000);
   });
@@ -172,8 +168,8 @@ async function multiAdminLeave(platform: SupportedPlatformsType, testInfo: TestI
     await alice1.navigateBack();
     await alice1.clickOnElementAll(new LeaveGroupMenuItem(alice1));
     await alice1.checkModalStrings(
-      englishStrippedStr('groupLeave').toString(),
-      englishStrippedStr('groupLeaveDescription').withArgs({ group_name: testGroupName }).toString()
+      tStripped('groupLeave'),
+      tStripped('groupLeaveDescription', { group_name: testGroupName })
     );
   });
   await test.step(`${alice.userName} leaves the group`, async () => {
@@ -182,7 +178,7 @@ async function multiAdminLeave(platform: SupportedPlatformsType, testInfo: TestI
     await Promise.all(
       [bob1, charlie1].map(device =>
         device.waitForControlMessageToBePresent(
-          englishStrippedStr('groupMemberLeft').withArgs({ name: alice.userName }).toString(),
+          tStripped('groupMemberLeft', { name: alice.userName }),
           30_000
         )
       )

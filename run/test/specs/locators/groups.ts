@@ -1,7 +1,7 @@
 import type { UserNameType } from '@session-foundation/qa-seeder';
 
 import { LocatorsInterface } from '.';
-import { englishStrippedStr } from '../../../localizer/englishStrippedStr';
+import { tStripped } from '../../../localizer/lib';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { StrategyExtractionObj } from '../../../types/testing';
 import { GROUPNAME } from '../../../types/testing';
@@ -221,7 +221,7 @@ export class LatestReleaseBanner extends LocatorsInterface {
         return {
           strategy: 'id',
           selector: 'Version warning banner',
-          text: englishStrippedStr('groupInviteVersion').toString(),
+          text: tStripped('groupInviteVersion'),
         } as const;
       case 'ios':
         // On iOS, the text is currently not exposed to Appium

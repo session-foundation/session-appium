@@ -1,6 +1,6 @@
 import test, { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -38,8 +38,8 @@ async function slowModeBackgroundModal(platform: SupportedPlatformsType, testInf
   try {
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Background Permissions'), async () => {
       await device.checkModalStrings(
-        englishStrippedStr('runSessionBackground').toString(),
-        englishStrippedStr('runSessionBackgroundDescription').toString()
+        tStripped('runSessionBackground'),
+        tStripped('runSessionBackgroundDescription')
       );
       await device.clickOnElementAll(new BackgroundPermsAllowButton(device));
       await device.clickOnElementAll({

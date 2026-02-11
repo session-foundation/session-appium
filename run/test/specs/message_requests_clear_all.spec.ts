@@ -1,6 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { type AccessibilityId, USERNAME } from '../../types/testing';
 import { MessageRequestsBanner } from './locators/home';
@@ -28,12 +28,12 @@ async function clearAllRequests(platform: SupportedPlatformsType, testInfo: Test
   // Select Clear All button
   await device2.clickOnByAccessibilityID('Clear all');
   await device2.checkModalStrings(
-    englishStrippedStr('clearAll').toString(),
-    englishStrippedStr('messageRequestsClearAllExplanation').toString()
+    tStripped('clearAll'),
+    tStripped('messageRequestsClearAllExplanation')
   );
   await device2.clickOnByAccessibilityID('Clear');
   // "messageRequestsNonePending": "No pending message requests",
-  const messageRequestsNonePending = englishStrippedStr('messageRequestsNonePending').toString();
+  const messageRequestsNonePending = tStripped('messageRequestsNonePending');
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: messageRequestsNonePending as AccessibilityId,

@@ -1,6 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { type AccessibilityId, USERNAME } from '../../types/testing';
 import { DeclineMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
@@ -35,13 +35,10 @@ async function declineRequest(platform: SupportedPlatformsType, testInfo: TestIn
   await device3.waitForTextElementToBePresent(new MessageRequestItem(device3));
   // Click on decline button
   await device2.clickOnElementAll(new DeclineMessageRequestButton(device2));
-  await device2.checkModalStrings(
-    englishStrippedStr('delete').toString(),
-    englishStrippedStr('messageRequestsContactDelete').toString()
-  );
+  await device2.checkModalStrings(tStripped('delete'), tStripped('messageRequestsContactDelete'));
   await device2.clickOnElementAll(new DeleteMesssageRequestConfirmation(device2));
   // "messageRequestsNonePending": "No pending message requests",
-  const messageRequestsNonePending = englishStrippedStr('messageRequestsNonePending').toString();
+  const messageRequestsNonePending = tStripped('messageRequestsNonePending');
   await Promise.all([
     device2.waitForTextElementToBePresent({
       strategy: 'accessibility id',

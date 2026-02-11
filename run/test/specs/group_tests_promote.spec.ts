@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { androidIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
@@ -86,26 +86,26 @@ async function promoteSoloToAdmin(platform: SupportedPlatformsType, testInfo: Te
     await alice1.clickOnElementAll(new PromoteMemberFooterButton(alice1));
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Promote'), async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('promote').toString(),
-        englishStrippedStr('adminPromoteDescription').withArgs({ name: bob.userName }).toString()
+        tStripped('promote'),
+        tStripped('adminPromoteDescription', { name: bob.userName })
       );
       // This is a string that's part of the modal but not part of the modal description element
       await alice1.waitForTextElementToBePresent({
         strategy: '-android uiautomator',
-        selector: `new UiSelector().text("${englishStrippedStr('promoteAdminsWarning').toString()}")`,
+        selector: `new UiSelector().text("${tStripped('promoteAdminsWarning')}")`,
       });
     });
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Confirm Promotion'), async () => {
       await alice1.clickOnElementAll(new PromoteMemberModalConfirm(alice1));
       await alice1.checkModalStrings(
-        englishStrippedStr('confirmPromotion').toString(),
-        englishStrippedStr('confirmPromotionDescription').toString()
+        tStripped('confirmPromotion'),
+        tStripped('confirmPromotionDescription')
       );
     });
     await alice1.clickOnElementAll(new ConfirmPromotionModalButton(alice1));
     // This is not tied to Bob but they're the only admin this status can apply to
     await alice1.waitForTextElementToBePresent(
-      new MemberStatus(alice1).build(englishStrippedStr('adminPromotionSent').toString())
+      new MemberStatus(alice1).build(tStripped('adminPromotionSent'))
     );
   });
   await alice1.navigateBack();
@@ -114,22 +114,20 @@ async function promoteSoloToAdmin(platform: SupportedPlatformsType, testInfo: Te
     await Promise.all(
       [alice1, charlie1].map(device =>
         device.waitForControlMessageToBePresent(
-          englishStrippedStr('adminPromotedToAdmin').withArgs({ name: bob.userName }).toString(),
+          tStripped('adminPromotedToAdmin', { name: bob.userName }),
           30_000
         )
       )
     );
-    await bob1.waitForControlMessageToBePresent(englishStrippedStr('groupPromotedYou').toString());
+    await bob1.waitForControlMessageToBePresent(tStripped('groupPromotedYou'));
   });
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   await alice1.clickOnElementAll(new ManageAdminsMenuItem(alice1));
   await Promise.all([
     alice1.waitForTextElementToBePresent(new Contact(alice1, bob.userName)),
+    alice1.verifyElementNotPresent(new MemberStatus(alice1).build(tStripped('adminPromotionSent'))),
     alice1.verifyElementNotPresent(
-      new MemberStatus(alice1).build(englishStrippedStr('adminPromotionSent').toString())
-    ),
-    alice1.verifyElementNotPresent(
-      new MemberStatus(alice1).build(englishStrippedStr('adminPromotionFailed').toString())
+      new MemberStatus(alice1).build(tStripped('adminPromotionFailed'))
     ),
   ]);
   await alice1.navigateBack();
@@ -140,17 +138,17 @@ async function promoteSoloToAdmin(platform: SupportedPlatformsType, testInfo: Te
     await Promise.all(
       [alice1, charlie1].map(device =>
         device.waitForControlMessageToBePresent(
-          englishStrippedStr('disappearingMessagesSet')
-            .withArgs({ name: bob.userName, time, disappearing_messages_type: 'sent' })
-            .toString(),
+          tStripped('disappearingMessagesSet', {
+            name: bob.userName,
+            time,
+            disappearing_messages_type: 'sent',
+          }),
           30_000
         )
       )
     );
     await bob1.waitForControlMessageToBePresent(
-      englishStrippedStr('disappearingMessagesSetYou')
-        .withArgs({ time, disappearing_messages_type: 'sent' })
-        .toString()
+      tStripped('disappearingMessagesSetYou', { time, disappearing_messages_type: 'sent' })
     );
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
@@ -176,26 +174,26 @@ async function promoteSoloLinked(platform: SupportedPlatformsType, testInfo: Tes
     await device1.clickOnElementAll(new PromoteMemberFooterButton(device1));
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Promote'), async () => {
       await device1.checkModalStrings(
-        englishStrippedStr('promote').toString(),
-        englishStrippedStr('adminPromoteDescription').withArgs({ name: bob.userName }).toString()
+        tStripped('promote'),
+        tStripped('adminPromoteDescription', { name: bob.userName })
       );
       // This is a string that's part of the modal but not part of the modal description element
       await device1.waitForTextElementToBePresent({
         strategy: '-android uiautomator',
-        selector: `new UiSelector().text("${englishStrippedStr('promoteAdminsWarning').toString()}")`,
+        selector: `new UiSelector().text("${tStripped('promoteAdminsWarning')}")`,
       });
     });
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Confirm Promotion'), async () => {
       await device1.clickOnElementAll(new PromoteMemberModalConfirm(device1));
       await device1.checkModalStrings(
-        englishStrippedStr('confirmPromotion').toString(),
-        englishStrippedStr('confirmPromotionDescription').toString()
+        tStripped('confirmPromotion'),
+        tStripped('confirmPromotionDescription')
       );
     });
     await device1.clickOnElementAll(new ConfirmPromotionModalButton(device1));
     // This is not tied to Bob but they're the only admin this status can apply to
     await device1.waitForTextElementToBePresent(
-      new MemberStatus(device1).build(englishStrippedStr('adminPromotionSent').toString())
+      new MemberStatus(device1).build(tStripped('adminPromotionSent'))
     );
   });
   await device1.navigateBack();
@@ -204,24 +202,22 @@ async function promoteSoloLinked(platform: SupportedPlatformsType, testInfo: Tes
     await Promise.all(
       [device1, device3].map(device =>
         device.waitForControlMessageToBePresent(
-          englishStrippedStr('adminPromotedToAdmin').withArgs({ name: bob.userName }).toString(),
+          tStripped('adminPromotedToAdmin', { name: bob.userName }),
           30_000
         )
       )
     );
-    await device2.waitForControlMessageToBePresent(
-      englishStrippedStr('groupPromotedYou').toString()
-    );
+    await device2.waitForControlMessageToBePresent(tStripped('groupPromotedYou'));
   });
   await device1.clickOnElementAll(new ConversationSettings(device1));
   await device1.clickOnElementAll(new ManageAdminsMenuItem(device1));
   await Promise.all([
     device1.waitForTextElementToBePresent(new Contact(device1, bob.userName)),
     device1.verifyElementNotPresent(
-      new MemberStatus(device1).build(englishStrippedStr('adminPromotionSent').toString())
+      new MemberStatus(device1).build(tStripped('adminPromotionSent'))
     ),
     device1.verifyElementNotPresent(
-      new MemberStatus(device1).build(englishStrippedStr('adminPromotionFailed').toString())
+      new MemberStatus(device1).build(tStripped('adminPromotionFailed'))
     ),
   ]);
   await device1.navigateBack();
@@ -232,17 +228,17 @@ async function promoteSoloLinked(platform: SupportedPlatformsType, testInfo: Tes
     await Promise.all(
       [device1, device3].map(device =>
         device.waitForControlMessageToBePresent(
-          englishStrippedStr('disappearingMessagesSet')
-            .withArgs({ name: bob.userName, time, disappearing_messages_type: 'sent' })
-            .toString(),
+          tStripped('disappearingMessagesSet', {
+            name: bob.userName,
+            time,
+            disappearing_messages_type: 'sent',
+          }),
           30_000
         )
       )
     );
     await device2.waitForControlMessageToBePresent(
-      englishStrippedStr('disappearingMessagesSetYou')
-        .withArgs({ time, disappearing_messages_type: 'sent' })
-        .toString()
+      tStripped('disappearingMessagesSetYou', { time, disappearing_messages_type: 'sent' })
     );
   });
   await restoreAccount(device4, bob, 'bob2');
@@ -278,28 +274,26 @@ async function promoteMultiToAdmin(platform: SupportedPlatformsType, testInfo: T
     await alice1.clickOnElementAll(new PromoteMemberFooterButton(alice1));
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Promote'), async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('promote').toString(),
-        englishStrippedStr('adminPromoteTwoDescription')
-          .withArgs({ name: firstUser, other_name: secondUser })
-          .toString()
+        tStripped('promote'),
+        tStripped('adminPromoteTwoDescription', { name: firstUser, other_name: secondUser })
       );
       // This is a string that's part of the modal but not part of the modal description element
       await alice1.waitForTextElementToBePresent({
         strategy: '-android uiautomator',
-        selector: `new UiSelector().text("${englishStrippedStr('promoteAdminsWarning').toString()}")`,
+        selector: `new UiSelector().text("${tStripped('promoteAdminsWarning')}")`,
       });
     });
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Confirm Promotion'), async () => {
       await alice1.clickOnElementAll(new PromoteMemberModalConfirm(alice1));
       await alice1.checkModalStrings(
-        englishStrippedStr('confirmPromotion').toString(),
-        englishStrippedStr('confirmPromotionDescription').toString()
+        tStripped('confirmPromotion'),
+        tStripped('confirmPromotionDescription')
       );
     });
     await alice1.clickOnElementAll(new ConfirmPromotionModalButton(alice1));
     // This is not tied to Bob/Charlie but they're the only admin this status can apply to
     await alice1.waitForTextElementToBePresent(
-      new MemberStatus(alice1).build(englishStrippedStr('adminPromotionSent').toString())
+      new MemberStatus(alice1).build(tStripped('adminPromotionSent'))
     );
   });
   await alice1.navigateBack();
@@ -307,19 +301,15 @@ async function promoteMultiToAdmin(platform: SupportedPlatformsType, testInfo: T
   await test.step('Verify every member sees the promotion control message', async () => {
     await Promise.all([
       alice1.waitForControlMessageToBePresent(
-        englishStrippedStr('adminTwoPromotedToAdmin')
-          .withArgs({ name: firstUser, other_name: secondUser })
-          .toString(),
+        tStripped('adminTwoPromotedToAdmin', { name: firstUser, other_name: secondUser }),
         10_000
       ),
       bob1.waitForControlMessageToBePresent(
-        englishStrippedStr('groupPromotedYouTwo')
-          .withArgs({ other_name: charlie.userName })
-          .toString(),
+        tStripped('groupPromotedYouTwo', { other_name: charlie.userName }),
         45_000
       ),
       charlie1.waitForControlMessageToBePresent(
-        englishStrippedStr('groupPromotedYouTwo').withArgs({ other_name: bob.userName }).toString(),
+        tStripped('groupPromotedYouTwo', { other_name: bob.userName }),
         45_000
       ),
     ]);
@@ -330,11 +320,11 @@ async function promoteMultiToAdmin(platform: SupportedPlatformsType, testInfo: T
     alice1.waitForTextElementToBePresent(new Contact(alice1, bob.userName)),
     alice1.waitForTextElementToBePresent(new Contact(alice1, charlie.userName)),
     alice1.verifyElementNotPresent({
-      ...new MemberStatus(alice1).build(englishStrippedStr('adminPromotionSent').toString()),
+      ...new MemberStatus(alice1).build(tStripped('adminPromotionSent')),
       maxWait: 10_000,
     }),
     alice1.verifyElementNotPresent(
-      new MemberStatus(alice1).build(englishStrippedStr('adminPromotionFailed').toString())
+      new MemberStatus(alice1).build(tStripped('adminPromotionFailed'))
     ),
   ]);
   await alice1.navigateBack();
@@ -345,17 +335,17 @@ async function promoteMultiToAdmin(platform: SupportedPlatformsType, testInfo: T
     await Promise.all(
       [alice1, charlie1].map(device =>
         device.waitForControlMessageToBePresent(
-          englishStrippedStr('disappearingMessagesSet')
-            .withArgs({ name: bob.userName, time, disappearing_messages_type: 'sent' })
-            .toString(),
+          tStripped('disappearingMessagesSet', {
+            name: bob.userName,
+            time,
+            disappearing_messages_type: 'sent',
+          }),
           30_000
         )
       )
     );
     await bob1.waitForControlMessageToBePresent(
-      englishStrippedStr('disappearingMessagesSetYou')
-        .withArgs({ time, disappearing_messages_type: 'sent' })
-        .toString()
+      tStripped('disappearingMessagesSetYou', { time, disappearing_messages_type: 'sent' })
     );
   });
   await test.step(`Verify ${charlie.userName} has admin powers by setting disappearing messages`, async () => {
@@ -365,21 +355,20 @@ async function promoteMultiToAdmin(platform: SupportedPlatformsType, testInfo: T
     await Promise.all(
       [alice1, bob1].map(device =>
         device.waitForControlMessageToBePresent(
-          englishStrippedStr('disappearingMessagesSet')
-            .withArgs({
-              name: charlie.userName,
-              time: charlieTime,
-              disappearing_messages_type: 'sent',
-            })
-            .toString(),
+          tStripped('disappearingMessagesSet', {
+            name: charlie.userName,
+            time: charlieTime,
+            disappearing_messages_type: 'sent',
+          }),
           30_000
         )
       )
     );
     await charlie1.waitForControlMessageToBePresent(
-      englishStrippedStr('disappearingMessagesSetYou')
-        .withArgs({ time: charlieTime, disappearing_messages_type: 'sent' })
-        .toString()
+      tStripped('disappearingMessagesSetYou', {
+        time: charlieTime,
+        disappearing_messages_type: 'sent',
+      })
     );
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
