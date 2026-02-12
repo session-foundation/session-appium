@@ -51,8 +51,8 @@ export class BlockedContactsSettings extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
-          selector: 'qa-blocked-contacts-settings-item',
+          strategy: 'id',
+          selector: 'preferences-option-blocked-contacts',
         };
       case 'ios':
         return {
@@ -471,8 +471,7 @@ export class ReadReceiptsButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'android:id/summary',
-          text: 'Show read receipts for all messages you send and receive.',
+          selector: 'preferences-option-read-receipt',
         } as const;
       case 'ios':
         return {

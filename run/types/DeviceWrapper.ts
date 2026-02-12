@@ -2386,14 +2386,10 @@ export class DeviceWrapper {
 
   public async turnOnReadReceipts() {
     await this.navigateBack();
-    await sleepFor(100);
     await this.clickOnElementAll(new UserSettings(this));
-    await sleepFor(500);
     await this.clickOnElementAll(new PrivacyMenuItem(this));
-    await sleepFor(2000);
     await this.clickOnElementAll(new ReadReceiptsButton(this));
     await this.navigateBack(false);
-    await sleepFor(100);
     await this.clickOnElementAll(new CloseSettings(this));
   }
 
