@@ -18,12 +18,14 @@ import {
   describeLocator,
   DownloadMediaButton,
   FirstGif,
+  GIFName,
   ImageName,
   ImagePermissionsModalAllow,
   LocatorsInterface,
   ReadReceiptsButton,
 } from '../../run/test/locators';
 import {
+  animatedProfilePicture,
   profilePicture,
   testFile,
   testImage,
@@ -68,7 +70,11 @@ import {
   UserSettings,
   VersionNumber,
 } from '../test/locators/settings';
-import { EnterAccountID, NewMessageOption, NextButton } from '../test/locators/start_conversation';
+import {
+  EnterAccountID,
+  NewMessageOption,
+  NextButton,
+} from '../test/locators/start_conversation';
 import { clickOnCoordinates, sleepFor } from '../test/utils';
 import { getAdbFullPath } from '../test/utils/binaries';
 import { parseDataImage } from '../test/utils/check_colour';
@@ -1874,7 +1880,7 @@ export class DeviceWrapper {
   }
 
   public async pushMediaToDevice(
-    mediaFileName: 'profile_picture.jpg' | 'test_file.pdf' | 'test_image.jpg' | 'test_video.mp4'
+    mediaFileName: 'animated_profile_picture.webp' | 'profile_picture.jpg' | 'test_file.pdf' | 'test_image.jpg' | 'test_video.mp4'
   ) {
     const filePath = path.join('run', 'test', 'specs', 'media', mediaFileName);
     if (this.isIOS()) {
@@ -2155,7 +2161,17 @@ export class DeviceWrapper {
     return sentTimestamp;
   }
 
-  public async uploadProfilePicture() {
+  public async uploadProfilePicture(animated: boolean = false) {
+    let uploadPicture: 'animated_profile_picture.webp' | 'profile_picture.jpg'
+    let dpLocator
+    if (animated) {
+      uploadPicture = animatedProfilePicture
+      dpLocator = new GIFName(this)
+    } else {
+      uploadPicture = profilePicture
+      dpLocator = new ImageName(this)
+    }
+
     await this.clickOnElementAll(new UserSettings(this));
     // Click on Profile picture
     await this.clickOnElementAll(new UserAvatar(this));
@@ -2166,12 +2182,12 @@ export class DeviceWrapper {
       await sleepFor(5000); // sometimes Appium doesn't recognize the XPATH immediately
       await this.matchAndTapImage(
         { strategy: 'xpath', selector: `//XCUIElementTypeImage` },
-        profilePicture
+        uploadPicture
       );
       await this.clickOnByAccessibilityID('Done');
     } else if (this.isAndroid()) {
       // Push file first
-      await this.pushMediaToDevice(profilePicture);
+      await this.pushMediaToDevice(uploadPicture);
       await this.clickOnElementAll(new ImagePermissionsModalAllow(this));
       await sleepFor(1000);
       await this.clickOnElementAll({
@@ -2179,8 +2195,8 @@ export class DeviceWrapper {
         selector: 'Image button',
       });
       await sleepFor(500);
-      await this.clickOnElementAll(new ImageName(this));
-      await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
+      await this.clickOnElementAll(dpLocator);
+      if (!animated) { await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop'); }
     }
     await this.clickOnElementAll(new SaveProfilePictureButton(this));
   }
@@ -2523,21 +2539,12 @@ export class DeviceWrapper {
     this.assertTextMatches(actualDescription, expectedDescription, 'Modal description');
   }
 
-  /**
-   * Checks CTA component text against expected values.
-   * CTAs contain: heading, body, 0-3 features, 1-2 buttons.
-   * @param heading - Expected CTA heading text
-   * @param body - Expected CTA body text
-   * @param buttons - Expected button text(s). First is positive, second (if present) is negative
-   * @param features - Optional array of expected feature text (0-3 items)
-   * @throws Error if any text element doesn't match expected value
-   */
-  public async checkCTAStrings(
-    heading: string,
-    body: string,
-    buttons: string[],
-    features?: string[]
-  ): Promise<void> {
+  private async checkCTAStrings({
+    heading,
+    body,
+    buttons,
+    features,
+  }: CTAConfig): Promise<void> {
     // Validate input
     if (features && features.length > 3) {
       throw new Error('CTAs support maximum 3 features');
@@ -2578,6 +2585,20 @@ export class DeviceWrapper {
       const actualNegative = await this.getTextFromElement(elNegative);
       this.assertTextMatches(actualNegative, buttons[1], 'CTA negative button');
     }
+  }
+
+  public async checkCTA(type: CTAType): Promise<void> {
+    await this.checkCTAStrings(ctaConfigs[type]);
+  }
+
+  // This is the bare minimum of a CTA so we only check these 
+  // Features may or may not exist anyway, same goes for negative buttons 
+  public async verifyNoCTAShows(): Promise<void> {
+    await Promise.all([
+      this.verifyElementNotPresent(new CTAHeading(this)),
+      this.verifyElementNotPresent(new CTABody(this)),
+      this.verifyElementNotPresent(new CTAButtonPositive(this))
+    ])
   }
 
   public async getElementPixelColor(args: LocatorsInterface): Promise<string> {

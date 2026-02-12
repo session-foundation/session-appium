@@ -311,10 +311,25 @@ export class FirstGif extends LocatorsInterface {
   }
 }
 
-export class ImageName extends LocatorsInterface {
+export class GIFName extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       // Dates can wildly differ between emulators but it will begin with "Photo taken on" on Android
+      case 'android':
+        return {
+          strategy: 'xpath',
+          selector: `//*[starts-with(@content-desc, "GIF taken on")]`,
+        };
+      case 'ios':
+        throw new Error(`No such element on iOS`);
+    }
+  }
+}
+
+export class ImageName extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      // Dates can wildly differ between emulators but it will begin with "GIF taken on" on Android
       case 'android':
         return {
           strategy: 'xpath',

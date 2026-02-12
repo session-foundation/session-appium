@@ -44,11 +44,7 @@ async function donateCTAReview(platform: SupportedPlatformsType, testInfo: TestI
     await forceStopAndRestartApp(device);
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Donate CTA'), async () => {
-    await device.checkCTAStrings(
-      tStripped('donateSessionHelp'),
-      tStripped('donateSessionDescription'),
-      [tStripped('donate'), tStripped('maybeLater')]
-    );
+    await device.checkCTA('donate');
   });
   // There *is* supposed to be a blur on Android but there is a bug on API 34 emulators preventing it from showing
   await test.step(TestSteps.VERIFY.SCREENSHOT('Donate CTA'), async () => {

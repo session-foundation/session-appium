@@ -97,16 +97,7 @@ for (const testCase of messageLengthTestCases) {
           // Android: CTA appears, verify and dismiss
           // Post-Pro is active on debug/qa builds by default
           // This will be the default for both platforms once Pro is live
-          await device.checkCTAStrings(
-            tStripped('upgradeTo'),
-            tStripped('proCallToActionLongerMessages'),
-            [tStripped('theContinue'), tStripped('cancel')],
-            [
-              tStripped('proFeatureListLongerMessages'),
-              tStripped('proFeatureListPinnedConversations'),
-              tStripped('proFeatureListLoadsMore'),
-            ]
-          );
+          await device.checkCTA('longerMessages');
           await device.clickOnElementAll(new CTAButtonNegative(device));
           await device.verifyElementNotPresent(new MessageBody(device, message));
         }
