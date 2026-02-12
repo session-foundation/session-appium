@@ -1,20 +1,20 @@
 /**
  * Session Pro Test Account Setup
- * 
+ *
  * Registers test accounts as Pro subscribers against the Session Pro dev backend,
  * bypassing Google Play / Apple App Store verification entirely.
- * 
- * Based on: 
+ *
+ * Based on:
  * https://github.com/session-foundation/session-pro-backend/blob/main/examples/endpoint_example.py
- * 
+ *
  * Usage:
  *   import { makeAccountPro } from './mock_pro';
- *   
+ *
  *   await makeAccountPro({
  *     mnemonic: 'word1 word2 ... word13',
  *     provider: 'google' // or 'apple'
  *   });
- * 
+ *
  * In order for the changes to take effect in the clients it's best to force close and restart the app
  */
 
@@ -31,7 +31,7 @@ export type PaymentProvider = 'apple' | 'google';
 export interface MakeAccountProParams {
   mnemonic: string;
   provider: PaymentProvider;
-  dryRun?: boolean;   // If true, build and print the request but don't send it 
+  dryRun?: boolean; // If true, build and print the request but don't send it
 }
 
 export interface AddProPaymentRequest {
@@ -71,7 +71,10 @@ function getWordlist(): string[] {
 
   const wordlistPath = join(__dirname, '../../../../english_wordlist.txt');
   const content = readFileSync(wordlistPath, 'utf-8');
-  const words = content.split('\n').map(w => w.trim()).filter(Boolean);
+  const words = content
+    .split('\n')
+    .map(w => w.trim())
+    .filter(Boolean);
 
   if (words.length !== 1626) {
     throw new Error(`Expected 1626 words in wordlist, got ${words.length}`);
@@ -105,7 +108,7 @@ export function mnemonicToSeedHex(mnemonic: string): string {
       const matches = wordlist
         .map((w, i) => ({ w, i }))
         .filter(({ w }) => w.startsWith(word.slice(0, 4)));
-      
+
       if (matches.length === 1) {
         indices.push(matches[0].i);
       } else {
@@ -114,7 +117,6 @@ export function mnemonicToSeedHex(mnemonic: string): string {
     }
   }
 
-
   // Decode: every 3 words -> 4 bytes (little-endian)
   const dataIndices = indices.slice(0, 12);
   const seedBytes: number[] = [];
@@ -122,9 +124,9 @@ export function mnemonicToSeedHex(mnemonic: string): string {
     const w1 = dataIndices[i];
     const w2 = dataIndices[i + 1];
     const w3 = dataIndices[i + 2];
-    
-    const x = w1 + n * (((w2 - w1) % n + n) % n) + n * n * (((w3 - w2) % n + n) % n);
-    
+
+    const x = w1 + n * ((((w2 - w1) % n) + n) % n) + n * n * ((((w3 - w2) % n) + n) % n);
+
     // Convert to 4 bytes little-endian
     seedBytes.push(x & 0xff);
     seedBytes.push((x >> 8) & 0xff);
@@ -144,7 +146,7 @@ function padSeed(seedHex: string): Uint8Array {
   if (seed.length !== 16) {
     throw new Error(`Seed must be 16 bytes, got ${seed.length}`);
   }
-  
+
   // Pad with 16 zero bytes
   const padded = new Uint8Array(32);
   padded.set(seed, 0);
@@ -152,36 +154,41 @@ function padSeed(seedHex: string): Uint8Array {
 }
 
 // Derives the account-level Ed25519 keypair by zero-padding the 16-byte seed to 32 bytes.
-export function deriveAccountEd25519Keypair(seedHex: string): { privateKey: Uint8Array; publicKey: Uint8Array } {
+export function deriveAccountEd25519Keypair(seedHex: string): {
+  privateKey: Uint8Array;
+  publicKey: Uint8Array;
+} {
   const padded = padSeed(seedHex);
   const privateKey = padded;
   const publicKey = ed25519.getPublicKey(privateKey);
   return { privateKey, publicKey };
 }
 
-// Derives the Pro master keypair from the seed using Blake2b with "SessionProRandom" as the key. 
-export function deriveProMasterKey(seedHex: string): { privateKey: Uint8Array; publicKey: Uint8Array } {
+// Derives the Pro master keypair from the seed using Blake2b with "SessionProRandom" as the key.
+export function deriveProMasterKey(seedHex: string): {
+  privateKey: Uint8Array;
+  publicKey: Uint8Array;
+} {
   const padded = padSeed(seedHex);
-  
+
   // Blake2b-256 with "SessionProRandom" as the key
-  const proSeed = blake2b(padded, { 
+  const proSeed = blake2b(padded, {
     dkLen: 32,
-    key: Buffer.from('SessionProRandom', 'utf-8')
+    key: Buffer.from('SessionProRandom', 'utf-8'),
   });
-  
+
   const privateKey = proSeed;
   const publicKey = ed25519.getPublicKey(privateKey);
-  
+
   return { privateKey, publicKey };
 }
 
-// Generates a random ephemeral rotating keypair for the payment request. 
+// Generates a random ephemeral rotating keypair for the payment request.
 export function generateRotatingKey(): { privateKey: Uint8Array; publicKey: Uint8Array } {
   const privateKey = ed25519.utils.randomSecretKey();
   const publicKey = ed25519.getPublicKey(privateKey);
   return { privateKey, publicKey };
 }
-
 
 function makeAddProPaymentHash(
   version: number,
@@ -193,27 +200,29 @@ function makeAddProPaymentHash(
   appleTxId?: string
 ): Uint8Array {
   const personalization = Buffer.from('ProAddPayment___', 'utf-8'); // 16 bytes
-  
+
   const parts: Uint8Array[] = [
     new Uint8Array([version]),
     masterPubkey,
     rotatingPubkey,
-    new Uint8Array([provider])
+    new Uint8Array([provider]),
   ];
-  
-  if (provider === 1) { // Google
+
+  if (provider === 1) {
+    // Google
     if (!paymentToken || !orderId) {
       throw new Error('Google provider requires payment_token and order_id');
     }
     parts.push(Buffer.from(paymentToken, 'utf-8'));
     parts.push(Buffer.from(orderId, 'utf-8'));
-  } else if (provider === 2) { // Apple
+  } else if (provider === 2) {
+    // Apple
     if (!appleTxId) {
       throw new Error('Apple provider requires tx_id');
     }
     parts.push(Buffer.from(appleTxId, 'utf-8'));
   }
-  
+
   // Concatenate all parts
   const totalLen = parts.reduce((sum, p) => sum + p.length, 0);
   const message = new Uint8Array(totalLen);
@@ -222,7 +231,7 @@ function makeAddProPaymentHash(
     message.set(part, offset);
     offset += part.length;
   }
-  
+
   return blake2b(message, { dkLen: 32, personalization });
 }
 
@@ -234,11 +243,11 @@ export function buildAddProPaymentRequest(
 ): AddProPaymentRequest {
   const version = 0;
   const providerNum = provider === 'google' ? 1 : 2;
-  
+
   let paymentToken: string | undefined;
   let orderId: string | undefined;
   let appleTxId: string | undefined;
-  
+
   const timestamp = Date.now();
   const nonce = randomBytes(4).toString('hex');
 
@@ -248,7 +257,7 @@ export function buildAddProPaymentRequest(
   } else {
     appleTxId = `DEV.${timestamp}.${nonce}`;
   }
-  
+
   const hash = makeAddProPaymentHash(
     version,
     masterKey.publicKey,
@@ -258,28 +267,28 @@ export function buildAddProPaymentRequest(
     orderId,
     appleTxId
   );
-  
+
   const masterSig = ed25519.sign(hash, masterKey.privateKey);
   const rotatingSig = ed25519.sign(hash, rotatingKey.privateKey);
-  
+
   const paymentTx: AddProPaymentRequest['payment_tx'] = {
-    provider: providerNum
+    provider: providerNum,
   };
-  
+
   if (provider === 'google') {
     paymentTx.google_payment_token = paymentToken;
     paymentTx.google_order_id = orderId;
   } else {
     paymentTx.apple_tx_id = appleTxId;
   }
-  
+
   return {
     version,
     master_pkey: Buffer.from(masterKey.publicKey).toString('hex'),
     rotating_pkey: Buffer.from(rotatingKey.publicKey).toString('hex'),
     master_sig: Buffer.from(masterSig).toString('hex'),
     rotating_sig: Buffer.from(rotatingSig).toString('hex'),
-    payment_tx: paymentTx
+    payment_tx: paymentTx,
   };
 }
 
@@ -327,7 +336,7 @@ export async function addProPayment(
   throw new Error('Unreachable');
 }
 
-// Registers a test account as a Pro subscriber against the dev backend. 
+// Registers a test account as a Pro subscriber against the dev backend.
 export async function makeAccountPro(params: MakeAccountProParams): Promise<ProProof | null> {
   const { mnemonic, provider, dryRun = false } = params;
 
@@ -335,41 +344,41 @@ export async function makeAccountPro(params: MakeAccountProParams): Promise<ProP
   const seedHex = mnemonicToSeedHex(mnemonic);
 
   const masterKey = deriveProMasterKey(seedHex);
-  
+
   console.log(`  Master pubkey: ${Buffer.from(masterKey.publicKey).toString('hex')}`);
-  
+
   // Generate rotating key
   const rotatingKey = generateRotatingKey();
   console.log(`  Rotating pubkey: ${Buffer.from(rotatingKey.publicKey).toString('hex')}`);
-  
+
   // Build request
   console.log(`\nBuilding add_pro_payment request (${provider})...`);
   const request = buildAddProPaymentRequest(masterKey, rotatingKey, provider);
   console.log('\nRequest body:');
   console.log(JSON.stringify(request, null, 2));
-  
+
   if (dryRun) {
     console.log('\nDRY RUN - Request not sent');
     return null;
   }
-  
+
   // Send request
   console.log(`\nSending request to ${PRO_BACKEND_URL}...`);
   const response = await addProPayment(PRO_BACKEND_URL, request);
-  
+
   if (!response.result) {
     throw new Error('No proof in response');
   }
-  
+
   console.log('Account successfully registered as Pro');
   console.log(`  Expiry: ${new Date(response.result.expiry_unix_ts_ms).toISOString()}`);
-  
+
   return response.result;
 }
 
 if (require.main === module) {
   const args = process.argv.slice(2);
-  
+
   if (args.length < 2) {
     console.error('Usage: ts-node mock_pro.ts <mnemonic> <provider> [--dry-run]');
     console.error('Example: ts-node mock_pro.ts "word1 word2 ..." google');
@@ -384,7 +393,7 @@ if (require.main === module) {
   makeAccountPro({
     mnemonic,
     provider: provider as PaymentProvider,
-    dryRun
+    dryRun,
   })
     .then(() => process.exit(0))
     .catch(err => {

@@ -1,7 +1,7 @@
 import type { Constraints, DefaultCreateSessionResult } from '@appium/types';
 
 import { getImageOccurrence } from '@appium/opencv';
-import { TestInfo } from '@playwright/test';
+import { expect, TestInfo } from '@playwright/test';
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
 import { W3CUiautomator2DriverCaps } from 'appium-uiautomator2-driver/build/lib/types';
 import { W3CXCUITestDriverCaps, XCUITestDriver } from 'appium-xcuitest-driver/build/lib/driver';
@@ -1880,7 +1880,12 @@ export class DeviceWrapper {
   }
 
   public async pushMediaToDevice(
-    mediaFileName: 'animated_profile_picture.webp' | 'profile_picture.jpg' | 'test_file.pdf' | 'test_image.jpg' | 'test_video.mp4'
+    mediaFileName:
+      | 'animated_profile_picture.gif'
+      | 'profile_picture.jpg'
+      | 'test_file.pdf'
+      | 'test_image.jpg'
+      | 'test_video.mp4'
   ) {
     const filePath = path.join('run', 'test', 'specs', 'media', mediaFileName);
     if (this.isIOS()) {
@@ -2162,14 +2167,14 @@ export class DeviceWrapper {
   }
 
   public async uploadProfilePicture(animated: boolean = false) {
-    let uploadPicture: 'animated_profile_picture.webp' | 'profile_picture.jpg'
-    let dpLocator
+    let uploadPicture: 'animated_profile_picture.gif' | 'profile_picture.jpg';
+    let dpLocator;
     if (animated) {
-      uploadPicture = animatedProfilePicture
-      dpLocator = new GIFName(this)
+      uploadPicture = animatedProfilePicture;
+      dpLocator = new GIFName(this);
     } else {
-      uploadPicture = profilePicture
-      dpLocator = new ImageName(this)
+      uploadPicture = profilePicture;
+      dpLocator = new ImageName(this);
     }
 
     await this.clickOnElementAll(new UserSettings(this));
@@ -2196,7 +2201,9 @@ export class DeviceWrapper {
       });
       await sleepFor(500);
       await this.clickOnElementAll(dpLocator);
-      if (!animated) { await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop'); }
+      if (!animated) {
+        await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
+      }
     }
     await this.clickOnElementAll(new SaveProfilePictureButton(this));
   }
@@ -2539,12 +2546,7 @@ export class DeviceWrapper {
     this.assertTextMatches(actualDescription, expectedDescription, 'Modal description');
   }
 
-  private async checkCTAStrings({
-    heading,
-    body,
-    buttons,
-    features,
-  }: CTAConfig): Promise<void> {
+  private async checkCTAStrings({ heading, body, buttons, features }: CTAConfig): Promise<void> {
     // Validate input
     if (features && features.length > 3) {
       throw new Error('CTAs support maximum 3 features');
@@ -2591,14 +2593,14 @@ export class DeviceWrapper {
     await this.checkCTAStrings(ctaConfigs[type]);
   }
 
-  // This is the bare minimum of a CTA so we only check these 
-  // Features may or may not exist anyway, same goes for negative buttons 
+  // This is the bare minimum of a CTA so we only check these
+  // Features may or may not exist anyway, same goes for negative buttons
   public async verifyNoCTAShows(): Promise<void> {
     await Promise.all([
       this.verifyElementNotPresent(new CTAHeading(this)),
       this.verifyElementNotPresent(new CTABody(this)),
-      this.verifyElementNotPresent(new CTAButtonPositive(this))
-    ])
+      this.verifyElementNotPresent(new CTAButtonPositive(this)),
+    ]);
   }
 
   public async getElementPixelColor(args: LocatorsInterface): Promise<string> {
@@ -2608,6 +2610,22 @@ export class DeviceWrapper {
     const base64image = await this.getElementScreenshot(element.ELEMENT);
     const pixelColor = await parseDataImage(base64image);
     return pixelColor;
+  }
+  // Sample an element's centre pixel color SAMPLE_SIZE times to determine whether it is animated or not. 
+  // If the set contains more than 1 color it is likely animated. 
+  public async verifyElementIsAnimated(args: LocatorsInterface): Promise<void> {
+    const SAMPLE_SIZE = 3;
+    const colors = new Set<string>();
+    for (let i = 0; i < SAMPLE_SIZE; i++) {
+      colors.add(await this.getElementPixelColor(args));
+      if (i < SAMPLE_SIZE - 1) {
+        await sleepFor(300);
+      }
+    }
+    expect(
+      colors.size,
+      `Expected element to be animated but detected 1 unique color: ${[...colors][0]}`
+    ).toBeGreaterThan(1);
   }
 
   public async getVersionNumber() {

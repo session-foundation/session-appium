@@ -12,7 +12,6 @@ export type IOSTestContext = {
   sessionProEnabled?: string;
 };
 
-
 const iosPathPrefix = process.env.IOS_APP_PATH_PREFIX;
 
 export const iOSBundleId = 'com.loki-project.loki-messenger';

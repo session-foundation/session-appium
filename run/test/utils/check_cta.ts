@@ -7,7 +7,7 @@ export type CTAConfig = {
   body: string;
   buttons: string[];
   features?: string[];
-}
+};
 
 export const ctaConfigs: Record<CTAType, CTAConfig> = {
   donate: {

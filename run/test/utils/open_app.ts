@@ -30,7 +30,6 @@ const APPIUM_PORT = 4728;
 
 export type SupportedPlatformsType = 'android' | 'ios';
 
-
 export const openAppMultipleDevices = async (
   platform: SupportedPlatformsType,
   numberOfDevices: number,
