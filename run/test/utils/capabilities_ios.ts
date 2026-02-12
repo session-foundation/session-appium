@@ -7,6 +7,12 @@ import { IntRange } from '../../types/RangeType';
 
 dotenv.config({ quiet: true });
 
+export type IOSTestContext = {
+  customInstallTime?: string;
+  sessionProEnabled?: string;
+};
+
+
 const iosPathPrefix = process.env.IOS_APP_PATH_PREFIX;
 
 export const iOSBundleId = 'com.loki-project.loki-messenger';
@@ -125,7 +131,7 @@ export function capabilityIsValid(
 
 export function getIosCapabilities(
   capabilitiesIndex: CapabilitiesIndexType,
-  customInstallTime?: string
+  customCaps?: IOSTestContext
 ): W3CXCUITestDriverCaps {
   if (capabilitiesIndex >= capabilities.length) {
     throw new Error(
@@ -141,10 +147,14 @@ export function getIosCapabilities(
   const baseEnv =
     (caps['appium:processArguments'] as { env?: Record<string, string> } | undefined)?.env ?? {};
 
-  // Optional per-test override:
-  // Some tests set IOS_CUSTOM_FIRST_INSTALL_DATE_TIME before starting Appium.
-  // If present, inject it into the processArguments.env. Otherwise inject nothing.
-  const customEnv = customInstallTime ? { customFirstInstallDateTime: customInstallTime } : {};
+  // Build custom env entries from per-test overrides
+  const customEnv: Record<string, string> = {};
+  if (customCaps?.customInstallTime) {
+    customEnv.customFirstInstallDateTime = customCaps.customInstallTime;
+  }
+  if (customCaps?.sessionProEnabled) {
+    customEnv.sessionPro = customCaps.sessionProEnabled;
+  }
 
   // Rebuild the processArguments block with merged env vars
   caps['appium:processArguments'] = {
