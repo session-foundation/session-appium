@@ -10,9 +10,8 @@ import {
   FastModeRadio,
   SlowModeRadio,
 } from '../locators/onboarding';
-import { RecoveryPhraseContainer, RevealRecoveryPhraseButton } from '../locators/settings';
+import { RecoveryPasswordMenuItem, RecoveryPhraseContainer } from '../locators/settings';
 import { UserSettings } from '../locators/settings';
-import { CopyButton } from '../locators/start_conversation';
 import { handleBackgroundPermissions, handleNotificationPermissions } from './permissions';
 
 export type BaseSetupOptions = {
@@ -70,18 +69,17 @@ export async function newUser(
   }
 
   // Open recovery phrase modal and save recovery phrase
-  await device.waitForTextElementToBePresent(new RevealRecoveryPhraseButton(device));
-  await device.clickOnElementAll(new RevealRecoveryPhraseButton(device));
+  await device.clickOnElementAll(new UserSettings(device));
+  await device.onIOS().scrollDown();
+  await device.clickOnElementAll(new RecoveryPasswordMenuItem(device));
   const recoveryPhraseContainer = await device.clickOnElementAll(
     new RecoveryPhraseContainer(device)
   );
-  await device.onAndroid().clickOnElementAll(new CopyButton(device));
   const recoveryPhrase = await device.getTextFromElement(recoveryPhraseContainer);
   device.log(`${userName}s recovery phrase is "${recoveryPhrase}"`);
   await device.navigateBack(false);
-
+  await device.scrollUp();
   // Get Account ID from User Settings
-  await device.clickOnElementAll(new UserSettings(device));
   const el = await device.waitForTextElementToBePresent(new AccountIDDisplay(device));
   const accountID = await device.getTextFromElement(el);
   await device.clickOnElementAll(new CloseSettings(device));
