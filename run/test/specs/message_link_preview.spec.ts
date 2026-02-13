@@ -1,19 +1,19 @@
 import type { TestInfo } from '@playwright/test';
 
 import { testLink } from '../../constants';
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
-import { LinkPreview, LinkPreviewMessage } from './locators';
+import { LinkPreview, LinkPreviewMessage } from '../locators';
 import {
   MessageBody,
   MessageInput,
   OutgoingMessageStatusSent,
   SendButton,
-} from './locators/conversation';
-import { EnableLinkPreviewsModalButton } from './locators/global';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/conversation';
+import { EnableLinkPreviewsModalButton } from '../locators/global';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { sleepFor } from '../utils';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Send link 1:1',
@@ -43,8 +43,8 @@ async function sendLinkIos(platform: SupportedPlatformsType, testInfo: TestInfo)
   await alice1.inputText(testLink, new MessageInput(alice1));
   // Accept dialog for link preview
   await alice1.checkModalStrings(
-    englishStrippedStr('linkPreviewsEnable').toString(),
-    englishStrippedStr('linkPreviewsFirstDescription').toString()
+    tStripped('linkPreviewsEnable'),
+    tStripped('linkPreviewsFirstDescription')
   );
   await alice1.clickOnElementAll(new EnableLinkPreviewsModalButton(alice1));
   await alice1.clickOnElementAll(new SendButton(alice1));
@@ -79,8 +79,8 @@ async function sendLinkAndroid(platform: SupportedPlatformsType, testInfo: TestI
   await alice1.inputText(testLink, new MessageInput(alice1));
   // Accept dialog for link preview
   await alice1.checkModalStrings(
-    englishStrippedStr('linkPreviewsEnable').toString(),
-    englishStrippedStr('linkPreviewsFirstDescription').toString()
+    tStripped('linkPreviewsEnable'),
+    tStripped('linkPreviewsFirstDescription')
   );
   await alice1.clickOnElementAll(new EnableLinkPreviewsModalButton(alice1));
   //wait for preview to generate

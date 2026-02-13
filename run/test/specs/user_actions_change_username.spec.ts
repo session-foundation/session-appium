@@ -1,12 +1,12 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ClearInputButton, EditUsernameButton, UsernameDisplay, UsernameInput } from './locators';
-import { SaveNameChangeButton, UserSettings } from './locators/settings';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+import { ClearInputButton, EditUsernameButton, UsernameDisplay, UsernameInput } from '../locators';
+import { SaveNameChangeButton, UserSettings } from '../locators/settings';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Change username',
@@ -26,10 +26,7 @@ async function changeUsername(platform: SupportedPlatformsType, testInfo: TestIn
   await device.clickOnElementAll(new UserSettings(device));
   // select username
   await device.clickOnElementAll(new EditUsernameButton(device));
-  await device.checkModalStrings(
-    englishStrippedStr('displayNameSet').toString(),
-    englishStrippedStr('displayNameVisible').toString()
-  );
+  await device.checkModalStrings(tStripped('displayNameSet'), tStripped('displayNameVisible'));
   await device.onIOS().deleteText(new UsernameInput(device));
   await device.onAndroid().clickOnElementAll(new ClearInputButton(device));
   await device.inputText(newUsername, new UsernameInput(device));

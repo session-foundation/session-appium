@@ -1,15 +1,15 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
-import { CloseSettings } from './locators';
-import { CallButton, NotificationsModalButton, NotificationSwitch } from './locators/conversation';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
-import { setDisappearingMessage } from './utils/set_disappearing_messages';
+import { CloseSettings } from '../locators';
+import { CallButton, NotificationsModalButton, NotificationSwitch } from '../locators/conversation';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { sleepFor } from '../utils';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
+import { setDisappearingMessage } from '../utils/set_disappearing_messages';
 
 bothPlatformsItSeparate({
   title: 'Disappearing call message 1:1',
@@ -91,12 +91,8 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType, t
       await bob1.clickOnElementAll(new CloseSettings(bob1));
     })(),
   ]);
-  const callsYouCalled = englishStrippedStr('callsYouCalled')
-    .withArgs({ name: bob.userName })
-    .toString();
-  const callsMissedCallFrom = englishStrippedStr('callsMissedCallFrom')
-    .withArgs({ name: alice.userName })
-    .toString();
+  const callsYouCalled = tStripped('callsYouCalled', { name: bob.userName });
+  const callsMissedCallFrom = tStripped('callsMissedCallFrom', { name: alice.userName });
   await Promise.all([
     alice1.hasElementDisappeared({
       strategy: 'accessibility id',

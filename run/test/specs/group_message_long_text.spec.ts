@@ -2,9 +2,9 @@ import type { TestInfo } from '@playwright/test';
 
 import { longText } from '../../constants';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { MessageBody } from './locators/conversation';
-import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { MessageBody } from '../locators/conversation';
+import { open_Alice1_Bob1_Charlie1_friends_group } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Send long message to group',

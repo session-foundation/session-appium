@@ -1,18 +1,18 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { InviteContactsButton, InviteContactsMenuItem } from './locators';
-import { ConversationSettings } from './locators/conversation';
-import { Contact } from './locators/global';
-import { InviteContactConfirm, ManageMembersMenuItem } from './locators/groups';
-import { ConversationItem } from './locators/home';
-import { open_Alice1_Bob1_Charlie1_Unknown1 } from './state_builder';
-import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { InviteContactsButton, InviteContactsMenuItem } from '../locators';
+import { ConversationSettings } from '../locators/conversation';
+import { Contact } from '../locators/global';
+import { InviteContactConfirm, ManageMembersMenuItem } from '../locators/groups';
+import { ConversationItem } from '../locators/home';
+import { open_Alice1_Bob1_Charlie1_Unknown1 } from '../state_builder';
+import { sleepFor } from '../utils';
+import { newUser } from '../utils/create_account';
+import { newContact } from '../utils/create_contact';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Add contact to group',
@@ -65,7 +65,7 @@ async function addContactToGroup(platform: SupportedPlatformsType, testInfo: Tes
   await Promise.all(
     [alice1, bob1, charlie1].map(device =>
       device.waitForControlMessageToBePresent(
-        englishStrippedStr('groupMemberNew').withArgs({ name: USERNAME.DRACULA }).toString()
+        tStripped('groupMemberNew', { name: USERNAME.DRACULA })
       )
     )
   );
@@ -74,6 +74,6 @@ async function addContactToGroup(platform: SupportedPlatformsType, testInfo: Tes
   // Leave Message Requests screen (Android)
   await unknown1.onAndroid().navigateBack();
   await unknown1.clickOnElementAll(new ConversationItem(unknown1, group.groupName)); // Check for control message on device 4
-  await unknown1.waitForControlMessageToBePresent(englishStrippedStr('groupInviteYou').toString());
+  await unknown1.waitForControlMessageToBePresent(tStripped('groupInviteYou'));
   await closeApp(alice1, bob1, charlie1, unknown1);
 }

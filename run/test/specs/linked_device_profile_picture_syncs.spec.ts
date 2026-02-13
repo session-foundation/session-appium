@@ -2,9 +2,9 @@ import { test, type TestInfo } from '@playwright/test';
 
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { UserAvatar, UserSettings } from './locators/settings';
-import { open_Alice2 } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { UserAvatar, UserSettings } from '../locators/settings';
+import { open_Alice2 } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Change profile picture linked device',

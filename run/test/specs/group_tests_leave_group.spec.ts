@@ -1,13 +1,13 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { ConversationSettings } from './locators/conversation';
-import { LeaveGroupConfirm, LeaveGroupMenuItem } from './locators/groups';
-import { ConversationItem } from './locators/home';
-import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { sleepFor } from './utils/index';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { ConversationSettings } from '../locators/conversation';
+import { LeaveGroupConfirm, LeaveGroupMenuItem } from '../locators/groups';
+import { ConversationItem } from '../locators/home';
+import { open_Alice1_Bob1_Charlie1_friends_group } from '../state_builder';
+import { sleepFor } from '../utils/index';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Leave group',
@@ -38,14 +38,12 @@ async function leaveGroup(platform: SupportedPlatformsType, testInfo: TestInfo) 
   await charlie1.clickOnElementAll(new LeaveGroupMenuItem(charlie1));
   // Modal with Leave/Cancel
   await charlie1.checkModalStrings(
-    englishStrippedStr('groupLeave').toString(),
-    englishStrippedStr('groupLeaveDescription').withArgs({ group_name: testGroupName }).toString()
+    tStripped('groupLeave'),
+    tStripped('groupLeaveDescription', { group_name: testGroupName })
   );
   await charlie1.clickOnElementAll(new LeaveGroupConfirm(charlie1));
   // Check for control message
-  const groupMemberLeft = englishStrippedStr('groupMemberLeft')
-    .withArgs({ name: charlie.userName })
-    .toString();
+  const groupMemberLeft = tStripped('groupMemberLeft', { name: charlie.userName });
   await alice1.waitForControlMessageToBePresent(groupMemberLeft);
   await bob1.waitForControlMessageToBePresent(groupMemberLeft);
   // Check device 3 that group has disappeared

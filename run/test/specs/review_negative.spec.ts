@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -8,11 +8,11 @@ import {
   ReviewPromptNeedsWorkButton,
   ReviewPromptNotNowButton,
   ReviewPromptOpenSurveyButton,
-} from './locators/home';
-import { PathMenuItem } from './locators/settings';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { assertUrlIsReachable } from './utils/utilities';
+} from '../locators/home';
+import { PathMenuItem } from '../locators/settings';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
+import { assertUrlIsReachable } from '../utils/utilities';
 
 bothPlatformsIt({
   title: 'Review prompt negative flow',
@@ -45,24 +45,18 @@ async function reviewPromptNegative(platform: SupportedPlatformsType, testInfo: 
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Enjoying Session'), async () => {
     await device.checkModalStrings(
-      englishStrippedStr('enjoyingSession').toString(),
-      englishStrippedStr('enjoyingSessionDescription').toString()
+      tStripped('enjoyingSession'),
+      tStripped('enjoyingSessionDescription')
     );
     await device.clickOnElementAll(new ReviewPromptNeedsWorkButton(device));
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Give Feedback'), async () => {
-    await device.checkModalStrings(
-      englishStrippedStr('giveFeedback').toString(),
-      englishStrippedStr('giveFeedbackDescription').toString()
-    );
+    await device.checkModalStrings(tStripped('giveFeedback'), tStripped('giveFeedbackDescription'));
     await device.waitForTextElementToBePresent(new ReviewPromptNotNowButton(device));
     await device.clickOnElementAll(new ReviewPromptOpenSurveyButton(device));
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Open URL'), async () => {
-    await device.checkModalStrings(
-      englishStrippedStr('urlOpen').toString(),
-      englishStrippedStr('urlOpenDescription').withArgs({ url }).toString()
-    );
+    await device.checkModalStrings(tStripped('urlOpen'), tStripped('urlOpenDescription', { url }));
     await assertUrlIsReachable(url);
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

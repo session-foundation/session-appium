@@ -1,13 +1,13 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES } from '../../types/testing';
-import { MessageBody } from './locators/conversation';
-import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
-import { setDisappearingMessage } from './utils/set_disappearing_messages';
+import { MessageBody } from '../locators/conversation';
+import { open_Alice1_Bob1_Charlie1_friends_group } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
+import { setDisappearingMessage } from '../utils/set_disappearing_messages';
 
 bothPlatformsIt({
   title: 'Disappear after send groups',
@@ -45,13 +45,16 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType, testIn
   });
   await test.step(TestSteps.VERIFY.DISAPPEARING_CONTROL_MESSAGES, async () => {
     // Get correct control message for You setting disappearing messages
-    const disappearingMessagesSetYou = englishStrippedStr('disappearingMessagesSetYou')
-      .withArgs({ time, disappearing_messages_type: controlMode })
-      .toString();
+    const disappearingMessagesSetYou = tStripped('disappearingMessagesSetYou', {
+      time,
+      disappearing_messages_type: controlMode,
+    });
     // Get correct control message for alice setting disappearing messages
-    const disappearingMessagesSetControl = englishStrippedStr('disappearingMessagesSet')
-      .withArgs({ name: alice.userName, time, disappearing_messages_type: controlMode })
-      .toString();
+    const disappearingMessagesSetControl = tStripped('disappearingMessagesSet', {
+      name: alice.userName,
+      time,
+      disappearing_messages_type: controlMode,
+    });
     // Check control message is correct on device 1, 2 and 3
     await Promise.all([
       alice1.waitForControlMessageToBePresent(disappearingMessagesSetYou),

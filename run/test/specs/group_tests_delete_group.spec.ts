@@ -1,13 +1,13 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { ConversationSettings } from './locators/conversation';
-import { DeleteGroupConfirm, DeleteGroupMenuItem } from './locators/groups';
-import { ConversationItem, PlusButton } from './locators/home';
-import { open_Alice2_Bob1_Charlie1_friends_group } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { ConversationSettings } from '../locators/conversation';
+import { DeleteGroupConfirm, DeleteGroupMenuItem } from '../locators/groups';
+import { ConversationItem, PlusButton } from '../locators/home';
+import { open_Alice2_Bob1_Charlie1_friends_group } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Delete group linked device',
@@ -39,10 +39,8 @@ async function deleteGroup(platform: SupportedPlatformsType, testInfo: TestInfo)
     await alice1.clickOnElementAll(new DeleteGroupMenuItem(alice1));
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Delete Group'), async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('groupDelete').toString(),
-        englishStrippedStr('groupDeleteDescription')
-          .withArgs({ group_name: testGroupName })
-          .toString()
+        tStripped('groupDelete'),
+        tStripped('groupDeleteDescription', { group_name: testGroupName })
       );
     });
     await alice1.clickOnElementAll(new DeleteGroupConfirm(alice1));
@@ -53,9 +51,7 @@ async function deleteGroup(platform: SupportedPlatformsType, testInfo: TestInfo)
       await Promise.all(
         [bob1, charlie1].map(device =>
           device.waitForControlMessageToBePresent(
-            englishStrippedStr('groupDeletedMemberDescription')
-              .withArgs({ group_name: testGroupName })
-              .toString()
+            tStripped('groupDeletedMemberDescription', { group_name: testGroupName })
           )
         )
       );
@@ -66,9 +62,9 @@ async function deleteGroup(platform: SupportedPlatformsType, testInfo: TestInfo)
           device.waitForTextElementToBePresent({
             strategy: 'accessibility id',
             selector: 'Empty list',
-            text: englishStrippedStr('groupDeletedMemberDescription')
-              .withArgs({ group_name: testGroupName })
-              .toString(),
+            text: tStripped('groupDeletedMemberDescription', {
+              group_name: testGroupName,
+            }),
           })
         )
       );

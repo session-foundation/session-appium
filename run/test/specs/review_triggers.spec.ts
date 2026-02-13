@@ -1,20 +1,20 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { CopyURLButton } from './locators/global';
+import { CopyURLButton } from '../locators/global';
 import {
   AppearanceMenuItem,
   ClassicLightThemeOption,
   DonationsMenuItem,
   PathMenuItem,
   UserSettings,
-} from './locators/settings';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/settings';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 
 // Yes, multiple tests in one file!
 const reviewTriggers = [
@@ -75,8 +75,8 @@ for (const { titleSnippet, descriptionSnippet, testStepName, trigger } of review
       });
       await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('App Review'), async () => {
         await device.checkModalStrings(
-          englishStrippedStr('enjoyingSession').toString(),
-          englishStrippedStr('enjoyingSessionDescription').toString()
+          tStripped('enjoyingSession'),
+          tStripped('enjoyingSessionDescription')
         );
       });
       await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

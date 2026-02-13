@@ -1,15 +1,15 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { SafariAddressBar, URLInputField } from './locators/browsers';
-import { OpenLinkButton } from './locators/network_page';
-import { DonationsMenuItem, UserSettings } from './locators/settings';
-import { newUser } from './utils/create_account';
-import { handleChromeFirstTimeOpen } from './utils/handle_first_open';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { assertUrlIsReachable, ensureHttpsURL } from './utils/utilities';
+import { SafariAddressBar, URLInputField } from '../locators/browsers';
+import { OpenLinkButton } from '../locators/network_page';
+import { DonationsMenuItem, UserSettings } from '../locators/settings';
+import { newUser } from '../utils/create_account';
+import { handleChromeFirstTimeOpen } from '../utils/handle_first_open';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
+import { assertUrlIsReachable, ensureHttpsURL } from '../utils/utilities';
 
 bothPlatformsIt({
   title: 'Donate Settings menu item',
@@ -30,8 +30,8 @@ async function donateLinkout(platform: SupportedPlatformsType, testInfo: TestInf
   await device.clickOnElementAll(new UserSettings(device));
   await device.clickOnElementAll(new DonationsMenuItem(device));
   await device.checkModalStrings(
-    englishStrippedStr('urlOpen').toString(),
-    englishStrippedStr('urlOpenDescription').withArgs({ url: linkURL }).toString()
+    tStripped('urlOpen'),
+    tStripped('urlOpenDescription', { url: linkURL })
   );
   await device.clickOnElementAll(new OpenLinkButton(device));
   if (platform === 'ios') {

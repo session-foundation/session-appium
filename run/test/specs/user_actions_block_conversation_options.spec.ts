@@ -1,19 +1,19 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import {
   BlockedContactsSettings,
   BlockUser,
   BlockUserConfirmationModal,
   CloseSettings,
-} from './locators';
-import { BlockedBanner, ConversationSettings, MessageBody } from './locators/conversation';
-import { Contact } from './locators/global';
-import { ConversationsMenuItem, UserSettings } from './locators/settings';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+} from '../locators';
+import { BlockedBanner, ConversationSettings, MessageBody } from '../locators/conversation';
+import { Contact } from '../locators/global';
+import { ConversationsMenuItem, UserSettings } from '../locators/settings';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { sleepFor } from '../utils';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Block user in conversation settings',
@@ -47,8 +47,8 @@ async function blockUserInConversationSettings(
   await alice1.clickOnElementAll(new BlockUser(alice1));
   // Check modal strings
   await alice1.checkModalStrings(
-    englishStrippedStr('block').toString(),
-    englishStrippedStr('blockDescription').withArgs({ name: bob.userName }).toString()
+    tStripped('block'),
+    tStripped('blockDescription', { name: bob.userName })
   );
   // Confirm block option
   await alice1.clickOnElementAll(new BlockUserConfirmationModal(alice1));

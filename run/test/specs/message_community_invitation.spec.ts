@@ -1,20 +1,20 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { testCommunityLink, testCommunityName } from './../../constants/community';
-import { InviteContactsMenuItem, JoinCommunityModalButton } from './locators';
+import { InviteContactsMenuItem, JoinCommunityModalButton } from '../locators';
 import {
   CommunityInvitation,
   CommunityInviteConfirmButton,
   ConversationSettings,
-} from './locators/conversation';
-import { GroupMember } from './locators/groups';
-import { ConversationItem } from './locators/home';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
-import { joinCommunity } from './utils/join_community';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/conversation';
+import { GroupMember } from '../locators/groups';
+import { ConversationItem } from '../locators/home';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { sleepFor } from '../utils';
+import { joinCommunity } from '../utils/join_community';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
+import { testCommunityLink, testCommunityName } from './../../constants/community';
 
 bothPlatformsIt({
   title: 'Send community invitation',
@@ -44,10 +44,8 @@ async function sendCommunityInvitation(platform: SupportedPlatformsType, testInf
   await bob1.waitForTextElementToBePresent(new CommunityInvitation(bob1));
   await bob1.clickOnElementAll(new CommunityInvitation(bob1));
   await bob1.checkModalStrings(
-    englishStrippedStr('communityJoin').toString(),
-    englishStrippedStr('communityJoinDescription')
-      .withArgs({ community_name: testCommunityName })
-      .toString()
+    tStripped('communityJoin'),
+    tStripped('communityJoinDescription', { community_name: testCommunityName })
   );
   await bob1.clickOnElementAll(new JoinCommunityModalButton(bob1));
   await bob1.navigateBack();

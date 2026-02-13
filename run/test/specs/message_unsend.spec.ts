@@ -1,11 +1,11 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
-import { DeletedMessage, MessageBody } from './locators/conversation';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from '../locators';
+import { DeletedMessage, MessageBody } from '../locators/conversation';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Unsend message',
@@ -34,8 +34,8 @@ async function unsendMessage(platform: SupportedPlatformsType, testInfo: TestInf
   // Check modal is correct
   // Check modal is correct
   await alice1.checkModalStrings(
-    englishStrippedStr('deleteMessage').withArgs({ count: 1 }).toString(),
-    englishStrippedStr('deleteMessageConfirm').withArgs({ count: 1 }).toString()
+    tStripped('deleteMessage', { count: 1 }),
+    tStripped('deleteMessageConfirm', { count: 1 })
   );
   // Select 'Delete for me and User B'
   await alice1.clickOnElementAll(new DeleteMessageForEveryone(alice1));

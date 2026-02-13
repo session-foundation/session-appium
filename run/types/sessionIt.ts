@@ -2,15 +2,15 @@
 import { test, type TestInfo } from '@playwright/test';
 import { omit } from 'lodash';
 
-import type { AppCountPerTest } from '../test/specs/state_builder';
+import type { AppCountPerTest } from '../test/state_builder';
 
-import { setupAllureTestInfo } from '../test/specs/utils/allure/allureHelpers';
-import { getNetworkTarget } from '../test/specs/utils/devnet';
-import { SupportedPlatformsType } from '../test/specs/utils/open_app';
+import { setupAllureTestInfo } from '../test/utils/allure/allureHelpers';
+import { getNetworkTarget } from '../test/utils/devnet';
+import { SupportedPlatformsType } from '../test/utils/open_app';
 import {
   captureScreenshotsOnFailure,
   unregisterDevicesForTest,
-} from '../test/specs/utils/screenshot_helper';
+} from '../test/utils/screenshot_helper';
 import { AllureSuiteConfig } from './allure';
 import { TestRisk } from './testing';
 

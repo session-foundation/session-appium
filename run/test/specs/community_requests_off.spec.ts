@@ -4,11 +4,11 @@ import { USERNAME } from '@session-foundation/qa-seeder';
 import { testCommunityLink, testCommunityName } from '../../constants/community';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { CommunityMessageAuthor, UPMMessageButton } from './locators/conversation';
-import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { joinCommunity } from './utils/join_community';
-import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
+import { CommunityMessageAuthor, UPMMessageButton } from '../locators/conversation';
+import { sleepFor } from '../utils';
+import { newUser } from '../utils/create_account';
+import { joinCommunity } from '../utils/join_community';
+import { closeApp, openAppTwoDevices, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Community message requests off',

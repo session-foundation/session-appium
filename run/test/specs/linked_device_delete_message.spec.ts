@@ -1,12 +1,12 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { DeleteMessageConfirmationModal } from './locators';
-import { DeletedMessage, MessageBody } from './locators/conversation';
-import { ConversationItem } from './locators/home';
-import { open_Alice2_Bob1_friends } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { DeleteMessageConfirmationModal } from '../locators';
+import { DeletedMessage, MessageBody } from '../locators/conversation';
+import { ConversationItem } from '../locators/home';
+import { open_Alice2_Bob1_friends } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Delete message linked device',
@@ -38,8 +38,8 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType, test
   // Select delete
   await alice1.clickOnByAccessibilityID('Delete message');
   await alice1.checkModalStrings(
-    englishStrippedStr('deleteMessage').withArgs({ count: 1 }).toString(),
-    englishStrippedStr('deleteMessageConfirm').withArgs({ count: 1 }).toString()
+    tStripped('deleteMessage', { count: 1 }),
+    tStripped('deleteMessageConfirm', { count: 1 })
   );
   await alice1.clickOnElementAll(new DeleteMessageConfirmationModal(alice1));
   // Check linked device for deleted message

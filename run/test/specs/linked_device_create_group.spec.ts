@@ -1,20 +1,20 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ConversationHeaderName, ConversationSettings } from './locators/conversation';
+import { ConversationHeaderName, ConversationSettings } from '../locators/conversation';
 import {
   EditGroupNameInput,
   SaveGroupNameChangeButton,
   UpdateGroupInformation,
-} from './locators/groups';
-import { ConversationItem } from './locators/home';
-import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { createGroup } from './utils/create_group';
-import { linkedDevice } from './utils/link_device';
-import { closeApp, openAppFourDevices, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/groups';
+import { ConversationItem } from '../locators/home';
+import { sleepFor } from '../utils';
+import { newUser } from '../utils/create_account';
+import { createGroup } from '../utils/create_group';
+import { linkedDevice } from '../utils/link_device';
+import { closeApp, openAppFourDevices, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Create group and change name syncs',
@@ -56,8 +56,8 @@ async function linkedGroupiOS(platform: SupportedPlatformsType, testInfo: TestIn
   await device1.clickOnElementAll(new UpdateGroupInformation(device1, testGroupName));
   //  Check new dialog
   await device1.checkModalStrings(
-    englishStrippedStr('updateGroupInformation').toString(),
-    englishStrippedStr('updateGroupInformationDescription').toString()
+    tStripped('updateGroupInformation'),
+    tStripped('updateGroupInformationDescription')
   );
   // Delete old name first
   await device1.deleteText(new EditGroupNameInput(device1));
@@ -68,9 +68,7 @@ async function linkedGroupiOS(platform: SupportedPlatformsType, testInfo: TestIn
   // Go back to conversation
   await device1.navigateBack();
   // Check control message for changed name
-  const groupNameNew = englishStrippedStr('groupNameNew')
-    .withArgs({ group_name: newGroupName })
-    .toString();
+  const groupNameNew = tStripped('groupNameNew', { group_name: newGroupName });
   // Control message should be "Group name is now {group_name}."
   await device1.waitForControlMessageToBePresent(groupNameNew);
   // Wait 5 seconds for name to update
@@ -116,9 +114,7 @@ async function linkedGroupAndroid(platform: SupportedPlatformsType, testInfo: Te
   await device1.clickOnElementAll(new SaveGroupNameChangeButton(device1));
   await device1.navigateBack();
   // Check control message for changed name
-  const groupNameNew = englishStrippedStr('groupNameNew')
-    .withArgs({ group_name: newGroupName })
-    .toString();
+  const groupNameNew = tStripped('groupNameNew', { group_name: newGroupName });
   // Config message is "Group name is now {group_name}"
   await device1.waitForControlMessageToBePresent(groupNameNew);
   // Check linked device for name change (conversation header name)

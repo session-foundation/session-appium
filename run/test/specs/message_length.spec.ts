@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -10,11 +10,11 @@ import {
   MessageLengthCountdown,
   MessageLengthOkayButton,
   SendButton,
-} from './locators/conversation';
-import { PlusButton } from './locators/home';
-import { EnterAccountID, NewMessageOption, NextButton } from './locators/start_conversation';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/conversation';
+import { PlusButton } from '../locators/home';
+import { EnterAccountID, NewMessageOption, NextButton } from '../locators/start_conversation';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 
 const maxChars = 2000;
 const countdownThreshold = 1800;
@@ -87,10 +87,8 @@ for (const testCase of messageLengthTestCases) {
         } else {
           // Modal appears, verify and dismiss
           await device.checkModalStrings(
-            englishStrippedStr('modalMessageTooLongTitle').toString(),
-            englishStrippedStr('modalMessageTooLongDescription')
-              .withArgs({ limit: maxChars.toString() })
-              .toString()
+            tStripped('modalMessageTooLongTitle'),
+            tStripped('modalMessageTooLongDescription', { limit: maxChars.toString() })
           );
           await device.clickOnElementAll(new MessageLengthOkayButton(device));
           await device.verifyElementNotPresent(new MessageBody(device, message));

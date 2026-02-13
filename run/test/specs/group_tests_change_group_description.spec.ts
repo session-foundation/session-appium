@@ -2,21 +2,21 @@ import type { TestInfo } from '@playwright/test';
 
 import { test } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { AccessibilityId } from '../../types/testing';
-import { ConversationSettings } from './locators/conversation';
+import { ConversationSettings } from '../locators/conversation';
 import {
   EditGroupDescriptionInput,
   GroupDescription,
   SaveGroupNameChangeButton,
   UpdateGroupInformation,
-} from './locators/groups';
-import { ErrorMessage } from './locators/onboarding';
-import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { sleepFor } from './utils';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/groups';
+import { ErrorMessage } from '../locators/onboarding';
+import { open_Alice1_Bob1_Charlie1_friends_group } from '../state_builder';
+import { sleepFor } from '../utils';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Change group description',
@@ -51,9 +51,7 @@ if (longGroupDescription.length <= 200) {
 const trimmedGroupDescription = longGroupDescription.slice(0, 200);
 
 // the expected error is 'Please enter a shorter group description' which is represented by the following localized string
-const expectedError = englishStrippedStr(
-  'updateGroupInformationEnterShorterDescription'
-).toString();
+const expectedError = tStripped('updateGroupInformationEnterShorterDescription');
 
 async function changeGroupDescriptionIOS(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {

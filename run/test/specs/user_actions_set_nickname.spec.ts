@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
@@ -11,10 +11,10 @@ import {
   NicknameInput,
   PreferredDisplayName,
   SaveNicknameButton,
-} from './locators/conversation';
-import { ConversationItem } from './locators/home';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/conversation';
+import { ConversationItem } from '../locators/home';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Set nickname',
@@ -44,8 +44,8 @@ async function setNickname(platform: SupportedPlatformsType, testInfo: TestInfo)
     await alice1.clickOnElementAll(new EditNicknameButton(alice1));
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Set Nickname'), async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('nicknameSet').toString(),
-        englishStrippedStr('nicknameDescription').withArgs({ name: USERNAME.BOB }).toString()
+        tStripped('nicknameSet'),
+        tStripped('nicknameDescription', { name: USERNAME.BOB })
       );
     });
     await alice1.clickOnElementAll(new NicknameInput(alice1));

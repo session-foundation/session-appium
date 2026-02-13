@@ -1,15 +1,15 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { CloseSettings } from './locators';
-import { ModalHeading } from './locators/global';
-import { PlusButton } from './locators/home';
-import { PathMenuItem, UserSettings } from './locators/settings';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+import { CloseSettings } from '../locators';
+import { ModalHeading } from '../locators/global';
+import { PlusButton } from '../locators/home';
+import { PathMenuItem, UserSettings } from '../locators/settings';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Review prompt only once',
@@ -37,8 +37,8 @@ async function reviewPromptOnce(platform: SupportedPlatformsType, testInfo: Test
   });
   await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
     await device.checkModalStrings(
-      englishStrippedStr('enjoyingSession').toString(),
-      englishStrippedStr('enjoyingSessionDescription').toString()
+      tStripped('enjoyingSession'),
+      tStripped('enjoyingSessionDescription')
     );
     await device.clickOnElementAll(new CloseSettings(device));
   });

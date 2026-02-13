@@ -1,7 +1,7 @@
 import { execSync } from 'child_process';
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 
-import type { Simulator } from '../run/test/specs/utils/capabilities_ios';
+import type { Simulator } from '../run/test/utils/capabilities_ios';
 
 import { shutdownSimulator } from './ios_shared';
 

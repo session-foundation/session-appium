@@ -1,11 +1,11 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { MessageBody } from './locators/conversation';
-import { ConversationItem } from './locators/home';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils/index';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { MessageBody } from '../locators/conversation';
+import { ConversationItem } from '../locators/home';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { sleepFor } from '../utils/index';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Read status',

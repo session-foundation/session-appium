@@ -1,16 +1,16 @@
 import type { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { androidIt } from '../../types/sessionIt';
-import { ContinueButton } from '../specs/locators/global';
+import { ContinueButton } from '../locators/global';
 import {
   AccountRestoreButton,
   BackButton,
   SeedPhraseInput,
   SlowModeRadio,
   WarningModalQuitButton,
-} from './locators/onboarding';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/onboarding';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 // These modals no longer exist in groups rebuild for iOS
 androidIt({
   title: 'Warning modal on restore account',
@@ -30,10 +30,7 @@ async function warningModalRestoreAccount(platform: SupportedPlatformsType, test
   await device.waitForTextElementToBePresent(new SlowModeRadio(device).build());
   // Pressing Back on the Message Notifications screen to trigger the Warning modal
   await device.clickOnElementAll(new BackButton(device));
-  await device.checkModalStrings(
-    englishStrippedStr('warning').toString(),
-    englishStrippedStr('onboardingBackLoadAccount').toString()
-  );
+  await device.checkModalStrings(tStripped('warning'), tStripped('onboardingBackLoadAccount'));
   await device.clickOnElementAll(new WarningModalQuitButton(device));
   await closeApp(device);
 }

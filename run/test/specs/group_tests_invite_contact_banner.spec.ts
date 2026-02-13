@@ -1,11 +1,11 @@
 import type { TestInfo } from '@playwright/test';
 
 import { androidIt } from '../../types/sessionIt';
-import { InviteContactsButton } from './locators';
-import { ConversationSettings } from './locators/conversation';
-import { LatestReleaseBanner, ManageMembersMenuItem } from './locators/groups';
-import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { InviteContactsButton } from '../locators';
+import { ConversationSettings } from '../locators/conversation';
+import { LatestReleaseBanner, ManageMembersMenuItem } from '../locators/groups';
+import { open_Alice1_Bob1_Charlie1_friends_group } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 // This banner no longer exists on iOS
 androidIt({

@@ -1,22 +1,22 @@
 import { test, type TestInfo } from '@playwright/test';
 
 import { testLink } from '../../constants';
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
-import { LinkPreview, LinkPreviewMessage } from './locators';
+import { LinkPreview, LinkPreviewMessage } from '../locators';
 import {
   MessageBody,
   MessageInput,
   OutgoingMessageStatusSent,
   SendButton,
-} from './locators/conversation';
-import { EnableLinkPreviewsModalButton } from './locators/global';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
-import { setDisappearingMessage } from './utils/set_disappearing_messages';
+} from '../locators/conversation';
+import { EnableLinkPreviewsModalButton } from '../locators/global';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { sleepFor } from '../utils';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
+import { setDisappearingMessage } from '../utils/set_disappearing_messages';
 
 bothPlatformsItSeparate({
   title: 'Disappearing link message 1:1',
@@ -58,8 +58,8 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
     // Accept dialog for link preview
     await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('linkPreviewsEnable').toString(),
-        englishStrippedStr('linkPreviewsFirstDescription').toString()
+        tStripped('linkPreviewsEnable'),
+        tStripped('linkPreviewsFirstDescription')
       );
     });
     await alice1.clickOnElementAll(new EnableLinkPreviewsModalButton(alice1));
@@ -112,8 +112,8 @@ async function disappearingLinkMessage1o1Android(
     // Accept dialog for link preview
     await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('linkPreviewsEnable').toString(),
-        englishStrippedStr('linkPreviewsFirstDescription').toString()
+        tStripped('linkPreviewsEnable'),
+        tStripped('linkPreviewsFirstDescription')
       );
     });
     await alice1.clickOnElementAll(new EnableLinkPreviewsModalButton(alice1));

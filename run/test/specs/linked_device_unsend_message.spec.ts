@@ -1,13 +1,13 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
-import { DeletedMessage, MessageBody } from './locators/conversation';
-import { ConversationItem, MessageSnippet } from './locators/home';
-import { open_Alice2_Bob1_friends } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from '../locators';
+import { DeletedMessage, MessageBody } from '../locators/conversation';
+import { ConversationItem, MessageSnippet } from '../locators/home';
+import { open_Alice2_Bob1_friends } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Unsent message syncs',
@@ -56,8 +56,8 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType, testI
     await alice1.clickOnByAccessibilityID('Delete message');
     await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Delete message'), async () => {
       await alice1.checkModalStrings(
-        englishStrippedStr('deleteMessage').withArgs({ count: 1 }).toString(),
-        englishStrippedStr('deleteMessageConfirm').withArgs({ count: 1 }).toString()
+        tStripped('deleteMessage', { count: 1 }),
+        tStripped('deleteMessageConfirm', { count: 1 })
       );
     });
     await alice1.clickOnElementAll(new DeleteMessageForEveryone(alice1));

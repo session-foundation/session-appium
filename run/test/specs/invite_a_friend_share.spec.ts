@@ -3,11 +3,11 @@ import type { TestInfo } from '@playwright/test';
 import { IOS_XPATHS } from '../../constants';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { AccountIDDisplay } from './locators/global';
-import { PlusButton } from './locators/home';
-import { InviteAFriendOption, ShareButton } from './locators/start_conversation';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+import { AccountIDDisplay } from '../locators/global';
+import { PlusButton } from '../locators/home';
+import { InviteAFriendOption, ShareButton } from '../locators/start_conversation';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Invite a friend',

@@ -22,7 +22,7 @@ import {
   ImagePermissionsModalAllow,
   LocatorsInterface,
   ReadReceiptsButton,
-} from '../../run/test/specs/locators';
+} from '../../run/test/locators';
 import {
   profilePicture,
   testFile,
@@ -30,7 +30,7 @@ import {
   testVideo,
   testVideoThumbnail,
 } from '../constants/testfiles';
-import { englishStrippedStr } from '../localizer/englishStrippedStr';
+import { tStripped } from '../localizer/lib';
 import {
   AttachmentsButton,
   DocumentsFolderButton,
@@ -42,7 +42,7 @@ import {
   OutgoingMessageStatusSent,
   ScrollToBottomButton,
   SendButton,
-} from '../test/specs/locators/conversation';
+} from '../test/locators/conversation';
 import {
   Contact,
   CTABody,
@@ -52,27 +52,23 @@ import {
   CTAHeading,
   ModalDescription,
   ModalHeading,
-} from '../test/specs/locators/global';
-import { ConversationItem, PlusButton } from '../test/specs/locators/home';
-import { LoadingAnimation } from '../test/specs/locators/onboarding';
+} from '../test/locators/global';
+import { ConversationItem, PlusButton } from '../test/locators/home';
+import { LoadingAnimation } from '../test/locators/onboarding';
 import {
   PrivacyMenuItem,
   SaveProfilePictureButton,
   UserAvatar,
   UserSettings,
   VersionNumber,
-} from '../test/specs/locators/settings';
-import {
-  EnterAccountID,
-  NewMessageOption,
-  NextButton,
-} from '../test/specs/locators/start_conversation';
-import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
-import { getAdbFullPath } from '../test/specs/utils/binaries';
-import { parseDataImage } from '../test/specs/utils/check_colour';
-import { isSameColor } from '../test/specs/utils/check_colour';
-import { SupportedPlatformsType } from '../test/specs/utils/open_app';
-import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/specs/utils/utilities';
+} from '../test/locators/settings';
+import { EnterAccountID, NewMessageOption, NextButton } from '../test/locators/start_conversation';
+import { clickOnCoordinates, sleepFor } from '../test/utils';
+import { getAdbFullPath } from '../test/utils/binaries';
+import { parseDataImage } from '../test/utils/check_colour';
+import { isSameColor } from '../test/utils/check_colour';
+import { SupportedPlatformsType } from '../test/utils/open_app';
+import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/utils/utilities';
 import {
   AccessibilityId,
   DISAPPEARING_TIMES,
@@ -2105,10 +2101,7 @@ export class DeviceWrapper {
   public async sendGIF(): Promise<number> {
     await this.clickOnElementAll(new AttachmentsButton(this));
     await this.clickOnElementAll(new GIFButton(this));
-    await this.checkModalStrings(
-      englishStrippedStr('giphyWarning').toString(),
-      englishStrippedStr('giphyWarningDescription').toString()
-    );
+    await this.checkModalStrings(tStripped('giphyWarning'), tStripped('giphyWarningDescription'));
     await this.clickOnByAccessibilityID('Continue', 5000);
     await this.clickOnElementAll(new FirstGif(this));
     if (this.isIOS()) {
@@ -2235,10 +2228,8 @@ export class DeviceWrapper {
       selector: 'Untrusted attachment message',
     });
     await this.checkModalStrings(
-      englishStrippedStr(`attachmentsAutoDownloadModalTitle`).toString(),
-      englishStrippedStr(`attachmentsAutoDownloadModalDescription`)
-        .withArgs({ conversation_name: conversationName })
-        .toString()
+      tStripped(`attachmentsAutoDownloadModalTitle`),
+      tStripped(`attachmentsAutoDownloadModalDescription`, { conversation_name: conversationName })
     );
     await this.clickOnElementAll(new DownloadMediaButton(this));
   }

@@ -1,19 +1,19 @@
 import test, { TestInfo } from '@playwright/test';
 
-import { englishStrippedStr } from '../../localizer/englishStrippedStr';
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { CTAButtonPositive } from './locators/global';
-import { PlusButton } from './locators/home';
-import { newUser } from './utils/create_account';
+import { CTAButtonPositive } from '../locators/global';
+import { PlusButton } from '../locators/home';
+import { newUser } from '../utils/create_account';
 import {
   closeApp,
   IOSTestContext,
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
-} from './utils/open_app';
-import { setIOSFirstInstallDate } from './utils/time_travel';
+} from '../utils/open_app';
+import { setIOSFirstInstallDate } from '../utils/time_travel';
 
 // iOS uses app-level time override (customFirstInstallDateTime capability).
 // Android would require system-level time manipulation (`adb root` + `toybox date`), which
@@ -43,9 +43,9 @@ async function donateCTAShowsSevenDaysAgo(platform: SupportedPlatformsType, test
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Donate CTA'), async () => {
     await device.checkCTAStrings(
-      englishStrippedStr('donateSessionHelp').toString(),
-      englishStrippedStr('donateSessionDescription').toString(),
-      [englishStrippedStr('donate').toString(), englishStrippedStr('maybeLater').toString()]
+      tStripped('donateSessionHelp'),
+      tStripped('donateSessionDescription'),
+      [tStripped('donate'), tStripped('maybeLater')]
     );
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
