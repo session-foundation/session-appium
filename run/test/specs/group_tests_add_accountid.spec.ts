@@ -4,24 +4,24 @@ import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { InviteAccountIDOrONS } from './locators';
+import { InviteAccountIDOrONS } from '../locators';
 import {
   AcceptMessageRequestButton,
   ConversationSettings,
   MessageBody,
-} from './locators/conversation';
+} from '../locators/conversation';
 import {
   InviteContactSendInviteButton,
   ManageMembersMenuItem,
   ShareNewMessagesRadial,
-} from './locators/groups';
-import { MessageRequestItem, MessageRequestsBanner } from './locators/home';
-import { EnterAccountID, NextButton } from './locators/start_conversation';
-import { open_Alice1_Bob1_Charlie1_Unknown1 } from './state_builder';
-import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { truncatePubkey } from './utils/get_account_id';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/groups';
+import { MessageRequestItem, MessageRequestsBanner } from '../locators/home';
+import { EnterAccountID, NextButton } from '../locators/start_conversation';
+import { open_Alice1_Bob1_Charlie1_Unknown1 } from '../state_builder';
+import { sleepFor } from '../utils';
+import { newUser } from '../utils/create_account';
+import { truncatePubkey } from '../utils/get_account_id';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 androidIt({
   title: 'Invite Account ID to group',

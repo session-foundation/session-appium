@@ -10,12 +10,12 @@ import {
   MessageLengthCountdown,
   MessageLengthOkayButton,
   SendButton,
-} from './locators/conversation';
-import { CTAButtonNegative } from './locators/global';
-import { PlusButton } from './locators/home';
-import { EnterAccountID, NewMessageOption, NextButton } from './locators/start_conversation';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/conversation';
+import { CTAButtonNegative } from '../locators/global';
+import { PlusButton } from '../locators/home';
+import { EnterAccountID, NewMessageOption, NextButton } from '../locators/start_conversation';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 
 const maxChars = 2000;
 const countdownThreshold = 1800;

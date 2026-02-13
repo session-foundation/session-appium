@@ -3,18 +3,18 @@ import type { TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ConversationHeaderName, ConversationSettings } from './locators/conversation';
+import { ConversationHeaderName, ConversationSettings } from '../locators/conversation';
 import {
   EditGroupNameInput,
   SaveGroupNameChangeButton,
   UpdateGroupInformation,
-} from './locators/groups';
-import { ConversationItem } from './locators/home';
-import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { createGroup } from './utils/create_group';
-import { linkedDevice } from './utils/link_device';
-import { closeApp, openAppFourDevices, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/groups';
+import { ConversationItem } from '../locators/home';
+import { sleepFor } from '../utils';
+import { newUser } from '../utils/create_account';
+import { createGroup } from '../utils/create_group';
+import { linkedDevice } from '../utils/link_device';
+import { closeApp, openAppFourDevices, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Create group and change name syncs',

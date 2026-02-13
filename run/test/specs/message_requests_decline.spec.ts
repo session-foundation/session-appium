@@ -3,12 +3,12 @@ import type { TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { type AccessibilityId, USERNAME } from '../../types/testing';
-import { DeclineMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
-import { MessageRequestItem, MessageRequestsBanner, PlusButton } from './locators/home';
-import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { linkedDevice } from './utils/link_device';
-import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
+import { DeclineMessageRequestButton, DeleteMesssageRequestConfirmation } from '../locators';
+import { MessageRequestItem, MessageRequestsBanner, PlusButton } from '../locators/home';
+import { sleepFor } from '../utils';
+import { newUser } from '../utils/create_account';
+import { linkedDevice } from '../utils/link_device';
+import { closeApp, openAppThreeDevices, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Delete message request in conversation',

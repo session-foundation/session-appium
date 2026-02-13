@@ -7,13 +7,13 @@ import {
   BlockUser,
   BlockUserConfirmationModal,
   CloseSettings,
-} from './locators';
-import { BlockedBanner, ConversationSettings, MessageBody } from './locators/conversation';
-import { Contact } from './locators/global';
-import { ConversationsMenuItem, UserSettings } from './locators/settings';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+} from '../locators';
+import { BlockedBanner, ConversationSettings, MessageBody } from '../locators/conversation';
+import { Contact } from '../locators/global';
+import { ConversationsMenuItem, UserSettings } from '../locators/settings';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { sleepFor } from '../utils';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Block user in conversation settings',

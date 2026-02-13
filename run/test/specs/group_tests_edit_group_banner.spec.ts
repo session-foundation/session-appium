@@ -1,10 +1,10 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { ConversationSettings } from './locators/conversation';
-import { LatestReleaseBanner, ManageMembersMenuItem } from './locators/groups';
-import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { ConversationSettings } from '../locators/conversation';
+import { LatestReleaseBanner, ManageMembersMenuItem } from '../locators/groups';
+import { open_Alice1_Bob1_Charlie1_friends_group } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Edit group banner',

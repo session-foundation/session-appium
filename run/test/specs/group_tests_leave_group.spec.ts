@@ -2,12 +2,12 @@ import type { TestInfo } from '@playwright/test';
 
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { ConversationSettings } from './locators/conversation';
-import { LeaveGroupConfirm, LeaveGroupMenuItem } from './locators/groups';
-import { ConversationItem } from './locators/home';
-import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { sleepFor } from './utils/index';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { ConversationSettings } from '../locators/conversation';
+import { LeaveGroupConfirm, LeaveGroupMenuItem } from '../locators/groups';
+import { ConversationItem } from '../locators/home';
+import { open_Alice1_Bob1_Charlie1_friends_group } from '../state_builder';
+import { sleepFor } from '../utils/index';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Leave group',

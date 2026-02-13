@@ -3,9 +3,9 @@ import type { TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { type AccessibilityId, USERNAME } from '../../types/testing';
-import { MessageRequestsBanner } from './locators/home';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
+import { MessageRequestsBanner } from '../locators/home';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppTwoDevices, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Message requests clear all',

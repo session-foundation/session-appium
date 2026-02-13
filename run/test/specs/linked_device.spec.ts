@@ -3,11 +3,11 @@ import type { TestInfo } from '@playwright/test';
 import { USERNAME } from '@session-foundation/qa-seeder';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { UsernameDisplay } from './locators';
-import { AccountIDDisplay } from './locators/global';
-import { UserSettings } from './locators/settings';
-import { linkedDevice } from './utils/link_device';
-import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
+import { UsernameDisplay } from '../locators';
+import { AccountIDDisplay } from '../locators/global';
+import { UserSettings } from '../locators/settings';
+import { linkedDevice } from '../utils/link_device';
+import { closeApp, openAppTwoDevices, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Link device',

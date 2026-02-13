@@ -3,17 +3,17 @@ import type { TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { SafariAddressBar, URLInputField } from './locators/browsers';
+import { SafariAddressBar, URLInputField } from '../locators/browsers';
 import {
   OpenLinkButton,
   SessionNetworkLearnMoreStaking,
   SessionNetworkMenuItem,
-} from './locators/network_page';
-import { UserSettings } from './locators/settings';
-import { newUser } from './utils/create_account';
-import { handleChromeFirstTimeOpen } from './utils/handle_first_open';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { assertUrlIsReachable, ensureHttpsURL } from './utils/utilities';
+} from '../locators/network_page';
+import { UserSettings } from '../locators/settings';
+import { newUser } from '../utils/create_account';
+import { handleChromeFirstTimeOpen } from '../utils/handle_first_open';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
+import { assertUrlIsReachable, ensureHttpsURL } from '../utils/utilities';
 
 bothPlatformsIt({
   title: 'Network page learn more staking link',

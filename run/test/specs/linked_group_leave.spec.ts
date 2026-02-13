@@ -3,13 +3,13 @@ import type { TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ConversationSettings } from './locators/conversation';
-import { LeaveGroupConfirm, LeaveGroupMenuItem } from './locators/groups';
-import { ConversationItem } from './locators/home';
-import { newUser } from './utils/create_account';
-import { createGroup } from './utils/create_group';
-import { linkedDevice } from './utils/link_device';
-import { closeApp, openAppFourDevices, SupportedPlatformsType } from './utils/open_app';
+import { ConversationSettings } from '../locators/conversation';
+import { LeaveGroupConfirm, LeaveGroupMenuItem } from '../locators/groups';
+import { ConversationItem } from '../locators/home';
+import { newUser } from '../utils/create_account';
+import { createGroup } from '../utils/create_group';
+import { linkedDevice } from '../utils/link_device';
+import { closeApp, openAppFourDevices, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Leave group linked device',

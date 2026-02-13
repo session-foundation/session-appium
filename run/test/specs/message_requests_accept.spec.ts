@@ -3,10 +3,10 @@ import type { TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ConversationItem } from './locators/home';
-import { newUser } from './utils/create_account';
-import { linkedDevice } from './utils/link_device';
-import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
+import { ConversationItem } from '../locators/home';
+import { newUser } from '../utils/create_account';
+import { linkedDevice } from '../utils/link_device';
+import { closeApp, openAppThreeDevices, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Accept message request',

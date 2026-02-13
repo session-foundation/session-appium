@@ -1,5 +1,5 @@
-import { sleepFor } from '../run/test/specs/utils';
-import { runScriptAndLog } from '../run/test/specs/utils/utilities';
+import { sleepFor } from '../run/test/utils';
+import { runScriptAndLog } from '../run/test/utils/utilities';
 
 const EMULATOR_CONFIG = {
   1: 5554,

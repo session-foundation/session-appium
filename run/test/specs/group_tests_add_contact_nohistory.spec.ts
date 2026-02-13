@@ -4,21 +4,21 @@ import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { InviteContactsMenuItem } from './locators';
-import { ConversationSettings, MessageBody } from './locators/conversation';
-import { Contact } from './locators/global';
+import { InviteContactsMenuItem } from '../locators';
+import { ConversationSettings, MessageBody } from '../locators/conversation';
+import { Contact } from '../locators/global';
 import {
   InviteContactConfirm,
   InviteContactSendInviteButton,
   ManageMembersMenuItem,
   ShareNewMessagesRadial,
-} from './locators/groups';
-import { ConversationItem } from './locators/home';
-import { open_Alice1_Bob1_Charlie1_Unknown1 } from './state_builder';
-import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { newContact } from './utils/create_contact';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/groups';
+import { ConversationItem } from '../locators/home';
+import { open_Alice1_Bob1_Charlie1_Unknown1 } from '../state_builder';
+import { sleepFor } from '../utils';
+import { newUser } from '../utils/create_account';
+import { newContact } from '../utils/create_contact';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Invite contact to group without chat history',

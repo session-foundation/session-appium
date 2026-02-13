@@ -4,14 +4,14 @@ import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { BackgroundPermsAllowButton } from './locators/home';
-import { newUser } from './utils/create_account';
+import { BackgroundPermsAllowButton } from '../locators/home';
+import { newUser } from '../utils/create_account';
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
   uninstallApp,
-} from './utils/open_app';
+} from '../utils/open_app';
 
 androidIt({
   title: 'Slow mode background perms modal',

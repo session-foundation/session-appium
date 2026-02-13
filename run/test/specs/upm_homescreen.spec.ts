@@ -2,9 +2,9 @@ import { test, type TestInfo } from '@playwright/test';
 
 import { TestSteps } from '../../types/allure';
 import { androidIt } from '../../types/sessionIt';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
-import { verifyPageScreenshot } from './utils/verify_screenshots';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
+import { verifyPageScreenshot } from '../utils/verify_screenshots';
 
 androidIt({
   title: 'User Profile Modal Home Screen',

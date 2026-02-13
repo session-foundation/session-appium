@@ -3,12 +3,12 @@ import type { TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { BlockedContactsSettings } from './locators';
-import { Contact } from './locators/global';
-import { ConversationItem, LongPressBlockOption } from './locators/home';
-import { ConversationsMenuItem, UserSettings } from './locators/settings';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { BlockedContactsSettings } from '../locators';
+import { Contact } from '../locators/global';
+import { ConversationItem, LongPressBlockOption } from '../locators/home';
+import { ConversationsMenuItem, UserSettings } from '../locators/settings';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 // Block option no longer available on iOS in conversation list
 androidIt({

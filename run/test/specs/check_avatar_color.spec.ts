@@ -2,13 +2,13 @@ import { test, type TestInfo } from '@playwright/test';
 
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { ConversationSettings } from './locators/conversation';
-import { ConversationItem } from './locators/home';
-import { UserAvatar, UserSettings } from './locators/settings';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
-import { isSameColor } from './utils/check_colour';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { ConversationSettings } from '../locators/conversation';
+import { ConversationItem } from '../locators/home';
+import { UserAvatar, UserSettings } from '../locators/settings';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { sleepFor } from '../utils';
+import { isSameColor } from '../utils/check_colour';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Check placeholder avatar color',

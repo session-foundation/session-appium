@@ -3,15 +3,15 @@ import type { TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { AccountIDDisplay, ContinueButton } from './locators/global';
+import { AccountIDDisplay, ContinueButton } from '../locators/global';
 import {
   HideRecoveryPasswordButton,
   RecoveryPasswordMenuItem,
   UserSettings,
   YesButton,
-} from './locators/settings';
-import { linkedDevice } from './utils/link_device';
-import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/settings';
+import { linkedDevice } from '../utils/link_device';
+import { closeApp, openAppTwoDevices, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Hide recovery password',

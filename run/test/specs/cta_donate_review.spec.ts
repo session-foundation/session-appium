@@ -4,14 +4,14 @@ import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { CloseSettings } from './locators';
-import { CTAButtonPositive } from './locators/global';
-import { ReviewPromptItsGreatButton } from './locators/home';
-import { PathMenuItem, UserSettings } from './locators/settings';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { forceStopAndRestart as forceStopAndRestartApp } from './utils/utilities';
-import { verifyPageScreenshot } from './utils/verify_screenshots';
+import { CloseSettings } from '../locators';
+import { CTAButtonPositive } from '../locators/global';
+import { ReviewPromptItsGreatButton } from '../locators/home';
+import { PathMenuItem, UserSettings } from '../locators/settings';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
+import { forceStopAndRestart as forceStopAndRestartApp } from '../utils/utilities';
+import { verifyPageScreenshot } from '../utils/verify_screenshots';
 
 bothPlatformsIt({
   title: 'Donate CTA shows after positive review',

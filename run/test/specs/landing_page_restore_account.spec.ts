@@ -3,9 +3,9 @@ import type { TestInfo } from '@playwright/test';
 import { USERNAME } from '@session-foundation/qa-seeder';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { linkedDevice } from './utils/link_device';
-import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
-import { verifyPageScreenshot } from './utils/verify_screenshots';
+import { linkedDevice } from '../utils/link_device';
+import { closeApp, openAppTwoDevices, SupportedPlatformsType } from '../utils/open_app';
+import { verifyPageScreenshot } from '../utils/verify_screenshots';
 
 bothPlatformsIt({
   title: 'Check landing page (restored account) layout',

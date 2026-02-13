@@ -3,11 +3,11 @@ import { test, type TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { ConversationSettings, EmptyConversation } from './locators/conversation';
-import { DeleteGroupConfirm, DeleteGroupMenuItem } from './locators/groups';
-import { ConversationItem, PlusButton } from './locators/home';
-import { open_Alice2_Bob1_Charlie1_friends_group } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { ConversationSettings, EmptyConversation } from '../locators/conversation';
+import { DeleteGroupConfirm, DeleteGroupMenuItem } from '../locators/groups';
+import { ConversationItem, PlusButton } from '../locators/home';
+import { open_Alice2_Bob1_Charlie1_friends_group } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Delete group linked device',

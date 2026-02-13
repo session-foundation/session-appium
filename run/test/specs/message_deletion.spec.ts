@@ -2,10 +2,10 @@ import type { TestInfo } from '@playwright/test';
 
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { DeleteMessageConfirmationModal, DeleteMessageLocally } from './locators';
-import { DeletedMessage, MessageBody } from './locators/conversation';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { DeleteMessageConfirmationModal, DeleteMessageLocally } from '../locators';
+import { DeletedMessage, MessageBody } from '../locators/conversation';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Delete message locally',

@@ -3,11 +3,11 @@ import { test, type TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
-import { DeletedMessage, MessageBody } from './locators/conversation';
-import { ConversationItem, MessageSnippet } from './locators/home';
-import { open_Alice2_Bob1_friends } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from '../locators';
+import { DeletedMessage, MessageBody } from '../locators/conversation';
+import { ConversationItem, MessageSnippet } from '../locators/home';
+import { open_Alice2_Bob1_friends } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Unsent message syncs',

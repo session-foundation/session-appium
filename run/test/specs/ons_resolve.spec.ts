@@ -4,12 +4,12 @@ import { ONS_MAPPINGS } from '../../constants';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ConversationHeaderName } from './locators/conversation';
-import { PlusButton } from './locators/home';
-import { EnterAccountID, NewMessageOption, NextButton } from './locators/start_conversation';
-import { newUser } from './utils/create_account';
-import { truncatePubkey } from './utils/get_account_id';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+import { ConversationHeaderName } from '../locators/conversation';
+import { PlusButton } from '../locators/home';
+import { EnterAccountID, NewMessageOption, NextButton } from '../locators/start_conversation';
+import { newUser } from '../utils/create_account';
+import { truncatePubkey } from '../utils/get_account_id';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'ONS resolution',

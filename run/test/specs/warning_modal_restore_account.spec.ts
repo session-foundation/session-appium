@@ -2,15 +2,15 @@ import type { TestInfo } from '@playwright/test';
 
 import { tStripped } from '../../localizer/lib';
 import { androidIt } from '../../types/sessionIt';
-import { ContinueButton } from '../specs/locators/global';
+import { ContinueButton } from '../locators/global';
 import {
   AccountRestoreButton,
   BackButton,
   SeedPhraseInput,
   SlowModeRadio,
   WarningModalQuitButton,
-} from './locators/onboarding';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/onboarding';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 // These modals no longer exist in groups rebuild for iOS
 androidIt({
   title: 'Warning modal on restore account',

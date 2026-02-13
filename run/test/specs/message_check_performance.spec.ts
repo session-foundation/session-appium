@@ -1,8 +1,8 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { SupportedPlatformsType } from './utils/open_app';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Check performance',

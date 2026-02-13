@@ -2,10 +2,10 @@ import { execSync } from 'child_process';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import * as path from 'path';
 
-import type { Simulator } from '../run/test/specs/utils/capabilities_ios';
+import type { Simulator } from '../run/test/utils/capabilities_ios';
 import type { DeviceWrapper } from '../run/types/DeviceWrapper';
 
-import { copyFileToSimulator } from '../run/test/specs/utils/copy_file_to_simulator';
+import { copyFileToSimulator } from '../run/test/utils/copy_file_to_simulator';
 import { bootSimulator, isSimulatorBooted, shutdownSimulator } from './ios_shared';
 import { sleepSync } from './shared';
 

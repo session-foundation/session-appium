@@ -10,16 +10,16 @@ import {
   EmptyConversation,
   MessageBody,
   MessageInput,
-} from './locators/conversation';
+} from '../locators/conversation';
 import {
   ConfirmRemovalButton,
   GroupMember,
   ManageMembersMenuItem,
   RemoveMemberButton,
   RemoveMemberMessagesRadial,
-} from './locators/groups';
-import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/groups';
+import { open_Alice1_Bob1_Charlie1_friends_group } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 // This functionality only exists on Android at the moment
 androidIt({

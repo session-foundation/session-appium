@@ -4,15 +4,15 @@ import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ConversationSettings, EmptyConversation, MessageInput } from './locators/conversation';
+import { ConversationSettings, EmptyConversation, MessageInput } from '../locators/conversation';
 import {
   ConfirmRemovalButton,
   GroupMember,
   ManageMembersMenuItem,
   RemoveMemberButton,
-} from './locators/groups';
-import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/groups';
+import { open_Alice1_Bob1_Charlie1_friends_group } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Kick member',

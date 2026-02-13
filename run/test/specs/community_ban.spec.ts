@@ -13,12 +13,12 @@ import {
   MessageInput,
   OutgoingMessageStatusSent,
   SendButton,
-} from './locators/conversation';
-import { ConversationItem } from './locators/home';
-import { assertAdminIsKnown, joinCommunity } from './utils/community';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
-import { restoreAccount } from './utils/restore_account';
+} from '../locators/conversation';
+import { ConversationItem } from '../locators/home';
+import { assertAdminIsKnown, joinCommunity } from '../utils/community';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppTwoDevices, SupportedPlatformsType } from '../utils/open_app';
+import { restoreAccount } from '../utils/restore_account';
 
 bothPlatformsIt({
   title: 'Ban and unban user in community',

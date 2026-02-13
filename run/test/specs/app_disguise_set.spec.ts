@@ -4,22 +4,17 @@ import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { DisguisedApp } from './locators/external';
+import { DisguisedApp } from '../locators/external';
 import {
   AppDisguiseMeetingIcon,
   AppearanceMenuItem,
   CloseAppButton,
   SelectAppIcon,
   UserSettings,
-} from './locators/settings';
-import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import {
-  openAppOnPlatformSingleDevice,
-  SupportedPlatformsType,
-  uninstallApp,
-} from './utils/open_app';
-import { closeApp } from './utils/open_app';
+} from '../locators/settings';
+import { sleepFor } from '../utils';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType, uninstallApp } from '../utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'App disguise set icon',

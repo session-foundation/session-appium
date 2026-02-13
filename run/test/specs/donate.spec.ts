@@ -3,13 +3,13 @@ import type { TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { SafariAddressBar, URLInputField } from './locators/browsers';
-import { OpenLinkButton } from './locators/network_page';
-import { DonationsMenuItem, UserSettings } from './locators/settings';
-import { newUser } from './utils/create_account';
-import { handleChromeFirstTimeOpen } from './utils/handle_first_open';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { assertUrlIsReachable, ensureHttpsURL } from './utils/utilities';
+import { SafariAddressBar, URLInputField } from '../locators/browsers';
+import { OpenLinkButton } from '../locators/network_page';
+import { DonationsMenuItem, UserSettings } from '../locators/settings';
+import { newUser } from '../utils/create_account';
+import { handleChromeFirstTimeOpen } from '../utils/handle_first_open';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
+import { assertUrlIsReachable, ensureHttpsURL } from '../utils/utilities';
 
 bothPlatformsIt({
   title: 'Donate Settings menu item',

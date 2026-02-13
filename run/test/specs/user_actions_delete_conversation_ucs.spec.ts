@@ -8,10 +8,10 @@ import {
   ConversationSettings,
   DeleteConversationMenuItem,
   DeleteConversationModalConfirm,
-} from './locators/conversation';
-import { ConversationItem } from './locators/home';
-import { open_Alice2_Bob1_friends } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/conversation';
+import { ConversationItem } from '../locators/home';
+import { open_Alice2_Bob1_friends } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Delete conversation from conversation settings',

@@ -1,21 +1,21 @@
 import type { TestInfo } from '@playwright/test';
 
+import { testCommunityLink, testCommunityName } from '../../constants/community';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
-import { testCommunityLink, testCommunityName } from './../../constants/community';
-import { InviteContactsMenuItem } from './locators';
+import { InviteContactsMenuItem } from '../locators';
 import {
   CommunityInvitation,
   CommunityInviteConfirmButton,
   ConversationSettings,
-} from './locators/conversation';
-import { GroupMember } from './locators/groups';
-import { ConversationItem } from './locators/home';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
-import { joinCommunity } from './utils/community';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
-import { setDisappearingMessage } from './utils/set_disappearing_messages';
+} from '../locators/conversation';
+import { GroupMember } from '../locators/groups';
+import { ConversationItem } from '../locators/home';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { sleepFor } from '../utils';
+import { joinCommunity } from '../utils/community';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
+import { setDisappearingMessage } from '../utils/set_disappearing_messages';
 
 bothPlatformsIt({
   title: 'Disappearing community invite message 1:1',

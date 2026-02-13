@@ -8,11 +8,11 @@ import {
   ReviewPromptNeedsWorkButton,
   ReviewPromptNotNowButton,
   ReviewPromptOpenSurveyButton,
-} from './locators/home';
-import { PathMenuItem } from './locators/settings';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { assertUrlIsReachable } from './utils/utilities';
+} from '../locators/home';
+import { PathMenuItem } from '../locators/settings';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
+import { assertUrlIsReachable } from '../utils/utilities';
 
 bothPlatformsIt({
   title: 'Review prompt negative flow',

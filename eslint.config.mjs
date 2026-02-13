@@ -93,7 +93,7 @@ export default defineConfig(
     },
   },
   {
-    files: ['run/test/specs/locators/*'],
+    files: ['run/test/locators/*'],
     rules: {
       'perfectionist/sort-modules': 'error',
     },

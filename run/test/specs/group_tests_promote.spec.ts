@@ -4,8 +4,8 @@ import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { androidIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
-import { ConversationSettings } from './locators/conversation';
-import { Contact } from './locators/global';
+import { ConversationSettings } from '../locators/conversation';
+import { Contact } from '../locators/global';
 import {
   ConfirmPromotionModalButton,
   ManageAdminsMenuItem,
@@ -13,15 +13,15 @@ import {
   PromoteMemberFooterButton,
   PromoteMemberModalConfirm,
   PromoteMembersMenuItem,
-} from './locators/groups';
-import { ConversationItem } from './locators/home';
-import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { newUser } from './utils/create_account';
-import { createGroup } from './utils/create_group';
-import { sortByPubkey } from './utils/get_account_id';
-import { closeApp, openAppFourDevices, SupportedPlatformsType } from './utils/open_app';
-import { restoreAccount } from './utils/restore_account';
-import { setDisappearingMessage } from './utils/set_disappearing_messages';
+} from '../locators/groups';
+import { ConversationItem } from '../locators/home';
+import { open_Alice1_Bob1_Charlie1_friends_group } from '../state_builder';
+import { newUser } from '../utils/create_account';
+import { createGroup } from '../utils/create_group';
+import { sortByPubkey } from '../utils/get_account_id';
+import { closeApp, openAppFourDevices, SupportedPlatformsType } from '../utils/open_app';
+import { restoreAccount } from '../utils/restore_account';
+import { setDisappearingMessage } from '../utils/set_disappearing_messages';
 
 androidIt({
   title: 'Promote to admin (one member)',

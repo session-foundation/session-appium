@@ -3,12 +3,12 @@ import type { TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { MessageInput, OutgoingMessageStatusSent, SendButton } from './locators/conversation';
-import { MessageRequestItem, PlusButton } from './locators/home';
-import { MessageRequestsBanner } from './locators/home';
-import { EnterAccountID, NewMessageOption, NextButton } from './locators/start_conversation';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
+import { MessageInput, OutgoingMessageStatusSent, SendButton } from '../locators/conversation';
+import { MessageRequestItem, PlusButton } from '../locators/home';
+import { MessageRequestsBanner } from '../locators/home';
+import { EnterAccountID, NewMessageOption, NextButton } from '../locators/start_conversation';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppTwoDevices, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Accept message request with text',

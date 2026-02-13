@@ -3,8 +3,8 @@ import { test, type TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { androidIt } from '../../types/sessionIt';
-import { ConversationSettings, EmptyConversation, MessageBody } from './locators/conversation';
-import { Contact } from './locators/global';
+import { ConversationSettings, EmptyConversation, MessageBody } from '../locators/conversation';
+import { Contact } from '../locators/global';
 import {
   ConfirmPromotionModalButton,
   DeleteGroupConfirm,
@@ -16,11 +16,11 @@ import {
   PromoteMemberFooterButton,
   PromoteMemberModalConfirm,
   PromoteMembersMenuItem,
-} from './locators/groups';
-import { ConversationItem, PlusButton } from './locators/home';
-import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { sleepFor } from './utils';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/groups';
+import { ConversationItem, PlusButton } from '../locators/home';
+import { open_Alice1_Bob1_Charlie1_friends_group } from '../state_builder';
+import { sleepFor } from '../utils';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 androidIt({
   title: 'Leave group as the only admin',

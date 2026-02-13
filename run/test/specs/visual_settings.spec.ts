@@ -4,17 +4,17 @@ import { TestSteps } from '../../types/allure';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { NotificationsMenuItem } from './locators/settings';
+import { NotificationsMenuItem } from '../locators/settings';
 import {
   AppearanceMenuItem,
   ConversationsMenuItem,
   PrivacyMenuItem,
   UserSettings,
-} from './locators/settings';
-import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { verifyPageScreenshot } from './utils/verify_screenshots';
+} from '../locators/settings';
+import { sleepFor } from '../utils';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
+import { verifyPageScreenshot } from '../utils/verify_screenshots';
 
 const testCases = [
   {

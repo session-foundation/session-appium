@@ -3,11 +3,11 @@ import { test, type TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
-import { CloseSettings } from './locators';
-import { CallButton, NotificationsModalButton, NotificationSwitch } from './locators/conversation';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils/index';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { CloseSettings } from '../locators';
+import { CallButton, NotificationsModalButton, NotificationSwitch } from '../locators/conversation';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { sleepFor } from '../utils/index';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Voice calls',

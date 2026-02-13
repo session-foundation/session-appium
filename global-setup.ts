@@ -1,7 +1,7 @@
 import { FullConfig } from '@playwright/test';
 
-import { getNetworkTarget } from './run/test/specs/utils/devnet';
-import { SupportedPlatformsType } from './run/test/specs/utils/open_app';
+import { getNetworkTarget } from './run/test/utils/devnet';
+import { SupportedPlatformsType } from './run/test/utils/open_app';
 
 export default async function globalSetup(_config: FullConfig) {
   const platform = process.env.PLATFORM as SupportedPlatformsType | undefined;

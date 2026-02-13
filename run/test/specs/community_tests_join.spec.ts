@@ -3,11 +3,11 @@ import { test, type TestInfo } from '@playwright/test';
 import { testCommunityLink, testCommunityName } from '../../constants/community';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { ConversationItem } from './locators/home';
-import { open_Alice2 } from './state_builder';
-import { sleepFor } from './utils';
-import { joinCommunity } from './utils/community';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { ConversationItem } from '../locators/home';
+import { open_Alice2 } from '../state_builder';
+import { sleepFor } from '../utils';
+import { joinCommunity } from '../utils/community';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Join community test',

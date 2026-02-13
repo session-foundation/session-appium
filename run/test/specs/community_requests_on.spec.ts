@@ -4,7 +4,7 @@ import { USERNAME } from '@session-foundation/qa-seeder';
 import { testCommunityLink, testCommunityName } from '../../constants/community';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { CloseSettings } from './locators';
+import { CloseSettings } from '../locators';
 import {
   CommunityMessageAuthor,
   ConversationHeaderName,
@@ -12,13 +12,13 @@ import {
   MessageRequestAcceptDescription,
   MessageRequestPendingDescription,
   UPMMessageButton,
-} from './locators/conversation';
-import { MessageRequestItem, MessageRequestsBanner } from './locators/home';
-import { CommunityMessageRequestSwitch, PrivacyMenuItem, UserSettings } from './locators/settings';
-import { sleepFor } from './utils';
-import { joinCommunity } from './utils/community';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/conversation';
+import { MessageRequestItem, MessageRequestsBanner } from '../locators/home';
+import { CommunityMessageRequestSwitch, PrivacyMenuItem, UserSettings } from '../locators/settings';
+import { sleepFor } from '../utils';
+import { joinCommunity } from '../utils/community';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppTwoDevices, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Community message requests on',

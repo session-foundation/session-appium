@@ -5,16 +5,16 @@ import { TestSteps } from '../../types/allure';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { CopyURLButton } from './locators/global';
+import { CopyURLButton } from '../locators/global';
 import {
   AppearanceMenuItem,
   ClassicLightThemeOption,
   DonationsMenuItem,
   PathMenuItem,
   UserSettings,
-} from './locators/settings';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/settings';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 
 // Yes, multiple tests in one file!
 const reviewTriggers = [

@@ -3,11 +3,11 @@ import { test, type TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { EmptyConversation, Hide } from './locators/conversation';
-import { CancelSearchButton, NoteToSelfOption } from './locators/global_search';
-import { ConversationItem, SearchButton } from './locators/home';
-import { open_Alice2 } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { EmptyConversation, Hide } from '../locators/conversation';
+import { CancelSearchButton, NoteToSelfOption } from '../locators/global_search';
+import { ConversationItem, SearchButton } from '../locators/home';
+import { open_Alice2 } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Hide note to self linked device',

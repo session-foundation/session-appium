@@ -3,14 +3,14 @@ import type { TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { type AccessibilityId, USERNAME } from '../../types/testing';
-import { BlockedContactsSettings } from './locators';
-import { Contact } from './locators/global';
-import { MessageRequestItem, MessageRequestsBanner, PlusButton } from './locators/home';
-import { ConversationsMenuItem, UserSettings } from './locators/settings';
-import { sleepFor } from './utils';
-import { newUser } from './utils/create_account';
-import { linkedDevice } from './utils/link_device';
-import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
+import { BlockedContactsSettings } from '../locators';
+import { Contact } from '../locators/global';
+import { MessageRequestItem, MessageRequestsBanner, PlusButton } from '../locators/home';
+import { ConversationsMenuItem, UserSettings } from '../locators/settings';
+import { sleepFor } from '../utils';
+import { newUser } from '../utils/create_account';
+import { linkedDevice } from '../utils/link_device';
+import { closeApp, openAppThreeDevices, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Block message request in conversation',

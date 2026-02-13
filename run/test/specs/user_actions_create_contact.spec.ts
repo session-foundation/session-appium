@@ -2,13 +2,13 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ConversationItem } from './locators/home';
-import { newUser } from './utils/create_account';
-import { retryMsgSentForBanner } from './utils/create_contact';
-import { linkedDevice } from './utils/link_device';
-import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
-import { runOnlyOnIOS } from './utils/run_on';
-import { sleepFor } from './utils/sleep_for';
+import { ConversationItem } from '../locators/home';
+import { newUser } from '../utils/create_account';
+import { retryMsgSentForBanner } from '../utils/create_contact';
+import { linkedDevice } from '../utils/link_device';
+import { closeApp, openAppThreeDevices, SupportedPlatformsType } from '../utils/open_app';
+import { runOnlyOnIOS } from '../utils/run_on';
+import { sleepFor } from '../utils/sleep_for';
 
 bothPlatformsIt({
   title: 'Create contact',
