@@ -1,5 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
+import { testCommunityLink, testCommunityName } from '../../constants/community';
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { InviteContactsMenuItem, JoinCommunityModalButton } from '../locators';
@@ -14,7 +15,6 @@ import { open_Alice1_Bob1_friends } from '../state_builder';
 import { sleepFor } from '../utils';
 import { joinCommunity } from '../utils/join_community';
 import { closeApp, SupportedPlatformsType } from '../utils/open_app';
-import { testCommunityLink, testCommunityName } from './../../constants/community';
 
 bothPlatformsIt({
   title: 'Send community invitation',

@@ -1,5 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
+import { testCommunityLink, testCommunityName } from '../../constants/community';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { InviteContactsMenuItem } from '../locators';
@@ -15,7 +16,6 @@ import { sleepFor } from '../utils';
 import { joinCommunity } from '../utils/join_community';
 import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 import { setDisappearingMessage } from '../utils/set_disappearing_messages';
-import { testCommunityLink, testCommunityName } from './../../constants/community';
 
 bothPlatformsIt({
   title: 'Disappearing community invite message 1:1',
