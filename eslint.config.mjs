@@ -42,6 +42,7 @@ export default defineConfig(
     rules: {
       'no-unused-vars': 'off', // we have @typescript-eslint/no-unused-vars enabled below
       'no-else-return': 'error',
+      'preserve-caught-error': 'off',
       '@typescript-eslint/no-floating-promises': 'error',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-explicit-any': 'off',

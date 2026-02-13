@@ -70,15 +70,12 @@ import {
   UserSettings,
   VersionNumber,
 } from '../test/locators/settings';
-import {
-  EnterAccountID,
-  NewMessageOption,
-  NextButton,
-} from '../test/locators/start_conversation';
+import { EnterAccountID, NewMessageOption, NextButton } from '../test/locators/start_conversation';
 import { clickOnCoordinates, sleepFor } from '../test/utils';
 import { getAdbFullPath } from '../test/utils/binaries';
 import { parseDataImage } from '../test/utils/check_colour';
 import { isSameColor } from '../test/utils/check_colour';
+import { CTAConfig, ctaConfigs, CTAType } from '../test/utils/check_cta';
 import { SupportedPlatformsType } from '../test/utils/open_app';
 import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/utils/utilities';
 import {
@@ -2607,8 +2604,8 @@ export class DeviceWrapper {
     const pixelColor = await parseDataImage(base64image);
     return pixelColor;
   }
-  // Sample an element's centre pixel color SAMPLE_SIZE times to determine whether it is animated or not. 
-  // If the set contains more than 1 color it is likely animated. 
+  // Sample an element's centre pixel color SAMPLE_SIZE times to determine whether it is animated or not.
+  // If the set contains more than 1 color it is likely animated.
   public async verifyElementIsAnimated(args: LocatorsInterface): Promise<void> {
     const SAMPLE_SIZE = 3;
     const colors = new Set<string>();

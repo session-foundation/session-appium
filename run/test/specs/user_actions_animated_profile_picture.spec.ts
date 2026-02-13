@@ -3,11 +3,11 @@ import { test, type TestInfo } from '@playwright/test';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { PathMenuItem, UserAvatar } from './locators/settings';
-import { newUser } from './utils/create_account';
-import { makeAccountPro } from './utils/mock_pro';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { forceStopAndRestart } from './utils/utilities';
+import { PathMenuItem, UserAvatar } from '../locators/settings';
+import { newUser } from '../utils/create_account';
+import { makeAccountPro } from '../utils/mock_pro';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
+import { forceStopAndRestart } from '../utils/utilities';
 
 bothPlatformsIt({
   title: 'Upload animated profile picture (non Pro)',

@@ -24,7 +24,7 @@ import { randomBytes } from 'crypto';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-import { PRO_BACKEND_URL } from '../../../constants';
+import { PRO_BACKEND_URL } from '../../constants';
 
 export type PaymentProvider = 'apple' | 'google';
 
@@ -326,7 +326,6 @@ export async function addProPayment(
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'Unknown error';
       if (attempt === maxAttempts) {
-        // eslint-disable-next-line preserve-caught-error
         throw new Error(`add_pro_payment failed after ${maxAttempts} attempts: ${msg}`);
       }
       console.log(`add_pro_payment attempt ${attempt}/${maxAttempts} failed: ${msg}, retrying...`);

@@ -1,4 +1,4 @@
-import { tStripped } from '../../../localizer/lib';
+import { tStripped } from '../../localizer/lib';
 
 export type CTAType = 'animatedProfilePicture' | 'donate' | 'longerMessages';
 

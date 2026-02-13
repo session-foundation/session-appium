@@ -4,13 +4,9 @@ import { TestSteps } from '../../types/allure';
 import { iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { PlusButton } from '../locators/home';
-import { newUser } from '../utils/create_account';
 import { IOSTestContext } from '../utils/capabilities_ios';
-import {
-  closeApp,
-  openAppOnPlatformSingleDevice,
-  SupportedPlatformsType,
-} from '../utils/open_app';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 import { setIOSFirstInstallDate } from '../utils/time_travel';
 
 // iOS uses app-level time override (customFirstInstallDateTime capability).

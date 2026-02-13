@@ -47,7 +47,10 @@ async function reviewPromptPositive(platform: SupportedPlatformsType, testInfo: 
     await device.clickOnElementAll(new ReviewPromptItsGreatButton(device));
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Rate Session'), async () => {
-    await device.checkModalStrings(tStripped('rateSession'), tStripped('rateSessionModalDescriptionUpdated', { storevariant }));
+    await device.checkModalStrings(
+      tStripped('rateSession'),
+      tStripped('rateSessionModalDescriptionUpdated', { storevariant })
+    );
     await device.waitForTextElementToBePresent(new ReviewPromptRateAppButton(device));
     await device.verifyElementNotPresent(new ReviewPromptNotNowButton(device)); // This modal now only has the Rate button
   });

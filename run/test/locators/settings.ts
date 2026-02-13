@@ -209,7 +209,8 @@ export class RecoveryPasswordMenuItem extends LocatorsInterface {
       case 'android':
         return {
           strategy: '-android uiautomator',
-          selector: 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("Recovery password menu item"))',
+          selector:
+            'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("Recovery password menu item"))',
         } as const;
       case 'ios':
         return {
