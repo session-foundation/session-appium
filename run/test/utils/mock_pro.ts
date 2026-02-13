@@ -69,7 +69,7 @@ function getWordlist(): string[] {
     return WORDLIST_CACHE;
   }
 
-  const wordlistPath = join(__dirname, '../../../../english_wordlist.txt');
+  const wordlistPath = join(__dirname, '../../../english_wordlist.txt');
   const content = readFileSync(wordlistPath, 'utf-8');
   const words = content
     .split('\n')

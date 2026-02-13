@@ -14,45 +14,96 @@ import {
 import { CTAButtonNegative } from '../locators/global';
 import { PlusButton } from '../locators/home';
 import { EnterAccountID, NewMessageOption, NextButton } from '../locators/start_conversation';
+import { IOSTestContext } from '../utils/capabilities_ios';
 import { newUser } from '../utils/create_account';
+import { makeAccountPro } from '../utils/mock_pro';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
+import { forceStopAndRestart } from '../utils/utilities';
 
-const maxChars = 2000;
-const countdownThreshold = 1800;
+const STANDARD_MAX_CHARS = 2000;
+const PRO_MAX_CHARS = 10000;
+const COUNTDOWN_START_THRESHOLD = 200;
 
 const messageLengthTestCases = [
   {
+    pro: false,
     length: 1799,
-    char: 'a',
     shouldSend: true,
     description: 'no countdown shows, message sends',
   },
-  { length: 1800, char: 'b', shouldSend: true, description: 'countdown shows 200, message sends' },
-  { length: 2000, char: 'c', shouldSend: true, description: 'countdown shows 0, message sends' },
   {
+    pro: false,
+    length: 1800,
+    shouldSend: true,
+    description: 'countdown shows 200, message sends',
+  },
+  {
+    pro: false,
+    length: 2000,
+    shouldSend: true,
+    description: 'countdown shows 0, message sends',
+  },
+  {
+    pro: false,
     length: 2001,
-    char: 'd',
+    shouldSend: false,
+    description: 'countdown shows -1, cannot send message',
+  },
+  {
+    pro: true,
+    length: 9799,
+    shouldSend: true,
+    description: 'no countdown shows, message sends',
+  },
+  {
+    pro: true,
+    length: 9800,
+    shouldSend: true,
+    description: 'countdown shows 200, message sends',
+  },
+  {
+    pro: true,
+    length: 10000,
+    shouldSend: true,
+    description: 'countdown shows 0, message sends',
+  },
+  {
+    pro: true,
+    length: 10001,
     shouldSend: false,
     description: 'countdown shows -1, cannot send message',
   },
 ];
 
 for (const testCase of messageLengthTestCases) {
+  const proSuffix = testCase.pro ? `Pro` : `non Pro`;
   bothPlatformsIt({
-    title: `Message length limit (${testCase.length} chars)`,
+    title: `Message length limit (${testCase.length} chars ${proSuffix})`,
     risk: 'high',
     countOfDevicesNeeded: 1,
     allureSuites: {
       parent: 'Sending Messages',
       suite: 'Rules',
     },
-    allureDescription: `Verifies message length behavior at ${testCase.length} characters - ${testCase.description}`,
+    allureDescription: `Verifies message length behavior at ${testCase.length} characters - ${testCase.description} (${proSuffix})`,
     testCb: async (platform: SupportedPlatformsType, testInfo: TestInfo) => {
+      const iosContext: IOSTestContext = {
+        sessionProEnabled: 'true',
+      };
       const { device, alice } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-        const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
+        const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, iosContext);
         const alice = await newUser(device, USERNAME.ALICE);
         return { device, alice };
       });
+
+      if (testCase.pro) {
+        const paymentProvider = platform === 'ios' ? 'apple' : 'google';
+        await makeAccountPro({
+          mnemonic: alice.recoveryPhrase,
+          provider: paymentProvider,
+        });
+        await forceStopAndRestart(device);
+      }
 
       // Send message to self to bring up Note to Self conversation
       await test.step(TestSteps.OPEN.NTS, async () => {
@@ -64,12 +115,15 @@ for (const testCase of messageLengthTestCases) {
       });
 
       await test.step(`Type ${testCase.length} chars, check countdown`, async () => {
+        const expectedMax = testCase.pro ? PRO_MAX_CHARS : STANDARD_MAX_CHARS;
         const expectedCount =
-          testCase.length < countdownThreshold ? null : (maxChars - testCase.length).toString();
+          testCase.length < expectedMax - COUNTDOWN_START_THRESHOLD
+            ? null
+            : (expectedMax - testCase.length).toString();
 
         // Construct the string of desired length
-        const message = testCase.char.repeat(testCase.length);
-        await device.inputText(message, new MessageInput(device));
+        const message = 'x'.repeat(testCase.length);
+        await device.inputText(message, new MessageInput(device), true);
 
         // Does the countdown appear?
         if (expectedCount) {
@@ -85,20 +139,18 @@ for (const testCase of messageLengthTestCases) {
         // Is the message short enough to send?
         if (testCase.shouldSend) {
           await device.waitForTextElementToBePresent(new MessageBody(device, message));
-        } else if (platform === 'ios') {
-          // iOS: Modal appears, verify and dismiss
-          await device.checkModalStrings(
-            tStripped('modalMessageTooLongTitle'),
-            tStripped('modalMessageTooLongDescription', { limit: maxChars.toString() })
-          );
-          await device.clickOnElementAll(new MessageLengthOkayButton(device));
-          await device.verifyElementNotPresent(new MessageBody(device, message));
-        } else {
-          // Android: CTA appears, verify and dismiss
-          // Post-Pro is active on debug/qa builds by default
-          // This will be the default for both platforms once Pro is live
+        } else if (!testCase.pro) {
+          // For Non Pro, a CTA appears
           await device.checkCTA('longerMessages');
           await device.clickOnElementAll(new CTAButtonNegative(device));
+          await device.verifyElementNotPresent(new MessageBody(device, message));
+        } else if (testCase.pro) {
+          // For Pro, a normal message length dialog appears
+          await device.checkModalStrings(
+            tStripped('modalMessageTooLongTitle'),
+            tStripped('modalMessageTooLongDescription', { limit: expectedMax.toString() })
+          );
+          await device.clickOnElementAll(new MessageLengthOkayButton(device));
           await device.verifyElementNotPresent(new MessageBody(device, message));
         }
       });

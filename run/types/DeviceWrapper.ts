@@ -1833,7 +1833,8 @@ export class DeviceWrapper {
 
   public async inputText(
     textToInput: string,
-    args: LocatorsInterface | ({ maxWait?: number } & StrategyExtractionObj)
+    args: LocatorsInterface | ({ maxWait?: number } & StrategyExtractionObj),
+    paste: boolean = false
   ) {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
 
@@ -1844,7 +1845,23 @@ export class DeviceWrapper {
       throw new Error(`inputText: Did not find element with locator: ${JSON.stringify(locator)}`);
     }
 
-    await this.setValueImmediate(textToInput, el.ELEMENT);
+    if (paste) {
+      await this.click(el.ELEMENT);
+      if (this.isAndroid()) {
+        await this.toAndroid().setClipboard(
+          Buffer.from(textToInput).toString('base64'),
+          'plaintext'
+        );
+        // KEYCODE_PASTE = 279
+        await this.toAndroid().pressKeyCode(279);
+      } else {
+        await this.toIOS().mobileSetPasteboard(textToInput, 'utf8');
+        // XCUIKeyModifierCommand = 1 << 4 = 16
+        await this.toIOS().mobileKeys([{ key: 'v', modifierFlags: 16 }]);
+      }
+    } else {
+      await this.setValueImmediate(textToInput, el.ELEMENT);
+    }
   }
 
   public async getAttribute(attribute: string, elementId: string) {
