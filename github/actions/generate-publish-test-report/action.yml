@@ -22,7 +22,7 @@ runs:
     - name: Generate Allure report
       shell: bash
       run: |
-        npx ts-node run/test/specs/utils/allure/closeRun.ts
+        npx ts-node run/test/utils/allure/closeRun.ts
       env:
         PLATFORM: ${{ inputs.PLATFORM }}
         BUILD_NUMBER: ${{ inputs.BUILD_NUMBER }}
@@ -37,7 +37,7 @@ runs:
       id: publish
       shell: bash
       run: |
-        npx ts-node run/test/specs/utils/allure/publishReport.ts
+        npx ts-node run/test/utils/allure/publishReport.ts
       env:
         PLATFORM: ${{ inputs.PLATFORM }}
         BUILD_NUMBER: ${{ inputs.BUILD_NUMBER }}

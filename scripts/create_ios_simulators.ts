@@ -42,7 +42,7 @@ const DEVICE_CONFIG = {
   runtime: 'com.apple.CoreSimulator.SimRuntime.iOS-26-2', // xcrun simctl list runtimes
 };
 
-const MEDIA_ROOT = path.join('run', 'test', 'specs', 'media');
+const MEDIA_ROOT = path.join('run', 'test', 'media');
 const MEDIA_FILES = {
   images: ['profile_picture.jpg', 'test_image.jpg'],
   videos: ['test_video.mp4'],

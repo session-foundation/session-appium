@@ -1070,7 +1070,10 @@ export class DeviceWrapper {
     );
 
     // Load the reference image buffer from disk
-    const referencePath = path.join('run', 'test', 'specs', 'media', referenceImageName);
+    const referencePath = path.join('run', 'test', 'media', referenceImageName);
+    await fs.access(referencePath).catch(() => {
+      throw new Error(`Reference image not found: ${referencePath}`);
+    });
     const referenceBuffer = await fs.readFile(referencePath);
 
     let bestMatch: {
@@ -1861,7 +1864,10 @@ export class DeviceWrapper {
   public async pushMediaToDevice(
     mediaFileName: 'profile_picture.jpg' | 'test_file.pdf' | 'test_image.jpg' | 'test_video.mp4'
   ) {
-    const filePath = path.join('run', 'test', 'specs', 'media', mediaFileName);
+    const filePath = path.join('run', 'test', 'media', mediaFileName);
+    await fs.access(filePath).catch(() => {
+      throw new Error(`Media file not found: ${filePath}`);
+    });
     if (this.isIOS()) {
       // Push file to simulator
       await runScriptAndLog(`xcrun simctl addmedia ${this.udid} ${filePath}`, true);
