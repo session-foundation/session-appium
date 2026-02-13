@@ -6,6 +6,15 @@ import { StrategyExtractionObj } from '../../types/testing';
 import { getAppDisplayName } from '../utils/devnet';
 import { LocatorsInterface } from './index';
 
+export class AcceptMessageRequestButton extends LocatorsInterface {
+  public build() {
+    return {
+      strategy: 'accessibility id',
+      selector: 'Accept message request',
+    } as const;
+  }
+}
+
 export class AttachmentsButton extends LocatorsInterface {
   public build() {
     return {
@@ -14,7 +23,6 @@ export class AttachmentsButton extends LocatorsInterface {
     } as const;
   }
 }
-
 export class BlockedBanner extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -149,6 +157,7 @@ export class ConversationSettings extends LocatorsInterface {
     }
   }
 }
+
 export class DeleteContactConfirmButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -165,7 +174,6 @@ export class DeleteContactConfirmButton extends LocatorsInterface {
     }
   }
 }
-
 export class DeleteContactMenuItem extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -182,6 +190,7 @@ export class DeleteContactMenuItem extends LocatorsInterface {
     }
   }
 }
+
 export class DeleteConversationMenuItem extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -198,7 +207,6 @@ export class DeleteConversationMenuItem extends LocatorsInterface {
     }
   }
 }
-
 export class DeleteConversationModalConfirm extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -215,6 +223,7 @@ export class DeleteConversationModalConfirm extends LocatorsInterface {
     }
   }
 }
+
 export class DeletedMessage extends LocatorsInterface {
   public build() {
     return {
@@ -223,7 +232,6 @@ export class DeletedMessage extends LocatorsInterface {
     } as const;
   }
 }
-
 export class DocumentMessage extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -386,6 +394,7 @@ export class HideNoteToSelfConfirmButton extends LocatorsInterface {
     }
   }
 }
+
 export class HideNoteToSelfMenuOption extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -402,13 +411,66 @@ export class HideNoteToSelfMenuOption extends LocatorsInterface {
     }
   }
 }
-
 export class ImagesFolderButton extends LocatorsInterface {
   public build() {
     return {
       strategy: 'accessibility id',
       selector: 'Images folder',
     } as const;
+  }
+}
+
+export class LongPressBanAndDelete extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/context_menu_item_title',
+          text: tStripped('banDeleteAll'),
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Ban and Delete All',
+        } as const;
+    }
+  }
+}
+
+export class LongPressBanUser extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/context_menu_item_title',
+          text: tStripped('banUser'),
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Ban User',
+        } as const;
+    }
+  }
+}
+
+export class LongPressUnBan extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/context_menu_item_title',
+          text: tStripped('banUnbanUser'),
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Unban User',
+        } as const;
+    }
   }
 }
 

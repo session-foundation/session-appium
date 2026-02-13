@@ -13,11 +13,11 @@ import {
   MessageRequestPendingDescription,
   UPMMessageButton,
 } from '../locators/conversation';
-import { MessageRequestsBanner } from '../locators/home';
+import { MessageRequestItem, MessageRequestsBanner } from '../locators/home';
 import { CommunityMessageRequestSwitch, PrivacyMenuItem, UserSettings } from '../locators/settings';
 import { sleepFor } from '../utils';
+import { joinCommunity } from '../utils/community';
 import { newUser } from '../utils/create_account';
-import { joinCommunity } from '../utils/join_community';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
@@ -68,6 +68,7 @@ async function blindedMessageRequests(platform: SupportedPlatformsType, testInfo
   });
   await test.step(TestSteps.SEND.MESSAGE(alice.userName, bob.userName), async () => {
     await device1.clickOnElementAll(new CommunityMessageAuthor(device1, message));
+    await sleepFor(500); // brief sleep to let the UI settle
     await device1.clickOnElementAll(new UPMMessageButton(device1));
     await device1.clickOnElementAll(new ConversationHeaderName(device1, bob.userName));
     await device1.waitForTextElementToBePresent(new MessageRequestPendingDescription(device1));
@@ -76,7 +77,7 @@ async function blindedMessageRequests(platform: SupportedPlatformsType, testInfo
   await test.step(`${bob.userName} accepts message request from ${alice.userName}`, async () => {
     await device2.clickOnElementAll(new MessageRequestsBanner(device2));
     // Bob clicks on request conversation item
-    await device2.clickOnByAccessibilityID('Message request');
+    await device2.clickOnElementAll(new MessageRequestItem(device2));
     await device2.waitForTextElementToBePresent(
       new ConversationHeaderName(device2, alice.userName)
     );

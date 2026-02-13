@@ -25,7 +25,7 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   'appium:deviceName': 'iPhone 17',
   'appium:automationName': 'XCUITest',
   'appium:bundleId': iOSBundleId,
-  'appium:newCommandTimeout': 300000,
+  'appium:newCommandTimeout': 600000,
   'appium:useNewWDA': false,
   'appium:showXcodeLog': false,
   'appium:autoDismissAlerts': false,
@@ -34,6 +34,7 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
     env: {
       debugDisappearingMessageDurations: 'true',
       communityPollLimit: '3',
+      animationsEnabled: 'false',
     },
   },
 } as AppiumXCUITestCapabilities;

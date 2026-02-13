@@ -17,6 +17,7 @@ export interface ReportContext {
   build: string;
   artifact: string;
   risk: string;
+  networkTarget: string;
   runNumber: number;
   runAttempt: number;
   runID: number;
@@ -33,6 +34,7 @@ export function getReportContextFromEnv(): ReportContext {
   const build = process.env.BUILD_NUMBER;
   const artifact = process.env.APK_URL;
   const risk = process.env.RISK?.trim() || 'full';
+  const networkTarget = process.env.NETWORK_TARGET || 'mainnet'; // Default to mainnet for iOS
   const runNumber = Number(process.env.GITHUB_RUN_NUMBER);
   const runAttempt = Number(process.env.GITHUB_RUN_ATTEMPT);
   const runID = Number(process.env.GITHUB_RUN_ID);
@@ -64,6 +66,7 @@ export function getReportContextFromEnv(): ReportContext {
     build,
     artifact,
     risk,
+    networkTarget,
     runNumber,
     runAttempt,
     runID,
@@ -79,6 +82,7 @@ export async function writeEnvironmentProperties(ctx: ReportContext) {
     `platform=${ctx.platform}`,
     `build=${ctx.build}`,
     `artifact=${ctx.artifact}`,
+    `network=${ctx.networkTarget}`,
     `appium=https://github.com/session-foundation/session-appium/commit/${getGitCommitSha()}`,
     `branch=${getGitBranch()}`,
   ].join('\n');

@@ -32,6 +32,7 @@ import {
 } from '../constants/testfiles';
 import { tStripped } from '../localizer/lib';
 import {
+  AcceptMessageRequestButton,
   AttachmentsButton,
   DocumentsFolderButton,
   GIFButton,
@@ -53,7 +54,12 @@ import {
   ModalDescription,
   ModalHeading,
 } from '../test/locators/global';
-import { ConversationItem, PlusButton } from '../test/locators/home';
+import {
+  ConversationItem,
+  MessageRequestItem,
+  MessageRequestsBanner,
+  PlusButton,
+} from '../test/locators/home';
 import { LoadingAnimation } from '../test/locators/onboarding';
 import {
   PrivacyMenuItem,
@@ -346,6 +352,7 @@ export class DeviceWrapper {
       { from: 'Message sent status: Sent', to: 'Message sent status: Sending' },
       { from: 'Done', to: 'Donate' },
       { from: 'New conversation button', to: 'conversation-options-avatar' },
+      { from: 'Leave group', to: 'Delete group' },
     ];
 
     // System locators such as 'network.loki.messenger:id' can cause false positives with too high similarity scores
@@ -412,7 +419,7 @@ export class DeviceWrapper {
       }
 
       // Validate the candidate element
-      let isValidCandidate = true;
+      let isValidCandidate: boolean;
 
       // Always check visibility first
       try {
@@ -603,7 +610,9 @@ export class DeviceWrapper {
           skipHealing: true,
         });
       } catch (fallbackError) {
-        throw new Error(`Element ${primaryDescription} and ${fallbackDescription} not found.`);
+        throw new Error(`Element ${primaryDescription} and ${fallbackDescription} not found.`, {
+          cause: fallbackError,
+        });
       }
     }
   }
@@ -655,10 +664,8 @@ export class DeviceWrapper {
   public async clickOnElementAll(
     args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
   ) {
-    let el: AppiumNextElementType | null = null;
     const locator = args instanceof LocatorsInterface ? args.build() : args;
-
-    el = await this.waitForTextElementToBePresent({ ...locator });
+    const el = await this.waitForTextElementToBePresent({ ...locator });
     await this.click(el.ELEMENT);
     return el;
   }
@@ -869,10 +876,8 @@ export class DeviceWrapper {
   public async deleteText(
     args: LocatorsInterface | ({ text?: string; maxWait?: number } & StrategyExtractionObj)
   ) {
-    let el: AppiumNextElementType | null = null;
     const locator = args instanceof LocatorsInterface ? args.build() : args;
-
-    el = await this.waitForTextElementToBePresent({ ...locator });
+    const el = await this.waitForTextElementToBePresent({ ...locator });
     await this.click(el.ELEMENT);
     await sleepFor(100);
     const maxRetries = 3;
@@ -1228,19 +1233,24 @@ export class DeviceWrapper {
 
     if (element) {
       // Elements can disappear in the GUI but still be present in the DOM
+      let isVisible: boolean;
       try {
-        const isVisible = await this.isVisible(element.ELEMENT);
-        if (isVisible) {
-          throw new Error(
-            `Element with ${description} is visible after ${maxWait}ms when it should not be`
-          );
-        }
-        // Element exists but not visible - that's okay
-        this.log(`Element with ${description} exists but is not visible`);
+        isVisible = await this.isVisible(element.ELEMENT);
       } catch (e) {
-        // Stale element or other error - element is gone, that's okay
-        this.log(`Element with ${description} is not present (stale reference)`);
+        // Stale reference or other error checking visibility
+        const errorMsg = e instanceof Error ? e.message : String(e);
+        throw new Error(
+          `Element with ${description} has stale reference or error checking visibility: ${errorMsg}`
+        );
       }
+
+      if (isVisible) {
+        throw new Error(
+          `Element with ${description} is visible after ${maxWait}ms when it should not be`
+        );
+      }
+      // Element exists but not visible - that's okay
+      this.log(`Element with ${description} exists but is not visible`);
     } else {
       this.log(`Verified no element with ${description} is present`);
     }
@@ -1628,7 +1638,7 @@ export class DeviceWrapper {
         // Success when element is GONE
         return { success: !element };
       },
-      { maxWait: 15_000 }
+      { maxWait: 18_000 }
     );
 
     this.info('Loading animation has finished');
@@ -1649,7 +1659,7 @@ export class DeviceWrapper {
     } = {}
   ): Promise<T | undefined> {
     const start = Date.now();
-    let elapsed = 0;
+    let elapsed: number;
     let attempt = 0;
     let lastError: string | undefined;
 
@@ -1772,6 +1782,12 @@ export class DeviceWrapper {
     return message;
   }
 
+  public async acceptMessageRequestWithButton() {
+    await this.clickOnElementAll(new MessageRequestsBanner(this));
+    await this.clickOnElementAll(new MessageRequestItem(this));
+    await this.onAndroid().clickOnElementAll(new AcceptMessageRequestButton(this));
+  }
+
   public async sendMessageTo(sender: User, receiver: Group | User) {
     const message = `${sender.userName} to ${receiver.userName}`;
     await this.clickOnElementAll(new ConversationItem(this, receiver.userName));
@@ -1816,12 +1832,11 @@ export class DeviceWrapper {
     textToInput: string,
     args: LocatorsInterface | ({ maxWait?: number } & StrategyExtractionObj)
   ) {
-    let el: AppiumNextElementType | null = null;
     const locator = args instanceof LocatorsInterface ? args.build() : args;
 
     this.log('Locator being used:', locator);
 
-    el = await this.waitForTextElementToBePresent({ ...locator });
+    const el = await this.waitForTextElementToBePresent({ ...locator });
     if (!el) {
       throw new Error(`inputText: Did not find element with locator: ${JSON.stringify(locator)}`);
     }
@@ -2261,11 +2276,13 @@ export class DeviceWrapper {
 
     this.info('Swiped left on ', selector);
   }
+
+  // Swipe horizontally from 20% to 80% of screen width at the vertical center
   public async swipeRight() {
     const { width, height } = await this.getWindowRect();
-    // Swipe horizontally from 20% to 80% of screen width at the vertical center
     await this.scroll({ x: width * 0.2, y: height / 2 }, { x: width * 0.8, y: height / 2 }, 100);
   }
+
   public async swipeLeft(accessibilityId: AccessibilityId, text: string) {
     const el = await this.findMatchingTextAndAccessibilityId(accessibilityId, text);
 
@@ -2285,14 +2302,19 @@ export class DeviceWrapper {
     // let some time for swipe action to happen and UI to update
   }
 
+  // Swipe vertically from 70% to 30% of screen height at the horizontal center
   public async scrollDown() {
-    await this.scroll({ x: 760, y: 1500 }, { x: 760, y: 710 }, 100);
+    const { width, height } = await this.getWindowRect();
+    await this.scroll({ x: width / 2, y: height * 0.7 }, { x: width / 2, y: height * 0.3 }, 100);
   }
 
+  // Swipe vertically from 30% to 70% of screen height at the horizontal center
   public async scrollUp() {
-    await this.scroll({ x: 760, y: 710 }, { x: 760, y: 1500 }, 100);
+    const { width, height } = await this.getWindowRect();
+    await this.scroll({ x: width / 2, y: height * 0.3 }, { x: width / 2, y: height * 0.7 }, 100);
   }
 
+  // Swipe vertically from 95% to 35% of screen height at the horizontal center
   public async swipeFromBottom(): Promise<void> {
     const { width, height } = await this.getWindowRect();
 
@@ -2543,10 +2565,10 @@ export class DeviceWrapper {
     // Check features if expected
     if (features) {
       for (let i = 0; i < features.length; i++) {
-        const featureLocator = new CTAFeature(this, i + 1);
+        const featureLocator = new CTAFeature(this, i);
         const elFeature = await this.waitForTextElementToBePresent(featureLocator);
         const actualFeature = await this.getTextFromElement(elFeature);
-        this.assertTextMatches(actualFeature, features[i], `CTA feature ${i + 1}`);
+        this.assertTextMatches(actualFeature, features[i], `CTA feature ${i}`);
       }
     }
 

@@ -5,7 +5,7 @@ import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { EmojiReactsPill, FirstEmojiReact, MessageBody } from '../locators/conversation';
 import { open_Alice1_Bob1_friends } from '../state_builder';
-import { joinCommunity } from '../utils/join_community';
+import { joinCommunity } from '../utils/community';
 import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({

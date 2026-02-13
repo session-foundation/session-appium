@@ -6,7 +6,6 @@ import { USERNAME } from '../../types/testing';
 import { ConversationSettings } from '../locators/conversation';
 import { LeaveGroupConfirm, LeaveGroupMenuItem } from '../locators/groups';
 import { ConversationItem } from '../locators/home';
-import { sleepFor } from '../utils';
 import { newUser } from '../utils/create_account';
 import { createGroup } from '../utils/create_group';
 import { linkedDevice } from '../utils/link_device';
@@ -27,29 +26,32 @@ bothPlatformsIt({
 async function leaveGroupLinkedDevice(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName = 'Leave group linked device';
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform, testInfo);
-  const charlie = await linkedDevice(device3, device4, USERNAME.CHARLIE);
-  // Create users A, B and C
-  const [alice, bob] = await Promise.all([
+  const [alice, bob, charlie] = await Promise.all([
     newUser(device1, USERNAME.ALICE),
     newUser(device2, USERNAME.BOB),
+    linkedDevice(device3, device4, USERNAME.CHARLIE),
   ]);
   // Create group with user A, user B and User C
   await createGroup(platform, device1, alice, device2, bob, device3, charlie, testGroupName);
-  await sleepFor(1000);
+  // If we know group is present on device4, we can check for just disappearance later (vs. hasElementBeenDeleted)
+  await device4.waitForTextElementToBePresent(new ConversationItem(device2, testGroupName));
+  // Leave Group on device 3
   await device3.clickOnElementAll(new ConversationSettings(device3));
-  await sleepFor(1000);
   await device3.clickOnElementAll(new LeaveGroupMenuItem(device3));
   await device3.checkModalStrings(
     tStripped('groupLeave'),
     tStripped('groupLeaveDescription', { group_name: testGroupName })
   );
-  // Modal with Leave/Cancel
   await device3.clickOnElementAll(new LeaveGroupConfirm(device3));
-  // Check for group disappearing
-  await Promise.all([
-    device3.verifyElementNotPresent(new ConversationItem(device3, testGroupName)),
-    device4.hasElementBeenDeleted(new ConversationItem(device4, testGroupName)),
-  ]);
+  // Check for group not being visible anymore
+  await Promise.all(
+    [device3, device4].map(device =>
+      device.verifyElementNotPresent({
+        ...new ConversationItem(device, testGroupName).build(),
+        maxWait: 10_000,
+      })
+    )
+  );
   // Create control message for user leaving group
   const groupMemberLeft = tStripped('groupMemberLeft', { name: charlie.userName });
   await Promise.all([

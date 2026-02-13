@@ -13,7 +13,6 @@ export const USERNAME = usernameFromSeeder;
 export type GROUPNAME =
   | 'Disappear after send test'
   | 'Disappear after sent test'
-  | 'Group to test adding contact'
   | 'Kick member'
   | 'Leave group'
   | 'Leave group linked device'
@@ -150,6 +149,7 @@ export type XPath =
   | `//XCUIElementTypeStaticText[contains(@name, '00:')]`
   | `//XCUIElementTypeStaticText[contains(@name, "Version")]`
   | `//XCUIElementTypeStaticText[starts-with(@name,'${string}')]`
+  | `//XCUIElementTypeStaticText`
   | `//XCUIElementTypeSwitch[@name="Read Receipts, Send read receipts in one-to-one chats."]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`
@@ -159,16 +159,13 @@ export type XPath =
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.TabHost/android.widget.LinearLayout/android.widget.FrameLayout/androidx.viewpager.widget.ViewPager/android.widget.RelativeLayout/android.widget.GridView/android.widget.LinearLayout/android.widget.LinearLayout[2]`;
 
 export type UiAutomatorQuery =
-  | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("Appearance"))'
-  | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("Conversations"))'
-  | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("path-menu-item"))'
-  | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text("Select app icon"))'
-  | 'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().textStartsWith("Version"))'
-  | 'new UiSelector().resourceId("cta-button-negative").childSelector(new UiSelector().className("android.widget.TextView"))'
-  | 'new UiSelector().resourceId("cta-button-positive").childSelector(new UiSelector().className("android.widget.TextView"))'
   | 'new UiSelector().resourceId("network.loki.messenger:id/messageStatusTextView").text("Sent")'
   | 'new UiSelector().text("Enter your display name")'
+  | `new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId(${string}))`
+  | `new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text(${string}))`
+  | `new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().textStartsWith(${string}))`
   | `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-text"))`
+  | `new UiSelector().resourceId(${string}).childSelector(new UiSelector().className("android.widget.TextView"))`
   | `new UiSelector().text(${string})`;
 
 export type AccessibilityId =
@@ -196,6 +193,8 @@ export type AccessibilityId =
   | 'back'
   | 'Back'
   | 'BackButton'
+  | 'Ban and Delete All'
+  | 'Ban User'
   | 'Blinded ID'
   | 'Block'
   | 'Block contacts - Navigation'
@@ -407,6 +406,7 @@ export type AccessibilityId =
   | 'Terms of Service'
   | 'test_file, pdf'
   | 'Time selector'
+  | 'Unban User'
   | 'Unblock'
   | 'Untrusted attachment message'
   | 'Upload'
@@ -433,6 +433,7 @@ export type Id =
   | 'android:id/aerr_close'
   | 'android:id/aerr_wait'
   | 'android:id/alertTitle'
+  | 'android:id/button1'
   | 'android:id/content_preview_text'
   | 'android:id/summary'
   | 'android:id/title'
@@ -456,6 +457,7 @@ export type Id =
   | 'com.android.settings:id/switch_text'
   | 'com.google.android.apps.photos:id/sign_in_button'
   | 'Community input'
+  | 'Confirm'
   | 'Confirm invite button'
   | 'Contact'
   | 'Contact status'
@@ -503,6 +505,7 @@ export type Id =
   | 'Hide recovery password button'
   | 'Image button'
   | 'Image picker'
+  | 'invite-accountid-menu-option'
   | 'invite-contacts-menu-option'
   | 'Invite button'
   | 'Invite friend button'
@@ -511,10 +514,12 @@ export type Id =
   | 'Last updated timestamp'
   | 'Learn about staking link'
   | 'Learn more link'
+  | 'leave-group-cancel-button'
   | 'leave-group-confirm-button'
   | 'leave-group-menu-option'
   | 'Leave'
   | 'Loading animation'
+  | 'manage-admins-menu-option'
   | 'manage-members-menu-option'
   | 'Market cap amount'
   | 'MeetingSE option'
@@ -529,6 +534,7 @@ export type Id =
   | 'network.loki.messenger:id/callSubtitle'
   | 'network.loki.messenger:id/callTitle'
   | 'network.loki.messenger:id/characterLimitText'
+  | 'network.loki.messenger:id/context_menu_item_title'
   | 'network.loki.messenger:id/crop_image_menu_crop'
   | 'network.loki.messenger:id/emptyStateContainer'
   | 'network.loki.messenger:id/endCallButton'
@@ -564,23 +570,32 @@ export type Id =
   | 'Privacy'
   | 'Privacy policy button'
   | 'pro-badge-text'
+  | 'promote-members-menu-option'
+  | 'Promote'
   | 'qa-collapsing-footer-action_invite'
+  | 'qa-collapsing-footer-action_promote'
+  | 'qa-collapsing-footer-action_remove'
   | 'Quit'
   | 'rate-app-button'
   | 'Recovery password container'
   | 'Recovery password menu item'
   | 'Recovery phrase input'
+  | 'remove-member-messages-option'
+  | 'remove-member-option'
   | 'Remove'
   | 'Remove contact button'
   | 'Restore your session button'
   | 'Reveal recovery phrase button'
   | 'Save'
   | 'Select All'
+  | 'Send Invite'
   | 'SESH price'
   | 'session-network-menu-item'
   | 'Session id input box'
   | 'set-nickname-confirm-button'
   | 'Set button'
+  | 'share-message-history-option'
+  | 'share-new-messages-option'
   | 'Share button'
   | 'show-nts-confirm-button'
   | 'Show'
@@ -593,6 +608,8 @@ export type Id =
   | 'update-username-confirm-button'
   | 'User settings'
   | 'Version warning banner'
+  | 'whitelist-cancel-button'
+  | 'whitelist-confirm-button'
   | 'Yes'
   | `All ${AppName} notifications`
   | `cta-feature-${number}`

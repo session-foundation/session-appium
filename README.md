@@ -77,7 +77,7 @@ nvm install
 nvm use
 git lfs install
 git lfs pull
-git submodule update --init --recursive
+git submodule update --init --recursive --remote
 pnpm install --frozen-lockfile
 ```
 
