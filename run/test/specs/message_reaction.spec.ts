@@ -2,9 +2,9 @@ import { test, type TestInfo } from '@playwright/test';
 
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { EmojiReactsPill, FirstEmojiReact, MessageBody } from './locators/conversation';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { EmojiReactsPill, FirstEmojiReact, MessageBody } from '../locators/conversation';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Send emoji react 1:1',

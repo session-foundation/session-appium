@@ -4,22 +4,22 @@ import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { DisguisedApp } from './locators/external';
+import { DisguisedApp } from '../locators/external';
 import {
   AppDisguiseMeetingIcon,
   AppearanceMenuItem,
   CloseAppButton,
   SelectAppIcon,
   UserSettings,
-} from './locators/settings';
-import { sleepFor } from './utils';
-import { getAdbFullPath } from './utils/binaries';
-import { androidAppPackage } from './utils/capabilities_android';
-import { iOSBundleId } from './utils/capabilities_ios';
-import { newUser } from './utils/create_account';
-import { openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { closeApp } from './utils/open_app';
-import { runScriptAndLog } from './utils/utilities';
+} from '../locators/settings';
+import { sleepFor } from '../utils';
+import { getAdbFullPath } from '../utils/binaries';
+import { androidAppPackage } from '../utils/capabilities_android';
+import { iOSBundleId } from '../utils/capabilities_ios';
+import { newUser } from '../utils/create_account';
+import { openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
+import { closeApp } from '../utils/open_app';
+import { runScriptAndLog } from '../utils/utilities';
 
 bothPlatformsItSeparate({
   title: 'App disguise set icon',

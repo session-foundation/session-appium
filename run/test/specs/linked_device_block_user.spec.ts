@@ -2,14 +2,14 @@ import type { TestInfo } from '@playwright/test';
 
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { BlockedContactsSettings, BlockUser, BlockUserConfirmationModal } from './locators';
-import { BlockedBanner, ConversationSettings } from './locators/conversation';
-import { Contact } from './locators/global';
-import { ConversationItem } from './locators/home';
-import { ConversationsMenuItem, UserSettings } from './locators/settings';
-import { open_Alice2_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { BlockedContactsSettings, BlockUser, BlockUserConfirmationModal } from '../locators';
+import { BlockedBanner, ConversationSettings } from '../locators/conversation';
+import { Contact } from '../locators/global';
+import { ConversationItem } from '../locators/home';
+import { ConversationsMenuItem, UserSettings } from '../locators/settings';
+import { open_Alice2_Bob1_friends } from '../state_builder';
+import { sleepFor } from '../utils';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Block user linked device',

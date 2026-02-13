@@ -8,10 +8,10 @@ import {
   ReviewPromptItsGreatButton,
   ReviewPromptNotNowButton,
   ReviewPromptRateAppButton,
-} from './locators/home';
-import { PathMenuItem, UserSettings } from './locators/settings';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/home';
+import { PathMenuItem, UserSettings } from '../locators/settings';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Review prompt positive flow',

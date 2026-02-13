@@ -2,10 +2,10 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
-import { VoiceMessage } from './locators/conversation';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
-import { setDisappearingMessage } from './utils/set_disappearing_messages';
+import { VoiceMessage } from '../locators/conversation';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
+import { setDisappearingMessage } from '../utils/set_disappearing_messages';
 
 bothPlatformsIt({
   title: 'Disappearing voice message 1:1',

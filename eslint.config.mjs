@@ -92,7 +92,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['run/test/specs/locators/*'],
+    files: ['run/test/locators/*'],
     rules: {
       'perfectionist/sort-modules': 'error',
     },

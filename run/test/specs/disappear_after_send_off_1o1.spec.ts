@@ -3,19 +3,19 @@ import type { TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES, DisappearModes } from '../../types/testing';
-import { ConversationSettings } from './locators/conversation';
+import { ConversationSettings } from '../locators/conversation';
 import {
   DisableDisappearingMessages,
   DisappearingMessagesMenuOption,
   DisappearingMessagesSubtitle,
   FollowSettingsButton,
   SetDisappearMessagesButton,
-} from './locators/disappearing_messages';
-import { open_Alice2_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
-import { checkDisappearingControlMessage } from './utils/disappearing_control_messages';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
-import { setDisappearingMessage } from './utils/set_disappearing_messages';
+} from '../locators/disappearing_messages';
+import { open_Alice2_Bob1_friends } from '../state_builder';
+import { sleepFor } from '../utils';
+import { checkDisappearingControlMessage } from '../utils/disappearing_control_messages';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
+import { setDisappearingMessage } from '../utils/set_disappearing_messages';
 
 bothPlatformsIt({
   title: 'Disappear after send off 1:1',

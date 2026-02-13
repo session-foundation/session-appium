@@ -2,9 +2,9 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { newUser } from './utils/create_account';
-import { createGroup } from './utils/create_group';
-import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
+import { newUser } from '../utils/create_account';
+import { createGroup } from '../utils/create_group';
+import { closeApp, openAppThreeDevices, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Create group',

@@ -1,10 +1,10 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { MessageBody, VoiceMessage } from './locators/conversation';
-import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { sleepFor } from './utils';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { MessageBody, VoiceMessage } from '../locators/conversation';
+import { open_Alice1_Bob1_Charlie1_friends_group } from '../state_builder';
+import { sleepFor } from '../utils';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Send voice message to group',

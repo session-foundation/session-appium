@@ -7,11 +7,11 @@ import {
   MessageInput,
   OutgoingMessageStatusSent,
   SendButton,
-} from './locators/conversation';
-import { ConversationItem } from './locators/home';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/conversation';
+import { ConversationItem } from '../locators/home';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { sleepFor } from '../utils';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Send long message 1:1',

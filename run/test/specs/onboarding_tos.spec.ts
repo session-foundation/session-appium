@@ -1,11 +1,11 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { SafariAddressBar, URLInputField } from './locators/browsers';
-import { SplashScreenLinks, TermsOfServiceButton } from './locators/onboarding';
-import { handleChromeFirstTimeOpen } from './utils/handle_first_open';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { assertUrlIsReachable, ensureHttpsURL } from './utils/utilities';
+import { SafariAddressBar, URLInputField } from '../locators/browsers';
+import { SplashScreenLinks, TermsOfServiceButton } from '../locators/onboarding';
+import { handleChromeFirstTimeOpen } from '../utils/handle_first_open';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
+import { assertUrlIsReachable, ensureHttpsURL } from '../utils/utilities';
 
 bothPlatformsIt({
   title: 'Onboarding terms of service',

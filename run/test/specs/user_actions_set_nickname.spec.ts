@@ -11,10 +11,10 @@ import {
   NicknameInput,
   PreferredDisplayName,
   SaveNicknameButton,
-} from './locators/conversation';
-import { ConversationItem } from './locators/home';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/conversation';
+import { ConversationItem } from '../locators/home';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Set nickname',

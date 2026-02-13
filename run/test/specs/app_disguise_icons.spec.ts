@@ -3,10 +3,10 @@ import { test, type TestInfo } from '@playwright/test';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { AppearanceMenuItem, SelectAppIcon, UserSettings } from './locators/settings';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { verifyPageScreenshot } from './utils/verify_screenshots';
+import { AppearanceMenuItem, SelectAppIcon, UserSettings } from '../locators/settings';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
+import { verifyPageScreenshot } from '../utils/verify_screenshots';
 
 bothPlatformsIt({
   title: 'Check app disguise icon layout',

@@ -3,10 +3,10 @@ import type { TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ClearInputButton, EditUsernameButton, UsernameDisplay, UsernameInput } from './locators';
-import { SaveNameChangeButton, UserSettings } from './locators/settings';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+import { ClearInputButton, EditUsernameButton, UsernameDisplay, UsernameInput } from '../locators';
+import { SaveNameChangeButton, UserSettings } from '../locators/settings';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Change username',

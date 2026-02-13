@@ -9,10 +9,10 @@ import {
   DeleteContactConfirmButton,
   DeleteContactMenuItem,
   MessageBody,
-} from './locators/conversation';
-import { ConversationItem, MessageRequestsBanner } from './locators/home';
-import { open_Alice2_Bob1_friends } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/conversation';
+import { ConversationItem, MessageRequestsBanner } from '../locators/home';
+import { open_Alice2_Bob1_friends } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Delete contact from conversation settings',

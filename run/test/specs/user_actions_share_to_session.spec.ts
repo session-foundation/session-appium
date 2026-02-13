@@ -4,14 +4,14 @@ import { testImage } from '../../constants/testfiles';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ImageName, ShareExtensionIcon } from './locators';
-import { MessageBody, MessageInput, SendButton } from './locators/conversation';
-import { PhotoLibrary } from './locators/external';
-import { Contact } from './locators/global';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
-import { handlePhotosFirstTimeOpen } from './utils/handle_first_open';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+import { ImageName, ShareExtensionIcon } from '../locators';
+import { MessageBody, MessageInput, SendButton } from '../locators/conversation';
+import { PhotoLibrary } from '../locators/external';
+import { Contact } from '../locators/global';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { sleepFor } from '../utils';
+import { handlePhotosFirstTimeOpen } from '../utils/handle_first_open';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Share to session',

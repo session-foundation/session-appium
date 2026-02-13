@@ -2,12 +2,12 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ConversationHeaderName, MessageBody } from './locators/conversation';
-import { ConversationItem } from './locators/home';
-import { newUser } from './utils/create_account';
-import { createGroup } from './utils/create_group';
-import { closeApp, openAppFourDevices, SupportedPlatformsType } from './utils/open_app';
-import { restoreAccount } from './utils/restore_account';
+import { ConversationHeaderName, MessageBody } from '../locators/conversation';
+import { ConversationItem } from '../locators/home';
+import { newUser } from '../utils/create_account';
+import { createGroup } from '../utils/create_group';
+import { closeApp, openAppFourDevices, SupportedPlatformsType } from '../utils/open_app';
+import { restoreAccount } from '../utils/restore_account';
 
 bothPlatformsIt({
   title: 'Restore group',

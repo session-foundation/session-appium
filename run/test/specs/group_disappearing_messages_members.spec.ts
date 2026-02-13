@@ -2,14 +2,14 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
-import { ConversationSettings } from './locators/conversation';
+import { ConversationSettings } from '../locators/conversation';
 import {
   DisappearingMessageRadial,
   DisappearingMessagesMenuOption,
   SetDisappearMessagesButton,
-} from './locators/disappearing_messages';
-import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/disappearing_messages';
+import { open_Alice1_Bob1_Charlie1_friends_group } from '../state_builder';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Group member disappearing messages',

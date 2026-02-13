@@ -5,18 +5,18 @@ import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
-import { LinkPreview, LinkPreviewMessage } from './locators';
+import { LinkPreview, LinkPreviewMessage } from '../locators';
 import {
   MessageBody,
   MessageInput,
   OutgoingMessageStatusSent,
   SendButton,
-} from './locators/conversation';
-import { EnableLinkPreviewsModalButton } from './locators/global';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
-import { setDisappearingMessage } from './utils/set_disappearing_messages';
+} from '../locators/conversation';
+import { EnableLinkPreviewsModalButton } from '../locators/global';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { sleepFor } from '../utils';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
+import { setDisappearingMessage } from '../utils/set_disappearing_messages';
 
 bothPlatformsItSeparate({
   title: 'Disappearing link message 1:1',

@@ -4,16 +4,16 @@ import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { CTAButtonPositive } from './locators/global';
-import { PlusButton } from './locators/home';
-import { newUser } from './utils/create_account';
+import { CTAButtonPositive } from '../locators/global';
+import { PlusButton } from '../locators/home';
+import { newUser } from '../utils/create_account';
 import {
   closeApp,
   IOSTestContext,
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
-} from './utils/open_app';
-import { setIOSFirstInstallDate } from './utils/time_travel';
+} from '../utils/open_app';
+import { setIOSFirstInstallDate } from '../utils/time_travel';
 
 // iOS uses app-level time override (customFirstInstallDateTime capability).
 // Android would require system-level time manipulation (`adb root` + `toybox date`), which

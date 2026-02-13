@@ -3,15 +3,15 @@ import type { TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ContinueButton } from '../specs/locators/global';
+import { ContinueButton } from '../locators/global';
 import {
   BackButton,
   CreateAccountButton,
   DisplayNameInput,
   SlowModeRadio,
   WarningModalQuitButton,
-} from './locators/onboarding';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/onboarding';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 
 // These modals no longer exist in groups rebuild for iOS
 androidIt({

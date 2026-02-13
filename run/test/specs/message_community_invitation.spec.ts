@@ -1,20 +1,20 @@
 import type { TestInfo } from '@playwright/test';
 
+import { testCommunityLink, testCommunityName } from '../../constants/community';
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { testCommunityLink, testCommunityName } from './../../constants/community';
-import { InviteContactsMenuItem, JoinCommunityModalButton } from './locators';
+import { InviteContactsMenuItem, JoinCommunityModalButton } from '../locators';
 import {
   CommunityInvitation,
   CommunityInviteConfirmButton,
   ConversationSettings,
-} from './locators/conversation';
-import { GroupMember } from './locators/groups';
-import { ConversationItem } from './locators/home';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
-import { joinCommunity } from './utils/join_community';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/conversation';
+import { GroupMember } from '../locators/groups';
+import { ConversationItem } from '../locators/home';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { sleepFor } from '../utils';
+import { joinCommunity } from '../utils/join_community';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Send community invitation',

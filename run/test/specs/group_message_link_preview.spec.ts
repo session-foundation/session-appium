@@ -3,17 +3,17 @@ import type { TestInfo } from '@playwright/test';
 import { testLink } from '../../constants';
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
-import { LinkPreview, LinkPreviewMessage } from './locators';
+import { LinkPreview, LinkPreviewMessage } from '../locators';
 import {
   MessageBody,
   MessageInput,
   OutgoingMessageStatusSent,
   SendButton,
-} from './locators/conversation';
-import { EnableLinkPreviewsModalButton } from './locators/global';
-import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { sleepFor } from './utils';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/conversation';
+import { EnableLinkPreviewsModalButton } from '../locators/global';
+import { open_Alice1_Bob1_Charlie1_friends_group } from '../state_builder';
+import { sleepFor } from '../utils';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Send link to group',

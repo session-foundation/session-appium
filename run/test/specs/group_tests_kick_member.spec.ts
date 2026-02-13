@@ -3,15 +3,15 @@ import type { TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { ConversationSettings, MessageInput } from './locators/conversation';
+import { ConversationSettings, MessageInput } from '../locators/conversation';
 import {
   ConfirmRemovalButton,
   GroupMember,
   ManageMembersMenuItem,
   RemoveMemberButton,
-} from './locators/groups';
-import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { SupportedPlatformsType } from './utils/open_app';
+} from '../locators/groups';
+import { open_Alice1_Bob1_Charlie1_friends_group } from '../state_builder';
+import { SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Kick member',

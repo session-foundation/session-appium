@@ -7,11 +7,11 @@ import {
   MessageInput,
   OutgoingMessageStatusSent,
   SendButton,
-} from './locators/conversation';
-import { open_Alice1_Bob1_friends } from './state_builder';
-import { sleepFor } from './utils';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
-import { verifyPageScreenshot } from './utils/verify_screenshots';
+} from '../locators/conversation';
+import { open_Alice1_Bob1_friends } from '../state_builder';
+import { sleepFor } from '../utils';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
+import { verifyPageScreenshot } from '../utils/verify_screenshots';
 
 bothPlatformsIt({
   title: 'Check message bubble layout',

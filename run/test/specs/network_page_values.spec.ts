@@ -8,11 +8,11 @@ import {
   SESHPrice,
   SessionNetworkMenuItem,
   StakingRewardPoolAmount,
-} from './locators/network_page';
-import { UserSettings } from './locators/settings';
-import { newUser } from './utils/create_account';
-import { validateNetworkData } from './utils/network_api';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/network_page';
+import { UserSettings } from '../locators/settings';
+import { newUser } from '../utils/create_account';
+import { validateNetworkData } from '../utils/network_api';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Network page values',

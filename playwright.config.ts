@@ -4,11 +4,7 @@ dotenv.config({ quiet: true });
 import { defineConfig, ReporterDescription } from '@playwright/test';
 
 import { allureResultsDir } from './run/constants/allure';
-import {
-  getRepeatEachCount,
-  getRetriesCount,
-  getWorkersCount,
-} from './run/test/specs/utils/binaries';
+import { getRepeatEachCount, getRetriesCount, getWorkersCount } from './run/test/utils/binaries';
 
 // NOTE: without this, the wrong source map is loaded and the stacktraces are all wrong
 // eslint-disable-next-line @typescript-eslint/no-require-imports

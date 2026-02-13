@@ -4,12 +4,12 @@ import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { CloseSettings } from './locators';
-import { ModalHeading } from './locators/global';
-import { PlusButton } from './locators/home';
-import { PathMenuItem, UserSettings } from './locators/settings';
-import { newUser } from './utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
+import { CloseSettings } from '../locators';
+import { ModalHeading } from '../locators/global';
+import { PlusButton } from '../locators/home';
+import { PathMenuItem, UserSettings } from '../locators/settings';
+import { newUser } from '../utils/create_account';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Review prompt only once',

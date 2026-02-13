@@ -6,17 +6,17 @@ import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { AccessibilityId } from '../../types/testing';
-import { ConversationSettings } from './locators/conversation';
+import { ConversationSettings } from '../locators/conversation';
 import {
   EditGroupDescriptionInput,
   GroupDescription,
   SaveGroupNameChangeButton,
   UpdateGroupInformation,
-} from './locators/groups';
-import { ErrorMessage } from './locators/onboarding';
-import { open_Alice1_Bob1_Charlie1_friends_group } from './state_builder';
-import { sleepFor } from './utils';
-import { closeApp, SupportedPlatformsType } from './utils/open_app';
+} from '../locators/groups';
+import { ErrorMessage } from '../locators/onboarding';
+import { open_Alice1_Bob1_Charlie1_friends_group } from '../state_builder';
+import { sleepFor } from '../utils';
+import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsItSeparate({
   title: 'Change group description',
