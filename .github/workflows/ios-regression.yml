@@ -90,6 +90,7 @@ jobs:
       AVD_MANAGER_FULL_PATH: '<just_not_empty>'
       ANDROID_SYSTEM_IMAGE: '<just_not_empty>'
       EMULATOR_FULL_PATH: '<just_not_empty>'
+      SOGS_ADMIN_SEED: ${{ secrets.SOGS_ADMIN_SEED }}
 
     steps:
       - uses: actions/checkout@v6
