@@ -620,18 +620,47 @@ export class DeviceWrapper {
     }
   }
 
-  public async longClick(element: AppiumNextElementType, durationMs: number) {
+  // Appium taps elements in their center but sometimes that is not desirable
+  // The native methods apply the tap offset from the top left corner
+  // For a more intuitive offset calculation, this method allows us to
+  // define offsets based on the element center
+  private async calculateGestureOffset(
+    element: AppiumNextElementType,
+    offset: Coordinates
+  ): Promise<Coordinates> {
+    const rect = await this.getElementRect(element.ELEMENT);
+    if (!rect) {
+      throw new Error('Failed to resolve element rect for offset calculation');
+    }
+    const { width, height } = rect;
+    const centerX = Math.round(width / 2);
+    const centerY = Math.round(height / 2);
+    // Clamp offset to element bounds
+    const x = Math.min(Math.max(centerX + offset.x, 0), rect.width);
+    const y = Math.min(Math.max(centerY + offset.y, 0), rect.height);
+    return { x, y };
+  }
+
+  /**
+   * @param offset Pixel offset from the element center. 
+   *  If an offset is necessary, both x and y must be defined, otherwise Appium doesn't apply the offset parameter.
+   */
+  public async longClick(element: AppiumNextElementType, durationMs: number, offset?: Coordinates) {
+    let xOffset: number | undefined;
+    let yOffset: number | undefined;
+
+    if (offset) {
+      const offsetCoordinates = await this.calculateGestureOffset(element, offset);
+      xOffset = offsetCoordinates.x;
+      yOffset = offsetCoordinates.y;
+    }
+
     if (this.isIOS()) {
       // iOS takes a number in seconds
       const duration = Math.floor(durationMs / 1000);
-      return this.toIOS().mobileTouchAndHold(duration, undefined, undefined, element.ELEMENT);
+      return this.toIOS().mobileTouchAndHold(duration, xOffset, yOffset, element.ELEMENT);
     }
-    return this.toAndroid().mobileLongClickGesture(
-      element.ELEMENT,
-      undefined,
-      undefined,
-      durationMs
-    );
+    return this.toAndroid().mobileLongClickGesture(element.ELEMENT, xOffset, yOffset, durationMs);
   }
 
   public async clickOnByAccessibilityID(
@@ -745,7 +774,8 @@ export class DeviceWrapper {
    * @throws if message not found or context menu fails to appear within maxWait
    */
   public async longPressMessage(
-    args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
+    args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj),
+    options?: { offset?: Coordinates }
   ): Promise<void> {
     const { text, maxWait = 10_000 } = args;
     const locator = args instanceof LocatorsInterface ? args.build() : args;
@@ -768,9 +798,11 @@ export class DeviceWrapper {
         if (!el) {
           return { success: false, error: `Message not found: ${displayText}` };
         }
-
+        if (options?.offset) {
+          console.log(`Offsetting long press by x=${options?.offset?.x}, y=${options?.offset?.y}`);
+        }
         // Attempt long click
-        await this.longClick(el, 2000);
+        await this.longClick(el, 2000, options?.offset);
 
         // Check if context menu appeared
         const longPressSuccess = await this.waitForTextElementToBePresent({
