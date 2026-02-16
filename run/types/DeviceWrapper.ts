@@ -639,7 +639,7 @@ export class DeviceWrapper {
   }
 
   /**
-   * @param offset Pixel offset from the element center. 
+   * @param offset Pixel offset from the element center.
    *  If an offset is necessary, both x and y must be defined, otherwise Appium doesn't apply the offset parameter.
    */
   public async longClick(element: AppiumNextElementType, durationMs: number, offset?: Coordinates) {
@@ -2656,6 +2656,18 @@ export class DeviceWrapper {
       this.verifyElementNotPresent(new CTABody(this)),
       this.verifyElementNotPresent(new CTAButtonPositive(this)),
     ]);
+  }
+
+  // Dismiss any CTA if it shows
+  public async dismissCTA(): Promise<void> {
+    const hasCTAAppeared = await this.doesElementExist({
+      ...new CTAButtonNegative(this).build(),
+      maxWait: 8_000,
+    });
+    if (hasCTAAppeared) {
+      this.log('Dismissing CTA');
+      await this.clickOnElementAll(new CTAButtonNegative(this));
+    }
   }
 
   public async getElementPixelColor(args: LocatorsInterface): Promise<string> {

@@ -5,6 +5,7 @@ import path from 'path';
 import * as util from 'util';
 
 import { DeviceWrapper } from '../../types/DeviceWrapper';
+import { PlusButton } from '../locators/home';
 import { androidAppActivity, androidAppPackage } from './capabilities_android';
 import { iOSBundleId } from './capabilities_ios';
 import { sleepFor } from './sleep_for';
@@ -146,4 +147,6 @@ export async function forceStopAndRestart(device: DeviceWrapper): Promise<void> 
     await runScriptAndLog(`xcrun simctl launch ${device.udid} ${iOSBundleId}`, true);
     await sleepFor(1_000);
   }
+  // Ensure we're on the home screen again
+  await device.waitForTextElementToBePresent(new PlusButton(device));
 }

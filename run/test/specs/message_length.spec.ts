@@ -102,7 +102,9 @@ for (const testCase of messageLengthTestCases) {
           mnemonic: alice.recoveryPhrase,
           provider: paymentProvider,
         });
+        // Restart to notify app of Pro status change
         await forceStopAndRestart(device);
+        await device.dismissCTA();
       }
 
       // Send message to self to bring up Note to Self conversation
