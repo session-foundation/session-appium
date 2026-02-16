@@ -5,7 +5,8 @@ import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { CloseSettings } from '../locators';
-import { CallButton, NotificationsModalButton, NotificationSwitch } from '../locators/conversation';
+import { CallButton, NotificationSwitch } from '../locators/conversation';
+import { SettingsModalsEnableButton } from '../locators/settings';
 import { open_Alice1_Bob1_friends } from '../state_builder';
 import { sleepFor } from '../utils';
 import { closeApp, SupportedPlatformsType } from '../utils/open_app';
@@ -133,11 +134,11 @@ async function disappearingCallMessage1o1Android(
     strategy: 'accessibility id',
     selector: 'Settings',
   });
-  await alice1.clickOnByAccessibilityID('Enable');
+  await alice1.clickOnElementAll(new SettingsModalsEnableButton(alice1));
   await alice1.clickOnElementById(
     'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   );
-  await alice1.clickOnElementAll(new NotificationsModalButton(alice1));
+  await alice1.clickOnElementAll(new SettingsModalsEnableButton(alice1));
   await alice1.clickOnElementAll(new NotificationSwitch(alice1));
   // Return to conversation
   await alice1.navigateBack(false);

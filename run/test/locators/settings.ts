@@ -137,23 +137,6 @@ export class DonationsMenuItem extends LocatorsInterface {
   }
 }
 
-export class EnableVoiceCalls extends LocatorsInterface {
-  public build() {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: 'preferences-dialog-option-enable',
-        } as const;
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Continue',
-        } as const;
-    }
-  }
-}
-
 export class HideRecoveryPasswordButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -170,6 +153,7 @@ export class HideRecoveryPasswordButton extends LocatorsInterface {
     }
   }
 }
+
 export class NotificationsMenuItem extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -187,7 +171,6 @@ export class NotificationsMenuItem extends LocatorsInterface {
     }
   }
 }
-
 export class PathMenuItem extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -288,6 +271,7 @@ export class SaveNameChangeButton extends LocatorsInterface {
     }
   }
 }
+
 export class SaveProfilePictureButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -317,6 +301,22 @@ export class SelectAppIcon extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'Select alternate app icon',
+        } as const;
+    }
+  }
+}
+export class SettingsModalsEnableButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'preferences-dialog-option-enable',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Continue',
         } as const;
     }
   }
