@@ -26,15 +26,15 @@ import { join } from 'path';
 
 import { PRO_BACKEND_URL } from '../../constants';
 
-export type PaymentProvider = 'apple' | 'google';
+type PaymentProvider = 'apple' | 'google';
 
-export interface MakeAccountProParams {
+type MakeAccountProParams = {
   mnemonic: string;
   provider: PaymentProvider;
   dryRun?: boolean; // If true, build and print the request but don't send it
-}
+};
 
-export interface AddProPaymentRequest {
+type AddProPaymentRequest = {
   version: number;
   master_pkey: string;
   rotating_pkey: string;
@@ -46,21 +46,21 @@ export interface AddProPaymentRequest {
     google_order_id?: string;
     apple_tx_id?: string;
   };
-}
+};
 
-export interface ProProof {
+type ProProof = {
   version: number;
   expiry_unix_ts_ms: number;
   gen_index_hash: string;
   rotating_pkey: string;
   sig: string;
-}
+};
 
-export interface AddProPaymentResponse {
+type AddProPaymentResponse = {
   status: number;
   result?: ProProof;
   errors?: string[];
-}
+};
 
 let WORDLIST_CACHE: string[] | null = null;
 
@@ -85,7 +85,7 @@ function getWordlist(): string[] {
 }
 
 // Decodes a 13-word recovery phrase a 16-byte seed hex string. */
-export function mnemonicToSeedHex(mnemonic: string): string {
+function mnemonicToSeedHex(mnemonic: string): string {
   const wordlist = getWordlist();
   const n = wordlist.length; // 1626
 
@@ -153,19 +153,8 @@ function padSeed(seedHex: string): Uint8Array {
   return padded;
 }
 
-// Derives the account-level Ed25519 keypair by zero-padding the 16-byte seed to 32 bytes.
-export function deriveAccountEd25519Keypair(seedHex: string): {
-  privateKey: Uint8Array;
-  publicKey: Uint8Array;
-} {
-  const padded = padSeed(seedHex);
-  const privateKey = padded;
-  const publicKey = ed25519.getPublicKey(privateKey);
-  return { privateKey, publicKey };
-}
-
 // Derives the Pro master keypair from the seed using Blake2b with "SessionProRandom" as the key.
-export function deriveProMasterKey(seedHex: string): {
+function deriveProMasterKey(seedHex: string): {
   privateKey: Uint8Array;
   publicKey: Uint8Array;
 } {
@@ -184,7 +173,7 @@ export function deriveProMasterKey(seedHex: string): {
 }
 
 // Generates a random ephemeral rotating keypair for the payment request.
-export function generateRotatingKey(): { privateKey: Uint8Array; publicKey: Uint8Array } {
+function generateRotatingKey(): { privateKey: Uint8Array; publicKey: Uint8Array } {
   const privateKey = ed25519.utils.randomSecretKey();
   const publicKey = ed25519.getPublicKey(privateKey);
   return { privateKey, publicKey };
@@ -236,7 +225,7 @@ function makeAddProPaymentHash(
 }
 
 // Builds a signed add_pro_payment request body with fake payment tokens.
-export function buildAddProPaymentRequest(
+function buildAddProPaymentRequest(
   masterKey: { privateKey: Uint8Array; publicKey: Uint8Array },
   rotatingKey: { privateKey: Uint8Array; publicKey: Uint8Array },
   provider: PaymentProvider
@@ -293,7 +282,7 @@ export function buildAddProPaymentRequest(
 }
 
 // POSTs the payment request to the Pro backend with retries and timeout.
-export async function addProPayment(
+async function addProPayment(
   backendUrl: string,
   request: AddProPaymentRequest,
   { maxAttempts = 3, timeout = 10_000 } = {}

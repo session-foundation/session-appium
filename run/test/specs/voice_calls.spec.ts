@@ -5,6 +5,7 @@ import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { CloseSettings } from '../locators';
 import { CallButton, NotificationsModalButton, NotificationSwitch } from '../locators/conversation';
+import { EnableVoiceCalls } from '../locators/settings';
 import { open_Alice1_Bob1_friends } from '../state_builder';
 import { sleepFor } from '../utils/index';
 import { closeApp, SupportedPlatformsType } from '../utils/open_app';
@@ -58,7 +59,7 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
         tStripped('callsVoiceAndVideoModalDescription')
       );
     });
-    await alice1.clickOnByAccessibilityID('Continue');
+    await alice1.clickOnElementAll(new EnableVoiceCalls(alice1));
     // Need to allow microphone access
     await alice1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
     await sleepFor(1_000);
@@ -103,7 +104,7 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
     tStripped('callsVoiceAndVideoBeta'),
     tStripped('callsVoiceAndVideoModalDescription')
   );
-  await bob1.clickOnByAccessibilityID('Continue');
+  await bob1.clickOnElementAll(new EnableVoiceCalls(bob1));
   // Need to allow microphone access
   await bob1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
   await sleepFor(1_000);
@@ -178,7 +179,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: Test
         tStripped('callsVoiceAndVideoBeta'),
         tStripped('callsVoiceAndVideoModalDescription')
       );
-      await alice1.clickOnByAccessibilityID('Enable');
+      await alice1.clickOnElementAll(new EnableVoiceCalls(alice1));
     });
     await alice1.clickOnElementById(
       'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
@@ -231,7 +232,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: Test
       strategy: 'accessibility id',
       selector: 'Settings',
     });
-    await bob1.clickOnByAccessibilityID('Enable');
+    await bob1.clickOnElementAll(new EnableVoiceCalls(bob1));
     await bob1.clickOnElementById(
       'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
     );

@@ -1868,6 +1868,16 @@ export class DeviceWrapper {
     return this.toShared().getAttribute(attribute, elementId);
   }
 
+  public async assertAttribute(
+    element: LocatorsInterface | StrategyExtractionObj,
+    attribute: string,
+    value: string
+  ) {
+    const el = await this.waitForTextElementToBePresent(element);
+    const received = await this.getAttribute(attribute, el.ELEMENT);
+    expect(received, 'Element attribute value mismatch').toBe(value);
+  }
+
   public async disappearRadioButtonSelected(
     platform: SupportedPlatformsType,
     timeOption: DISAPPEARING_TIMES

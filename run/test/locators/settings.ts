@@ -137,6 +137,23 @@ export class DonationsMenuItem extends LocatorsInterface {
   }
 }
 
+export class EnableVoiceCalls extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'preferences-dialog-option-enable',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Continue',
+        } as const;
+    }
+  }
+}
+
 export class HideRecoveryPasswordButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
