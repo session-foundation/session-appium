@@ -77,14 +77,13 @@ nvm install
 nvm use
 git lfs install
 git lfs pull
-git submodule update --init --recursive --remote
+git submodule update --init --recursive
 pnpm install --frozen-lockfile
 ```
 
 Then, choose an option:
 
 ```
-pnpm tsc # Build typescript files
 pnpm run test # Run all the tests
 
 Platform specific
@@ -92,5 +91,5 @@ pnpm run test-android # To run just Android tests
 pnpm run test-ios # To run just iOS tests
 
 pnpm run test-one 'Name of test' # To run one test (on both platforms)
-pnpm run test-one 'Name of test android/ios' # To run one test on either platform
+pnpm run test-one 'Name of test @android/@ios' # To run one test on either platform
 ```
