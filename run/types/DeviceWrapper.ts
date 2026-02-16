@@ -80,6 +80,7 @@ import { SupportedPlatformsType } from '../test/utils/open_app';
 import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/utils/utilities';
 import {
   AccessibilityId,
+  Coordinates,
   DISAPPEARING_TIMES,
   Group,
   Id,
@@ -90,10 +91,6 @@ import {
   XPath,
 } from './testing';
 
-export type Coordinates = {
-  x: number;
-  y: number;
-};
 export type ActionSequence = {
   actions: string;
 };
@@ -799,7 +796,7 @@ export class DeviceWrapper {
           return { success: false, error: `Message not found: ${displayText}` };
         }
         if (options?.offset) {
-          console.log(`Offsetting long press by x=${options?.offset?.x}, y=${options?.offset?.y}`);
+          this.log(`Offsetting long press by x=${options?.offset?.x}, y=${options?.offset?.y}`);
         }
         // Attempt long click
         await this.longClick(el, 2000, options?.offset);
