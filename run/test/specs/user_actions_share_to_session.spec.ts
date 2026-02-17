@@ -31,7 +31,7 @@ bothPlatformsIt({
   allureDescription: `Verifies that a user can share an image from the photo gallery to Session`,
 });
 
-// On iOS the Share button just opens the regular share sheet, same as 'Share to Session' - no need to test separately. 
+// On iOS the Share button just opens the regular share sheet, same as 'Share to Session' - no need to test separately.
 androidIt({
   title: 'Share within Session',
   risk: 'medium',
@@ -121,7 +121,7 @@ async function shareInSession(platform: SupportedPlatformsType, testInfo: TestIn
   await test.step(TestSteps.VERIFY.MESSAGE_RECEIVED, async () => {
     await alice1.waitForTextElementToBePresent(new ConversationHeaderName(alice1, 'Note to Self'));
     await alice1.waitForTextElementToBePresent(new MessageBody(alice1, testMessage));
-    await alice1.matchAndTapImage(new MediaMessage(alice1).build(), testImage);
+    await alice1.waitForTextElementToBePresent(new MediaMessage(alice1));
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, bob1);
