@@ -4,6 +4,7 @@ import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { PathMenuItem, UserAvatar } from '../locators/settings';
+import { IOSTestContext } from '../utils/capabilities_ios';
 import { newUser } from '../utils/create_account';
 import { makeAccountPro } from '../utils/mock_pro';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
@@ -32,8 +33,11 @@ bothPlatformsIt({
 });
 
 async function nonProAnimatedDP(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const iosContext: IOSTestContext = {
+    sessionProEnabled: 'true',
+  };
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, iosContext);
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
     return { device };
   });
@@ -47,8 +51,11 @@ async function nonProAnimatedDP(platform: SupportedPlatformsType, testInfo: Test
   });
 }
 async function proAnimatedDP(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const iosContext: IOSTestContext = {
+    sessionProEnabled: 'true',
+  };
   const { device, alice } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, iosContext);
     const alice = await newUser(device, USERNAME.ALICE);
     return { device, alice };
   });

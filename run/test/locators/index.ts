@@ -550,6 +550,14 @@ export function describeLocator(locator: StrategyExtractionObj & { text?: string
       ? `${selector.substring(0, halfLength)}…${selector.substring(selector.length - halfLength)}`
       : selector;
 
+  // Trim text if too long, show beginning and end
+  const maxTextLength = 100;
+  const trimmedText = text
+    ? text.length > maxTextLength
+      ? `${text.substring(0, maxTextLength / 2)}…${text.substring(text.length - maxTextLength / 2)}`
+      : text
+    : undefined;
+
   const base = `${strategy} "${trimmedSelector}"`;
-  return text ? `${base} and text "${text}"` : base;
+  return trimmedText ? `${base} and text "${trimmedText}"` : base;
 }

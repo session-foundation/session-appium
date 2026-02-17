@@ -183,6 +183,7 @@ export type AccessibilityId =
   | 'Allow'
   | 'Allow Access to All Photos'
   | 'Allow Full Access'
+  | 'Allow Paste'
   | 'Allow voice and video calls'
   | 'All Photos'
   | 'Answer call'
@@ -234,6 +235,10 @@ export type AccessibilityId =
   | 'Copy URL'
   | 'Create account button'
   | 'Create group'
+  | 'cta-body'
+  | 'cta-button-negative'
+  | 'cta-button-positive'
+  | 'cta-heading'
   | 'Decline message request'
   | 'Delete'
   | 'Delete Contact'
@@ -352,6 +357,7 @@ export type AccessibilityId =
   | 'open-survey-button'
   | 'Open'
   | 'Open URL'
+  | 'Paste'
   | 'Path'
   | 'Photo library'
   | 'Photos'
@@ -424,6 +430,7 @@ export type AccessibilityId =
   | 'Your message request has been accepted.'
   | `${DISAPPEARING_TIMES} - Radio`
   | `${GROUPNAME}`
+  | `cta-feature-${number}`
   | `Disappear after ${DisappearActions} option`;
 
 export type Id =

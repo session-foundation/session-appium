@@ -1866,27 +1866,24 @@ export class DeviceWrapper {
     paste: boolean = false
   ) {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
-
-    this.log('Locator being used:', locator);
-
     const el = await this.waitForTextElementToBePresent({ ...locator });
-    if (!el) {
-      throw new Error(`inputText: Did not find element with locator: ${JSON.stringify(locator)}`);
-    }
 
     if (paste) {
-      await this.click(el.ELEMENT);
+      // Set clipboard, press key-code for instant paste
+      await this.clickOnElementAll({ ...locator });
       if (this.isAndroid()) {
         await this.toAndroid().setClipboard(
           Buffer.from(textToInput).toString('base64'),
           'plaintext'
         );
-        // KEYCODE_PASTE = 279
         await this.toAndroid().pressKeyCode(279);
       } else {
-        await this.toIOS().mobileSetPasteboard(textToInput, 'utf8');
-        // XCUIKeyModifierCommand = 1 << 4 = 16
-        await this.toIOS().mobileKeys([{ key: 'v', modifierFlags: 16 }]);
+        // Use native paste UI, accept perms if needed
+        await this.toIOS().mobileSetPasteboard(textToInput);
+        await this.toIOS().mobileGetPasteboard();
+        await this.processPermissions({ strategy: 'accessibility id', selector: 'Allow Paste' });
+        await this.clickOnElementAll({ ...locator });
+        await this.clickOnByAccessibilityID('Paste');
       }
     } else {
       await this.setValueImmediate(textToInput, el.ELEMENT);
@@ -2452,8 +2449,8 @@ export class DeviceWrapper {
     await this.clickOnElementAll(new CloseSettings(this));
   }
 
-  public async processPermissions(locator: LocatorsInterface) {
-    const locatorConfig = locator.build();
+  public async processPermissions(locator: LocatorsInterface | StrategyExtractionObj) {
+    const locatorConfig = locator instanceof LocatorsInterface ? locator.build() : locator;
 
     if (this.isAndroid()) {
       const permissions = await this.doesElementExist({
@@ -2610,17 +2607,35 @@ export class DeviceWrapper {
       throw new Error('CTAs must have 1-2 buttons');
     }
 
-    // Find and check heading
-    const elHeading = await this.waitForTextElementToBePresent(new CTAHeading(this));
+    // Fallback locators for Donate CTA on iOS (no accessibility IDs)
+    const headingFallback = {
+      strategy: 'xpath',
+      selector: `//XCUIElementTypeStaticText[starts-with(@name,'Session Needs')]`,
+    } as const;
+    const bodyFallback = {
+      strategy: 'xpath',
+      selector: `//XCUIElementTypeStaticText[starts-with(@name,'Powerful forces are trying to')]`,
+    } as const;
+    const positiveButtonFallback = {
+      strategy: 'accessibility id',
+      selector: 'Donate',
+    } as const;
+    const negativeButtonFallback = {
+      strategy: 'accessibility id',
+      selector: 'Maybe Later',
+    } as const;
+
+    // Find and check heading (with fallback for Donate CTA)
+    const elHeading = await this.findWithFallback(new CTAHeading(this), headingFallback);
     const actualHeading = await this.getTextFromElement(elHeading);
     this.assertTextMatches(actualHeading, heading, 'CTA heading');
 
-    // Find and check body
-    const elBody = await this.waitForTextElementToBePresent(new CTABody(this));
+    // Find and check body (with fallback for Donate CTA)
+    const elBody = await this.findWithFallback(new CTABody(this), bodyFallback);
     const actualBody = await this.getTextFromElement(elBody);
     this.assertTextMatches(actualBody, body, 'CTA body');
 
-    // Check features if expected
+    // Check features if expected (Pro CTAs only)
     if (features) {
       for (let i = 0; i < features.length; i++) {
         const featureLocator = new CTAFeature(this, i);
@@ -2630,15 +2645,15 @@ export class DeviceWrapper {
       }
     }
 
-    // Check buttons
+    // Check buttons (with fallback for Donate CTA)
     const positiveLocator = new CTAButtonPositive(this);
-    const elPositive = await this.waitForTextElementToBePresent(positiveLocator);
+    const elPositive = await this.findWithFallback(positiveLocator, positiveButtonFallback);
     const actualPositive = await this.getTextFromElement(elPositive);
     this.assertTextMatches(actualPositive, buttons[0], 'CTA positive button');
 
     if (buttons.length === 2) {
       const negativeLocator = new CTAButtonNegative(this);
-      const elNegative = await this.waitForTextElementToBePresent(negativeLocator);
+      const elNegative = await this.findWithFallback(negativeLocator, negativeButtonFallback);
       const actualNegative = await this.getTextFromElement(elNegative);
       this.assertTextMatches(actualNegative, buttons[1], 'CTA negative button');
     }
@@ -2650,12 +2665,31 @@ export class DeviceWrapper {
 
   // This is the bare minimum of a CTA so we only check these
   // Features may or may not exist anyway, same goes for negative buttons
-  public async verifyNoCTAShows(): Promise<void> {
-    await Promise.all([
-      this.verifyElementNotPresent(new CTAHeading(this)),
-      this.verifyElementNotPresent(new CTABody(this)),
-      this.verifyElementNotPresent(new CTAButtonPositive(this)),
-    ]);
+  public async verifyNoCTAShows(ctaType?: CTAType): Promise<void> {
+    // For Donate CTA on iOS, check the XPath selectors since accessibility IDs don't exist
+    if (ctaType === 'donate' && this.isIOS()) {
+      await Promise.all([
+        this.verifyElementNotPresent({
+          strategy: 'xpath',
+          selector: `//XCUIElementTypeStaticText[starts-with(@name,'Session Needs')]`,
+        }),
+        this.verifyElementNotPresent({
+          strategy: 'xpath',
+          selector: `//XCUIElementTypeStaticText[starts-with(@name,'Powerful forces are trying to')]`,
+        }),
+        this.verifyElementNotPresent({
+          strategy: 'accessibility id',
+          selector: 'Donate',
+        }),
+      ]);
+    } else {
+      // For all other cases, use the standard CTA locators
+      await Promise.all([
+        this.verifyElementNotPresent(new CTAHeading(this)),
+        this.verifyElementNotPresent(new CTABody(this)),
+        this.verifyElementNotPresent(new CTAButtonPositive(this)),
+      ]);
+    }
   }
 
   // Dismiss any CTA if it shows

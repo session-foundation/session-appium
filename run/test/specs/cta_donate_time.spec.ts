@@ -67,7 +67,7 @@ async function donateCTADoesntShowSixDaysAgo(platform: SupportedPlatformsType, t
   await test.step('Verify Donate CTA does not show', async () => {
     await Promise.all([
       device.waitForTextElementToBePresent(new PlusButton(device)),
-      device.verifyNoCTAShows(),
+      device.verifyNoCTAShows('donate'),
     ]);
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

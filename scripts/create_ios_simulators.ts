@@ -44,7 +44,7 @@ const DEVICE_CONFIG = {
 
 const MEDIA_ROOT = path.join('run', 'test', 'media');
 const MEDIA_FILES = {
-  images: ['profile_picture.jpg', 'test_image.jpg'],
+  images: ['profile_picture.jpg', 'test_image.jpg', 'animated_profile_picture.gif'],
   videos: ['test_video.mp4'],
   pdfs: ['test_file.pdf'],
 };

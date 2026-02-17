@@ -51,7 +51,11 @@ async function donateCTAReview(platform: SupportedPlatformsType, testInfo: TestI
     await verifyPageScreenshot(device, platform, 'cta_donate', testInfo);
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Open URL'), async () => {
-    await device.clickOnElementAll(new CTAButtonPositive(device));
+    const positiveButton = await device.findWithFallback(new CTAButtonPositive(device), {
+      strategy: 'accessibility id',
+      selector: 'Donate',
+    } as const);
+    await device.click(positiveButton.ELEMENT);
     await device.checkModalStrings(
       tStripped('urlOpen'),
       tStripped('urlOpenDescription', { url: donateURL })

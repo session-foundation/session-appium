@@ -327,20 +327,10 @@ async function addProPayment(
 // Registers a test account as a Pro subscriber against the dev backend.
 export async function makeAccountPro(params: MakeAccountProParams): Promise<ProProof | null> {
   const { mnemonic, provider, dryRun = false } = params;
-
-  console.log('Deriving keys from mnemonic...');
   const seedHex = mnemonicToSeedHex(mnemonic);
-
   const masterKey = deriveProMasterKey(seedHex);
-
-  console.log(`  Master pubkey: ${Buffer.from(masterKey.publicKey).toString('hex')}`);
-
-  // Generate rotating key
   const rotatingKey = generateRotatingKey();
-  console.log(`  Rotating pubkey: ${Buffer.from(rotatingKey.publicKey).toString('hex')}`);
-
   // Build request
-  console.log(`\nBuilding add_pro_payment request (${provider})...`);
   const request = buildAddProPaymentRequest(masterKey, rotatingKey, provider);
   console.log('\nRequest body:');
   console.log(JSON.stringify(request, null, 2));
@@ -368,9 +358,13 @@ if (require.main === module) {
   const args = process.argv.slice(2);
 
   if (args.length < 2) {
-    console.error('Usage: ts-node mock_pro.ts <mnemonic> <provider> [--dry-run]');
-    console.error('Example: ts-node mock_pro.ts "word1 word2 ..." google');
-    console.error('         ts-node mock_pro.ts "word1 word2 ..." apple --dry-run');
+    console.error(
+      'Usage: npx ts-node run/test/utils/mock_pro.ts <mnemonic> <provider> [--dry-run]'
+    );
+    console.error('Example: npx ts-node run/test/utils/mock_pro.ts "word1 word2 ..." google');
+    console.error(
+      '         npx ts-node run/test/utils/mock_pro.ts "word1 word2 ..." apple --dry-run'
+    );
     process.exit(1);
   }
 
