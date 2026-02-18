@@ -119,8 +119,6 @@ export class CTABody extends LocatorsInterface {
   }
 }
 
-// NOTE: iOS Pro CTAs use accessibility IDs, Donate CTA requires XPath fallback (see DeviceWrapper)
-// See SES-4930
 export class CTAButtonNegative extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -139,8 +137,6 @@ export class CTAButtonNegative extends LocatorsInterface {
   }
 }
 
-// NOTE: iOS Pro CTAs use accessibility IDs, Donate CTA requires XPath fallback (see DeviceWrapper)
-// See SES-4930
 export class CTAButtonPositive extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -159,8 +155,6 @@ export class CTAButtonPositive extends LocatorsInterface {
   }
 }
 
-// NOTE: iOS Pro CTAs use accessibility IDs, Donate CTA doesn't have features
-// See SES-4930
 export class CTAFeature extends LocatorsInterface {
   private index: number;
 
@@ -186,8 +180,6 @@ export class CTAFeature extends LocatorsInterface {
   }
 }
 
-// NOTE: iOS Pro CTAs use accessibility IDs, Donate CTA requires XPath fallback (see DeviceWrapper)
-// See SES-4930
 export class CTAHeading extends LocatorsInterface {
   public build() {
     switch (this.platform) {

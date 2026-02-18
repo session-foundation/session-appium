@@ -10,7 +10,7 @@ import { ReviewPromptItsGreatButton } from '../locators/home';
 import { PathMenuItem, UserSettings } from '../locators/settings';
 import { newUser } from '../utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
-import { forceStopAndRestart as forceStopAndRestartApp } from '../utils/utilities';
+import { forceStopAndRestart } from '../utils/utilities';
 import { verifyPageScreenshot } from '../utils/verify_screenshots';
 
 bothPlatformsIt({
@@ -41,7 +41,7 @@ async function donateCTAReview(platform: SupportedPlatformsType, testInfo: TestI
   await test.step('Dismiss review prompt and restart the app', async () => {
     await device.clickOnElementAll(new ReviewPromptItsGreatButton(device));
     await device.clickOnElementAll(new CloseSettings(device));
-    await forceStopAndRestartApp(device);
+    await forceStopAndRestart(device);
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Donate CTA'), async () => {
     await device.checkCTA('donate');
@@ -51,11 +51,7 @@ async function donateCTAReview(platform: SupportedPlatformsType, testInfo: TestI
     await verifyPageScreenshot(device, platform, 'cta_donate', testInfo);
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Open URL'), async () => {
-    const positiveButton = await device.findWithFallback(new CTAButtonPositive(device), {
-      strategy: 'accessibility id',
-      selector: 'Donate',
-    } as const);
-    await device.click(positiveButton.ELEMENT);
+    await device.clickOnElementAll(new CTAButtonPositive(device));
     await device.checkModalStrings(
       tStripped('urlOpen'),
       tStripped('urlOpenDescription', { url: donateURL })

@@ -2607,53 +2607,33 @@ export class DeviceWrapper {
       throw new Error('CTAs must have 1-2 buttons');
     }
 
-    // Fallback locators for Donate CTA on iOS (no accessibility IDs)
-    const headingFallback = {
-      strategy: 'xpath',
-      selector: `//XCUIElementTypeStaticText[starts-with(@name,'Session Needs')]`,
-    } as const;
-    const bodyFallback = {
-      strategy: 'xpath',
-      selector: `//XCUIElementTypeStaticText[starts-with(@name,'Powerful forces are trying to')]`,
-    } as const;
-    const positiveButtonFallback = {
-      strategy: 'accessibility id',
-      selector: 'Donate',
-    } as const;
-    const negativeButtonFallback = {
-      strategy: 'accessibility id',
-      selector: 'Maybe Later',
-    } as const;
-
-    // Find and check heading (with fallback for Donate CTA)
-    const elHeading = await this.findWithFallback(new CTAHeading(this), headingFallback);
+    // CTA heading
+    const elHeading = await this.waitForTextElementToBePresent(new CTAHeading(this));
     const actualHeading = await this.getTextFromElement(elHeading);
     this.assertTextMatches(actualHeading, heading, 'CTA heading');
 
-    // Find and check body (with fallback for Donate CTA)
-    const elBody = await this.findWithFallback(new CTABody(this), bodyFallback);
+    // CTA body
+    const elBody = await this.waitForTextElementToBePresent(new CTABody(this));
     const actualBody = await this.getTextFromElement(elBody);
     this.assertTextMatches(actualBody, body, 'CTA body');
 
-    // Check features if expected (Pro CTAs only)
+    // CTA features if present
     if (features) {
       for (let i = 0; i < features.length; i++) {
-        const featureLocator = new CTAFeature(this, i);
-        const elFeature = await this.waitForTextElementToBePresent(featureLocator);
+        const elFeature = await this.waitForTextElementToBePresent(new CTAFeature(this, i));
         const actualFeature = await this.getTextFromElement(elFeature);
-        this.assertTextMatches(actualFeature, features[i], `CTA feature ${i}`);
+        this.assertTextMatches(actualFeature, features[i], `CTA feature ${i + 1}`);
       }
     }
 
-    // Check buttons (with fallback for Donate CTA)
-    const positiveLocator = new CTAButtonPositive(this);
-    const elPositive = await this.findWithFallback(positiveLocator, positiveButtonFallback);
+    // CTA positive button
+    const elPositive = await this.waitForTextElementToBePresent(new CTAButtonPositive(this));
     const actualPositive = await this.getTextFromElement(elPositive);
     this.assertTextMatches(actualPositive, buttons[0], 'CTA positive button');
 
+    // CTA negative button if present 
     if (buttons.length === 2) {
-      const negativeLocator = new CTAButtonNegative(this);
-      const elNegative = await this.findWithFallback(negativeLocator, negativeButtonFallback);
+      const elNegative = await this.waitForTextElementToBePresent(new CTAButtonNegative(this));
       const actualNegative = await this.getTextFromElement(elNegative);
       this.assertTextMatches(actualNegative, buttons[1], 'CTA negative button');
     }
@@ -2664,35 +2644,17 @@ export class DeviceWrapper {
   }
 
   // This is the bare minimum of a CTA so we only check these
-  // Features may or may not exist anyway, same goes for negative buttons
-  public async verifyNoCTAShows(ctaType?: CTAType): Promise<void> {
-    // For Donate CTA on iOS, check the XPath selectors since accessibility IDs don't exist
-    if (ctaType === 'donate' && this.isIOS()) {
-      await Promise.all([
-        this.verifyElementNotPresent({
-          strategy: 'xpath',
-          selector: `//XCUIElementTypeStaticText[starts-with(@name,'Session Needs')]`,
-        }),
-        this.verifyElementNotPresent({
-          strategy: 'xpath',
-          selector: `//XCUIElementTypeStaticText[starts-with(@name,'Powerful forces are trying to')]`,
-        }),
-        this.verifyElementNotPresent({
-          strategy: 'accessibility id',
-          selector: 'Donate',
-        }),
-      ]);
-    } else {
-      // For all other cases, use the standard CTA locators
-      await Promise.all([
-        this.verifyElementNotPresent(new CTAHeading(this)),
-        this.verifyElementNotPresent(new CTABody(this)),
-        this.verifyElementNotPresent(new CTAButtonPositive(this)),
-      ]);
-    }
+  public async verifyNoCTAShows(): Promise<void> {
+    await Promise.all([
+      this.verifyElementNotPresent(new CTAHeading(this)),
+      this.verifyElementNotPresent(new CTABody(this)),
+      this.verifyElementNotPresent(new CTAButtonPositive(this)),
+    ]);
   }
 
   // Dismiss any CTA if it shows
+  // Note that not every CTA has negative buttons but a vast majority of them do
+  // And the ones that show and block the automation are likely to be ones with negative button
   public async dismissCTA(): Promise<void> {
     const hasCTAAppeared = await this.doesElementExist({
       ...new CTAButtonNegative(this).build(),
