@@ -2719,9 +2719,6 @@ export class DeviceWrapper {
     const colors = new Set<string>();
     for (let i = 0; i < SAMPLE_SIZE; i++) {
       colors.add(await this.getElementPixelColor(args));
-      if (i < SAMPLE_SIZE - 1) {
-        await sleepFor(300);
-      }
     }
     expect(
       colors.size,
