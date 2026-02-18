@@ -97,11 +97,7 @@ for (const testCase of messageLengthTestCases) {
       });
 
       if (testCase.pro) {
-        const paymentProvider = platform === 'ios' ? 'apple' : 'google';
-        await makeAccountPro({
-          mnemonic: alice.recoveryPhrase,
-          provider: paymentProvider,
-        });
+        await makeAccountPro({ user: alice, platform });
         // Restart to notify app of Pro status change
         await forceStopAndRestart(device);
         await device.dismissCTA();

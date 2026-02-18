@@ -59,10 +59,7 @@ async function proAnimatedDP(platform: SupportedPlatformsType, testInfo: TestInf
     const alice = await newUser(device, USERNAME.ALICE);
     return { device, alice };
   });
-  await makeAccountPro({
-    mnemonic: alice.recoveryPhrase,
-    provider: 'google',
-  });
+  await makeAccountPro({ user: alice, platform });
   await forceStopAndRestart(device);
   await test.step(TestSteps.USER_ACTIONS.CHANGE_PROFILE_PICTURE, async () => {
     await device.uploadProfilePicture(true);

@@ -10,10 +10,7 @@
  * Usage:
  *   import { makeAccountPro } from './mock_pro';
  *
- *   await makeAccountPro({
- *     mnemonic: 'word1 word2 ... word13',
- *     provider: 'google' // or 'apple'
- *   });
+ *   await makeAccountPro({ user: alice, platform });
  *
  * In order for the changes to take effect in the clients it's best to force close and restart the app
  */
@@ -25,12 +22,14 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 import { PRO_BACKEND_URL } from '../../constants';
+import { User } from '../../types/testing';
+import { SupportedPlatformsType } from './open_app';
 
 type PaymentProvider = 'apple' | 'google';
 
 type MakeAccountProParams = {
-  mnemonic: string;
-  provider: PaymentProvider;
+  user: User;
+  platform: SupportedPlatformsType;
   dryRun?: boolean; // If true, build and print the request but don't send it
 };
 
@@ -84,7 +83,7 @@ function getWordlist(): string[] {
   return words;
 }
 
-// Decodes a 13-word recovery phrase a 16-byte seed hex string. */
+// Decodes a 13-word recovery phrase to a 16-byte seed hex string. */
 function mnemonicToSeedHex(mnemonic: string): string {
   const wordlist = getWordlist();
   const n = wordlist.length; // 1626
@@ -326,14 +325,16 @@ async function addProPayment(
 
 // Registers a test account as a Pro subscriber against the dev backend.
 export async function makeAccountPro(params: MakeAccountProParams): Promise<ProProof | null> {
-  const { mnemonic, provider, dryRun = false } = params;
+  const { user, platform, dryRun = false } = params;
+  const mnemonic = user.recoveryPhrase;
+  const provider: PaymentProvider = platform === 'ios' ? 'apple' : 'google';
   const seedHex = mnemonicToSeedHex(mnemonic);
   const masterKey = deriveProMasterKey(seedHex);
   const rotatingKey = generateRotatingKey();
   // Build request
   const request = buildAddProPaymentRequest(masterKey, rotatingKey, provider);
-  console.log('\nRequest body:');
-  console.log(JSON.stringify(request, null, 2));
+  console.log(`\nRequest body:
+    ${JSON.stringify(request, null, 2)}`);
 
   if (dryRun) {
     console.log('\nDRY RUN - Request not sent');
@@ -359,22 +360,22 @@ if (require.main === module) {
 
   if (args.length < 2) {
     console.error(
-      'Usage: npx ts-node run/test/utils/mock_pro.ts <mnemonic> <provider> [--dry-run]'
+      'Usage: npx ts-node run/test/utils/mock_pro.ts <mnemonic> <platform> [--dry-run]'
     );
-    console.error('Example: npx ts-node run/test/utils/mock_pro.ts "word1 word2 ..." google');
+    console.error('Example: npx ts-node run/test/utils/mock_pro.ts "word1 word2 ..." android');
     console.error(
-      '         npx ts-node run/test/utils/mock_pro.ts "word1 word2 ..." apple --dry-run'
+      '         npx ts-node run/test/utils/mock_pro.ts "word1 word2 ..." ios --dry-run'
     );
     process.exit(1);
   }
 
   const dryRun = args.includes('--dry-run');
   const filteredArgs = args.filter(a => a !== '--dry-run');
-  const [mnemonic, provider] = filteredArgs;
+  const [mnemonic, platform] = filteredArgs;
 
   makeAccountPro({
-    mnemonic,
-    provider: provider as PaymentProvider,
+    user: { userName: '' as any, accountID: '', recoveryPhrase: mnemonic },
+    platform: platform as SupportedPlatformsType,
     dryRun,
   })
     .then(() => process.exit(0))
