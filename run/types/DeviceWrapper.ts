@@ -1992,12 +1992,12 @@ export class DeviceWrapper {
       await sleepFor(500);
       await this.clickOnElementAll({
         strategy: 'id',
-        selector: 'network.loki.messenger:id/mediapicker_folder_item_thumbnail',
+        selector: 'mediapicker-folder-item-thumbnail-0',
       });
       await sleepFor(100);
       await this.clickOnElementAll({
         strategy: 'id',
-        selector: 'network.loki.messenger:id/mediapicker_image_item_thumbnail',
+        selector: 'mediapicker-image-item-thumbnail-0',
       });
     }
     await this.inputText(message, new MessageInput(this));
