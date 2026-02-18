@@ -1,6 +1,6 @@
 import test, { type TestInfo } from '@playwright/test';
 
-import { testCommunityLink, testCommunityName } from '../../constants/community';
+import { communities } from '../../constants/community';
 import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
@@ -68,15 +68,15 @@ async function banUserCommunity(platform: SupportedPlatformsType, testInfo: Test
     });
   await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
     const adminJoined = await alice1.doesElementExist(
-      new ConversationItem(alice1, testCommunityName)
+      new ConversationItem(alice1, communities.testCommunity.name)
     );
     if (!adminJoined) {
-      await joinCommunity(alice1, testCommunityLink, testCommunityName);
+      await joinCommunity(alice1, communities.testCommunity.link, communities.testCommunity.name);
     } else {
-      await alice1.clickOnElementAll(new ConversationItem(alice1, testCommunityName));
+      await alice1.clickOnElementAll(new ConversationItem(alice1, communities.testCommunity.name));
       await alice1.scrollToBottom();
     }
-    await joinCommunity(bob1, testCommunityLink, testCommunityName);
+    await joinCommunity(bob1, communities.testCommunity.link, communities.testCommunity.name);
   });
   await test.step(TestSteps.SEND.MESSAGE('Bob', 'community'), async () => {
     await bob1.sendMessage(msg1);
@@ -138,15 +138,15 @@ async function banAndDelete(platform: SupportedPlatformsType, testInfo: TestInfo
   });
   await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
     const adminJoined = await alice1.doesElementExist(
-      new ConversationItem(alice1, testCommunityName)
+      new ConversationItem(alice1, communities.testCommunity.name)
     );
     if (!adminJoined) {
-      await joinCommunity(alice1, testCommunityLink, testCommunityName);
+      await joinCommunity(alice1, communities.testCommunity.link, communities.testCommunity.name);
     } else {
-      await alice1.clickOnElementAll(new ConversationItem(alice1, testCommunityName));
+      await alice1.clickOnElementAll(new ConversationItem(alice1, communities.testCommunity.name));
       await alice1.scrollToBottom();
     }
-    await joinCommunity(bob1, testCommunityLink, testCommunityName);
+    await joinCommunity(bob1, communities.testCommunity.link, communities.testCommunity.name);
   });
   await test.step(TestSteps.SEND.MESSAGE('Bob', 'community'), async () => {
     await bob1.sendMessage(msg1);

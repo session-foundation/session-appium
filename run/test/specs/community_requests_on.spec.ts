@@ -1,7 +1,7 @@
 import { test, type TestInfo } from '@playwright/test';
 import { USERNAME } from '@session-foundation/qa-seeder';
 
-import { testCommunityLink, testCommunityName } from '../../constants/community';
+import { communities } from '../../constants/community';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { CloseSettings } from '../locators';
@@ -55,17 +55,20 @@ async function blindedMessageRequests(platform: SupportedPlatformsType, testInfo
   await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
     await Promise.all(
       [device1, device2].map(async device => {
-        await joinCommunity(device, testCommunityLink, testCommunityName);
+        await joinCommunity(device, communities.testCommunity.link, communities.testCommunity.name);
       })
     );
   });
 
-  await test.step(TestSteps.SEND.MESSAGE(bob.userName, testCommunityName), async () => {
-    // brief sleep to let the UI settle
-    await sleepFor(1000);
-    await device2.sendMessage(message);
-    await device2.navigateBack();
-  });
+  await test.step(
+    TestSteps.SEND.MESSAGE(bob.userName, communities.testCommunity.name),
+    async () => {
+      // brief sleep to let the UI settle
+      await sleepFor(1000);
+      await device2.sendMessage(message);
+      await device2.navigateBack();
+    }
+  );
   await test.step(TestSteps.SEND.MESSAGE(alice.userName, bob.userName), async () => {
     await device1.clickOnElementAll(new CommunityMessageAuthor(device1, message));
     await sleepFor(500); // brief sleep to let the UI settle

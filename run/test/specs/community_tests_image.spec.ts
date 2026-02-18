@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { testCommunityLink, testCommunityName } from '../../constants/community';
+import { communities } from '../../constants/community';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { MessageBody } from '../locators/conversation';
@@ -31,7 +31,9 @@ async function sendImageCommunity(platform: SupportedPlatformsType, testInfo: Te
   const testImageMessage = `Image message + ${new Date().getTime()} - ${platform}`;
   await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
     await Promise.all(
-      [alice1, bob1].map(device => joinCommunity(device, testCommunityLink, testCommunityName))
+      [alice1, bob1].map(device =>
+        joinCommunity(device, communities.testCommunity.link, communities.testCommunity.name)
+      )
     );
   });
   await test.step(TestSteps.SEND.IMAGE, async () => {
@@ -40,7 +42,7 @@ async function sendImageCommunity(platform: SupportedPlatformsType, testInfo: Te
   await test.step(TestSteps.VERIFY.MESSAGE_RECEIVED, async () => {
     await sleepFor(2000); // Give bob some time to receive the image
     await bob1.scrollToBottom();
-    await bob1.onAndroid().trustAttachments(testCommunityName);
+    await bob1.onAndroid().trustAttachments(communities.testCommunity.name);
     await bob1.onAndroid().scrollToBottom(); // Trusting attachments scrolls the viewport up a bit so gotta scroll to bottom again
     await bob1.waitForTextElementToBePresent(new MessageBody(bob1, testImageMessage));
   });

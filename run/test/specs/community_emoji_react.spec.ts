@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { testCommunityLink, testCommunityName } from '../../constants/community';
+import { communities } from '../../constants/community';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { EmojiReactsPill, FirstEmojiReact, MessageBody } from '../locators/conversation';
@@ -36,11 +36,16 @@ async function sendEmojiReactionCommunity(platform: SupportedPlatformsType, test
     });
   });
   await Promise.all(
-    [alice1, bob1].map(device => joinCommunity(device, testCommunityLink, testCommunityName))
+    [alice1, bob1].map(device =>
+      joinCommunity(device, communities.testCommunity.link, communities.testCommunity.name)
+    )
   );
-  await test.step(TestSteps.SEND.MESSAGE(alice.userName, testCommunityName), async () => {
-    await alice1.sendMessage(message);
-  });
+  await test.step(
+    TestSteps.SEND.MESSAGE(alice.userName, communities.testCommunity.name),
+    async () => {
+      await alice1.sendMessage(message);
+    }
+  );
   await test.step(TestSteps.SEND.EMOJI_REACT, async () => {
     await bob1.scrollToBottom();
     await bob1.longPressMessage(new MessageBody(bob1, message));
