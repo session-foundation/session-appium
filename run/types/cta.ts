@@ -1,11 +1,15 @@
-import { tStripped } from '../../localizer/lib';
+import { tStripped } from '../localizer/lib';
 
-export type CTAType = 'animatedProfilePicture' | 'donate' | 'longerMessages';
+export type CTAType = 'alreadyActivated' | 'animatedProfilePicture' | 'donate' | 'longerMessages';
 
+/**
+ * buttons[0] is the negative/dismiss button (always present);
+ * buttons[1] is the optional positive/action button
+ */
 export type CTAConfig = {
   heading: string;
   body: string;
-  buttons: string[];
+  buttons: [string, string] | [string];
   features?: string[];
 };
 
@@ -13,12 +17,12 @@ export const ctaConfigs: Record<CTAType, CTAConfig> = {
   donate: {
     heading: tStripped('donateSessionHelp'),
     body: tStripped('donateSessionDescription'),
-    buttons: [tStripped('donate'), tStripped('maybeLater')],
+    buttons: [tStripped('maybeLater'), tStripped('donate')],
   },
   longerMessages: {
     heading: tStripped('upgradeTo'),
     body: tStripped('proCallToActionLongerMessages'),
-    buttons: [tStripped('theContinue'), tStripped('cancel')],
+    buttons: [tStripped('cancel'), tStripped('theContinue')],
     features: [
       tStripped('proFeatureListLongerMessages'),
       tStripped('proFeatureListPinnedConversations'),
@@ -28,11 +32,16 @@ export const ctaConfigs: Record<CTAType, CTAConfig> = {
   animatedProfilePicture: {
     heading: tStripped('upgradeTo'),
     body: tStripped('proAnimatedDisplayPictureCallToActionDescription'),
-    buttons: [tStripped('theContinue'), tStripped('cancel')],
+    buttons: [tStripped('cancel'), tStripped('theContinue')],
     features: [
       tStripped('proFeatureListAnimatedDisplayPicture'),
       tStripped('proFeatureListLongerMessages'),
       tStripped('proFeatureListLoadsMore'),
     ],
+  },
+  alreadyActivated: {
+    heading: tStripped('proActivated'),
+    body: tStripped('proAnimatedDisplayPicture'),
+    buttons: [tStripped('close')],
   },
 };

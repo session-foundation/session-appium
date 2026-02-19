@@ -634,6 +634,7 @@ export type ScreenshotFileNames =
   | 'conversation_alice'
   | 'conversation_bob'
   | 'cta_donate'
+  | 'cta_pro_activated'
   | 'landingpage_new_account'
   | 'landingpage_restore_account'
   | 'settings_appearance'

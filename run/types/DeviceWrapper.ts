@@ -75,9 +75,9 @@ import { clickOnCoordinates, sleepFor } from '../test/utils';
 import { getAdbFullPath } from '../test/utils/binaries';
 import { parseDataImage } from '../test/utils/check_colour';
 import { isSameColor } from '../test/utils/check_colour';
-import { CTAConfig, ctaConfigs, CTAType } from '../test/utils/check_cta';
 import { SupportedPlatformsType } from '../test/utils/open_app';
 import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/utils/utilities';
+import { CTAConfig, ctaConfigs, CTAType } from './cta';
 import {
   AccessibilityId,
   Coordinates,
@@ -2626,16 +2626,18 @@ export class DeviceWrapper {
       }
     }
 
-    // CTA positive button
-    const elPositive = await this.waitForTextElementToBePresent(new CTAButtonPositive(this));
-    const actualPositive = await this.getTextFromElement(elPositive);
-    this.assertTextMatches(actualPositive, buttons[0], 'CTA positive button');
+    /**
+     * buttons[0] = negative/dismiss (always present);
+     * buttons[1] = positive/action (optional)
+     */
+    const elNegative = await this.waitForTextElementToBePresent(new CTAButtonNegative(this));
+    const actualNegative = await this.getTextFromElement(elNegative);
+    this.assertTextMatches(actualNegative, buttons[0], 'CTA negative button');
 
-    // CTA negative button if present 
     if (buttons.length === 2) {
-      const elNegative = await this.waitForTextElementToBePresent(new CTAButtonNegative(this));
-      const actualNegative = await this.getTextFromElement(elNegative);
-      this.assertTextMatches(actualNegative, buttons[1], 'CTA negative button');
+      const elPositive = await this.waitForTextElementToBePresent(new CTAButtonPositive(this));
+      const actualPositive = await this.getTextFromElement(elPositive);
+      this.assertTextMatches(actualPositive, buttons[1], 'CTA positive button');
     }
   }
 
@@ -2648,13 +2650,11 @@ export class DeviceWrapper {
     await Promise.all([
       this.verifyElementNotPresent(new CTAHeading(this)),
       this.verifyElementNotPresent(new CTABody(this)),
-      this.verifyElementNotPresent(new CTAButtonPositive(this)),
+      this.verifyElementNotPresent(new CTAButtonNegative(this)),
     ]);
   }
 
   // Dismiss any CTA if it shows
-  // Note that not every CTA has negative buttons but a vast majority of them do
-  // And the ones that show and block the automation are likely to be ones with negative button
   public async dismissCTA(): Promise<void> {
     const hasCTAAppeared = await this.doesElementExist({
       ...new CTAButtonNegative(this).build(),
@@ -2674,6 +2674,7 @@ export class DeviceWrapper {
     const pixelColor = await parseDataImage(base64image);
     return pixelColor;
   }
+
   // Sample an element's centre pixel color SAMPLE_SIZE times to determine whether it is animated or not.
   // If the set contains more than 1 color it is likely animated.
   public async verifyElementIsAnimated(args: LocatorsInterface): Promise<void> {
