@@ -38,7 +38,6 @@ export const getEmulatorFullPath = () => {
   return fromEnv;
 };
 
-
 export const getRetriesCount = () => {
   const asNumber = toNumber(process.env.PLAYWRIGHT_RETRIES_COUNT);
   return isFinite(asNumber) ? asNumber : 0;
