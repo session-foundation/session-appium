@@ -27,7 +27,7 @@ async function deleteRequest(platform: SupportedPlatformsType, testInfo: TestInf
   // Bob clicks on message request banner
   await device2.clickOnElementAll(new MessageRequestsBanner(device2));
   // Swipe left on ios
-  await device2.onIOS().swipeLeftAny('Message request');
+  await device2.onIOS().swipeLeftAny(new MessageRequestItem(device2).build().selector);
   await device2.onAndroid().longPress(new MessageRequestItem(device2));
   await device2.clickOnElementAll(new DeleteMessageRequestButton(device2));
   await device2.checkModalStrings(tStripped('delete'), tStripped('messageRequestsContactDelete'));

@@ -158,8 +158,9 @@ export class NotificationsMenuItem extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'Notifications',
+          strategy: '-android uiautomator',
+          selector:
+            'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("Notifications"))',
         } as const;
       case 'ios':
         return {

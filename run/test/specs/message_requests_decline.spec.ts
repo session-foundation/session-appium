@@ -29,7 +29,7 @@ async function declineRequest(platform: SupportedPlatformsType, testInfo: TestIn
   // Bob clicks on message request banner
   await device2.clickOnElementAll(new MessageRequestsBanner(device2));
   // Bob clicks on request conversation item
-  await device2.clickOnByAccessibilityID('Message request');
+  await device2.clickOnElementAll(new MessageRequestItem(device2));
   // Check message request appears on linked device (device 3)
   await device3.clickOnElementAll(new MessageRequestsBanner(device3));
   await device3.waitForTextElementToBePresent(new MessageRequestItem(device3));

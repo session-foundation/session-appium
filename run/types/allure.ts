@@ -31,10 +31,11 @@ export type AllureSuiteConfig =
       parent: 'Sending Messages';
       suite: 'Emoji reacts' | 'Mentions' | 'Message types' | 'Performance' | 'Rules';
     }
-  | { parent: 'Settings'; suite: 'App Disguise' | 'Community Message Requests' }
+  | { parent: 'Settings'; suite: 'App Disguise' | 'Community Message Requests' | 'Notifications' }
   | {
       parent: 'User Actions';
       suite:
+        | 'Ban/Unban'
         | 'Block/Unblock'
         | 'Change Profile Picture'
         | 'Change Username'
@@ -67,6 +68,7 @@ export const TestSteps = {
     NEW_USER: 'Create new account',
     QA_SEEDER: 'Restore pre-seeded accounts',
     CLOSE_APP: 'Close app(s)',
+    RESTORE_ACCOUNT: (name: UserNameType) => `Restore ${name} on another device`,
   },
   // Plus Button options
   NEW_CONVERSATION: {
@@ -95,6 +97,8 @@ export const TestSteps = {
     CHANGE_PROFILE_PICTURE: 'Change profile picture',
     APP_DISGUISE: 'Set App Disguise',
     DELETE_FOR_EVERYONE: 'Delete for everyone',
+    GROUPS_ADD_CONTACT: (name: string) => `Invite ${name} to group`,
+    GROUPS_REMOVE_MEMBER: (name: string) => `Remove ${name} from group`,
   },
   // Disappearing Messages
   DISAPPEARING_MESSAGES: {
@@ -120,5 +124,6 @@ export const TestSteps = {
     NICKNAME_CHANGED: (context: string) => `Verify nickname changed in/on ${context}`,
     PROFILE_PICTURE_CHANGED: 'Verify profile picture has been changed',
     EMOJI_REACT: 'Verify emoji react appears for everyone',
+    GROUP_DELETED: 'Verify group is deleted for all members',
   },
 };

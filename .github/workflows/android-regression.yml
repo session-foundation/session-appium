@@ -4,6 +4,15 @@ run-name: '${{ inputs.RISK }} regressions on ${{ github.head_ref || github.ref }
 on:
   workflow_dispatch:
     inputs:
+      NETWORK_TARGET:
+        description: 'network target to run the tests on'
+        required: true
+        type: choice
+        options:
+          - 'devnet'
+          - 'mainnet'
+        default: 'devnet'
+
       APK_URL:
         description: 'apk url to test (.tar.xz)'
         required: true
@@ -53,6 +62,9 @@ on:
           - 'verbose' # Ongoing and failed test logs
         default: 'minimal'
 
+permissions:
+  contents: write
+
 jobs:
   android-regression:
     runs-on: [self-hosted, linux, X64, qa-android]
@@ -66,11 +78,13 @@ jobs:
       IOS_APP_PATH_PREFIX: '<just_not_empty>'
       ANDROID_APK: './extracted/session-android.apk'
       APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
+      EMULATOR_FULL_PATH: '/opt/android/emulator/emulator'
       ANDROID_SDK_ROOT: '/opt/android'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
       _TESTING: 1 # Always hide webdriver logs (@appium/support/ flag)
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL != 'minimal' && '1' || '0' }} # Show stdout/stderr if test fails (@session-foundation/playwright-reporter/ flag)
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'verbose' && '1' || '0' }} # Show everything as it happens (@session-foundation/playwright-reporter/ flag)
+      SOGS_ADMIN_SEED: ${{ secrets.SOGS_ADMIN_SEED }}
 
     steps:
       - uses: actions/checkout@v6
@@ -97,57 +111,62 @@ jobs:
         run: |
           pwd
 
-          # Check if devnet is accessible before choosing APK
-          echo "Checking devnet accessibility for APK selection..."
-          DEVNET_ACCESSIBLE=false
+          NETWORK_TARGET="${{ github.event.inputs.NETWORK_TARGET }}"
+          echo "Network target: $NETWORK_TARGET"
 
-          # Retry logic 
-          for attempt in 1 2 3; do
-            echo "Devnet check attempt $attempt/3..."
-            if curl -s --connect-timeout 5 --max-time 10 http://sesh-net.local:1280 >/dev/null 2>&1; then
-              echo "Devnet is accessible on attempt $attempt"
-              DEVNET_ACCESSIBLE=true
-              break
-            else
-              echo "Attempt $attempt failed"
-              if [ $attempt -lt 3 ]; then
-                echo "Waiting ${attempt}s before retry..."
-                sleep $attempt
-              fi
-            fi
-          done
-
-          if [ "$DEVNET_ACCESSIBLE" = "false" ]; then
-            echo "Devnet is not accessible after 3 attempts"
-          fi
-
-          # Download and extract APK 
+          # Download and extract APK
           wget -q -O session-android.apk.tar.xz ${{ github.event.inputs.APK_URL }}
           tar xf session-android.apk.tar.xz
           mv session-android-*universal extracted
 
-          # Choose APK based on devnet accessibility
-          if ls extracted/*automaticQa.apk 1>/dev/null 2>&1; then
-            if [ "$DEVNET_ACCESSIBLE" = "true" ]; then
-              echo "Using AQA build (devnet accessible)"
+          # Choose APK based on network target
+          if [ "$NETWORK_TARGET" = "devnet" ]; then
+            echo "Devnet target - checking devnet accessibility..."
+            DEVNET_ACCESSIBLE=false
+
+            # Retry logic
+            for attempt in 1 2 3; do
+              echo "Devnet check attempt $attempt/3..."
+              if curl -s --connect-timeout 5 --max-time 10 http://sesh-net.local:1280 >/dev/null 2>&1; then
+                echo "Devnet is accessible on attempt $attempt"
+                DEVNET_ACCESSIBLE=true
+                break
+              else
+                echo "Attempt $attempt failed"
+                if [ $attempt -lt 3 ]; then
+                  echo "Waiting ${attempt}s before retry..."
+                  sleep $attempt
+                fi
+              fi
+            done
+
+            if [ "$DEVNET_ACCESSIBLE" = "false" ]; then
+              echo "ERROR: Devnet is not accessible after 3 attempts, but devnet target was selected"
+              exit 1
+            fi
+
+            # Use AQA build for devnet
+            if ls extracted/*automaticQa.apk 1>/dev/null 2>&1; then
+              echo "Using AQA build for devnet"
               mv extracted/*automaticQa.apk extracted/session-android.apk
               echo "IS_AUTOMATIC_QA=true" >> $GITHUB_ENV
             else
-              echo "AQA build available but devnet not accessible - falling back to regular QA build"
-              if ls extracted/*qa.apk 1>/dev/null 2>&1; then
-                mv extracted/*qa.apk extracted/session-android.apk
-                echo "IS_AUTOMATIC_QA=false" >> $GITHUB_ENV
-              else
-                echo "No regular QA build found as fallback"
-                exit 1
-              fi
+              echo "ERROR: No AQA build found for devnet target"
+              exit 1
             fi
-          elif ls extracted/*qa.apk 1>/dev/null 2>&1; then
-            echo "Using regular QA build"
-            mv extracted/*qa.apk extracted/session-android.apk
-            echo "IS_AUTOMATIC_QA=false" >> $GITHUB_ENV
+
+          elif [ "$NETWORK_TARGET" = "mainnet" ]; then
+            echo "Mainnet target - using regular QA build"
+            if ls extracted/*qa.apk 1>/dev/null 2>&1; then
+              mv extracted/*qa.apk extracted/session-android.apk
+              echo "IS_AUTOMATIC_QA=false" >> $GITHUB_ENV
+            else
+              echo "ERROR: No regular QA build found for mainnet target"
+              exit 1
+            fi
+
           else
-            echo "No suitable APK found"
+            echo "ERROR: Unknown network target: $NETWORK_TARGET"
             exit 1
           fi
 
@@ -194,6 +213,9 @@ jobs:
           PLATFORM: ${{ env.PLATFORM }}
           UPLOAD_IDENTIFIER: 'devices-1-test-run'
 
+      - name: Recover emulators if needed
+        run: pnpm recover-emulators
+
       - name: Run the 2-devices tests ​​with 2 workers
         continue-on-error: true
         id: devices-2-test-run
@@ -212,6 +234,9 @@ jobs:
         with:
           PLATFORM: ${{ env.PLATFORM }}
           UPLOAD_IDENTIFIER: 'devices-2-test-run'
+
+      - name: Recover emulators if needed
+        run: pnpm recover-emulators
 
       - name: Run the other tests with 1 worker
         continue-on-error: true
@@ -237,6 +262,7 @@ jobs:
           RISK: ${{github.event.inputs.RISK}}
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
           GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
+          NETWORK_TARGET: ${{ github.event.inputs.NETWORK_TARGET }}
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results

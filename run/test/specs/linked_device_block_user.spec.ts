@@ -35,6 +35,7 @@ async function blockUserInConversationOptions(
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   // Select Block option
   await sleepFor(500);
+  await alice1.onIOS().scrollDown(); // Blind scroll because Block option is obscured by system UI on iOS
   await alice1.clickOnElementAll(new BlockUser(alice1));
   await alice1.checkModalStrings(
     tStripped('block'),
@@ -42,23 +43,11 @@ async function blockUserInConversationOptions(
   );
   // Confirm block option
   await alice1.clickOnElementAll(new BlockUserConfirmationModal(alice1));
-  // On ios there is an alert that confirms that the user has been blocked
-  await sleepFor(1000);
-  // On ios, you need to navigate back to conversation screen to confirm block
+  await alice2.hasElementBeenDeleted(new ConversationItem(alice2, bob.userName));
   await alice1.navigateBack();
-  // Look for alert at top of screen (Bob is blocked. Unblock them?)
-  // Check device 1 for blocked status
-  const blockedStatus = await alice1.waitForTextElementToBePresent(new BlockedBanner(alice1));
-  if (blockedStatus) {
-    // Check linked device for blocked status (if shown on alice1)
-    await alice2.onAndroid().clickOnElementAll(new ConversationItem(alice2, bob.userName));
-    await alice2.onAndroid().waitForTextElementToBePresent(new BlockedBanner(alice2));
-    alice2.info(`${bob.userName}` + ' has been blocked');
-  } else {
-    alice2.info('Blocked banner not found');
-  }
+  await alice1.waitForTextElementToBePresent(new BlockedBanner(alice1));
   // Check settings for blocked user
-  await Promise.all([alice1.navigateBack(), alice2.onAndroid().navigateBack()]);
+  await alice1.navigateBack();
   await Promise.all([
     alice1.clickOnElementAll(new UserSettings(alice1)),
     alice2.clickOnElementAll(new UserSettings(alice2)),

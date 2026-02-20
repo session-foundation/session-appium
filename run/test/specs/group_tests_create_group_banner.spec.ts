@@ -1,14 +1,13 @@
 import type { TestInfo } from '@playwright/test';
 
-import { androidIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { LatestReleaseBanner } from '../locators/groups';
 import { PlusButton } from '../locators/home';
 import { CreateGroupOption } from '../locators/start_conversation';
 import { open_Alice1_Bob1_friends } from '../state_builder';
 import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
-// This banner no longer exists on iOS
-androidIt({
+bothPlatformsIt({
   title: 'Create group banner',
   risk: 'high',
   testCb: createGroupBanner,
@@ -18,7 +17,7 @@ androidIt({
     suite: 'Create Group',
   },
   allureDescription:
-    'Verifies that the latest release banner is present on the Create Group screen',
+    'Verifies that the latest release banner is no longer present on the Create Group screen',
 });
 
 async function createGroupBanner(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -34,6 +33,6 @@ async function createGroupBanner(platform: SupportedPlatformsType, testInfo: Tes
   await alice1.clickOnElementAll(new PlusButton(alice1));
   await alice1.clickOnElementAll(new CreateGroupOption(alice1));
   // Verify the banner is present
-  await alice1.waitForTextElementToBePresent(new LatestReleaseBanner(alice1));
+  await alice1.verifyElementNotPresent(new LatestReleaseBanner(alice1));
   await closeApp(alice1, bob1);
 }

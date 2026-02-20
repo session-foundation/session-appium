@@ -1,13 +1,12 @@
 import type { TestInfo } from '@playwright/test';
 
-import { androidIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { ConversationSettings } from '../locators/conversation';
 import { LatestReleaseBanner, ManageMembersMenuItem } from '../locators/groups';
 import { open_Alice1_Bob1_Charlie1_friends_group } from '../state_builder';
 import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
-// This banner no longer exists on iOS
-androidIt({
+bothPlatformsIt({
   title: 'Edit group banner',
   risk: 'medium',
   testCb: editGroupBanner,
@@ -16,7 +15,8 @@ androidIt({
     parent: 'Groups',
     suite: 'Edit Group',
   },
-  allureDescription: 'Verifies that the latest release banner is present on the Edit Group screen',
+  allureDescription:
+    'Verifies that the latest release banner is no longer present on the Edit Group screen',
 });
 
 async function editGroupBanner(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -33,6 +33,6 @@ async function editGroupBanner(platform: SupportedPlatformsType, testInfo: TestI
   // Navigate to Edit Group screen
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   await alice1.clickOnElementAll(new ManageMembersMenuItem(alice1));
-  await alice1.waitForTextElementToBePresent(new LatestReleaseBanner(alice1));
+  await alice1.verifyElementNotPresent(new LatestReleaseBanner(alice1));
   await closeApp(alice1, bob1, charlie1);
 }

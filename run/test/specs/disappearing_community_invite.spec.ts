@@ -13,7 +13,7 @@ import { GroupMember } from '../locators/groups';
 import { ConversationItem } from '../locators/home';
 import { open_Alice1_Bob1_friends } from '../state_builder';
 import { sleepFor } from '../utils';
-import { joinCommunity } from '../utils/join_community';
+import { joinCommunity } from '../utils/community';
 import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 import { setDisappearingMessage } from '../utils/set_disappearing_messages';
 
@@ -68,7 +68,7 @@ async function disappearingCommunityInviteMessage(
   // Leave Invite Contacts, Conversation Settings, Community, and open convo with Bob
   await alice1.navigateBack();
   await alice1.navigateBack();
-  await alice1.navigateBack();
+  await alice1.onIOS().navigateBack(); // Android only needs to go back twice
   await alice1.clickOnElementAll(new ConversationItem(alice1, bob.userName));
   // At this point the invite should have disappeared already so we just check it's not there
   await alice1.verifyElementNotPresent(new CommunityInvitation(alice1));

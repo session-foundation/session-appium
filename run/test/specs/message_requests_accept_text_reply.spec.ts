@@ -4,7 +4,7 @@ import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { MessageInput, OutgoingMessageStatusSent, SendButton } from '../locators/conversation';
-import { PlusButton } from '../locators/home';
+import { MessageRequestItem, PlusButton } from '../locators/home';
 import { MessageRequestsBanner } from '../locators/home';
 import { EnterAccountID, NewMessageOption, NextButton } from '../locators/start_conversation';
 import { newUser } from '../utils/create_account';
@@ -57,7 +57,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType, testInfo:
   // Bob clicks on message request banner
   await device2.clickOnElementAll(new MessageRequestsBanner(device2));
   // Bob clicks on request conversation item
-  await device2.clickOnByAccessibilityID('Message request');
+  await device2.clickOnElementAll(new MessageRequestItem(device2));
   // Check control message warning of sending message request reply
   // "messageRequestsAcceptDescription": "Sending a message to this user will automatically accept their message request and reveal your Account ID."
   const messageRequestsAcceptDescription = tStripped('messageRequestsAcceptDescription');
