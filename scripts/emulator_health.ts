@@ -1,4 +1,5 @@
 import { sleepFor } from '../run/test/utils';
+import { getAdbFullPath, getEmulatorFullPath } from '../run/test/utils/binaries';
 import { runScriptAndLog } from '../run/test/utils/utilities';
 
 const EMULATOR_CONFIG = {
@@ -9,7 +10,7 @@ const EMULATOR_CONFIG = {
 } as const;
 
 async function getRunningEmulators(): Promise<number[]> {
-  const output = await runScriptAndLog('adb devices');
+  const output = await runScriptAndLog(`${getAdbFullPath()} devices`);
   return output
     .split('\n')
     .map(line => {
@@ -34,9 +35,10 @@ async function getMissingEmulators(): Promise<number[]> {
 
 async function waitForEmulatorBoot(
   emulatorNum: number,
-  timeoutMs: number = 30_0000
+  timeoutMs: number = 300_000
 ): Promise<boolean> {
   const port = EMULATOR_CONFIG[emulatorNum as keyof typeof EMULATOR_CONFIG];
+  const udid = `emulator-${port}`;
   const startTime = Date.now();
   const maxAttempts = Math.floor(timeoutMs / 5_000);
 
@@ -45,7 +47,7 @@ async function waitForEmulatorBoot(
   for (let i = 0; i < maxAttempts; i++) {
     try {
       const result = await runScriptAndLog(
-        `adb -s emulator-${port} shell getprop sys.boot_completed 2>/dev/null`,
+        `${getAdbFullPath()} -s ${udid} shell getprop sys.boot_completed 2>/dev/null`,
         false
       );
 
@@ -65,6 +67,37 @@ async function waitForEmulatorBoot(
   return false;
 }
 
+export async function recoverEmulator(emulatorNum: number): Promise<void> {
+  const port = EMULATOR_CONFIG[emulatorNum as keyof typeof EMULATOR_CONFIG];
+  const udid = `emulator-${port}`;
+  const avdName = `emulator${emulatorNum}`;
+
+  console.warn(`[Recovery] ${udid} not running — attempting to recover ${avdName}...`);
+
+  // Kill any zombie process
+  try {
+    await runScriptAndLog(`${getAdbFullPath()} -s ${udid} emu kill`, false);
+    await sleepFor(2_000);
+  } catch {
+    // Already dead, that's fine
+  }
+
+  // Restart from snapshot (mirrors ci.sh start_with_snapshots)
+  const configFile = `$HOME/.android/avd/${avdName}.avd/emulator-user.ini`;
+  const windowX = 100 + (emulatorNum - 1) * 400;
+  await runScriptAndLog(`sed -i "s/^window.x.*/window.x=${windowX}/" ${configFile}`, false);
+
+  await runScriptAndLog(
+    `DISPLAY=:0 nohup ${getEmulatorFullPath()} @${avdName} -gpu host -accel on -no-snapshot-save -snapshot plop.snapshot -force-snapshot-load > /dev/null 2>&1 &`,
+    false
+  );
+
+  const booted = await waitForEmulatorBoot(emulatorNum);
+  if (!booted) {
+    throw new Error(`[Recovery] ${udid} failed to boot`);
+  }
+}
+
 async function restartMissingEmulators(): Promise<void> {
   const missing = await getMissingEmulators();
 
@@ -73,42 +106,10 @@ async function restartMissingEmulators(): Promise<void> {
     return;
   }
 
-  console.log(`Missing emulators: ${missing.join(', ')}`);
-  console.log(`Restarting emulators: ${missing.join(', ')}`);
+  console.log(`Missing emulators: ${missing.join(', ')} — recovering...`);
 
-  for (const num of missing) {
-    const port = EMULATOR_CONFIG[num as keyof typeof EMULATOR_CONFIG];
-
-    // Kill if zombie process
-    try {
-      await runScriptAndLog(`adb -s emulator-${port} emu kill`, false);
-      await sleepFor(2_000);
-    } catch {
-      // Already dead, that's fine
-    }
-
-    // Restart from snapshot (same as ci.sh start_with_snapshots)
-    const configFile = `$HOME/.android/avd/emulator${num}.avd/emulator-user.ini`;
-    const windowX = 100 + (num - 1) * 400;
-
-    await runScriptAndLog(`sed -i "s/^window.x.*/window.x=${windowX}/" ${configFile}`, false);
-
-    await runScriptAndLog(
-      `DISPLAY=:0 nohup emulator @emulator${num} -gpu host -accel on -no-snapshot-save -snapshot plop.snapshot -force-snapshot-load > /dev/null 2>&1 &`,
-      false
-    );
-
-    await sleepFor(5_000);
-  }
-
-  console.log(`\nWaiting for ${missing.length} emulator(s) to boot...`);
-
-  const bootResults = await Promise.all(missing.map(num => waitForEmulatorBoot(num)));
-
-  if (bootResults.every(result => result)) {
-    console.log(`\nEmulators restarted and booted successfully`);
-  } else {
-    console.log(`\nSome emulators failed to boot`);
+  const results = await Promise.allSettled(missing.map(num => recoverEmulator(num)));
+  if (results.some(r => r.status === 'rejected')) {
     throw new Error('Emulator recovery failed');
   }
 }

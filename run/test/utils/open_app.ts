@@ -5,14 +5,9 @@ import { XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
 import { DriverOpts } from 'appium/build/lib/appium';
 import { compact } from 'lodash';
 
+import { recoverEmulator } from '../../../scripts/emulator_health';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
-import {
-  getAdbFullPath,
-  getAndroidSystemImageToUse,
-  getDevicesPerTestCount,
-  getEmulatorFullPath,
-  getSdkManagerFullPath,
-} from './binaries';
+import { getAdbFullPath, getDevicesPerTestCount } from './binaries';
 import { androidAppPackage, getAndroidCapabilities, getAndroidUdid } from './capabilities_android';
 import {
   CapabilitiesIndexType,
@@ -24,7 +19,7 @@ import {
 import { cleanPermissions } from './permissions';
 import { registerDevicesForTest } from './screenshot_helper';
 import { sleepFor } from './sleep_for';
-import { isCI, runScriptAndLog } from './utilities';
+import { runScriptAndLog } from './utilities';
 
 const APPIUM_PORT = 4728;
 
@@ -155,31 +150,6 @@ export const openAppFourDevices = async (
   return result;
 };
 
-async function createAndroidEmulator(emulatorName: string) {
-  if (isCI()) {
-    // on CI, emulators are created during the docker build step.
-    return emulatorName;
-  }
-  const installSystemImageCmd = `${getSdkManagerFullPath()} --install '${getAndroidSystemImageToUse()}'`;
-  console.warn(installSystemImageCmd);
-  await runScriptAndLog(installSystemImageCmd);
-
-  const createCmd = `echo "no" | ${getSdkManagerFullPath()} create avd --name ${emulatorName} -k '${getAndroidSystemImageToUse()}' --force --skin pixel_5`;
-  console.info(createCmd);
-  await runScriptAndLog(createCmd);
-  return emulatorName;
-}
-
-async function startAndroidEmulator(emulatorName: string) {
-  await runScriptAndLog(`echo "hw.lcd.density=440" >> ~/.android/avd/${emulatorName}.avd/config.ini
-  `);
-  const startEmulatorCmd = `${getEmulatorFullPath()} @${emulatorName}`;
-  console.info(`${startEmulatorCmd} & ; disown`);
-  await runScriptAndLog(
-    startEmulatorCmd // -netdelay none -no-snapshot -wipe-data
-  );
-}
-
 async function isEmulatorRunning(emulatorName: string) {
   const failedWith = await runScriptAndLog(
     `${getAdbFullPath()} -s ${emulatorName} get-state;`,
@@ -244,13 +214,15 @@ const openAndroidApp = async (
   const emulatorAlreadyRunning = await isEmulatorRunning(targetName);
   console.info('emulatorAlreadyRunning', targetName, emulatorAlreadyRunning);
   if (!emulatorAlreadyRunning) {
-    if (process.env.CI) {
-      throw new Error(
-        `Emulator "${targetName}" is not running but it should have been started earlier.`
-      );
+    if (process.env.CI === '1') {
+      // Emulator died mid-job — attempt recovery before failing the test.
+      // Each worker owns a fixed port range (determined by TEST_PARALLEL_INDEX), so
+      // parallel workers will never race to recover the same emulator.
+      const port = parseInt(targetName.replace('emulator-', ''));
+      await recoverEmulator((port - 5554) / 2 + 1);
+    } else {
+      throw new Error(`Emulator "${targetName}" is not running. Please start it manually.`);
     }
-    await createAndroidEmulator(targetName);
-    void startAndroidEmulator(targetName);
   }
   await waitForEmulatorToBeRunning(targetName);
   console.log(targetName, ' emulator booted');

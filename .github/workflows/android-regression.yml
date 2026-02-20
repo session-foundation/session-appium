@@ -78,6 +78,7 @@ jobs:
       IOS_APP_PATH_PREFIX: '<just_not_empty>'
       ANDROID_APK: './extracted/session-android.apk'
       APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
+      EMULATOR_FULL_PATH: '/opt/android/emulator/emulator'
       ANDROID_SDK_ROOT: '/opt/android'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
       _TESTING: 1 # Always hide webdriver logs (@appium/support/ flag)
