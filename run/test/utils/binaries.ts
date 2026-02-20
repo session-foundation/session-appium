@@ -38,38 +38,6 @@ export const getEmulatorFullPath = () => {
   return fromEnv;
 };
 
-export const getAvdManagerFullPath = () => {
-  const fromEnv = process.env.AVD_MANAGER_FULL_PATH;
-
-  if (!fromEnv) {
-    throw new Error('env variable `AVD_MANAGER_FULL_PATH` needs to be set');
-  }
-  existsAndFileOrThrow(fromEnv, 'AVD_MANAGER_FULL_PATH');
-
-  return fromEnv;
-};
-
-export const getSdkManagerFullPath = () => {
-  const fromEnv = process.env.SDK_MANAGER_FULL_PATH;
-
-  if (!fromEnv) {
-    throw new Error('env variable `SDK_MANAGER_FULL_PATH` needs to be set');
-  }
-
-  existsAndFileOrThrow(fromEnv, 'SDK_MANAGER_FULL_PATH');
-
-  return fromEnv;
-};
-
-export const getAndroidSystemImageToUse = () => {
-  const fromEnv = process.env.ANDROID_SYSTEM_IMAGE;
-
-  if (!fromEnv) {
-    throw new Error('env variable `ANDROID_SYSTEM_IMAGE` needs to be set');
-  }
-
-  return fromEnv;
-};
 
 export const getRetriesCount = () => {
   const asNumber = toNumber(process.env.PLAYWRIGHT_RETRIES_COUNT);

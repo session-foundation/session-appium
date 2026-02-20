@@ -86,10 +86,6 @@ jobs:
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL != 'minimal' && '1' || '0' }} # Show stdout/stderr if test fails (@session-foundation/playwright-reporter/ flag)
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'verbose' && '1' || '0' }} # Show everything as it happens (@session-foundation/playwright-reporter/ flag)
       PLAYWRIGHT_WORKERS_COUNT: 3 # for iOS, this is the max we can have on our self-hosted runner
-      SDK_MANAGER_FULL_PATH: '<just_not_empty>'
-      AVD_MANAGER_FULL_PATH: '<just_not_empty>'
-      ANDROID_SYSTEM_IMAGE: '<just_not_empty>'
-      EMULATOR_FULL_PATH: '<just_not_empty>'
       SOGS_ADMIN_SEED: ${{ secrets.SOGS_ADMIN_SEED }}
 
     steps:

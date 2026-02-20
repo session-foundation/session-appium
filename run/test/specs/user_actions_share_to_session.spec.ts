@@ -31,7 +31,7 @@ bothPlatformsIt({
   allureDescription: `Verifies that a user can share an image from the photo gallery to Session`,
 });
 
-// On iOS the Share button just opens the regular share sheet, same as 'Share to Session' - no need to test separately. 
+// On iOS the Share button just opens the regular share sheet, same as 'Share to Session' - no need to test separately.
 androidIt({
   title: 'Share within Session',
   risk: 'medium',
