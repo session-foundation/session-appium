@@ -4,7 +4,11 @@ import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { CloseSettings } from '../locators';
+import { ConversationSettings, MessageBody } from '../locators/conversation';
+import { ConversationItem } from '../locators/home';
 import { PathMenuItem, UserAvatar, UserSettings } from '../locators/settings';
+import { open_Alice1_Bob1_friends } from '../state_builder';
 import { IOSTestContext } from '../utils/capabilities_ios';
 import { newUser } from '../utils/create_account';
 import { makeAccountPro } from '../utils/mock_pro';
@@ -14,7 +18,7 @@ import { verifyPageScreenshot } from '../utils/verify_screenshots';
 
 bothPlatformsIt({
   title: 'Upload animated profile picture (non Pro)',
-  risk: 'medium',
+  risk: 'high',
   countOfDevicesNeeded: 1,
   testCb: nonProAnimatedDP,
   allureSuites: {
@@ -25,7 +29,7 @@ bothPlatformsIt({
 
 bothPlatformsIt({
   title: 'Upload animated profile picture (Pro)',
-  risk: 'medium',
+  risk: 'high',
   countOfDevicesNeeded: 1,
   testCb: proAnimatedDP,
   allureSuites: {
@@ -36,9 +40,19 @@ bothPlatformsIt({
 
 bothPlatformsIt({
   title: 'Pro Activated CTA',
-  risk: 'medium',
+  risk: 'low',
   countOfDevicesNeeded: 1,
   testCb: proActivatedCTA,
+  allureSuites: {
+    parent: 'Session Pro',
+  },
+});
+
+bothPlatformsIt({
+  title: 'Animated Profile Picture shows',
+  risk: 'high',
+  countOfDevicesNeeded: 2,
+  testCb: proAnimatedDPShows,
   allureSuites: {
     parent: 'Session Pro',
   },
@@ -108,5 +122,35 @@ async function proAnimatedDP(platform: SupportedPlatformsType, testInfo: TestInf
   await device.verifyElementIsAnimated(new UserAvatar(device));
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);
+  });
+}
+
+async function proAnimatedDPShows(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const iosContext: IOSTestContext = {
+    sessionProEnabled: 'true',
+  };
+  const { devices, prebuilt } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
+    return await open_Alice1_Bob1_friends({
+      platform,
+      focusFriendsConvo: false,
+      testInfo,
+      iOSContext: iosContext,
+    });
+  });
+  const { alice1, bob1 } = devices;
+  const { alice, bob } = prebuilt;
+  await makeAccountPro({ user: alice, platform });
+  await forceStopAndRestart(alice1);
+  await test.step(TestSteps.USER_ACTIONS.CHANGE_PROFILE_PICTURE, async () => {
+    await alice1.uploadProfilePicture(true);
+  });
+  await alice1.clickOnElementAll(new CloseSettings(alice1));
+  await alice1.clickOnElementAll(new ConversationItem(alice1, bob.userName));
+  await alice1.sendMessage('Howdy');
+  await bob1.clickOnElementAll(new ConversationItem(bob1, alice.userName));
+  await bob1.waitForTextElementToBePresent(new MessageBody(bob1, 'Howdy'));
+  await bob1.verifyElementIsAnimated(new ConversationSettings(bob1));
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(alice1, bob1);
   });
 }
