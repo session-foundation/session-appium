@@ -1,6 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
-import { testCommunityLink, testCommunityName } from '../../constants/community';
+import { communities } from '../../constants/community';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { InviteContactsMenuItem } from '../locators';
@@ -50,7 +50,7 @@ async function disappearingCommunityInviteMessage(
   await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
   // await alice1.navigateBack();
   await alice1.navigateBack();
-  await joinCommunity(alice1, testCommunityLink, testCommunityName);
+  await joinCommunity(alice1, communities.testCommunity.link, communities.testCommunity.name);
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   await sleepFor(1000);
   await alice1.clickOnElementAll(new InviteContactsMenuItem(alice1));

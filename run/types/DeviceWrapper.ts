@@ -1,7 +1,7 @@
 import type { Constraints, DefaultCreateSessionResult } from '@appium/types';
 
 import { getImageOccurrence } from '@appium/opencv';
-import { TestInfo } from '@playwright/test';
+import { expect, TestInfo } from '@playwright/test';
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
 import { W3CUiautomator2DriverCaps } from 'appium-uiautomator2-driver/build/lib/types';
 import { W3CXCUITestDriverCaps, XCUITestDriver } from 'appium-xcuitest-driver/build/lib/driver';
@@ -18,12 +18,14 @@ import {
   describeLocator,
   DownloadMediaButton,
   FirstGif,
+  GIFName,
   ImageName,
   ImagePermissionsModalAllow,
   LocatorsInterface,
   ReadReceiptsButton,
 } from '../../run/test/locators';
 import {
+  animatedProfilePicture,
   profilePicture,
   testFile,
   testImage,
@@ -75,10 +77,11 @@ import { parseDataImage } from '../test/utils/check_colour';
 import { isSameColor } from '../test/utils/check_colour';
 import { SupportedPlatformsType } from '../test/utils/open_app';
 import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/utils/utilities';
+import { CTAConfig, ctaConfigs, CTAType } from './cta';
 import {
   AccessibilityId,
+  Coordinates,
   DISAPPEARING_TIMES,
-  Group,
   Id,
   InteractionPoints,
   Strategy,
@@ -87,10 +90,6 @@ import {
   XPath,
 } from './testing';
 
-export type Coordinates = {
-  x: number;
-  y: number;
-};
 export type ActionSequence = {
   actions: string;
 };
@@ -571,6 +570,16 @@ export class DeviceWrapper {
     return [];
   }
 
+  private resolveLocator(args: LocatorsInterface | (StrategyExtractionObj & { text?: string })): {
+    locator: StrategyExtractionObj;
+    description: string;
+  } {
+    const built = args instanceof LocatorsInterface ? args.build() : args;
+    const text = args instanceof LocatorsInterface ? undefined : args.text;
+    const locator = text ? { ...built, text } : built;
+    return { locator, description: describeLocator(locator) };
+  }
+
   /**
    * Attempts to find an element using a primary locator, and if not found, falls back to a secondary locator.
    * This is useful for supporting UI transitions (e.g., between legacy and Compose Android screens) where
@@ -588,13 +597,10 @@ export class DeviceWrapper {
     fallbackLocator: LocatorsInterface | StrategyExtractionObj,
     maxWait: number = 3000
   ): Promise<AppiumNextElementType> {
-    const primary =
-      primaryLocator instanceof LocatorsInterface ? primaryLocator.build() : primaryLocator;
-    const fallback =
-      fallbackLocator instanceof LocatorsInterface ? fallbackLocator.build() : fallbackLocator;
-
-    const primaryDescription = describeLocator(primary);
-    const fallbackDescription = describeLocator(fallback);
+    const { locator: primary, description: primaryDescription } =
+      this.resolveLocator(primaryLocator);
+    const { locator: fallback, description: fallbackDescription } =
+      this.resolveLocator(fallbackLocator);
 
     try {
       return await this.waitForTextElementToBePresent({ ...primary, maxWait, skipHealing: true });
@@ -617,18 +623,47 @@ export class DeviceWrapper {
     }
   }
 
-  public async longClick(element: AppiumNextElementType, durationMs: number) {
+  // Appium taps elements in their center but sometimes that is not desirable
+  // The native methods apply the tap offset from the top left corner
+  // For a more intuitive offset calculation, this method allows us to
+  // define offsets based on the element center
+  private async calculateGestureOffset(
+    element: AppiumNextElementType,
+    offset: Coordinates
+  ): Promise<Coordinates> {
+    const rect = await this.getElementRect(element.ELEMENT);
+    if (!rect) {
+      throw new Error('Failed to resolve element rect for offset calculation');
+    }
+    const { width, height } = rect;
+    const centerX = Math.round(width / 2);
+    const centerY = Math.round(height / 2);
+    // Clamp offset to element bounds
+    const x = Math.min(Math.max(centerX + offset.x, 0), rect.width);
+    const y = Math.min(Math.max(centerY + offset.y, 0), rect.height);
+    return { x, y };
+  }
+
+  /**
+   * @param offset Pixel offset from the element center.
+   *  If an offset is necessary, both x and y must be defined, otherwise Appium doesn't apply the offset parameter.
+   */
+  public async longClick(element: AppiumNextElementType, durationMs: number, offset?: Coordinates) {
+    let xOffset: number | undefined;
+    let yOffset: number | undefined;
+
+    if (offset) {
+      const offsetCoordinates = await this.calculateGestureOffset(element, offset);
+      xOffset = offsetCoordinates.x;
+      yOffset = offsetCoordinates.y;
+    }
+
     if (this.isIOS()) {
       // iOS takes a number in seconds
       const duration = Math.floor(durationMs / 1000);
-      return this.toIOS().mobileTouchAndHold(duration, undefined, undefined, element.ELEMENT);
+      return this.toIOS().mobileTouchAndHold(duration, xOffset, yOffset, element.ELEMENT);
     }
-    return this.toAndroid().mobileLongClickGesture(
-      element.ELEMENT,
-      undefined,
-      undefined,
-      durationMs
-    );
+    return this.toAndroid().mobileLongClickGesture(element.ELEMENT, xOffset, yOffset, durationMs);
   }
 
   public async clickOnByAccessibilityID(
@@ -742,32 +777,31 @@ export class DeviceWrapper {
    * @throws if message not found or context menu fails to appear within maxWait
    */
   public async longPressMessage(
-    args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
+    args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj),
+    options?: { offset?: Coordinates }
   ): Promise<void> {
-    const { text, maxWait = 10_000 } = args;
-    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const { maxWait = 10_000 } = args;
+    const { locator, description } = this.resolveLocator(args);
 
-    // Merge text if provided
-    const finalLocator = text ? { ...locator, text } : locator;
-
-    const displayText = describeLocator(finalLocator);
-    this.log(`Attempting long press on ${displayText}`);
+    this.log(`Attempting long press on ${description}`);
 
     await this.pollUntil(
       async () => {
         // Find the message
-        this.log(`Looking for: ${JSON.stringify(finalLocator)}`);
+        this.log(`Looking for: ${JSON.stringify(locator)}`);
         const el = await this.waitForTextElementToBePresent({
-          ...finalLocator,
+          ...locator,
           maxWait: 1_000,
         });
 
         if (!el) {
-          return { success: false, error: `Message not found: ${displayText}` };
+          return { success: false, error: `Message not found: ${description}` };
         }
-
+        if (options?.offset) {
+          this.log(`Offsetting long press by x=${options?.offset?.x}, y=${options?.offset?.y}`);
+        }
         // Attempt long click
-        await this.longClick(el, 2000);
+        await this.longClick(el, 2000, options?.offset);
 
         // Check if context menu appeared
         const longPressSuccess = await this.waitForTextElementToBePresent({
@@ -783,7 +817,7 @@ export class DeviceWrapper {
 
         return {
           success: false,
-          error: `Long press didn't show context menu for ${displayText}`,
+          error: `Long press didn't show context menu for ${description}`,
         };
       },
       {
@@ -1221,15 +1255,13 @@ export class DeviceWrapper {
       maxWait?: number;
     } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<void> {
-    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const { locator, description } = this.resolveLocator(args);
     const maxWait = args.maxWait || 2_000;
 
     // Wait for any transitions to complete
     await sleepFor(maxWait);
 
     const element = await this.findElementQuietly(locator, args.text);
-
-    const description = describeLocator({ ...locator, text: args.text });
 
     if (element) {
       // Elements can disappear in the GUI but still be present in the DOM
@@ -1275,12 +1307,10 @@ export class DeviceWrapper {
       maxWait?: number;
     } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<void> {
-    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const { locator, description } = this.resolveLocator(args);
     const text = args.text;
     const initialMaxWait = args.initialMaxWait ?? 10_000;
     const maxWait = args.maxWait ?? 30_000;
-
-    const description = describeLocator({ ...locator, text: args.text });
 
     // Track total time from start - disappearing timers begin on send, not on display
     const functionStartTime = Date.now();
@@ -1326,12 +1356,10 @@ export class DeviceWrapper {
       maxWait?: number;
     } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<void> {
-    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const { locator, description } = this.resolveLocator(args);
     const text = args.text;
     const initialMaxWait = args.initialMaxWait ?? 10_000;
     const maxWait = args.maxWait ?? 30_000;
-
-    const description = describeLocator({ ...locator, text: args.text });
 
     // Phase 1: Wait for element to appear
     this.log(`Waiting for element with ${description} to be deleted...`);
@@ -1702,8 +1730,7 @@ export class DeviceWrapper {
     expectedColor: string,
     tolerance?: number
   ): Promise<void> {
-    const locator = args instanceof LocatorsInterface ? args.build() : args;
-    const description = describeLocator({ ...locator, text: args.text });
+    const { locator, description } = this.resolveLocator(args);
 
     this.log(`Waiting for ${description} to have color #${expectedColor}`);
 
@@ -1788,14 +1815,6 @@ export class DeviceWrapper {
     await this.onAndroid().clickOnElementAll(new AcceptMessageRequestButton(this));
   }
 
-  public async sendMessageTo(sender: User, receiver: Group | User) {
-    const message = `${sender.userName} to ${receiver.userName}`;
-    await this.clickOnElementAll(new ConversationItem(this, receiver.userName));
-    this.log(`${sender.userName} + " sent message to ${receiver.userName}`);
-    await this.sendMessage(message);
-    this.log(`Message received by ${receiver.userName} from ${sender.userName}`);
-    return message;
-  }
   // TODO instead of blind sleeping, check presence of reply preview
   // Remove blind sleep from other tests that reply as well
   public async replyToMessage(user: Pick<User, 'userName'>, body: string) {
@@ -1830,22 +1849,46 @@ export class DeviceWrapper {
 
   public async inputText(
     textToInput: string,
-    args: LocatorsInterface | ({ maxWait?: number } & StrategyExtractionObj)
+    args: LocatorsInterface | ({ maxWait?: number } & StrategyExtractionObj),
+    paste: boolean = false
   ) {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
-
-    this.log('Locator being used:', locator);
-
     const el = await this.waitForTextElementToBePresent({ ...locator });
-    if (!el) {
-      throw new Error(`inputText: Did not find element with locator: ${JSON.stringify(locator)}`);
-    }
 
-    await this.setValueImmediate(textToInput, el.ELEMENT);
+    if (paste) {
+      // Set clipboard, press key-code for instant paste
+      await this.clickOnElementAll({ ...locator });
+      if (this.isAndroid()) {
+        await this.toAndroid().setClipboard(
+          Buffer.from(textToInput).toString('base64'),
+          'plaintext'
+        );
+        await this.toAndroid().pressKeyCode(279);
+      } else {
+        // Use native paste UI, accept perms if needed
+        await this.toIOS().mobileSetPasteboard(textToInput);
+        await this.toIOS().mobileGetPasteboard();
+        await this.processPermissions({ strategy: 'accessibility id', selector: 'Allow Paste' });
+        await this.clickOnElementAll({ ...locator });
+        await this.clickOnByAccessibilityID('Paste');
+      }
+    } else {
+      await this.setValueImmediate(textToInput, el.ELEMENT);
+    }
   }
 
   public async getAttribute(attribute: string, elementId: string) {
     return this.toShared().getAttribute(attribute, elementId);
+  }
+
+  public async assertAttribute(
+    element: LocatorsInterface | StrategyExtractionObj,
+    attribute: string,
+    value: string
+  ) {
+    const el = await this.waitForTextElementToBePresent(element);
+    const received = await this.getAttribute(attribute, el.ELEMENT);
+    expect(received, 'Element attribute value mismatch').toBe(value);
   }
 
   public async disappearRadioButtonSelected(
@@ -1877,7 +1920,12 @@ export class DeviceWrapper {
   }
 
   public async pushMediaToDevice(
-    mediaFileName: 'profile_picture.jpg' | 'test_file.pdf' | 'test_image.jpg' | 'test_video.mp4'
+    mediaFileName:
+      | 'animated_profile_picture.gif'
+      | 'profile_picture.jpg'
+      | 'test_file.pdf'
+      | 'test_image.jpg'
+      | 'test_video.mp4'
   ) {
     const filePath = path.join('run', 'test', 'media', mediaFileName);
     await fs.access(filePath).catch(() => {
@@ -1931,12 +1979,12 @@ export class DeviceWrapper {
       await sleepFor(500);
       await this.clickOnElementAll({
         strategy: 'id',
-        selector: 'network.loki.messenger:id/mediapicker_folder_item_thumbnail',
+        selector: 'mediapicker-folder-item-thumbnail-0',
       });
       await sleepFor(100);
       await this.clickOnElementAll({
         strategy: 'id',
-        selector: 'network.loki.messenger:id/mediapicker_image_item_thumbnail',
+        selector: 'mediapicker-image-item-thumbnail-0',
       });
     }
     await this.inputText(message, new MessageInput(this));
@@ -2161,7 +2209,17 @@ export class DeviceWrapper {
     return sentTimestamp;
   }
 
-  public async uploadProfilePicture() {
+  public async uploadProfilePicture(animated: boolean = false) {
+    let uploadPicture: 'animated_profile_picture.gif' | 'profile_picture.jpg';
+    let dpLocator: LocatorsInterface;
+    if (animated) {
+      uploadPicture = animatedProfilePicture;
+      dpLocator = new GIFName(this);
+    } else {
+      uploadPicture = profilePicture;
+      dpLocator = new ImageName(this);
+    }
+
     await this.clickOnElementAll(new UserSettings(this));
     // Click on Profile picture
     await this.clickOnElementAll(new UserAvatar(this));
@@ -2172,12 +2230,12 @@ export class DeviceWrapper {
       await sleepFor(5000); // sometimes Appium doesn't recognize the XPATH immediately
       await this.matchAndTapImage(
         { strategy: 'xpath', selector: `//XCUIElementTypeImage` },
-        profilePicture
+        uploadPicture
       );
       await this.clickOnByAccessibilityID('Done');
     } else if (this.isAndroid()) {
       // Push file first
-      await this.pushMediaToDevice(profilePicture);
+      await this.pushMediaToDevice(uploadPicture);
       await this.clickOnElementAll(new ImagePermissionsModalAllow(this));
       await sleepFor(1000);
       await this.clickOnElementAll({
@@ -2185,8 +2243,10 @@ export class DeviceWrapper {
         selector: 'Image button',
       });
       await sleepFor(500);
-      await this.clickOnElementAll(new ImageName(this));
-      await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
+      await this.clickOnElementAll(dpLocator);
+      if (!animated) {
+        await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
+      }
     }
     await this.clickOnElementAll(new SaveProfilePictureButton(this));
   }
@@ -2369,19 +2429,15 @@ export class DeviceWrapper {
 
   public async turnOnReadReceipts() {
     await this.navigateBack();
-    await sleepFor(100);
     await this.clickOnElementAll(new UserSettings(this));
-    await sleepFor(500);
     await this.clickOnElementAll(new PrivacyMenuItem(this));
-    await sleepFor(2000);
     await this.clickOnElementAll(new ReadReceiptsButton(this));
     await this.navigateBack(false);
-    await sleepFor(100);
     await this.clickOnElementAll(new CloseSettings(this));
   }
 
-  public async processPermissions(locator: LocatorsInterface) {
-    const locatorConfig = locator.build();
+  public async processPermissions(locator: LocatorsInterface | StrategyExtractionObj) {
+    const locatorConfig = locator instanceof LocatorsInterface ? locator.build() : locator;
 
     if (this.isAndroid()) {
       const permissions = await this.doesElementExist({
@@ -2529,21 +2585,7 @@ export class DeviceWrapper {
     this.assertTextMatches(actualDescription, expectedDescription, 'Modal description');
   }
 
-  /**
-   * Checks CTA component text against expected values.
-   * CTAs contain: heading, body, 0-3 features, 1-2 buttons.
-   * @param heading - Expected CTA heading text
-   * @param body - Expected CTA body text
-   * @param buttons - Expected button text(s). First is positive, second (if present) is negative
-   * @param features - Optional array of expected feature text (0-3 items)
-   * @throws Error if any text element doesn't match expected value
-   */
-  public async checkCTAStrings(
-    heading: string,
-    body: string,
-    buttons: string[],
-    features?: string[]
-  ): Promise<void> {
+  private async checkCTAStrings({ heading, body, buttons, features }: CTAConfig): Promise<void> {
     // Validate input
     if (features && features.length > 3) {
       throw new Error('CTAs support maximum 3 features');
@@ -2552,47 +2594,92 @@ export class DeviceWrapper {
       throw new Error('CTAs must have 1-2 buttons');
     }
 
-    // Find and check heading
+    // CTA heading
     const elHeading = await this.waitForTextElementToBePresent(new CTAHeading(this));
     const actualHeading = await this.getTextFromElement(elHeading);
     this.assertTextMatches(actualHeading, heading, 'CTA heading');
 
-    // Find and check body
+    // CTA body
     const elBody = await this.waitForTextElementToBePresent(new CTABody(this));
     const actualBody = await this.getTextFromElement(elBody);
     this.assertTextMatches(actualBody, body, 'CTA body');
 
-    // Check features if expected
+    // CTA features if present
     if (features) {
       for (let i = 0; i < features.length; i++) {
-        const featureLocator = new CTAFeature(this, i);
-        const elFeature = await this.waitForTextElementToBePresent(featureLocator);
+        const elFeature = await this.waitForTextElementToBePresent(new CTAFeature(this, i));
         const actualFeature = await this.getTextFromElement(elFeature);
-        this.assertTextMatches(actualFeature, features[i], `CTA feature ${i}`);
+        this.assertTextMatches(actualFeature, features[i], `CTA feature ${i + 1}`);
       }
     }
 
-    // Check buttons
-    const positiveLocator = new CTAButtonPositive(this);
-    const elPositive = await this.waitForTextElementToBePresent(positiveLocator);
-    const actualPositive = await this.getTextFromElement(elPositive);
-    this.assertTextMatches(actualPositive, buttons[0], 'CTA positive button');
+    /**
+     * buttons[0] = negative/dismiss (always present);
+     * buttons[1] = positive/action (optional)
+     */
+    const elNegative = await this.waitForTextElementToBePresent(new CTAButtonNegative(this));
+    const actualNegative = await this.getTextFromElement(elNegative);
+    this.assertTextMatches(actualNegative, buttons[0], 'CTA negative button');
 
     if (buttons.length === 2) {
-      const negativeLocator = new CTAButtonNegative(this);
-      const elNegative = await this.waitForTextElementToBePresent(negativeLocator);
-      const actualNegative = await this.getTextFromElement(elNegative);
-      this.assertTextMatches(actualNegative, buttons[1], 'CTA negative button');
+      const elPositive = await this.waitForTextElementToBePresent(new CTAButtonPositive(this));
+      const actualPositive = await this.getTextFromElement(elPositive);
+      this.assertTextMatches(actualPositive, buttons[1], 'CTA positive button');
     }
   }
 
-  public async getElementPixelColor(args: LocatorsInterface): Promise<string> {
+  public async checkCTA(type: CTAType): Promise<void> {
+    await this.checkCTAStrings(ctaConfigs[type]);
+  }
+
+  // This is the bare minimum of a CTA so we only check these
+  public async verifyNoCTAShows(): Promise<void> {
+    await Promise.all([
+      this.verifyElementNotPresent(new CTAHeading(this)),
+      this.verifyElementNotPresent(new CTABody(this)),
+      this.verifyElementNotPresent(new CTAButtonNegative(this)),
+    ]);
+  }
+
+  // Dismiss any CTA if it shows
+  public async dismissCTA(): Promise<void> {
+    const hasCTAAppeared = await this.doesElementExist({
+      ...new CTAButtonNegative(this).build(),
+      maxWait: 8_000,
+    });
+    if (hasCTAAppeared) {
+      this.log('Dismissing CTA');
+      await this.clickOnElementAll(new CTAButtonNegative(this));
+    }
+  }
+
+  public async getElementPixelColor(
+    args: LocatorsInterface | StrategyExtractionObj
+  ): Promise<string> {
     // Wait for the element to be present
     const element = await this.waitForTextElementToBePresent(args);
     // Take a screenshot and return a hex color value
     const base64image = await this.getElementScreenshot(element.ELEMENT);
     const pixelColor = await parseDataImage(base64image);
     return pixelColor;
+  }
+
+  // Sample an element's centre pixel color SAMPLE_SIZE times to determine whether it is animated or not.
+  // If the set contains more than 1 color it is likely animated.
+  public async verifyElementIsAnimated(
+    args: LocatorsInterface | StrategyExtractionObj
+  ): Promise<void> {
+    const { locator, description } = this.resolveLocator(args);
+    this.log(`Checking if ${description} is animated`);
+    const SAMPLE_SIZE = 3;
+    const colors = new Set<string>();
+    for (let i = 0; i < SAMPLE_SIZE; i++) {
+      colors.add(await this.getElementPixelColor(locator));
+    }
+    expect(
+      colors.size,
+      `Expected element to be animated but detected 1 unique color: ${[...colors][0]}`
+    ).toBeGreaterThan(1);
   }
 
   public async getVersionNumber() {

@@ -124,6 +124,7 @@ export type XPath =
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
   | `//*[@resource-id='network.loki.messenger:id/callTitle' and contains(@text, ':')]`
+  | `//*[starts-with(@content-desc, "GIF taken on")]`
   | `//*[starts-with(@content-desc, "Photo taken on")]`
   | `//android.view.ViewGroup[@resource-id='network.loki.messenger:id/mainContainer'][.//android.widget.TextView[contains(@text,'${string}')]]//androidx.compose.ui.platform.ComposeView[@resource-id='network.loki.messenger:id/profilePictureView']`
   | `//android.view.ViewGroup[@resource-id="network.loki.messenger:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.view.ViewGroup[@resource-id="network.loki.messenger:id/layout_emoji_container"]`
@@ -182,6 +183,7 @@ export type AccessibilityId =
   | 'Allow'
   | 'Allow Access to All Photos'
   | 'Allow Full Access'
+  | 'Allow Paste'
   | 'Allow voice and video calls'
   | 'All Photos'
   | 'Answer call'
@@ -233,6 +235,10 @@ export type AccessibilityId =
   | 'Copy URL'
   | 'Create account button'
   | 'Create group'
+  | 'cta-body'
+  | 'cta-button-negative'
+  | 'cta-button-positive'
+  | 'cta-heading'
   | 'Decline message request'
   | 'Delete'
   | 'Delete Contact'
@@ -351,13 +357,13 @@ export type AccessibilityId =
   | 'open-survey-button'
   | 'Open'
   | 'Open URL'
+  | 'Paste'
   | 'Path'
   | 'Photo library'
   | 'Photos'
   | 'Pin'
   | 'Please enter a shorter group name'
   | 'Privacy Policy'
-  | 'qa-blocked-contacts-settings-item'
   | 'rate-app-button'
   | 'Read Receipts - Switch'
   | 'Recents'
@@ -424,6 +430,7 @@ export type AccessibilityId =
   | 'Your message request has been accepted.'
   | `${DISAPPEARING_TIMES} - Radio`
   | `${GROUPNAME}`
+  | `cta-feature-${number}`
   | `Disappear after ${DisappearActions} option`;
 
 export type Id =
@@ -435,7 +442,6 @@ export type Id =
   | 'android:id/alertTitle'
   | 'android:id/button1'
   | 'android:id/content_preview_text'
-  | 'android:id/summary'
   | 'android:id/title'
   | 'android.widget.TextView'
   | 'Appearance'
@@ -522,6 +528,8 @@ export type Id =
   | 'manage-admins-menu-option'
   | 'manage-members-menu-option'
   | 'Market cap amount'
+  | 'mediapicker-folder-item-thumbnail-0'
+  | 'mediapicker-image-item-thumbnail-0'
   | 'MeetingSE option'
   | 'Modal description'
   | 'Modal heading'
@@ -540,8 +548,6 @@ export type Id =
   | 'network.loki.messenger:id/endCallButton'
   | 'network.loki.messenger:id/layout_emoji_container'
   | 'network.loki.messenger:id/linkPreviewView'
-  | 'network.loki.messenger:id/mediapicker_folder_item_thumbnail'
-  | 'network.loki.messenger:id/mediapicker_image_item_thumbnail'
   | 'network.loki.messenger:id/messageStatusTextView'
   | 'network.loki.messenger:id/openGroupTitleTextView'
   | 'network.loki.messenger:id/play_overlay'
@@ -566,6 +572,10 @@ export type Id =
   | 'open-survey-button'
   | 'Open'
   | 'Open URL'
+  | 'preferences-dialog-option-enable'
+  | 'preferences-option-blocked-contacts'
+  | 'preferences-option-read-receipt'
+  | 'preferences-option-whitelist-toggle'
   | 'preferred-display-name'
   | 'Privacy'
   | 'Privacy policy button'
@@ -624,6 +634,7 @@ export type ScreenshotFileNames =
   | 'conversation_alice'
   | 'conversation_bob'
   | 'cta_donate'
+  | 'cta_pro_activated'
   | 'landingpage_new_account'
   | 'landingpage_restore_account'
   | 'settings_appearance'

@@ -14,6 +14,7 @@ import {
   capabilityIsValid,
   getIosCapabilities,
   iOSBundleId,
+  IOSTestContext,
 } from './capabilities_ios';
 import { cleanPermissions } from './permissions';
 import { registerDevicesForTest } from './screenshot_helper';
@@ -23,10 +24,6 @@ import { runScriptAndLog } from './utilities';
 const APPIUM_PORT = 4728;
 
 export type SupportedPlatformsType = 'android' | 'ios';
-
-export type IOSTestContext = {
-  customInstallTime?: string;
-};
 
 export const openAppMultipleDevices = async (
   platform: SupportedPlatformsType,
@@ -311,7 +308,7 @@ const openiOSApp = async (
 
   const capabilities = getIosCapabilities(
     actualCapabilitiesIndex as CapabilitiesIndexType,
-    iOSContext?.customInstallTime
+    iOSContext
   );
   const udid = capabilities.alwaysMatch['appium:udid'] as string;
 

@@ -31,7 +31,11 @@ export type AllureSuiteConfig =
       parent: 'Sending Messages';
       suite: 'Emoji reacts' | 'Mentions' | 'Message types' | 'Performance' | 'Rules';
     }
-  | { parent: 'Settings'; suite: 'App Disguise' | 'Community Message Requests' | 'Notifications' }
+  | { parent: 'Session Pro' }
+  | {
+      parent: 'Settings';
+      suite: 'App Disguise' | 'Community Message Requests' | 'Notifications' | 'Recovery Password';
+    }
   | {
       parent: 'User Actions';
       suite:

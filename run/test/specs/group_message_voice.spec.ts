@@ -40,7 +40,9 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType, testInfo:
       device.waitForTextElementToBePresent(new VoiceMessage(device))
     )
   );
-  await bob1.longPressMessage(new VoiceMessage(bob1));
+  // The voice message long tap must be offset so that it doesn't tap the scrubber
+  // As this starts playback and does not open the long press menu
+  await bob1.longPressMessage(new VoiceMessage(bob1), { offset: { x: 0, y: 50 } });
   await bob1.clickOnByAccessibilityID('Reply to message');
   await sleepFor(500); // Let the UI settle before finding message input and typing
   await bob1.sendMessage(replyMessage);

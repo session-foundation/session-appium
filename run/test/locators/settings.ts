@@ -153,6 +153,7 @@ export class HideRecoveryPasswordButton extends LocatorsInterface {
     }
   }
 }
+
 export class NotificationsMenuItem extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -170,7 +171,6 @@ export class NotificationsMenuItem extends LocatorsInterface {
     }
   }
 }
-
 export class PathMenuItem extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -208,8 +208,9 @@ export class RecoveryPasswordMenuItem extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: 'Recovery password menu item',
+          strategy: '-android uiautomator',
+          selector:
+            'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("Recovery password menu item"))',
         } as const;
       case 'ios':
         return {
@@ -270,6 +271,7 @@ export class SaveNameChangeButton extends LocatorsInterface {
     }
   }
 }
+
 export class SaveProfilePictureButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -299,6 +301,22 @@ export class SelectAppIcon extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'Select alternate app icon',
+        } as const;
+    }
+  }
+}
+export class SettingsModalsEnableButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'preferences-dialog-option-enable',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Continue',
         } as const;
     }
   }

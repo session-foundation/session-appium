@@ -48,7 +48,7 @@ async function upmHomeScreen(platform: SupportedPlatformsType, testInfo: TestInf
     });
     const elText = await alice1.getTextFromElement(el);
     const normalized = elText.replace(/\s+/g, ''); // account id comes in two lines
-    const expected = bob.sessionId.trim();
+    const expected = bob.accountID.trim();
     if (normalized !== expected) {
       console.log(`Expected: ${expected}
         Observed: ${normalized}`);

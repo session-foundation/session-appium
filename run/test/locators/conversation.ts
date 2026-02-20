@@ -1,6 +1,6 @@
 import type { DeviceWrapper } from '../../types/DeviceWrapper';
 
-import { testCommunityName } from '../../constants/community';
+import { communities } from '../../constants/community';
 import { tStripped } from '../../localizer/lib';
 import { StrategyExtractionObj } from '../../types/testing';
 import { getAppDisplayName } from '../utils/devnet';
@@ -64,13 +64,13 @@ export class CommunityInvitation extends LocatorsInterface {
         return {
           strategy: 'id',
           selector: 'network.loki.messenger:id/openGroupTitleTextView',
-          text: testCommunityName,
+          text: communities.testCommunity.name,
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Community invitation',
-          text: testCommunityName,
+          text: communities.testCommunity.name,
         } as const;
     }
   }

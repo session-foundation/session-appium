@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { testCommunityLink, testCommunityName } from '../../constants/community';
+import { communities } from '../../constants/community';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { ConversationItem } from '../locators/home';
@@ -31,16 +31,21 @@ async function joinCommunityTest(platform: SupportedPlatformsType, testInfo: Tes
   });
   const testMessage = `Test message + ${new Date().getTime()}`;
   await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
-    await joinCommunity(alice1, testCommunityLink, testCommunityName);
+    await joinCommunity(alice1, communities.testCommunity.link, communities.testCommunity.name);
     await sleepFor(5000);
   });
-  await test.step(TestSteps.SEND.MESSAGE(alice.userName, testCommunityName), async () => {
-    await alice1.scrollToBottom();
-    await alice1.sendMessage(testMessage);
-  });
+  await test.step(
+    TestSteps.SEND.MESSAGE(alice.userName, communities.testCommunity.name),
+    async () => {
+      await alice1.scrollToBottom();
+      await alice1.sendMessage(testMessage);
+    }
+  );
   await test.step(TestSteps.VERIFY.MESSAGE_SYNCED, async () => {
     // Has community synced to device 2?
-    await alice2.waitForTextElementToBePresent(new ConversationItem(alice2, testCommunityName));
+    await alice2.waitForTextElementToBePresent(
+      new ConversationItem(alice2, communities.testCommunity.name)
+    );
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, alice2);

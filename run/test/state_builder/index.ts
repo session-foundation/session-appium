@@ -14,16 +14,26 @@ import {
 } from '@session-foundation/qa-seeder';
 
 import type { DeviceWrapper } from '../../types/DeviceWrapper';
+import type { User } from '../../types/testing';
 
 import { ConversationItem } from '../locators/home';
+import { IOSTestContext } from '../utils/capabilities_ios';
 import { getNetworkTarget } from '../utils/devnet';
 import { openAppMultipleDevices, type SupportedPlatformsType } from '../utils/open_app';
 import { restoreAccountNoFallback } from '../utils/restore_account';
 
-type WithAlice = { alice: StateUser };
-type WithBob = { bob: StateUser };
-type WithCharlie = { charlie: StateUser };
-type WithDracula = { dracula: StateUser };
+function toUser(stateUser: StateUser): User {
+  return {
+    userName: stateUser.userName,
+    accountID: stateUser.sessionId,
+    recoveryPhrase: stateUser.seedPhrase,
+  };
+}
+
+type WithAlice = { alice: User };
+type WithBob = { bob: User };
+type WithCharlie = { charlie: User };
+type WithDracula = { dracula: User };
 
 type WithFocusFriendsConvo = { focusFriendsConvo: boolean };
 type WithFocusGroupConvo = { focusGroupConvo: boolean };
@@ -91,14 +101,16 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
   groupName,
   stateToBuildKey,
   testInfo,
+  iOSContext,
 }: WithPlatform & {
   appsToOpen: A;
   stateToBuildKey: K;
   groupName: K extends WithGroupStateKey ? string : undefined;
   testInfo: TestInfo;
+  iOSContext?: IOSTestContext;
 }) {
   const [devices, prebuilt] = await Promise.all([
-    openAppMultipleDevices(platform, appsToOpen, testInfo),
+    openAppMultipleDevices(platform, appsToOpen, testInfo, iOSContext),
     buildStateForTest(stateToBuildKey, groupName, await getNetworkTarget(platform)),
   ]);
 
@@ -109,7 +121,8 @@ export async function open_Alice1_Bob1_friends({
   platform,
   focusFriendsConvo,
   testInfo,
-}: WithPlatform & WithFocusFriendsConvo & { testInfo: TestInfo }) {
+  iOSContext,
+}: WithPlatform & WithFocusFriendsConvo & { testInfo: TestInfo; iOSContext?: IOSTestContext }) {
   const stateToBuildKey = '2friends';
   const appsToOpen = 2;
   const result = await openAppsWithState({
@@ -118,14 +131,15 @@ export async function open_Alice1_Bob1_friends({
     stateToBuildKey,
     groupName: undefined,
     testInfo,
+    iOSContext,
   });
   result.devices[0].setDeviceIdentity('alice1');
   result.devices[1].setDeviceIdentity('bob1');
   const seedPhrases = result.prebuilt.users.map(m => m.seedPhrase);
   await linkDevices(result.devices, seedPhrases);
 
-  const alice = result.prebuilt.users[0];
-  const bob = result.prebuilt.users[1];
+  const alice = toUser(result.prebuilt.users[0]);
+  const bob = toUser(result.prebuilt.users[1]);
   const alice1 = result.devices[0];
   const bob1 = result.devices[1];
   const formattedDevices = {
@@ -156,10 +170,12 @@ export async function open_Alice1_Bob1_Charlie1_friends_group({
   groupName,
   focusGroupConvo,
   testInfo,
+  iOSContext,
 }: WithPlatform &
   WithFocusGroupConvo & {
     groupName: string;
     testInfo: TestInfo;
+    iOSContext?: IOSTestContext;
   }) {
   const stateToBuildKey = '3friendsInGroup';
   const appsToOpen = 3;
@@ -169,6 +185,7 @@ export async function open_Alice1_Bob1_Charlie1_friends_group({
     stateToBuildKey,
     groupName,
     testInfo,
+    iOSContext,
   });
   result.devices[0].setDeviceIdentity('alice1');
   result.devices[1].setDeviceIdentity('bob1');
@@ -177,9 +194,9 @@ export async function open_Alice1_Bob1_Charlie1_friends_group({
   const seedPhrases = result.prebuilt.users.map(m => m.seedPhrase);
   await linkDevices(result.devices, seedPhrases);
 
-  const alice = result.prebuilt.users[0];
-  const bob = result.prebuilt.users[1];
-  const charlie = result.prebuilt.users[2];
+  const alice = toUser(result.prebuilt.users[0]);
+  const bob = toUser(result.prebuilt.users[1]);
+  const charlie = toUser(result.prebuilt.users[2]);
 
   const alice1 = result.devices[0];
   const bob1 = result.devices[1];
@@ -214,10 +231,12 @@ export async function open_Alice2_Bob1_Charlie1_friends_group({
   groupName,
   focusGroupConvo,
   testInfo,
+  iOSContext,
 }: WithPlatform &
   WithFocusGroupConvo & {
     groupName: string;
     testInfo: TestInfo;
+    iOSContext?: IOSTestContext;
   }) {
   const stateToBuildKey = '3friendsInGroup';
   const appsToOpen = 4;
@@ -227,15 +246,23 @@ export async function open_Alice2_Bob1_Charlie1_friends_group({
     stateToBuildKey,
     groupName,
     testInfo,
+    iOSContext,
   });
   result.devices[0].setDeviceIdentity('alice1');
   result.devices[1].setDeviceIdentity('bob1');
   result.devices[2].setDeviceIdentity('charlie1');
   result.devices[3].setDeviceIdentity('alice2');
 
-  const [alice, bob, charlie] = result.prebuilt.users;
+  const alice = toUser(result.prebuilt.users[0]);
+  const bob = toUser(result.prebuilt.users[1]);
+  const charlie = toUser(result.prebuilt.users[2]);
 
-  const seedPhrases = [alice.seedPhrase, bob.seedPhrase, charlie.seedPhrase, alice.seedPhrase];
+  const seedPhrases = [
+    alice.recoveryPhrase,
+    bob.recoveryPhrase,
+    charlie.recoveryPhrase,
+    alice.recoveryPhrase,
+  ];
   await linkDevices(result.devices, seedPhrases);
 
   const [alice1, bob1, charlie1, alice2] = result.devices;
@@ -275,10 +302,12 @@ export async function open_Alice1_Bob1_Charlie1_Unknown1({
   groupName,
   focusGroupConvo = true,
   testInfo,
+  iOSContext,
 }: WithPlatform &
   WithFocusGroupConvo & {
     groupName: string;
     testInfo: TestInfo;
+    iOSContext?: IOSTestContext;
   }) {
   const stateToBuildKey = '3friendsInGroup';
   const appsToOpen = 4;
@@ -288,6 +317,7 @@ export async function open_Alice1_Bob1_Charlie1_Unknown1({
     stateToBuildKey,
     groupName,
     testInfo,
+    iOSContext,
   });
   result.devices[0].setDeviceIdentity('alice1');
   result.devices[1].setDeviceIdentity('bob1');
@@ -308,9 +338,9 @@ export async function open_Alice1_Bob1_Charlie1_Unknown1({
     charlie1,
     unknown1: result.devices[3], // not assigned yet
   };
-  const alice = result.prebuilt.users[0];
-  const bob = result.prebuilt.users[1];
-  const charlie = result.prebuilt.users[2];
+  const alice = toUser(result.prebuilt.users[0]);
+  const bob = toUser(result.prebuilt.users[1]);
+  const charlie = toUser(result.prebuilt.users[2]);
   const formattedUsers: WithUsers<3> = {
     alice,
     bob,
@@ -330,7 +360,11 @@ export async function open_Alice1_Bob1_Charlie1_Unknown1({
   };
 }
 
-export async function open_Alice2({ platform, testInfo }: WithPlatform & { testInfo: TestInfo }) {
+export async function open_Alice2({
+  platform,
+  testInfo,
+  iOSContext,
+}: WithPlatform & { testInfo: TestInfo; iOSContext?: IOSTestContext }) {
   const prebuiltStateKey = '1user';
   const appsToOpen = 2;
   const result = await openAppsWithState({
@@ -339,15 +373,16 @@ export async function open_Alice2({ platform, testInfo }: WithPlatform & { testI
     stateToBuildKey: prebuiltStateKey,
     groupName: undefined,
     testInfo,
+    iOSContext,
   });
   result.devices[0].setDeviceIdentity('alice1');
   result.devices[1].setDeviceIdentity('alice2');
   // we want the first user to have the first 2 devices linked
-  const alice = result.prebuilt.users[0];
+  const alice = toUser(result.prebuilt.users[0]);
   const alice1 = result.devices[0];
   const alice2 = result.devices[1];
 
-  const seedPhrases = [alice.seedPhrase, alice.seedPhrase];
+  const seedPhrases = [alice.recoveryPhrase, alice.recoveryPhrase];
   await linkDevices(result.devices, seedPhrases);
 
   const formattedUsers: WithUsers<1> = {
@@ -370,7 +405,8 @@ export async function open_Alice2({ platform, testInfo }: WithPlatform & { testI
 export async function open_Alice1_bob1_notfriends({
   platform,
   testInfo,
-}: WithPlatform & { testInfo: TestInfo }) {
+  iOSContext,
+}: WithPlatform & { testInfo: TestInfo; iOSContext?: IOSTestContext }) {
   const appsToOpen = 2;
   const result = await openAppsWithState({
     platform,
@@ -378,16 +414,17 @@ export async function open_Alice1_bob1_notfriends({
     stateToBuildKey: '2users',
     groupName: undefined,
     testInfo,
+    iOSContext,
   });
   result.devices[0].setDeviceIdentity('alice1');
   result.devices[1].setDeviceIdentity('bob1');
-  const alice = result.prebuilt.users[0];
-  const bob = result.prebuilt.users[1];
+  const alice = toUser(result.prebuilt.users[0]);
+  const bob = toUser(result.prebuilt.users[1]);
 
   const alice1 = result.devices[0];
   const bob1 = result.devices[1];
 
-  const seedPhrases = [alice.seedPhrase, bob.seedPhrase];
+  const seedPhrases = [alice.recoveryPhrase, bob.recoveryPhrase];
   await linkDevices(result.devices, seedPhrases);
 
   const formattedUsers: WithUsers<2> = {
@@ -408,7 +445,8 @@ export async function open_Alice2_Bob1_friends({
   platform,
   focusFriendsConvo,
   testInfo,
-}: WithPlatform & WithFocusFriendsConvo & { testInfo: TestInfo }) {
+  iOSContext,
+}: WithPlatform & WithFocusFriendsConvo & { testInfo: TestInfo; iOSContext?: IOSTestContext }) {
   const prebuiltStateKey = '2friends';
   const appsToOpen = 3;
   const result = await openAppsWithState({
@@ -417,14 +455,15 @@ export async function open_Alice2_Bob1_friends({
     stateToBuildKey: prebuiltStateKey,
     groupName: undefined,
     testInfo,
+    iOSContext,
   });
   result.devices[0].setDeviceIdentity('alice1');
   result.devices[1].setDeviceIdentity('alice2');
   result.devices[2].setDeviceIdentity('bob1');
-  const alice = result.prebuilt.users[0];
-  const bob = result.prebuilt.users[1];
+  const alice = toUser(result.prebuilt.users[0]);
+  const bob = toUser(result.prebuilt.users[1]);
   // we want the first user to have the first 2 devices linked
-  const seedPhrases = [alice.seedPhrase, alice.seedPhrase, bob.seedPhrase];
+  const seedPhrases = [alice.recoveryPhrase, alice.recoveryPhrase, bob.recoveryPhrase];
   await linkDevices(result.devices, seedPhrases);
 
   const alice1 = result.devices[0];

@@ -52,7 +52,7 @@ async function addAccountIDToGroup(platform: SupportedPlatformsType, testInfo: T
   const userD = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     return newUser(unknown1, USERNAME.DRACULA);
   });
-  const aliceTruncatedPubkey = truncatePubkey(alice.sessionId, platform);
+  const aliceTruncatedPubkey = truncatePubkey(alice.accountID, platform);
   const historicMsg = `Hello from ${alice.userName}`;
   const userDTruncatedPubkey = truncatePubkey(userD.accountID, platform);
   const userDMsg = `Hello from ${userD.userName}`;
