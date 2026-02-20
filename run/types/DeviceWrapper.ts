@@ -82,7 +82,6 @@ import {
   AccessibilityId,
   Coordinates,
   DISAPPEARING_TIMES,
-  Group,
   Id,
   InteractionPoints,
   Strategy,
@@ -571,6 +570,16 @@ export class DeviceWrapper {
     return [];
   }
 
+  private resolveLocator(args: LocatorsInterface | (StrategyExtractionObj & { text?: string })): {
+    locator: StrategyExtractionObj;
+    description: string;
+  } {
+    const built = args instanceof LocatorsInterface ? args.build() : args;
+    const text = args instanceof LocatorsInterface ? undefined : args.text;
+    const locator = text ? { ...built, text } : built;
+    return { locator, description: describeLocator(locator) };
+  }
+
   /**
    * Attempts to find an element using a primary locator, and if not found, falls back to a secondary locator.
    * This is useful for supporting UI transitions (e.g., between legacy and Compose Android screens) where
@@ -588,13 +597,10 @@ export class DeviceWrapper {
     fallbackLocator: LocatorsInterface | StrategyExtractionObj,
     maxWait: number = 3000
   ): Promise<AppiumNextElementType> {
-    const primary =
-      primaryLocator instanceof LocatorsInterface ? primaryLocator.build() : primaryLocator;
-    const fallback =
-      fallbackLocator instanceof LocatorsInterface ? fallbackLocator.build() : fallbackLocator;
-
-    const primaryDescription = describeLocator(primary);
-    const fallbackDescription = describeLocator(fallback);
+    const { locator: primary, description: primaryDescription } =
+      this.resolveLocator(primaryLocator);
+    const { locator: fallback, description: fallbackDescription } =
+      this.resolveLocator(fallbackLocator);
 
     try {
       return await this.waitForTextElementToBePresent({ ...primary, maxWait, skipHealing: true });
@@ -774,26 +780,22 @@ export class DeviceWrapper {
     args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj),
     options?: { offset?: Coordinates }
   ): Promise<void> {
-    const { text, maxWait = 10_000 } = args;
-    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const { maxWait = 10_000 } = args;
+    const { locator, description } = this.resolveLocator(args);
 
-    // Merge text if provided
-    const finalLocator = text ? { ...locator, text } : locator;
-
-    const displayText = describeLocator(finalLocator);
-    this.log(`Attempting long press on ${displayText}`);
+    this.log(`Attempting long press on ${description}`);
 
     await this.pollUntil(
       async () => {
         // Find the message
-        this.log(`Looking for: ${JSON.stringify(finalLocator)}`);
+        this.log(`Looking for: ${JSON.stringify(locator)}`);
         const el = await this.waitForTextElementToBePresent({
-          ...finalLocator,
+          ...locator,
           maxWait: 1_000,
         });
 
         if (!el) {
-          return { success: false, error: `Message not found: ${displayText}` };
+          return { success: false, error: `Message not found: ${description}` };
         }
         if (options?.offset) {
           this.log(`Offsetting long press by x=${options?.offset?.x}, y=${options?.offset?.y}`);
@@ -815,7 +817,7 @@ export class DeviceWrapper {
 
         return {
           success: false,
-          error: `Long press didn't show context menu for ${displayText}`,
+          error: `Long press didn't show context menu for ${description}`,
         };
       },
       {
@@ -1253,15 +1255,13 @@ export class DeviceWrapper {
       maxWait?: number;
     } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<void> {
-    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const { locator, description } = this.resolveLocator(args);
     const maxWait = args.maxWait || 2_000;
 
     // Wait for any transitions to complete
     await sleepFor(maxWait);
 
     const element = await this.findElementQuietly(locator, args.text);
-
-    const description = describeLocator({ ...locator, text: args.text });
 
     if (element) {
       // Elements can disappear in the GUI but still be present in the DOM
@@ -1307,12 +1307,10 @@ export class DeviceWrapper {
       maxWait?: number;
     } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<void> {
-    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const { locator, description } = this.resolveLocator(args);
     const text = args.text;
     const initialMaxWait = args.initialMaxWait ?? 10_000;
     const maxWait = args.maxWait ?? 30_000;
-
-    const description = describeLocator({ ...locator, text: args.text });
 
     // Track total time from start - disappearing timers begin on send, not on display
     const functionStartTime = Date.now();
@@ -1358,12 +1356,10 @@ export class DeviceWrapper {
       maxWait?: number;
     } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<void> {
-    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const { locator, description } = this.resolveLocator(args);
     const text = args.text;
     const initialMaxWait = args.initialMaxWait ?? 10_000;
     const maxWait = args.maxWait ?? 30_000;
-
-    const description = describeLocator({ ...locator, text: args.text });
 
     // Phase 1: Wait for element to appear
     this.log(`Waiting for element with ${description} to be deleted...`);
@@ -1734,8 +1730,7 @@ export class DeviceWrapper {
     expectedColor: string,
     tolerance?: number
   ): Promise<void> {
-    const locator = args instanceof LocatorsInterface ? args.build() : args;
-    const description = describeLocator({ ...locator, text: args.text });
+    const { locator, description } = this.resolveLocator(args);
 
     this.log(`Waiting for ${description} to have color #${expectedColor}`);
 
@@ -1820,14 +1815,6 @@ export class DeviceWrapper {
     await this.onAndroid().clickOnElementAll(new AcceptMessageRequestButton(this));
   }
 
-  public async sendMessageTo(sender: User, receiver: Group | User) {
-    const message = `${sender.userName} to ${receiver.userName}`;
-    await this.clickOnElementAll(new ConversationItem(this, receiver.userName));
-    this.log(`${sender.userName} + " sent message to ${receiver.userName}`);
-    await this.sendMessage(message);
-    this.log(`Message received by ${receiver.userName} from ${sender.userName}`);
-    return message;
-  }
   // TODO instead of blind sleeping, check presence of reply preview
   // Remove blind sleep from other tests that reply as well
   public async replyToMessage(user: Pick<User, 'userName'>, body: string) {
@@ -2666,7 +2653,9 @@ export class DeviceWrapper {
     }
   }
 
-  public async getElementPixelColor(args: LocatorsInterface): Promise<string> {
+  public async getElementPixelColor(
+    args: LocatorsInterface | StrategyExtractionObj
+  ): Promise<string> {
     // Wait for the element to be present
     const element = await this.waitForTextElementToBePresent(args);
     // Take a screenshot and return a hex color value
@@ -2677,11 +2666,15 @@ export class DeviceWrapper {
 
   // Sample an element's centre pixel color SAMPLE_SIZE times to determine whether it is animated or not.
   // If the set contains more than 1 color it is likely animated.
-  public async verifyElementIsAnimated(args: LocatorsInterface): Promise<void> {
+  public async verifyElementIsAnimated(
+    args: LocatorsInterface | StrategyExtractionObj
+  ): Promise<void> {
+    const { locator, description } = this.resolveLocator(args);
+    this.log(`Checking if ${description} is animated`);
     const SAMPLE_SIZE = 3;
     const colors = new Set<string>();
     for (let i = 0; i < SAMPLE_SIZE; i++) {
-      colors.add(await this.getElementPixelColor(args));
+      colors.add(await this.getElementPixelColor(locator));
     }
     expect(
       colors.size,
