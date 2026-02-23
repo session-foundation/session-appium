@@ -16,7 +16,7 @@ export const joinCommunity = async (
   await device.inputText(communityLink, new CommunityInput(device));
   await device.clickOnElementAll(new JoinCommunityButton(device));
   await device.waitForTextElementToBePresent(new ConversationHeaderName(device, communityName));
-  await device.verifyElementNotPresent(new EmptyConversation(device)); // checking that messages loaded already
+  await device.hasElementBeenDeleted(new EmptyConversation(device)); // checking that messages loaded already
   await device.scrollToBottom();
 };
 
