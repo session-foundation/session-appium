@@ -44,7 +44,7 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType, t
     focusFriendsConvo: true,
     testInfo,
   });
-  await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
+  await setDisappearingMessage(alice1, ['1:1', timerType, time]);
   await alice1.clickOnElementAll(new CallButton(alice1));
   // Alice turns on all calls perms necessary (without checking every modal string)
   await alice1.clickOnByAccessibilityID('Settings');
@@ -127,7 +127,7 @@ async function disappearingCallMessage1o1Android(
     focusFriendsConvo: true,
     testInfo,
   });
-  await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
+  await setDisappearingMessage(alice1, ['1:1', timerType, time]);
   await alice1.clickOnElementAll(new CallButton(alice1));
   // Alice turns on all calls perms necessary (without checking every modal string)
   await alice1.clickOnElementAll({

@@ -46,11 +46,7 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, te
   });
   await test.step(TestSteps.DISAPPEARING_MESSAGES.SET(time), async () => {
     // Enable disappearing messages
-    await setDisappearingMessage(platform, device, [
-      'Note to Self',
-      'Disappear after send option',
-      time,
-    ]);
+    await setDisappearingMessage(device, ['Note to Self', 'Disappear after send option', time]);
     await sleepFor(1000);
     await device.waitForControlMessageToBePresent(
       `You set messages to disappear ${time} after they have been ${controlMode}.`

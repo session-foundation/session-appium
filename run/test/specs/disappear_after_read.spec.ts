@@ -41,12 +41,7 @@ async function disappearAfterRead(platform: SupportedPlatformsType, testInfo: Te
   let sentTimestamp: number;
   // Click conversation options menu (three dots)
   await test.step(TestSteps.DISAPPEARING_MESSAGES.SET(time), async () => {
-    await setDisappearingMessage(
-      platform,
-      alice1,
-      ['1:1', `Disappear after ${mode} option`, time],
-      bob1
-    );
+    await setDisappearingMessage(alice1, ['1:1', `Disappear after ${mode} option`, time]);
   });
   // Check control message is correct on device 2
   await test.step(TestSteps.VERIFY.DISAPPEARING_CONTROL_MESSAGES, async () => {

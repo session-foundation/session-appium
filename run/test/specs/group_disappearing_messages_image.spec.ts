@@ -34,7 +34,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
     testInfo,
   });
 
-  await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
+  await setDisappearingMessage(alice1, ['Group', timerType, time]);
   const sentTimestamp = await alice1.sendImage(testMessage);
   if (platform === 'ios') {
     await Promise.all(

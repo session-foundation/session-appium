@@ -9,7 +9,6 @@ import { CreateGroupOption } from '../locators/start_conversation';
 import { newContact } from './create_contact';
 import { sortByPubkey } from './get_account_id';
 import { SupportedPlatformsType } from './open_app';
-import { sleepFor } from './sleep_for';
 
 export const createGroup = async (
   platform: SupportedPlatformsType,
@@ -48,7 +47,6 @@ export const createGroup = async (
   await device1.clickOnElementAll({ ...new Contact(device1).build(), text: userThree.userName });
   // Select tick
   await device1.clickOnElementAll(new CreateGroupButton(device1));
-  await sleepFor(3000);
   // Enter group chat on device 2 and 3
   await Promise.all([
     device2.onAndroid().navigateBack(false),
@@ -76,26 +74,17 @@ export const createGroup = async (
       ),
     ]);
   }
-  // Send message from User A to group to verify all working
-  await device1.sendMessage(aliceMessage);
-  // Did the other devices receive alice's message?
+  // Send messages from all three users simultaneously to verify group is working
+  await Promise.all([
+    device1.sendMessage(aliceMessage),
+    device2.sendMessage(bobMessage),
+    device3.sendMessage(charlieMessage),
+  ]);
+  // Verify all messages are visible on all devices
+  const allMessages = [aliceMessage, bobMessage, charlieMessage];
   await Promise.all(
-    [device2, device3].map(device =>
-      device.waitForTextElementToBePresent(new MessageBody(device, aliceMessage))
-    )
-  );
-  // Send message from User B to group
-  await device2.sendMessage(bobMessage);
-  await Promise.all(
-    [device1, device3].map(device =>
-      device.waitForTextElementToBePresent(new MessageBody(device, bobMessage))
-    )
-  );
-  // Send message to User C to group
-  await device3.sendMessage(charlieMessage);
-  await Promise.all(
-    [device1, device2].map(device =>
-      device.waitForTextElementToBePresent(new MessageBody(device, charlieMessage))
+    [device1, device2, device3].flatMap(device =>
+      allMessages.map(message => device.waitForTextElementToBePresent(new MessageBody(device, message)))
     )
   );
   return { userName, userOne, userTwo, userThree };

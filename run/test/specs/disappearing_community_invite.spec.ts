@@ -47,7 +47,7 @@ async function disappearingCommunityInviteMessage(
     focusFriendsConvo: true,
     testInfo,
   });
-  await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
+  await setDisappearingMessage(alice1, ['1:1', timerType, time]);
   // await alice1.navigateBack();
   await alice1.navigateBack();
   await joinCommunity(alice1, communities.testCommunity.link, communities.testCommunity.name);

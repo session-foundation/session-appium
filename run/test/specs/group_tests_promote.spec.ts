@@ -134,7 +134,7 @@ async function promoteSoloToAdmin(platform: SupportedPlatformsType, testInfo: Te
   await alice1.navigateBack();
   await test.step(`Verify ${bob.userName} has admin powers by setting disappearing messages`, async () => {
     // Check to see if Bob has admin powers by setting disappearing messages
-    await setDisappearingMessage(platform, bob1, ['Group', timerType, time]);
+    await setDisappearingMessage(bob1, ['Group', timerType, time]);
     await Promise.all(
       [alice1, charlie1].map(device =>
         device.waitForControlMessageToBePresent(
@@ -224,7 +224,7 @@ async function promoteSoloLinked(platform: SupportedPlatformsType, testInfo: Tes
   await device1.navigateBack();
   await test.step(`Verify ${bob.userName} has admin powers by setting disappearing messages`, async () => {
     // Check to see if Bob has admin powers by setting disappearing messages
-    await setDisappearingMessage(platform, device2, ['Group', timerType, time]);
+    await setDisappearingMessage(device2, ['Group', timerType, time]);
     await Promise.all(
       [device1, device3].map(device =>
         device.waitForControlMessageToBePresent(
@@ -331,7 +331,7 @@ async function promoteMultiToAdmin(platform: SupportedPlatformsType, testInfo: T
   await alice1.navigateBack();
   await test.step(`Verify ${bob.userName} has admin powers by setting disappearing messages`, async () => {
     // Check to see if Bob has admin powers by setting disappearing messages
-    await setDisappearingMessage(platform, bob1, ['Group', timerType, time]);
+    await setDisappearingMessage(bob1, ['Group', timerType, time]);
     await Promise.all(
       [alice1, charlie1].map(device =>
         device.waitForControlMessageToBePresent(
@@ -351,7 +351,7 @@ async function promoteMultiToAdmin(platform: SupportedPlatformsType, testInfo: T
   await test.step(`Verify ${charlie.userName} has admin powers by setting disappearing messages`, async () => {
     // Check to see if Bob has admin powers by setting disappearing messages
     const charlieTime = DISAPPEARING_TIMES.TWELVE_HOURS;
-    await setDisappearingMessage(platform, charlie1, ['Group', timerType, charlieTime]);
+    await setDisappearingMessage(charlie1, ['Group', timerType, charlieTime]);
     await Promise.all(
       [alice1, bob1].map(device =>
         device.waitForControlMessageToBePresent(

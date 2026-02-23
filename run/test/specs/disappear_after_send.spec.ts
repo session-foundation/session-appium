@@ -35,12 +35,7 @@ async function disappearAfterSend(platform: SupportedPlatformsType, testInfo: Te
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   const maxWait = 35_000; // 30s plus buffer
   // Select disappearing messages option
-  await setDisappearingMessage(
-    platform,
-    alice1,
-    ['1:1', `Disappear after ${mode} option`, time],
-    bob1
-  );
+  await setDisappearingMessage(alice1, ['1:1', `Disappear after ${mode} option`, time]);
   // Get control message based on key from json file
   await checkDisappearingControlMessage(
     platform,

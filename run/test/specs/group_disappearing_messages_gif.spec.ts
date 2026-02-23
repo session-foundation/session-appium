@@ -35,7 +35,7 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType, tes
     focusGroupConvo: true,
     testInfo,
   });
-  await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
+  await setDisappearingMessage(alice1, ['Group', timerType, time]);
   // Click on attachments button
   const sentTimestamp = await alice1.sendGIF();
   await Promise.all(
