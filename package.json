@@ -80,7 +80,8 @@
   "packageManager": "pnpm@10.28.1",
   "pnpm": {
     "patchedDependencies": {
-      "appium-uiautomator2-driver": "patches/appium-uiautomator2-driver.patch"
+      "appium-uiautomator2-driver": "patches/appium-uiautomator2-driver.patch",
+      "allure-playwright@3.4.5": "patches/allure-playwright@3.4.5.patch"
     },
     "ignoredBuiltDependencies": [
       "appium-ios-tuntap",

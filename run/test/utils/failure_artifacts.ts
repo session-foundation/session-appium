@@ -270,7 +270,7 @@ export async function captureLogsOnFailure(testInfo: TestInfo): Promise<void> {
         const buffer = tailBuffer(raw);
         const label = device.getDeviceIdentity();
         const truncated = raw.length !== buffer.length;
-        await testInfo.attach(`log-${label}`, { body: buffer, contentType: 'text/plain' });
+        await testInfo.attach(`device-log-${label}`, { body: buffer, contentType: 'text/plain' });
         console.log(
           `Log captured for ${label} (${buffer.length} bytes${truncated ? `, truncated from ${raw.length}` : ''})`
         );

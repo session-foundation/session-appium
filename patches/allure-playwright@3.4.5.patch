@@ -1,0 +1,38 @@
+diff --git a/dist/cjs/index.js b/dist/cjs/index.js
+index e09edfdc7f8ddc07f8865a9df6a8895b62f7998c..8af3d392a9a70b971f8fdb0f88e4ed336c5719e0 100644
+--- a/dist/cjs/index.js
++++ b/dist/cjs/index.js
+@@ -504,12 +504,12 @@ var AllureReporter = exports.AllureReporter = /*#__PURE__*/function () {
+                 testResult.stage = _allureJsCommons.Stage.FINISHED;
+               });
+               if (result.stdout.length > 0) {
+-                this.allureRuntime.writeAttachment(testUuid, undefined, "stdout", Buffer.from((0, _sdk.stripAnsi)(result.stdout.join("")), "utf-8"), {
++                this.allureRuntime.writeAttachment(testUuid, undefined, "test runner logs", Buffer.from((0, _sdk.stripAnsi)(result.stdout.join("")), "utf-8"), {
+                   contentType: _allureJsCommons.ContentType.TEXT
+                 });
+               }
+               if (result.stderr.length > 0) {
+-                this.allureRuntime.writeAttachment(testUuid, undefined, "stderr", Buffer.from((0, _sdk.stripAnsi)(result.stderr.join("")), "utf-8"), {
++                this.allureRuntime.writeAttachment(testUuid, undefined, "test runner errors", Buffer.from((0, _sdk.stripAnsi)(result.stderr.join("")), "utf-8"), {
+                   contentType: _allureJsCommons.ContentType.TEXT
+                 });
+               }
+diff --git a/dist/esm/index.js b/dist/esm/index.js
+index 84ab12679c08c2738e7d9fb53267f950c60cfb86..b55ef16e6900f444aee1944cfa286baa37e6369c 100644
+--- a/dist/esm/index.js
++++ b/dist/esm/index.js
+@@ -486,12 +486,12 @@ export var AllureReporter = /*#__PURE__*/function () {
+                 testResult.stage = Stage.FINISHED;
+               });
+               if (result.stdout.length > 0) {
+-                this.allureRuntime.writeAttachment(testUuid, undefined, "stdout", Buffer.from(stripAnsi(result.stdout.join("")), "utf-8"), {
++                this.allureRuntime.writeAttachment(testUuid, undefined, "test runner logs", Buffer.from(stripAnsi(result.stdout.join("")), "utf-8"), {
+                   contentType: ContentType.TEXT
+                 });
+               }
+               if (result.stderr.length > 0) {
+-                this.allureRuntime.writeAttachment(testUuid, undefined, "stderr", Buffer.from(stripAnsi(result.stderr.join("")), "utf-8"), {
++                this.allureRuntime.writeAttachment(testUuid, undefined, "test runner errors", Buffer.from(stripAnsi(result.stderr.join("")), "utf-8"), {
+                   contentType: ContentType.TEXT
+                 });
+               }
