@@ -6,7 +6,7 @@ type CommunityConfig = {
 
 export const communities: Record<string, CommunityConfig> = {
   testCommunity: {
-    link: 'https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17',
+    link: 'https://test-chat.session.codes/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17',
     name: 'Testing All The Things!',
     roomName: 'testing-all-the-things',
   },
