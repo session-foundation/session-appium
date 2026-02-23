@@ -1083,15 +1083,14 @@ export class DeviceWrapper {
     const message = await this.findMatchingTextAndAccessibilityId('Message body', textToLookFor);
     return message;
   }
+
   /**
-   * Attempts to visually match a reference image against all elements found by the given locator,
-   * and taps the best match (or the first high-confidence match if earlyMatch is enabled).
-   * This is useful for scenarios where UI elements cannot be reliably identified,
-   * such as elements with date-based accessibility IDs.
+   * Attempts to visually match a reference image against all instances found by the given locator, and taps the best match.
+   * All element screenshots are taken in parallel.
+   * If the method finds 0 results for a locator, retries with exponential backoff up to 5 seconds.
    *
    * @param locator - The strategy and selector to find candidate elements.
    * @param referenceImageName - The filename of the reference image (in the media directory).
-   * @param earlyMatch - If true, taps immediately on the first match above the earlyMatchThreshold.
    * @throws If no suitable match is found among the candidate elements.
    */
   public async matchAndTapImage(
@@ -1123,10 +1122,10 @@ export class DeviceWrapper {
       throw new Error(`Reference image not found: ${referencePath}`);
     });
     const referenceBuffer = await fs.readFile(referencePath);
-    // Hoist reference metadata — it never changes across elements
+    // Reference metadata never changes across elements
     const refMeta = await sharp(referenceBuffer).metadata();
 
-    // Phase 1: screenshot + comparison in parallel — no rect yet
+    // Phase 1: screenshot + comparison in parallel
     const results = await Promise.all(
       elements.map(async el => {
         const base64 = await this.getElementScreenshot(el.ELEMENT);
@@ -1171,7 +1170,7 @@ export class DeviceWrapper {
       throw new Error('Unable to find the expected UI element on screen');
     }
 
-    // Phase 2: fetch rect only for the winning element
+    // Phase 2: fetch rect only for the winning element to determine tap coords
     const rect = await this.getElementRect(bestResult.el.ELEMENT);
 
     if (!rect) {
@@ -1196,6 +1195,7 @@ export class DeviceWrapper {
 
     await clickOnCoordinates(this, { x: tapX, y: tapY });
   }
+
   /**
    * Checks if an element exists on the screen without throwing an error.
    * Only useful for scenarios where you want to interact with an element if it exists
