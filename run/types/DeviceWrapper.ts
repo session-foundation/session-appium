@@ -1918,6 +1918,9 @@ export class DeviceWrapper {
     });
     if (this.isIOS()) {
       // Push file to simulator
+      this.warn(
+        `pushMediaToDevice on iOS is deprecated. Consider pre-loading it on simulator creation`
+      );
       await runScriptAndLog(`xcrun simctl addmedia ${this.udid} ${filePath}`, true);
     } else if (this.isAndroid()) {
       const ANDROID_DOWNLOAD_DIR = '/storage/emulated/0/Download';
