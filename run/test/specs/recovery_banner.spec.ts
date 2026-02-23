@@ -12,7 +12,7 @@ import { newUser } from '../utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 
 androidIt({
-  title: 'Recovery password banner only shows after >2 conversations',
+  title: 'Recovery password banner only shows after 3 conversations',
   risk: 'medium',
   testCb: bannerShowsThreeConvos,
   countOfDevicesNeeded: 1,
@@ -37,7 +37,7 @@ androidIt({
 });
 
 androidIt({
-  title: 'Recovery password banner persists with <3 conversations',
+  title: 'Recovery password banner persists with less than 3 conversations',
   risk: 'medium',
   testCb: bannerPersists,
   countOfDevicesNeeded: 1,
