@@ -84,7 +84,9 @@ export const createGroup = async (
   const allMessages = [aliceMessage, bobMessage, charlieMessage];
   await Promise.all(
     [device1, device2, device3].flatMap(device =>
-      allMessages.map(message => device.waitForTextElementToBePresent(new MessageBody(device, message)))
+      allMessages.map(message =>
+        device.waitForTextElementToBePresent(new MessageBody(device, message))
+      )
     )
   );
   return { userName, userOne, userTwo, userThree };

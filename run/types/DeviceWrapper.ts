@@ -1096,120 +1096,105 @@ export class DeviceWrapper {
    */
   public async matchAndTapImage(
     locator: StrategyExtractionObj,
-    referenceImageName: string,
-    earlyMatch: boolean = true
+    referenceImageName: string
   ): Promise<void> {
     const threshold = 0.85;
-    const earlyMatchThreshold = 0.97;
 
-    // Find all candidate elements matching the locator
-    const elements = await this.findElements(locator.strategy, locator.selector);
+    // Retry findElements with exponential backoff — photo picker may not have rendered yet
+    let elements = await this.findElements(locator.strategy, locator.selector);
+    if (elements.length === 0) {
+      let delay = 100;
+      const maxWait = 5000;
+      const start = Date.now();
+      while (elements.length === 0 && Date.now() - start < maxWait) {
+        await sleepFor(delay);
+        delay = Math.min(delay * 2, 1600);
+        elements = await this.findElements(locator.strategy, locator.selector);
+      }
+    }
+
     this.info(
       `[matchAndTapImage] Starting image matching: ${elements.length} elements with ${locator.strategy} "${locator.selector}"`
     );
 
-    // Load the reference image buffer from disk
+    // Load the reference image buffer from disk once
     const referencePath = path.join('run', 'test', 'media', referenceImageName);
     await fs.access(referencePath).catch(() => {
       throw new Error(`Reference image not found: ${referencePath}`);
     });
     const referenceBuffer = await fs.readFile(referencePath);
+    // Hoist reference metadata — it never changes across elements
+    const refMeta = await sharp(referenceBuffer).metadata();
 
-    let bestMatch: {
-      center: { x: number; y: number };
-      score: number;
-    } | null = null;
+    // Phase 1: screenshot + comparison in parallel — no rect yet
+    const results = await Promise.all(
+      elements.map(async el => {
+        const base64 = await this.getElementScreenshot(el.ELEMENT);
+        const elementBuffer = Buffer.from(base64, 'base64');
 
-    // Iterate over each candidate element
-    for (const el of elements) {
-      // Take a screenshot of the element
-      const base64 = await this.getElementScreenshot(el.ELEMENT);
-      const elementBuffer = Buffer.from(base64, 'base64');
+        const elementMeta = await sharp(elementBuffer).metadata();
 
-      // Get the element's rectangle (position and size)
-      const rect = await this.getElementRect(el.ELEMENT);
-      if (!rect) {
-        continue;
-      }
-      // Get actual pixel dimensions of the element screenshot
-      const elementMeta = await sharp(elementBuffer).metadata();
-      // Get original reference image dimensions
-      const refMeta = await sharp(referenceBuffer).metadata();
+        let resizedRef: Buffer;
+        let resizedMeta: Awaited<ReturnType<typeof sharp.prototype.metadata>>;
 
-      let resizedRef: Buffer;
-
-      if (elementMeta.width === refMeta.width && elementMeta.height === refMeta.height) {
-        // Skip resizing if reference already matches the screenshot dimensions
-        resizedRef = referenceBuffer;
-      } else {
-        // Resize the reference image to exactly match the screenshot dimensions
-        const targetWidth = elementMeta.width;
-        const targetHeight = elementMeta.height;
-
-        resizedRef = await sharp(referenceBuffer).resize(targetWidth, targetHeight).toBuffer();
-      }
-
-      try {
-        const { rect: matchRect, score } = await getImageOccurrence(elementBuffer, resizedRef, {
-          threshold,
-        });
-
-        /**
-         * Matching is done on a resized reference image to account for device pixel density.
-         * However, the coordinates returned by getImageOccurrence are relative to the resized buffer,
-         * *not* the original screen element. This leads to incorrect tap positions unless we
-         * scale the match result back down to the actual dimensions of the element.
-         * The logic below handles this scaling correction, ensuring the tap lands at the correct
-         * screen coordinates — even when Retina displays and image resizing are involved.
-         */
-
-        // Calculate scale between resized image and element dimensions
-        const resizedMeta = await sharp(resizedRef).metadata();
-        const scaleX = rect.width / (resizedMeta.width ?? rect.width);
-        const scaleY = rect.height / (resizedMeta.height ?? rect.height);
-
-        // Calculate center of the match rectangle (in buffer space)
-        const matchCenterX = matchRect.x + Math.floor(matchRect.width / 2);
-        const matchCenterY = matchRect.y + Math.floor(matchRect.height / 2);
-
-        // Scale match center down to element space
-        const scaledCenterX = matchCenterX * scaleX;
-        const scaledCenterY = matchCenterY * scaleY;
-
-        // Final absolute coordinates
-        const tapX = Math.round(rect.x + scaledCenterX);
-        const tapY = Math.round(rect.y + scaledCenterY);
-
-        const center = { x: tapX, y: tapY };
-
-        // If earlyMatch is enabled and the score is high enough, tap immediately
-        if (earlyMatch && score >= earlyMatchThreshold) {
-          this.info(
-            `[matchAndTapImage] Tapping first high-confidence match (${(score * 100).toFixed(2)}%)`
-          );
-          await clickOnCoordinates(this, center);
-          return;
+        if (elementMeta.width === refMeta.width && elementMeta.height === refMeta.height) {
+          // Skip resizing if reference already matches the screenshot dimensions
+          resizedRef = referenceBuffer;
+          resizedMeta = refMeta;
+        } else {
+          resizedRef = await sharp(referenceBuffer)
+            .resize(elementMeta.width, elementMeta.height)
+            .toBuffer();
+          resizedMeta = await sharp(resizedRef).metadata();
         }
-        // Otherwise, keep track of the best match so far
-        if (!bestMatch || score > bestMatch.score) {
-          bestMatch = { center, score };
+
+        try {
+          const { rect: matchRect, score } = await getImageOccurrence(elementBuffer, resizedRef, {
+            threshold,
+          });
+          return { el, matchRect, score, resizedMeta };
+        } catch {
+          return null;
         }
-      } catch {
-        continue; // No match in this element, try next
-      }
-    }
-    // If no good match was found, throw an error
-    if (!bestMatch) {
+      })
+    );
+
+    type MatchResult = NonNullable<(typeof results)[number]>;
+    const bestResult = results
+      .filter((r): r is MatchResult => r !== null)
+      .reduce<MatchResult | null>((best, r) => (!best || r.score > best.score ? r : best), null);
+
+    if (!bestResult) {
       console.log(
         `[matchAndTapImage] No matching image found among ${elements.length} elements for ${locator.strategy} "${locator.selector}"`
       );
       throw new Error('Unable to find the expected UI element on screen');
     }
-    // Tap the best match found
-    this.info(
-      `[matchAndTapImage] Tapping best match with ${(bestMatch.score * 100).toFixed(2)}% confidence`
-    );
-    await clickOnCoordinates(this, bestMatch.center);
+
+    // Phase 2: fetch rect only for the winning element
+    const rect = await this.getElementRect(bestResult.el.ELEMENT);
+
+    if (!rect) {
+      throw new Error('Unable to get rect for matched element');
+    }
+
+    /**
+     * Matching is done on a resized reference image to account for device pixel density.
+     * However, the coordinates returned by getImageOccurrence are relative to the resized buffer,
+     * *not* the original screen element. This leads to incorrect tap positions unless we
+     * scale the match result back down to the actual dimensions of the element.
+     * The logic below handles this scaling correction, ensuring the tap lands at the correct
+     * screen coordinates — even when Retina displays and image resizing are involved.
+     */
+    const { matchRect, resizedMeta } = bestResult;
+    const scaleX = rect.width / (resizedMeta.width ?? rect.width);
+    const scaleY = rect.height / (resizedMeta.height ?? rect.height);
+    const matchCenterX = matchRect.x + Math.floor(matchRect.width / 2);
+    const matchCenterY = matchRect.y + Math.floor(matchRect.height / 2);
+    const tapX = Math.round(rect.x + matchCenterX * scaleX);
+    const tapY = Math.round(rect.y + matchCenterY * scaleY);
+
+    await clickOnCoordinates(this, { x: tapX, y: tapY });
   }
   /**
    * Checks if an element exists on the screen without throwing an error.
@@ -1961,7 +1946,6 @@ export class DeviceWrapper {
       await this.clickOnElementAll(new ImagesFolderButton(this));
       await sleepFor(1000);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      await sleepFor(2000); // Appium needs a moment, matchAndTapImage sometimes finds 0 elements otherwise
       await this.matchAndTapImage(
         { strategy: 'xpath', selector: `//XCUIElementTypeCell` },
         testImage
@@ -2008,7 +1992,6 @@ export class DeviceWrapper {
       strategy: 'accessibility id',
       selector: 'Allow Full Access',
     });
-    await sleepFor(2000); // Appium needs a moment, matchAndTapImage sometimes finds 0 elements otherwise
     // A video can't be matched by its thumbnail so we use a video thumbnail file
     await this.matchAndTapImage(
       { strategy: 'xpath', selector: `//XCUIElementTypeCell` },
@@ -2227,7 +2210,6 @@ export class DeviceWrapper {
     // iOS files are pre-loaded on simulator creation, no need to push
     if (this.isIOS()) {
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      await sleepFor(5000); // sometimes Appium doesn't recognize the XPATH immediately
       await this.matchAndTapImage(
         { strategy: 'xpath', selector: `//XCUIElementTypeImage` },
         uploadPicture
