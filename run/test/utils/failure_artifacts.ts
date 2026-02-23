@@ -1,43 +1,19 @@
 import type { TestInfo } from '@playwright/test';
 
+import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import sharp from 'sharp';
 
 import { DeviceWrapper } from '../../types/DeviceWrapper';
+import { getAdbFullPath } from './binaries';
+import { iOSBundleId } from './capabilities_ios';
+import { deviceRegistry, LogContext, registryKey } from './device_registry';
 import { SupportedPlatformsType } from './open_app';
+import { runScriptAndLog } from './utilities';
 
-// Screenshot context type
-type ScreenshotContext = {
-  devices: DeviceWrapper[];
-  testInfo: TestInfo;
-  platform: SupportedPlatformsType;
-};
+// --- Screenshots ---
 
-// Global registry to track devices for screenshot capture
-const deviceRegistry = new Map<string, ScreenshotContext>();
-
-// Register devices for a test
-export function registerDevicesForTest(
-  testInfo: TestInfo,
-  devices: DeviceWrapper[],
-  platform: SupportedPlatformsType
-) {
-  const testId = `${testInfo.testId}-${testInfo.parallelIndex}-${testInfo.repeatEachIndex}`;
-  // Throw if deviceRegistry already has an entry for this test
-  // Could indicate that previous test did not unregister properly
-  if (deviceRegistry.has(testId)) {
-    throw new Error(`Device registry already contains entry for test "${testInfo.title}"`);
-  }
-
-  deviceRegistry.set(testId, { devices, testInfo, platform });
-}
-
-// Unregister devices after test
-export function unregisterDevicesForTest(testInfo: TestInfo) {
-  const testId = `${testInfo.testId}-${testInfo.parallelIndex}-${testInfo.repeatEachIndex}`;
-  deviceRegistry.delete(testId);
-}
 // Add device labels to screenshots (e.g. "Device: alice1")
 async function addDeviceLabel(screenshot: Buffer, device: DeviceWrapper): Promise<Buffer> {
   const { width } = await sharp(screenshot).metadata();
@@ -50,11 +26,11 @@ async function addDeviceLabel(screenshot: Buffer, device: DeviceWrapper): Promis
     <svg width="${width}" height="${labelHeight}">
       <rect x="0" y="0" width="${width}" height="${labelHeight}"
             fill="black" fill-opacity="0.5"/>
-      <text x="${width / 2}" y="${labelHeight / 2 + fontSize / 3}" 
-            font-family="-apple-system, Arial, sans-serif" 
-            font-size="${fontSize}" 
+      <text x="${width / 2}" y="${labelHeight / 2 + fontSize / 3}"
+            font-family="-apple-system, Arial, sans-serif"
+            font-size="${fontSize}"
             font-weight="bold"
-            fill="white" 
+            fill="white"
             text-anchor="middle">
          Device: ${deviceName}
       </text>
@@ -63,14 +39,7 @@ async function addDeviceLabel(screenshot: Buffer, device: DeviceWrapper): Promis
 
   // Composite label over screenshot
   return sharp(screenshot)
-    .composite([
-      {
-        input: label,
-        top: 0,
-        left: 0,
-        blend: 'over',
-      },
-    ])
+    .composite([{ input: label, top: 0, left: 0, blend: 'over' }])
     .png()
     .toBuffer();
 }
@@ -116,14 +85,7 @@ async function createComposite(screenshots: Buffer[]): Promise<Buffer> {
   const composites = screenshots.map((screenshot, index) => {
     const col = index % cols;
     const row = Math.floor(index / cols);
-    const x = col * (width + gap);
-    const y = row * (height + gap);
-
-    return {
-      input: screenshot,
-      left: x,
-      top: y,
-    };
+    return { input: screenshot, left: col * (width + gap), top: row * (height + gap) };
   });
 
   // Apply all screenshots to canvas
@@ -132,8 +94,7 @@ async function createComposite(screenshots: Buffer[]): Promise<Buffer> {
 
 // Main screenshot capture function
 export async function captureScreenshotsOnFailure(testInfo: TestInfo): Promise<void> {
-  const testId = `${testInfo.testId}-${testInfo.parallelIndex}-${testInfo.repeatEachIndex}`;
-  const context = deviceRegistry.get(testId);
+  const context = deviceRegistry.get(registryKey(testInfo));
 
   if (!context || context.devices.length === 0) {
     console.log('No devices registered for screenshot capture');
@@ -143,30 +104,20 @@ export async function captureScreenshotsOnFailure(testInfo: TestInfo): Promise<v
   console.log(`Test failed, capturing screenshots from ${context.devices.length} device(s)...`);
 
   // Capture all raw screenshots in parallel
-
   const rawCaptures = await Promise.all(
     context.devices.map(async device => {
       try {
         const base64 = await device.getScreenshot();
-        return {
-          device,
-          base64,
-          success: true,
-        };
+        return { device, base64, success: true };
       } catch (error) {
         console.error(`Failed to capture from ${device.getDeviceIdentity()}:`, error);
-        return {
-          device,
-          base64: null,
-          success: false,
-        };
+        return { device, base64: null, success: false };
       }
     })
   );
 
   // Filter out failed captures
   const successfulCaptures = rawCaptures.filter(c => c.success && c.base64);
-
   if (successfulCaptures.length === 0) {
     console.log('No screenshots captured successfully');
     return;
@@ -180,16 +131,19 @@ export async function captureScreenshotsOnFailure(testInfo: TestInfo): Promise<v
       return { device, labeledBuffer };
     })
   );
-
   // Extract successful results and log failures
   const screenshots = processedResults
-    .filter((result): result is PromiseFulfilledResult<{ device: any; labeledBuffer: Buffer }> => {
-      if (result.status === 'rejected') {
-        console.error(`Failed to process screenshot:`, result.reason);
-        return false;
+    .filter(
+      (
+        result
+      ): result is PromiseFulfilledResult<{ device: DeviceWrapper; labeledBuffer: Buffer }> => {
+        if (result.status === 'rejected') {
+          console.error(`Failed to process screenshot:`, result.reason);
+          return false;
+        }
+        return true;
       }
-      return true;
-    })
+    )
     .map(result => result.value.labeledBuffer);
 
   if (screenshots.length === 0) {
@@ -198,7 +152,6 @@ export async function captureScreenshotsOnFailure(testInfo: TestInfo): Promise<v
   }
 
   // Create composite and save
-
   try {
     const finalImage = await createComposite(screenshots);
 
@@ -210,7 +163,6 @@ export async function captureScreenshotsOnFailure(testInfo: TestInfo): Promise<v
 
     // Ensure output directory exists
     await fs.promises.mkdir(testInfo.outputDir, { recursive: true });
-
     // Save locally
     const screenshotPath = path.join(testInfo.outputDir, fileName);
     await fs.promises.writeFile(screenshotPath, finalImage);
@@ -222,10 +174,7 @@ export async function captureScreenshotsOnFailure(testInfo: TestInfo): Promise<v
         ? 'Test Failure Screenshot'
         : `Test Failure - ${screenshots.length} Devices`;
 
-    await testInfo.attach(attachmentName, {
-      body: finalImage,
-      contentType: 'image/png',
-    });
+    await testInfo.attach(attachmentName, { body: finalImage, contentType: 'image/png' });
   } catch (error) {
     console.error('Failed to create composite screenshot:', error);
 
@@ -241,4 +190,93 @@ export async function captureScreenshotsOnFailure(testInfo: TestInfo): Promise<v
       }
     }
   }
+}
+
+// --- Logs ---
+
+async function collectLogBuffer(
+  platform: SupportedPlatformsType,
+  device: DeviceWrapper,
+  logCtx: LogContext
+): Promise<Buffer | null> {
+  if (platform === 'android') {
+    const startEpochSec = (logCtx.startMs / 1000).toFixed(3);
+    const parts = [
+      `${getAdbFullPath()} -s ${device.udid} logcat -d -T ${startEpochSec}`,
+      ...(logCtx.pid ? [`--pid=${logCtx.pid}`] : []),
+    ];
+    const output = await runScriptAndLog(parts.join(' '));
+    return Buffer.from(output);
+  }
+
+  if (platform === 'ios') {
+    const containerPath = execSync(
+      `xcrun simctl get_app_container ${device.udid} ${iOSBundleId} data`,
+      { encoding: 'utf8' }
+    ).trim();
+
+    const logsDir = path.join(containerPath, 'Library', 'Caches', 'Logs');
+
+    if (!fs.existsSync(logsDir)) {
+      console.log(`No logs directory found for ${device.getDeviceIdentity()}`);
+      return null;
+    }
+
+    const logFiles = fs
+      .readdirSync(logsDir)
+      .filter(f => f.startsWith(iOSBundleId) && f.endsWith('.log'))
+      .map(f => ({ name: f, mtime: fs.statSync(path.join(logsDir, f)).mtimeMs }))
+      .filter(f => f.mtime >= logCtx.startMs)
+      .sort((a, b) => b.mtime - a.mtime);
+
+    if (logFiles.length === 0) {
+      console.log(`No log files found after test start for ${device.getDeviceIdentity()}`);
+      return null;
+    }
+
+    return Buffer.from(fs.readFileSync(path.join(logsDir, logFiles[0].name), 'utf8'));
+  }
+
+  return null;
+}
+
+const MAX_LOG_BYTES = 2 * 1024 * 1024; // 2 MB — tail beyond this to keep reports lean
+
+function tailBuffer(raw: Buffer): Buffer {
+  if (raw.length <= MAX_LOG_BYTES) return raw;
+
+  const tail = raw.subarray(raw.length - MAX_LOG_BYTES);
+  // Advance past any partial line at the cut point
+  const firstNewline = tail.indexOf('\n'.charCodeAt(0));
+  return firstNewline > 0 ? tail.subarray(firstNewline + 1) : tail;
+}
+
+export async function captureLogsOnFailure(testInfo: TestInfo): Promise<void> {
+  const context = deviceRegistry.get(registryKey(testInfo));
+
+  if (!context?.logCtxByUdid) {
+    return;
+  }
+
+  await Promise.all(
+    context.devices.map(async device => {
+      const logCtx = context.logCtxByUdid!.get(device.udid);
+      if (!logCtx) return;
+
+      try {
+        const raw = await collectLogBuffer(context.platform, device, logCtx);
+        if (!raw) return;
+
+        const buffer = tailBuffer(raw);
+        const label = device.getDeviceIdentity();
+        const truncated = raw.length !== buffer.length;
+        await testInfo.attach(`log-${label}`, { body: buffer, contentType: 'text/plain' });
+        console.log(
+          `Log captured for ${label} (${buffer.length} bytes${truncated ? `, truncated from ${raw.length}` : ''})`
+        );
+      } catch (error) {
+        console.error(`Failed to capture log for ${device.getDeviceIdentity()}:`, error);
+      }
+    })
+  );
 }

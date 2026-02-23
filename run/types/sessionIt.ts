@@ -5,12 +5,10 @@ import { omit } from 'lodash';
 import type { AppCountPerTest } from '../test/state_builder';
 
 import { setupAllureTestInfo } from '../test/utils/allure/allureHelpers';
+import { unregisterDevicesForTest } from '../test/utils/device_registry';
 import { getNetworkTarget } from '../test/utils/devnet';
+import { captureLogsOnFailure, captureScreenshotsOnFailure } from '../test/utils/failure_artifacts';
 import { SupportedPlatformsType } from '../test/utils/open_app';
-import {
-  captureScreenshotsOnFailure,
-  unregisterDevicesForTest,
-} from '../test/utils/screenshot_helper';
 import { AllureSuiteConfig } from './allure';
 import { TestRisk } from './testing';
 
@@ -105,9 +103,10 @@ function mobileIt({
           testInfo.status === 'timedOut'
         ) {
           await captureScreenshotsOnFailure(testInfo);
+          await captureLogsOnFailure(testInfo);
         }
-      } catch (screenshotError) {
-        console.error('Failed to capture screenshot:', screenshotError);
+      } catch (artifactError) {
+        console.error('Failed to capture failure artifacts:', artifactError);
       }
 
       try {
