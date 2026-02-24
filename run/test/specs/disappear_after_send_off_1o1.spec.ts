@@ -11,8 +11,8 @@ import {
   FollowSettingsButton,
   SetDisappearMessagesButton,
 } from '../locators/disappearing_messages';
+import { ConversationItem } from '../locators/home';
 import { open_Alice2_Bob1_friends } from '../state_builder';
-import { checkDisappearingControlMessage } from '../utils/disappearing_control_messages';
 import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 import { setDisappearingMessage } from '../utils/set_disappearing_messages';
 
@@ -40,17 +40,24 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType, testIn
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   // Select disappearing messages option
   await setDisappearingMessage(alice1, ['1:1', `Disappear after ${mode} option`, time]);
-  // Get control message based on key from json file
-  await checkDisappearingControlMessage(
-    platform,
-    alice.userName,
-    bob.userName,
-    alice1,
-    bob1,
+  // Check control messages on both devices and sync to linked device
+  const setYouMsg = tStripped('disappearingMessagesSetYou', {
     time,
-    controlMode,
+    disappearing_messages_type: controlMode,
+  });
+  await Promise.all([
+    alice1.waitForControlMessageToBePresent(setYouMsg),
+    bob1.waitForControlMessageToBePresent(
+      tStripped('disappearingMessagesSet', {
+        name: alice.userName,
+        time,
+        disappearing_messages_type: controlMode,
+      })
+    ),
     alice2
-  );
+      .clickOnElementAll(new ConversationItem(alice2, bob.userName))
+      .then(() => alice2.waitForControlMessageToBePresent(setYouMsg)),
+  ]);
 
   // Turn off disappearing messages on device 1
   await alice1.clickOnElementAll(new ConversationSettings(alice1));

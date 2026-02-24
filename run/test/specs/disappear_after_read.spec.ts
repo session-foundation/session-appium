@@ -1,11 +1,11 @@
 import { test, type TestInfo } from '@playwright/test';
 
+import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, DisappearModes } from '../../types/testing';
 import { MessageBody } from '../locators/conversation';
 import { open_Alice1_Bob1_friends } from '../state_builder';
-import { checkDisappearingControlMessage } from '../utils/disappearing_control_messages';
 import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 import { setDisappearingMessage } from '../utils/set_disappearing_messages';
 
@@ -43,17 +43,20 @@ async function disappearAfterRead(platform: SupportedPlatformsType, testInfo: Te
   await test.step(TestSteps.DISAPPEARING_MESSAGES.SET(time), async () => {
     await setDisappearingMessage(alice1, ['1:1', `Disappear after ${mode} option`, time]);
   });
-  // Check control message is correct on device 2
+  // Check control messages on both devices
   await test.step(TestSteps.VERIFY.DISAPPEARING_CONTROL_MESSAGES, async () => {
-    await checkDisappearingControlMessage(
-      platform,
-      alice.userName,
-      bob.userName,
-      alice1,
-      bob1,
-      time,
-      mode
-    );
+    await Promise.all([
+      alice1.waitForControlMessageToBePresent(
+        tStripped('disappearingMessagesSetYou', { time, disappearing_messages_type: mode })
+      ),
+      bob1.waitForControlMessageToBePresent(
+        tStripped('disappearingMessagesSet', {
+          name: alice.userName,
+          time,
+          disappearing_messages_type: mode,
+        })
+      ),
+    ]);
   });
   // Send message to verify that deletion is working
   await test.step(TestSteps.SEND.MESSAGE(alice.userName, bob.userName), async () => {
