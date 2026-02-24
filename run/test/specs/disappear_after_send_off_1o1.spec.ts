@@ -8,7 +8,6 @@ import {
   DisableDisappearingMessages,
   DisappearingMessagesMenuOption,
   DisappearingMessagesSubtitle,
-  FollowSettingsButton,
   SetDisappearMessagesButton,
 } from '../locators/disappearing_messages';
 import { ConversationItem } from '../locators/home';
@@ -77,13 +76,6 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType, testIn
     bob1.waitForControlMessageToBePresent(disappearingMessagesTurnedOff),
     alice2.waitForControlMessageToBePresent(disappearingMessagesTurnedOffYou),
   ]);
-  // Follow setting on device 2
-  await bob1.clickOnElementAll(new FollowSettingsButton(bob1));
-  await bob1.checkModalStrings(
-    tStripped('disappearingMessagesFollowSetting'),
-    tStripped('disappearingMessagesFollowSettingOff')
-  );
-  await bob1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Confirm' });
   // Check conversation subtitle?
   await Promise.all(
     [alice1, bob1, alice2].map(device =>

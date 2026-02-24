@@ -2,7 +2,7 @@ import test from '@playwright/test';
 
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { CommunityInput, JoinCommunityButton } from '../locators';
-import { ConversationHeaderName, EmptyConversation } from '../locators/conversation';
+import { ConversationHeaderName, MessageBody } from '../locators/conversation';
 import { PlusButton } from '../locators/home';
 import { JoinCommunityOption } from '../locators/start_conversation';
 
@@ -16,7 +16,7 @@ export const joinCommunity = async (
   await device.inputText(communityLink, new CommunityInput(device));
   await device.clickOnElementAll(new JoinCommunityButton(device));
   await device.waitForTextElementToBePresent(new ConversationHeaderName(device, communityName));
-  await device.hasElementBeenDeleted(new EmptyConversation(device)); // checking that messages loaded already
+  await device.waitForTextElementToBePresent(new MessageBody(device)); // Check for ANY message
   await device.scrollToBottom();
 };
 

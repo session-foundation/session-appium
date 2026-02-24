@@ -3,6 +3,7 @@ import type { TestInfo } from '@playwright/test';
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
+import { MessageBody } from '../locators/conversation';
 import {
   DisappearingMessagesSubtitle,
   FollowSettingsButton,
@@ -34,10 +35,11 @@ async function disappearingMessagesFollowSetting1o1(
 ) {
   const {
     devices: { alice1, bob1 },
+    prebuilt: { alice, bob },
   } = await open_Alice1_Bob1_friends({ platform, focusFriendsConvo: true, testInfo });
-
+  const aliceMsg = `${alice.userName}'s messages will disappear`;
+  const bobMsg = `${bob.userName}'s messages will disappear`;
   await setDisappearingMessage(alice1, ['1:1', timerType, time]);
-
   // Bob should see the follow settings banner after Alice sets DM
   await bob1.clickOnElementAll(new FollowSettingsButton(bob1));
   await bob1.checkModalStrings(
@@ -55,6 +57,19 @@ async function disappearingMessagesFollowSetting1o1(
       device.waitForTextElementToBePresent(new DisappearingMessagesSubtitle(device))
     )
   );
-
+  const aliceTimestamp = await alice1.sendMessage(aliceMsg);
+  const bobTimestamp = await bob1.sendMessage(bobMsg);
+  await Promise.all(
+    [alice1, bob1].flatMap(device => [
+      device.hasElementDisappeared({
+        ...new MessageBody(device, aliceMsg).build(),
+        actualStartTime: aliceTimestamp,
+      }),
+      device.hasElementDisappeared({
+        ...new MessageBody(device, bobMsg).build(),
+        actualStartTime: bobTimestamp,
+      }),
+    ])
+  );
   await closeApp(alice1, bob1);
 }
