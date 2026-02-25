@@ -129,6 +129,7 @@ export type XPath =
   | `//android.view.ViewGroup[@resource-id='network.loki.messenger:id/mainContainer'][.//android.widget.TextView[contains(@text,'${string}')]]//androidx.compose.ui.platform.ComposeView[@resource-id='network.loki.messenger:id/profilePictureView']`
   | `//android.view.ViewGroup[@resource-id="network.loki.messenger:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.view.ViewGroup[@resource-id="network.loki.messenger:id/layout_emoji_container"]`
   | `//android.view.ViewGroup[@resource-id="network.loki.messenger:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.widget.TextView[@resource-id="network.loki.messenger:id/reactions_pill_count"][@text="${string}"]`
+  | `//android.view.ViewGroup[android.widget.TextView[@content-desc='Conversation list item' and @text='${string}']]/android.widget.ImageView[@resource-id='network.loki.messenger:id/iconPinned']`
   | `//android.widget.LinearLayout[.//android.widget.TextView[@content-desc="Conversation list item" and @text="${string}"]]//android.widget.TextView[@resource-id="network.loki.messenger:id/snippetTextView" and @text="${string}"]`
   | `//android.widget.TextView[@text="${string}"]`
   | `//android.widget.TextView[@text="Message"]/parent::android.view.View`
@@ -414,6 +415,7 @@ export type AccessibilityId =
   | 'Time selector'
   | 'Unban User'
   | 'Unblock'
+  | 'Unpin'
   | 'Untrusted attachment message'
   | 'Upload'
   | 'URL'
@@ -563,6 +565,7 @@ export type Id =
   | 'network.loki.messenger:id/theme_option_classic_light'
   | 'network.loki.messenger:id/thumbnail_load_indicator'
   | 'network.loki.messenger:id/title'
+  | 'network.loki.messenger:id/unpinTextView'
   | 'New direct message'
   | 'Next'
   | 'nickname-input'

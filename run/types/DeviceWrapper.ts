@@ -60,7 +60,9 @@ import {
   ConversationItem,
   MessageRequestItem,
   MessageRequestsBanner,
+  PinConversationOption,
   PlusButton,
+  UnpinConversationOption,
 } from '../test/locators/home';
 import { LoadingAnimation } from '../test/locators/onboarding';
 import {
@@ -845,12 +847,12 @@ export class DeviceWrapper {
 
         await this.longClick(el, 3000);
         await sleepFor(1000);
-        // Pin is the only consistent option in context menu
-        const longPressSuccess = await this.waitForTextElementToBePresent({
-          strategy: 'accessibility id',
-          selector: 'Pin',
-          maxWait: 1000,
-        });
+        // Either Pin or Unpin will be present depending on whether the conversation is already pinned
+        const longPressSuccess = await this.findWithFallback(
+          new PinConversationOption(this),
+          new UnpinConversationOption(this),
+          1000
+        );
 
         if (longPressSuccess) {
           this.log('LongClick successful');
@@ -870,6 +872,18 @@ export class DeviceWrapper {
         }
       }
     }
+  }
+
+  public async pinConversation(name: string) {
+    await this.onIOS().swipeLeft('Conversation list item', name);
+    await this.onAndroid().longPressConversation(name);
+    await this.clickOnElementAll(new PinConversationOption(this));
+  }
+
+  public async unpinConversation(name: string) {
+    await this.onIOS().swipeLeft('Conversation list item', name);
+    await this.onAndroid().longPressConversation(name);
+    await this.clickOnElementAll(new UnpinConversationOption(this));
   }
 
   public async pressAndHold(accessibilityId: AccessibilityId) {

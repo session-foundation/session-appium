@@ -47,6 +47,7 @@ export type AllureSuiteConfig =
         | 'Delete Conversation'
         | 'Delete Message'
         | 'Hide Note to Self'
+        | 'Pin/Unpin'
         | 'Set Nickname'
         | 'Share to Session';
     }
