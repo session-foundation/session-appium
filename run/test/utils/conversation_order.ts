@@ -13,10 +13,23 @@ export const assertPinOrder = (
   pinnedNames: string[],
   afterOrder: string[]
 ) => {
-  const expected = [
-    ...beforeOrder.filter(n => pinnedNames.includes(n)),
-    ...beforeOrder.filter(n => !pinnedNames.includes(n)),
-  ];
+  const pinnedSet = new Set(pinnedNames);
+  const pinnedExpected: string[] = [];
+  const unpinnedExpected: string[] = [];
+  for (const name of beforeOrder) {
+    if (pinnedSet.has(name)) {
+      pinnedExpected.push(name);
+    } else {
+      unpinnedExpected.push(name);
+    }
+  }
+  const expected = [...pinnedExpected, ...unpinnedExpected];
+
+  if (afterOrder.length !== expected.length) {
+    throw new Error(
+      `Conversation count mismatch: expected ${expected.length} conversations but got ${afterOrder.length}`
+    );
+  }
 
   for (let i = 0; i < expected.length; i++) {
     if (afterOrder[i] !== expected[i]) {
