@@ -28,6 +28,9 @@ bothPlatformsItSeparate({
   },
   allureDescription:
     'Verifies that a call control message disappears as expected in a 1:1 conversation',
+  allureLinks: {
+    android: 'SES-5265',
+  },
 });
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
