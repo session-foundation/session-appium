@@ -1,3 +1,5 @@
+import { expect } from '@playwright/test';
+
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 
 // Returns the names of all conversation list items in their current DOM order
@@ -25,17 +27,5 @@ export const assertPinOrder = (
   }
   const expected = [...pinnedExpected, ...unpinnedExpected];
 
-  if (afterOrder.length !== expected.length) {
-    throw new Error(
-      `Conversation count mismatch: expected ${expected.length} conversations but got ${afterOrder.length}`
-    );
-  }
-
-  for (let i = 0; i < expected.length; i++) {
-    if (afterOrder[i] !== expected[i]) {
-      console.log(`Conversation order wrong at position ${i + 1}: expected "${expected[i]}" but got "${afterOrder[i]}".
-        Full order: [${afterOrder.join(', ')}]`);
-      throw new Error(`Conversations are not in the correct order after (un)pinning`);
-    }
-  }
+  expect(afterOrder, 'Conversation order is not correct').toEqual(expected);
 };
