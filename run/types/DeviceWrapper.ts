@@ -1852,7 +1852,6 @@ export class DeviceWrapper {
     paste: boolean = false
   ) {
     const locator = args instanceof LocatorsInterface ? args.build() : args;
-    const el = await this.waitForTextElementToBePresent({ ...locator });
 
     if (paste) {
       // Set clipboard, press key-code for instant paste
@@ -1872,6 +1871,7 @@ export class DeviceWrapper {
         await this.clickOnByAccessibilityID('Paste');
       }
     } else {
+      const el = await this.waitForTextElementToBePresent({ ...locator });
       await this.setValueImmediate(textToInput, el.ELEMENT);
     }
   }
