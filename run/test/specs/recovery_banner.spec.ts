@@ -7,7 +7,7 @@ import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { androidIt } from '../../types/sessionIt';
 import { ConversationItem, PlusButton } from '../locators/home';
 import { RecoveryPhraseContainer, RevealRecoveryPhraseButton } from '../locators/settings';
-import { joinCommunity } from '../utils/community';
+import { joinCommunities, joinCommunity } from '../utils/community';
 import { newUser } from '../utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 
@@ -87,10 +87,7 @@ async function bannerDisappearsAfterOpened(platform: SupportedPlatformsType, tes
     return { device };
   });
   await test.step('Create three conversations, verify banner does not reappear after being opened', async () => {
-    for (const community of Object.values(communities).slice(0, 3)) {
-      await joinCommunity(device, community.link, community.name);
-      await device.navigateBack();
-    }
+    await joinCommunities(device, 3);
     await bannerShouldShow(device);
     await device.clickOnElementAll(new RevealRecoveryPhraseButton(device));
     await device.waitForTextElementToBePresent(new RecoveryPhraseContainer(device));
@@ -109,10 +106,7 @@ async function bannerPersists(platform: SupportedPlatformsType, testInfo: TestIn
     return { device };
   });
   await test.step('Create three conversations, verify banner persists after a conversation is deleted', async () => {
-    for (const community of Object.values(communities).slice(0, 3)) {
-      await joinCommunity(device, community.link, community.name);
-      await device.navigateBack();
-    }
+    await joinCommunities(device, 3);
     await bannerShouldShow(device);
     await device.longPressConversation(communities.testCommunity.name);
     await device.clickOnElementAll({ strategy: 'accessibility id', selector: 'Leave' }); // Long press options

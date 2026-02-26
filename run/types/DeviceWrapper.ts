@@ -1056,8 +1056,8 @@ export class DeviceWrapper {
     if (elements && elements.length) {
       const matching = await this.findAsync(elements, async e => {
         const text = await this.getTextFromElement(e);
-        const isPartialMatch = text && text.toLowerCase().includes(textToLookFor.toLowerCase());
-        return Boolean(isPartialMatch);
+        const isExactMatch = text && text.toLowerCase() === textToLookFor.toLowerCase();
+        return Boolean(isExactMatch);
       });
 
       return matching || null;

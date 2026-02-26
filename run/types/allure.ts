@@ -79,6 +79,7 @@ export const TestSteps = {
   NEW_CONVERSATION: {
     NEW_MESSAGE: 'New Message',
     JOIN_COMMUNITY: 'Join Community',
+    JOIN_COMMUNITIES: (number: number) => `Join ${number} communities`,
   },
   // Sending things
   SEND: {
@@ -104,6 +105,7 @@ export const TestSteps = {
     DELETE_FOR_EVERYONE: 'Delete for everyone',
     GROUPS_ADD_CONTACT: (name: string) => `Invite ${name} to group`,
     GROUPS_REMOVE_MEMBER: (name: string) => `Remove ${name} from group`,
+    PIN_CONVERSATIONS: (number: number) => `Attempt to pin ${number} conversations`,
   },
   // Disappearing Messages
   DISAPPEARING_MESSAGES: {

@@ -1,6 +1,11 @@
 import { tStripped } from '../localizer/lib';
 
-export type CTAType = 'alreadyActivated' | 'animatedProfilePicture' | 'donate' | 'longerMessages';
+export type CTAType =
+  | 'alreadyActivated'
+  | 'animatedProfilePicture'
+  | 'donate'
+  | 'longerMessages'
+  | 'pinnedConversations';
 
 /**
  * buttons[0] is the negative/dismiss button (always present);
@@ -43,5 +48,15 @@ export const ctaConfigs: Record<CTAType, CTAConfig> = {
     heading: tStripped('proActivated'),
     body: tStripped('proAnimatedDisplayPicture'),
     buttons: [tStripped('close')],
+  },
+  pinnedConversations: {
+    heading: tStripped('upgradeTo'),
+    body: tStripped('proCallToActionPinnedConversationsMoreThan', { limit: '5' }),
+    buttons: [tStripped('cancel'), tStripped('theContinue')],
+    features: [
+      tStripped('proFeatureListPinnedConversations'),
+      tStripped('proFeatureListLongerMessages'),
+      tStripped('proFeatureListLoadsMore'),
+    ],
   },
 };
