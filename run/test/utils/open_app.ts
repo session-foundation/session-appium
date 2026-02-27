@@ -14,19 +14,16 @@ import {
   capabilityIsValid,
   getIosCapabilities,
   iOSBundleId,
+  IOSTestContext,
 } from './capabilities_ios';
+import { registerDevicesForTest } from './device_registry';
 import { cleanPermissions } from './permissions';
-import { registerDevicesForTest } from './screenshot_helper';
 import { sleepFor } from './sleep_for';
 import { runScriptAndLog } from './utilities';
 
 const APPIUM_PORT = 4728;
 
 export type SupportedPlatformsType = 'android' | 'ios';
-
-export type IOSTestContext = {
-  customInstallTime?: string;
-};
 
 export const openAppMultipleDevices = async (
   platform: SupportedPlatformsType,
@@ -45,7 +42,7 @@ export const openAppMultipleDevices = async (
   //  Map the result to return only the device objects
   const devices = apps.map(app => app.device);
 
-  registerDevicesForTest(testInfo, devices, platform);
+  await registerDevicesForTest(testInfo, devices, platform);
 
   return devices;
 };
@@ -73,7 +70,7 @@ export const openAppOnPlatformSingleDevice = async (
 }> => {
   const result = await openAppOnPlatform(platform, 0, testInfo, iOSContext);
 
-  registerDevicesForTest(testInfo, [result.device], platform);
+  await registerDevicesForTest(testInfo, [result.device], platform);
 
   return result;
 };
@@ -93,7 +90,7 @@ export const openAppTwoDevices = async (
 
   const result = { device1: app1.device, device2: app2.device };
 
-  registerDevicesForTest(testInfo, Object.values(result), platform);
+  await registerDevicesForTest(testInfo, Object.values(result), platform);
 
   return result;
 };
@@ -119,7 +116,7 @@ export const openAppThreeDevices = async (
     device3: app3.device,
   };
 
-  registerDevicesForTest(testInfo, Object.values(result), platform);
+  await registerDevicesForTest(testInfo, Object.values(result), platform);
 
   return result;
 };
@@ -148,7 +145,7 @@ export const openAppFourDevices = async (
     device4: app4.device,
   };
 
-  registerDevicesForTest(testInfo, Object.values(result), platform);
+  await registerDevicesForTest(testInfo, Object.values(result), platform);
 
   return result;
 };
@@ -311,7 +308,7 @@ const openiOSApp = async (
 
   const capabilities = getIosCapabilities(
     actualCapabilitiesIndex as CapabilitiesIndexType,
-    iOSContext?.customInstallTime
+    iOSContext
   );
   const udid = capabilities.alwaysMatch['appium:udid'] as string;
 

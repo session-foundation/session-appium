@@ -47,7 +47,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
     });
   });
   await test.step(TestSteps.DISAPPEARING_MESSAGES.SET(time), async () => {
-    await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
+    await setDisappearingMessage(alice1, ['Group', timerType, time]);
   });
   await test.step(TestSteps.SEND.LINK, async () => {
     await alice1.inputText(testLink, new MessageInput(alice1));

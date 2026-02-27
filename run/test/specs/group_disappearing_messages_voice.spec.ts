@@ -31,7 +31,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType, t
     focusGroupConvo: true,
     testInfo,
   });
-  await setDisappearingMessage(platform, alice1, ['Group', timerType, time]);
+  await setDisappearingMessage(alice1, ['Group', timerType, time]);
   const sentTimestamp = await alice1.sendVoiceMessage();
   await Promise.all(
     [bob1, charlie1].map(device => device.onAndroid().trustAttachments(testGroupName))

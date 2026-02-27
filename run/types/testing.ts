@@ -124,10 +124,12 @@ export type XPath =
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
   | `//*[@resource-id='network.loki.messenger:id/callTitle' and contains(@text, ':')]`
+  | `//*[starts-with(@content-desc, "GIF taken on")]`
   | `//*[starts-with(@content-desc, "Photo taken on")]`
   | `//android.view.ViewGroup[@resource-id='network.loki.messenger:id/mainContainer'][.//android.widget.TextView[contains(@text,'${string}')]]//androidx.compose.ui.platform.ComposeView[@resource-id='network.loki.messenger:id/profilePictureView']`
   | `//android.view.ViewGroup[@resource-id="network.loki.messenger:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.view.ViewGroup[@resource-id="network.loki.messenger:id/layout_emoji_container"]`
   | `//android.view.ViewGroup[@resource-id="network.loki.messenger:id/mainContainer"][.//android.widget.TextView[contains(@text,"${string}")]]//android.widget.TextView[@resource-id="network.loki.messenger:id/reactions_pill_count"][@text="${string}"]`
+  | `//android.view.ViewGroup[android.widget.TextView[@content-desc='Conversation list item' and @text='${string}']]/android.widget.ImageView[@resource-id='network.loki.messenger:id/iconPinned']`
   | `//android.widget.LinearLayout[.//android.widget.TextView[@content-desc="Conversation list item" and @text="${string}"]]//android.widget.TextView[@resource-id="network.loki.messenger:id/snippetTextView" and @text="${string}"]`
   | `//android.widget.TextView[@text="${string}"]`
   | `//android.widget.TextView[@text="Message"]/parent::android.view.View`
@@ -182,6 +184,7 @@ export type AccessibilityId =
   | 'Allow'
   | 'Allow Access to All Photos'
   | 'Allow Full Access'
+  | 'Allow Paste'
   | 'Allow voice and video calls'
   | 'All Photos'
   | 'Answer call'
@@ -210,6 +213,7 @@ export type AccessibilityId =
   | 'Clear all'
   | 'Close'
   | 'Close button'
+  | 'Collections'
   | 'Community invitation'
   | 'Community Message Requests'
   | 'Configuration message'
@@ -233,6 +237,10 @@ export type AccessibilityId =
   | 'Copy URL'
   | 'Create account button'
   | 'Create group'
+  | 'cta-body'
+  | 'cta-button-negative'
+  | 'cta-button-positive'
+  | 'cta-heading'
   | 'Decline message request'
   | 'Delete'
   | 'Delete Contact'
@@ -287,6 +295,8 @@ export type AccessibilityId =
   | 'Hide Note to Self'
   | 'Hide recovery password button'
   | 'Hide Recovery Password Permanently'
+  | 'https://getsession.org/privacy-policy'
+  | 'https://getsession.org/terms-of-service'
   | 'Image picker'
   | 'Images folder'
   | 'Invite'
@@ -351,13 +361,12 @@ export type AccessibilityId =
   | 'open-survey-button'
   | 'Open'
   | 'Open URL'
+  | 'Paste'
   | 'Path'
   | 'Photo library'
   | 'Photos'
   | 'Pin'
   | 'Please enter a shorter group name'
-  | 'Privacy Policy'
-  | 'qa-blocked-contacts-settings-item'
   | 'rate-app-button'
   | 'Read Receipts - Switch'
   | 'Recents'
@@ -403,16 +412,17 @@ export type AccessibilityId =
   | 'space'
   | 'Staking reward pool amount'
   | 'TabBarItemTitle'
-  | 'Terms of Service'
   | 'test_file, pdf'
   | 'Time selector'
   | 'Unban User'
   | 'Unblock'
+  | 'Unpin'
   | 'Untrusted attachment message'
   | 'Upload'
   | 'URL'
   | 'Username'
   | 'Username input'
+  | ' users can upload GIFs' // Yes this is an intentional whitespace
   | 'User settings'
   | 'Version warning banner'
   | 'Videos'
@@ -424,6 +434,7 @@ export type AccessibilityId =
   | 'Your message request has been accepted.'
   | `${DISAPPEARING_TIMES} - Radio`
   | `${GROUPNAME}`
+  | `cta-feature-${number}`
   | `Disappear after ${DisappearActions} option`;
 
 export type Id =
@@ -435,7 +446,6 @@ export type Id =
   | 'android:id/alertTitle'
   | 'android:id/button1'
   | 'android:id/content_preview_text'
-  | 'android:id/summary'
   | 'android:id/title'
   | 'android.widget.TextView'
   | 'Appearance'
@@ -522,6 +532,8 @@ export type Id =
   | 'manage-admins-menu-option'
   | 'manage-members-menu-option'
   | 'Market cap amount'
+  | 'mediapicker-folder-item-thumbnail-0'
+  | 'mediapicker-image-item-thumbnail-0'
   | 'MeetingSE option'
   | 'Modal description'
   | 'Modal heading'
@@ -540,8 +552,6 @@ export type Id =
   | 'network.loki.messenger:id/endCallButton'
   | 'network.loki.messenger:id/layout_emoji_container'
   | 'network.loki.messenger:id/linkPreviewView'
-  | 'network.loki.messenger:id/mediapicker_folder_item_thumbnail'
-  | 'network.loki.messenger:id/mediapicker_image_item_thumbnail'
   | 'network.loki.messenger:id/messageStatusTextView'
   | 'network.loki.messenger:id/openGroupTitleTextView'
   | 'network.loki.messenger:id/play_overlay'
@@ -557,6 +567,7 @@ export type Id =
   | 'network.loki.messenger:id/theme_option_classic_light'
   | 'network.loki.messenger:id/thumbnail_load_indicator'
   | 'network.loki.messenger:id/title'
+  | 'network.loki.messenger:id/unpinTextView'
   | 'New direct message'
   | 'Next'
   | 'nickname-input'
@@ -566,6 +577,10 @@ export type Id =
   | 'open-survey-button'
   | 'Open'
   | 'Open URL'
+  | 'preferences-dialog-option-enable'
+  | 'preferences-option-blocked-contacts'
+  | 'preferences-option-read-receipt'
+  | 'preferences-option-whitelist-toggle'
   | 'preferred-display-name'
   | 'Privacy'
   | 'Privacy policy button'
@@ -624,6 +639,7 @@ export type ScreenshotFileNames =
   | 'conversation_alice'
   | 'conversation_bob'
   | 'cta_donate'
+  | 'cta_pro_activated'
   | 'landingpage_new_account'
   | 'landingpage_restore_account'
   | 'settings_appearance'

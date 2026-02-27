@@ -11,6 +11,9 @@ overrides:
   tar-fs@>=3.0.0 <3.0.7: '>=3.0.7'
 
 patchedDependencies:
+  allure-playwright@3.4.5:
+    hash: 8445e5b25f59024b1c2c8950f356f63676ad3ea2a153b051a41eff8ca5f3b305
+    path: patches/allure-playwright@3.4.5.patch
   appium-uiautomator2-driver:
     hash: 8226be3d8d63cd3e3963f8450fc068a726a9a71eddecad1a612f92bdbd92d121
     path: patches/appium-uiautomator2-driver.patch
@@ -22,6 +25,12 @@ importers:
       '@appium/support':
         specifier: ^7.0.5
         version: 7.0.5
+      '@noble/curves':
+        specifier: ^2.0.1
+        version: 2.0.1
+      '@noble/hashes':
+        specifier: ^2.0.1
+        version: 2.0.1
       '@playwright/test':
         specifier: ^1.58.2
         version: 1.58.2
@@ -88,10 +97,10 @@ importers:
         version: 2.36.0
       allure-js-commons:
         specifier: ^3.4.5
-        version: 3.4.5(allure-playwright@3.4.5(@playwright/test@1.58.2))
+        version: 3.4.5(allure-playwright@3.4.5(patch_hash=8445e5b25f59024b1c2c8950f356f63676ad3ea2a153b051a41eff8ca5f3b305)(@playwright/test@1.58.2))
       allure-playwright:
         specifier: ^3.4.5
-        version: 3.4.5(@playwright/test@1.58.2)
+        version: 3.4.5(patch_hash=8445e5b25f59024b1c2c8950f356f63676ad3ea2a153b051a41eff8ca5f3b305)(@playwright/test@1.58.2)
       eslint:
         specifier: ^10.0.0
         version: 10.0.0
@@ -446,6 +455,14 @@ packages:
 
   '@jsquash/png@3.1.1':
     resolution: {integrity: sha512-C10pc+0H6j0h8fENOfnGOvkXCmvpSQTDGlfGd0sHphZhPSGTyLjIrHba0FaZZdsKqA/wlmhYicUHb92vfZphaw==}
+
+  '@noble/curves@2.0.1':
+    resolution: {integrity: sha512-vs1Az2OOTBiP4q0pwjW5aF0xp9n4MxVrmkFBxc6EKZc6ddYx5gaZiAsZoq0uRRXWbi3AT/sBqn05eRPtn1JCPw==}
+    engines: {node: '>= 20.19.0'}
+
+  '@noble/hashes@2.0.1':
+    resolution: {integrity: sha512-XlOlEbQcE9fmuXxrVTXCTlG2nlRXa9Rj3rr5Ue/+tX+nmkgbX720YHh0VR3hBF9xDvwnb8D2shVGOwNx+ulArw==}
+    engines: {node: '>= 20.19.0'}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -3400,6 +3417,12 @@ snapshots:
 
   '@jsquash/png@3.1.1': {}
 
+  '@noble/curves@2.0.1':
+    dependencies:
+      '@noble/hashes': 2.0.1
+
+  '@noble/hashes@2.0.1': {}
+
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
       '@nodelib/fs.stat': 2.0.5
@@ -3766,16 +3789,16 @@ snapshots:
 
   allure-commandline@2.36.0: {}
 
-  allure-js-commons@3.4.5(allure-playwright@3.4.5(@playwright/test@1.58.2)):
+  allure-js-commons@3.4.5(allure-playwright@3.4.5(patch_hash=8445e5b25f59024b1c2c8950f356f63676ad3ea2a153b051a41eff8ca5f3b305)(@playwright/test@1.58.2)):
     dependencies:
       md5: 2.3.0
     optionalDependencies:
-      allure-playwright: 3.4.5(@playwright/test@1.58.2)
+      allure-playwright: 3.4.5(patch_hash=8445e5b25f59024b1c2c8950f356f63676ad3ea2a153b051a41eff8ca5f3b305)(@playwright/test@1.58.2)
 
-  allure-playwright@3.4.5(@playwright/test@1.58.2):
+  allure-playwright@3.4.5(patch_hash=8445e5b25f59024b1c2c8950f356f63676ad3ea2a153b051a41eff8ca5f3b305)(@playwright/test@1.58.2):
     dependencies:
       '@playwright/test': 1.58.2
-      allure-js-commons: 3.4.5(allure-playwright@3.4.5(@playwright/test@1.58.2))
+      allure-js-commons: 3.4.5(allure-playwright@3.4.5(patch_hash=8445e5b25f59024b1c2c8950f356f63676ad3ea2a153b051a41eff8ca5f3b305)(@playwright/test@1.58.2))
 
   ansi-regex@5.0.1: {}
 
@@ -5627,7 +5650,7 @@ snapshots:
   proxy-agent@6.3.1:
     dependencies:
       agent-base: 7.1.4
-      debug: 4.3.4
+      debug: 4.4.3
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
       lru-cache: 7.18.3

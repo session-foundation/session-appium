@@ -92,7 +92,7 @@ async function addContactToGroupHistory(platform: SupportedPlatformsType, testIn
     await Promise.all(
       [alice1, bob1, charlie1].map(device =>
         device.waitForControlMessageToBePresent(
-          tStripped('groupMemberNew', { name: USERNAME.DRACULA })
+          tStripped('groupMemberInvitedHistory', { name: USERNAME.DRACULA })
         )
       )
     );

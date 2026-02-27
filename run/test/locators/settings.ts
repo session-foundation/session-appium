@@ -1,3 +1,4 @@
+import { tStripped } from '../../localizer/lib';
 import { StrategyExtractionObj } from '../../types/testing';
 import { LocatorsInterface } from './index';
 
@@ -153,6 +154,7 @@ export class HideRecoveryPasswordButton extends LocatorsInterface {
     }
   }
 }
+
 export class NotificationsMenuItem extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -170,7 +172,6 @@ export class NotificationsMenuItem extends LocatorsInterface {
     }
   }
 }
-
 export class PathMenuItem extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -203,13 +204,32 @@ export class PrivacyMenuItem extends LocatorsInterface {
   }
 }
 
-export class RecoveryPasswordMenuItem extends LocatorsInterface {
+export class ProAnimatedDisplayPictureModalDescription extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Recovery password menu item',
+          selector: 'pro-badge-text',
+          text: tStripped('proAnimatedDisplayPictureModalDescription'),
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: ' users can upload GIFs', // Yes this is an intentional whitespace
+        } as const;
+    }
+  }
+}
+
+export class RecoveryPasswordMenuItem extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: '-android uiautomator',
+          selector:
+            'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().resourceId("Recovery password menu item"))',
         } as const;
       case 'ios':
         return {
@@ -304,6 +324,22 @@ export class SelectAppIcon extends LocatorsInterface {
   }
 }
 
+export class SettingsModalsEnableButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'preferences-dialog-option-enable',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Continue',
+        } as const;
+    }
+  }
+}
 export class UserAvatar extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -316,10 +352,12 @@ export class UserAvatar extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'User settings',
+          text: 'Profile picture', // There's more than one User settings so this is to specify the avatar
         } as const;
     }
   }
 }
+
 export class UserSettings extends LocatorsInterface {
   public build() {
     return {

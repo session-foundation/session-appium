@@ -10,7 +10,7 @@ import { ReviewPromptItsGreatButton } from '../locators/home';
 import { PathMenuItem, UserSettings } from '../locators/settings';
 import { newUser } from '../utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
-import { forceStopAndRestart as forceStopAndRestartApp } from '../utils/utilities';
+import { forceStopAndRestart } from '../utils/utilities';
 import { verifyPageScreenshot } from '../utils/verify_screenshots';
 
 bothPlatformsIt({
@@ -41,14 +41,10 @@ async function donateCTAReview(platform: SupportedPlatformsType, testInfo: TestI
   await test.step('Dismiss review prompt and restart the app', async () => {
     await device.clickOnElementAll(new ReviewPromptItsGreatButton(device));
     await device.clickOnElementAll(new CloseSettings(device));
-    await forceStopAndRestartApp(device);
+    await forceStopAndRestart(device);
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Donate CTA'), async () => {
-    await device.checkCTAStrings(
-      tStripped('donateSessionHelp'),
-      tStripped('donateSessionDescription'),
-      [tStripped('donate'), tStripped('maybeLater')]
-    );
+    await device.checkCTA('donate');
   });
   // There *is* supposed to be a blur on Android but there is a bug on API 34 emulators preventing it from showing
   await test.step(TestSteps.VERIFY.SCREENSHOT('Donate CTA'), async () => {

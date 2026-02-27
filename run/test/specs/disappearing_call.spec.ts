@@ -5,7 +5,8 @@ import { TestSteps } from '../../types/allure';
 import { bothPlatformsItSeparate } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { CloseSettings } from '../locators';
-import { CallButton, NotificationsModalButton, NotificationSwitch } from '../locators/conversation';
+import { CallButton, NotificationSwitch } from '../locators/conversation';
+import { SettingsModalsEnableButton } from '../locators/settings';
 import { open_Alice1_Bob1_friends } from '../state_builder';
 import { sleepFor } from '../utils';
 import { closeApp, SupportedPlatformsType } from '../utils/open_app';
@@ -27,6 +28,9 @@ bothPlatformsItSeparate({
   },
   allureDescription:
     'Verifies that a call control message disappears as expected in a 1:1 conversation',
+  allureLinks: {
+    android: 'SES-5265',
+  },
 });
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
@@ -43,7 +47,7 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType, t
     focusFriendsConvo: true,
     testInfo,
   });
-  await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
+  await setDisappearingMessage(alice1, ['1:1', timerType, time]);
   await alice1.clickOnElementAll(new CallButton(alice1));
   // Alice turns on all calls perms necessary (without checking every modal string)
   await alice1.clickOnByAccessibilityID('Settings');
@@ -126,18 +130,18 @@ async function disappearingCallMessage1o1Android(
     focusFriendsConvo: true,
     testInfo,
   });
-  await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
+  await setDisappearingMessage(alice1, ['1:1', timerType, time]);
   await alice1.clickOnElementAll(new CallButton(alice1));
   // Alice turns on all calls perms necessary (without checking every modal string)
   await alice1.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Settings',
   });
-  await alice1.clickOnByAccessibilityID('Enable');
+  await alice1.clickOnElementAll(new SettingsModalsEnableButton(alice1));
   await alice1.clickOnElementById(
     'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   );
-  await alice1.clickOnElementAll(new NotificationsModalButton(alice1));
+  await alice1.clickOnElementAll(new SettingsModalsEnableButton(alice1));
   await alice1.clickOnElementAll(new NotificationSwitch(alice1));
   // Return to conversation
   await alice1.navigateBack(false);

@@ -67,6 +67,8 @@
   },
   "dependencies": {
     "@appium/support": "^7.0.5",
+    "@noble/curves": "^2.0.1",
+    "@noble/hashes": "^2.0.1",
     "@playwright/test": "^1.58.2",
     "@session-foundation/playwright-reporter": "^0.0.8",
     "@session-foundation/qa-seeder": "^0.1.26",
@@ -78,7 +80,8 @@
   "packageManager": "pnpm@10.28.1",
   "pnpm": {
     "patchedDependencies": {
-      "appium-uiautomator2-driver": "patches/appium-uiautomator2-driver.patch"
+      "appium-uiautomator2-driver": "patches/appium-uiautomator2-driver.patch",
+      "allure-playwright@3.4.5": "patches/allure-playwright@3.4.5.patch"
     },
     "ignoredBuiltDependencies": [
       "appium-ios-tuntap",

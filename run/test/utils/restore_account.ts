@@ -82,7 +82,6 @@ export const restoreAccountNoFallback = async (
   // Wait for permissions modal to pop up
   await sleepFor(500);
   await handleNotificationPermissions(device, allowNotificationPermissions);
-  await sleepFor(1000);
   // Check that we're on the home screen
   await device.waitForTextElementToBePresent(new PlusButton(device));
 };

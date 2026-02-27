@@ -1,10 +1,11 @@
-import test, { TestInfo } from '@playwright/test';
+import { test, TestInfo } from '@playwright/test';
 
 import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { BackgroundPermsAllowButton } from '../locators/home';
+import { NotificationsMenuItem, UserSettings } from '../locators/settings';
 import { newUser } from '../utils/create_account';
 import {
   closeApp,
@@ -48,7 +49,18 @@ async function slowModeBackgroundModal(platform: SupportedPlatformsType, testInf
         text: 'Allow',
       });
     });
-    // The test ends here since there is no good way to verify that the specific toggle is ON.
+    await test.step('Verify Background usage toggle is turned ON', async () => {
+      await device.clickOnElementAll(new UserSettings(device));
+      await device.clickOnElementAll(new NotificationsMenuItem(device));
+      await device.assertAttribute(
+        {
+          strategy: 'id',
+          selector: 'preferences-option-whitelist-toggle',
+        },
+        'checked',
+        'true'
+      );
+    });
   } finally {
     // App must be uninstalled to prevent state pollution (background permission is tied to app install)
     await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

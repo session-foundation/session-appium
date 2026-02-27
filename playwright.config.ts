@@ -17,6 +17,7 @@ const baseReporter: ReporterDescription = [
 const allureReporter: ReporterDescription = [
   'allure-playwright',
   {
+    detail: false, // No Playwright internal steps in the test body
     resultsDir: allureResultsDir,
     categories: [
       {
