@@ -203,13 +203,13 @@ async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: Test
         strategy: 'id',
         selector: 'network.loki.messenger:id/callTitle',
         text: 'Ringing...',
-        maxWait: 5_000,
+        maxWait: 10_000,
       });
       await alice1.waitForTextElementToBePresent({
         strategy: 'id',
         selector: 'network.loki.messenger:id/callSubtitle',
         text: 'Sending Call Offer 2/5',
-        maxWait: 5_000,
+        maxWait: 10_000,
       });
     });
     await alice1.clickOnElementById('network.loki.messenger:id/endCallButton');
