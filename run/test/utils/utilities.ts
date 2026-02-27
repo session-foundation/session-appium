@@ -1,3 +1,4 @@
+import { expect } from '@playwright/test';
 import { exec as execNotPromised } from 'child_process';
 import * as fs from 'fs';
 import { pick } from 'lodash';
@@ -149,4 +150,45 @@ export async function forceStopAndRestart(device: DeviceWrapper): Promise<void> 
   }
   // Ensure we're on the home screen again
   await device.waitForTextElementToBePresent(new PlusButton(device));
+}
+
+/**
+ * Drop-in replacement for Playwright's `expect()` that keeps Allure reports clean.
+ *
+ * Playwright dumps the full diff (received vs expected) into the error message, which
+ * ends up verbatim in Allure — too technical for customers. `verify()` catches
+ * assertion errors and rethrows with only the human-readable `message`, preserving the diffs
+ * in the runner logs.
+ *
+ * @param actual - The value being asserted
+ * @param message - Business-readable failure message — this is all Allure will show on failure.
+ *
+ * @example
+ * verify(messages, 'Conversation messages are in the wrong order').toEqual(expected);
+ * verify(isVisible, 'Blocked user banner should not be visible').not.toBe(true);
+ */
+export function verify<T>(actual: T, message: string) {
+  const matchers = expect(actual, message);
+
+  function wrapMatchers(obj: typeof matchers): typeof matchers {
+    return new Proxy(obj, {
+      get(target, prop: string | symbol) {
+        const val = Reflect.get(target, prop, target);
+        if (prop === 'not') return wrapMatchers(val as typeof matchers);
+        if (typeof val === 'function') {
+          return (...args: unknown[]) => {
+            try {
+              return (val as (...a: unknown[]) => unknown).apply(target, args);
+            } catch {
+              console.log(`${message}\n  actual:  `, actual, '\n  expected:', args[0]);
+              throw new Error(message);
+            }
+          };
+        }
+        return val;
+      },
+    });
+  }
+
+  return wrapMatchers(matchers);
 }

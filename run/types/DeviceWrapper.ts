@@ -1,7 +1,7 @@
 import type { Constraints, DefaultCreateSessionResult } from '@appium/types';
 
 import { getImageOccurrence } from '@appium/opencv';
-import { expect, TestInfo } from '@playwright/test';
+import { TestInfo } from '@playwright/test';
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
 import { W3CUiautomator2DriverCaps } from 'appium-uiautomator2-driver/build/lib/types';
 import { W3CXCUITestDriverCaps, XCUITestDriver } from 'appium-xcuitest-driver/build/lib/driver';
@@ -78,7 +78,7 @@ import { getAdbFullPath } from '../test/utils/binaries';
 import { parseDataImage } from '../test/utils/check_colour';
 import { isSameColor } from '../test/utils/check_colour';
 import { SupportedPlatformsType } from '../test/utils/open_app';
-import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/utils/utilities';
+import { isDeviceAndroid, isDeviceIOS, runScriptAndLog, verify } from '../test/utils/utilities';
 import { CTAConfig, ctaConfigs, CTAType } from './cta';
 import {
   AccessibilityId,
@@ -1887,7 +1887,7 @@ export class DeviceWrapper {
   ) {
     const el = await this.waitForTextElementToBePresent(element);
     const received = await this.getAttribute(attribute, el.ELEMENT);
-    expect(received, 'Element attribute value mismatch').toBe(value);
+    verify(received, 'Element attribute value mismatch').toBe(value);
   }
 
   public async disappearRadioButtonSelected(
@@ -2682,7 +2682,7 @@ export class DeviceWrapper {
     for (let i = 0; i < SAMPLE_SIZE; i++) {
       colors.add(await this.getElementPixelColor(locator));
     }
-    expect(
+    verify(
       colors.size,
       `Expected element to be animated but detected 1 unique color: ${[...colors][0]}`
     ).toBeGreaterThan(1);
