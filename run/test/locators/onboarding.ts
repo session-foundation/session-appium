@@ -132,7 +132,7 @@ export class PrivacyPolicyButton extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Privacy Policy',
+          selector: 'https://getsession.org/privacy-policy',
         } as const;
     }
   }
@@ -200,7 +200,7 @@ export class TermsOfServiceButton extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Terms of Service',
+          selector: 'https://getsession.org/terms-of-service',
         } as const;
     }
   }

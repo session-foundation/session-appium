@@ -1,3 +1,4 @@
+import { tStripped } from '../../localizer/lib';
 import { StrategyExtractionObj } from '../../types/testing';
 import { LocatorsInterface } from './index';
 
@@ -203,6 +204,24 @@ export class PrivacyMenuItem extends LocatorsInterface {
   }
 }
 
+export class ProAnimatedDisplayPictureModalDescription extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'pro-badge-text',
+          text: tStripped('proAnimatedDisplayPictureModalDescription'),
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'users can upload GIFs',
+        } as const;
+    }
+  }
+}
+
 export class RecoveryPasswordMenuItem extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -271,7 +290,6 @@ export class SaveNameChangeButton extends LocatorsInterface {
     }
   }
 }
-
 export class SaveProfilePictureButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -305,6 +323,7 @@ export class SelectAppIcon extends LocatorsInterface {
     }
   }
 }
+
 export class SettingsModalsEnableButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -321,7 +340,6 @@ export class SettingsModalsEnableButton extends LocatorsInterface {
     }
   }
 }
-
 export class UserAvatar extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -338,6 +356,7 @@ export class UserAvatar extends LocatorsInterface {
     }
   }
 }
+
 export class UserSettings extends LocatorsInterface {
   public build() {
     return {

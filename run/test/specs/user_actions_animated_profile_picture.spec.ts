@@ -1,13 +1,17 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { CloseSettings } from '../locators';
 import { ConversationSettings, MessageBody } from '../locators/conversation';
 import { ConversationItem } from '../locators/home';
-import { PathMenuItem, UserAvatar, UserSettings } from '../locators/settings';
+import {
+  PathMenuItem,
+  ProAnimatedDisplayPictureModalDescription,
+  UserAvatar,
+  UserSettings,
+} from '../locators/settings';
 import { open_Alice1_Bob1_friends } from '../state_builder';
 import { IOSTestContext } from '../utils/capabilities_ios';
 import { newUser } from '../utils/create_account';
@@ -90,11 +94,7 @@ async function proActivatedCTA(platform: SupportedPlatformsType, testInfo: TestI
   await test.step('Verify Pro Activated CTA', async () => {
     await device.clickOnElementAll(new UserSettings(device));
     await device.clickOnElementAll(new UserAvatar(device));
-    await device.clickOnElementAll({
-      strategy: 'id',
-      selector: 'pro-badge-text',
-      text: tStripped('proAnimatedDisplayPictureModalDescription'),
-    });
+    await device.clickOnElementAll(new ProAnimatedDisplayPictureModalDescription(device));
     await verifyPageScreenshot(device, platform, 'cta_pro_activated', testInfo);
     await device.checkCTA('alreadyActivated');
   });
