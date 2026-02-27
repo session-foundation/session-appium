@@ -213,6 +213,7 @@ export type AccessibilityId =
   | 'Clear all'
   | 'Close'
   | 'Close button'
+  | 'Collections'
   | 'Community invitation'
   | 'Community Message Requests'
   | 'Configuration message'

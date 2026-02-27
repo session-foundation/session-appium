@@ -1961,8 +1961,11 @@ export class DeviceWrapper {
     if (this.isIOS()) {
       await this.clickOnElementAll(new AttachmentsButton(this));
       await this.clickOnElementAll(new ImagesFolderButton(this));
-      await sleepFor(1000);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
+      await this.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Recents',
+      });
       await this.matchAndTapImage(
         { strategy: 'xpath', selector: `//XCUIElementTypeCell` },
         testImage
@@ -2004,11 +2007,11 @@ export class DeviceWrapper {
     // iOS files are pre-loaded on simulator creation, no need to push
     await this.clickOnElementAll(new AttachmentsButton(this));
     await this.clickOnElementAll(new ImagesFolderButton(this));
-    await sleepFor(100);
     await this.modalPopup({
       strategy: 'accessibility id',
       selector: 'Allow Full Access',
     });
+    await this.waitForTextElementToBePresent({ strategy: 'accessibility id', selector: 'Recents' });
     // A video can't be matched by its thumbnail so we use a video thumbnail file
     await this.matchAndTapImage(
       { strategy: 'xpath', selector: `//XCUIElementTypeCell` },
@@ -2227,6 +2230,10 @@ export class DeviceWrapper {
     // iOS files are pre-loaded on simulator creation, no need to push
     if (this.isIOS()) {
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
+      await this.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Collections',
+      });
       await this.matchAndTapImage(
         { strategy: 'xpath', selector: `//XCUIElementTypeImage` },
         uploadPicture
