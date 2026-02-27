@@ -153,13 +153,13 @@ async function disappearingCallMessage1o1Android(
     strategy: 'id',
     selector: 'network.loki.messenger:id/callTitle',
     text: 'Ringing...',
-    maxWait: 10_000,
+    maxWait: 5_000,
   });
   await alice1.waitForTextElementToBePresent({
     strategy: 'id',
     selector: 'network.loki.messenger:id/callSubtitle',
     text: 'Sending Call Offer 2/5',
-    maxWait: 10_000,
+    maxWait: 5_000,
   });
   await alice1.clickOnElementById('network.loki.messenger:id/endCallButton');
   const callEndTimestamp = Date.now();

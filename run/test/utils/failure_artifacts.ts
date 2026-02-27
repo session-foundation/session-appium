@@ -240,7 +240,7 @@ async function collectLogBuffer(
   return null;
 }
 
-const MAX_LOG_BYTES = 1024 * 1024; // 1 MB — tail beyond this to keep reports lean
+const MAX_LOG_BYTES = 512 * 1024; // 512kB — tail beyond this to keep reports lean
 
 function tailBuffer(raw: Buffer): Buffer {
   if (raw.length <= MAX_LOG_BYTES) return raw;

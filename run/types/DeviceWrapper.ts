@@ -1056,7 +1056,13 @@ export class DeviceWrapper {
     if (elements && elements.length) {
       const matching = await this.findAsync(elements, async e => {
         const text = await this.getTextFromElement(e);
-        const isExactMatch = text && text.toLowerCase() === textToLookFor.toLowerCase();
+        // Strip LTR/RTL markers and other whitespace nonsense
+        const normalize = (s: string) =>
+          s
+            .replace(/[\u200e\u200f\u202a-\u202e]/g, '')
+            .trim()
+            .toLowerCase();
+        const isExactMatch = text && normalize(text) === normalize(textToLookFor);
         return Boolean(isExactMatch);
       });
 
