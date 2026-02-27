@@ -156,7 +156,7 @@ export async function forceStopAndRestart(device: DeviceWrapper): Promise<void> 
  * Drop-in replacement for Playwright's `expect()` that keeps Allure reports clean.
  *
  * Playwright dumps the full diff (received vs expected) into the error message, which
- * ends up verbatim in Allure — too technical for customers. `verify()` catches
+ * ends up verbatim in Allure — too technical for customers. `assert()` catches
  * assertion errors and rethrows with only the human-readable `message`, preserving the diffs
  * in the runner logs.
  *
@@ -164,10 +164,10 @@ export async function forceStopAndRestart(device: DeviceWrapper): Promise<void> 
  * @param message - Business-readable failure message — this is all Allure will show on failure.
  *
  * @example
- * verify(messages, 'Conversation messages are in the wrong order').toEqual(expected);
- * verify(isVisible, 'Blocked user banner should not be visible').not.toBe(true);
+ * assert(messages, 'Conversation messages are in the wrong order').toEqual(expected);
+ * assert(isVisible, 'Blocked user banner should not be visible').not.toBe(true);
  */
-export function verify<T>(actual: T, message: string) {
+export function assert<T>(actual: T, message: string) {
   const matchers = expect(actual, message);
 
   function wrapMatchers(obj: typeof matchers): typeof matchers {

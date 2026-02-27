@@ -3,7 +3,7 @@ import { test, type TestInfo } from '@playwright/test';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { CloseSettings } from '../locators';
+import { ChangeProfilePictureButton, CloseSettings } from '../locators';
 import { ConversationSettings, MessageBody } from '../locators/conversation';
 import { ConversationItem } from '../locators/home';
 import {
@@ -88,9 +88,10 @@ async function proActivatedCTA(platform: SupportedPlatformsType, testInfo: TestI
   await test.step('Verify Pro Activated CTA', async () => {
     await device.clickOnElementAll(new UserSettings(device));
     await device.clickOnElementAll(new UserAvatar(device));
+    await device.waitForTextElementToBePresent(new ChangeProfilePictureButton(device));
     await device.clickOnElementAll(new ProAnimatedDisplayPictureModalDescription(device));
-    await verifyPageScreenshot(device, platform, 'cta_pro_activated', testInfo);
     await device.checkCTA('alreadyActivated');
+    await verifyPageScreenshot(device, platform, 'cta_pro_activated', testInfo);
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);

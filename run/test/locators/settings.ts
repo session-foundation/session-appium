@@ -216,7 +216,7 @@ export class ProAnimatedDisplayPictureModalDescription extends LocatorsInterface
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'users can upload GIFs',
+          selector: ' users can upload GIFs', // Yes this is an intentional whitespace
         } as const;
     }
   }
@@ -352,6 +352,7 @@ export class UserAvatar extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'User settings',
+          text: 'Profile picture', // There's more than one User settings so this is to specify the avatar
         } as const;
     }
   }

@@ -422,7 +422,7 @@ export type AccessibilityId =
   | 'URL'
   | 'Username'
   | 'Username input'
-  | 'users can upload GIFs'
+  | ' users can upload GIFs' // Yes this is an intentional whitespace
   | 'User settings'
   | 'Version warning banner'
   | 'Videos'

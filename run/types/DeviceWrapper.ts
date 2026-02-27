@@ -73,12 +73,12 @@ import {
   VersionNumber,
 } from '../test/locators/settings';
 import { EnterAccountID, NewMessageOption, NextButton } from '../test/locators/start_conversation';
-import { clickOnCoordinates, sleepFor } from '../test/utils';
+import { assert, clickOnCoordinates, sleepFor } from '../test/utils';
 import { getAdbFullPath } from '../test/utils/binaries';
 import { parseDataImage } from '../test/utils/check_colour';
 import { isSameColor } from '../test/utils/check_colour';
 import { SupportedPlatformsType } from '../test/utils/open_app';
-import { isDeviceAndroid, isDeviceIOS, runScriptAndLog, verify } from '../test/utils/utilities';
+import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/utils/utilities';
 import { CTAConfig, ctaConfigs, CTAType } from './cta';
 import {
   AccessibilityId,
@@ -1887,7 +1887,7 @@ export class DeviceWrapper {
   ) {
     const el = await this.waitForTextElementToBePresent(element);
     const received = await this.getAttribute(attribute, el.ELEMENT);
-    verify(received, 'Element attribute value mismatch').toBe(value);
+    assert(received, 'Element attribute value mismatch').toBe(value);
   }
 
   public async disappearRadioButtonSelected(
@@ -2605,10 +2605,15 @@ export class DeviceWrapper {
     const actualHeading = await this.getTextFromElement(elHeading);
     this.assertTextMatches(actualHeading, heading, 'CTA heading');
 
-    // CTA body
-    const elBody = await this.waitForTextElementToBePresent(new CTABody(this));
-    const actualBody = await this.getTextFromElement(elBody);
-    this.assertTextMatches(actualBody, body, 'CTA body');
+    // iOS may split the body around inline images, producing multiple cta-body elements.
+    // Wait for the first, then find all and check that the expected text appears in any of them.
+    await this.waitForTextElementToBePresent(new CTABody(this));
+    const { strategy, selector } = new CTABody(this).build();
+    const bodyElements = await this.findElements(strategy, selector, true);
+    const bodyTexts = await Promise.all(bodyElements.map(el => this.getTextFromElement(el)));
+    const matchingText =
+      bodyTexts.find(t => this.sanitizeString(t) === this.sanitizeString(body)) ?? bodyTexts[0];
+    this.assertTextMatches(matchingText, body, 'CTA body');
 
     // CTA features if present
     if (features) {
@@ -2682,7 +2687,7 @@ export class DeviceWrapper {
     for (let i = 0; i < SAMPLE_SIZE; i++) {
       colors.add(await this.getElementPixelColor(locator));
     }
-    verify(
+    assert(
       colors.size,
       `Expected element to be animated but detected 1 unique color: ${[...colors][0]}`
     ).toBeGreaterThan(1);
