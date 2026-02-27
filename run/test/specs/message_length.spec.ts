@@ -14,7 +14,7 @@ import {
 import { CTAButtonNegative } from '../locators/global';
 import { PlusButton } from '../locators/home';
 import { EnterAccountID, NewMessageOption, NextButton } from '../locators/start_conversation';
-import { IOSTestContext } from '../utils/capabilities_ios';
+import { IOS_PRO_CONTEXT } from '../utils/capabilities_ios';
 import { newUser } from '../utils/create_account';
 import { makeAccountPro } from '../utils/mock_pro';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
@@ -87,11 +87,8 @@ for (const testCase of messageLengthTestCases) {
     },
     allureDescription: `Verifies message length behavior at ${testCase.length} characters - ${testCase.description} (${proSuffix})`,
     testCb: async (platform: SupportedPlatformsType, testInfo: TestInfo) => {
-      const iosContext: IOSTestContext = {
-        sessionProEnabled: 'true',
-      };
       const { device, alice } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-        const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, iosContext);
+        const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, IOS_PRO_CONTEXT);
         const alice = await newUser(device, USERNAME.ALICE);
         return { device, alice };
       });

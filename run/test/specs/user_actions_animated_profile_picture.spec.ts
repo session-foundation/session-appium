@@ -13,7 +13,7 @@ import {
   UserSettings,
 } from '../locators/settings';
 import { open_Alice1_Bob1_friends } from '../state_builder';
-import { IOSTestContext } from '../utils/capabilities_ios';
+import { IOS_PRO_CONTEXT } from '../utils/capabilities_ios';
 import { newUser } from '../utils/create_account';
 import { makeAccountPro } from '../utils/mock_pro';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
@@ -63,11 +63,8 @@ bothPlatformsIt({
 });
 
 async function nonProAnimatedDP(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const iosContext: IOSTestContext = {
-    sessionProEnabled: 'true',
-  };
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, iosContext);
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, IOS_PRO_CONTEXT);
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
     return { device };
   });
@@ -81,11 +78,8 @@ async function nonProAnimatedDP(platform: SupportedPlatformsType, testInfo: Test
   });
 }
 async function proActivatedCTA(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const iosContext: IOSTestContext = {
-    sessionProEnabled: 'true',
-  };
   const { device, alice } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, iosContext);
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, IOS_PRO_CONTEXT);
     const alice = await newUser(device, USERNAME.ALICE);
     return { device, alice };
   });
@@ -104,11 +98,8 @@ async function proActivatedCTA(platform: SupportedPlatformsType, testInfo: TestI
 }
 
 async function proAnimatedDP(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const iosContext: IOSTestContext = {
-    sessionProEnabled: 'true',
-  };
   const { device, alice } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, iosContext);
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, IOS_PRO_CONTEXT);
     const alice = await newUser(device, USERNAME.ALICE);
     return { device, alice };
   });
@@ -126,15 +117,12 @@ async function proAnimatedDP(platform: SupportedPlatformsType, testInfo: TestInf
 }
 
 async function proAnimatedDPShows(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const iosContext: IOSTestContext = {
-    sessionProEnabled: 'true',
-  };
   const { devices, prebuilt } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
     return await open_Alice1_Bob1_friends({
       platform,
       focusFriendsConvo: false,
       testInfo,
-      iOSContext: iosContext,
+      iOSContext: IOS_PRO_CONTEXT,
     });
   });
   const { alice1, bob1 } = devices;

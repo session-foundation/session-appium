@@ -5,7 +5,7 @@ import { communities } from '../../constants/community';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { ConversationPinnedIcon, PlusButton } from '../locators/home';
-import { IOSTestContext } from '../utils/capabilities_ios';
+import { IOS_PRO_CONTEXT } from '../utils/capabilities_ios';
 import { joinCommunities } from '../utils/community';
 import { assertPinOrder, getConversationOrder } from '../utils/conversation_order';
 import { newUser } from '../utils/create_account';
@@ -95,12 +95,9 @@ async function pinConversation(platform: SupportedPlatformsType, testInfo: TestI
 }
 
 async function nonProPinnedLimit(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const iosContext: IOSTestContext = {
-    sessionProEnabled: 'true',
-  };
   const numCommunities = 6;
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, iosContext);
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, IOS_PRO_CONTEXT);
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
     return { device };
   });
@@ -131,12 +128,9 @@ async function nonProPinnedLimit(platform: SupportedPlatformsType, testInfo: Tes
 }
 
 async function proPinnedLimit(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const iosContext: IOSTestContext = {
-    sessionProEnabled: 'true',
-  };
   const numCommunities = 6;
   const { device, alice } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, iosContext);
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, IOS_PRO_CONTEXT);
     const alice = await newUser(device, USERNAME.ALICE);
     return { device, alice };
   });
