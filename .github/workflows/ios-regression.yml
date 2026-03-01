@@ -100,7 +100,7 @@ jobs:
 
       - name: Fetch result history from gh-pages
         uses: ./github/actions/fetch-allure-history
-        if: ${{ env.ALLURE_ENABLED }}
+        if: ${{ env.ALLURE_ENABLED == 'true' }}
         with:
           PLATFORM: ${{ env.PLATFORM }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -148,7 +148,7 @@ jobs:
 
       - name: Generate and publish test report
         uses: ./github/actions/generate-publish-test-report
-        if: ${{ always() && env.ALLURE_ENABLED }}
+        if: ${{ always() && env.ALLURE_ENABLED == 'true' }}
         with:
           PLATFORM: ${{ env.PLATFORM }}
           BUILD_NUMBER: ${{ env.BUILD_NUMBER }}
