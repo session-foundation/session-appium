@@ -36,7 +36,7 @@ on:
       RUN_PRO_TESTS:
         description: 'include Session Pro tests in this run'
         required: false
-        default: false
+        default: true
         type: boolean
 
       ALLURE_ENABLED:
@@ -198,6 +198,7 @@ jobs:
         with:
           PLATFORM: ${{ env.PLATFORM }}
           RISK: ${{ github.event.inputs.RISK }}
+          PRO_GREP_INVERT: ${{ env.PRO_GREP_INVERT }}
 
       - name: Run the 1-devices tests ​​with 4 workers
         continue-on-error: true

@@ -10,6 +10,10 @@ inputs:
   RISK:
     description: "Risk level to filter tests 'high-risk'|'medium-risk'|'low-risk'|''"
     required: false
+  PRO_GREP_INVERT:
+    description: 'Optional --grep-invert flag to exclude @pro tests'
+    required: false
+    default: ''
 
 runs:
   using: 'composite'
@@ -18,4 +22,4 @@ runs:
       shell: bash
       run: |
         pwd
-        npx playwright test --list --reporter list --grep "(?=.*@${{ inputs.PLATFORM }})(?=.*@${{ inputs.RISK }})"
+        npx playwright test --list --reporter list --grep "(?=.*@${{ inputs.PLATFORM }})(?=.*@${{ inputs.RISK }})" ${{ inputs.PRO_GREP_INVERT }}

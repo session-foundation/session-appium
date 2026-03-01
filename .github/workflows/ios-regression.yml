@@ -135,6 +135,7 @@ jobs:
         with:
           PLATFORM: ${{ env.PLATFORM }}
           RISK: ${{ github.event.inputs.RISK }}
+          PRO_GREP_INVERT: ${{ env.PRO_GREP_INVERT }}
 
       - name: Run the iOS tests​​ (all device counts)
         env:
