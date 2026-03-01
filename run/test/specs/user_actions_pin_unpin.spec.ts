@@ -31,6 +31,7 @@ bothPlatformsIt({
   risk: 'high',
   testCb: nonProPinnedLimit,
   countOfDevicesNeeded: 1,
+  isPro: true,
   allureSuites: {
     parent: 'Session Pro',
   },
@@ -42,6 +43,7 @@ bothPlatformsIt({
   risk: 'high',
   testCb: proPinnedLimit,
   countOfDevicesNeeded: 1,
+  isPro: true,
   allureSuites: {
     parent: 'Session Pro',
   },

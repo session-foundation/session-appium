@@ -1,4 +1,3 @@
-// run/types/sessionIt.ts - Clean version matching original pattern
 import { test, type TestInfo } from '@playwright/test';
 import { omit } from 'lodash';
 
@@ -20,6 +19,7 @@ type MobileItArgs = {
   risk: TestRisk;
   testCb: (platform: SupportedPlatformsType, testInfo: TestInfo) => Promise<void>;
   shouldSkip?: boolean;
+  isPro?: boolean;
   allureSuites?: AllureSuiteConfig;
   allureDescription?: string;
   allureLinks?: {
@@ -43,12 +43,14 @@ function mobileIt({
   testCb,
   title,
   shouldSkip = false,
+  isPro = false,
   countOfDevicesNeeded,
   allureSuites,
   allureDescription,
   allureLinks,
 }: MobileItArgs) {
-  const testName = `${title} @${platform} @${risk ?? 'default'}-risk @${countOfDevicesNeeded}-devices`;
+  const proTag = isPro ? ' @pro' : '';
+  const testName = `${title} @${platform} @${risk ?? 'default'}-risk @${countOfDevicesNeeded}-devices${proTag}`;
 
   if (shouldSkip) {
     test.skip(testName, () => {

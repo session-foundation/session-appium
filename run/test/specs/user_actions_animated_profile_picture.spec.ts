@@ -25,6 +25,7 @@ bothPlatformsIt({
   risk: 'high',
   countOfDevicesNeeded: 1,
   testCb: nonProAnimatedDP,
+  isPro: true,
   allureSuites: {
     parent: 'User Actions',
     suite: 'Change Profile Picture',
@@ -36,6 +37,7 @@ bothPlatformsIt({
   risk: 'high',
   countOfDevicesNeeded: 1,
   testCb: proAnimatedDP,
+  isPro: true,
   allureSuites: {
     parent: 'User Actions',
     suite: 'Change Profile Picture',
@@ -47,6 +49,7 @@ bothPlatformsIt({
   risk: 'low',
   countOfDevicesNeeded: 1,
   testCb: proActivatedCTA,
+  isPro: true,
   allureSuites: {
     parent: 'Session Pro',
   },
@@ -57,6 +60,7 @@ bothPlatformsIt({
   risk: 'high',
   countOfDevicesNeeded: 2,
   testCb: proAnimatedDPShows,
+  isPro: true,
   allureSuites: {
     parent: 'Session Pro',
   },

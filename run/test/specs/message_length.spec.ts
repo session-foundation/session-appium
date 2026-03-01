@@ -81,6 +81,7 @@ for (const testCase of messageLengthTestCases) {
     title: `Message length limit (${testCase.length} chars ${proSuffix})`,
     risk: 'high',
     countOfDevicesNeeded: 1,
+    isPro: testCase.pro,
     allureSuites: {
       parent: 'Sending Messages',
       suite: 'Rules',

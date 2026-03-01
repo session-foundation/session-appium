@@ -33,14 +33,17 @@ on:
           - 'low-risk'
           - ''
 
+      RUN_PRO_TESTS:
+        description: 'include Session Pro tests in this run'
+        required: false
+        default: false
+        type: boolean
+
       ALLURE_ENABLED:
         description: 'generate allure report'
         required: false
-        default: 'true'
-        type: choice
-        options:
-          - 'true'
-          - 'false'
+        default: true
+        type: boolean
 
       PLAYWRIGHT_RETRIES_COUNT:
         description: 'retries of failing tests to do at most'
@@ -74,7 +77,7 @@ jobs:
       BUILD_NUMBER: ${{ github.event.inputs.BUILD_NUMBER }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CI: 1
-      ALLURE_ENABLED: ${{ github.event.inputs.ALLURE_ENABLED}}
+      ALLURE_ENABLED: ${{ github.event.inputs.ALLURE_ENABLED }}
       IOS_APP_PATH_PREFIX: '<just_not_empty>'
       ANDROID_APK: './extracted/session-android.apk'
       APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
@@ -85,6 +88,8 @@ jobs:
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL != 'minimal' && '1' || '0' }} # Show stdout/stderr if test fails (@session-foundation/playwright-reporter/ flag)
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'verbose' && '1' || '0' }} # Show everything as it happens (@session-foundation/playwright-reporter/ flag)
       SOGS_ADMIN_SEED: ${{ secrets.SOGS_ADMIN_SEED }}
+      PRO_GREP_INVERT: ${{ inputs.RUN_PRO_TESTS != true && '--grep-invert @pro' || '' }}
+      PRO_INVERT_SUFFIX: ${{ inputs.RUN_PRO_TESTS != true && '|@pro' || '' }}
 
     steps:
       - uses: actions/checkout@v6
@@ -94,7 +99,7 @@ jobs:
 
       - name: Fetch result history from gh-pages
         uses: ./github/actions/fetch-allure-history
-        if: ${{ env.ALLURE_ENABLED == 'true' }}
+        if: ${{ env.ALLURE_ENABLED }}
         with:
           PLATFORM: ${{ env.PLATFORM }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -205,7 +210,7 @@ jobs:
           PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
         run: |
           pwd
-          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
+          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" $PRO_GREP_INVERT #Note: this has to be double quotes
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results
@@ -227,7 +232,7 @@ jobs:
           PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
         run: |
           pwd
-          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
+          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" $PRO_GREP_INVERT #Note: this has to be double quotes
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results
@@ -249,11 +254,11 @@ jobs:
           PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
         run: |
           pwd
-          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" --grep-invert "@1-devices|@2-devices" #Note: this has to be double quotes
+          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" --grep-invert "@1-devices|@2-devices${PRO_INVERT_SUFFIX}" #Note: this has to be double quotes
 
       - name: Generate and publish test report
         uses: ./github/actions/generate-publish-test-report
-        if: ${{ always() && env.ALLURE_ENABLED == 'true' }}
+        if: ${{ always() && env.ALLURE_ENABLED }}
         with:
           PLATFORM: ${{ env.PLATFORM }}
           BUILD_NUMBER: ${{ env.BUILD_NUMBER }}
