@@ -174,11 +174,19 @@ export function assert<T>(actual: T, message: string) {
     return new Proxy(obj, {
       get(target, prop: string | symbol) {
         const val = Reflect.get(target, prop, target);
-        if (prop === 'not') return wrapMatchers(val as typeof matchers);
+        if (prop === 'not' || prop === 'resolves' || prop === 'rejects')
+          return wrapMatchers(val as typeof matchers);
         if (typeof val === 'function') {
           return (...args: unknown[]) => {
             try {
-              return (val as (...a: unknown[]) => unknown).apply(target, args);
+              const result = (val as (...a: unknown[]) => unknown).apply(target, args);
+              if (result instanceof Promise) {
+                return result.catch(() => {
+                  console.log(`${message}\n  actual:  `, actual, '\n  expected:', args[0]);
+                  throw new Error(message);
+                });
+              }
+              return result;
             } catch {
               console.log(`${message}\n  actual:  `, actual, '\n  expected:', args[0]);
               throw new Error(message);
