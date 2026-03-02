@@ -102,7 +102,7 @@ async function addContactToGroupHistory(platform: SupportedPlatformsType, testIn
     await unknown1.navigateBack();
     await unknown1.clickOnElementAll(new ConversationItem(unknown1, group.groupName)); // Check for control message on device 4
     await unknown1.waitForTextElementToBePresent(new MessageBody(unknown1, historicMsg));
-    await unknown1.waitForControlMessageToBePresent(tStripped('groupInviteYou'));
+    await unknown1.waitForControlMessageToBePresent(tStripped('groupInviteYouHistory'));
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, bob1, charlie1, unknown1);
