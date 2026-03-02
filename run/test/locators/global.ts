@@ -100,8 +100,6 @@ export class CopyURLButton extends LocatorsInterface {
   }
 }
 
-// NOTE: iOS Pro CTAs use accessibility IDs, Donate CTA requires XPath fallback (see DeviceWrapper)
-// See SES-4930
 export class CTABody extends LocatorsInterface {
   public build() {
     switch (this.platform) {
