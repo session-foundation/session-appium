@@ -1,9 +1,10 @@
 import type { TestInfo } from '@playwright/test';
 
+import type { SupportedPlatformsType } from './open_app';
+
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { getAdbFullPath } from './binaries';
 import { androidAppPackage } from './capabilities_android';
-import { SupportedPlatformsType } from './open_app';
 import { runScriptAndLog } from './utilities';
 
 export type LogContext = {

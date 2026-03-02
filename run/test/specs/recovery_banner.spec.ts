@@ -49,7 +49,7 @@ androidIt({
     'Verifies that the recovery password banner does not disappear if the conversation count drops below 3',
 });
 
-async function bannerShouldNotshow(device: DeviceWrapper) {
+async function bannerShouldNotShow(device: DeviceWrapper) {
   await device.waitForTextElementToBePresent(new PlusButton(device));
   await device.verifyElementNotPresent(new RevealRecoveryPhraseButton(device));
   device.log('On home screen, banner did not appear');
@@ -69,7 +69,7 @@ async function bannerShowsThreeConvos(platform: SupportedPlatformsType, testInfo
   });
   await test.step('Create three conversations, verify banner only appears after the third', async () => {
     for (const community of Object.values(communities).slice(0, 3)) {
-      await bannerShouldNotshow(device);
+      await bannerShouldNotShow(device);
       await joinCommunity(device, community.link, community.name);
       await device.navigateBack();
     }
@@ -92,7 +92,7 @@ async function bannerDisappearsAfterOpened(platform: SupportedPlatformsType, tes
     await device.clickOnElementAll(new RevealRecoveryPhraseButton(device));
     await device.waitForTextElementToBePresent(new RecoveryPhraseContainer(device));
     await device.navigateBack();
-    await bannerShouldNotshow(device);
+    await bannerShouldNotShow(device);
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);

@@ -32,8 +32,9 @@ export const joinCommunity = async (
 export const joinCommunities = async (device: DeviceWrapper, number: number) => {
   const available = Object.values(communities).length;
   if (number > available) {
-    throw new Error(`joinCommunities: requested ${number} but only ${available} communities have been recorded
-      Check run/constants/community.ts for more`);
+    throw new Error(
+      `joinCommunities: requested ${number} but only ${available} communities have been recorded.\nCheck run/constants/community.ts for more`
+    );
   }
   for (const community of Object.values(communities).slice(0, number)) {
     await joinCommunity(device, community.link, community.name);

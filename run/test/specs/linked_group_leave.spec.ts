@@ -34,7 +34,7 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType, testInfo
   // Create group with user A, user B and User C
   await createGroup(platform, device1, alice, device2, bob, device3, charlie, testGroupName);
   // If we know group is present on device4, we can check for just disappearance later (vs. hasElementBeenDeleted)
-  await device4.waitForTextElementToBePresent(new ConversationItem(device2, testGroupName));
+  await device4.waitForTextElementToBePresent(new ConversationItem(device4, testGroupName));
   // Leave Group on device 3
   await device3.clickOnElementAll(new ConversationSettings(device3));
   await device3.clickOnElementAll(new LeaveGroupMenuItem(device3));
