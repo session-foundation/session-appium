@@ -324,15 +324,17 @@ export class DeviceWrapper {
     return this.toShared().getPageSource();
   }
 
-  public async injectQRCodeImage(imagePath: string): Promise<void> {
+  /**
+   * Injects a base64-encoded image into the Android emulator's virtual camera scene.
+   */
+  public async injectImageToScene(base64Image: string): Promise<void> {
     if (this.isAndroid()) {
-      const base64Image = (await fs.readFile(imagePath)).toString('base64');
       await this.toShared().execute('mobile: injectEmulatorCameraImage', {
         payload: base64Image,
       });
-      this.log(`Added ${imagePath}`);
+      this.log(`Injected image to scene`);
     }
-    // iOS: no-op — camera pipeline unavailable on simulator
+    // iOS: no-op
   }
 
   /* === all the device-specific function ===  */

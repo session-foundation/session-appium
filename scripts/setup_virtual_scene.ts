@@ -2,9 +2,10 @@
  * Copies virtual scene config files from the repo to local Android SDK folder if necessary.
  *
  * The Toren1BD.posters file keeps track of where to show posters (images) in the virtual camera scene.
- * It has been modified so that the `table` poster shows right in front of where the camera opens (x: 0, y: 0, z: -1.5).
- * This is necessary because appium's injection methods manipulate this specific poster's image content.
- * This has been the only reliable way to get this working.
+ * It has been modified so that the `table` poster shows right in front of where the camera opens, 
+ * scaled up 2x, positioned at x: 0, y: 0, z: -1.5. 
+ * This is necessary because appium's injection method manipulates this specific poster's image content.
+ * This has been the only reliable way to get this working other than patching appium and the android driver.
  *
  * The file is global for all emulators on the host machine but each appium session can temporarily modify the image.
  *

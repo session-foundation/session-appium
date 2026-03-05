@@ -385,6 +385,20 @@ export class VersionNumber extends LocatorsInterface {
   }
 }
 
+export class ViewQR extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: '-android uiautomator',
+          selector: `new UiSelector().text("${tStripped('qrView')}")`,
+        } as const;
+      case 'ios':
+        throw new Error('Not implemented on iOS');
+    }
+  }
+}
+
 export class YesButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
