@@ -186,6 +186,9 @@ jobs:
           adb kill-server;
           adb start-server;
 
+      - name: Apply emulator virtual scene config
+        run: pnpm setup-virtual-scene
+
       - name: Start emulators from snapshot
         shell: bash
         run: |

@@ -324,6 +324,17 @@ export class DeviceWrapper {
     return this.toShared().getPageSource();
   }
 
+  public async injectQRCodeImage(imagePath: string): Promise<void> {
+    if (this.isAndroid()) {
+      const base64Image = (await fs.readFile(imagePath)).toString('base64');
+      await this.toShared().execute('mobile: injectEmulatorCameraImage', {
+        payload: base64Image,
+      });
+      this.log(`Added ${imagePath}`);
+    }
+    // iOS: no-op — camera pipeline unavailable on simulator
+  }
+
   /* === all the device-specific function ===  */
 
   // ELEMENT INTERACTION
