@@ -89,6 +89,7 @@ async function proActivatedCTA(platform: SupportedPlatformsType, testInfo: TestI
   });
   await makeAccountPro({ user: alice, platform });
   await forceStopAndRestart(device);
+  await device.dismissCTA();
   await test.step('Verify Pro Activated CTA', async () => {
     await device.clickOnElementAll(new UserSettings(device));
     await device.clickOnElementAll(new UserAvatar(device));
@@ -110,6 +111,7 @@ async function proAnimatedDP(platform: SupportedPlatformsType, testInfo: TestInf
   });
   await makeAccountPro({ user: alice, platform });
   await forceStopAndRestart(device);
+  await device.dismissCTA();
   await test.step(TestSteps.USER_ACTIONS.CHANGE_PROFILE_PICTURE, async () => {
     await device.uploadProfilePicture(true);
   });
@@ -134,6 +136,7 @@ async function proAnimatedDPShows(platform: SupportedPlatformsType, testInfo: Te
   const { alice, bob } = prebuilt;
   await makeAccountPro({ user: alice, platform });
   await forceStopAndRestart(alice1);
+  await alice1.dismissCTA();
   await test.step(TestSteps.USER_ACTIONS.CHANGE_PROFILE_PICTURE, async () => {
     await alice1.uploadProfilePicture(true);
   });
