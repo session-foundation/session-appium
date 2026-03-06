@@ -28,7 +28,8 @@ androidIt({
     parent: 'Onboarding',
     suite: 'Restore account',
   },
-  allureDescription: 'Verifies that an account can be restored on a second device by scanning a recovery phrase QR code',
+  allureDescription:
+    'Verifies that an account can be restored on a second device by scanning a recovery phrase QR code',
 });
 
 androidIt({
@@ -128,7 +129,7 @@ async function qrCodeAccountID(platform: SupportedPlatformsType, testInfo: TestI
 async function qrCodeCommunity(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
-    prebuilt: { bob } 
+    prebuilt: { bob },
   } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
     return open_Alice1_bob1_notfriends({ platform, testInfo });
   });
