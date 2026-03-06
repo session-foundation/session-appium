@@ -75,6 +75,7 @@ export function getReportContextFromEnv(): ReportContext {
     githubRunUrl,
   };
 }
+
 // The Environment block shows up in the report dashboard
 export async function writeEnvironmentProperties(ctx: ReportContext) {
   await fs.ensureDir(allureResultsDir);
@@ -90,6 +91,7 @@ export async function writeEnvironmentProperties(ctx: ReportContext) {
   await fs.writeFile(path.join(allureResultsDir, 'environment.properties'), content);
   console.log('Created environment.properties');
 }
+
 // The Executors block shows up in the report dashboard and links back to the CI run
 // It also allows us to access history through trend graphs and test results
 export async function writeExecutorJson(ctx: ReportContext) {
@@ -110,6 +112,7 @@ export async function writeExecutorJson(ctx: ReportContext) {
   );
   console.log('Created executor.json');
 }
+
 // The metadata.json is a custom file for the front-end display
 export async function writeMetadataJson(ctx: ReportContext) {
   const metadata = {
@@ -183,6 +186,7 @@ function getGitCommitSha(): string {
 function getGitBranch(): string {
   return execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
 }
+
 // Handle test-level metadata such as suites, test description or linked issues
 export async function setupAllureTestInfo({
   suites,

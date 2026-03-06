@@ -12,19 +12,12 @@ import {
 
 // Bail out early if not on CI
 if (process.env.CI !== '1' || process.env.ALLURE_ENABLED === 'false') {
-  console.log('Skipping closeRun (CI != 1 or ALLURE_ENABLED is false)');
+  console.log('Skipping publishReport (CI != 1 or ALLURE_ENABLED is false)');
   process.exit(0);
 }
 
 // Publishes the report directory to the gh-pages branch of the repo
 function publishToGhPages(dir: string, dest: string, repo: string, message: string): Promise<void> {
-  // Ensure .nojekyll file exists to skip Jekyll processing
-  const nojekyllPath = path.join(dir, '.nojekyll');
-  if (!fs.existsSync(nojekyllPath)) {
-    fs.writeFileSync(nojekyllPath, '');
-    console.log('Created .nojekyll file');
-  }
-
   return new Promise((resolve, reject) => {
     void ghpages.publish(
       dir,
@@ -61,7 +54,7 @@ async function publishReport() {
   const publishedReportName = ctx.reportFolder;
   const newReportDir = path.join(ctx.platform, publishedReportName);
 
-  // Allue manipulation
+  // Allure manipulation
   await patchStylesCss();
   await patchFilesForLFSCDN(ctx);
 
@@ -85,6 +78,9 @@ async function publishReport() {
   const repoWithToken = `https://x-access-token:${githubToken}@github.com/session-foundation/session-appium.git`;
 
   console.log(`Deploying report to GitHub Pages as: ${publishedReportName}`);
+
+  // Clear stale gh-pages cache left by interrupted runs
+  ghpages.clean();
 
   // Publish the report to GitHub Pages
   try {
