@@ -2702,6 +2702,7 @@ export class DeviceWrapper {
   public async getVersionNumber() {
     // NOTE if this becomes necessary for more tests, consider adding a property/caching to the DeviceWrapper
     await this.clickOnElementAll(new UserSettings(this));
+    await this.onIOS().scrollDown();
     const versionElement = await this.waitForTextElementToBePresent(new VersionNumber(this));
     // Get the full text from the element
     const versionText = await this.getTextFromElement(versionElement);
