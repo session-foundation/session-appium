@@ -28,6 +28,7 @@ bothPlatformsIt({
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
+const disappearMaxWait = 35_000; // 30s plus buffer
 
 async function disappearingMessagesFollowSetting1o1(
   platform: SupportedPlatformsType,
@@ -64,10 +65,12 @@ async function disappearingMessagesFollowSetting1o1(
       device.hasElementDisappeared({
         ...new MessageBody(device, aliceMsg).build(),
         actualStartTime: aliceTimestamp,
+        maxWait: disappearMaxWait,
       }),
       device.hasElementDisappeared({
         ...new MessageBody(device, bobMsg).build(),
         actualStartTime: bobTimestamp,
+        maxWait: disappearMaxWait,
       }),
     ])
   );
