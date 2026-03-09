@@ -48,7 +48,7 @@ async function hideRecoveryPassword(platform: SupportedPlatformsType, testInfo: 
     maxWait: 1000,
   });
   // Should be taken back to Settings page after hiding recovery password
-  await device1.onAndroid().scrollUp();
+  await device1.scrollUp();
   await device1.waitForTextElementToBePresent(new AccountIDDisplay(device1));
   // Check that linked device still has Recovery Password
   await device2.clickOnElementAll(new UserSettings(device2));

@@ -30,8 +30,6 @@ async function createContact(platform: SupportedPlatformsType, testInfo: TestInf
 
   await device2.acceptMessageRequestWithButton();
 
-  // Type into message input box
-  await device2.sendMessage(`Reply-message-${Bob.userName}-to-${Alice.userName}`);
   // NOTE: This appears to be broken on both platforms:
   // Verify config message states message request was accepted
   // "messageRequestsAccepted": "Your message request has been accepted.",

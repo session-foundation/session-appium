@@ -1817,7 +1817,7 @@ export class DeviceWrapper {
   public async acceptMessageRequestWithButton() {
     await this.clickOnElementAll(new MessageRequestsBanner(this));
     await this.clickOnElementAll(new MessageRequestItem(this));
-    await this.onAndroid().clickOnElementAll(new AcceptMessageRequestButton(this));
+    await this.clickOnElementAll(new AcceptMessageRequestButton(this));
   }
 
   // TODO instead of blind sleeping, check presence of reply preview
