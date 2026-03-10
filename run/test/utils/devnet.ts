@@ -7,7 +7,6 @@ import { AppName } from '../../types/testing';
 import { getAndroidApk } from './binaries';
 import { sleepFor } from './sleep_for';
 
-// NOTE this currently only applies to Android as iOS doesn't supply AQA builds yet
 type NetworkType = Parameters<typeof buildStateForTest>[2];
 
 // Using native fetch to check devnet accessibility
@@ -52,20 +51,25 @@ function isAutomaticQABuildAndroid(apkPath: string): boolean {
 
   return isAutomaticQA;
 }
+
+function isAutomaticQABuildIOS(): boolean {
+  const isAutomaticQA = process.env.IS_AUTOMATIC_QA === 'true';
+
+  console.log(`${isAutomaticQA ? 'Automatic QA/devnet' : 'Regular/mainnet'} build detected`);
+
+  return isAutomaticQA;
+}
+
 export async function getNetworkTarget(platform: SupportedPlatformsType): Promise<NetworkType> {
   if (process.env.DETECTED_NETWORK_TARGET) {
     return process.env.DETECTED_NETWORK_TARGET as NetworkType;
   }
-  if (platform === 'ios') {
-    process.env.DETECTED_NETWORK_TARGET = 'mainnet'; // iOS doesn't supply devnet builds yet
-    return 'mainnet';
-  }
-  if (platform !== 'android') {
+  if (platform !== 'android' && platform !== 'ios') {
     throw new Error('getNetworkTarget: unsupported platform');
   }
 
-  const apkPath = getAndroidApk();
-  const isAQA = isAutomaticQABuildAndroid(apkPath);
+  const isAQA =
+    platform === 'ios' ? isAutomaticQABuildIOS() : isAutomaticQABuildAndroid(getAndroidApk());
 
   // Early exit for non AQA builds - no need to check devnet
   if (!isAQA) {
@@ -75,20 +79,15 @@ export async function getNetworkTarget(platform: SupportedPlatformsType): Promis
   }
 
   const canAccessDevnet = await isDevnetReachable();
-  // If you pass an AQA build in the .env but can't access devnet, tests will fail
-  if (isAQA && !canAccessDevnet) {
+  // If you pass an AQA build but can't access devnet, tests will fail
+  if (!canAccessDevnet) {
     throw new Error('Cannot use AQA build without internal network access');
   }
-  // If the devnet is available, mainnet is still an option but you *could* switch to an AQA build
-  if (!isAQA && canAccessDevnet) {
-    console.log('The internal devnet is available, but using regular build');
-  }
 
-  const resolvedTarget = isAQA && canAccessDevnet ? DEVNET_URL : 'mainnet';
-  process.env.DETECTED_NETWORK_TARGET = resolvedTarget;
-  console.log(`Network target: ${resolvedTarget}`);
+  process.env.DETECTED_NETWORK_TARGET = DEVNET_URL;
+  console.log(`Network target: ${DEVNET_URL}`);
 
-  return resolvedTarget;
+  return DEVNET_URL;
 }
 
 export function getAppDisplayName(): AppName {

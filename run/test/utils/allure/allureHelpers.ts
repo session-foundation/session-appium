@@ -34,7 +34,7 @@ export function getReportContextFromEnv(): ReportContext {
   const build = process.env.BUILD_NUMBER;
   const artifact = process.env.APK_URL;
   const risk = process.env.RISK?.trim() || 'full';
-  const networkTarget = process.env.NETWORK_TARGET || 'mainnet'; // Default to mainnet for iOS
+  const networkTarget = process.env.NETWORK_TARGET;
   const runNumber = Number(process.env.GITHUB_RUN_NUMBER);
   const runAttempt = Number(process.env.GITHUB_RUN_ATTEMPT);
   const runID = Number(process.env.GITHUB_RUN_ID);
@@ -50,6 +50,9 @@ export function getReportContextFromEnv(): ReportContext {
   }
   if (!artifact) {
     throw new Error('APK_URL env variable is required');
+  }
+  if (!networkTarget) {
+    throw new Error('NETWORK_TARGET env variable is required');
   }
   if (!runNumber) {
     throw new Error('GITHUB_RUN_NUMBER env variable is required');
