@@ -78,10 +78,13 @@ export async function getNetworkTarget(platform: SupportedPlatformsType): Promis
     return 'mainnet';
   }
 
-  const canAccessDevnet = await isDevnetReachable();
-  // If you pass an AQA build but can't access devnet, tests will fail
-  if (!canAccessDevnet) {
-    throw new Error('Cannot use AQA build without internal network access');
+  // In CI the workflow already verified devnet reachability before setting IS_AUTOMATIC_QA.
+  // Skip the check here: Node.js can't resolve .local mDNS hostnames (unlike curl/bash).
+  if (process.env.CI !== '1') {
+    const canAccessDevnet = await isDevnetReachable();
+    if (!canAccessDevnet) {
+      throw new Error('Cannot use AQA build without internal network access');
+    }
   }
 
   process.env.DETECTED_NETWORK_TARGET = DEVNET_URL;
