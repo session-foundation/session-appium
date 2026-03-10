@@ -157,11 +157,11 @@ export function getIosCapabilities(
     customEnv.sessionPro = customCaps.sessionProEnabled;
   }
   if (process.env.IS_AUTOMATIC_QA === 'true') {
-    customEnv.serviceNetwork = 'devnet'
+    customEnv.serviceNetwork = 'devnet';
     customEnv.devnetPubkey = 'f8c53dcdb1932bcfd2dfb569f9ef6905a379a96c855851135015692e8b05dd3e';
     customEnv.devnetIp = '192.168.1.107';
     customEnv.devnetHttpPort = '1300';
-    customEnv.devnetOmqPort = '1295';
+    customEnv.devnetOmqPort = '1305';
   }
 
   // Rebuild the processArguments block with merged env vars
