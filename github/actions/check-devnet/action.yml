@@ -1,0 +1,50 @@
+name: Check devnet accessibility
+
+description: Verifies devnet is reachable when selected and sets IS_AUTOMATIC_QA in the environment
+
+inputs:
+  NETWORK_TARGET:
+    description: 'network target (devnet or mainnet)'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Check devnet accessibility
+      shell: bash
+      run: |
+        NETWORK_TARGET="${{ inputs.NETWORK_TARGET }}"
+        echo "Network target: $NETWORK_TARGET"
+
+        if [ "$NETWORK_TARGET" = "devnet" ]; then
+          echo "Devnet target - checking devnet accessibility..."
+          DEVNET_ACCESSIBLE=false
+
+          for attempt in 1 2 3; do
+            echo "Devnet check attempt $attempt/3..."
+            if curl -s --connect-timeout 5 --max-time 10 http://sesh-net.local:1280 >/dev/null 2>&1; then
+              echo "Devnet is accessible on attempt $attempt"
+              DEVNET_ACCESSIBLE=true
+              break
+            else
+              echo "Attempt $attempt failed"
+              if [ $attempt -lt 3 ]; then
+                echo "Waiting ${attempt}s before retry..."
+                sleep $attempt
+              fi
+            fi
+          done
+
+          if [ "$DEVNET_ACCESSIBLE" = "false" ]; then
+            echo "ERROR: Devnet is not accessible after 3 attempts, but devnet target was selected"
+            exit 1
+          fi
+
+          echo "IS_AUTOMATIC_QA=true" >> $GITHUB_ENV
+        elif [ "$NETWORK_TARGET" = "mainnet" ]; then
+          echo "Mainnet target"
+          echo "IS_AUTOMATIC_QA=false" >> $GITHUB_ENV
+        else
+          echo "ERROR: Unknown network target: $NETWORK_TARGET"
+          exit 1
+        fi
