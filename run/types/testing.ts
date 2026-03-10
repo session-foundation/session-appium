@@ -630,7 +630,7 @@ export type Id =
   | `cta-feature-${number}`
   | `Disappear after ${DisappearModes} option`;
 
-export type TestRisk = 'high' | 'low' | 'medium';
+export type TestRisk = 'debug' | 'high' | 'low' | 'medium';
 
 export type AppName = 'Session AQA' | 'Session QA';
 

@@ -12,7 +12,7 @@ import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
   title: 'Check placeholder avatar color',
-  risk: 'medium',
+  risk: 'debug',
   countOfDevicesNeeded: 2,
   testCb: avatarColor,
   allureSuites: {

@@ -10,7 +10,7 @@ import { verifyPageScreenshot } from '../utils/verify_screenshots';
 
 bothPlatformsIt({
   title: 'Check app disguise icon layout',
-  risk: 'medium',
+  risk: 'debug',
   countOfDevicesNeeded: 1,
   testCb: appDisguiseIcons,
   allureSuites: {
