@@ -1,13 +1,18 @@
-name: Prune Old Allure Attachments
+name: Prune Old Allure Reports
 on:
   schedule:
     - cron: '0 16 * * 0' # Weekly, 16:00 UTC Sunday
   workflow_dispatch:
     inputs:
-      retention-days:
+      attachment-retention-days:
         description: 'Number of days to retain attachments'
         required: false
         default: '14'
+        type: string
+      report-retention-days:
+        description: 'Number of days to retain full report directories'
+        required: false
+        default: '60'
         type: string
       dry-run:
         description: 'If true, only list files that would be deleted (no deletion or commit)'
@@ -28,50 +33,66 @@ jobs:
         env:
           GIT_LFS_SKIP_SMUDGE: 1 # Don't actually download LFS content
 
-      - name: Set retention days
-        id: retention
-        run: |
-          DAYS="${{ github.event.inputs.retention-days || '14' }}"
-          [[ "$DAYS" =~ ^[1-9][0-9]*$ ]] || { echo "Error: retention-days must be a positive integer"; exit 1; }
-          echo "days=$DAYS" >> $GITHUB_OUTPUT
-
-      - name: Prune Allure attachments
+      - name: Prune old attachments and report directories
         env:
           DRY_RUN: ${{ github.event.inputs.dry-run || 'false' }}
-          RETENTION_DAYS: ${{ steps.retention.outputs.days }}
+          ATTACHMENT_DAYS: ${{ github.event.inputs.attachment-retention-days || '14' }}
+          REPORT_DAYS: ${{ github.event.inputs.report-retention-days || '60' }}
         run: |
-          CUTOFF_DATE=$(date -d "$RETENTION_DAYS days ago" +%s)
+          [[ "$ATTACHMENT_DAYS" =~ ^[1-9][0-9]*$ ]] || { echo "Error: retention-days must be a positive integer"; exit 1; }
+          [[ "$REPORT_DAYS" =~ ^[1-9][0-9]*$ ]] || { echo "Error: report-retention-days must be a positive integer"; exit 1; }
+
           PREVIEW_LIMIT=20
-          DELETE_LIST="files_to_delete.txt"
 
-          echo "Retention: $RETENTION_DAYS days | Dry run: $DRY_RUN" >> $GITHUB_STEP_SUMMARY
+          # Returns 0 (true) if the given path's last commit is older than the given cutoff epoch
+          is_older_than() {
+            local path="$1" cutoff="$2"
+            local commit_date
+            commit_date=$(git log -1 --format="%ct" -- "$path" 2>/dev/null || echo "0")
+            [ "$commit_date" -ne "0" ] && [ "$commit_date" -lt "$cutoff" ]
+          }
 
-          # Find old attachment files
-          > "$DELETE_LIST"
+          # Previews or deletes items listed in a file, then summarises
+          apply_deletions() {
+            local list="$1" label="$2"
+            local count
+            count=$(wc -l < "$list" 2>/dev/null || echo 0)
+            echo "Found $count old $label" >> $GITHUB_STEP_SUMMARY
+            if [ "$count" -gt 0 ]; then
+              if [ "$DRY_RUN" == "true" ]; then
+                echo "$label to delete:" >> $GITHUB_STEP_SUMMARY
+                head -$PREVIEW_LIMIT "$list" >> $GITHUB_STEP_SUMMARY
+                [ "$count" -gt $PREVIEW_LIMIT ] && echo "...(+$((count-PREVIEW_LIMIT)) more)" >> $GITHUB_STEP_SUMMARY
+              else
+                while IFS= read -r item; do rm -rf "$item"; done < "$list"
+                echo "Deleted $count $label" >> $GITHUB_STEP_SUMMARY
+              fi
+            fi
+            rm -f "$list"
+          }
+
+          echo "Attachment retention: $ATTACHMENT_DAYS days | Report retention: $REPORT_DAYS days | Dry run: $DRY_RUN" >> $GITHUB_STEP_SUMMARY
+
+          # Prune attachment files older than ATTACHMENT_DAYS
+          ATTACHMENT_CUTOFF=$(date -d "$ATTACHMENT_DAYS days ago" +%s)
+          ATTACHMENT_LIST="attachments_to_delete.txt"
+          > "$ATTACHMENT_LIST"
           for pattern in '*/data/attachments/*.png' '*/data/attachments/*.txt' '*/data/attachments/*.imagediff'; do
             while IFS= read -r -d '' file; do
-              COMMIT_DATE=$(git log -1 --format="%ct" -- "$file" 2>/dev/null || echo "0")
-              [ "$COMMIT_DATE" -lt "$CUTOFF_DATE" ] && [ "$COMMIT_DATE" -ne "0" ] && echo "$file" >> "$DELETE_LIST"
+              is_older_than "$file" "$ATTACHMENT_CUTOFF" && echo "$file" >> "$ATTACHMENT_LIST"
             done < <(git ls-files -z "$pattern")
           done
+          apply_deletions "$ATTACHMENT_LIST" "attachment files"
 
-          COUNT=$(wc -l < "$DELETE_LIST" 2>/dev/null || echo 0)
-          echo "Found $COUNT old files" >> $GITHUB_STEP_SUMMARY
-
-          if [ "$COUNT" -gt 0 ]; then
-            if [ "$DRY_RUN" == "true" ]; then
-              echo "Files to delete:" >> $GITHUB_STEP_SUMMARY
-              if [ -s "$DELETE_LIST" ]; then
-                head -$PREVIEW_LIMIT "$DELETE_LIST" >> $GITHUB_STEP_SUMMARY
-                [ "$COUNT" -gt $PREVIEW_LIMIT ] && echo "...(+$((COUNT-PREVIEW_LIMIT)) more)" >> $GITHUB_STEP_SUMMARY
-              fi
-            else
-              xargs rm -f < "$DELETE_LIST"
-              echo "Deleted $COUNT files" >> $GITHUB_STEP_SUMMARY
-            fi
-          fi
-
-          rm -f "$DELETE_LIST"
+          # Prune report directories older than REPORT_DAYS
+          REPORT_CUTOFF=$(date -d "$REPORT_DAYS days ago" +%s)
+          REPORT_LIST="reports_to_delete.txt"
+          > "$REPORT_LIST"
+          for dir in android/run-* ios/run-*; do
+            [ -d "$dir" ] && is_older_than "$dir" "$REPORT_CUTOFF" && echo "$dir" >> "$REPORT_LIST"
+          done
+          REPORT_FILE_COUNT=$(while IFS= read -r dir; do find "$dir" -type f; done < "$REPORT_LIST" | wc -l)
+          apply_deletions "$REPORT_LIST" "report directories ($REPORT_FILE_COUNT files)"
 
       - name: Commit changes
         if: github.event.inputs.dry-run != 'true'
@@ -81,7 +102,7 @@ jobs:
 
           if [ -n "$(git status --porcelain)" ]; then
             git add -A
-            git commit -m "ci: Prune attachments older than ${{ steps.retention.outputs.days }} days"
+            git commit -m "ci: prune old attachments and report directories"
             git push
           fi
 
