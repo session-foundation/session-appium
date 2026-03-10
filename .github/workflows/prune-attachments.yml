@@ -91,6 +91,8 @@ jobs:
           for dir in android/run-* ios/run-*; do
             [ -d "$dir" ] && is_older_than "$dir" "$REPORT_CUTOFF" && echo "$dir" >> "$REPORT_LIST"
           done
+          REPORT_FILE_COUNT=$(while IFS= read -r dir; do find "$dir" -type f; done < "$REPORT_LIST" | wc -l)
+          echo "($REPORT_FILE_COUNT files total)" >> $GITHUB_STEP_SUMMARY
           apply_deletions "$REPORT_LIST" "report directories"
 
       - name: Commit changes
