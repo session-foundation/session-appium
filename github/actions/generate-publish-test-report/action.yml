@@ -40,6 +40,7 @@ runs:
       id: publish
       shell: bash
       run: |
+        git config --global lfs.locksverify false
         npx ts-node run/test/utils/allure/publishReport.ts
       env:
         PLATFORM: ${{ inputs.PLATFORM }}
