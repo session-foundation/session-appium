@@ -55,7 +55,7 @@ function isAutomaticQABuildAndroid(apkPath: string): boolean {
 function isAutomaticQABuildIOS(): boolean {
   const isAutomaticQA = process.env.IS_AUTOMATIC_QA === 'true';
 
-  console.log(`${isAutomaticQA ? 'Automatic QA/devnet' : 'Regular/mainnet'} build detected`);
+  console.log(`${isAutomaticQA ? 'Devnet' : 'Mainnet'} target configured`);
 
   return isAutomaticQA;
 }
@@ -78,13 +78,9 @@ export async function getNetworkTarget(platform: SupportedPlatformsType): Promis
     return 'mainnet';
   }
 
-  // In CI the workflow already verified devnet reachability before setting IS_AUTOMATIC_QA.
-  // Skip the check here: Node.js can't resolve .local mDNS hostnames (unlike curl/bash).
-  if (process.env.CI !== '1') {
-    const canAccessDevnet = await isDevnetReachable();
-    if (!canAccessDevnet) {
-      throw new Error('Cannot use AQA build without internal network access');
-    }
+  const canAccessDevnet = await isDevnetReachable();
+  if (!canAccessDevnet) {
+    throw new Error('Devnet target selected but devnet is not reachable');
   }
 
   process.env.DETECTED_NETWORK_TARGET = DEVNET_URL;
