@@ -169,10 +169,14 @@ export function getIosCapabilities(
     env: { ...baseEnv, ...customEnv },
   };
 
-  return {
+  const result = {
     firstMatch: [{}],
     alwaysMatch: caps,
   } as W3CXCUITestDriverCaps;
+
+  console.log(`[iOS caps ${capabilitiesIndex}]`, JSON.stringify(result, null, 2));
+
+  return result;
 }
 
 export function getCapabilitiesForWorker(workerId: number) {
