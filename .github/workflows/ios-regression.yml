@@ -73,6 +73,9 @@ jobs:
   ios-regression:
     runs-on: [self-hosted, macOS]
     env:
+      # TODO: remove once pnpm/action-setup releases a Node 24 version
+      # https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       PLATFORM: 'ios'
       APK_URL: ${{ github.event.inputs.APK_URL }}
       BUILD_NUMBER: ${{ github.event.inputs.BUILD_NUMBER }}
