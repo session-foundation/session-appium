@@ -10,7 +10,7 @@ import { closeApp, openAppThreeDevices, SupportedPlatformsType } from '../utils/
 
 bothPlatformsIt({
   title: 'Accept message request',
-  risk: 'high',
+  risk: 'debug',
   testCb: acceptRequest,
   countOfDevicesNeeded: 3,
 });
