@@ -57,18 +57,26 @@ function create_emulators() {
 
         # Set the RAM size to 4GB (4192MB)
         sed -i 's/^hw\.ramSize=.*/hw.ramSize=4192/' "$CONFIG_FILE"
+        # Use virtualscene camera so injectEmulatorCameraImage works
+        sed -i 's/^hw\.camera\.back=.*/hw.camera.back=virtualscene/' "$CONFIG_FILE"
 
     done
 
     cd
 }
 
+# Start a single emulator to snapshot or start all 4 at once 
 function start_for_snapshots() {
-    for i in {1..4}
-    do
-        DISPLAY=:0 emulator @emulator$i -gpu host -accel on -no-snapshot-load  &
-        sleep 20
-    done
+    local i=${1:-}
+    if [[ -n "$i" ]]; then
+        DISPLAY=:0 emulator @emulator$i -gpu host -accel on -no-snapshot-load &
+    else
+        for i in {1..4}
+        do
+            DISPLAY=:0 emulator @emulator$i -gpu host -accel on -no-snapshot-load &
+            sleep 20
+        done
+    fi
 }
 
 # let the emulators start and be ready (check cpu usage) before calling this.

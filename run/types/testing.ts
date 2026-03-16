@@ -46,6 +46,7 @@ export type Coordinates = {
 
 export const InteractionPoints: Record<string, Coordinates> = {
   BackToSession: { x: 42, y: 42 },
+  AndroidConvoSettingsQRCode: { x: 627, y: 329 },
 };
 
 export type Strategy = '-android uiautomator' | 'accessibility id' | 'class name' | 'id' | 'xpath';

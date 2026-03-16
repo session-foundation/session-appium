@@ -1,4 +1,5 @@
 import { ANDROID_XPATHS, IOS_XPATHS } from '../../constants';
+import { tStripped } from '../../localizer/lib';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { StrategyExtractionObj } from '../../types/testing';
 import { getAppDisplayName } from '../utils/devnet';
@@ -326,6 +327,20 @@ export class GIFName extends LocatorsInterface {
   }
 }
 
+export class GrantCameraAccessButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: '-android uiautomator',
+          selector: `new UiSelector().text("${tStripped('cameraGrantAccess')}")`,
+        } as const;
+      case 'ios':
+        throw new Error('Not implemented on iOS');
+    }
+  }
+}
+
 export class ImageName extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -478,6 +493,20 @@ export class ReadReceiptsButton extends LocatorsInterface {
           strategy: 'accessibility id',
           selector: 'Read Receipts - Switch',
         } as const;
+    }
+  }
+}
+
+export class ScanQRTab extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: '-android uiautomator',
+          selector: `new UiSelector().text("${tStripped('qrScan')}")`,
+        } as const;
+      case 'ios':
+        throw new Error('Not implemented on iOS');
     }
   }
 }

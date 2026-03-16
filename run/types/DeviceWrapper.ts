@@ -324,6 +324,19 @@ export class DeviceWrapper {
     return this.toShared().getPageSource();
   }
 
+  /**
+   * Injects a base64-encoded image into the Android emulator's virtual camera scene.
+   */
+  public async injectImageToScene(base64Image: string): Promise<void> {
+    if (this.isAndroid()) {
+      await this.toShared().execute('mobile: injectEmulatorCameraImage', {
+        payload: base64Image,
+      });
+      this.log(`Injected image to scene`);
+    }
+    // iOS: no-op
+  }
+
   /* === all the device-specific function ===  */
 
   // ELEMENT INTERACTION
