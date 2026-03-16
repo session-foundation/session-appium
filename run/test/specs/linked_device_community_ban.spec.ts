@@ -122,7 +122,7 @@ async function banUnbanLinked(platform: SupportedPlatformsType, testInfo: TestIn
     ]);
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
-    await closeApp(bob1, alice1);
+    await closeApp(alice1, bob1, bob2);
   });
 }
 
@@ -205,6 +205,6 @@ async function banAndDeleteLinked(platform: SupportedPlatformsType, testInfo: Te
     await alice1.verifyElementNotPresent(new MessageBody(alice1, msg2));
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
-    await closeApp(bob1, alice1);
+    await closeApp(alice1, bob1, bob2);
   });
 }
