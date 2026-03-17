@@ -1,5 +1,5 @@
 import { DeviceWrapper } from '../../types/DeviceWrapper';
-import { assert } from './';
+import { verify } from './';
 
 // Returns the names of all conversation list items in their current DOM order
 export const getConversationOrder = async (device: DeviceWrapper): Promise<string[]> => {
@@ -26,5 +26,5 @@ export const assertPinOrder = (
   }
   const expected = [...pinnedExpected, ...unpinnedExpected];
 
-  assert(afterOrder, 'Conversation order is not correct').toEqual(expected);
+  verify(afterOrder, 'Conversation order is not correct').toEqual(expected);
 };

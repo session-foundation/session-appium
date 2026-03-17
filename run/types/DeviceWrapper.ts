@@ -73,7 +73,7 @@ import {
   VersionNumber,
 } from '../test/locators/settings';
 import { EnterAccountID, NewMessageOption, NextButton } from '../test/locators/start_conversation';
-import { assert, clickOnCoordinates, sleepFor } from '../test/utils';
+import { clickOnCoordinates, sleepFor, verify } from '../test/utils';
 import { getAdbFullPath } from '../test/utils/binaries';
 import { parseDataImage } from '../test/utils/check_colour';
 import { isSameColor } from '../test/utils/check_colour';
@@ -1906,7 +1906,7 @@ export class DeviceWrapper {
   ) {
     const el = await this.waitForTextElementToBePresent(element);
     const received = await this.getAttribute(attribute, el.ELEMENT);
-    assert(received, 'Element attribute value mismatch').toBe(value);
+    verify(received, 'Element attribute value mismatch').toBe(value);
   }
 
   public async disappearRadioButtonSelected(
@@ -2706,7 +2706,7 @@ export class DeviceWrapper {
     for (let i = 0; i < SAMPLE_SIZE; i++) {
       colors.add(await this.getElementPixelColor(locator));
     }
-    assert(
+    verify(
       colors.size,
       `Expected element to be animated but detected 1 unique color: ${[...colors][0]}`
     ).toBeGreaterThan(1);

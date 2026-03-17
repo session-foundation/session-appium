@@ -12,7 +12,7 @@ import { AccountRestoreButton, FastModeRadio } from '../locators/onboarding';
 import { RecoveryPasswordMenuItem, UserSettings, ViewQR } from '../locators/settings';
 import { JoinCommunityOption, NewMessageOption } from '../locators/start_conversation';
 import { open_Alice1_bob1_notfriends } from '../state_builder';
-import { assert, clickOnCoordinates, sleepFor } from '../utils';
+import { clickOnCoordinates, sleepFor, verify } from '../utils';
 import { joinCommunity } from '../utils/community';
 import { newUser } from '../utils/create_account';
 import { truncatePubkey } from '../utils/get_account_id';
@@ -88,7 +88,7 @@ async function qrCodeSeedPhrase(platform: SupportedPlatformsType, testInfo: Test
       new AccountIDDisplay(device2)
     );
     const secondAccountID = await device2.getTextFromElement(secondAccountIDElement);
-    assert(firstAccountID, 'The account recovered from QR code is not the right one').toBe(
+    verify(firstAccountID, 'The account recovered from QR code is not the right one').toBe(
       secondAccountID
     );
   });
