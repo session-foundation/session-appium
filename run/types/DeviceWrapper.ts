@@ -743,7 +743,10 @@ export class DeviceWrapper {
           return { success: true, data: el };
         } catch {
           this.log(`Click on ${firstLocator} did not produce expected result, retrying...`);
-          return { success: false, error: `Click on ${firstLocator} did not produce expected result` };
+          return {
+            success: false,
+            error: `Click on ${firstLocator} did not produce expected result`,
+          };
         }
       },
       { maxWait: 5_000, pollInterval: 500 }
