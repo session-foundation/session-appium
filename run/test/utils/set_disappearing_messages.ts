@@ -14,7 +14,10 @@ export const setDisappearingMessage = async (
   [conversationType, timerType, timerDuration = DISAPPEARING_TIMES.THIRTY_SECONDS]: MergedOptions
 ) => {
   const enforcedType: ConversationType = conversationType;
-  await device.clickOnElementAll(new ConversationSettings(device));
+  await device.clickAndWaitFor(
+    new ConversationSettings(device),
+    new DisappearingMessagesMenuOption(device)
+  );
   await device.clickOnElementAll(new DisappearingMessagesMenuOption(device));
   if (enforcedType === '1:1') {
     await device.clickOnElementAll(new DisappearingMessagesTimerType(device, timerType));

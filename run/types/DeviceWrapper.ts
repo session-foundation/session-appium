@@ -720,6 +720,36 @@ export class DeviceWrapper {
     return el;
   }
 
+  /**
+   * Clicks an element and retries until an expected element appears, confirming the click registered.
+   * Useful for flaky taps where Appium reports success but the UI doesn't respond.
+   *
+   * @param args - The element to click
+   * @param waitFor - A locator that should become present after a successful click
+   */
+  public async clickAndWaitFor(
+    args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj),
+    waitFor: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
+  ) {
+    const { description: firstLocator } = this.resolveLocator(args);
+    const { locator: waitForLocator } = this.resolveLocator(waitFor);
+
+    return this.pollUntil(
+      async () => {
+        const el = await this.waitForTextElementToBePresent(args);
+        await this.click(el.ELEMENT);
+        try {
+          await this.waitForTextElementToBePresent({ ...waitForLocator, maxWait: 1_000 });
+          return { success: true, data: el };
+        } catch {
+          this.log(`Click on ${firstLocator} did not produce expected result, retrying...`);
+          return { success: false, error: `Click on ${firstLocator} did not produce expected result` };
+        }
+      },
+      { maxWait: 5_000, pollInterval: 500 }
+    );
+  }
+
   public async clickOnElementByText(
     args: { text: string; maxWait?: number } & StrategyExtractionObj
   ) {
