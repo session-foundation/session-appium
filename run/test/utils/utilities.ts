@@ -153,15 +153,15 @@ export async function forceStopAndRestart(device: DeviceWrapper): Promise<void> 
 }
 
 /**
- * Drop-in replacement for Playwright's `expect()` that keeps Allure reports clean.
+ * Wrapper for Playwright's `expect()` that keeps Allure reports clean.
  *
- * Playwright dumps the full diff (received vs expected) into the error message, which
- * ends up verbatim in Allure — too technical for customers. `verify()` catches
- * assertion errors and rethrows with only the human-readable `message`, preserving the diffs
- * in the runner logs.
+ * Playwright dumps the raw diff into the error message, 
+ * which can be confusing for report readers.
+ * 
+ * `verify()` catches assertion errors and rethrows with a clean message.
  *
  * @param actual - The value being asserted
- * @param message - Business-readable failure message — this is all Allure will show on failure.
+ * @param message - Business-readable failure message for reporting
  *
  * @example
  * verify(messages, 'Conversation messages are in the wrong order').toEqual(expected);
@@ -178,18 +178,24 @@ export function verify<T>(actual: T, message: string) {
           return wrapMatchers(val as typeof matchers);
         if (typeof val === 'function') {
           return (...args: unknown[]) => {
+            const mismatch = () => {
+              const lines = [message];
+              if (args.length > 0) {
+                lines.push(`Expected: ${String(args[0])}`);
+                lines.push(`Actual: ${String(actual)}`);
+              }
+              return new Error(lines.join('\n'));
+            };
             try {
               const result = (val as (...a: unknown[]) => unknown).apply(target, args);
               if (result instanceof Promise) {
                 return result.catch(() => {
-                  console.log(`${message}\n  actual:  `, actual, '\n  expected:', args[0]);
-                  throw new Error(message);
+                  throw mismatch();
                 });
               }
               return result;
             } catch {
-              console.log(`${message}\n  actual:  `, actual, '\n  expected:', args[0]);
-              throw new Error(message);
+              throw mismatch();
             }
           };
         }
