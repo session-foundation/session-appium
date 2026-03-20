@@ -155,9 +155,9 @@ export async function forceStopAndRestart(device: DeviceWrapper): Promise<void> 
 /**
  * Wrapper for Playwright's `expect()` that keeps Allure reports clean.
  *
- * Playwright dumps the raw diff into the error message, 
+ * Playwright dumps the raw diff into the error message,
  * which can be confusing for report readers.
- * 
+ *
  * `verify()` catches assertion errors and rethrows with a clean message.
  *
  * @param actual - The value being asserted
