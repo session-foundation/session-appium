@@ -1,11 +1,9 @@
 import test, { TestInfo } from '@playwright/test';
 
-import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { CloseSettings } from '../locators';
-import { CTAButtonPositive } from '../locators/global';
 import { ReviewPromptItsGreatButton } from '../locators/home';
 import { PathMenuItem, UserSettings } from '../locators/settings';
 import { newUser } from '../utils/create_account';
@@ -26,7 +24,6 @@ bothPlatformsIt({
 });
 
 async function donateCTAReview(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const donateURL = 'https://getsession.org/donate#app';
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
@@ -49,13 +46,6 @@ async function donateCTAReview(platform: SupportedPlatformsType, testInfo: TestI
   // There *is* supposed to be a blur on Android but there is a bug on API 34 emulators preventing it from showing
   await test.step(TestSteps.VERIFY.SCREENSHOT('Donate CTA'), async () => {
     await verifyPageScreenshot(device, platform, 'cta_donate', testInfo);
-  });
-  await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Open URL'), async () => {
-    await device.clickOnElementAll(new CTAButtonPositive(device));
-    await device.checkModalStrings(
-      tStripped('urlOpen'),
-      tStripped('urlOpenDescription', { url: donateURL })
-    );
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);

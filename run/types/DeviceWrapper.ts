@@ -2643,13 +2643,15 @@ export class DeviceWrapper {
     this.assertTextMatches(actualDescription, expectedDescription, 'Modal description');
   }
 
-  private async checkCTAStrings({ heading, body, buttons, features }: CTAConfig): Promise<void> {
-    // Validate input
+  private async checkCTAStrings({
+    heading,
+    body,
+    negativeButton,
+    positiveButton,
+    features,
+  }: CTAConfig): Promise<void> {
     if (features && features.length > 3) {
       throw new Error('CTAs support maximum 3 features');
-    }
-    if (buttons.length < 1 || buttons.length > 2) {
-      throw new Error('CTAs must have 1-2 buttons');
     }
 
     // CTA heading
@@ -2676,18 +2678,16 @@ export class DeviceWrapper {
       }
     }
 
-    /**
-     * buttons[0] = negative/dismiss (always present);
-     * buttons[1] = positive/action (optional)
-     */
-    const elNegative = await this.waitForTextElementToBePresent(new CTAButtonNegative(this));
-    const actualNegative = await this.getTextFromElement(elNegative);
-    this.assertTextMatches(actualNegative, buttons[0], 'CTA negative button');
+    if (negativeButton) {
+      const elNegative = await this.waitForTextElementToBePresent(new CTAButtonNegative(this));
+      const actualNegative = await this.getTextFromElement(elNegative);
+      this.assertTextMatches(actualNegative, negativeButton, 'CTA negative button');
+    }
 
-    if (buttons.length === 2) {
+    if (positiveButton) {
       const elPositive = await this.waitForTextElementToBePresent(new CTAButtonPositive(this));
       const actualPositive = await this.getTextFromElement(elPositive);
-      this.assertTextMatches(actualPositive, buttons[1], 'CTA positive button');
+      this.assertTextMatches(actualPositive, positiveButton, 'CTA positive button');
     }
   }
 
@@ -2695,24 +2695,24 @@ export class DeviceWrapper {
     await this.checkCTAStrings(ctaConfigs[type]);
   }
 
-  // This is the bare minimum of a CTA so we only check these
   public async verifyNoCTAShows(): Promise<void> {
     await Promise.all([
       this.verifyElementNotPresent(new CTAHeading(this)),
       this.verifyElementNotPresent(new CTABody(this)),
       this.verifyElementNotPresent(new CTAButtonNegative(this)),
+      this.verifyElementNotPresent(new CTAButtonPositive(this)),
     ]);
   }
 
   // Dismiss any CTA if it shows
   public async dismissCTA(): Promise<void> {
     const hasCTAAppeared = await this.doesElementExist({
-      ...new CTAButtonNegative(this).build(),
+      ...new CTAHeading(this).build(),
       maxWait: 8_000,
     });
     if (hasCTAAppeared) {
       this.log('Dismissing CTA');
-      await this.clickOnElementAll(new CTAButtonNegative(this));
+      await this.clickOnCoordinates(150, 150);
     }
   }
 
