@@ -43,9 +43,10 @@ async function sendCommunityInvitation(platform: SupportedPlatformsType, testInf
   await alice1.clickOnElementAll(new CommunityInviteConfirmButton(alice1));
   await bob1.waitForTextElementToBePresent(new CommunityInvitation(bob1));
   await bob1.clickOnElementAll(new CommunityInvitation(bob1));
+  const joinCommunityModaBody = platform === 'android' ? tStripped('joinThisCommunity') : tStripped('communityJoinDescription', { community_name: communities.testCommunity.name })
   await bob1.checkModalStrings(
     tStripped('communityJoin'),
-    tStripped('communityJoinDescription', { community_name: communities.testCommunity.name })
+    joinCommunityModaBody
   );
   await bob1.clickOnElementAll(new JoinCommunityModalButton(bob1));
   await bob1.navigateBack();

@@ -6,7 +6,7 @@ import { iOSPhotosContinuebutton } from '../locators/external';
 export async function handleChromeFirstTimeOpen(device: DeviceWrapper) {
   const chromeUseWithoutAnAccount = await device.doesElementExist({
     ...new ChromeUseWithoutAnAccount(device).build(),
-    maxWait: 2_000,
+    maxWait: 5_000,
   });
   if (!chromeUseWithoutAnAccount) {
     device.log('Chrome opened without an account check, proceeding');
