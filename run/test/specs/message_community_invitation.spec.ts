@@ -7,7 +7,9 @@ import { InviteContactsMenuItem, JoinCommunityModalButton } from '../locators';
 import {
   CommunityInvitation,
   CommunityInviteConfirmButton,
+  ConversationHeaderName,
   ConversationSettings,
+  MessageBody,
 } from '../locators/conversation';
 import { GroupMember } from '../locators/groups';
 import { ConversationItem } from '../locators/home';
@@ -43,15 +45,22 @@ async function sendCommunityInvitation(platform: SupportedPlatformsType, testInf
   await alice1.clickOnElementAll(new CommunityInviteConfirmButton(alice1));
   await bob1.waitForTextElementToBePresent(new CommunityInvitation(bob1));
   await bob1.clickOnElementAll(new CommunityInvitation(bob1));
-  const joinCommunityModaBody = platform === 'android' ? tStripped('joinThisCommunity') : tStripped('communityJoinDescription', { community_name: communities.testCommunity.name })
-  await bob1.checkModalStrings(
-    tStripped('communityJoin'),
-    joinCommunityModaBody
-  );
+  const joinCommunityModaBody =
+    platform === 'android'
+      ? tStripped('joinThisCommunity')
+      : tStripped('communityJoinDescription', { community_name: communities.testCommunity.name });
+  await bob1.checkModalStrings(tStripped('communityJoin'), joinCommunityModaBody);
   await bob1.clickOnElementAll(new JoinCommunityModalButton(bob1));
-  await bob1.navigateBack();
-  await bob1.waitForTextElementToBePresent(
-    new ConversationItem(bob1, communities.testCommunity.name)
-  );
+  if (platform === 'android') {
+    await bob1.waitForTextElementToBePresent(
+      new ConversationHeaderName(bob1, communities.testCommunity.name)
+    );
+    await bob1.waitForTextElementToBePresent(new MessageBody(bob1));
+  } else {
+    await bob1.navigateBack();
+    await bob1.waitForTextElementToBePresent(
+      new ConversationItem(bob1, communities.testCommunity.name)
+    );
+  }
   await closeApp(alice1, bob1);
 }
