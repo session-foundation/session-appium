@@ -55,8 +55,10 @@ export async function newUser(
   await device.clickOnElementAll(new ContinueButton(device));
   // Choose message notification options (Fast mode by default)
   if (fastMode) {
-    await device.clickOnElementAll(new FastModeRadio(device));
-  } else await device.clickOnElementAll(new SlowModeRadio(device));
+await device.clickOnElementAll(new FastModeRadio(device));
+  } else {
+  await device.clickOnElementAll(new SlowModeRadio(device));
+  }
   await device.clickOnElementAll(new ContinueButton(device));
   // Handle permissions based on the flag
   await handleNotificationPermissions(device, allowNotificationPermissions);
