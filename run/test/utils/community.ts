@@ -29,14 +29,14 @@ export const joinCommunity = async (
   await device.scrollToBottom();
 };
 
-export const joinCommunities = async (device: DeviceWrapper, number: number) => {
+export const joinCommunities = async (device: DeviceWrapper, toJoin: number) => {
   const available = Object.values(communities).length;
-  if (number > available) {
+  if (toJoin > available) {
     throw new Error(
-      `joinCommunities: requested ${number} but only ${available} communities have been recorded.\nCheck run/constants/community.ts for more`
+      `joinCommunities: requested ${toJoin} but only ${available} communities have been recorded.\nCheck run/constants/community.ts for more`
     );
   }
-  for (const community of Object.values(communities).slice(0, number)) {
+  for (const community of Object.values(communities).slice(0, toJoin)) {
     await joinCommunity(device, community.link, community.name);
     await device.navigateBack();
   }
