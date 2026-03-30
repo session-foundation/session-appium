@@ -4,41 +4,28 @@ This repository holds the code to run integration tests for Session iOS and Andr
 
 ## Quick Start
 
-You can check the current node version in `.tool-versions` or `.nvmrc`.
+### Prerequisites
 
-1. **Install dependencies:**
-    ```bash
-    nvm install
-    nvm use
-    corepack enable 
-    # pnpm is installed by corepack, no separate install required 
-    pnpm install --frozen-lockfile 
-    ```
-2. **Git:**
-   ```bash
-   # macOS
-   brew install git-lfs
-   
-   # Linux
-   sudo apt install git-lfs
+- Node.js 24.12.0
+- pnpm 10.28.1 
+- Git LFS
 
-   # Then
-   git lfs install
-   git lfs pull  
+```bash
+pnpm install --frozen-lockfile
+git lfs install && git lfs pull
+git submodule update --init --recursive
+```
 
-   # Finally, pull the app strings from the localization repo
-   git submodule update --init --recursive
-   ```
+### Running tests
 
-3. **Run tests locally:**
-   ```bash
-   pnpm start-server                        # Starts Appium server
-   pnpm test                                # Run all tests
-   pnpm test-android                        # Android tests only
-   pnpm test-ios                            # iOS tests only
-   pnpm test-one 'Test name'                # Run specific test (both platforms)
-   pnpm test-one 'Test name @android'       # Run specific test on one platform
-   ```
+```bash
+pnpm start-server                        # Starts Appium server
+pnpm test                                # Run all tests
+pnpm test-android                        # Android tests only
+pnpm test-ios                            # iOS tests only
+pnpm test-one 'Test name'                # Run specific test (both platforms)
+pnpm test-one 'Test name @android'       # Run specific test on one platform
+```
 
 ## Local Development
 
