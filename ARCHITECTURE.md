@@ -176,3 +176,7 @@ To run community admin tests, the 13-word recovery phrase of a Community Admin h
 **LFS footprint** grows with each CI run. Run `prune-attachments.yml` periodically.
 
 **Dependabot** is configured in `.github/dependabot.yml`.
+
+**pnpm patches** live in `patches/` and are applied automatically on install. If either patched dependency is upgraded, the patch may fail to apply or become redundant — check `pnpm install` output after upgrades:
+- `appium-uiautomator2-driver` — expands the device port range to `[8200, 8999]` to support parallel device sessions
+- `allure-playwright` — purely cosmetic, renames stdout/stderr labels in the Allure report
