@@ -4,16 +4,17 @@ This repository holds the code to run integration tests for Session iOS and Andr
 
 ## Quick Start
 
-You can check the current node version in `.tool-versions`
+You can check the current node version in `.tool-versions` or `.nvmrc`.
 
 1. **Install dependencies:**
-    ```
+    ```bash
     nvm install
     nvm use
-    git submodule update --init --recursive
-    pnpm install --frozen-lockfile
+    corepack enable 
+    # pnpm is installed by corepack, no separate install required 
+    pnpm install --frozen-lockfile 
     ```
-2. **Install Git LFS:**
+2. **Git:**
    ```bash
    # macOS
    brew install git-lfs
@@ -23,14 +24,13 @@ You can check the current node version in `.tool-versions`
 
    # Then
    git lfs install
-   git lfs pull  # Ensure all LFS files are downloaded
+   git lfs pull  
+
+   # Finally, pull the app strings from the localization repo
+   git submodule update --init --recursive
    ```
-3. **Setup environment:**
-   ```bash
-   cp .env.sample .env
-   # Edit .env with your specific paths - see Environment Configuration below
-   ```
-4. **Run tests locally:**
+
+3. **Run tests locally:**
    ```bash
    pnpm start-server                        # Starts Appium server
    pnpm test                                # Run all tests
@@ -49,6 +49,7 @@ Note: The tests use devices with specific resolutions for visual regression test
 Prerequisites: Android Studio installed with SDK tools available
 1. Create 4x Pixel 6 emulators via AVD Manager (minimum 4 emulators - tests require up to 4 devices simultaneously)
     - Recommended system image is Android API 34 with Google Play services
+   - Emulator names are not significant. The tests discover running emulators automatically.
 2. Configure the emulators' virtual scene to enable custom image injection to camera viewport
     ```bash
     pnpm setup-virtual-scene
@@ -68,7 +69,7 @@ Prerequisites: Android Studio installed with SDK tools available
    ```
 
 ### iOS  
-Prerequisites: Xcode installed
+Prerequisites: Xcode installed and the appropriate simulator runtime available - check in `scripts/create_ios_simulators.ts`
 
 1. Create iOS simulators with preloaded media attachments:
    ```bash   
@@ -88,7 +89,9 @@ Prerequisites: Xcode installed
 
 ### Environment Configuration
 
-Copy `.env.sample` to `.env` and configure the following:
+```bash
+cp .env.sample .env
+```
 
 **Required paths:**
 ```bash
@@ -106,4 +109,5 @@ PLAYWRIGHT_WORKERS_COUNT=1           # Parallel test workers
 CI=0                                 # Set to 1 to simulate CI (mostly for Allure reporting)
 ALLURE_ENABLED='false'               # Set to 'true' to generate Allure reports (in conjunction with CI=1)
 UPDATE_BASELINES=1                   # Auto-save new screenshot baselines if unavailable
+SOGS_ADMIN_SEED='word1 word2...'     # 13-word recovery phrase of an account that's an admin in the testing SOGS. 
 ```
