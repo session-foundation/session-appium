@@ -36,7 +36,7 @@ on:
       RUN_PRO_TESTS:
         description: 'include Session Pro tests in this run'
         required: false
-        default: true
+        default: false
         type: boolean
 
       ALLURE_ENABLED:
