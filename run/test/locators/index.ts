@@ -1,4 +1,5 @@
 import { ANDROID_XPATHS, IOS_XPATHS } from '../../constants';
+import { tStripped } from '../../localizer/lib';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { StrategyExtractionObj } from '../../types/testing';
 import { getAppDisplayName } from '../utils/devnet';
@@ -51,8 +52,8 @@ export class BlockedContactsSettings extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
-          selector: 'qa-blocked-contacts-settings-item',
+          strategy: 'id',
+          selector: 'preferences-option-blocked-contacts',
         };
       case 'ios':
         return {
@@ -311,10 +312,39 @@ export class FirstGif extends LocatorsInterface {
   }
 }
 
+export class GIFName extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      // Dates can wildly differ between emulators but it will begin with "X taken on" on Android
+      case 'android':
+        return {
+          strategy: 'xpath',
+          selector: `//*[starts-with(@content-desc, "GIF taken on")]`,
+        };
+      case 'ios':
+        throw new Error(`No such element on iOS`);
+    }
+  }
+}
+
+export class GrantCameraAccessButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: '-android uiautomator',
+          selector: `new UiSelector().text("${tStripped('cameraGrantAccess')}")`,
+        } as const;
+      case 'ios':
+        throw new Error('Not implemented on iOS');
+    }
+  }
+}
+
 export class ImageName extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
-      // Dates can wildly differ between emulators but it will begin with "Photo taken on" on Android
+      // Dates can wildly differ between emulators but it will begin with "X taken on" on Android
       case 'android':
         return {
           strategy: 'xpath',
@@ -336,6 +366,20 @@ export class ImagePermissionsModalAllow extends LocatorsInterface {
         };
       case 'ios':
         return { strategy: 'accessibility id', selector: 'Allow Full Access' };
+    }
+  }
+}
+
+export class InviteAccountIDOrONS extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'invite-accountid-menu-option',
+        } as const;
+      case 'ios':
+        throw new Error('Manage Members not implemented yet on iOS');
     }
   }
 }
@@ -442,14 +486,27 @@ export class ReadReceiptsButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'android:id/summary',
-          text: 'Show read receipts for all messages you send and receive.',
+          selector: 'preferences-option-read-receipt',
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Read Receipts - Switch',
         } as const;
+    }
+  }
+}
+
+export class ScanQRTab extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: '-android uiautomator',
+          selector: `new UiSelector().text("${tStripped('qrScan')}")`,
+        } as const;
+      case 'ios':
+        throw new Error('Not implemented on iOS');
     }
   }
 }
@@ -522,6 +579,14 @@ export function describeLocator(locator: StrategyExtractionObj & { text?: string
       ? `${selector.substring(0, halfLength)}…${selector.substring(selector.length - halfLength)}`
       : selector;
 
+  // Trim text if too long, show beginning and end
+  const maxTextLength = 100;
+  const trimmedText = text
+    ? text.length > maxTextLength
+      ? `${text.substring(0, maxTextLength / 2)}…${text.substring(text.length - maxTextLength / 2)}`
+      : text
+    : undefined;
+
   const base = `${strategy} "${trimmedSelector}"`;
-  return text ? `${base} and text "${text}"` : base;
+  return trimmedText ? `${base} and text "${trimmedText}"` : base;
 }

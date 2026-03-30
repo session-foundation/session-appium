@@ -34,7 +34,7 @@ async function restoreGroup(platform: SupportedPlatformsType, testInfo: TestInfo
   const aliceMessage = `${USERNAME.ALICE} to ${testGroupName}`;
   const bobMessage = `${USERNAME.BOB} to ${testGroupName}`;
   const charlieMessage = `${USERNAME.CHARLIE} to ${testGroupName}`;
-  await restoreAccount(device4, alice);
+  await restoreAccount(device4, alice, 'alice2');
   //   Check that group has loaded on linked device
   await device4.clickOnElementAll(new ConversationItem(device4, testGroupName));
   // Check the group name has loaded

@@ -1,4 +1,3 @@
-import { AppiumAndroidCapabilities, AppiumCapabilities } from '@wdio/types/build/Capabilities';
 import { W3CUiautomator2DriverCaps } from 'appium-uiautomator2-driver/build/lib/types';
 import dotenv from 'dotenv';
 import { isString } from 'lodash';
@@ -16,51 +15,24 @@ export const androidAppActivity = 'network.loki.messenger.RoutingActivity';
 
 console.log(`Android app full path: ${androidAppFullPath}`);
 
-const sharedCapabilities: AppiumAndroidCapabilities & AppiumCapabilities = {
+const sharedCapabilities: W3CUiautomator2DriverCaps['alwaysMatch'] = {
   'appium:app': androidAppFullPath,
-  'appium:platformName': 'Android',
+  platformName: 'Android',
   'appium:platformVersion': '14',
   'appium:appPackage': androidAppPackage,
   'appium:appActivity': androidAppActivity,
   'appium:automationName': 'UiAutomator2',
   'appium:newCommandTimeout': 300000,
   'appium:eventTimings': false,
+  'appium:injectedImageProperties': {},
 };
 
-const emulator1Udid = 'emulator-5554';
-const emulator2Udid = 'emulator-5556';
-const emulator3Udid = 'emulator-5558';
-const emulator4Udid = 'emulator-5560';
-const emulator5Udid = 'emulator-5562';
-const emulator6Udid = 'emulator-5564';
-const emulator7Udid = 'emulator-5566';
-const emulator8Udid = 'emulator-5568';
+const udids = ['emulator-5554', 'emulator-5556', 'emulator-5558', 'emulator-5560'];
 
-const udids = [
-  emulator1Udid,
-  emulator2Udid,
-  emulator3Udid,
-  emulator4Udid,
-  emulator5Udid,
-  emulator6Udid,
-  emulator7Udid,
-  emulator8Udid,
-];
-
-const emulatorCapabilities: AppiumCapabilities[] = udids.map(udid => ({
+const emulatorCapabilities: W3CUiautomator2DriverCaps['alwaysMatch'][] = udids.map(udid => ({
   ...sharedCapabilities,
   'appium:udid': udid,
 }));
-
-// Access individual capabilities like this
-const emulatorCapabilities1 = emulatorCapabilities[0];
-const emulatorCapabilities2 = emulatorCapabilities[1];
-const emulatorCapabilities3 = emulatorCapabilities[2];
-const emulatorCapabilities4 = emulatorCapabilities[3];
-const emulatorCapabilities5 = emulatorCapabilities[4];
-const emulatorCapabilities6 = emulatorCapabilities[5];
-const emulatorCapabilities7 = emulatorCapabilities[6];
-const emulatorCapabilities8 = emulatorCapabilities[7];
 
 export const androidCapabilities = {
   sharedCapabilities,
@@ -68,17 +40,7 @@ export const androidCapabilities = {
 };
 
 function getAllCaps() {
-  const emulatorCaps = [
-    emulatorCapabilities1,
-    emulatorCapabilities2,
-    emulatorCapabilities3,
-    emulatorCapabilities4,
-    emulatorCapabilities5,
-    emulatorCapabilities6,
-    emulatorCapabilities7,
-    emulatorCapabilities8,
-  ];
-  return emulatorCaps;
+  return emulatorCapabilities;
 }
 
 export function getAndroidCapabilities(

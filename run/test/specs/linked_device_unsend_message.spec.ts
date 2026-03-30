@@ -69,11 +69,11 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType, testI
     await Promise.all(
       [alice1, bob1, alice2].map(async device => {
         await device.waitForTextElementToBePresent(new MessageBody(device, firstMessage));
-        await device.verifyElementNotPresent(new MessageBody(device, secondMessage));
         await device.waitForTextElementToBePresent({
           ...new DeletedMessage(device).build(),
           maxWait: 10_000,
         });
+        await device.verifyElementNotPresent(new MessageBody(device, secondMessage));
         await device.back();
       })
     );

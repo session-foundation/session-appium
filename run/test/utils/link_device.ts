@@ -12,7 +12,7 @@ import {
 } from '../locators/onboarding';
 import { newUser } from './create_account';
 import { BaseSetupOptions } from './create_account';
-import { handlePermissions } from './permissions';
+import { handleNotificationPermissions } from './permissions';
 
 export const linkedDevice = async (
   device1: DeviceWrapper,
@@ -49,7 +49,7 @@ export const linkedDevice = async (
     device2.info('Display name found: Loading account');
   }
   // Wait for permissions modal to pop up
-  await handlePermissions(device2, allowNotificationPermissions);
+  await handleNotificationPermissions(device2, allowNotificationPermissions);
   // Check that button was clicked
   await device2.waitForTextElementToBePresent(new PlusButton(device2));
 

@@ -51,7 +51,7 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
     });
   });
   await test.step(TestSteps.DISAPPEARING_MESSAGES.SET(time), async () => {
-    await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
+    await setDisappearingMessage(alice1, ['1:1', timerType, time]);
   });
   await test.step(TestSteps.SEND.LINK, async () => {
     await alice1.inputText(testLink, new MessageInput(alice1));
@@ -105,7 +105,7 @@ async function disappearingLinkMessage1o1Android(
     });
   });
   await test.step(TestSteps.DISAPPEARING_MESSAGES.SET(time), async () => {
-    await setDisappearingMessage(platform, alice1, ['1:1', timerType, time]);
+    await setDisappearingMessage(alice1, ['1:1', timerType, time]);
   });
   await test.step(TestSteps.SEND.LINK, async () => {
     await alice1.inputText(testLink, new MessageInput(alice1));

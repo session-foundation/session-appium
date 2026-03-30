@@ -5,28 +5,25 @@ import { XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
 import { DriverOpts } from 'appium/build/lib/appium';
 import { compact } from 'lodash';
 
+import { recoverEmulator } from '../../../scripts/emulator_health';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
+import { getAdbFullPath, getDevicesPerTestCount } from './binaries';
+import { androidAppPackage, getAndroidCapabilities, getAndroidUdid } from './capabilities_android';
 import {
-  getAdbFullPath,
-  getAndroidSystemImageToUse,
-  getDevicesPerTestCount,
-  getEmulatorFullPath,
-  getSdkManagerFullPath,
-} from './binaries';
-import { getAndroidCapabilities, getAndroidUdid } from './capabilities_android';
-import { CapabilitiesIndexType, capabilityIsValid, getIosCapabilities } from './capabilities_ios';
+  CapabilitiesIndexType,
+  capabilityIsValid,
+  getIosCapabilities,
+  iOSBundleId,
+  IOSTestContext,
+} from './capabilities_ios';
+import { registerDevicesForTest } from './device_registry';
 import { cleanPermissions } from './permissions';
-import { registerDevicesForTest } from './screenshot_helper';
 import { sleepFor } from './sleep_for';
-import { isCI, runScriptAndLog } from './utilities';
+import { runScriptAndLog } from './utilities';
 
 const APPIUM_PORT = 4728;
 
 export type SupportedPlatformsType = 'android' | 'ios';
-
-export type IOSTestContext = {
-  customInstallTime?: string;
-};
 
 export const openAppMultipleDevices = async (
   platform: SupportedPlatformsType,
@@ -45,7 +42,7 @@ export const openAppMultipleDevices = async (
   //  Map the result to return only the device objects
   const devices = apps.map(app => app.device);
 
-  registerDevicesForTest(testInfo, devices, platform);
+  await registerDevicesForTest(testInfo, devices, platform);
 
   return devices;
 };
@@ -73,7 +70,7 @@ export const openAppOnPlatformSingleDevice = async (
 }> => {
   const result = await openAppOnPlatform(platform, 0, testInfo, iOSContext);
 
-  registerDevicesForTest(testInfo, [result.device], platform);
+  await registerDevicesForTest(testInfo, [result.device], platform);
 
   return result;
 };
@@ -93,7 +90,7 @@ export const openAppTwoDevices = async (
 
   const result = { device1: app1.device, device2: app2.device };
 
-  registerDevicesForTest(testInfo, Object.values(result), platform);
+  await registerDevicesForTest(testInfo, Object.values(result), platform);
 
   return result;
 };
@@ -119,7 +116,7 @@ export const openAppThreeDevices = async (
     device3: app3.device,
   };
 
-  registerDevicesForTest(testInfo, Object.values(result), platform);
+  await registerDevicesForTest(testInfo, Object.values(result), platform);
 
   return result;
 };
@@ -148,35 +145,10 @@ export const openAppFourDevices = async (
     device4: app4.device,
   };
 
-  registerDevicesForTest(testInfo, Object.values(result), platform);
+  await registerDevicesForTest(testInfo, Object.values(result), platform);
 
   return result;
 };
-
-async function createAndroidEmulator(emulatorName: string) {
-  if (isCI()) {
-    // on CI, emulators are created during the docker build step.
-    return emulatorName;
-  }
-  const installSystemImageCmd = `${getSdkManagerFullPath()} --install '${getAndroidSystemImageToUse()}'`;
-  console.warn(installSystemImageCmd);
-  await runScriptAndLog(installSystemImageCmd);
-
-  const createCmd = `echo "no" | ${getSdkManagerFullPath()} create avd --name ${emulatorName} -k '${getAndroidSystemImageToUse()}' --force --skin pixel_5`;
-  console.info(createCmd);
-  await runScriptAndLog(createCmd);
-  return emulatorName;
-}
-
-async function startAndroidEmulator(emulatorName: string) {
-  await runScriptAndLog(`echo "hw.lcd.density=440" >> ~/.android/avd/${emulatorName}.avd/config.ini
-  `);
-  const startEmulatorCmd = `${getEmulatorFullPath()} @${emulatorName}`;
-  console.info(`${startEmulatorCmd} & ; disown`);
-  await runScriptAndLog(
-    startEmulatorCmd // -netdelay none -no-snapshot -wipe-data
-  );
-}
 
 async function isEmulatorRunning(emulatorName: string) {
   const failedWith = await runScriptAndLog(
@@ -189,7 +161,7 @@ async function isEmulatorRunning(emulatorName: string) {
 
 async function waitForEmulatorToBeRunning(emulatorName: string) {
   let start = Date.now();
-  let found = false;
+  let found: boolean;
 
   do {
     found = await isEmulatorRunning(emulatorName);
@@ -242,13 +214,15 @@ const openAndroidApp = async (
   const emulatorAlreadyRunning = await isEmulatorRunning(targetName);
   console.info('emulatorAlreadyRunning', targetName, emulatorAlreadyRunning);
   if (!emulatorAlreadyRunning) {
-    if (process.env.CI) {
-      throw new Error(
-        `Emulator "${targetName}" is not running but it should have been started earlier.`
-      );
+    if (process.env.CI === '1') {
+      // Emulator died mid-job — attempt recovery before failing the test.
+      // Each worker owns a fixed port range (determined by TEST_PARALLEL_INDEX), so
+      // parallel workers will never race to recover the same emulator.
+      const port = parseInt(targetName.replace('emulator-', ''));
+      await recoverEmulator((port - 5554) / 2 + 1);
+    } else {
+      throw new Error(`Emulator "${targetName}" is not running. Please start it manually.`);
     }
-    await createAndroidEmulator(targetName);
-    void startAndroidEmulator(targetName);
   }
   await waitForEmulatorToBeRunning(targetName);
   console.log(targetName, ' emulator booted');
@@ -334,7 +308,7 @@ const openiOSApp = async (
 
   const capabilities = getIosCapabilities(
     actualCapabilitiesIndex as CapabilitiesIndexType,
-    iOSContext?.customInstallTime
+    iOSContext
   );
   const udid = capabilities.alwaysMatch['appium:udid'] as string;
 
@@ -346,4 +320,13 @@ export const closeApp = async (...devices: Array<DeviceWrapper>) => {
   await Promise.all(compact(devices).map(d => d.deleteSession()));
 
   console.info('sessions closed');
+};
+
+export const uninstallApp = async (device: DeviceWrapper, platform: SupportedPlatformsType) => {
+  const command =
+    platform === 'android'
+      ? `${getAdbFullPath()} -s ${device.udid} uninstall ${androidAppPackage}`
+      : `xcrun simctl uninstall ${device.udid} ${iOSBundleId}`;
+
+  await runScriptAndLog(command, true);
 };

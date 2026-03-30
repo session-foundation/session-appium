@@ -1,13 +1,13 @@
 import { test, type TestInfo } from '@playwright/test';
 import { USERNAME } from '@session-foundation/qa-seeder';
 
-import { testCommunityLink, testCommunityName } from '../../constants/community';
+import { communities } from '../../constants/community';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { CommunityMessageAuthor, UPMMessageButton } from '../locators/conversation';
 import { sleepFor } from '../utils';
+import { joinCommunity } from '../utils/community';
 import { newUser } from '../utils/create_account';
-import { joinCommunity } from '../utils/join_community';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
@@ -33,13 +33,16 @@ async function blindedMessageRequests(platform: SupportedPlatformsType, testInfo
   await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
     await Promise.all(
       [device1, device2].map(async device => {
-        await joinCommunity(device, testCommunityLink, testCommunityName);
+        await joinCommunity(device, communities.testCommunity.link, communities.testCommunity.name);
       })
     );
   });
-  await test.step(TestSteps.SEND.MESSAGE(USERNAME.BOB, testCommunityName), async () => {
-    await device2.sendMessage(message);
-  });
+  await test.step(
+    TestSteps.SEND.MESSAGE(USERNAME.BOB, communities.testCommunity.name),
+    async () => {
+      await device2.sendMessage(message);
+    }
+  );
   await device1.clickOnElementAll(new CommunityMessageAuthor(device1, message));
   await test.step(`Verify the 'Message' button in the User Profile Modal is disabled`, async () => {
     // brief sleep to let the UI settle

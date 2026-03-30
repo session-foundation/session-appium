@@ -35,7 +35,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType, tes
     focusFriendsConvo: true,
     testInfo,
   });
-  await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
+  await setDisappearingMessage(alice1, ['1:1', timerType, time]);
   let sentTimestamp: number;
   if (platform === 'ios') {
     sentTimestamp = await alice1.onIOS().sendVideoiOS(testMessage);

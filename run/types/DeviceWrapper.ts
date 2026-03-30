@@ -18,12 +18,14 @@ import {
   describeLocator,
   DownloadMediaButton,
   FirstGif,
+  GIFName,
   ImageName,
   ImagePermissionsModalAllow,
   LocatorsInterface,
   ReadReceiptsButton,
 } from '../../run/test/locators';
 import {
+  animatedProfilePicture,
   profilePicture,
   testFile,
   testImage,
@@ -32,6 +34,7 @@ import {
 } from '../constants/testfiles';
 import { tStripped } from '../localizer/lib';
 import {
+  AcceptMessageRequestButton,
   AttachmentsButton,
   DocumentsFolderButton,
   GIFButton,
@@ -53,7 +56,14 @@ import {
   ModalDescription,
   ModalHeading,
 } from '../test/locators/global';
-import { ConversationItem, PlusButton } from '../test/locators/home';
+import {
+  ConversationItem,
+  MessageRequestItem,
+  MessageRequestsBanner,
+  PinConversationOption,
+  PlusButton,
+  UnpinConversationOption,
+} from '../test/locators/home';
 import { LoadingAnimation } from '../test/locators/onboarding';
 import {
   PrivacyMenuItem,
@@ -63,16 +73,17 @@ import {
   VersionNumber,
 } from '../test/locators/settings';
 import { EnterAccountID, NewMessageOption, NextButton } from '../test/locators/start_conversation';
-import { clickOnCoordinates, sleepFor } from '../test/utils';
+import { clickOnCoordinates, sleepFor, verify } from '../test/utils';
 import { getAdbFullPath } from '../test/utils/binaries';
 import { parseDataImage } from '../test/utils/check_colour';
 import { isSameColor } from '../test/utils/check_colour';
 import { SupportedPlatformsType } from '../test/utils/open_app';
 import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/utils/utilities';
+import { CTAConfig, ctaConfigs, CTAType } from './cta';
 import {
   AccessibilityId,
+  Coordinates,
   DISAPPEARING_TIMES,
-  Group,
   Id,
   InteractionPoints,
   Strategy,
@@ -81,10 +92,6 @@ import {
   XPath,
 } from './testing';
 
-export type Coordinates = {
-  x: number;
-  y: number;
-};
 export type ActionSequence = {
   actions: string;
 };
@@ -317,6 +324,19 @@ export class DeviceWrapper {
     return this.toShared().getPageSource();
   }
 
+  /**
+   * Injects a base64-encoded image into the Android emulator's virtual camera scene.
+   */
+  public async injectImageToScene(base64Image: string): Promise<void> {
+    if (this.isAndroid()) {
+      await this.toShared().execute('mobile: injectEmulatorCameraImage', {
+        payload: base64Image,
+      });
+      this.log(`Injected image to scene`);
+    }
+    // iOS: no-op
+  }
+
   /* === all the device-specific function ===  */
 
   // ELEMENT INTERACTION
@@ -346,6 +366,7 @@ export class DeviceWrapper {
       { from: 'Message sent status: Sent', to: 'Message sent status: Sending' },
       { from: 'Done', to: 'Donate' },
       { from: 'New conversation button', to: 'conversation-options-avatar' },
+      { from: 'Leave group', to: 'Delete group' },
     ];
 
     // System locators such as 'network.loki.messenger:id' can cause false positives with too high similarity scores
@@ -412,7 +433,7 @@ export class DeviceWrapper {
       }
 
       // Validate the candidate element
-      let isValidCandidate = true;
+      let isValidCandidate: boolean;
 
       // Always check visibility first
       try {
@@ -564,6 +585,16 @@ export class DeviceWrapper {
     return [];
   }
 
+  private resolveLocator(args: LocatorsInterface | (StrategyExtractionObj & { text?: string })): {
+    locator: StrategyExtractionObj;
+    description: string;
+  } {
+    const built = args instanceof LocatorsInterface ? args.build() : args;
+    const text = args instanceof LocatorsInterface ? undefined : args.text;
+    const locator = text ? { ...built, text } : built;
+    return { locator, description: describeLocator(locator) };
+  }
+
   /**
    * Attempts to find an element using a primary locator, and if not found, falls back to a secondary locator.
    * This is useful for supporting UI transitions (e.g., between legacy and Compose Android screens) where
@@ -581,13 +612,10 @@ export class DeviceWrapper {
     fallbackLocator: LocatorsInterface | StrategyExtractionObj,
     maxWait: number = 3000
   ): Promise<AppiumNextElementType> {
-    const primary =
-      primaryLocator instanceof LocatorsInterface ? primaryLocator.build() : primaryLocator;
-    const fallback =
-      fallbackLocator instanceof LocatorsInterface ? fallbackLocator.build() : fallbackLocator;
-
-    const primaryDescription = describeLocator(primary);
-    const fallbackDescription = describeLocator(fallback);
+    const { locator: primary, description: primaryDescription } =
+      this.resolveLocator(primaryLocator);
+    const { locator: fallback, description: fallbackDescription } =
+      this.resolveLocator(fallbackLocator);
 
     try {
       return await this.waitForTextElementToBePresent({ ...primary, maxWait, skipHealing: true });
@@ -603,23 +631,54 @@ export class DeviceWrapper {
           skipHealing: true,
         });
       } catch (fallbackError) {
-        throw new Error(`Element ${primaryDescription} and ${fallbackDescription} not found.`);
+        throw new Error(`Element ${primaryDescription} and ${fallbackDescription} not found.`, {
+          cause: fallbackError,
+        });
       }
     }
   }
 
-  public async longClick(element: AppiumNextElementType, durationMs: number) {
+  // Appium taps elements in their center but sometimes that is not desirable
+  // The native methods apply the tap offset from the top left corner
+  // For a more intuitive offset calculation, this method allows us to
+  // define offsets based on the element center
+  private async calculateGestureOffset(
+    element: AppiumNextElementType,
+    offset: Coordinates
+  ): Promise<Coordinates> {
+    const rect = await this.getElementRect(element.ELEMENT);
+    if (!rect) {
+      throw new Error('Failed to resolve element rect for offset calculation');
+    }
+    const { width, height } = rect;
+    const centerX = Math.round(width / 2);
+    const centerY = Math.round(height / 2);
+    // Clamp offset to element bounds
+    const x = Math.min(Math.max(centerX + offset.x, 0), rect.width);
+    const y = Math.min(Math.max(centerY + offset.y, 0), rect.height);
+    return { x, y };
+  }
+
+  /**
+   * @param offset Pixel offset from the element center.
+   *  If an offset is necessary, both x and y must be defined, otherwise Appium doesn't apply the offset parameter.
+   */
+  public async longClick(element: AppiumNextElementType, durationMs: number, offset?: Coordinates) {
+    let xOffset: number | undefined;
+    let yOffset: number | undefined;
+
+    if (offset) {
+      const offsetCoordinates = await this.calculateGestureOffset(element, offset);
+      xOffset = offsetCoordinates.x;
+      yOffset = offsetCoordinates.y;
+    }
+
     if (this.isIOS()) {
       // iOS takes a number in seconds
       const duration = Math.floor(durationMs / 1000);
-      return this.toIOS().mobileTouchAndHold(duration, undefined, undefined, element.ELEMENT);
+      return this.toIOS().mobileTouchAndHold(duration, xOffset, yOffset, element.ELEMENT);
     }
-    return this.toAndroid().mobileLongClickGesture(
-      element.ELEMENT,
-      undefined,
-      undefined,
-      durationMs
-    );
+    return this.toAndroid().mobileLongClickGesture(element.ELEMENT, xOffset, yOffset, durationMs);
   }
 
   public async clickOnByAccessibilityID(
@@ -655,12 +714,43 @@ export class DeviceWrapper {
   public async clickOnElementAll(
     args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
   ) {
-    let el: AppiumNextElementType | null = null;
     const locator = args instanceof LocatorsInterface ? args.build() : args;
-
-    el = await this.waitForTextElementToBePresent({ ...locator });
+    const el = await this.waitForTextElementToBePresent({ ...locator });
     await this.click(el.ELEMENT);
     return el;
+  }
+
+  /**
+   * Clicks an element and retries until an expected element appears, confirming the click registered.
+   * Useful for flaky taps where Appium reports success but the UI doesn't respond.
+   *
+   * @param args - The element to click
+   * @param waitFor - A locator that should become present after a successful click
+   */
+  public async clickAndWaitFor(
+    args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj),
+    waitFor: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
+  ) {
+    const { description: firstLocator } = this.resolveLocator(args);
+    const { locator: waitForLocator } = this.resolveLocator(waitFor);
+
+    return this.pollUntil(
+      async () => {
+        const el = await this.waitForTextElementToBePresent(args);
+        await this.click(el.ELEMENT);
+        try {
+          await this.waitForTextElementToBePresent({ ...waitForLocator, maxWait: 1_000 });
+          return { success: true, data: el };
+        } catch {
+          this.log(`Click on ${firstLocator} did not produce expected result, retrying...`);
+          return {
+            success: false,
+            error: `Click on ${firstLocator} did not produce expected result`,
+          };
+        }
+      },
+      { maxWait: 5_000, pollInterval: 500 }
+    );
   }
 
   public async clickOnElementByText(
@@ -735,32 +825,31 @@ export class DeviceWrapper {
    * @throws if message not found or context menu fails to appear within maxWait
    */
   public async longPressMessage(
-    args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
+    args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj),
+    options?: { offset?: Coordinates }
   ): Promise<void> {
-    const { text, maxWait = 10_000 } = args;
-    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const { maxWait = 10_000 } = args;
+    const { locator, description } = this.resolveLocator(args);
 
-    // Merge text if provided
-    const finalLocator = text ? { ...locator, text } : locator;
-
-    const displayText = describeLocator(finalLocator);
-    this.log(`Attempting long press on ${displayText}`);
+    this.log(`Attempting long press on ${description}`);
 
     await this.pollUntil(
       async () => {
         // Find the message
-        this.log(`Looking for: ${JSON.stringify(finalLocator)}`);
+        this.log(`Looking for: ${JSON.stringify(locator)}`);
         const el = await this.waitForTextElementToBePresent({
-          ...finalLocator,
+          ...locator,
           maxWait: 1_000,
         });
 
         if (!el) {
-          return { success: false, error: `Message not found: ${displayText}` };
+          return { success: false, error: `Message not found: ${description}` };
         }
-
+        if (options?.offset) {
+          this.log(`Offsetting long press by x=${options?.offset?.x}, y=${options?.offset?.y}`);
+        }
         // Attempt long click
-        await this.longClick(el, 2000);
+        await this.longClick(el, 2000, options?.offset);
 
         // Check if context menu appeared
         const longPressSuccess = await this.waitForTextElementToBePresent({
@@ -776,7 +865,7 @@ export class DeviceWrapper {
 
         return {
           success: false,
-          error: `Long press didn't show context menu for ${displayText}`,
+          error: `Long press didn't show context menu for ${description}`,
         };
       },
       {
@@ -804,12 +893,12 @@ export class DeviceWrapper {
 
         await this.longClick(el, 3000);
         await sleepFor(1000);
-        // Pin is the only consistent option in context menu
-        const longPressSuccess = await this.waitForTextElementToBePresent({
-          strategy: 'accessibility id',
-          selector: 'Pin',
-          maxWait: 1000,
-        });
+        // Either Pin or Unpin will be present depending on whether the conversation is already pinned
+        const longPressSuccess = await this.findWithFallback(
+          new PinConversationOption(this),
+          new UnpinConversationOption(this),
+          1000
+        );
 
         if (longPressSuccess) {
           this.log('LongClick successful');
@@ -829,6 +918,18 @@ export class DeviceWrapper {
         }
       }
     }
+  }
+
+  public async pinConversation(name: string) {
+    await this.onIOS().swipeLeft('Conversation list item', name);
+    await this.onAndroid().longPressConversation(name);
+    await this.clickOnElementAll(new PinConversationOption(this));
+  }
+
+  public async unpinConversation(name: string) {
+    await this.onIOS().swipeLeft('Conversation list item', name);
+    await this.onAndroid().longPressConversation(name);
+    await this.clickOnElementAll(new UnpinConversationOption(this));
   }
 
   public async pressAndHold(accessibilityId: AccessibilityId) {
@@ -869,10 +970,8 @@ export class DeviceWrapper {
   public async deleteText(
     args: LocatorsInterface | ({ text?: string; maxWait?: number } & StrategyExtractionObj)
   ) {
-    let el: AppiumNextElementType | null = null;
     const locator = args instanceof LocatorsInterface ? args.build() : args;
-
-    el = await this.waitForTextElementToBePresent({ ...locator });
+    const el = await this.waitForTextElementToBePresent({ ...locator });
     await this.click(el.ELEMENT);
     await sleepFor(100);
     const maxRetries = 3;
@@ -1003,8 +1102,14 @@ export class DeviceWrapper {
     if (elements && elements.length) {
       const matching = await this.findAsync(elements, async e => {
         const text = await this.getTextFromElement(e);
-        const isPartialMatch = text && text.toLowerCase().includes(textToLookFor.toLowerCase());
-        return Boolean(isPartialMatch);
+        // Strip LTR/RTL markers and other whitespace nonsense
+        const normalize = (s: string) =>
+          s
+            .replace(/[\u200e\u200f\u202a-\u202e]/g, '')
+            .trim()
+            .toLowerCase();
+        const isExactMatch = text && normalize(text) === normalize(textToLookFor);
+        return Boolean(isExactMatch);
       });
 
       return matching || null;
@@ -1044,134 +1149,119 @@ export class DeviceWrapper {
     const message = await this.findMatchingTextAndAccessibilityId('Message body', textToLookFor);
     return message;
   }
+
   /**
-   * Attempts to visually match a reference image against all elements found by the given locator,
-   * and taps the best match (or the first high-confidence match if earlyMatch is enabled).
-   * This is useful for scenarios where UI elements cannot be reliably identified,
-   * such as elements with date-based accessibility IDs.
+   * Attempts to visually match a reference image against all instances found by the given locator, and taps the best match.
+   * All element screenshots are taken in parallel.
+   * If the method finds 0 results for a locator, retries with exponential backoff up to 5 seconds.
    *
    * @param locator - The strategy and selector to find candidate elements.
    * @param referenceImageName - The filename of the reference image (in the media directory).
-   * @param earlyMatch - If true, taps immediately on the first match above the earlyMatchThreshold.
    * @throws If no suitable match is found among the candidate elements.
    */
   public async matchAndTapImage(
     locator: StrategyExtractionObj,
-    referenceImageName: string,
-    earlyMatch: boolean = true
+    referenceImageName: string
   ): Promise<void> {
     const threshold = 0.85;
-    const earlyMatchThreshold = 0.97;
 
-    // Find all candidate elements matching the locator
-    const elements = await this.findElements(locator.strategy, locator.selector);
+    // Retry findElements with exponential backoff — photo picker may not have rendered yet
+    let elements = await this.findElements(locator.strategy, locator.selector);
+    if (elements.length === 0) {
+      let delay = 100;
+      const maxWait = 5000;
+      const start = Date.now();
+      while (elements.length === 0 && Date.now() - start < maxWait) {
+        await sleepFor(delay);
+        delay = Math.min(delay * 2, 1600);
+        elements = await this.findElements(locator.strategy, locator.selector);
+      }
+    }
+
     this.info(
       `[matchAndTapImage] Starting image matching: ${elements.length} elements with ${locator.strategy} "${locator.selector}"`
     );
 
-    // Load the reference image buffer from disk
+    // Load the reference image buffer from disk once
     const referencePath = path.join('run', 'test', 'media', referenceImageName);
     await fs.access(referencePath).catch(() => {
       throw new Error(`Reference image not found: ${referencePath}`);
     });
     const referenceBuffer = await fs.readFile(referencePath);
+    // Reference metadata never changes across elements
+    const refMeta = await sharp(referenceBuffer).metadata();
 
-    let bestMatch: {
-      center: { x: number; y: number };
-      score: number;
-    } | null = null;
+    // Phase 1: screenshot + comparison in parallel
+    const results = await Promise.all(
+      elements.map(async el => {
+        const base64 = await this.getElementScreenshot(el.ELEMENT);
+        const elementBuffer = Buffer.from(base64, 'base64');
 
-    // Iterate over each candidate element
-    for (const el of elements) {
-      // Take a screenshot of the element
-      const base64 = await this.getElementScreenshot(el.ELEMENT);
-      const elementBuffer = Buffer.from(base64, 'base64');
+        const elementMeta = await sharp(elementBuffer).metadata();
 
-      // Get the element's rectangle (position and size)
-      const rect = await this.getElementRect(el.ELEMENT);
-      if (!rect) {
-        continue;
-      }
-      // Get actual pixel dimensions of the element screenshot
-      const elementMeta = await sharp(elementBuffer).metadata();
-      // Get original reference image dimensions
-      const refMeta = await sharp(referenceBuffer).metadata();
+        let resizedRef: Buffer;
+        let resizedMeta: Awaited<ReturnType<typeof sharp.prototype.metadata>>;
 
-      let resizedRef: Buffer;
-
-      if (elementMeta.width === refMeta.width && elementMeta.height === refMeta.height) {
-        // Skip resizing if reference already matches the screenshot dimensions
-        resizedRef = referenceBuffer;
-      } else {
-        // Resize the reference image to exactly match the screenshot dimensions
-        const targetWidth = elementMeta.width;
-        const targetHeight = elementMeta.height;
-
-        resizedRef = await sharp(referenceBuffer).resize(targetWidth, targetHeight).toBuffer();
-      }
-
-      try {
-        const { rect: matchRect, score } = await getImageOccurrence(elementBuffer, resizedRef, {
-          threshold,
-        });
-
-        /**
-         * Matching is done on a resized reference image to account for device pixel density.
-         * However, the coordinates returned by getImageOccurrence are relative to the resized buffer,
-         * *not* the original screen element. This leads to incorrect tap positions unless we
-         * scale the match result back down to the actual dimensions of the element.
-         * The logic below handles this scaling correction, ensuring the tap lands at the correct
-         * screen coordinates — even when Retina displays and image resizing are involved.
-         */
-
-        // Calculate scale between resized image and element dimensions
-        const resizedMeta = await sharp(resizedRef).metadata();
-        const scaleX = rect.width / (resizedMeta.width ?? rect.width);
-        const scaleY = rect.height / (resizedMeta.height ?? rect.height);
-
-        // Calculate center of the match rectangle (in buffer space)
-        const matchCenterX = matchRect.x + Math.floor(matchRect.width / 2);
-        const matchCenterY = matchRect.y + Math.floor(matchRect.height / 2);
-
-        // Scale match center down to element space
-        const scaledCenterX = matchCenterX * scaleX;
-        const scaledCenterY = matchCenterY * scaleY;
-
-        // Final absolute coordinates
-        const tapX = Math.round(rect.x + scaledCenterX);
-        const tapY = Math.round(rect.y + scaledCenterY);
-
-        const center = { x: tapX, y: tapY };
-
-        // If earlyMatch is enabled and the score is high enough, tap immediately
-        if (earlyMatch && score >= earlyMatchThreshold) {
-          this.info(
-            `[matchAndTapImage] Tapping first high-confidence match (${(score * 100).toFixed(2)}%)`
-          );
-          await clickOnCoordinates(this, center);
-          return;
+        if (elementMeta.width === refMeta.width && elementMeta.height === refMeta.height) {
+          // Skip resizing if reference already matches the screenshot dimensions
+          resizedRef = referenceBuffer;
+          resizedMeta = refMeta;
+        } else {
+          resizedRef = await sharp(referenceBuffer)
+            .resize(elementMeta.width, elementMeta.height)
+            .toBuffer();
+          resizedMeta = await sharp(resizedRef).metadata();
         }
-        // Otherwise, keep track of the best match so far
-        if (!bestMatch || score > bestMatch.score) {
-          bestMatch = { center, score };
+
+        try {
+          const { rect: matchRect, score } = await getImageOccurrence(elementBuffer, resizedRef, {
+            threshold,
+          });
+          return { el, matchRect, score, resizedMeta };
+        } catch {
+          return null;
         }
-      } catch {
-        continue; // No match in this element, try next
-      }
-    }
-    // If no good match was found, throw an error
-    if (!bestMatch) {
+      })
+    );
+
+    type MatchResult = NonNullable<(typeof results)[number]>;
+    const bestResult = results
+      .filter((r): r is MatchResult => r !== null)
+      .reduce<MatchResult | null>((best, r) => (!best || r.score > best.score ? r : best), null);
+
+    if (!bestResult) {
       console.log(
         `[matchAndTapImage] No matching image found among ${elements.length} elements for ${locator.strategy} "${locator.selector}"`
       );
       throw new Error('Unable to find the expected UI element on screen');
     }
-    // Tap the best match found
-    this.info(
-      `[matchAndTapImage] Tapping best match with ${(bestMatch.score * 100).toFixed(2)}% confidence`
-    );
-    await clickOnCoordinates(this, bestMatch.center);
+
+    // Phase 2: fetch rect only for the winning element to determine tap coords
+    const rect = await this.getElementRect(bestResult.el.ELEMENT);
+
+    if (!rect) {
+      throw new Error('Unable to get rect for matched element');
+    }
+
+    /**
+     * Matching is done on a resized reference image to account for device pixel density.
+     * However, the coordinates returned by getImageOccurrence are relative to the resized buffer,
+     * *not* the original screen element. This leads to incorrect tap positions unless we
+     * scale the match result back down to the actual dimensions of the element.
+     * The logic below handles this scaling correction, ensuring the tap lands at the correct
+     * screen coordinates — even when Retina displays and image resizing are involved.
+     */
+    const { matchRect, resizedMeta } = bestResult;
+    const scaleX = rect.width / (resizedMeta.width ?? rect.width);
+    const scaleY = rect.height / (resizedMeta.height ?? rect.height);
+    const matchCenterX = matchRect.x + Math.floor(matchRect.width / 2);
+    const matchCenterY = matchRect.y + Math.floor(matchRect.height / 2);
+    const tapX = Math.round(rect.x + matchCenterX * scaleX);
+    const tapY = Math.round(rect.y + matchCenterY * scaleY);
+
+    await clickOnCoordinates(this, { x: tapX, y: tapY });
   }
+
   /**
    * Checks if an element exists on the screen without throwing an error.
    * Only useful for scenarios where you want to interact with an element if it exists
@@ -1216,7 +1306,7 @@ export class DeviceWrapper {
       maxWait?: number;
     } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<void> {
-    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const { locator, description } = this.resolveLocator(args);
     const maxWait = args.maxWait || 2_000;
 
     // Wait for any transitions to complete
@@ -1224,23 +1314,26 @@ export class DeviceWrapper {
 
     const element = await this.findElementQuietly(locator, args.text);
 
-    const description = describeLocator({ ...locator, text: args.text });
-
     if (element) {
       // Elements can disappear in the GUI but still be present in the DOM
+      let isVisible: boolean;
       try {
-        const isVisible = await this.isVisible(element.ELEMENT);
-        if (isVisible) {
-          throw new Error(
-            `Element with ${description} is visible after ${maxWait}ms when it should not be`
-          );
-        }
-        // Element exists but not visible - that's okay
-        this.log(`Element with ${description} exists but is not visible`);
+        isVisible = await this.isVisible(element.ELEMENT);
       } catch (e) {
-        // Stale element or other error - element is gone, that's okay
-        this.log(`Element with ${description} is not present (stale reference)`);
+        // Stale reference or other error checking visibility
+        const errorMsg = e instanceof Error ? e.message : String(e);
+        throw new Error(
+          `Element with ${description} has stale reference or error checking visibility: ${errorMsg}`
+        );
       }
+
+      if (isVisible) {
+        throw new Error(
+          `Element with ${description} is visible after ${maxWait}ms when it should not be`
+        );
+      }
+      // Element exists but not visible - that's okay
+      this.log(`Element with ${description} exists but is not visible`);
     } else {
       this.log(`Verified no element with ${description} is present`);
     }
@@ -1265,12 +1358,10 @@ export class DeviceWrapper {
       maxWait?: number;
     } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<void> {
-    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const { locator, description } = this.resolveLocator(args);
     const text = args.text;
     const initialMaxWait = args.initialMaxWait ?? 10_000;
     const maxWait = args.maxWait ?? 30_000;
-
-    const description = describeLocator({ ...locator, text: args.text });
 
     // Track total time from start - disappearing timers begin on send, not on display
     const functionStartTime = Date.now();
@@ -1316,12 +1407,10 @@ export class DeviceWrapper {
       maxWait?: number;
     } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<void> {
-    const locator = args instanceof LocatorsInterface ? args.build() : args;
+    const { locator, description } = this.resolveLocator(args);
     const text = args.text;
     const initialMaxWait = args.initialMaxWait ?? 10_000;
     const maxWait = args.maxWait ?? 30_000;
-
-    const description = describeLocator({ ...locator, text: args.text });
 
     // Phase 1: Wait for element to appear
     this.log(`Waiting for element with ${description} to be deleted...`);
@@ -1628,7 +1717,7 @@ export class DeviceWrapper {
         // Success when element is GONE
         return { success: !element };
       },
-      { maxWait: 15_000 }
+      { maxWait: 18_000 }
     );
 
     this.info('Loading animation has finished');
@@ -1649,7 +1738,7 @@ export class DeviceWrapper {
     } = {}
   ): Promise<T | undefined> {
     const start = Date.now();
-    let elapsed = 0;
+    let elapsed: number;
     let attempt = 0;
     let lastError: string | undefined;
 
@@ -1692,8 +1781,7 @@ export class DeviceWrapper {
     expectedColor: string,
     tolerance?: number
   ): Promise<void> {
-    const locator = args instanceof LocatorsInterface ? args.build() : args;
-    const description = describeLocator({ ...locator, text: args.text });
+    const { locator, description } = this.resolveLocator(args);
 
     this.log(`Waiting for ${description} to have color #${expectedColor}`);
 
@@ -1772,14 +1860,12 @@ export class DeviceWrapper {
     return message;
   }
 
-  public async sendMessageTo(sender: User, receiver: Group | User) {
-    const message = `${sender.userName} to ${receiver.userName}`;
-    await this.clickOnElementAll(new ConversationItem(this, receiver.userName));
-    this.log(`${sender.userName} + " sent message to ${receiver.userName}`);
-    await this.sendMessage(message);
-    this.log(`Message received by ${receiver.userName} from ${sender.userName}`);
-    return message;
+  public async acceptMessageRequestWithButton() {
+    await this.clickOnElementAll(new MessageRequestsBanner(this));
+    await this.clickOnElementAll(new MessageRequestItem(this));
+    await this.clickOnElementAll(new AcceptMessageRequestButton(this));
   }
+
   // TODO instead of blind sleeping, check presence of reply preview
   // Remove blind sleep from other tests that reply as well
   public async replyToMessage(user: Pick<User, 'userName'>, body: string) {
@@ -1814,23 +1900,46 @@ export class DeviceWrapper {
 
   public async inputText(
     textToInput: string,
-    args: LocatorsInterface | ({ maxWait?: number } & StrategyExtractionObj)
+    args: LocatorsInterface | ({ maxWait?: number } & StrategyExtractionObj),
+    paste: boolean = false
   ) {
-    let el: AppiumNextElementType | null = null;
     const locator = args instanceof LocatorsInterface ? args.build() : args;
 
-    this.log('Locator being used:', locator);
-
-    el = await this.waitForTextElementToBePresent({ ...locator });
-    if (!el) {
-      throw new Error(`inputText: Did not find element with locator: ${JSON.stringify(locator)}`);
+    if (paste) {
+      // Set clipboard, press key-code for instant paste
+      await this.clickOnElementAll({ ...locator });
+      if (this.isAndroid()) {
+        await this.toAndroid().setClipboard(
+          Buffer.from(textToInput).toString('base64'),
+          'plaintext'
+        );
+        await this.toAndroid().pressKeyCode(279);
+      } else {
+        // Use native paste UI, accept perms if needed
+        await this.toIOS().mobileSetPasteboard(textToInput);
+        await this.toIOS().mobileGetPasteboard();
+        await this.processPermissions({ strategy: 'accessibility id', selector: 'Allow Paste' });
+        await this.clickOnElementAll({ ...locator });
+        await this.clickOnByAccessibilityID('Paste');
+      }
+    } else {
+      const el = await this.waitForTextElementToBePresent({ ...locator });
+      await this.setValueImmediate(textToInput, el.ELEMENT);
     }
-
-    await this.setValueImmediate(textToInput, el.ELEMENT);
   }
 
   public async getAttribute(attribute: string, elementId: string) {
     return this.toShared().getAttribute(attribute, elementId);
+  }
+
+  public async assertAttribute(
+    element: LocatorsInterface | StrategyExtractionObj,
+    attribute: string,
+    value: string
+  ) {
+    const el = await this.waitForTextElementToBePresent(element);
+    const received = await this.getAttribute(attribute, el.ELEMENT);
+    verify(received, 'Element attribute value mismatch').toBe(value);
   }
 
   public async disappearRadioButtonSelected(
@@ -1862,7 +1971,12 @@ export class DeviceWrapper {
   }
 
   public async pushMediaToDevice(
-    mediaFileName: 'profile_picture.jpg' | 'test_file.pdf' | 'test_image.jpg' | 'test_video.mp4'
+    mediaFileName:
+      | 'animated_profile_picture.gif'
+      | 'profile_picture.jpg'
+      | 'test_file.pdf'
+      | 'test_image.jpg'
+      | 'test_video.mp4'
   ) {
     const filePath = path.join('run', 'test', 'media', mediaFileName);
     await fs.access(filePath).catch(() => {
@@ -1870,6 +1984,9 @@ export class DeviceWrapper {
     });
     if (this.isIOS()) {
       // Push file to simulator
+      this.warn(
+        `pushMediaToDevice on iOS is deprecated. Consider pre-loading it on simulator creation`
+      );
       await runScriptAndLog(`xcrun simctl addmedia ${this.udid} ${filePath}`, true);
     } else if (this.isAndroid()) {
       const ANDROID_DOWNLOAD_DIR = '/storage/emulated/0/Download';
@@ -1896,9 +2013,11 @@ export class DeviceWrapper {
     if (this.isIOS()) {
       await this.clickOnElementAll(new AttachmentsButton(this));
       await this.clickOnElementAll(new ImagesFolderButton(this));
-      await sleepFor(1000);
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      await sleepFor(2000); // Appium needs a moment, matchAndTapImage sometimes finds 0 elements otherwise
+      await this.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Recents',
+      });
       await this.matchAndTapImage(
         { strategy: 'xpath', selector: `//XCUIElementTypeCell` },
         testImage
@@ -1916,12 +2035,12 @@ export class DeviceWrapper {
       await sleepFor(500);
       await this.clickOnElementAll({
         strategy: 'id',
-        selector: 'network.loki.messenger:id/mediapicker_folder_item_thumbnail',
+        selector: 'mediapicker-folder-item-thumbnail-0',
       });
       await sleepFor(100);
       await this.clickOnElementAll({
         strategy: 'id',
-        selector: 'network.loki.messenger:id/mediapicker_image_item_thumbnail',
+        selector: 'mediapicker-image-item-thumbnail-0',
       });
     }
     await this.inputText(message, new MessageInput(this));
@@ -1940,12 +2059,11 @@ export class DeviceWrapper {
     // iOS files are pre-loaded on simulator creation, no need to push
     await this.clickOnElementAll(new AttachmentsButton(this));
     await this.clickOnElementAll(new ImagesFolderButton(this));
-    await sleepFor(100);
     await this.modalPopup({
       strategy: 'accessibility id',
       selector: 'Allow Full Access',
     });
-    await sleepFor(2000); // Appium needs a moment, matchAndTapImage sometimes finds 0 elements otherwise
+    await this.waitForTextElementToBePresent({ strategy: 'accessibility id', selector: 'Recents' });
     // A video can't be matched by its thumbnail so we use a video thumbnail file
     await this.matchAndTapImage(
       { strategy: 'xpath', selector: `//XCUIElementTypeCell` },
@@ -2146,7 +2264,17 @@ export class DeviceWrapper {
     return sentTimestamp;
   }
 
-  public async uploadProfilePicture() {
+  public async uploadProfilePicture(animated: boolean = false) {
+    let uploadPicture: 'animated_profile_picture.gif' | 'profile_picture.jpg';
+    let dpLocator: LocatorsInterface;
+    if (animated) {
+      uploadPicture = animatedProfilePicture;
+      dpLocator = new GIFName(this);
+    } else {
+      uploadPicture = profilePicture;
+      dpLocator = new ImageName(this);
+    }
+
     await this.clickOnElementAll(new UserSettings(this));
     // Click on Profile picture
     await this.clickOnElementAll(new UserAvatar(this));
@@ -2154,15 +2282,18 @@ export class DeviceWrapper {
     // iOS files are pre-loaded on simulator creation, no need to push
     if (this.isIOS()) {
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-      await sleepFor(5000); // sometimes Appium doesn't recognize the XPATH immediately
+      await this.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Collections',
+      });
       await this.matchAndTapImage(
         { strategy: 'xpath', selector: `//XCUIElementTypeImage` },
-        profilePicture
+        uploadPicture
       );
       await this.clickOnByAccessibilityID('Done');
     } else if (this.isAndroid()) {
       // Push file first
-      await this.pushMediaToDevice(profilePicture);
+      await this.pushMediaToDevice(uploadPicture);
       await this.clickOnElementAll(new ImagePermissionsModalAllow(this));
       await sleepFor(1000);
       await this.clickOnElementAll({
@@ -2170,8 +2301,10 @@ export class DeviceWrapper {
         selector: 'Image button',
       });
       await sleepFor(500);
-      await this.clickOnElementAll(new ImageName(this));
-      await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
+      await this.clickOnElementAll(dpLocator);
+      if (!animated) {
+        await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
+      }
     }
     await this.clickOnElementAll(new SaveProfilePictureButton(this));
   }
@@ -2261,11 +2394,13 @@ export class DeviceWrapper {
 
     this.info('Swiped left on ', selector);
   }
+
+  // Swipe horizontally from 20% to 80% of screen width at the vertical center
   public async swipeRight() {
     const { width, height } = await this.getWindowRect();
-    // Swipe horizontally from 20% to 80% of screen width at the vertical center
     await this.scroll({ x: width * 0.2, y: height / 2 }, { x: width * 0.8, y: height / 2 }, 100);
   }
+
   public async swipeLeft(accessibilityId: AccessibilityId, text: string) {
     const el = await this.findMatchingTextAndAccessibilityId(accessibilityId, text);
 
@@ -2285,14 +2420,19 @@ export class DeviceWrapper {
     // let some time for swipe action to happen and UI to update
   }
 
+  // Swipe vertically from 70% to 30% of screen height at the horizontal center
   public async scrollDown() {
-    await this.scroll({ x: 760, y: 1500 }, { x: 760, y: 710 }, 100);
+    const { width, height } = await this.getWindowRect();
+    await this.scroll({ x: width / 2, y: height * 0.7 }, { x: width / 2, y: height * 0.3 }, 100);
   }
 
+  // Swipe vertically from 30% to 70% of screen height at the horizontal center
   public async scrollUp() {
-    await this.scroll({ x: 760, y: 710 }, { x: 760, y: 1500 }, 100);
+    const { width, height } = await this.getWindowRect();
+    await this.scroll({ x: width / 2, y: height * 0.3 }, { x: width / 2, y: height * 0.7 }, 100);
   }
 
+  // Swipe vertically from 95% to 35% of screen height at the horizontal center
   public async swipeFromBottom(): Promise<void> {
     const { width, height } = await this.getWindowRect();
 
@@ -2347,19 +2487,15 @@ export class DeviceWrapper {
 
   public async turnOnReadReceipts() {
     await this.navigateBack();
-    await sleepFor(100);
     await this.clickOnElementAll(new UserSettings(this));
-    await sleepFor(500);
     await this.clickOnElementAll(new PrivacyMenuItem(this));
-    await sleepFor(2000);
     await this.clickOnElementAll(new ReadReceiptsButton(this));
     await this.navigateBack(false);
-    await sleepFor(100);
     await this.clickOnElementAll(new CloseSettings(this));
   }
 
-  public async processPermissions(locator: LocatorsInterface) {
-    const locatorConfig = locator.build();
+  public async processPermissions(locator: LocatorsInterface | StrategyExtractionObj) {
+    const locatorConfig = locator instanceof LocatorsInterface ? locator.build() : locator;
 
     if (this.isAndroid()) {
       const permissions = await this.doesElementExist({
@@ -2507,64 +2643,82 @@ export class DeviceWrapper {
     this.assertTextMatches(actualDescription, expectedDescription, 'Modal description');
   }
 
-  /**
-   * Checks CTA component text against expected values.
-   * CTAs contain: heading, body, 0-3 features, 1-2 buttons.
-   * @param heading - Expected CTA heading text
-   * @param body - Expected CTA body text
-   * @param buttons - Expected button text(s). First is positive, second (if present) is negative
-   * @param features - Optional array of expected feature text (0-3 items)
-   * @throws Error if any text element doesn't match expected value
-   */
-  public async checkCTAStrings(
-    heading: string,
-    body: string,
-    buttons: string[],
-    features?: string[]
-  ): Promise<void> {
-    // Validate input
+  private async checkCTAStrings({
+    heading,
+    body,
+    negativeButton,
+    positiveButton,
+    features,
+  }: CTAConfig): Promise<void> {
     if (features && features.length > 3) {
       throw new Error('CTAs support maximum 3 features');
     }
-    if (buttons.length < 1 || buttons.length > 2) {
-      throw new Error('CTAs must have 1-2 buttons');
-    }
 
-    // Find and check heading
+    // CTA heading
     const elHeading = await this.waitForTextElementToBePresent(new CTAHeading(this));
     const actualHeading = await this.getTextFromElement(elHeading);
     this.assertTextMatches(actualHeading, heading, 'CTA heading');
 
-    // Find and check body
-    const elBody = await this.waitForTextElementToBePresent(new CTABody(this));
-    const actualBody = await this.getTextFromElement(elBody);
-    this.assertTextMatches(actualBody, body, 'CTA body');
+    // iOS may split the body around inline images, producing multiple cta-body elements.
+    // Wait for the first, then find all and check that the expected text appears in any of them.
+    await this.waitForTextElementToBePresent(new CTABody(this));
+    const { strategy, selector } = new CTABody(this).build();
+    const bodyElements = await this.findElements(strategy, selector, true);
+    const bodyTexts = await Promise.all(bodyElements.map(el => this.getTextFromElement(el)));
+    const matchingText =
+      bodyTexts.find(t => this.sanitizeString(t) === this.sanitizeString(body)) ?? bodyTexts[0];
+    this.assertTextMatches(matchingText, body, 'CTA body');
 
-    // Check features if expected
+    // CTA features if present
     if (features) {
       for (let i = 0; i < features.length; i++) {
-        const featureLocator = new CTAFeature(this, i + 1);
-        const elFeature = await this.waitForTextElementToBePresent(featureLocator);
+        const elFeature = await this.waitForTextElementToBePresent(new CTAFeature(this, i));
         const actualFeature = await this.getTextFromElement(elFeature);
         this.assertTextMatches(actualFeature, features[i], `CTA feature ${i + 1}`);
       }
     }
 
-    // Check buttons
-    const positiveLocator = new CTAButtonPositive(this);
-    const elPositive = await this.waitForTextElementToBePresent(positiveLocator);
-    const actualPositive = await this.getTextFromElement(elPositive);
-    this.assertTextMatches(actualPositive, buttons[0], 'CTA positive button');
-
-    if (buttons.length === 2) {
-      const negativeLocator = new CTAButtonNegative(this);
-      const elNegative = await this.waitForTextElementToBePresent(negativeLocator);
+    if (negativeButton) {
+      const elNegative = await this.waitForTextElementToBePresent(new CTAButtonNegative(this));
       const actualNegative = await this.getTextFromElement(elNegative);
-      this.assertTextMatches(actualNegative, buttons[1], 'CTA negative button');
+      this.assertTextMatches(actualNegative, negativeButton, 'CTA negative button');
+    }
+
+    if (positiveButton) {
+      const elPositive = await this.waitForTextElementToBePresent(new CTAButtonPositive(this));
+      const actualPositive = await this.getTextFromElement(elPositive);
+      this.assertTextMatches(actualPositive, positiveButton, 'CTA positive button');
     }
   }
 
-  public async getElementPixelColor(args: LocatorsInterface): Promise<string> {
+  public async checkCTA(type: CTAType): Promise<void> {
+    await this.checkCTAStrings(ctaConfigs[type]);
+  }
+
+  public async verifyNoCTAShows(): Promise<void> {
+    await Promise.all([
+      this.verifyElementNotPresent(new CTAHeading(this)),
+      this.verifyElementNotPresent(new CTABody(this)),
+      this.verifyElementNotPresent(new CTAButtonNegative(this)),
+      this.verifyElementNotPresent(new CTAButtonPositive(this)),
+    ]);
+  }
+
+  // Dismiss any CTA if it shows
+  public async dismissCTA(): Promise<void> {
+    const hasCTAAppeared = await this.doesElementExist({
+      ...new CTAHeading(this).build(),
+      maxWait: 8_000,
+    });
+    if (hasCTAAppeared) {
+      this.log('Dismissing CTA');
+      await this.clickOnCoordinates(150, 150);
+    }
+  }
+
+  public async getElementPixelColor(
+    args: LocatorsInterface | StrategyExtractionObj
+  ): Promise<string> {
     // Wait for the element to be present
     const element = await this.waitForTextElementToBePresent(args);
     // Take a screenshot and return a hex color value
@@ -2573,9 +2727,28 @@ export class DeviceWrapper {
     return pixelColor;
   }
 
+  // Sample an element's centre pixel color SAMPLE_SIZE times to determine whether it is animated or not.
+  // If the set contains more than 1 color it is likely animated.
+  public async verifyElementIsAnimated(
+    args: LocatorsInterface | StrategyExtractionObj
+  ): Promise<void> {
+    const { locator, description } = this.resolveLocator(args);
+    this.log(`Checking if ${description} is animated`);
+    const SAMPLE_SIZE = 3;
+    const colors = new Set<string>();
+    for (let i = 0; i < SAMPLE_SIZE; i++) {
+      colors.add(await this.getElementPixelColor(locator));
+    }
+    verify(
+      colors.size,
+      `Expected element to be animated but detected 1 unique color: ${[...colors][0]}`
+    ).toBeGreaterThan(1);
+  }
+
   public async getVersionNumber() {
     // NOTE if this becomes necessary for more tests, consider adding a property/caching to the DeviceWrapper
     await this.clickOnElementAll(new UserSettings(this));
+    await this.onIOS().scrollDown();
     const versionElement = await this.waitForTextElementToBePresent(new VersionNumber(this));
     // Get the full text from the element
     const versionText = await this.getTextFromElement(versionElement);

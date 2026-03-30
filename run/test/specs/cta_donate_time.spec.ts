@@ -1,18 +1,12 @@
 import test, { TestInfo } from '@playwright/test';
 
-import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { CTAButtonPositive } from '../locators/global';
 import { PlusButton } from '../locators/home';
+import { IOSTestContext } from '../utils/capabilities_ios';
 import { newUser } from '../utils/create_account';
-import {
-  closeApp,
-  IOSTestContext,
-  openAppOnPlatformSingleDevice,
-  SupportedPlatformsType,
-} from '../utils/open_app';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 import { setIOSFirstInstallDate } from '../utils/time_travel';
 
 // iOS uses app-level time override (customFirstInstallDateTime capability).
@@ -42,11 +36,7 @@ async function donateCTAShowsSevenDaysAgo(platform: SupportedPlatformsType, test
     return { device };
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Donate CTA'), async () => {
-    await device.checkCTAStrings(
-      tStripped('donateSessionHelp'),
-      tStripped('donateSessionDescription'),
-      [tStripped('donate'), tStripped('maybeLater')]
-    );
+    await device.checkCTA('donate');
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);
@@ -77,7 +67,7 @@ async function donateCTADoesntShowSixDaysAgo(platform: SupportedPlatformsType, t
   await test.step('Verify Donate CTA does not show', async () => {
     await Promise.all([
       device.waitForTextElementToBePresent(new PlusButton(device)),
-      device.verifyElementNotPresent(new CTAButtonPositive(device)),
+      device.verifyNoCTAShows(),
     ]);
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

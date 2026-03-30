@@ -33,7 +33,7 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType, tes
     focusFriendsConvo: true,
     testInfo,
   });
-  await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
+  await setDisappearingMessage(alice1, ['1:1', timerType, time]);
   const sentTimestamp = await alice1.sendImage(testMessage);
   await bob1.trustAttachments(alice.userName);
   if (platform === 'ios') {

@@ -6,7 +6,7 @@ import { iOSPhotosContinuebutton } from '../locators/external';
 export async function handleChromeFirstTimeOpen(device: DeviceWrapper) {
   const chromeUseWithoutAnAccount = await device.doesElementExist({
     ...new ChromeUseWithoutAnAccount(device).build(),
-    maxWait: 2_000,
+    maxWait: 5_000,
   });
   if (!chromeUseWithoutAnAccount) {
     device.log('Chrome opened without an account check, proceeding');
@@ -37,8 +37,7 @@ export async function handlePhotosFirstTimeOpen(device: DeviceWrapper) {
   // On Android, the Photos app shows a sign-in prompt the first time it's opened that needs to be dismissed
   // I've seen two different kinds of sign in buttons on the same set of emulators
   if (device.isAndroid()) {
-    let signInButton = null;
-    signInButton = await device.doesElementExist({
+    let signInButton = await device.doesElementExist({
       strategy: 'id',
       selector: 'com.google.android.apps.photos:id/sign_in_button',
       maxWait: 1_000,

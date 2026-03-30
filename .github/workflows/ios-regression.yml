@@ -24,14 +24,17 @@ on:
           - 'low-risk'
           - ''
 
+      RUN_PRO_TESTS:
+        description: 'include Session Pro tests in this run'
+        required: false
+        default: false
+        type: boolean
+
       ALLURE_ENABLED:
         description: 'generate allure report'
         required: false
-        default: 'true'
-        type: choice
-        options:
-          - 'true'
-          - 'false'
+        default: true
+        type: boolean
 
       PLAYWRIGHT_RETRIES_COUNT:
         description: 'retries of failing tests to do at most'
@@ -63,6 +66,9 @@ on:
           - 'verbose' # All test logs - use with caution!
         default: 'minimal'
 
+permissions:
+  contents: write
+
 jobs:
   ios-regression:
     runs-on: [self-hosted, macOS]
@@ -72,20 +78,19 @@ jobs:
       BUILD_NUMBER: ${{ github.event.inputs.BUILD_NUMBER }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CI: 1
-      ALLURE_ENABLED: ${{ github.event.inputs.ALLURE_ENABLED}}
+      ALLURE_ENABLED: ${{ github.event.inputs.ALLURE_ENABLED }}
       IOS_APP_PATH_PREFIX: './extracted/Session.app'
       ANDROID_APK: '<just_not_empty>'
       APPIUM_ADB_FULL_PATH: '<just_not_empty>'
       ANDROID_SDK_ROOT: '<just_not_empty>'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
+      NETWORK_TARGET: 'mainnet' # iOS only supports mainnet for now
       _TESTING: 1 # Always hide webdriver logs (@appium/support/ flag)
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL != 'minimal' && '1' || '0' }} # Show stdout/stderr if test fails (@session-foundation/playwright-reporter/ flag)
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'verbose' && '1' || '0' }} # Show everything as it happens (@session-foundation/playwright-reporter/ flag)
       PLAYWRIGHT_WORKERS_COUNT: 3 # for iOS, this is the max we can have on our self-hosted runner
-      SDK_MANAGER_FULL_PATH: '<just_not_empty>'
-      AVD_MANAGER_FULL_PATH: '<just_not_empty>'
-      ANDROID_SYSTEM_IMAGE: '<just_not_empty>'
-      EMULATOR_FULL_PATH: '<just_not_empty>'
+      SOGS_ADMIN_SEED: ${{ secrets.SOGS_ADMIN_SEED }}
+      PRO_GREP_INVERT: ${{ inputs.RUN_PRO_TESTS != true && '--grep-invert @pro' || '' }}
 
     steps:
       - uses: actions/checkout@v6
@@ -130,6 +135,7 @@ jobs:
         with:
           PLATFORM: ${{ env.PLATFORM }}
           RISK: ${{ github.event.inputs.RISK }}
+          PRO_GREP_INVERT: ${{ env.PRO_GREP_INVERT }}
 
       - name: Run the iOS tests​​ (all device counts)
         env:
@@ -139,7 +145,7 @@ jobs:
           PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
         run: |
           pwd
-          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" #Note: this has to be double quotes
+          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" $PRO_GREP_INVERT #Note: this has to be double quotes
 
       - name: Generate and publish test report
         uses: ./github/actions/generate-publish-test-report
@@ -152,6 +158,7 @@ jobs:
           RISK: ${{github.event.inputs.RISK}}
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
           GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
+          NETWORK_TARGET: ${{ env.NETWORK_TARGET }}
 
       - name: Upload results of this run
         uses: ./github/actions/upload-test-results

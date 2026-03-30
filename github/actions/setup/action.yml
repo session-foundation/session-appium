@@ -6,15 +6,17 @@ runs:
   using: 'composite'
   steps:
     - name: Install pnpm
-      uses: pnpm/action-setup@v4
+      uses: pnpm/action-setup@v5
 
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v6
       with:
         node-version-file: '.nvmrc'
         cache: 'pnpm'
 
     - name: Install test dependencies
       shell: bash
+      env:
+        NODE_OPTIONS: '--dns-result-order=ipv4first'
       run: |
         ls
         git status

@@ -41,7 +41,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType, testIn
     });
   });
   await test.step(TestSteps.DISAPPEARING_MESSAGES.SET(time), async () => {
-    await setDisappearingMessage(platform, alice1, ['Group', `Disappear after send option`, time]);
+    await setDisappearingMessage(alice1, ['Group', `Disappear after send option`, time]);
   });
   await test.step(TestSteps.VERIFY.DISAPPEARING_CONTROL_MESSAGES, async () => {
     // Get correct control message for You setting disappearing messages

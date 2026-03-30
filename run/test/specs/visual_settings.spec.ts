@@ -45,6 +45,7 @@ const testCases = [
     screenshotFile: 'settings_notifications',
     navigation: async (device: DeviceWrapper) => {
       await device.clickOnElementAll(new UserSettings(device));
+      await device.onIOS().scrollDown();
       await device.clickOnElementAll(new NotificationsMenuItem(device));
       await sleepFor(1_000); // This one otherwise captures a black screen
     },

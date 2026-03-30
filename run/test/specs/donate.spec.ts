@@ -9,7 +9,7 @@ import { DonationsMenuItem, UserSettings } from '../locators/settings';
 import { newUser } from '../utils/create_account';
 import { handleChromeFirstTimeOpen } from '../utils/handle_first_open';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
-import { assertUrlIsReachable, ensureHttpsURL } from '../utils/utilities';
+import { assertUrlIsReachable, ensureHttpsURL, verify } from '../utils/utilities';
 
 bothPlatformsIt({
   title: 'Donate Settings menu item',
@@ -25,7 +25,7 @@ bothPlatformsIt({
 
 async function donateLinkout(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
-  const linkURL = 'https://getsession.org/donate#app';
+  const linkURL = 'https://getsession.org/donate';
   await newUser(device, USERNAME.ALICE, { saveUserData: false });
   await device.clickOnElementAll(new UserSettings(device));
   await device.clickOnElementAll(new DonationsMenuItem(device));
@@ -45,11 +45,7 @@ async function donateLinkout(platform: SupportedPlatformsType, testInfo: TestInf
   const actualUrlField = await device.getTextFromElement(urlField);
   const fullRetrievedURL = ensureHttpsURL(actualUrlField);
   // Verify that it's the correct URL
-  if (fullRetrievedURL !== linkURL) {
-    throw new Error(
-      `The retrieved URL does not match the expected. The retrieved URL is ${fullRetrievedURL}`
-    );
-  }
+  verify(fullRetrievedURL, 'The retrieved URL does not match the expected').toBe(linkURL);
   await assertUrlIsReachable(linkURL);
   // Close browser and app
   await device.backToSession();

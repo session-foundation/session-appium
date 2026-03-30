@@ -1,16 +1,14 @@
 import test, { TestInfo } from '@playwright/test';
 
-import { tStripped } from '../../localizer/lib';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { CloseSettings } from '../locators';
-import { CTAButtonPositive } from '../locators/global';
 import { ReviewPromptItsGreatButton } from '../locators/home';
 import { PathMenuItem, UserSettings } from '../locators/settings';
 import { newUser } from '../utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
-import { forceStopAndRestart as forceStopAndRestartApp } from '../utils/utilities';
+import { forceStopAndRestart } from '../utils/utilities';
 import { verifyPageScreenshot } from '../utils/verify_screenshots';
 
 bothPlatformsIt({
@@ -26,7 +24,6 @@ bothPlatformsIt({
 });
 
 async function donateCTAReview(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const donateURL = 'https://getsession.org/donate#app';
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
@@ -41,25 +38,14 @@ async function donateCTAReview(platform: SupportedPlatformsType, testInfo: TestI
   await test.step('Dismiss review prompt and restart the app', async () => {
     await device.clickOnElementAll(new ReviewPromptItsGreatButton(device));
     await device.clickOnElementAll(new CloseSettings(device));
-    await forceStopAndRestartApp(device);
+    await forceStopAndRestart(device);
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Donate CTA'), async () => {
-    await device.checkCTAStrings(
-      tStripped('donateSessionHelp'),
-      tStripped('donateSessionDescription'),
-      [tStripped('donate'), tStripped('maybeLater')]
-    );
+    await device.checkCTA('donate');
   });
   // There *is* supposed to be a blur on Android but there is a bug on API 34 emulators preventing it from showing
   await test.step(TestSteps.VERIFY.SCREENSHOT('Donate CTA'), async () => {
     await verifyPageScreenshot(device, platform, 'cta_donate', testInfo);
-  });
-  await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Open URL'), async () => {
-    await device.clickOnElementAll(new CTAButtonPositive(device));
-    await device.checkModalStrings(
-      tStripped('urlOpen'),
-      tStripped('urlOpenDescription', { url: donateURL })
-    );
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);

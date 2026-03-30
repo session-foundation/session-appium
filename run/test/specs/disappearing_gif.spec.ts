@@ -33,7 +33,7 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType, testI
     focusFriendsConvo: true,
     testInfo,
   });
-  await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
+  await setDisappearingMessage(alice1, ['1:1', timerType, time]);
   const sentTimestamp = await alice1.sendGIF();
   await bob1.trustAttachments(USERNAME.ALICE);
   await Promise.all(

@@ -22,6 +22,8 @@ export const testLink = `https://getsession.org/`;
 
 export const DEVNET_URL = 'http://sesh-net.local:1280';
 
+export const PRO_BACKEND_URL = 'https://pro-backend-dev.getsession.org';
+
 export const ONS_MAPPINGS = {
   TESTQA: {
     ons: 'testqa',

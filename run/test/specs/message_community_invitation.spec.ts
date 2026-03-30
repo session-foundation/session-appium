@@ -1,19 +1,21 @@
 import type { TestInfo } from '@playwright/test';
 
-import { testCommunityLink, testCommunityName } from '../../constants/community';
+import { communities } from '../../constants/community';
 import { tStripped } from '../../localizer/lib';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { InviteContactsMenuItem, JoinCommunityModalButton } from '../locators';
 import {
   CommunityInvitation,
   CommunityInviteConfirmButton,
+  ConversationHeaderName,
   ConversationSettings,
+  MessageBody,
 } from '../locators/conversation';
 import { GroupMember } from '../locators/groups';
 import { ConversationItem } from '../locators/home';
 import { open_Alice1_Bob1_friends } from '../state_builder';
 import { sleepFor } from '../utils';
-import { joinCommunity } from '../utils/join_community';
+import { joinCommunity } from '../utils/community';
 import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
@@ -35,7 +37,7 @@ async function sendCommunityInvitation(platform: SupportedPlatformsType, testInf
   // Join community on device 1
   // Click on plus button
   await alice1.navigateBack();
-  await joinCommunity(alice1, testCommunityLink, testCommunityName);
+  await joinCommunity(alice1, communities.testCommunity.link, communities.testCommunity.name);
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   await sleepFor(500);
   await alice1.clickOnElementAll(new InviteContactsMenuItem(alice1));
@@ -43,12 +45,22 @@ async function sendCommunityInvitation(platform: SupportedPlatformsType, testInf
   await alice1.clickOnElementAll(new CommunityInviteConfirmButton(alice1));
   await bob1.waitForTextElementToBePresent(new CommunityInvitation(bob1));
   await bob1.clickOnElementAll(new CommunityInvitation(bob1));
-  await bob1.checkModalStrings(
-    tStripped('communityJoin'),
-    tStripped('communityJoinDescription', { community_name: testCommunityName })
-  );
+  const joinCommunityModaBody =
+    platform === 'android'
+      ? tStripped('joinThisCommunity')
+      : tStripped('communityJoinDescription', { community_name: communities.testCommunity.name });
+  await bob1.checkModalStrings(tStripped('communityJoin'), joinCommunityModaBody);
   await bob1.clickOnElementAll(new JoinCommunityModalButton(bob1));
-  await bob1.navigateBack();
-  await bob1.waitForTextElementToBePresent(new ConversationItem(bob1, testCommunityName));
+  if (platform === 'android') {
+    await bob1.waitForTextElementToBePresent(
+      new ConversationHeaderName(bob1, communities.testCommunity.name)
+    );
+    await bob1.waitForTextElementToBePresent(new MessageBody(bob1));
+  } else {
+    await bob1.navigateBack();
+    await bob1.waitForTextElementToBePresent(
+      new ConversationItem(bob1, communities.testCommunity.name)
+    );
+  }
   await closeApp(alice1, bob1);
 }

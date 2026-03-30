@@ -1,11 +1,11 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { testCommunityLink, testCommunityName } from '../../constants/community';
+import { communities } from '../../constants/community';
 import { TestSteps } from '../../types/allure';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { EmojiReactsPill, FirstEmojiReact, MessageBody } from '../locators/conversation';
 import { open_Alice1_Bob1_friends } from '../state_builder';
-import { joinCommunity } from '../utils/join_community';
+import { joinCommunity } from '../utils/community';
 import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
 bothPlatformsIt({
@@ -18,9 +18,6 @@ bothPlatformsIt({
     suite: 'Emoji reacts',
   },
   allureDescription: 'Verifies that an emoji reaction can be sent and is received in a community',
-  allureLinks: {
-    android: 'SES-4608',
-  },
 });
 
 async function sendEmojiReactionCommunity(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -36,11 +33,16 @@ async function sendEmojiReactionCommunity(platform: SupportedPlatformsType, test
     });
   });
   await Promise.all(
-    [alice1, bob1].map(device => joinCommunity(device, testCommunityLink, testCommunityName))
+    [alice1, bob1].map(device =>
+      joinCommunity(device, communities.testCommunity.link, communities.testCommunity.name)
+    )
   );
-  await test.step(TestSteps.SEND.MESSAGE(alice.userName, testCommunityName), async () => {
-    await alice1.sendMessage(message);
-  });
+  await test.step(
+    TestSteps.SEND.MESSAGE(alice.userName, communities.testCommunity.name),
+    async () => {
+      await alice1.sendMessage(message);
+    }
+  );
   await test.step(TestSteps.SEND.EMOJI_REACT, async () => {
     await bob1.scrollToBottom();
     await bob1.longPressMessage(new MessageBody(bob1, message));

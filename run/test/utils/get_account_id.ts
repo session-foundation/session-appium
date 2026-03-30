@@ -1,6 +1,7 @@
 import { User } from '../../types/testing';
 import { SupportedPlatformsType } from './open_app';
 
+// Sorts users by pubkey hex and returns their usernames
 export function sortByPubkey(...users: Array<User>) {
   return [...users]
     .sort((a, b) => a.accountID.localeCompare(b.accountID))

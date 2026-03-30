@@ -7,6 +7,13 @@ import { IntRange } from '../../types/RangeType';
 
 dotenv.config({ quiet: true });
 
+export type IOSTestContext = {
+  customInstallTime?: string;
+  sessionProEnabled?: string;
+};
+
+export const IOS_PRO_CONTEXT: IOSTestContext = { sessionProEnabled: 'true' };
+
 const iosPathPrefix = process.env.IOS_APP_PATH_PREFIX;
 
 export const iOSBundleId = 'com.loki-project.loki-messenger';
@@ -25,7 +32,7 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   'appium:deviceName': 'iPhone 17',
   'appium:automationName': 'XCUITest',
   'appium:bundleId': iOSBundleId,
-  'appium:newCommandTimeout': 300000,
+  'appium:newCommandTimeout': 600000,
   'appium:useNewWDA': false,
   'appium:showXcodeLog': false,
   'appium:autoDismissAlerts': false,
@@ -34,6 +41,7 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
     env: {
       debugDisappearingMessageDurations: 'true',
       communityPollLimit: '3',
+      animationsEnabled: 'false',
     },
   },
 } as AppiumXCUITestCapabilities;
@@ -124,7 +132,7 @@ export function capabilityIsValid(
 
 export function getIosCapabilities(
   capabilitiesIndex: CapabilitiesIndexType,
-  customInstallTime?: string
+  customCaps?: IOSTestContext
 ): W3CXCUITestDriverCaps {
   if (capabilitiesIndex >= capabilities.length) {
     throw new Error(
@@ -140,10 +148,14 @@ export function getIosCapabilities(
   const baseEnv =
     (caps['appium:processArguments'] as { env?: Record<string, string> } | undefined)?.env ?? {};
 
-  // Optional per-test override:
-  // Some tests set IOS_CUSTOM_FIRST_INSTALL_DATE_TIME before starting Appium.
-  // If present, inject it into the processArguments.env. Otherwise inject nothing.
-  const customEnv = customInstallTime ? { customFirstInstallDateTime: customInstallTime } : {};
+  // Build custom env entries from per-test overrides
+  const customEnv: Record<string, string> = {};
+  if (customCaps?.customInstallTime) {
+    customEnv.customFirstInstallDateTime = customCaps.customInstallTime;
+  }
+  if (customCaps?.sessionProEnabled) {
+    customEnv.sessionPro = customCaps.sessionProEnabled;
+  }
 
   // Rebuild the processArguments block with merged env vars
   caps['appium:processArguments'] = {

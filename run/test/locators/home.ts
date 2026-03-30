@@ -3,6 +3,34 @@ import type { DeviceWrapper } from '../../types/DeviceWrapper';
 import { StrategyExtractionObj } from '../../types/testing';
 import { LocatorsInterface } from './index';
 
+export class BackgroundPermsAllowButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'whitelist-confirm-button',
+        } as const;
+      case 'ios':
+        throw new Error('Not implemented');
+    }
+  }
+}
+
+export class BackgroundPermsCancelButton extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'whitelist-cancel-button',
+        } as const;
+      case 'ios':
+        throw new Error('Not implemented');
+    }
+  }
+}
+
 export class ConversationItem extends LocatorsInterface {
   public text: string | undefined;
   constructor(device: DeviceWrapper, text?: string) {
@@ -18,6 +46,27 @@ export class ConversationItem extends LocatorsInterface {
           selector: 'Conversation list item',
           text: this.text,
         } as const;
+    }
+  }
+}
+
+// Find pin icon belonging to a specific conversation
+export class ConversationPinnedIcon extends LocatorsInterface {
+  constructor(
+    device: DeviceWrapper,
+    private name: string
+  ) {
+    super(device);
+  }
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'xpath',
+          selector: `//android.view.ViewGroup[android.widget.TextView[@content-desc='Conversation list item' and @text='${this.name}']]/android.widget.ImageView[@resource-id='network.loki.messenger:id/iconPinned']`,
+        } as const;
+      case 'ios':
+        throw new Error('ConversationPinnedIcon: iOS not yet implemented');
     }
   }
 }
@@ -112,6 +161,18 @@ export class MessageSnippet extends LocatorsInterface {
     }
   }
 }
+export class PinConversationOption extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Pin',
+        } as const;
+    }
+  }
+}
 
 export class PlusButton extends LocatorsInterface {
   public build() {
@@ -121,6 +182,7 @@ export class PlusButton extends LocatorsInterface {
     } as const;
   }
 }
+
 export class ReviewPromptItsGreatButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -219,6 +281,23 @@ export class SearchButton extends LocatorsInterface {
           strategy: 'accessibility id',
           selector: 'Search button',
         };
+    }
+  }
+}
+
+export class UnpinConversationOption extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/unpinTextView',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Unpin',
+        } as const;
     }
   }
 }

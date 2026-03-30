@@ -31,10 +31,15 @@ export type AllureSuiteConfig =
       parent: 'Sending Messages';
       suite: 'Emoji reacts' | 'Mentions' | 'Message types' | 'Performance' | 'Rules';
     }
-  | { parent: 'Settings'; suite: 'App Disguise' | 'Community Message Requests' }
+  | { parent: 'Session Pro' }
+  | {
+      parent: 'Settings';
+      suite: 'App Disguise' | 'Community Message Requests' | 'Notifications' | 'Recovery Password';
+    }
   | {
       parent: 'User Actions';
       suite:
+        | 'Ban/Unban'
         | 'Block/Unblock'
         | 'Change Profile Picture'
         | 'Change Username'
@@ -42,6 +47,7 @@ export type AllureSuiteConfig =
         | 'Delete Conversation'
         | 'Delete Message'
         | 'Hide Note to Self'
+        | 'Pin/Unpin'
         | 'Set Nickname'
         | 'Share to Session';
     }
@@ -67,11 +73,13 @@ export const TestSteps = {
     NEW_USER: 'Create new account',
     QA_SEEDER: 'Restore pre-seeded accounts',
     CLOSE_APP: 'Close app(s)',
+    RESTORE_ACCOUNT: (name: UserNameType) => `Restore ${name} on another device`,
   },
   // Plus Button options
   NEW_CONVERSATION: {
     NEW_MESSAGE: 'New Message',
     JOIN_COMMUNITY: 'Join Community',
+    JOIN_COMMUNITIES: (number: number) => `Join ${number} communities`,
   },
   // Sending things
   SEND: {
@@ -95,6 +103,9 @@ export const TestSteps = {
     CHANGE_PROFILE_PICTURE: 'Change profile picture',
     APP_DISGUISE: 'Set App Disguise',
     DELETE_FOR_EVERYONE: 'Delete for everyone',
+    GROUPS_ADD_CONTACT: (name: string) => `Invite ${name} to group`,
+    GROUPS_REMOVE_MEMBER: (name: string) => `Remove ${name} from group`,
+    PIN_CONVERSATIONS: (number: number) => `Attempt to pin ${number} conversations`,
   },
   // Disappearing Messages
   DISAPPEARING_MESSAGES: {
@@ -120,5 +131,6 @@ export const TestSteps = {
     NICKNAME_CHANGED: (context: string) => `Verify nickname changed in/on ${context}`,
     PROFILE_PICTURE_CHANGED: 'Verify profile picture has been changed',
     EMOJI_REACT: 'Verify emoji react appears for everyone',
+    GROUP_DELETED: 'Verify group is deleted for all members',
   },
 };

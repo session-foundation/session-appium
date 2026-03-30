@@ -1,6 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
-import { testCommunityLink, testCommunityName } from '../../constants/community';
+import { communities } from '../../constants/community';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../types/testing';
 import { InviteContactsMenuItem } from '../locators';
@@ -13,7 +13,7 @@ import { GroupMember } from '../locators/groups';
 import { ConversationItem } from '../locators/home';
 import { open_Alice1_Bob1_friends } from '../state_builder';
 import { sleepFor } from '../utils';
-import { joinCommunity } from '../utils/join_community';
+import { joinCommunity } from '../utils/community';
 import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 import { setDisappearingMessage } from '../utils/set_disappearing_messages';
 
@@ -47,10 +47,10 @@ async function disappearingCommunityInviteMessage(
     focusFriendsConvo: true,
     testInfo,
   });
-  await setDisappearingMessage(platform, alice1, ['1:1', timerType, time], bob1);
+  await setDisappearingMessage(alice1, ['1:1', timerType, time]);
   // await alice1.navigateBack();
   await alice1.navigateBack();
-  await joinCommunity(alice1, testCommunityLink, testCommunityName);
+  await joinCommunity(alice1, communities.testCommunity.link, communities.testCommunity.name);
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   await sleepFor(1000);
   await alice1.clickOnElementAll(new InviteContactsMenuItem(alice1));
@@ -68,7 +68,7 @@ async function disappearingCommunityInviteMessage(
   // Leave Invite Contacts, Conversation Settings, Community, and open convo with Bob
   await alice1.navigateBack();
   await alice1.navigateBack();
-  await alice1.navigateBack();
+  await alice1.onIOS().navigateBack(); // Android only needs to go back twice
   await alice1.clickOnElementAll(new ConversationItem(alice1, bob.userName));
   // At this point the invite should have disappeared already so we just check it's not there
   await alice1.verifyElementNotPresent(new CommunityInvitation(alice1));

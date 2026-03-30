@@ -18,6 +18,8 @@ runs:
         echo "Clearing temp clone"
         rm -rf "$CLONE_DIR"
 
+        git config --global credential.helper ""
+
         echo "Cloning gh-pages branch"
         GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1 --branch gh-pages "$GH_REPO" "$CLONE_DIR"
 

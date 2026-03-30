@@ -1,9 +1,10 @@
 import eslint from '@eslint/js';
+import { defineConfig } from 'eslint/config';
 import perfectionist from 'eslint-plugin-perfectionist';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-export default tseslint.config(
+export default defineConfig(
   {
     files: ['**/*.{ts,tsx,cts,mts,js,cjs,mjs}'],
   },

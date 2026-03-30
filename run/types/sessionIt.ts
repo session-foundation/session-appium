@@ -1,16 +1,13 @@
-// run/types/sessionIt.ts - Clean version matching original pattern
 import { test, type TestInfo } from '@playwright/test';
 import { omit } from 'lodash';
 
 import type { AppCountPerTest } from '../test/state_builder';
 
 import { setupAllureTestInfo } from '../test/utils/allure/allureHelpers';
+import { unregisterDevicesForTest } from '../test/utils/device_registry';
 import { getNetworkTarget } from '../test/utils/devnet';
+import { captureLogsOnFailure, captureScreenshotsOnFailure } from '../test/utils/failure_artifacts';
 import { SupportedPlatformsType } from '../test/utils/open_app';
-import {
-  captureScreenshotsOnFailure,
-  unregisterDevicesForTest,
-} from '../test/utils/screenshot_helper';
 import { AllureSuiteConfig } from './allure';
 import { TestRisk } from './testing';
 
@@ -22,6 +19,7 @@ type MobileItArgs = {
   risk: TestRisk;
   testCb: (platform: SupportedPlatformsType, testInfo: TestInfo) => Promise<void>;
   shouldSkip?: boolean;
+  isPro?: boolean;
   allureSuites?: AllureSuiteConfig;
   allureDescription?: string;
   allureLinks?: {
@@ -45,12 +43,14 @@ function mobileIt({
   testCb,
   title,
   shouldSkip = false,
+  isPro = false,
   countOfDevicesNeeded,
   allureSuites,
   allureDescription,
   allureLinks,
 }: MobileItArgs) {
-  const testName = `${title} @${platform} @${risk ?? 'default'}-risk @${countOfDevicesNeeded}-devices`;
+  const proTag = isPro ? ' @pro' : '';
+  const testName = `${title} @${platform} @${risk ?? 'default'}-risk @${countOfDevicesNeeded}-devices${proTag}`;
 
   if (shouldSkip) {
     test.skip(testName, () => {
@@ -105,9 +105,10 @@ function mobileIt({
           testInfo.status === 'timedOut'
         ) {
           await captureScreenshotsOnFailure(testInfo);
+          await captureLogsOnFailure(testInfo);
         }
-      } catch (screenshotError) {
-        console.error('Failed to capture screenshot:', screenshotError);
+      } catch (artifactError) {
+        console.error('Failed to capture failure artifacts:', artifactError);
       }
 
       try {

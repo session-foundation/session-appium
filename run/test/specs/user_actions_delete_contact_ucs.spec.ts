@@ -10,7 +10,7 @@ import {
   DeleteContactMenuItem,
   MessageBody,
 } from '../locators/conversation';
-import { ConversationItem, MessageRequestsBanner } from '../locators/home';
+import { ConversationItem, MessageRequestItem, MessageRequestsBanner } from '../locators/home';
 import { open_Alice2_Bob1_friends } from '../state_builder';
 import { closeApp, SupportedPlatformsType } from '../utils/open_app';
 
@@ -78,7 +78,7 @@ async function deleteContactCS(platform: SupportedPlatformsType, testInfo: TestI
     await Promise.all(
       [alice1, alice2].map(async device => {
         await device.clickOnElementAll(new MessageRequestsBanner(device));
-        await device.clickOnByAccessibilityID('Message request');
+        await device.clickOnElementAll(new MessageRequestItem(device));
         await device.waitForTextElementToBePresent(new MessageBody(device, newMessage));
       })
     );
