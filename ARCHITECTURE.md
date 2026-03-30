@@ -54,6 +54,27 @@ Exported functions follow the pattern `open_Alice1_Bob1_friends()`, `open_Alice1
 
 The `User` type is local. The seeder's `StateUser` type (`sessionId`, `seedPhrase`) is mapped at this boundary and never leaks into test code.
 
+### iOS Capabilities & Test Context (`run/test/utils/capabilities_ios.ts`)
+
+Every iOS session launches with a set of process arguments baked into the shared capabilities:
+
+- `debugDisappearingMessageDurations: true` — enables shortened disappearing message timers in the app, so DM tests don't have to wait for real-world durations
+- `animationsEnabled: false` — disables UI animations for test stability
+- `communityPollLimit: 3` — caps community polling frequency
+
+Per-test overrides are passed via `IOSTestContext`:
+
+```typescript
+type IOSTestContext = {
+  customInstallTime?: string; // fake first-install timestamp ("time travel")
+  sessionProEnabled?: string; // enables Session Pro features
+};
+```
+
+`customInstallTime` injects a `customFirstInstallDateTime` env var into the app process, letting CTA tests simulate the app having been installed days in the past without waiting. `IOSTestContext` threads through the state builder functions and `openApp*` utilities — pass it at the call site to apply it for that test.
+
+Android handles these behaviours via build flags in the `qa` binary rather than runtime capability overrides, so no equivalent mechanism exists on that side.
+
 ### Test Wrappers (`run/types/sessionIt.ts`)
 
 Tests use `bothPlatformsIt()`, `androidIt()`, `iosIt()`, or `bothPlatformsItSeparate()` instead of Playwright's `test()`. Each takes:
