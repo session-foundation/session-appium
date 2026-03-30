@@ -1,4 +1,4 @@
-import test from '@playwright/test';
+import { test } from '@playwright/test';
 
 import { communities } from '../../constants/community';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
