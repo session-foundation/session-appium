@@ -1,7 +1,5 @@
 name: Prune Old Allure Reports
 on:
-  schedule:
-    - cron: '0 16 * * 0' # Weekly, 16:00 UTC Sunday
   workflow_dispatch:
     inputs:
       attachment-retention-days:
