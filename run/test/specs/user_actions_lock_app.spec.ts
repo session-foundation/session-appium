@@ -42,9 +42,10 @@ async function lockApp(platform: SupportedPlatformsType, testInfo: TestInfo) {
     });
     await test.step('Force stop and restart app', async () => {
       await forceStopAndRestart(device, false);
-      // The unlock screen is not visible to appium
-      // This is basically a blind sleep before entering PIN to avoid a partial pin entry
-      await device.verifyElementNotPresent({ ...new PlusButton(device).build(), maxWait: 3_000 });
+      // The unlock screen is not visible to appium so there's no real way to tell it appeared
+      // Other than waiting a long time to make sure the home screen (plus button) never appeared
+      // This prevents the false positive where we send key events to nowhere and the lock screen never appeared anyway
+      await device.verifyElementNotPresent({ ...new PlusButton(device).build(), maxWait: 10_000 });
     });
     await test.step('Enter PIN to unlock app', async () => {
       await runScriptAndLog(`adb -s ${device.udid} shell input text ${pin}`, true);
