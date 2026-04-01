@@ -1,4 +1,5 @@
-import { AppiumXCUITestCapabilities } from '@wdio/types/build/Capabilities';
+import type { Capabilities } from '@wdio/types';
+
 import { W3CXCUITestDriverCaps } from 'appium-xcuitest-driver/build/lib/driver';
 import dotenv from 'dotenv';
 import { existsSync, readFileSync } from 'fs';
@@ -11,6 +12,8 @@ export type IOSTestContext = {
   customInstallTime?: string;
   sessionProEnabled?: string;
 };
+
+type AppiumXCUITestCapabilities = Capabilities.AppiumXCUITestCapabilities;
 
 export const IOS_PRO_CONTEXT: IOSTestContext = { sessionProEnabled: 'true' };
 
