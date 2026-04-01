@@ -580,6 +580,8 @@ export type Id =
   | 'Open URL'
   | 'preferences-dialog-option-enable'
   | 'preferences-option-blocked-contacts'
+  | 'preferences-option-lock-app-toggle'
+  | 'preferences-option-lock-app'
   | 'preferences-option-read-receipt'
   | 'preferences-option-whitelist-toggle'
   | 'preferred-display-name'

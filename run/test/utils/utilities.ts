@@ -133,7 +133,10 @@ export async function clearStatusBarOverrides(device: DeviceWrapper): Promise<vo
   }
 }
 
-export async function forceStopAndRestart(device: DeviceWrapper): Promise<void> {
+export async function forceStopAndRestart(
+  device: DeviceWrapper,
+  waitForReboot: boolean = true
+): Promise<void> {
   if (device.isAndroid()) {
     await runScriptAndLog(`adb -s ${device.udid} shell am force-stop ${androidAppPackage}`, true);
     await sleepFor(1_000);
@@ -149,7 +152,9 @@ export async function forceStopAndRestart(device: DeviceWrapper): Promise<void> 
     await sleepFor(1_000);
   }
   // Ensure we're on the home screen again
-  await device.waitForTextElementToBePresent(new PlusButton(device));
+  if (waitForReboot) {
+    await device.waitForTextElementToBePresent(new PlusButton(device));
+  }
 }
 
 /**
