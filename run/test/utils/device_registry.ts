@@ -20,8 +20,8 @@ export type DeviceContext = {
 
 export const deviceRegistry = new Map<string, DeviceContext>();
 
-export function registryKey(testInfo: TestInfo, retry = testInfo.retry): string {
-  return `${testInfo.testId}-${testInfo.parallelIndex}-${testInfo.repeatEachIndex}-${retry}`;
+export function registryKey(testInfo: TestInfo): string {
+  return `${testInfo.testId}-${testInfo.parallelIndex}-${testInfo.repeatEachIndex}`;
 }
 
 // Async because Android registration fetches per-device PID for scoped logcat on failure.
@@ -59,8 +59,5 @@ export async function registerDevicesForTest(
 }
 
 export function unregisterDevicesForTest(testInfo: TestInfo) {
-  // Clean up current attempt and any stale entries left by prior retry attempts
-  for (let r = 0; r <= testInfo.retry; r++) {
-    deviceRegistry.delete(registryKey(testInfo, r));
-  }
+  deviceRegistry.delete(registryKey(testInfo));
 }
