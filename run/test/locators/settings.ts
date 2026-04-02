@@ -155,6 +155,34 @@ export class HideRecoveryPasswordButton extends LocatorsInterface {
   }
 }
 
+export class LockAppOption extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'preferences-option-lock-app',
+        } as const;
+      case 'ios':
+        throw new Error('Not implemented on iOS');
+    }
+  }
+}
+
+export class LockAppToggle extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'preferences-option-lock-app-toggle',
+        } as const;
+      case 'ios':
+        throw new Error('Not implemented on iOS');
+    }
+  }
+}
+
 export class NotificationsMenuItem extends LocatorsInterface {
   public build() {
     switch (this.platform) {

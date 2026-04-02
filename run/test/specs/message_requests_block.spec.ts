@@ -54,7 +54,7 @@ async function blockedRequest(platform: SupportedPlatformsType, testInfo: TestIn
     }),
     device3.verifyElementNotPresent({
       ...new MessageRequestsBanner(device3).build(),
-      maxWait: 5_000,
+      maxWait: 10_000,
     }),
   ]);
   const blockedMessage = `"${alice.userName} to ${bob.userName} - shouldn't get through"`;

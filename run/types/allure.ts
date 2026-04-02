@@ -34,7 +34,7 @@ export type AllureSuiteConfig =
   | { parent: 'Session Pro' }
   | {
       parent: 'Settings';
-      suite: 'App Disguise' | 'Community Message Requests' | 'Notifications' | 'Recovery Password';
+      suite: 'App Disguise' | 'Notifications' | 'Privacy' | 'Recovery Password';
     }
   | {
       parent: 'User Actions';

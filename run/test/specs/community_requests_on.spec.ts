@@ -25,7 +25,7 @@ bothPlatformsIt({
   risk: 'medium',
   testCb: blindedMessageRequests,
   countOfDevicesNeeded: 2,
-  allureSuites: { parent: 'Settings', suite: 'Community Message Requests' },
+  allureSuites: { parent: 'Settings', suite: 'Privacy' },
   allureDescription:
     'Verifies that a message request can be sent when Community Message Requests are on.',
   allureLinks: {

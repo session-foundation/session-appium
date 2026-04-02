@@ -13,7 +13,7 @@ export class CancelSearchButton extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Cancel',
+          selector: 'Close',
         };
     }
   }
