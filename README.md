@@ -96,7 +96,7 @@ PLAYWRIGHT_RETRIES_COUNT=0           # Test retry attempts
 PLAYWRIGHT_REPEAT_COUNT=0            # Successful test repeat count
 PLAYWRIGHT_WORKERS_COUNT=1           # Parallel test workers
 CI=0                                 # Set to 1 to simulate CI (mostly for Allure reporting)
-ALLURE_ENABLED=false              # Set to 'true' to generate Allure reports (in conjunction with CI=1)
-UPDATE_BASELINES=true                 # Auto-save new screenshot baselines if unavailable
+ALLURE_ENABLED=false                 # Set to 'true' to generate Allure reports (in conjunction with CI=1)
+UPDATE_BASELINES=true                # Auto-save new screenshot baselines if unavailable
 SOGS_ADMIN_SEED='word1 word2...'     # 13-word recovery phrase of an account that's an admin in the testing SOGS. 
 ```
