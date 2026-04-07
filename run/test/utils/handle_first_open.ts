@@ -2,21 +2,28 @@ import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { ChromeNotificationsNegativeButton, ChromeUseWithoutAnAccount } from '../locators/browsers';
 import { iOSPhotosContinuebutton } from '../locators/external';
 
-// First time open of Chrome triggers an account check and a notifications modal
+// First time open of Chrome triggers an account check and a notifications modal.
+// If the account check appears, notifications will follow after dismissing it (not detectable upfront).
+// If someone already pressed the "Use without an account" button, only the notifications prompt may appear.
 export async function handleChromeFirstTimeOpen(device: DeviceWrapper) {
-  const chromeUseWithoutAnAccount = await device.doesElementExist({
-    ...new ChromeUseWithoutAnAccount(device).build(),
-    maxWait: 5_000,
-  });
-  if (!chromeUseWithoutAnAccount) {
-    device.log('Chrome opened without an account check, proceeding');
-  } else {
-    device.log(
-      'Chrome has been opened for the first time, dismissing account use and notifications'
-    );
-    await device.clickOnElementAll(new ChromeUseWithoutAnAccount(device));
-    await device.clickOnElementAll(new ChromeNotificationsNegativeButton(device));
+  const [useWithoutAccount, notifications] = await Promise.all([
+    device.doesElementExist({ ...new ChromeUseWithoutAnAccount(device).build(), maxWait: 5_000 }),
+    device.doesElementExist({
+      ...new ChromeNotificationsNegativeButton(device).build(),
+      maxWait: 5_000,
+    }),
+  ]);
+
+  if (!useWithoutAccount && !notifications) {
+    device.log('Chrome opened normally, proceeding');
+    return;
   }
+
+  device.log('Chrome has been opened for the first time, dismissing modals');
+  if (useWithoutAccount) {
+    await device.clickOnElementAll(new ChromeUseWithoutAnAccount(device));
+  }
+  await device.clickOnElementAll(new ChromeNotificationsNegativeButton(device));
 }
 
 export async function handlePhotosFirstTimeOpen(device: DeviceWrapper) {
