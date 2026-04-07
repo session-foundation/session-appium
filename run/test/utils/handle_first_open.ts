@@ -22,11 +22,8 @@ export async function handleChromeFirstTimeOpen(device: DeviceWrapper) {
   device.log('Chrome has been opened for the first time, dismissing modals');
   if (useWithoutAccount) {
     await device.clickOnElementAll(new ChromeUseWithoutAnAccount(device));
-    // Notifications prompt appears after dismissing the account check
-    await device.clickOnElementAll(new ChromeNotificationsNegativeButton(device));
-  } else if (notifications) {
-    await device.clickOnElementAll(new ChromeNotificationsNegativeButton(device));
   }
+  await device.clickOnElementAll(new ChromeNotificationsNegativeButton(device));
 }
 
 export async function handlePhotosFirstTimeOpen(device: DeviceWrapper) {
