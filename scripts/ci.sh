@@ -20,6 +20,12 @@ export PATH="$PATH:$ANDROID_SDK_ROOT/cmdline-tools/tools:$ANDROID_SDK_ROOT/cmdli
 export EMULATOR_DEVICE="pixel_6" # all emulators are created with the pixel 6 spec for now
 
 
+function ensure_display() {
+    export DISPLAY=:0
+    xhost +local: 2>/dev/null || true
+}
+
+
 # this should only be done when we bump the API version or add a worker to the CI that needs emulators to be setup
 # Once you've run this, you must also start_for_snapshots() and force_save_snapshots() (see details below)
 function create_emulators() {
@@ -65,8 +71,9 @@ function create_emulators() {
     cd
 }
 
-# Start a single emulator to snapshot or start all 4 at once 
+# Start a single emulator to snapshot or start all 4 at once
 function start_for_snapshots() {
+    ensure_display
     local i=${1:-}
     if [[ -n "$i" ]]; then
         DISPLAY=:0 emulator @emulator$i -gpu host -accel on -no-snapshot-load &
@@ -95,6 +102,7 @@ function killall_emulators() {
 
 
 function start_with_snapshots() {
+  ensure_display
   for i in {1..4}; do
     EMU_CONFIG_FILE="$HOME/.android/avd/emulator$i.avd/emulator-user.ini"
     # Set window position
