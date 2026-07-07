@@ -246,7 +246,7 @@ jobs:
       - name: Recover emulators if needed
         run: pnpm recover-emulators
 
-      - name: Run the other tests with 1 worker
+      - name: Run the other tests with 2 worker
         continue-on-error: true
         id: other-devices-test-run
         env:
