@@ -55,7 +55,7 @@ function create_emulators() {
 
     adb start-server
 
-    for i in {1..4}
+    for i in {1..8}
     do
         echo "no" | avdmanager --verbose create avd --force --name "emulator$i" --device "${EMULATOR_DEVICE}" --package "${EMULATOR_PACKAGE}"
         # Path to the AVD's config.ini file
@@ -78,7 +78,7 @@ function start_for_snapshots() {
     if [[ -n "$i" ]]; then
         DISPLAY=:0 emulator @emulator$i -gpu host -accel on -no-snapshot-load &
     else
-        for i in {1..4}
+        for i in {1..8}
         do
             DISPLAY=:0 emulator @emulator$i -gpu host -accel on -no-snapshot-load &
             sleep 20
@@ -89,7 +89,7 @@ function start_for_snapshots() {
 # let the emulators start and be ready (check cpu usage) before calling this.
 # We want to take a snapshot woth emulators state as "done" as we can
 function force_save_snapshots() {
-    values=("5554" "5556" "5558" "5560")
+    values=("5554" "5556" "5558" "5560" "5562" "5564" "5566" "5568")
     for val in "${values[@]}"
     do
         adb -s emulator-$val emu avd snapshot save plop.snapshot
@@ -103,7 +103,7 @@ function killall_emulators() {
 
 function start_with_snapshots() {
   ensure_display
-  for i in {1..4}; do
+  for i in {1..8}; do
     EMU_CONFIG_FILE="$HOME/.android/avd/emulator$i.avd/emulator-user.ini"
     # Set window position
     sed -i "s/^window.x.*/window.x=$(( 100 + (i-1) * 400))/" "$EMU_CONFIG_FILE"
@@ -115,7 +115,7 @@ function start_with_snapshots() {
 }
 
 function wait_for_emulators() {
-    for port in 5554 5556 5558 5560
+    for port in 5554 5556 5558 5560 5562 5564 5566 5568
     do
         for i in {1..60}; do
             if adb -s emulator-$port shell getprop sys.boot_completed 2>/dev/null | grep -q "1"; then
