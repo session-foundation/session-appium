@@ -124,26 +124,43 @@ jobs:
           tar xf session-android.apk.tar.xz
           mv session-android-*universal extracted
 
+          echo "::group::APK variants found in the extracted tarball"
+          echo "Contents of extracted/:"
+          ls -la extracted/
+          echo ""
+          echo "*.apk files:"
+          ls -1 extracted/*.apk 2>/dev/null || echo "(no .apk files found!)"
+          echo ""
+          echo "AQA build (extracted/*automaticQa.apk) present? -> $(ls -1 extracted/*automaticQa.apk 2>/dev/null || echo 'NO')"
+          echo "Regular QA build (extracted/*qa.apk) present?   -> $(ls -1 extracted/*qa.apk 2>/dev/null || echo 'NO')"
+          echo "NOTE: the '*qa.apk' glob also matches '*automaticQa.apk'."
+          echo "::endgroup::"
+
+          # Always probe devnet reachability so the log explains the decision,
+          # regardless of which network target was requested.
+          echo "::group::Devnet reachability probe (http://sesh-net.local:1280)"
+          DEVNET_ACCESSIBLE=false
+          for attempt in 1 2 3; do
+            echo "Devnet check attempt $attempt/3..."
+            HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' --connect-timeout 5 --max-time 10 http://sesh-net.local:1280 2>/dev/null || echo '000')
+            if [ "$HTTP_CODE" != "000" ]; then
+              echo "Devnet is reachable on attempt $attempt (HTTP $HTTP_CODE)"
+              DEVNET_ACCESSIBLE=true
+              break
+            else
+              echo "Devnet attempt $attempt failed (could not connect)"
+              if [ $attempt -lt 3 ]; then
+                echo "Waiting ${attempt}s before retry..."
+                sleep $attempt
+              fi
+            fi
+          done
+          echo "Devnet reachable: $DEVNET_ACCESSIBLE"
+          echo "::endgroup::"
+
           # Choose APK based on network target
           if [ "$NETWORK_TARGET" = "devnet" ]; then
-            echo "Devnet target - checking devnet accessibility..."
-            DEVNET_ACCESSIBLE=false
-
-            # Retry logic
-            for attempt in 1 2 3; do
-              echo "Devnet check attempt $attempt/3..."
-              if curl -s --connect-timeout 5 --max-time 10 http://sesh-net.local:1280 >/dev/null 2>&1; then
-                echo "Devnet is accessible on attempt $attempt"
-                DEVNET_ACCESSIBLE=true
-                break
-              else
-                echo "Attempt $attempt failed"
-                if [ $attempt -lt 3 ]; then
-                  echo "Waiting ${attempt}s before retry..."
-                  sleep $attempt
-                fi
-              fi
-            done
+            echo "Requested target=devnet -> want AQA build + reachable devnet"
 
             if [ "$DEVNET_ACCESSIBLE" = "false" ]; then
               echo "ERROR: Devnet is not accessible after 3 attempts, but devnet target was selected"
@@ -152,19 +169,25 @@ jobs:
 
             # Use AQA build for devnet
             if ls extracted/*automaticQa.apk 1>/dev/null 2>&1; then
-              echo "Using AQA build for devnet"
+              echo "Using AQA build for devnet: $(ls -1 extracted/*automaticQa.apk)"
               mv extracted/*automaticQa.apk extracted/session-android.apk
               echo "IS_AUTOMATIC_QA=true" >> $GITHUB_ENV
+              echo "Decision: DEVNET (IS_AUTOMATIC_QA=true)"
             else
               echo "ERROR: No AQA build found for devnet target"
+              echo "The tarball has no *automaticQa.apk."
               exit 1
             fi
 
           elif [ "$NETWORK_TARGET" = "mainnet" ]; then
-            echo "Mainnet target - using regular QA build"
-            if ls extracted/*qa.apk 1>/dev/null 2>&1; then
-              mv extracted/*qa.apk extracted/session-android.apk
+            echo "Requested target=mainnet -> using regular QA build"
+            # Exclude the AQA build so the '*qa.apk' glob does not grab '*automaticQa.apk'.
+            QA_APK=$(ls -1 extracted/*qa.apk 2>/dev/null | grep -v 'automaticQa' | head -n1 || true)
+            if [ -n "$QA_APK" ]; then
+              echo "Using regular QA build for mainnet: $QA_APK"
+              mv "$QA_APK" extracted/session-android.apk
               echo "IS_AUTOMATIC_QA=false" >> $GITHUB_ENV
+              echo "Decision: MAINNET (IS_AUTOMATIC_QA=false)"
             else
               echo "ERROR: No regular QA build found for mainnet target"
               exit 1
