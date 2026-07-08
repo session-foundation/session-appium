@@ -75,7 +75,8 @@ export const restoreAccountNoFallback = async (
     maxWait: 2000,
   });
   if (displayName) {
-    throw new Error('Account not found');
+    const network = process.env.DETECTED_NETWORK_TARGET ?? 'unknown';
+    throw new Error(`Account not found for seed: "${recoveryPhrase}" (network: ${network})`);
   }
   device.info('Display name found: Loading account');
 
