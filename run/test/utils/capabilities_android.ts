@@ -27,7 +27,7 @@ const sharedCapabilities: W3CUiautomator2DriverCaps['alwaysMatch'] = {
   'appium:injectedImageProperties': {},
 };
 
-const udids = ['emulator-5554', 'emulator-5556', 'emulator-5558', 'emulator-5560', 'emulator-5562', 'emulator-5564', 'emulator-5566', 'emulator-5568'];
+const udids = ['emulator-5554', 'emulator-5556', 'emulator-5558', 'emulator-5560'];
 
 const emulatorCapabilities: W3CUiautomator2DriverCaps['alwaysMatch'][] = udids.map(udid => ({
   ...sharedCapabilities,
