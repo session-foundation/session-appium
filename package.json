@@ -10,7 +10,7 @@
     "lint-check": "pnpm prettier . --check && pnpm eslint .",
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "npx playwright test --grep ",
+    "test": "_TESTING=1 _FORCE_LOGS=0 npx playwright test --grep ",
     "test-no-retry": "_TESTING=1 npx playwright test --grep ",
     "test-one": "_TESTING=1 _FORCE_LOGS=0 npx playwright test --grep",
     "test-udid": "_TESTING=1 npx playwright test UDID=$udid --grep",

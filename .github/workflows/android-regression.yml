@@ -1,69 +1,69 @@
 name: Android regression tests
-run-name: '${{ inputs.RISK }} regressions on ${{ github.head_ref || github.ref }}'
+run-name: "${{ inputs.RISK }} regressions on ${{ github.head_ref || github.ref }}"
 
 on:
   workflow_dispatch:
     inputs:
       NETWORK_TARGET:
-        description: 'network target to run the tests on'
+        description: "network target to run the tests on"
         required: true
         type: choice
         options:
-          - 'devnet'
-          - 'mainnet'
-        default: 'devnet'
+          - "devnet"
+          - "mainnet"
+        default: "devnet"
 
       APK_URL:
-        description: 'apk url to test (.tar.xz)'
+        description: "apk url to test (.tar.xz)"
         required: true
         type: string
 
       BUILD_NUMBER:
-        description: 'build number used for the report (e.g. 1.25.0)'
+        description: "build number used for the report (e.g. 1.25.0)"
         required: true
         type: string
 
       RISK:
-        description: 'risks to target'
+        description: "risks to target"
         required: false
         type: choice
         options:
-          - 'high-risk'
-          - 'medium-risk'
-          - 'low-risk'
-          - ''
+          - "high-risk"
+          - "medium-risk"
+          - "low-risk"
+          - ""
 
       RUN_PRO_TESTS:
-        description: 'include Session Pro tests in this run'
+        description: "include Session Pro tests in this run"
         required: false
         default: false
         type: boolean
 
       ALLURE_ENABLED:
-        description: 'generate allure report'
+        description: "generate allure report"
         required: false
         default: true
         type: boolean
 
       PLAYWRIGHT_RETRIES_COUNT:
-        description: 'retries of failing tests to do at most'
+        description: "retries of failing tests to do at most"
         required: true
         type: choice
         options:
-          - '0'
-          - '1'
-          - '2'
-        default: '0'
+          - "0"
+          - "1"
+          - "2"
+        default: "0"
 
       LOG_LEVEL:
-        description: 'Test logging verbosity (WARNING: anything other than minimal mode may crash GitHub Actions on large test runs)'
+        description: "Test logging verbosity (WARNING: anything other than minimal mode may crash GitHub Actions on large test runs)"
         required: true
         type: choice
         options:
-          - 'minimal' # Recommended for full regressions
-          - 'failures' # Show failed test logs stdout/stderr
-          - 'verbose' # Ongoing and failed test logs
-        default: 'minimal'
+          - "minimal" # Recommended for full regressions
+          - "failures" # Show failed test logs stdout/stderr
+          - "verbose" # Ongoing and failed test logs
+        default: "minimal"
 
 permissions:
   contents: write
@@ -72,17 +72,17 @@ jobs:
   android-regression:
     runs-on: [self-hosted, linux, X64, qa-android]
     env:
-      PLATFORM: 'android'
+      PLATFORM: "android"
       APK_URL: ${{ github.event.inputs.APK_URL }}
       BUILD_NUMBER: ${{ github.event.inputs.BUILD_NUMBER }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CI: 1
       ALLURE_ENABLED: ${{ github.event.inputs.ALLURE_ENABLED }}
-      IOS_APP_PATH_PREFIX: '<just_not_empty>'
-      ANDROID_APK: './extracted/session-android.apk'
-      APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
-      EMULATOR_FULL_PATH: '/opt/android/emulator/emulator'
-      ANDROID_SDK_ROOT: '/opt/android'
+      IOS_APP_PATH_PREFIX: "<just_not_empty>"
+      ANDROID_APK: "./extracted/session-android.apk"
+      APPIUM_ADB_FULL_PATH: "/opt/android/platform-tools/adb"
+      EMULATOR_FULL_PATH: "/opt/android/emulator/emulator"
+      ANDROID_SDK_ROOT: "/opt/android"
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
       _TESTING: 1 # Always hide webdriver logs (@appium/support/ flag)
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL != 'minimal' && '1' || '0' }} # Show stdout/stderr if test fails (@session-foundation/playwright-reporter/ flag)
@@ -95,7 +95,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           lfs: true
-          submodules: 'recursive'
+          submodules: "recursive"
 
       - name: Fetch result history from gh-pages
         uses: ./github/actions/fetch-allure-history
@@ -231,14 +231,12 @@ jobs:
         env:
           PLAYWRIGHT_WORKERS_COUNT: 1
           DEVICES_PER_TEST_COUNT: 2
-          _TESTING: ${{ env._TESTING }}
-          PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
-          PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
+          _TESTING: "1"
+          PRINT_FAILED_TEST_LOGS: "0"
+          PRINT_ONGOING_TEST_LOGS: "1"
         run: |
           pwd
-          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" $PRO_GREP_INVERT #Note: this has to be double quotes
-
-
+          pnpm test  "Disappearing messages defaults 1:1 @android"
 
       # - name: Run the 1-devices tests ​​with 4 workers
       #   continue-on-error: true
@@ -259,21 +257,21 @@ jobs:
       #     PLATFORM: ${{ env.PLATFORM }}
       #     UPLOAD_IDENTIFIER: 'devices-1-test-run'
 
-      # - name: Recover emulators if needed
-      #   run: pnpm recover-emulators
+      - name: Recover emulators if needed
+        run: pnpm recover-emulators
 
-      # - name: Run the 2-devices tests ​​with 2 workers
-      #   continue-on-error: true
-      #   id: devices-2-test-run
-      #   env:
-      #     PLAYWRIGHT_WORKERS_COUNT: 2
-      #     DEVICES_PER_TEST_COUNT: 2
-      #     _TESTING: ${{ env._TESTING }}
-      #     PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
-      #     PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
-      #   run: |
-      #     pwd
-      #     npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" $PRO_GREP_INVERT #Note: this has to be double quotes
+      - name: Run the 2-devices tests ​​with 2 workers
+        continue-on-error: true
+        id: devices-2-test-run
+        env:
+          PLAYWRIGHT_WORKERS_COUNT: 2
+          DEVICES_PER_TEST_COUNT: 2
+          _TESTING: ${{ env._TESTING }}
+          PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
+          PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
+        run: |
+          pwd
+          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" $PRO_GREP_INVERT #Note: this has to be double quotes
 
       # - name: Upload results of this run
       #   uses: ./github/actions/upload-test-results
@@ -314,7 +312,7 @@ jobs:
         uses: ./github/actions/upload-test-results
         with:
           PLATFORM: ${{ env.PLATFORM }}
-          UPLOAD_IDENTIFIER: 'devices-other-test-run'
+          UPLOAD_IDENTIFIER: "devices-other-test-run"
 
       - name: Upload csv of this whole run
         uses: ./github/actions/upload-csv-test-results
