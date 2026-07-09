@@ -225,33 +225,11 @@ jobs:
           RISK: ${{ github.event.inputs.RISK }}
           PRO_GREP_INVERT: ${{ env.PRO_GREP_INVERT }}
 
-      - name: Run the 1-devices tests ​​with 4 workers
-        continue-on-error: true
+      - name: Run the 1 test that fails
+        continue-on-error: false
         id: devices-1-test-run
         env:
-          PLAYWRIGHT_WORKERS_COUNT: 4
-          DEVICES_PER_TEST_COUNT: 1
-          _TESTING: ${{ env._TESTING }}
-          PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
-          PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
-        run: |
-          pwd
-          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" $PRO_GREP_INVERT #Note: this has to be double quotes
-
-      - name: Upload results of this run
-        uses: ./github/actions/upload-test-results
-        with:
-          PLATFORM: ${{ env.PLATFORM }}
-          UPLOAD_IDENTIFIER: 'devices-1-test-run'
-
-      - name: Recover emulators if needed
-        run: pnpm recover-emulators
-
-      - name: Run the 2-devices tests ​​with 2 workers
-        continue-on-error: true
-        id: devices-2-test-run
-        env:
-          PLAYWRIGHT_WORKERS_COUNT: 2
+          PLAYWRIGHT_WORKERS_COUNT: 1
           DEVICES_PER_TEST_COUNT: 2
           _TESTING: ${{ env._TESTING }}
           PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
@@ -260,27 +238,64 @@ jobs:
           pwd
           npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" $PRO_GREP_INVERT #Note: this has to be double quotes
 
-      - name: Upload results of this run
-        uses: ./github/actions/upload-test-results
-        with:
-          PLATFORM: ${{ env.PLATFORM }}
-          UPLOAD_IDENTIFIER: 'devices-2-test-run'
 
-      - name: Recover emulators if needed
-        run: pnpm recover-emulators
 
-      - name: Run the other tests with 1 worker
-        continue-on-error: true
-        id: other-devices-test-run
-        env:
-          PLAYWRIGHT_WORKERS_COUNT: 1
-          DEVICES_PER_TEST_COUNT: 4
-          _TESTING: ${{ env._TESTING }}
-          PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
-          PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
-        run: |
-          pwd
-          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" --grep-invert "@1-devices|@2-devices${PRO_INVERT_SUFFIX}" #Note: this has to be double quotes
+      # - name: Run the 1-devices tests ​​with 4 workers
+      #   continue-on-error: true
+      #   id: devices-1-test-run
+      #   env:
+      #     PLAYWRIGHT_WORKERS_COUNT: 4
+      #     DEVICES_PER_TEST_COUNT: 1
+      #     _TESTING: ${{ env._TESTING }}
+      #     PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
+      #     PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
+      #   run: |
+      #     pwd
+      #     npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" $PRO_GREP_INVERT #Note: this has to be double quotes
+
+      # - name: Upload results of this run
+      #   uses: ./github/actions/upload-test-results
+      #   with:
+      #     PLATFORM: ${{ env.PLATFORM }}
+      #     UPLOAD_IDENTIFIER: 'devices-1-test-run'
+
+      # - name: Recover emulators if needed
+      #   run: pnpm recover-emulators
+
+      # - name: Run the 2-devices tests ​​with 2 workers
+      #   continue-on-error: true
+      #   id: devices-2-test-run
+      #   env:
+      #     PLAYWRIGHT_WORKERS_COUNT: 2
+      #     DEVICES_PER_TEST_COUNT: 2
+      #     _TESTING: ${{ env._TESTING }}
+      #     PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
+      #     PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
+      #   run: |
+      #     pwd
+      #     npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${DEVICES_PER_TEST_COUNT}-devices)(?=.*@${{ github.event.inputs.RISK }})" $PRO_GREP_INVERT #Note: this has to be double quotes
+
+      # - name: Upload results of this run
+      #   uses: ./github/actions/upload-test-results
+      #   with:
+      #     PLATFORM: ${{ env.PLATFORM }}
+      #     UPLOAD_IDENTIFIER: 'devices-2-test-run'
+
+      # - name: Recover emulators if needed
+      #   run: pnpm recover-emulators
+
+      # - name: Run the other tests with 1 worker
+      #   continue-on-error: true
+      #   id: other-devices-test-run
+      #   env:
+      #     PLAYWRIGHT_WORKERS_COUNT: 1
+      #     DEVICES_PER_TEST_COUNT: 4
+      #     _TESTING: ${{ env._TESTING }}
+      #     PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
+      #     PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
+      #   run: |
+      #     pwd
+      #     npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" --grep-invert "@1-devices|@2-devices${PRO_INVERT_SUFFIX}" #Note: this has to be double quotes
 
       - name: Generate and publish test report
         uses: ./github/actions/generate-publish-test-report
