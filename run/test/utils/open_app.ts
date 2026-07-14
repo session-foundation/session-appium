@@ -47,7 +47,7 @@ export const openAppMultipleDevices = async (
   //  Map the result to return only the device objects
   const devices = apps.map(app => app.device);
 
-  await registerDevicesForTest(testInfo, devices, platform);
+  await registerDevicesForTest(testInfo, devices);
 
   return devices;
 };
@@ -75,7 +75,7 @@ export const openAppOnPlatformSingleDevice = async (
 }> => {
   const result = await openAppOnPlatform(platform, 0, testInfo, iOSContext);
 
-  await registerDevicesForTest(testInfo, [result.device], platform);
+  await registerDevicesForTest(testInfo, [result.device]);
 
   return result;
 };
@@ -95,7 +95,7 @@ export const openAppTwoDevices = async (
 
   const result = { device1: app1.device, device2: app2.device };
 
-  await registerDevicesForTest(testInfo, Object.values(result), platform);
+  await registerDevicesForTest(testInfo, Object.values(result));
 
   return result;
 };
@@ -121,7 +121,7 @@ export const openAppThreeDevices = async (
     device3: app3.device,
   };
 
-  await registerDevicesForTest(testInfo, Object.values(result), platform);
+  await registerDevicesForTest(testInfo, Object.values(result));
 
   return result;
 };
@@ -150,7 +150,7 @@ export const openAppFourDevices = async (
     device4: app4.device,
   };
 
-  await registerDevicesForTest(testInfo, Object.values(result), platform);
+  await registerDevicesForTest(testInfo, Object.values(result));
 
   return result;
 };
@@ -316,12 +316,12 @@ const cleanPermissions = async (
       }
       console.info('Create account button not found. Retrying...');
       retries++;
-      await wrappedDevice.deleteSession(); // Close the session before retrying
+      await wrappedDevice.deleteSession().catch(() => {}); // Close the session before retrying; ignore cleanup failures
     } catch (error) {
       console.info('Error opening iOS app:', error);
       retries++;
       if (wrappedDevice) {
-        await wrappedDevice.deleteSession(); // Close the session in case of an error
+        await wrappedDevice.deleteSession().catch(() => {}); // Close the session in case of an error; ignore cleanup failures (e.g. session never created)
       }
     }
   } while (retries < maxRetries);

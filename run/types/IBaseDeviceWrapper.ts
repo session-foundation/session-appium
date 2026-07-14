@@ -1,16 +1,16 @@
-import type { CTAType } from './cta';
 import type { User } from './testing';
 
 /**
- * High-level, platform-NEUTRAL capabilities that make sense on BOTH mobile
- * (Appium) and desktop (Electron/Playwright) clients.
+ * High-level, platform-NEUTRAL capabilities that a Session client of ANY
+ * platform (mobile Appium or desktop Electron/Playwright) can perform.
  *
  * HARD RULE: every member here must use platform-neutral signatures only —
  * primitives, enums and plain data types. No Appium element/locator types
  * (`AppiumNextElementType`, `StrategyExtractionObj`, `LocatorsInterface`) and no
- * Playwright `Locator` types may appear here, so that a future `DesktopWrapper`
- * can implement this interface too. Anything Appium-specific belongs in
- * `IMobileWrapper` instead.
+ * Playwright `Locator` types may appear here. Anything one platform cannot
+ * implement today (e.g. the Appium-shaped CTA/modal helpers, or the mobile-only
+ * "Pro Activated" settings assertion) belongs in `IMobileWrapper` instead, and
+ * is promoted here only once every platform can satisfy it.
  */
 export interface IBaseDeviceWrapper {
   // Logging
@@ -27,17 +27,14 @@ export interface IBaseDeviceWrapper {
   // Account
   restoreFromSeed(recoveryPhrase: string): Promise<void>;
 
+  // Profile
+  changeDisplayName(name: string): Promise<void>;
+  assertDisplayName(name: string): Promise<void>;
+
   // Messaging
   sendMessage(message: string): Promise<number>;
 
-  // CTA / modal
-  checkCTA(type: CTAType): Promise<void>;
-  verifyNoCTAShows(): Promise<void>;
-  dismissCTA(): Promise<void>;
-  checkModalStrings(expectedHeading: string, expectedDescription: string): Promise<void>;
-
   // Session Pro
   subscribeToPro(user: User): Promise<void>;
-  assertProActive(): Promise<void>;
   assertProFeatureUnlocked(user: Pick<User, 'accountID'>): Promise<void>;
 }

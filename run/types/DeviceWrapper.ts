@@ -17,15 +17,19 @@ import type { IMobileWrapper } from './IMobileWrapper';
 
 import {
   ChangeProfilePictureButton,
+  ClearInputButton,
   CloseSettings,
   describeLocator,
   DownloadMediaButton,
+  EditUsernameButton,
   FirstGif,
   GIFName,
   ImageName,
   ImagePermissionsModalAllow,
   LocatorsInterface,
   ReadReceiptsButton,
+  UsernameDisplay,
+  UsernameInput,
 } from '../../run/test/locators';
 import {
   animatedProfilePicture,
@@ -71,6 +75,7 @@ import { LoadingAnimation } from '../test/locators/onboarding';
 import {
   PrivacyMenuItem,
   ProAnimatedDisplayPictureModalDescription,
+  SaveNameChangeButton,
   SaveProfilePictureButton,
   UserAvatar,
   UserSettings,
@@ -2729,6 +2734,50 @@ export class DeviceWrapper implements IMobileWrapper {
    */
   public async restoreFromSeed(recoveryPhrase: string): Promise<void> {
     await restoreAccountNoFallback(this, recoveryPhrase);
+  }
+
+  /** === Profile === */
+
+  /** Change this account's display name via settings, then return to the home screen. */
+  public async changeDisplayName(name: string): Promise<void> {
+    await this.clickOnElementAll(new UserSettings(this));
+    await this.clickOnElementAll(new EditUsernameButton(this));
+    await this.onIOS().deleteText(new UsernameInput(this));
+    await this.onAndroid().clickOnElementAll(new ClearInputButton(this));
+    await this.inputText(name, new UsernameInput(this));
+    await this.clickOnElementAll(new SaveNameChangeButton(this));
+    await this.waitForTextElementToBePresent(new UsernameDisplay(this, name));
+    await this.clickOnElementAll(new CloseSettings(this));
+  }
+
+  /**
+   * Assert that this account's display name is (or becomes) `name`. Opens settings
+   * and polls the profile name — used on a linked device to wait for a synced change.
+   */
+  public async assertDisplayName(name: string): Promise<void> {
+    // Poll with a REOPEN each iteration: an already-open settings screen does not
+    // live-refresh when a config sync arrives, so we must close and reopen the
+    // dialog to observe a synced name (mirrors the desktop linked-device flow).
+    const deadline = Date.now() + 30_000;
+    let lastError: unknown;
+    do {
+      try {
+        await this.clickOnElementAll(new UserSettings(this));
+        await this.waitForTextElementToBePresent({
+          ...new UsernameDisplay(this, name).build(),
+          maxWait: 1_000,
+        });
+        await this.clickOnElementAll(new CloseSettings(this));
+        return;
+      } catch (e) {
+        lastError = e;
+        await this.clickOnElementAll(new CloseSettings(this)).catch(() => {});
+        await sleepFor(500);
+      }
+    } while (Date.now() < deadline);
+    throw new Error(
+      `assertDisplayName: "${name}" did not appear within 30s. Last error: ${lastError instanceof Error ? lastError.message : String(lastError)}`
+    );
   }
 
   /**

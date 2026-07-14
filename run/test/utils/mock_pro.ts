@@ -346,6 +346,24 @@ export async function makeAccountPro(params: MakeAccountProParams): Promise<ProP
     return null;
   }
 
+  // TEMPORARY: the Pro dev backend is not currently deployed, so add_pro_payment
+  // fails with "fetch failed". Set MOCK_PRO_PAYMENT=1 to skip the real request and
+  // return a synthetic proof, so the test flow can be exercised without a live
+  // backend. NOTE: the app clients still fetch their Pro status from the backend,
+  // so with this flag the clients won't actually reflect Pro until it's redeployed.
+  // Remove this block once the backend is back.
+  if (process.env.MOCK_PRO_PAYMENT === '1') {
+    console.log('\nMOCK_PRO_PAYMENT=1 - skipping real add_pro_payment, returning synthetic proof');
+    const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+    return {
+      version: request.version,
+      expiry_unix_ts_ms: Date.now() + thirtyDaysMs,
+      gen_index_hash: '00'.repeat(32),
+      rotating_pkey: request.rotating_pkey,
+      sig: '00'.repeat(64),
+    };
+  }
+
   // Send request
   console.log(`\nSending request to ${PRO_BACKEND_URL}...`);
   const response = await addProPayment(PRO_BACKEND_URL, request);
