@@ -1,12 +1,18 @@
 import type { TestInfo } from '@playwright/test';
 
 import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
-import { XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
+import {
+  W3CXCUITestDriverCaps,
+  XCUITestDriver,
+  XCUITestDriverOpts,
+} from 'appium-xcuitest-driver/build/lib/driver';
 import { DriverOpts } from 'appium/build/lib/appium';
 import { compact } from 'lodash';
 
 import { recoverEmulator } from '../../../scripts/emulator_health';
+import { AndroidDeviceWrapper } from '../../types/AndroidDeviceWrapper';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
+import { IosDeviceWrapper } from '../../types/IosDeviceWrapper';
 import { getAdbFullPath, getDevicesPerTestCount } from './binaries';
 import { androidAppPackage, getAndroidCapabilities, getAndroidUdid } from './capabilities_android';
 import {
@@ -17,7 +23,6 @@ import {
   IOSTestContext,
 } from './capabilities_ios';
 import { registerDevicesForTest } from './device_registry';
-import { cleanPermissions } from './permissions';
 import { sleepFor } from './sleep_for';
 import { runScriptAndLog } from './utilities';
 
@@ -242,7 +247,7 @@ const openAndroidApp = async (
   const device = new AndroidUiautomator2Driver(opts);
   const udid = getAndroidUdid(actualCapabilitiesIndex);
   console.log(`udid: ${udid}`);
-  const wrappedDevice = new DeviceWrapper(device, udid, testInfo);
+  const wrappedDevice = new AndroidDeviceWrapper(device, udid, testInfo);
 
   await runScriptAndLog(`${getAdbFullPath()} -s ${targetName} shell settings put global heads_up_notifications_enabled 0
     `);
@@ -266,6 +271,64 @@ const openAndroidApp = async (
     disableIdLocatorAutocompletion: true,
   });
   return { device: wrappedDevice };
+};
+
+// Opens the iOS app, dismissing any leftover modal and resetting privacy, retrying a few times.
+// Lives here (rather than in permissions.ts) so that constructing the IosDeviceWrapper subclass
+// doesn't pull a DeviceWrapper subclass into DeviceWrapper's own module-init chain.
+const cleanPermissions = async (
+  opts: XCUITestDriverOpts,
+  udid: string,
+  capabilities: W3CXCUITestDriverCaps,
+  testInfo: TestInfo
+): Promise<{ device: DeviceWrapper }> => {
+  let wrappedDevice: DeviceWrapper | null = null;
+  const maxRetries = 3;
+  let retries = 0;
+
+  do {
+    try {
+      const device: XCUITestDriver = new XCUITestDriver(opts);
+      wrappedDevice = new IosDeviceWrapper(device, udid, testInfo);
+
+      await wrappedDevice.createSession(capabilities);
+      // This function closes any pop up that hasn't been dismissed from a previous test (only happens for iOS currently)
+      await wrappedDevice.modalPopup({
+        strategy: 'xpath',
+        selector: `//XCUIElementTypeAlert//*//XCUIElementTypeButton`,
+        maxWait: 500,
+      });
+      // This is to check if the app is already open, sometimes when dismissing the modal, the app closes
+      await runScriptAndLog(
+        `xcrun simctl privacy ${udid} reset all ${capabilities.alwaysMatch['appium:bundleId']}`,
+        true
+      );
+
+      // Check if the "Create account button" is present (this is just to check if app is open)
+      const createAccountButtonExists = await wrappedDevice.doesElementExist({
+        strategy: 'accessibility id',
+        selector: 'Create account button',
+        maxWait: 5000,
+      });
+
+      if (createAccountButtonExists) {
+        return { device: wrappedDevice };
+      }
+      console.info('Create account button not found. Retrying...');
+      retries++;
+      await wrappedDevice.deleteSession(); // Close the session before retrying
+    } catch (error) {
+      console.info('Error opening iOS app:', error);
+      retries++;
+      if (wrappedDevice) {
+        await wrappedDevice.deleteSession(); // Close the session in case of an error
+      }
+    }
+  } while (retries < maxRetries);
+
+  throw new Error(
+    'Failed to open the iOS app and find the Create account button after multiple retries.'
+  );
 };
 
 const openiOSApp = async (

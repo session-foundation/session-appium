@@ -12,6 +12,9 @@ import * as path from 'path';
 import sharp from 'sharp';
 import * as sinon from 'sinon';
 
+import type { SupportedPlatformsType } from '../test/utils/open_app';
+import type { IMobileWrapper } from './IMobileWrapper';
+
 import {
   ChangeProfilePictureButton,
   CloseSettings,
@@ -67,6 +70,7 @@ import {
 import { LoadingAnimation } from '../test/locators/onboarding';
 import {
   PrivacyMenuItem,
+  ProAnimatedDisplayPictureModalDescription,
   SaveProfilePictureButton,
   UserAvatar,
   UserSettings,
@@ -77,7 +81,8 @@ import { clickOnCoordinates, sleepFor, verify } from '../test/utils';
 import { getAdbFullPath } from '../test/utils/binaries';
 import { parseDataImage } from '../test/utils/check_colour';
 import { isSameColor } from '../test/utils/check_colour';
-import { SupportedPlatformsType } from '../test/utils/open_app';
+import { makeAccountPro } from '../test/utils/mock_pro';
+import { restoreAccountNoFallback } from '../test/utils/restore_account';
 import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/utils/utilities';
 import { CTAConfig, ctaConfigs, CTAType } from './cta';
 import {
@@ -104,7 +109,7 @@ type PollResult<T = undefined> = {
   error?: string;
 };
 
-export class DeviceWrapper {
+export class DeviceWrapper implements IMobileWrapper {
   private readonly device: AndroidUiautomator2Driver | XCUITestDriver;
   public readonly udid: string;
   private deviceIdentity: string = '';
@@ -2714,6 +2719,52 @@ export class DeviceWrapper {
       this.log('Dismissing CTA');
       await this.clickOnCoordinates(150, 150);
     }
+  }
+
+  /** === Session Pro === */
+
+  /**
+   * Restore/link this device to an existing account from its recovery phrase.
+   * Fails if the account isn't found on the network.
+   */
+  public async restoreFromSeed(recoveryPhrase: string): Promise<void> {
+    await restoreAccountNoFallback(this, recoveryPhrase);
+  }
+
+  /**
+   * Register this device's account as a Session Pro subscriber against the dev
+   * backend (fake payment). The provider is derived from the device platform.
+   * NOTE: Pro becomes visible to this and any linked device without an app
+   * restart — reopen the Pro/settings dialog to observe the new state.
+   */
+  public async subscribeToPro(user: User): Promise<void> {
+    const provider = this.isIOS() ? 'apple' : 'google';
+    await makeAccountPro({ user, provider });
+  }
+
+  /**
+   * Assert that Session Pro is active for this account by opening the profile
+   * picture modal and checking the "Pro Activated" CTA. Does NOT restart the
+   * app. Cross-platform observers waiting for a subscription to sync should call
+   * this inside a retry that reopens the dialog between attempts.
+   */
+  public async assertProActive(): Promise<void> {
+    await this.clickOnElementAll(new UserSettings(this));
+    await this.clickOnElementAll(new UserAvatar(this));
+    await this.waitForTextElementToBePresent(new ChangeProfilePictureButton(this));
+    await this.clickOnElementAll(new ProAnimatedDisplayPictureModalDescription(this));
+    await this.checkCTA('alreadyActivated');
+  }
+
+  /**
+   * Assert that a Pro-gated feature is unlocked by sending a message longer than
+   * the standard 2000-char cap and confirming it sends (a non-Pro account would
+   * be blocked by the "longer messages" upgrade CTA instead).
+   */
+  public async assertProFeatureUnlocked(user: Pick<User, 'accountID'>): Promise<void> {
+    const message = 'x'.repeat(2001);
+    await this.sendNewMessage(user, message);
+    await this.waitForTextElementToBePresent(new MessageBody(this, message));
   }
 
   public async getElementPixelColor(
