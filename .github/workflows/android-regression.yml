@@ -229,7 +229,7 @@ jobs:
         continue-on-error: true
         id: devices-1-test-run
         env:
-          PLAYWRIGHT_WORKERS_COUNT: 4
+          PLAYWRIGHT_WORKERS_COUNT_ANDROID: 4
           DEVICES_PER_TEST_COUNT: 1
           _TESTING: ${{ env._TESTING }}
           PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
@@ -251,7 +251,7 @@ jobs:
         continue-on-error: true
         id: devices-2-test-run
         env:
-          PLAYWRIGHT_WORKERS_COUNT: 2
+          PLAYWRIGHT_WORKERS_COUNT_ANDROID: 2
           DEVICES_PER_TEST_COUNT: 2
           _TESTING: ${{ env._TESTING }}
           PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
@@ -273,7 +273,7 @@ jobs:
         continue-on-error: true
         id: other-devices-test-run
         env:
-          PLAYWRIGHT_WORKERS_COUNT: 1
+          PLAYWRIGHT_WORKERS_COUNT_ANDROID: 1
           DEVICES_PER_TEST_COUNT: 4
           _TESTING: ${{ env._TESTING }}
           PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}

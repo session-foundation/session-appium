@@ -92,7 +92,9 @@ IOS_APP_PATH_PREFIX=/path/to/Session.app       # iOS app for testing
 _TESTING=1                           # Skip printing appium/wdio logs
 PLAYWRIGHT_RETRIES_COUNT=0           # Test retry attempts
 PLAYWRIGHT_REPEAT_COUNT=0            # Successful test repeat count
-PLAYWRIGHT_WORKERS_COUNT=1           # Parallel test workers
+PLAYWRIGHT_WORKERS_COUNT_ANDROID=1   # Parallel test workers for Android (selected via PLATFORM)
+PLAYWRIGHT_WORKERS_COUNT_IOS=1       # Parallel test workers for iOS (selected via PLATFORM)
+PLAYWRIGHT_WORKERS_COUNT_DESKTOP=1   # Parallel test workers for desktop (selected via PLATFORM)
 CI=0                                 # Set to 1 to simulate CI (mostly for Allure reporting)
 ALLURE_ENABLED=false                 # Set to 'true' to generate Allure reports (in conjunction with CI=1)
 UPDATE_BASELINES=true                # Auto-save new screenshot baselines if unavailable

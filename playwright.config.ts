@@ -4,7 +4,28 @@ dotenv.config({ quiet: true });
 import { defineConfig, ReporterDescription } from '@playwright/test';
 
 import { allureResultsDir } from './run/constants/allure';
-import { getRepeatEachCount, getRetriesCount, getWorkersCount } from './run/test/utils/binaries';
+import {
+  getRepeatEachCount,
+  getRetriesCount,
+  getWorkersCount,
+  type WorkersPlatform,
+} from './run/test/utils/binaries';
+
+// A run always targets a single platform, but that platform is expressed differently depending
+// on the entrypoint: CI sets the PLATFORM env variable, while the local `test-*` scripts only
+// pass it through the `--grep`/`--project` CLI args. Resolve both so the right per-platform
+// worker count is picked. Returns undefined for the cross-platform project (no dedicated count).
+function currentTestPlatform(): WorkersPlatform | undefined {
+  const fromEnv = process.env.PLATFORM;
+  if (fromEnv === 'android' || fromEnv === 'ios' || fromEnv === 'desktop') {
+    return fromEnv;
+  }
+  const argv = process.argv.join(' ');
+  if (/@ios\b/.test(argv)) return 'ios';
+  if (/@android\b/.test(argv)) return 'android';
+  if (/(^|\s|--project[= ])desktop\b/.test(argv)) return 'desktop';
+  return undefined;
+}
 
 // NOTE: without this, the wrong source map is loaded and the stacktraces are all wrong
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -38,7 +59,7 @@ export default defineConfig({
   // outputDir: './tests/automation/test-results',
   retries: getRetriesCount(),
   repeatEach: getRepeatEachCount(),
-  workers: getWorkersCount(),
+  workers: getWorkersCount(currentTestPlatform()),
   reportSlowTests: null,
   fullyParallel: true, // otherwise, tests in the same file are not run in parallel
   // One project per suite: each suite has a distinct runtime profile (mobile needs an
