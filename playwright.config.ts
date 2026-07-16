@@ -41,4 +41,23 @@ export default defineConfig({
   workers: getWorkersCount(),
   reportSlowTests: null,
   fullyParallel: true, // otherwise, tests in the same file are not run in parallel
+  // One project per suite: each suite has a distinct runtime profile (mobile needs an
+  // emulator, desktop needs Electron, cross-platform needs both). testDir stays the same and
+  // each project narrows to its own folder via testMatch. android/ios are NOT separate
+  // projects: `bothPlatformsIt` registers both an @android and an @ios test from the same
+  // file, so they are split with `--grep '@android'` / `'@ios'` inside `--project mobile`.
+  projects: [
+    {
+      name: 'mobile',
+      testMatch: /specs\/mobile\/.*\.spec\.ts$/,
+    },
+    {
+      name: 'desktop',
+      testMatch: /specs\/desktop\/.*\.spec\.ts$/,
+    },
+    {
+      name: 'cross-platform',
+      testMatch: /specs\/cross_platform\/.*\.spec\.ts$/,
+    },
+  ],
 });

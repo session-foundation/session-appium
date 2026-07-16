@@ -1,0 +1,96 @@
+import type { TestInfo } from '@playwright/test';
+
+import { testLink } from '../../../constants';
+import { tStripped } from '../../../localizer/lib';
+import { bothPlatformsItSeparate } from '../../../types/sessionIt';
+import { LinkPreview, LinkPreviewMessage } from '../../locators';
+import {
+  MessageBody,
+  MessageInput,
+  OutgoingMessageStatusSent,
+  SendButton,
+} from '../../locators/conversation';
+import { EnableLinkPreviewsModalButton } from '../../locators/global';
+import { open_Alice1_Bob1_friends } from '../../state_builder';
+import { sleepFor } from '../../utils';
+import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
+
+bothPlatformsItSeparate({
+  title: 'Send link 1:1',
+  risk: 'high',
+  countOfDevicesNeeded: 2,
+  ios: {
+    testCb: sendLinkIos,
+  },
+  android: {
+    testCb: sendLinkAndroid,
+  },
+});
+
+async function sendLinkIos(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const {
+    devices: { alice1, bob1 },
+    prebuilt: { alice },
+  } = await open_Alice1_Bob1_friends({
+    platform,
+    focusFriendsConvo: true,
+    testInfo,
+  });
+
+  const replyMessage = `Replying to link from ${alice.userName}`;
+  // Send a link
+
+  await alice1.inputText(testLink, new MessageInput(alice1));
+  // Accept dialog for link preview
+  await alice1.checkModalStrings(
+    tStripped('linkPreviewsEnable'),
+    tStripped('linkPreviewsFirstDescription')
+  );
+  await alice1.clickOnElementAll(new EnableLinkPreviewsModalButton(alice1));
+  await alice1.clickOnElementAll(new SendButton(alice1));
+  await alice1.waitForTextElementToBePresent({
+    ...new OutgoingMessageStatusSent(alice1).build(),
+    maxWait: 20000,
+  });
+  await alice1.inputText(testLink, new MessageInput(alice1));
+  // Wait for link preview to load
+  await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
+  await alice1.clickOnElementAll(new SendButton(alice1));
+  // Make sure image preview is available in device 2
+  await bob1.waitForTextElementToBePresent(new MessageBody(bob1, testLink));
+  await bob1.longPressMessage(new MessageBody(bob1, testLink));
+  await bob1.clickOnByAccessibilityID('Reply to message');
+  await sleepFor(500); // Let the UI settle before finding message input and typin
+  await bob1.sendMessage(replyMessage);
+  await alice1.waitForTextElementToBePresent(new MessageBody(alice1, replyMessage));
+  await closeApp(alice1, bob1);
+}
+
+async function sendLinkAndroid(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const {
+    devices: { alice1, bob1 },
+  } = await open_Alice1_Bob1_friends({
+    platform,
+    focusFriendsConvo: true,
+    testInfo,
+  });
+
+  // Send a link
+  await alice1.inputText(testLink, new MessageInput(alice1));
+  // Accept dialog for link preview
+  await alice1.checkModalStrings(
+    tStripped('linkPreviewsEnable'),
+    tStripped('linkPreviewsFirstDescription')
+  );
+  await alice1.clickOnElementAll(new EnableLinkPreviewsModalButton(alice1));
+  //wait for preview to generate
+  await sleepFor(5000);
+  await alice1.clickOnElementAll(new SendButton(alice1));
+  await alice1.waitForTextElementToBePresent({
+    ...new OutgoingMessageStatusSent(alice1).build(),
+    maxWait: 25000,
+  });
+
+  await bob1.waitForTextElementToBePresent(new LinkPreviewMessage(bob1));
+  await closeApp(alice1, bob1);
+}

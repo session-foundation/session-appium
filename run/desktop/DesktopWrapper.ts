@@ -2,20 +2,29 @@ import type { Page } from '@playwright/test';
 
 import type { IBaseDeviceWrapper } from '../types/IBaseDeviceWrapper';
 import type { User } from '../types/testing';
+import type { DataTestId, User as DesktopUser, ModalId, StrategyExtractionObj } from './types';
 
 import { tStripped } from '../localizer/lib';
 import { makeAccountPro } from '../test/utils/mock_pro';
+import { openConversationWith as desktopOpenConversationWith } from './conversation';
+import { createContact } from './create_contact';
 import { LeftPane, Settings } from './locators';
 import { sendMessage as desktopSendMessage } from './message';
+import { newUser } from './new_user';
 import { recoverFromSeed } from './recovery_using_seed';
 import { sendNewMessage } from './send_message';
 import {
+  checkCTAStrings,
+  checkModalStrings,
   checkPathLight,
   clickOn,
   clickOnElement,
   clickOnMatchingText,
+  clickOnWithText,
   doWhileWithMax,
+  hasElementPoppedUpThatShouldnt,
   pasteIntoInput,
+  waitForElement,
   waitForTestIdWithText,
   waitForTextMessage,
 } from './utils';
@@ -38,10 +47,37 @@ import {
 export class DesktopWrapper implements IBaseDeviceWrapper {
   private readonly page: Page;
   private deviceIdentity: string;
+  private account?: DesktopUser;
 
   constructor(page: Page, identity: string = 'desktop') {
     this.page = page;
     this.deviceIdentity = identity;
+  }
+
+  // --- Escape hatch + account accessors ---
+
+  /**
+   * The underlying Playwright `Page`. Prefer the wrapper's verbs; reach for this
+   * only for the rare low-level interaction that has no method yet.
+   */
+  public getPage(): Page {
+    return this.page;
+  }
+
+  /** The account minted/linked on this client, if any. Throws if none yet. */
+  public getUser(): DesktopUser {
+    if (!this.account) {
+      throw new Error(`[${this.deviceIdentity}] has no account yet (call onboard() first)`);
+    }
+    return this.account;
+  }
+
+  public get userName(): string {
+    return this.getUser().userName;
+  }
+
+  public get accountId(): string {
+    return this.getUser().accountid;
   }
 
   // --- IBaseDeviceWrapper: logging ---
@@ -157,5 +193,111 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
         return false;
       }
     });
+  }
+
+  // --- High-level desktop verbs ---
+  // These are desktop-only (not on IBaseDeviceWrapper); they delegate to the ported
+  // Page-based helpers, passing this client's page/account implicitly.
+
+  /** Onboard a fresh account in this window and remember it as this client's account. */
+  public async onboard(userName: string, awaitOnionPath = true): Promise<DesktopUser> {
+    this.account = await newUser(this.page, userName, awaitOnionPath);
+    return this.account;
+  }
+
+  /** Make this client and `other` mutual contacts by exchanging a message each way. */
+  public async createContactWith(other: DesktopWrapper): Promise<void> {
+    await createContact(this.page, other.getPage(), this.getUser(), other.getUser());
+  }
+
+  /** Open the conversation whose left-pane name matches `convoName`. */
+  public async openConversationWith(convoName: string): Promise<void> {
+    await desktopOpenConversationWith(this.page, convoName);
+  }
+
+  /** Start a brand-new conversation with `sessionId` and send `message`. */
+  public async sendNewMessage(sessionId: string, message: string): Promise<void> {
+    await sendNewMessage(this.page, sessionId, message);
+  }
+
+  // --- Low-level primitives (mirror the mobile DeviceWrapper's dual nature) ---
+
+  public async clickOn(
+    locator: StrategyExtractionObj,
+    options?: Parameters<typeof clickOn>[2]
+  ): Promise<void> {
+    await clickOn(this.page, locator, options);
+  }
+
+  public async clickOnWithText(locator: StrategyExtractionObj, text: string): Promise<void> {
+    await clickOnWithText(this.page, locator, text);
+  }
+
+  public async clickOnElement(
+    args: StrategyExtractionObj & { maxWait?: number; rightButton?: boolean }
+  ): Promise<void> {
+    const { maxWait, rightButton, ...locator } = args;
+    await clickOn(this.page, locator as StrategyExtractionObj, { maxWait, rightButton });
+  }
+
+  public async clickOnMatchingText(text: string): Promise<void> {
+    await clickOnMatchingText(this.page, text);
+  }
+
+  public async pasteIntoInput(dataTestId: DataTestId, text: string): Promise<void> {
+    await pasteIntoInput(this.page, dataTestId, text);
+  }
+
+  public async waitForTextMessage(text: string, maxWait?: number): Promise<void> {
+    await waitForTextMessage(this.page, text, maxWait);
+  }
+
+  public async waitForTestIdWithText(
+    dataTestId: DataTestId,
+    text?: string,
+    maxWait?: number
+  ): Promise<void> {
+    await waitForTestIdWithText(this.page, dataTestId, text, maxWait);
+  }
+
+  public async waitForElement(
+    args: Omit<Parameters<typeof waitForElement>[0], 'window'>
+  ): Promise<void> {
+    await waitForElement({ window: this.page, ...args });
+  }
+
+  public async checkModalStrings(
+    expectedHeading: string,
+    expectedDescription?: string,
+    modalId?: ModalId
+  ): Promise<void> {
+    await checkModalStrings(this.page, expectedHeading, expectedDescription, modalId);
+  }
+
+  public async checkCTAStrings(
+    expectedHeading: string,
+    expectedBody: string,
+    expectedButtons: Array<string>,
+    expectedFeatures?: Array<string>
+  ): Promise<void> {
+    await checkCTAStrings(
+      this.page,
+      expectedHeading,
+      expectedBody,
+      expectedButtons,
+      expectedFeatures
+    );
+  }
+
+  public async hasElementPoppedUpThatShouldnt(
+    locator: StrategyExtractionObj,
+    text?: string
+  ): Promise<void> {
+    await hasElementPoppedUpThatShouldnt(this.page, locator, text);
+  }
+
+  /** Resolve once this client's window closes (e.g. after an onboarding "quit" restart). */
+  public async waitForWindowClosed(timeout: number): Promise<void> {
+    await this.page.waitForEvent('close', { timeout });
   }
 }

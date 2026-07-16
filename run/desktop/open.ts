@@ -69,6 +69,11 @@ const openElectronAppOnly = async (multi: string, context?: TestContext) => {
   try {
     const start = Date.now();
     const useXvfb = process.env.USE_XVFB === '1';
+    // Playwright must launch a real Electron process. If ELECTRON_RUN_AS_NODE is inherited
+    // (IDE-integrated terminals commonly set it), Electron runs as plain Node and rejects
+    // Chromium flags like --no-sandbox, failing with "Process failed to launch!".
+    const parentEnv = { ...process.env };
+    delete parentEnv.ELECTRON_RUN_AS_NODE;
     const electronApp = await electron.launch({
       args: [
         join(getAppRootPath(), 'app', 'ts', 'mains', 'main_node.js'),
@@ -77,7 +82,7 @@ const openElectronAppOnly = async (multi: string, context?: TestContext) => {
         ...(useXvfb ? ['--ozone-platform=x11'] : []),
       ],
       env: {
-        ...process.env,
+        ...parentEnv,
         ELECTRON_ENABLE_LOGGING: '1',
         // Optional: control log level
         ELECTRON_LOG_LEVEL: 'verbose', // 'verbose', 'info', 'warn', 'error'

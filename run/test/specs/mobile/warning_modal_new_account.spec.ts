@@ -1,0 +1,40 @@
+import type { TestInfo } from '@playwright/test';
+
+import { tStripped } from '../../../localizer/lib';
+import { androidIt } from '../../../types/sessionIt';
+import { USERNAME } from '../../../types/testing';
+import { ContinueButton } from '../../locators/global';
+import {
+  BackButton,
+  CreateAccountButton,
+  DisplayNameInput,
+  SlowModeRadio,
+  WarningModalQuitButton,
+} from '../../locators/onboarding';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../../utils/open_app';
+
+// These modals no longer exist in groups rebuild for iOS
+androidIt({
+  title: 'Warning modal on new account',
+  risk: 'medium',
+  testCb: warningModalNewAccount,
+  countOfDevicesNeeded: 1,
+});
+
+async function warningModalNewAccount(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
+  await device.clickOnElementAll(new CreateAccountButton(device));
+  await device.inputText(USERNAME.ALICE, new DisplayNameInput(device));
+  await device.clickOnElementAll(new ContinueButton(device));
+  // Checking that we're on the Message Notifications screen
+  await device.waitForTextElementToBePresent(new SlowModeRadio(device));
+  // Pressing Back on the Message Notifications screen
+  await device.clickOnElementAll(new BackButton(device));
+  // Verifying that pressing Back from the Message Notifications screen does not bring up a modal but instead shows the Display Name input field
+  await device.waitForTextElementToBePresent(new DisplayNameInput(device));
+  // Pressing Back on the Display Name screen to trigger the Warning modal
+  await device.clickOnElementAll(new BackButton(device));
+  await device.checkModalStrings(tStripped('warning'), tStripped('onboardingBackAccountCreation'));
+  await device.clickOnElementAll(new WarningModalQuitButton(device));
+  await closeApp(device);
+}

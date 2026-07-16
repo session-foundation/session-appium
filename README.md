@@ -7,7 +7,7 @@ This repository holds the code to run integration tests for Session iOS and Andr
 ### Prerequisites
 
 - Node.js 24.12.0
-- pnpm 10.28.1 
+- pnpm 10.28.1
 - Git LFS
 
 ```bash
@@ -23,8 +23,6 @@ pnpm start-server                        # Starts Appium server
 pnpm test                                # Run all tests
 pnpm test-android                        # Android tests only
 pnpm test-ios                            # iOS tests only
-pnpm test-one 'Test name'                # Run specific test (both platforms)
-pnpm test-one 'Test name @android'       # Run specific test on one platform
 ```
 
 For CI setup and codebase overview, see [ARCHITECTURE.md](ARCHITECTURE.md).
@@ -47,8 +45,8 @@ Prerequisites: Android Studio installed with SDK tools available
    - Choose the appropriate binary based on your network access:
      - QA: Pre-configured to mainnet, can run on any network
      - AutomaticQA: Pre-configured to a local devnet, must have access
-4. Set environment variable: 
-   ```bash   
+4. Set environment variable:
+   ```bash
    # In your .env file
    ANDROID_APK=/path/to/session-android.apk
    ```
@@ -57,11 +55,11 @@ Prerequisites: Android Studio installed with SDK tools available
    emulator @<your-emulator-name>
    ```
 
-### iOS  
+### iOS
 Prerequisites: Xcode installed and the appropriate simulator runtime available - check in `scripts/create_ios_simulators.ts`
 
 1. Create iOS simulators with preloaded media attachments:
-   ```bash   
+   ```bash
    # Local development (create 4 simulators to be able to run all tests)
    pnpm create-simulators 4
    # Or specify custom count
@@ -71,7 +69,7 @@ Prerequisites: Xcode installed and the appropriate simulator runtime available -
 3. Extract .app file and copy Session.app to an easily accessible location
 4. Set environment variable:
 
-   ```bash   
+   ```bash
    # In your .env file
    IOS_APP_PATH_PREFIX=/path/to/Session.app
    ```
@@ -98,5 +96,5 @@ PLAYWRIGHT_WORKERS_COUNT=1           # Parallel test workers
 CI=0                                 # Set to 1 to simulate CI (mostly for Allure reporting)
 ALLURE_ENABLED=false                 # Set to 'true' to generate Allure reports (in conjunction with CI=1)
 UPDATE_BASELINES=true                # Auto-save new screenshot baselines if unavailable
-SOGS_ADMIN_SEED='word1 word2...'     # 13-word recovery phrase of an account that's an admin in the testing SOGS. 
+SOGS_ADMIN_SEED='word1 word2...'     # 13-word recovery phrase of an account that's an admin in the testing SOGS.
 ```
