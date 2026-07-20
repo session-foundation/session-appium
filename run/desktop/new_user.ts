@@ -1,5 +1,3 @@
-// @ported-from tests/automation/setup/new_user.ts
-// @port-kind   verbatim
 // Only import paths were rewritten to `./` siblings and `chalk` removed.
 
 import { Page } from '@playwright/test';

@@ -1,10 +1,10 @@
-// @ported-from tests/automation/types/testing.ts
-// @port-kind   verbatim
 // Desktop (Electron/Playwright) test types. These are desktop-specific and are kept
 // separate from the mobile `run/types/testing.ts` on purpose (different shapes,
 // e.g. testid-based selectors). Only used by the desktop driving code under
 // `run/desktop/`.
 import { Page } from '@playwright/test';
+
+import type { DisappearActions } from '../shared/constants';
 
 export type User = {
   userName: string;
@@ -57,7 +57,7 @@ export type DisappearType = 'disappear-after-read-option' | 'disappear-after-sen
 
 export type DisappearGroupType = Exclude<DisappearType, 'disappear-after-read-option'>;
 
-export type DisappearActions = 'read' | 'sent';
+export type { DisappearActions };
 
 export type StrategyExtractionObj =
   | {

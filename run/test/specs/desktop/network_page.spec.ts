@@ -1,17 +1,15 @@
-// @ported-from tests/automation/network_page.spec.ts
-// @port-kind   spec
 // Rewritten to drive the app through DesktopWrapper instead of a raw Playwright Page.
 // The visual-regression cases compare against baselines under ./screenshots (see
 // snapshotPathTemplate in playwright.config.ts) — regenerate them on the target platform
 // with `--update-snapshots` if the desktop build's rendering differs.
 
 import { Global, LeftPane, Settings } from '../../../desktop/locators';
-import { validateNetworkData } from '../../../desktop/network_api';
-import { sleepFor } from '../../../desktop/promise_utils';
 import { compareElementScreenshot } from '../../../desktop/screenshot';
 import { test_Alice_1W } from '../../../desktop/sessionTest';
 import { assertUrlIsReachable, waitForTestIdWithText } from '../../../desktop/utils';
 import { tStripped } from '../../../localizer/lib';
+import { validateNetworkData } from '../../../shared/network_api';
+import { sleepFor } from '../../../shared/promise_utils';
 
 test_Alice_1W('Network page values', async ({ alice }) => {
   await alice.clickOn(LeftPane.settingsButton);

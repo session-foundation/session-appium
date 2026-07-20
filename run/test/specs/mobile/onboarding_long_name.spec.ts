@@ -4,7 +4,11 @@ import { tStripped } from '../../../localizer/lib';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { ContinueButton } from '../../locators/global';
 import { CreateAccountButton, DisplayNameInput, ErrorMessage } from '../../locators/onboarding';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../../utils/open_app';
+import {
+  closeApp,
+  openAppOnPlatformSingleDevice,
+  SupportedPlatformsType,
+} from '../../utils/open_app';
 
 bothPlatformsIt({
   title: 'Onboarding long name',

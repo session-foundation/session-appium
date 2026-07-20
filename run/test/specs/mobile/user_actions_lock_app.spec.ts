@@ -4,9 +4,18 @@ import { TestSteps } from '../../../types/allure';
 import { androidIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
 import { PlusButton } from '../../locators/home';
-import { LockAppOption, LockAppToggle, PrivacyMenuItem, UserSettings } from '../../locators/settings';
+import {
+  LockAppOption,
+  LockAppToggle,
+  PrivacyMenuItem,
+  UserSettings,
+} from '../../locators/settings';
 import { newUser } from '../../utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../../utils/open_app';
+import {
+  closeApp,
+  openAppOnPlatformSingleDevice,
+  SupportedPlatformsType,
+} from '../../utils/open_app';
 import { forceStopAndRestart, runScriptAndLog } from '../../utils/utilities';
 
 // `xcrun simctl` doesn't support adding a pin like adb does so this is an Android only test

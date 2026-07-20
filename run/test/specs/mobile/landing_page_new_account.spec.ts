@@ -3,7 +3,11 @@ import { type TestInfo } from '@playwright/test';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
 import { newUser } from '../../utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../../utils/open_app';
+import {
+  closeApp,
+  openAppOnPlatformSingleDevice,
+  SupportedPlatformsType,
+} from '../../utils/open_app';
 import { verifyPageScreenshot } from '../../utils/verify_screenshots';
 
 bothPlatformsIt({

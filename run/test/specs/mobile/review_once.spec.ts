@@ -9,7 +9,11 @@ import { ModalHeading } from '../../locators/global';
 import { PlusButton } from '../../locators/home';
 import { PathMenuItem, UserSettings } from '../../locators/settings';
 import { newUser } from '../../utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../../utils/open_app';
+import {
+  closeApp,
+  openAppOnPlatformSingleDevice,
+  SupportedPlatformsType,
+} from '../../utils/open_app';
 
 bothPlatformsIt({
   title: 'Review prompt only once',

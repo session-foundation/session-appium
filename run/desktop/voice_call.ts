@@ -1,10 +1,8 @@
-// @ported-from tests/automation/utilities/voice_call.ts
-// @port-kind   verbatim
 import { Page } from '@playwright/test';
 
 import { tStripped } from '../localizer/lib';
+import { sleepFor } from '../shared/promise_utils';
 import { Conversation, Global, Settings } from './locators';
-import { sleepFor } from './promise_utils';
 import { checkModalStrings, clickOn, clickOnMatchingText } from './utils';
 
 export const makeVoiceCall = async (callerWindow: Page, receiverWindow: Page) => {

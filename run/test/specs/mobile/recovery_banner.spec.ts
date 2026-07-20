@@ -9,7 +9,11 @@ import { ConversationItem, PlusButton } from '../../locators/home';
 import { RecoveryPhraseContainer, RevealRecoveryPhraseButton } from '../../locators/settings';
 import { joinCommunities, joinCommunity } from '../../utils/community';
 import { newUser } from '../../utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../../utils/open_app';
+import {
+  closeApp,
+  openAppOnPlatformSingleDevice,
+  SupportedPlatformsType,
+} from '../../utils/open_app';
 
 androidIt({
   title: 'Recovery password banner only shows after 3 conversations',

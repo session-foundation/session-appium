@@ -1,5 +1,3 @@
-// @ported-from tests/automation/utilities/checked.ts
-// @port-kind   verbatim
 import type { ElementHandle } from '@playwright/test';
 
 /**

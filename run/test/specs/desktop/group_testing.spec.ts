@@ -1,10 +1,7 @@
-// @ported-from tests/automation/group_testing.spec.ts
-// @port-kind   spec
 // Rewritten to drive the app through DesktopWrapper instead of raw Playwright Pages.
 
 import { createGroup } from '../../../desktop/create_group';
 import { Conversation, ConversationSettings, Global } from '../../../desktop/locators';
-import { sleepFor } from '../../../desktop/promise_utils';
 import {
   sessionTestThreeWindows,
   test_group_Alice_1W_Bob_1W_Charlie_1W,
@@ -12,6 +9,7 @@ import {
 } from '../../../desktop/sessionTest';
 import { grabTextFromElement } from '../../../desktop/utils';
 import { tStripped } from '../../../localizer/lib';
+import { sleepFor } from '../../../shared/promise_utils';
 
 // Note: Note using the group fixture here as we want to test it thoroughly
 sessionTestThreeWindows('Create group', async ([alice, bob, charlie]) => {

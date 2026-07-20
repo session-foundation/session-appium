@@ -1,4 +1,3 @@
-// @port-kind native
 // Not a port — the desktop client wrapper written for this repo. Its low-level primitives
 // delegate to the ported run/desktop/ helpers (which are compared against their originals).
 import type { Page } from '@playwright/test';
@@ -18,6 +17,7 @@ import type {
 
 import { tStripped } from '../localizer/lib';
 import { makeAccountPro } from '../test/utils/mock_pro';
+import { ctaConfigs, type CTAType } from '../types/cta';
 import {
   openConversationWith as desktopOpenConversationWith,
   scrollToBottomLookingForMessage,
@@ -327,6 +327,19 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
       expectedButtons,
       expectedFeatures
     );
+  }
+
+  /**
+   * Assert a Session Pro CTA by its kind, using the cross-platform CTA config table
+   * (`run/types/cta.ts`, shared with the mobile suite). Resolves the expected heading/body/
+   * buttons/features for `type` and delegates to {@link checkCTAStrings}. Prefer this over
+   * inlining `tStripped(...)` strings so both platforms share one source of CTA expectations.
+   */
+  public async checkCTA(type: CTAType): Promise<void> {
+    const config = ctaConfigs[type];
+    // checkCTAStrings reads buttons positionally: [0] = positive (confirm), [1] = negative (cancel).
+    const buttons = [config.positiveButton, config.negativeButton].filter((b): b is string => !!b);
+    await this.checkCTAStrings(config.heading, config.body, buttons, config.features);
   }
 
   public async hasElementPoppedUpThatShouldnt(

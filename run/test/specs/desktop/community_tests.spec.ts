@@ -1,5 +1,3 @@
-// @ported-from tests/automation/community_tests.spec.ts
-// @port-kind   spec
 // Rewritten to drive the app through DesktopWrapper instead of a raw Playwright Page.
 
 import { expect } from '@playwright/test';

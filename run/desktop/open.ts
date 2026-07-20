@@ -1,5 +1,3 @@
-// @ported-from tests/automation/setup/open.ts
-// @port-kind   adapted
 // Changes for this repo: `chalk` colouring removed (avoids an ESM-only dep in a
 // CJS project), catch-clause error access cast for the stricter tsconfig, and
 // ELECTRON_RUN_AS_NODE stripped from the launch env (see the launch call below).

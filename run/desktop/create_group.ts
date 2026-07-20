@@ -1,5 +1,3 @@
-// @ported-from tests/automation/setup/create_group.ts
-// @port-kind   verbatim
 import { Page } from '@playwright/test';
 
 import { tStripped } from '../localizer/lib';

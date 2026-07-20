@@ -1,10 +1,7 @@
-// @ported-from tests/automation/disappearing_messages.spec.ts
-// @port-kind   spec
 // Rewritten to drive the app through DesktopWrapper instead of a raw Playwright Page.
 
 import { defaultDisappearingOptions } from '../../../desktop/constants/variables';
 import { Conversation, Global } from '../../../desktop/locators';
-import { sleepFor } from '../../../desktop/promise_utils';
 import {
   test_Alice_2W,
   test_Alice_2W_Bob_1W,
@@ -17,6 +14,7 @@ import {
   hasTextMessageBeenDeleted,
 } from '../../../desktop/utils';
 import { tStripped } from '../../../localizer/lib';
+import { sleepFor } from '../../../shared/promise_utils';
 
 test_Alice_2W_Bob_1W('Disappear after read 1:1', async ({ alice, alice2, bob }) => {
   const { timeOption, disappearingMessagesType, disappearAction } = defaultDisappearingOptions.DAR;

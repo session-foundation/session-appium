@@ -16,7 +16,11 @@ import { open_Alice1_Bob1_friends } from '../../state_builder';
 import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { newUser } from '../../utils/create_account';
 import { makeAccountPro } from '../../utils/mock_pro';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../../utils/open_app';
+import {
+  closeApp,
+  openAppOnPlatformSingleDevice,
+  SupportedPlatformsType,
+} from '../../utils/open_app';
 import { forceStopAndRestart } from '../../utils/utilities';
 import { verifyPageScreenshot } from '../../utils/verify_screenshots';
 

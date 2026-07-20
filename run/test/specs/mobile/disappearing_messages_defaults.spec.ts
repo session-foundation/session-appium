@@ -14,7 +14,11 @@ import {
   open_Alice1_Bob1_friends,
 } from '../../state_builder';
 import { newUser } from '../../utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../../utils/open_app';
+import {
+  closeApp,
+  openAppOnPlatformSingleDevice,
+  SupportedPlatformsType,
+} from '../../utils/open_app';
 
 bothPlatformsIt({
   title: 'Disappearing messages defaults 1:1',

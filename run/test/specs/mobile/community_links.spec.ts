@@ -17,7 +17,11 @@ import {
 } from '../../locators/start_conversation';
 import { joinCommunity } from '../../utils/community';
 import { newUser } from '../../utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../../utils/open_app';
+import {
+  closeApp,
+  openAppOnPlatformSingleDevice,
+  SupportedPlatformsType,
+} from '../../utils/open_app';
 
 androidIt({
   title: 'Community URL on New Message - not member',

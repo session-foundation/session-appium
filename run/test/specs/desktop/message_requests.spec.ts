@@ -1,5 +1,3 @@
-// @ported-from tests/automation/message_requests.spec.ts
-// @port-kind   spec
 // Rewritten to drive the app through DesktopWrapper instead of a raw Playwright Page.
 
 import { Conversation, Global, HomeScreen, LeftPane, Settings } from '../../../desktop/locators';

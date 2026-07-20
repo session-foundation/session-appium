@@ -1,5 +1,3 @@
-// @ported-from tests/automation/pin_unpin.spec.ts
-// @port-kind   spec
 // Rewritten to drive the app through DesktopWrapper instead of a raw Playwright Page.
 
 import type { DesktopWrapper } from '../../../desktop/DesktopWrapper';

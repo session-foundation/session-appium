@@ -1,5 +1,3 @@
-// @ported-from tests/automation/call_checks.spec.ts
-// @port-kind   spec
 // Rewritten to drive the app through DesktopWrapper instead of a raw Playwright Page.
 
 import { Global, HomeScreen } from '../../../desktop/locators';

@@ -1,5 +1,3 @@
-// @ported-from tests/automation/setup/sessionTest.ts
-// @port-kind   adapted
 /* eslint-disable no-empty-pattern */
 
 // Desktop test-declaration helpers. Adapted from session-playwright

@@ -1,13 +1,11 @@
-// @ported-from tests/automation/recovery_phrase_banner.spec.ts
-// @port-kind   spec
 // Rewritten to drive the app through DesktopWrapper instead of a raw Playwright Page.
 
 import { DesktopWrapper } from '../../../desktop/DesktopWrapper';
 import { joinDefaultCommunity, leaveCommunity } from '../../../desktop/join_community';
 import { linkedDevice } from '../../../desktop/linked_device';
 import { Global, HomeScreen, Settings } from '../../../desktop/locators';
-import { sleepFor } from '../../../desktop/promise_utils';
 import { test_Alice_1W } from '../../../desktop/sessionTest';
+import { sleepFor } from '../../../shared/promise_utils';
 
 async function bannerShouldNotAppear(window: DesktopWrapper) {
   await window.waitForTestIdWithText(HomeScreen.plusButton.selector);

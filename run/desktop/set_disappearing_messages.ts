@@ -1,5 +1,3 @@
-// @ported-from tests/automation/utilities/set_disappearing_messages.ts
-// @port-kind   verbatim
 import { Page } from '@playwright/test';
 
 import { tStripped } from '../localizer/lib';

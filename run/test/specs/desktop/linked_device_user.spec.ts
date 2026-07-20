@@ -1,12 +1,8 @@
-// @ported-from tests/automation/linked_device_user.spec.ts
-// @port-kind   spec
-
 import { Page } from '@playwright/test';
 
 import { forceCloseAllWindows } from '../../../desktop/closeWindows';
 import { linkedDevice } from '../../../desktop/linked_device';
 import { Conversation, Global, HomeScreen, LeftPane, Settings } from '../../../desktop/locators';
-import { sleepFor } from '../../../desktop/promise_utils';
 import { compareElementScreenshot } from '../../../desktop/screenshot';
 import {
   sessionTestOneWindow,
@@ -19,6 +15,7 @@ import {
   waitForTestIdWithText,
 } from '../../../desktop/utils';
 import { tStripped } from '../../../localizer/lib';
+import { sleepFor } from '../../../shared/promise_utils';
 
 sessionTestOneWindow('Link a device', async ([alice]) => {
   let aliceWindow2: Page | undefined;
@@ -32,20 +29,11 @@ sessionTestOneWindow('Link a device', async ([alice]) => {
     await alice.waitForTestIdWithText(Settings.accountId.selector, userA.accountid);
     // exit profile modal
     await alice.clickOn(Global.modalCloseButton);
-    // You're almost finished isn't displayed
-    const errorDesc = 'Should not be found';
-    try {
-      const elemShouldNotBeFound = aliceWindow2.locator('[data-testid=reveal-recovery-phrase]');
-      if (elemShouldNotBeFound) {
-        console.error('Continue to save recovery phrase not found, excellent news');
-        throw new Error(errorDesc);
-      }
-    } catch (e) {
-      if ((e as Error).message !== errorDesc) {
-        // this is NOT ok
-        throw e;
-      }
-    }
+    // The "reveal recovery phrase" / "you're almost finished" prompt must NOT leak onto the
+    // linked device. Assert it is actually absent (throws if it appears within the window).
+    await hasElementBeenDeleted(aliceWindow2, HomeScreen.revealRecoveryPhraseButton, {
+      maxWait: 5_000,
+    });
   } finally {
     if (aliceWindow2) {
       await forceCloseAllWindows([aliceWindow2]);

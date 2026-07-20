@@ -1,7 +1,5 @@
-// @ported-from tests/automation/setup/recovery_using_seed.ts
-// @port-kind   adapted
 // Import paths rewritten for run/desktop/. Also uses Onboarding.recoveryPhraseInput.selector
-// instead of the raw 'recovery-phrase-input' string (see compare-port diff).
+// instead of the raw 'recovery-phrase-input' string
 import { Page } from '@playwright/test';
 
 import { Global, Onboarding } from './locators';

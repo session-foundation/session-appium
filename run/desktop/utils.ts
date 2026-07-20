@@ -1,15 +1,13 @@
 /* eslint-disable no-useless-escape */
-// @ported-from tests/automation/utilities/utils.ts
-// @port-kind   adapted
 // Import paths rewritten for run/desktop/ and catch-clause error access made type-safe.
 // Also adapted: doWhileWithMax aborts on closed-window errors, and checkPathLight's default
-// timeout was lowered from 500000 to 20_000 (see compare-port diff for the full picture).
+// timeout was lowered from 500000 to 20_000
 
 import { ElementHandle, expect, Page } from '@playwright/test';
 
+import { sleepFor } from '../shared/promise_utils';
 import { Conversation, CTA, HomeScreen } from './locators';
 import { sendMessage } from './message';
-import { sleepFor } from './promise_utils';
 import {
   DataTestId,
   DMTimeOption,
@@ -759,12 +757,8 @@ export function formatTimeOption(option: DMTimeOption) {
   return formattedTime;
 }
 
-export async function assertUrlIsReachable(url: string): Promise<void> {
-  const response = await fetch(url);
-  if (response.status !== 200) {
-    throw new Error(`Expected status 200 but got ${response.status} for URL: ${url}`);
-  }
-}
+// Shared cross-platform helper (mobile + desktop) lives in run/shared/url.ts.
+export { assertUrlIsReachable } from '../shared/url';
 
 export async function scrollToBottomIfNecessary(window: Page): Promise<void> {
   const canScroll = await doesElementExist(window, Conversation.scrollToBottomButton);

@@ -1,10 +1,8 @@
-// @ported-from tests/automation/utilities/message.ts
-// @port-kind   verbatim
 import { Page } from '@playwright/test';
 
 import { tStripped } from '../localizer/lib';
+import { sleepFor } from '../shared/promise_utils';
 import { Global } from './locators';
-import { sleepFor } from './promise_utils';
 import { MessageStatus } from './types';
 import {
   buildSelectorEscapeText,

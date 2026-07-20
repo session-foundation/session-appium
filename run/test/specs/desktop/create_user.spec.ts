@@ -1,9 +1,6 @@
-// @ported-from tests/automation/create_user.spec.ts
-// @port-kind   spec
-
 import { Global, LeftPane, Settings } from '../../../desktop/locators';
-import { sleepFor } from '../../../desktop/promise_utils';
 import { sessionTestOneWindow } from '../../../desktop/sessionTest';
+import { sleepFor } from '../../../shared/promise_utils';
 
 sessionTestOneWindow('Create User', async ([window]) => {
   // Create User

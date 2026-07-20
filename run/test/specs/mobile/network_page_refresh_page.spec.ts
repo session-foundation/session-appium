@@ -6,7 +6,11 @@ import { LastUpdatedTimeStamp, SessionNetworkMenuItem } from '../../locators/net
 import { UserSettings } from '../../locators/settings';
 import { sleepFor } from '../../utils';
 import { newUser } from '../../utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../../utils/open_app';
+import {
+  closeApp,
+  openAppOnPlatformSingleDevice,
+  SupportedPlatformsType,
+} from '../../utils/open_app';
 
 bothPlatformsIt({
   title: 'Network page refresh',

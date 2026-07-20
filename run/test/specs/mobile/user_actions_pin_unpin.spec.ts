@@ -10,7 +10,11 @@ import { joinCommunities } from '../../utils/community';
 import { assertPinOrder, getConversationOrder } from '../../utils/conversation_order';
 import { newUser } from '../../utils/create_account';
 import { makeAccountPro } from '../../utils/mock_pro';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../../utils/open_app';
+import {
+  closeApp,
+  openAppOnPlatformSingleDevice,
+  SupportedPlatformsType,
+} from '../../utils/open_app';
 import { forceStopAndRestart } from '../../utils/utilities';
 
 bothPlatformsIt({

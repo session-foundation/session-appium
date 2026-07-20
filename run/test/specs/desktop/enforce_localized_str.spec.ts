@@ -1,5 +1,3 @@
-// @ported-from tests/automation/enforce_localized_str.spec.ts
-// @port-kind   spec
 import { test } from '@playwright/test';
 import * as fs from 'fs';
 import * as path from 'path';

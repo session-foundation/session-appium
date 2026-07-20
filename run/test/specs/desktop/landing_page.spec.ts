@@ -1,6 +1,3 @@
-// @ported-from tests/automation/landing_page.spec.ts
-// @port-kind   spec
-
 import { Conversation } from '../../../desktop/locators';
 import { test_Alice_2W } from '../../../desktop/sessionTest';
 import { tStripped } from '../../../localizer/lib';

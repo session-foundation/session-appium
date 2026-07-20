@@ -1,5 +1,3 @@
-// @ported-from tests/automation/message_checks.spec.ts
-// @port-kind   spec
 // Rewritten to drive the app through DesktopWrapper instead of a raw Playwright Page.
 
 import { testCommunityName } from '../../../desktop/constants/community';
@@ -16,7 +14,6 @@ import {
   Global,
   HomeScreen,
 } from '../../../desktop/locators';
-import { sleepFor } from '../../../desktop/promise_utils';
 import {
   sessionTestTwoWindows,
   test_Alice_1W,
@@ -25,6 +22,7 @@ import {
   test_Alice_2W_Bob_1W,
 } from '../../../desktop/sessionTest';
 import { tStripped } from '../../../localizer/lib';
+import { sleepFor } from '../../../shared/promise_utils';
 
 mediaArray.forEach(({ mediaType, path, attachmentType, shouldCheckMediaPreview }) => {
   test_Alice_1W_Bob_1W(`Send ${mediaType} 1:1`, async ({ alice, bob }) => {
@@ -250,7 +248,10 @@ messageLengthTestCases.forEach(testCase => {
           options: { text: expectedCount },
         });
       } else {
-        // Verify countdown tooltip is not present
+        // Verify countdown tooltip is not present: waitForElement should TIME OUT (throw).
+        // If it resolves, the countdown was wrongly visible, so fail — outside the catch, so
+        // the failure isn't swallowed by the handler that absorbs the expected timeout.
+        let countdownVisible = false;
         try {
           await alice.waitForElement({
             locator: Conversation.tooltipCharacterCount,
@@ -259,13 +260,16 @@ messageLengthTestCases.forEach(testCase => {
               shouldLog: true,
             },
           });
+          countdownVisible = true;
+        } catch (_e) {
+          // Expected - countdown should not exist
+        }
+        if (countdownVisible) {
           throw new Error(
             `Countdown should not be visible for messages under ${countdownThreshold} chars`
           );
-        } catch (_e) {
-          // Expected - countdown should not exist
-          console.log('Countdown not present as expected');
         }
+        console.log('Countdown not present as expected');
       }
 
       // Try to send
@@ -305,13 +309,20 @@ messageLengthTestCases.forEach(testCase => {
           await alice.clickOn(Global.confirmButton);
         }
 
-        // Verify message didn't send
+        // Verify message didn't send: waitForTextMessage should TIME OUT (throw). If it
+        // resolves, the message was unexpectedly sent, so fail — outside the catch, so the
+        // failure isn't swallowed by the same handler that absorbs the expected timeout.
+        let wasSent = false;
         try {
           await alice.waitForTextMessage(message, 2000);
-          throw new Error('Message should not have been sent');
+          wasSent = true;
         } catch (_e) {
-          console.log(`Message didn't send as expected`);
+          // expected: the message never appeared, so waitForTextMessage timed out
         }
+        if (wasSent) {
+          throw new Error('Message should not have been sent');
+        }
+        console.log(`Message didn't send as expected`);
       }
     }
   );

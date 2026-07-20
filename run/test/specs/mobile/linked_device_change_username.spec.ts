@@ -1,7 +1,12 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import { ClearInputButton, EditUsernameButton, UsernameDisplay, UsernameInput } from '../../locators';
+import {
+  ClearInputButton,
+  EditUsernameButton,
+  UsernameDisplay,
+  UsernameInput,
+} from '../../locators';
 import { SaveNameChangeButton, UserSettings } from '../../locators/settings';
 import { open_Alice2 } from '../../state_builder';
 import { sleepFor } from '../../utils';

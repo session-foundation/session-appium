@@ -1,3 +1,6 @@
+// Cross-platform: shared by the mobile (Appium) and desktop (Electron) suites.
+// Validation of the public Session network API response — pure data logic, no platform coupling.
+
 import { isFinite } from 'lodash';
 
 export type NetworkData = {

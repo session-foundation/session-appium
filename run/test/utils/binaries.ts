@@ -48,7 +48,7 @@ export const getRepeatEachCount = () => {
   return isFinite(asNumber) ? asNumber : 0;
 };
 
-export type WorkersPlatform = 'android' | 'ios' | 'desktop';
+export type WorkersPlatform = 'android' | 'desktop' | 'ios';
 
 // Workers are configured per-platform so each platform can be tuned independently
 // (e.g. iOS is capped by the self-hosted runner, Android by the emulator count).

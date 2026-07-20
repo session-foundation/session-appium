@@ -1,7 +1,5 @@
-// @ported-from tests/promise_utils.ts
-// @port-kind   verbatim
-// Kept separate from the mobile `run/test/utils/sleep_for.ts` so the desktop driving
-// code matches the desktop suite verbatim.
+// Cross-platform: shared by the mobile (Appium) and desktop (Electron) suites.
+// The single source of truth for `sleepFor` (both suites) plus the desktop-only `doForAll`.
 import { Page } from '@playwright/test';
 
 function sleep(ms: number) {

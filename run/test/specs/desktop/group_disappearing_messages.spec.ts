@@ -1,5 +1,3 @@
-// @ported-from tests/automation/group_disappearing_messages.spec.ts
-// @port-kind   spec
 // Rewritten to drive the app through DesktopWrapper instead of raw Playwright Pages.
 
 import {
@@ -10,9 +8,9 @@ import {
   testLinkTitle,
 } from '../../../desktop/constants/variables';
 import { Conversation } from '../../../desktop/locators';
-import { sleepFor } from '../../../desktop/promise_utils';
 import { test_group_Alice_1W_Bob_1W_Charlie_1W } from '../../../desktop/sessionTest';
 import { hasElementBeenDeleted, hasTextMessageBeenDeleted } from '../../../desktop/utils';
+import { sleepFor } from '../../../shared/promise_utils';
 
 // Disappearing time settings for all tests
 const { timeOption, disappearingMessagesType, disappearAction } = defaultDisappearingOptions.group;

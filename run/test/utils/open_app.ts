@@ -10,6 +10,7 @@ import { DriverOpts } from 'appium/build/lib/appium';
 import { compact } from 'lodash';
 
 import { recoverEmulator } from '../../../scripts/emulator_health';
+import { sleepFor } from '../../shared/promise_utils';
 import { AndroidDeviceWrapper } from '../../types/AndroidDeviceWrapper';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { IosDeviceWrapper } from '../../types/IosDeviceWrapper';
@@ -23,7 +24,6 @@ import {
   IOSTestContext,
 } from './capabilities_ios';
 import { registerDevicesForTest } from './device_registry';
-import { sleepFor } from './sleep_for';
 import { runScriptAndLog } from './utilities';
 
 const APPIUM_PORT = 4728;

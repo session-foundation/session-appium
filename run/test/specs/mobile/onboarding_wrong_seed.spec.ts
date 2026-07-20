@@ -4,7 +4,11 @@ import { tStripped } from '../../../localizer/lib';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { ContinueButton } from '../../locators/global';
 import { AccountRestoreButton, ErrorMessage, SeedPhraseInput } from '../../locators/onboarding';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../../utils/open_app';
+import {
+  closeApp,
+  openAppOnPlatformSingleDevice,
+  SupportedPlatformsType,
+} from '../../utils/open_app';
 
 bothPlatformsIt({
   title: 'Onboarding wrong seed',

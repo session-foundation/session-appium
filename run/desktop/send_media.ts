@@ -1,12 +1,10 @@
-// @ported-from tests/automation/utilities/send_media.ts
-// @port-kind   verbatim
 import { Page } from '@playwright/test';
 
 import { tStripped } from '../localizer/lib';
+import { sleepFor } from '../shared/promise_utils';
 import { testLinkTitle } from './constants/variables';
 import { Conversation, Global, Settings } from './locators';
 import { waitForMessageStatus } from './message';
-import { sleepFor } from './promise_utils';
 import { MediaType } from './types';
 import {
   checkModalStrings,

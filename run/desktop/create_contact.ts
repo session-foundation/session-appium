@@ -1,5 +1,3 @@
-// @ported-from tests/automation/utilities/create_contact.ts
-// @port-kind   verbatim
 // Only import paths were rewritten to `./` siblings.
 
 import { Page } from '@playwright/test';

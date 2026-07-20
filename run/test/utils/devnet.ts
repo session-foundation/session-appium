@@ -3,9 +3,9 @@ import { buildStateForTest } from '@session-foundation/qa-seeder';
 import type { SupportedPlatformsType } from './open_app';
 
 import { DEVNET_URL } from '../../constants';
+import { sleepFor } from '../../shared/promise_utils';
 import { AppName } from '../../types/testing';
 import { getAndroidApk } from './binaries';
-import { sleepFor } from './sleep_for';
 
 // NOTE this currently only applies to Android as iOS doesn't supply AQA builds yet
 type NetworkType = Parameters<typeof buildStateForTest>[2];

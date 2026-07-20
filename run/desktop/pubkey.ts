@@ -1,5 +1,3 @@
-// @ported-from tests/pubkey.ts
-// @port-kind   verbatim
 import { User } from './types';
 
 export function shortenWithBrackets(str: string) {

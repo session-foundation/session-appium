@@ -1,12 +1,10 @@
-// @ported-from tests/automation/utilities/reply_message.ts
-// @port-kind   verbatim
 import { Page } from '@playwright/test';
 
 import { tStripped } from '../localizer/lib';
+import { sleepFor } from '../shared/promise_utils';
 import { scrollToBottomLookingForMessage } from './conversation';
 import { Conversation } from './locators';
 import { sendMessage } from './message';
-import { sleepFor } from './promise_utils';
 import { verifyMediaPreviewLoaded } from './send_media';
 import { type StrategyExtractionObj } from './types';
 import {
@@ -49,7 +47,7 @@ export const replyTo = async ({
     await verifyMediaPreviewLoaded(senderWindow, textMessage);
   }
   // the right click context menu, for some reasons, often doesn't show up on the first try. Let's loop a few times
-
+  let openedReply = false;
   for (let index = 0; index < 5; index++) {
     try {
       await clickOnTextMessage(senderWindow, textMessage, true, 1000);
@@ -61,11 +59,17 @@ export const replyTo = async ({
       // Tried extending this as layout shift still happens sometimes
       await sleepFor(200, true);
 
+      openedReply = true;
       break;
     } catch (_e) {
       console.info(`failed to right click & reply to message attempt: ${index}.`);
       await sleepFor(500, true);
     }
+  }
+  if (!openedReply) {
+    throw new Error(
+      `replyTo: failed to open the reply context menu for message "${textMessage}" after 5 attempts`
+    );
   }
   await sendMessage(senderWindow, replyText);
   await waitForTestIdWithText(senderWindow, Conversation.quoteText.selector, textMessage);
@@ -95,17 +99,23 @@ export const replyToMedia = async ({
     },
   });
   // the right click context menu, for some reasons, often doesn't show up on the first try. Let's loop a few times
-
+  let openedReply = false;
   for (let index = 0; index < 5; index++) {
     try {
       await selc.click({ button: 'right' });
       await sleepFor(200);
       await clickOnMatchingText(senderWindow, tStripped('reply'), false, 1000);
+      openedReply = true;
       break;
     } catch (_e) {
       console.info(`failed to right click & reply to message attempt: ${index}.`);
       await sleepFor(500, true);
     }
+  }
+  if (!openedReply) {
+    throw new Error(
+      `replyToMedia: failed to open the reply context menu after 5 attempts (locator ${locator.selector})`
+    );
   }
   await sendMessage(senderWindow, replyText);
   if (receiverWindow) {

@@ -1,11 +1,9 @@
-// @ported-from tests/automation/utilities/screenshot.ts
-// @port-kind   verbatim
 import type { ElementHandle, TestInfo } from '@playwright/test';
 
 import { expect } from '@playwright/test';
 import fs from 'node:fs';
 
-import { sleepFor } from './promise_utils';
+import { sleepFor } from '../shared/promise_utils';
 
 export type ScreenshotComparisonOptions = {
   element: ElementHandle;
@@ -24,7 +22,7 @@ export type ScreenshotComparisonOptions = {
  * @throws Error if screenshot doesn't match within the retry duration
  */
 export async function compareElementScreenshot(
-  options: ScreenshotComparisonOptions,
+  options: ScreenshotComparisonOptions
 ): Promise<void> {
   const MAX_RETRY_DURATION_MS = 20_000;
   const POLL_INTERVAL_MS = 500; // Retry every 500ms
@@ -85,16 +83,14 @@ export async function compareElementScreenshot(
     const tempPath = testInfo.snapshotPath(`temp-${snapshotName}`);
     fs.writeFileSync(tempPath, lastScreenshot);
     console.error(
-      `Screenshot matching of "${snapshotName}" failed after ${tryNumber} attempt(s) (${maxRetryDurationMs}ms)`,
+      `Screenshot matching of "${snapshotName}" failed after ${tryNumber} attempt(s) (${maxRetryDurationMs}ms)`
     );
     console.warn(`\n\texpected:${snapshotPath}\n\treceived: ${tempPath}`);
   }
 
   // Only reach here if we timed out
   console.error(
-    `Screenshot matching of "${snapshotName}" failed after ${tryNumber} attempt(s) (${maxRetryDurationMs}ms)`,
+    `Screenshot matching of "${snapshotName}" failed after ${tryNumber} attempt(s) (${maxRetryDurationMs}ms)`
   );
-  throw (
-    lastError ?? new Error('Screenshot comparison failed without error details')
-  );
+  throw lastError ?? new Error('Screenshot comparison failed without error details');
 }

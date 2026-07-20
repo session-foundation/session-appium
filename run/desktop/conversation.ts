@@ -1,11 +1,9 @@
-// @ported-from tests/automation/utilities/conversation.ts
-// @port-kind   verbatim
 // Only import paths were rewritten to `./` siblings.
 
 import type { Page } from '@playwright/test';
 
+import { sleepFor } from '../shared/promise_utils';
 import { Conversation, HomeScreen } from './locators';
-import { sleepFor } from './promise_utils';
 import { clickOnWithText, scrollToBottomIfNecessary, waitForTestIdWithText } from './utils';
 
 /**

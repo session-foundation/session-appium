@@ -1,10 +1,7 @@
-// @ported-from tests/automation/linked_device_requests.spec.ts
-// @port-kind   spec
-
 import { Conversation, Global, HomeScreen, LeftPane, Settings } from '../../../desktop/locators';
-import { sleepFor } from '../../../desktop/promise_utils';
 import { test_Alice_2W_Bob_1W } from '../../../desktop/sessionTest';
 import { tStripped } from '../../../localizer/lib';
+import { sleepFor } from '../../../shared/promise_utils';
 
 test_Alice_2W_Bob_1W('Accept request syncs', async ({ alice, alice2, bob }) => {
   const testMessage = `${bob.userName} sending message request to ${alice.userName}`;

@@ -1,12 +1,10 @@
-// @ported-from tests/automation/setup/closeWindows.ts
-// @port-kind   adapted
 // Import paths rewritten for run/desktop/. Also hardened: close() failures are swallowed,
-// the comment expanded, and tracked pids are reset after killing (see compare-port diff).
+// the comment expanded, and tracked pids are reset after killing
 import { Page } from '@playwright/test';
 import { execSync } from 'child_process';
 
+import { sleepFor } from '../shared/promise_utils';
 import { getTrackedElectronPids, resetTrackedElectronPids } from './open';
-import { sleepFor } from './promise_utils';
 
 export const forceCloseAllWindows = async (windows: Array<Page>) => {
   await Promise.race([Promise.all(windows.map(w => w.close().catch(() => {}))), sleepFor(4000)]);

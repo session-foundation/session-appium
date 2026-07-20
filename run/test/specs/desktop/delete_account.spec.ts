@@ -1,17 +1,14 @@
-// @ported-from tests/automation/delete_account.spec.ts
-// @port-kind   spec
-
 import { Page } from '@playwright/test';
 
 import { forceCloseAllWindows } from '../../../desktop/closeWindows';
 import { DesktopWrapper } from '../../../desktop/DesktopWrapper';
 import { Global, HomeScreen, LeftPane, Onboarding, Settings } from '../../../desktop/locators';
 import { openAppsAndWaitWindows } from '../../../desktop/open';
-import { sleepFor } from '../../../desktop/promise_utils';
 import { recoverFromSeed } from '../../../desktop/recovery_using_seed';
 import { sessionTestTwoWindows } from '../../../desktop/sessionTest';
 import { hasElementBeenDeleted } from '../../../desktop/utils';
 import { tStripped } from '../../../localizer/lib';
+import { sleepFor } from '../../../shared/promise_utils';
 
 sessionTestTwoWindows('Delete account from swarm', async ([windowA, windowB]) => {
   let restoringWindows: Array<Page> | undefined;

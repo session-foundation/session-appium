@@ -1,21 +1,15 @@
-// @ported-from tests/automation/cta_donations.spec.ts
-// @port-kind   spec
 // Rewritten to drive the app through DesktopWrapper instead of a raw Playwright Page.
 
 import type { DesktopWrapper } from '../../../desktop/DesktopWrapper';
 
 import { CTA } from '../../../desktop/locators';
 import { test_Alice_1W } from '../../../desktop/sessionTest';
-import { mockDBCreationTime } from '../../../desktop/time_travel';
 import { reloadWindow, verifyNoCTAShows } from '../../../desktop/utils';
-import { tStripped } from '../../../localizer/lib';
+import { mockDBCreationTime } from '../../../shared/mock_time';
 
 async function verifyDonateCTAShows(alice: DesktopWrapper) {
-  await alice.checkCTAStrings(
-    tStripped('ongoingAppeal'),
-    tStripped('ongoingAppealDescription'),
-    [tStripped('readMoreCapital')]
-  );
+  // Uses the cross-platform CTA config table (run/types/cta.ts) shared with the mobile suite.
+  await alice.checkCTA('donate');
 }
 
 test_Alice_1W(

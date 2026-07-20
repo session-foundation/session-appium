@@ -1,13 +1,11 @@
-// @ported-from tests/automation/password.spec.ts
-// @port-kind   spec
 // Rewritten to drive the app through DesktopWrapper instead of a raw Playwright Page.
 
 import type { DesktopWrapper } from '../../../desktop/DesktopWrapper';
 
 import { Global, LeftPane, Settings } from '../../../desktop/locators';
-import { sleepFor } from '../../../desktop/promise_utils';
 import { test_Alice_1W_no_network } from '../../../desktop/sessionTest';
 import { tStripped } from '../../../localizer/lib';
+import { sleepFor } from '../../../shared/promise_utils';
 
 const testPassword = '123456';
 /**

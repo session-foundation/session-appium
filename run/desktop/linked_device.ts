@@ -1,5 +1,3 @@
-// @ported-from tests/automation/utilities/linked_device.ts
-// @port-kind   verbatim
 import { openAppsAndWaitWindows } from './open';
 import { recoverFromSeed } from './recovery_using_seed';
 import { checkPathLight } from './utils';

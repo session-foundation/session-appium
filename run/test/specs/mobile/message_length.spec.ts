@@ -17,7 +17,11 @@ import { EnterAccountID, NewMessageOption, NextButton } from '../../locators/sta
 import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { newUser } from '../../utils/create_account';
 import { makeAccountPro } from '../../utils/mock_pro';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../../utils/open_app';
+import {
+  closeApp,
+  openAppOnPlatformSingleDevice,
+  SupportedPlatformsType,
+} from '../../utils/open_app';
 import { forceStopAndRestart } from '../../utils/utilities';
 
 const STANDARD_MAX_CHARS = 2000;

@@ -8,7 +8,11 @@ import { PlusButton } from '../../locators/home';
 import { EnterAccountID, NewMessageOption, NextButton } from '../../locators/start_conversation';
 import { sleepFor } from '../../utils';
 import { newUser } from '../../utils/create_account';
-import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../../utils/open_app';
+import {
+  closeApp,
+  openAppOnPlatformSingleDevice,
+  SupportedPlatformsType,
+} from '../../utils/open_app';
 import { setDisappearingMessage } from '../../utils/set_disappearing_messages';
 
 bothPlatformsIt({

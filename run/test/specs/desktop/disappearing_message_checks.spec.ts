@@ -1,5 +1,3 @@
-// @ported-from tests/automation/disappearing_message_checks.spec.ts
-// @port-kind   spec
 // Rewritten to drive the app through DesktopWrapper instead of a raw Playwright Page.
 
 import { testCommunityName } from '../../../desktop/constants/community';
@@ -11,7 +9,6 @@ import {
   testLinkTitle,
 } from '../../../desktop/constants/variables';
 import { Conversation, ConversationSettings, Global } from '../../../desktop/locators';
-import { sleepFor } from '../../../desktop/promise_utils';
 import { test_Alice_1W_Bob_1W } from '../../../desktop/sessionTest';
 import {
   formatTimeOption,
@@ -19,6 +16,7 @@ import {
   hasTextMessageBeenDeleted,
 } from '../../../desktop/utils';
 import { tStripped } from '../../../localizer/lib';
+import { sleepFor } from '../../../shared/promise_utils';
 
 // Disappearing time settings for all tests
 const { timeOption, disappearingMessagesType, disappearAction } = defaultDisappearingOptions.DAS;

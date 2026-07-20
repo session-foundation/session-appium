@@ -1,5 +1,3 @@
-// @ported-from tests/automation/message_checks_groups.spec.ts
-// @port-kind   spec
 // Rewritten to drive the app through DesktopWrapper instead of raw Playwright Pages.
 
 import type { DesktopWrapper } from '../../../desktop/DesktopWrapper';
@@ -12,12 +10,12 @@ import {
 } from '../../../desktop/constants/variables';
 import { Conversation } from '../../../desktop/locators';
 import { type MessageDeleteType } from '../../../desktop/message';
-import { sleepFor } from '../../../desktop/promise_utils';
 import {
   test_group_Alice_1W_Bob_1W_Charlie_1W,
   test_group_Alice_2W_Bob_1W_Charlie_1W,
 } from '../../../desktop/sessionTest';
 import { assertUnreachable } from '../../../desktop/utils';
+import { sleepFor } from '../../../shared/promise_utils';
 
 mediaArray.forEach(({ mediaType, path, shouldCheckMediaPreview }) => {
   test_group_Alice_1W_Bob_1W_Charlie_1W(
