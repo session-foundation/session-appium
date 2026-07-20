@@ -1,5 +1,7 @@
-// Copied from session-playwright (tests/automation/setup/closeWindows.ts).
-// Import paths rewritten for run/desktop/.
+// @ported-from tests/automation/setup/closeWindows.ts
+// @port-kind   adapted
+// Import paths rewritten for run/desktop/. Also hardened: close() failures are swallowed,
+// the comment expanded, and tracked pids are reset after killing (see compare-port diff).
 import { Page } from '@playwright/test';
 import { execSync } from 'child_process';
 

@@ -1,7 +1,9 @@
 /* eslint-disable no-useless-escape */
-// Copied from session-playwright (tests/automation/utilities/utils.ts).
-// Import paths rewritten for run/desktop/, and catch-clause `e.message` accesses
-// cast to `(e as Error).message` for this repo's stricter tsconfig.
+// @ported-from tests/automation/utilities/utils.ts
+// @port-kind   adapted
+// Import paths rewritten for run/desktop/ and catch-clause error access made type-safe.
+// Also adapted: doWhileWithMax aborts on closed-window errors, and checkPathLight's default
+// timeout was lowered from 500000 to 20_000 (see compare-port diff for the full picture).
 
 import { ElementHandle, expect, Page } from '@playwright/test';
 

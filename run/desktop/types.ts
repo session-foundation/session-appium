@@ -1,5 +1,6 @@
-// Desktop (Electron/Playwright) test types, copied from session-playwright
-// (tests/automation/types/testing.ts). These are desktop-specific and are kept
+// @ported-from tests/automation/types/testing.ts
+// @port-kind   verbatim
+// Desktop (Electron/Playwright) test types. These are desktop-specific and are kept
 // separate from the mobile `run/types/testing.ts` on purpose (different shapes,
 // e.g. testid-based selectors). Only used by the desktop driving code under
 // `run/desktop/`.

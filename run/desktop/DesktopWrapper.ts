@@ -1,18 +1,45 @@
+// @port-kind native
+// Not a port — the desktop client wrapper written for this repo. Its low-level primitives
+// delegate to the ported run/desktop/ helpers (which are compared against their originals).
 import type { Page } from '@playwright/test';
 
 import type { IBaseDeviceWrapper } from '../types/IBaseDeviceWrapper';
 import type { User } from '../types/testing';
-import type { DataTestId, User as DesktopUser, ModalId, StrategyExtractionObj } from './types';
+import type {
+  DataTestId,
+  User as DesktopUser,
+  DisappearOptions,
+  Group,
+  MediaType,
+  MessageStatus,
+  ModalId,
+  StrategyExtractionObj,
+} from './types';
 
 import { tStripped } from '../localizer/lib';
 import { makeAccountPro } from '../test/utils/mock_pro';
-import { openConversationWith as desktopOpenConversationWith } from './conversation';
+import {
+  openConversationWith as desktopOpenConversationWith,
+  scrollToBottomLookingForMessage,
+} from './conversation';
 import { createContact } from './create_contact';
+import { joinCommunity, joinOrOpenCommunity } from './join_community';
+import { leaveGroup } from './leave_group';
 import { LeftPane, Settings } from './locators';
-import { sendMessage as desktopSendMessage } from './message';
+import {
+  confirmMessageDeletedFor,
+  deleteMessageFor,
+  sendMessage as desktopSendMessage,
+  type MessageDeleteType,
+  waitForMessageStatus,
+} from './message';
 import { newUser } from './new_user';
 import { recoverFromSeed } from './recovery_using_seed';
+import { renameGroup } from './rename_group';
+import { replyTo, replyToMedia } from './reply_message';
+import { sendLinkPreview, sendMedia, sendVoiceMessage, trustUser } from './send_media';
 import { sendNewMessage } from './send_message';
+import { setDisappearingMessages } from './set_disappearing_messages';
 import {
   checkCTAStrings,
   checkModalStrings,
@@ -20,14 +47,22 @@ import {
   clickOn,
   clickOnElement,
   clickOnMatchingText,
+  clickOnTextMessage,
   clickOnWithText,
   doWhileWithMax,
   hasElementPoppedUpThatShouldnt,
+  measureSendingTime,
   pasteIntoInput,
+  rightClickOnWithText,
+  scrollToBottomIfNecessary,
   waitForElement,
+  waitForLoadingAnimationToFinish,
+  waitForMatchingPlaceholder,
+  waitForMatchingText,
   waitForTestIdWithText,
   waitForTextMessage,
 } from './utils';
+import { makeVoiceCall } from './voice_call';
 
 /**
  * Desktop (Session Desktop / Electron) client implementing the cross-platform
@@ -70,6 +105,11 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
       throw new Error(`[${this.deviceIdentity}] has no account yet (call onboard() first)`);
     }
     return this.account;
+  }
+
+  /** Record which account this client is signed into (e.g. a linked/second window). */
+  public setAccount(account: DesktopUser): void {
+    this.account = account;
   }
 
   public get userName(): string {
@@ -299,5 +339,159 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   /** Resolve once this client's window closes (e.g. after an onboarding "quit" restart). */
   public async waitForWindowClosed(timeout: number): Promise<void> {
     await this.page.waitForEvent('close', { timeout });
+  }
+
+  public async waitForMatchingText(text: string, maxWait: number): Promise<void> {
+    await waitForMatchingText(this.page, text, maxWait);
+  }
+
+  public async waitForMatchingPlaceholder(
+    dataTestId: DataTestId,
+    placeholder: string,
+    maxWait?: number
+  ): Promise<void> {
+    await waitForMatchingPlaceholder(this.page, dataTestId, placeholder, maxWait);
+  }
+
+  public async waitForLoadingAnimationToFinish(
+    loader: DataTestId,
+    maxWait?: number
+  ): Promise<void> {
+    await waitForLoadingAnimationToFinish(this.page, loader, maxWait);
+  }
+
+  public async clickOnTextMessage(
+    text: string,
+    rightButton?: boolean,
+    maxWait?: number
+  ): Promise<void> {
+    await clickOnTextMessage(this.page, text, rightButton, maxWait);
+  }
+
+  public async rightClickOnWithText(locator: StrategyExtractionObj, text: string): Promise<void> {
+    await rightClickOnWithText(this.page, locator, text);
+  }
+
+  public async scrollToBottomIfNecessary(): Promise<void> {
+    await scrollToBottomIfNecessary(this.page);
+  }
+
+  public async scrollToBottomLookingForMessage(msg: string): Promise<void> {
+    await scrollToBottomLookingForMessage({ window: this.page, msg });
+  }
+
+  public async measureSendingTime(messageNumber: number): Promise<number> {
+    return measureSendingTime(this.page, messageNumber);
+  }
+
+  // --- Messaging / deletion ---
+
+  public async waitForMessageStatus(message: string, status: MessageStatus): Promise<void> {
+    await waitForMessageStatus(this.page, message, status);
+  }
+
+  public async deleteMessageFor(message: string, deletionType: MessageDeleteType): Promise<void> {
+    await deleteMessageFor(this.page, message, deletionType);
+  }
+
+  /** Confirm a delete propagated as expected. `this` is the window that initiated the delete. */
+  public async confirmMessageDeletedFor(args: {
+    deleteType: MessageDeleteType;
+    messageToDelete: string;
+    otherWindows: DesktopWrapper[];
+  }): Promise<void> {
+    await confirmMessageDeletedFor({
+      deleteType: args.deleteType,
+      messageToDelete: args.messageToDelete,
+      windowInitiatingDelete: this.page,
+      otherWindows: args.otherWindows.map(w => w.getPage()),
+    });
+  }
+
+  // --- Reply ---
+
+  /** Reply to a text message. `this` is the sender; `to` receives (null skips the receipt wait). */
+  public async replyTo(args: {
+    textMessage: string;
+    replyText: string;
+    to: DesktopWrapper | null;
+    shouldCheckMediaPreview?: boolean;
+  }): Promise<void> {
+    await replyTo({
+      senderWindow: this.page,
+      textMessage: args.textMessage,
+      replyText: args.replyText,
+      receiverWindow: args.to ? args.to.getPage() : null,
+      shouldCheckMediaPreview: args.shouldCheckMediaPreview,
+    });
+  }
+
+  public async replyToMedia(args: {
+    replyText: string;
+    locator: StrategyExtractionObj;
+    to: DesktopWrapper;
+  }): Promise<void> {
+    await replyToMedia({
+      senderWindow: this.page,
+      replyText: args.replyText,
+      locator: args.locator,
+      receiverWindow: args.to.getPage(),
+    });
+  }
+
+  // --- Media ---
+
+  public async sendMedia(
+    path: string,
+    message: string,
+    shouldCheckMediaPreview: boolean = false
+  ): Promise<void> {
+    await sendMedia(this.page, path, message, shouldCheckMediaPreview);
+  }
+
+  public async sendVoiceMessage(): Promise<void> {
+    await sendVoiceMessage(this.page);
+  }
+
+  public async sendLinkPreview(link: string): Promise<void> {
+    await sendLinkPreview(this.page, link);
+  }
+
+  public async trustUser(mediaType: MediaType, userName: string): Promise<void> {
+    await trustUser(this.page, mediaType, userName);
+  }
+
+  // --- Communities / groups ---
+
+  public async joinCommunity(): Promise<void> {
+    await joinCommunity(this.page);
+  }
+
+  public async joinOrOpenCommunity(): Promise<void> {
+    await joinOrOpenCommunity(this.page);
+  }
+
+  public async leaveGroup(group: Group): Promise<void> {
+    await leaveGroup(this.page, group);
+  }
+
+  public async renameGroup(oldGroupName: string, newGroupName: string): Promise<void> {
+    await renameGroup(this.page, oldGroupName, newGroupName);
+  }
+
+  // --- Disappearing messages ---
+
+  public async setDisappearingMessages(
+    options: DisappearOptions,
+    other?: DesktopWrapper
+  ): Promise<void> {
+    await setDisappearingMessages(this.page, options, other?.getPage());
+  }
+
+  // --- Voice / video calls ---
+
+  /** Place a voice call from this client to `receiver`. */
+  public async makeVoiceCallTo(receiver: DesktopWrapper): Promise<void> {
+    await makeVoiceCall(this.page, receiver.getPage());
   }
 }

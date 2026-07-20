@@ -1,4 +1,5 @@
-// Copied from session-playwright (tests/automation/locators/index.ts).
+// @ported-from tests/automation/locators/index.ts
+// @port-kind   verbatim
 // Only the import path for the desktop types was rewritten.
 import { DataTestId, StrategyExtractionObj } from './types';
 

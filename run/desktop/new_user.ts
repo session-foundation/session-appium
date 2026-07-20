@@ -1,4 +1,5 @@
-// Copied from session-playwright (tests/automation/setup/new_user.ts).
+// @ported-from tests/automation/setup/new_user.ts
+// @port-kind   verbatim
 // Only import paths were rewritten to `./` siblings and `chalk` removed.
 
 import { Page } from '@playwright/test';
@@ -32,6 +33,9 @@ export const newUser = async (
     'data-testid',
     'recovery-password-seed-modal'
   );
+  // const recoveryPhrase = await window.innerText(
+  //   '[data-testid=recovery-password-seed-modal]',
+  // );
   await clickOn(window, Global.modalCloseButton);
   await clickOn(window, LeftPane.profileButton);
   // Save Account ID to a variable

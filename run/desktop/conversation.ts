@@ -1,4 +1,5 @@
-// Copied from session-playwright (tests/automation/utilities/conversation.ts).
+// @ported-from tests/automation/utilities/conversation.ts
+// @port-kind   verbatim
 // Only import paths were rewritten to `./` siblings.
 
 import type { Page } from '@playwright/test';

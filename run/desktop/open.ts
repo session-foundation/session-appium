@@ -1,6 +1,8 @@
-// Copied from session-playwright (tests/automation/setup/open.ts).
+// @ported-from tests/automation/setup/open.ts
+// @port-kind   adapted
 // Changes for this repo: `chalk` colouring removed (avoids an ESM-only dep in a
-// CJS project) and catch-clause error access cast for the stricter tsconfig.
+// CJS project), catch-clause error access cast for the stricter tsconfig, and
+// ELECTRON_RUN_AS_NODE stripped from the launch env (see the launch call below).
 import { _electron as electron, type ElectronApplication, type Page } from '@playwright/test';
 import { isEmpty } from 'lodash';
 import { join } from 'path';

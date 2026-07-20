@@ -1,4 +1,5 @@
-// Copied from session-playwright (tests/automation/utilities/send_message.ts).
+// @ported-from tests/automation/utilities/send_message.ts
+// @port-kind   verbatim
 // Import paths rewritten for run/desktop/.
 import { Page } from '@playwright/test';
 

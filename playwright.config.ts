@@ -62,6 +62,10 @@ export default defineConfig({
   workers: getWorkersCount(currentTestPlatform()),
   reportSlowTests: null,
   fullyParallel: true, // otherwise, tests in the same file are not run in parallel
+  // Desktop visual-regression baselines (toMatchSnapshot). Mirrors session-playwright's layout
+  // so the ported baselines under ./screenshots resolve. Mobile screenshot tests use their own
+  // run/screenshots/* comparison helper, not Playwright snapshots, so this doesn't affect them.
+  snapshotPathTemplate: `screenshots/{testName}/{arg}-{platform}{ext}`,
   // One project per suite: each suite has a distinct runtime profile (mobile needs an
   // emulator, desktop needs Electron, cross-platform needs both). testDir stays the same and
   // each project narrows to its own folder via testMatch. android/ios are NOT separate

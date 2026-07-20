@@ -1,6 +1,7 @@
-// Copied from session-playwright (tests/promise_utils.ts). Kept separate from
-// the mobile `run/test/utils/sleep_for.ts` so the desktop driving code matches
-// the desktop suite verbatim.
+// @ported-from tests/promise_utils.ts
+// @port-kind   verbatim
+// Kept separate from the mobile `run/test/utils/sleep_for.ts` so the desktop driving
+// code matches the desktop suite verbatim.
 import { Page } from '@playwright/test';
 
 function sleep(ms: number) {
