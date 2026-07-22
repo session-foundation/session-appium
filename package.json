@@ -15,6 +15,7 @@
     "test-one": "_TESTING=1 _FORCE_LOGS=0 npx playwright test --grep",
     "test-udid": "_TESTING=1 npx playwright test UDID=$udid --grep",
     "test-ios": "_TESTING=1 npx playwright test --grep '@ios'",
+    "test-ios-parallel": "npx ts-node scripts/run_ios_parallel.ts",
     "test-android": "_TESTING=1 npx playwright test --grep '@android'",
     "test-one-logs": "_TESTING=1  _FORCELOGS=1 npx playwright test --retries 0 ./run/test/**/*.spec.ts --grep",
     "test-high-risk-android": "_TESTING=1 npx playwright test --grep '@android @high-risk'",

@@ -17,6 +17,106 @@ type AppiumXCUITestCapabilities = Capabilities.AppiumXCUITestCapabilities;
 
 export const IOS_PRO_CONTEXT: IOSTestContext = { sessionProEnabled: 'true' };
 
+// --- Service network selection (mainnet / testnet / devnet) ---
+//
+// The iOS app (simulator build) reads `serviceNetwork` and, for devnet, the `devnet*` keys from
+// its launch-arg env (DeveloperSettingsViewModel.processUnitTestEnvVariablesIfNeeded in Session_iOS).
+// Running against a devnet avoids full mainnet onion-routing latency, which dominates the slowest
+// multi-device tests. Selection comes from NETWORK_TARGET (the same var the workflows/report use);
+// default stays mainnet so nothing changes unless NETWORK_TARGET is set.
+//
+// The devnet the *app* connects to (below) MUST be the same one the *seeder* points at
+// (see getNetworkTarget in devnet.ts, which uses getIosDevnetSeedUrl()).
+
+export type IosServiceNetwork = 'devnet' | 'mainnet' | 'testnet';
+
+export type IosDevnetConfig = {
+  pubkey: string;
+  ip: string;
+  httpPort: string;
+  omqPort: string;
+};
+
+export function getIosServiceNetwork(): IosServiceNetwork {
+  const raw = (process.env.NETWORK_TARGET ?? 'mainnet').trim().toLowerCase();
+  if (raw === 'mainnet' || raw === 'testnet' || raw === 'devnet') {
+    return raw;
+  }
+  throw new Error(
+    `Invalid NETWORK_TARGET "${process.env.NETWORK_TARGET}". Use mainnet | testnet | devnet.`
+  );
+}
+
+/**
+ * Devnet connection details for the iOS app, read from the environment. Mirrors the validation the
+ * app itself does, and throws (listing what's missing/invalid) so a misconfigured devnet run fails
+ * fast here rather than the app silently falling back to testnet.
+ */
+export function getIosDevnetConfig(): IosDevnetConfig {
+  const pubkey = (process.env.DEVNET_PUBKEY ?? '').trim();
+  const ip = (process.env.DEVNET_IP ?? '').trim();
+  const httpPort = (process.env.DEVNET_HTTP_PORT ?? '').trim();
+  const omqPort = (process.env.DEVNET_OMQ_PORT ?? '').trim();
+
+  const errors: string[] = [];
+  if (!/^[0-9a-fA-F]{64}$/.test(pubkey)) {
+    errors.push('DEVNET_PUBKEY must be a 64-character hex string');
+  }
+  const octets = ip.split('.');
+  if (octets.length !== 4 || !octets.every(o => /^\d{1,3}$/.test(o) && Number(o) <= 255)) {
+    errors.push('DEVNET_IP must be an IPv4 address like 10.0.0.1');
+  }
+  if (!/^\d{1,5}$/.test(httpPort) || Number(httpPort) > 65535) {
+    errors.push('DEVNET_HTTP_PORT must be a number between 0 and 65535');
+  }
+  if (!/^\d{1,5}$/.test(omqPort) || Number(omqPort) > 65535) {
+    errors.push('DEVNET_OMQ_PORT must be a number between 0 and 65535');
+  }
+  if (errors.length > 0) {
+    throw new Error(
+      `NETWORK_TARGET=devnet requires valid devnet env vars:\n  - ${errors.join('\n  - ')}`
+    );
+  }
+  return { pubkey, ip, httpPort, omqPort };
+}
+
+/** Seed-node URL the seeder should use for devnet (same devnet the app connects to). */
+export function getIosDevnetSeedUrl(): `http://${string}` {
+  const { ip, httpPort } = getIosDevnetConfig();
+  return `http://${ip}:${httpPort}`;
+}
+
+/** Extra processArguments.env keys that point the app at the selected service network. */
+function buildServiceNetworkEnv(): Record<string, string> {
+  const network = getIosServiceNetwork();
+  if (network === 'mainnet') {
+    return {}; // app default — nothing to set
+  }
+  if (network === 'testnet') {
+    return { serviceNetwork: 'testnet' };
+  }
+  const cfg = getIosDevnetConfig();
+  return {
+    serviceNetwork: 'devnet',
+    devnetPubkey: cfg.pubkey,
+    devnetIp: cfg.ip,
+    devnetHttpPort: cfg.httpPort,
+    devnetOmqPort: cfg.omqPort,
+  };
+}
+
+// Resolved lazily and memoised on first iOS capability build (NOT at module load): this file is
+// also imported on Android runs, where NETWORK_TARGET may be `devnet` — we must not try to read
+// (and throw on) the iOS-only DEVNET_* vars there. getIosCapabilities is iOS-only, so validation
+// happens exactly when/where it's relevant.
+let serviceNetworkEnvCache: Record<string, string> | undefined;
+function getServiceNetworkEnv(): Record<string, string> {
+  if (serviceNetworkEnvCache === undefined) {
+    serviceNetworkEnvCache = buildServiceNetworkEnv();
+  }
+  return serviceNetworkEnvCache;
+}
+
 const iosPathPrefix = process.env.IOS_APP_PATH_PREFIX;
 
 export const iOSBundleId = 'com.loki-project.loki-messenger';
@@ -160,9 +260,10 @@ export function getIosCapabilities(
     customEnv.sessionPro = customCaps.sessionProEnabled;
   }
 
-  // Rebuild the processArguments block with merged env vars
+  // Rebuild the processArguments block with merged env vars.
+  // The service-network env (mainnet/testnet/devnet selection) is layered under per-test customEnv.
   caps['appium:processArguments'] = {
-    env: { ...baseEnv, ...customEnv },
+    env: { ...baseEnv, ...getServiceNetworkEnv(), ...customEnv },
   };
 
   return {

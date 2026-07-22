@@ -276,30 +276,44 @@ const openiOSApp = async (
   device: DeviceWrapper;
 }> => {
   console.info('openiOSApp');
-  let actualCapabilitiesIndex: number;
   const parallelIndex = parseInt(process.env.TEST_PARALLEL_INDEX || '0');
-  if (process.env.CI === '1') {
-    // NOTE: This assumes DEVICES_PER_TEST_COUNT=4 is set in CI for iOS (not applicable to Android)
-    // Worker pools are fixed at 4 devices each regardless of actual test size:
-    // Worker 0: devices 0-3, Worker 1: devices 4-7, Worker 2: devices 8-11
-    const devicesPerWorker = getDevicesPerTestCount();
-    const workerBaseOffset = devicesPerWorker * parallelIndex;
 
-    // Apply retry offset, but wrap within the worker's device pool only
-    // This means when retrying, alice/bob etc won't be the same device as before within a worker's pool
-    // This is to avoid any issues where a device might be in a bad state for some reason
-    // (e.g. not accessing photo library on iOS)
-    const retryOffset = testInfo.retry || 0;
-    const deviceIndexWithinWorker = (capabilitiesIndex + retryOffset) % devicesPerWorker;
-    actualCapabilitiesIndex = workerBaseOffset + deviceIndexWithinWorker;
+  // Each Playwright worker owns a fixed pool of `DEVICES_PER_TEST_COUNT` simulators, offset by
+  // the worker's parallel index, so multiple workers never target the same simulator. This runs
+  // locally as well as on CI: with a single worker (parallelIndex 0) it collapses to devices
+  // 0..N-1, and with more workers it fans out (worker 0: devices 0-3, worker 1: 4-7, ...).
+  // To run >1 worker locally you must provision `workers * DEVICES_PER_TEST_COUNT` simulators —
+  // `pnpm test-ios-parallel` does this for you.
+  const devicesPerWorker = getDevicesPerTestCount();
 
-    if (retryOffset > 0) {
-      console.info(
-        `Retry offset applied (#${retryOffset}), rotating device allocations within worker`
-      );
-    }
-  } else {
-    actualCapabilitiesIndex = capabilitiesIndex;
+  // Guard: a test can only run if its device count fits within a single worker's pool. Without
+  // this, `capabilitiesIndex % devicesPerWorker` below would silently wrap and map two logical
+  // devices (e.g. alice and charlie) onto the SAME simulator, corrupting the test. Fail loudly
+  // with actionable guidance instead. (Never triggers on CI, where the pool of 4 covers the
+  // largest test.)
+  if (capabilitiesIndex >= devicesPerWorker) {
+    throw new Error(
+      `This test needs at least ${capabilitiesIndex + 1} devices, but each worker is allocated ` +
+        `only ${devicesPerWorker} simulator(s) (DEVICES_PER_TEST_COUNT=${devicesPerWorker}). ` +
+        `Re-run with a larger pool, e.g. \`pnpm test-ios-parallel --devices ${capabilitiesIndex + 1}\`, ` +
+        `or filter to tests that fit, e.g. \`--grep '@ios @${devicesPerWorker}-devices'\`.`
+    );
+  }
+
+  const workerBaseOffset = devicesPerWorker * parallelIndex;
+
+  // Apply retry offset, but wrap within the worker's device pool only.
+  // This means when retrying, alice/bob etc won't be the same device as before within a worker's
+  // pool, to avoid any issues where a device might be in a bad state for some reason
+  // (e.g. not accessing photo library on iOS).
+  const retryOffset = testInfo.retry || 0;
+  const deviceIndexWithinWorker = (capabilitiesIndex + retryOffset) % devicesPerWorker;
+  const actualCapabilitiesIndex = workerBaseOffset + deviceIndexWithinWorker;
+
+  if (retryOffset > 0) {
+    console.info(
+      `Retry offset applied (#${retryOffset}), rotating device allocations within worker`
+    );
   }
 
   const opts: XCUITestDriverOpts = {

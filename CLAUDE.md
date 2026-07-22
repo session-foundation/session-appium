@@ -61,9 +61,15 @@ Only a subset matters per platform (all read in `run/test/utils/binaries.ts` /
   boot them); see `README.md`.
 - **Run tuning:** `PLAYWRIGHT_WORKERS_COUNT` (default 1), `PLAYWRIGHT_RETRIES_COUNT`
   (default 0), `PLAYWRIGHT_REPEAT_COUNT`.
-- iOS is always **mainnet** (`getNetworkTarget` in `devnet.ts` hardcodes it —
-  "iOS doesn't supply devnet builds yet"), so `IS_AUTOMATIC_QA` / devnet only affect
-  Android.
+- **Network target.** iOS defaults to **mainnet** but supports **testnet/devnet** too — set
+  `NETWORK_TARGET=mainnet|testnet|devnet` (same var the CI workflows/report use). `devnet` also
+  needs `DEVNET_PUBKEY`, `DEVNET_IP`, `DEVNET_HTTP_PORT`, `DEVNET_OMQ_PORT` (see `.env.sample`) and
+  a reachable devnet seed node; the app is pointed at it via launch-arg env keys
+  (`serviceNetwork`/`devnet*`, consumed by `DeveloperSettingsViewModel+Testing.swift` in
+  Session_iOS) and the seeder is pointed at the same seed URL (`getNetworkTarget` /
+  `getIosDevnetSeedUrl`). Running on devnet avoids full mainnet onion-routing latency, which
+  dominates the slowest multi-device tests. Android reaches devnet differently — it switches build
+  variant (`IS_AUTOMATIC_QA` / an AQA build) rather than reading `NETWORK_TARGET` in the harness.
 
 ### iOS simulators
 
