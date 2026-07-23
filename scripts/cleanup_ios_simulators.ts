@@ -1,9 +1,8 @@
-import { execSync } from 'child_process';
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 
 import type { Simulator } from '../run/test/utils/capabilities_ios';
 
-import { shutdownSimulator } from './ios_shared';
+import { deleteSimulators } from './ios_shared';
 
 /**
  * iOS Simulator Cleanup Script
@@ -17,22 +16,6 @@ import { shutdownSimulator } from './ios_shared';
  * Usage:
  *   pnpm cleanup-simulators
  */
-function deleteSimulator(udids: string[] | string): number {
-  const udidArray = Array.isArray(udids) ? udids : [udids];
-  let deleted = 0;
-
-  for (const udid of udidArray) {
-    shutdownSimulator(udid);
-    try {
-      execSync(`xcrun simctl delete ${udid}`, { stdio: 'pipe' });
-      deleted++;
-    } catch {
-      console.warn(`Failed to delete: ${udid}`);
-    }
-  }
-
-  return deleted;
-}
 function cleanupFromJSON(): number {
   const jsonPath = 'ci-simulators.json';
 
@@ -47,7 +30,7 @@ function cleanupFromJSON(): number {
   }
 
   const simulators: Simulator[] = JSON.parse(readFileSync(jsonPath, 'utf-8'));
-  const deleted = deleteSimulator(simulators.map(sim => sim.udid));
+  const deleted = deleteSimulators(simulators.map(sim => sim.udid));
 
   unlinkSync(jsonPath);
   console.log(`✓ Removed ${jsonPath}`);
@@ -79,7 +62,7 @@ function cleanupFromEnv(): number {
     return 0;
   }
 
-  const deleted = deleteSimulator(udids);
+  const deleted = deleteSimulators(udids);
 
   // Remove simulator lines from .env
   const cleanedEnv =

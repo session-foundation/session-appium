@@ -6,12 +6,13 @@ import { DEVNET_URL } from '../../constants';
 import { sleepFor } from '../../shared/promise_utils';
 import { AppName } from '../../types/testing';
 import { getAndroidApk } from './binaries';
+import { getIosDevnetSeedUrl, getIosServiceNetwork } from './capabilities_ios';
 
 // NOTE this currently only applies to Android as iOS doesn't supply AQA builds yet
 type NetworkType = Parameters<typeof buildStateForTest>[2];
 
 // Using native fetch to check devnet accessibility
-async function isDevnetReachable(): Promise<boolean> {
+async function isDevnetReachable(url: string = DEVNET_URL): Promise<boolean> {
   const isCI = process.env.CI === '1';
   const maxAttempts = isCI ? 3 : 1;
   const timeout = isCI ? 10_000 : 2_000;
@@ -26,10 +27,10 @@ async function isDevnetReachable(): Promise<boolean> {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-      const response = await fetch(DEVNET_URL, { signal: controller.signal });
+      const response = await fetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
 
-      console.log(`Internal devnet is accessible (HTTP ${response.status})`);
+      console.log(`Devnet ${url} is accessible (HTTP ${response.status})`);
       return true;
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Unknown error';
@@ -57,7 +58,33 @@ export async function getNetworkTarget(platform: SupportedPlatformsType): Promis
     return process.env.DETECTED_NETWORK_TARGET as NetworkType;
   }
   if (platform === 'ios') {
-    process.env.DETECTED_NETWORK_TARGET = 'mainnet'; // iOS doesn't supply devnet builds yet
+    // iOS supports mainnet/testnet/devnet via the app's simulator launch-arg env
+    // (DeveloperSettingsViewModel+Testing.swift). Default is mainnet; opt into devnet/testnet
+    // with NETWORK_TARGET (+ DEVNET_* vars for devnet — see capabilities_ios.ts).
+    const network = getIosServiceNetwork();
+
+    if (network === 'devnet') {
+      const seedUrl = getIosDevnetSeedUrl();
+      const canAccessDevnet = await isDevnetReachable(seedUrl);
+      if (!canAccessDevnet) {
+        throw new Error(
+          `NETWORK_TARGET=devnet, but the devnet seed node at ${seedUrl} is not reachable. ` +
+            `Ensure the devnet is running/reachable, or set NETWORK_TARGET=mainnet.`
+        );
+      }
+      process.env.DETECTED_NETWORK_TARGET = seedUrl;
+      console.log(`Network target (iOS): devnet via ${seedUrl}`);
+      return seedUrl;
+    }
+
+    if (network === 'testnet') {
+      process.env.DETECTED_NETWORK_TARGET = 'testnet';
+      console.log('Network target (iOS): testnet');
+      return 'testnet';
+    }
+
+    process.env.DETECTED_NETWORK_TARGET = 'mainnet';
+    console.log('Network target (iOS): mainnet');
     return 'mainnet';
   }
   if (platform !== 'android') {

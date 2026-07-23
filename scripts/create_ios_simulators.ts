@@ -6,7 +6,12 @@ import type { Simulator } from '../run/test/utils/capabilities_ios';
 import type { DeviceWrapper } from '../run/types/DeviceWrapper';
 
 import { copyFileToSimulator } from '../run/test/utils/copy_file_to_simulator';
-import { bootSimulator, isSimulatorBooted, shutdownSimulator } from './ios_shared';
+import {
+  bootSimulator,
+  isSimulatorBooted,
+  resolveIosRuntime,
+  shutdownSimulator,
+} from './ios_shared';
 import { sleepSync } from './shared';
 
 /**
@@ -32,15 +37,38 @@ import { sleepSync } from './shared';
 type SimulatorConfig = {
   deviceType: string;
   runtime: string;
+  name: string;
   totalSimulators: number;
 };
 
-// Define the device type and runtime to create
-const DEVICE_CONFIG = {
+// Default device type + runtime. The runtime is a *preference*: if it isn't installed we fall
+// back to the newest installed iOS runtime (see resolveDeviceConfig). Both can be overridden via
+// the IOS_SIM_DEVICE_TYPE / IOS_SIM_RUNTIME env vars (or `--runtime` on run_ios_parallel).
+const DEVICE_CONFIG_DEFAULTS = {
   type: 'iPhone 17',
-  name: '17',
   runtime: 'com.apple.CoreSimulator.SimRuntime.iOS-26-2', // xcrun simctl list runtimes
 };
+
+/**
+ * Resolve the device type + runtime to create simulators against, applying overrides and
+ * falling back to the newest installed iOS runtime when the preferred one is missing.
+ *
+ * @param overrides.runtime a friendly version ("26.1") or full runtime identifier
+ * @param overrides.deviceType e.g. "iPhone 16e"
+ */
+export function resolveDeviceConfig(overrides?: { runtime?: string; deviceType?: string }): {
+  deviceType: string;
+  runtime: string;
+  name: string;
+} {
+  const deviceType =
+    overrides?.deviceType ?? process.env.IOS_SIM_DEVICE_TYPE ?? DEVICE_CONFIG_DEFAULTS.type;
+  const runtimeOverride = overrides?.runtime ?? process.env.IOS_SIM_RUNTIME;
+  const runtime = resolveIosRuntime(DEVICE_CONFIG_DEFAULTS.runtime, runtimeOverride);
+  // `name` is only a cosmetic prefix for the simulator name (e.g. "Auto-17-0").
+  const name = deviceType.replace(/^iPhone\s*/i, '').trim() || deviceType;
+  return { deviceType, runtime: runtime.identifier, name };
+}
 
 const MEDIA_ROOT = path.join('run', 'test', 'media');
 const MEDIA_FILES = {
@@ -105,7 +133,12 @@ function preloadMedia(udid: string): void {
 // Create N number of pre-loaded simulators by:
 // Creating one "template" simulator, booting it, copying media over, shutting it down and then cloning it N-1 times
 // (You can't copy to shutdown simulators and you can't clone booted simulators)
-function createIOSSimulators(config: SimulatorConfig): Simulator[] {
+//
+// NOTE: this only creates the simulators and returns them (all left shut down — Appium boots
+// them on demand). Persisting the config (.env / ci-simulators.json) is the caller's job, so
+// that callers which manage their own simulator lifecycle (e.g. run_ios_parallel.ts) can create
+// throwaway simulators without clobbering the developer's .env.
+export function createIOSSimulators(config: SimulatorConfig): Simulator[] {
   console.log(`\nCreating ${config.totalSimulators} iOS simulators\n`);
 
   const startTime = Date.now();
@@ -114,7 +147,7 @@ function createIOSSimulators(config: SimulatorConfig): Simulator[] {
   // Create Simulator 0 with preloaded media
   console.log(`Creating Simulator 0 with preloaded media...`);
 
-  const name0 = `Auto-${DEVICE_CONFIG.name}-0`;
+  const name0 = `Auto-${config.name}-0`;
   const udid0 = createSimulator(name0, config.deviceType, config.runtime);
 
   if (!bootSimulator(udid0)) {
@@ -140,7 +173,7 @@ function createIOSSimulators(config: SimulatorConfig): Simulator[] {
   console.log(`Cloning ${config.totalSimulators - 1} more Simulators...`);
 
   for (let index = 1; index < config.totalSimulators; index++) {
-    const name = `Auto-${DEVICE_CONFIG.name}-${index}`;
+    const name = `Auto-${config.name}-${index}`;
     const udid = cloneSimulator(udid0, name);
 
     simulators.push({
@@ -155,11 +188,10 @@ function createIOSSimulators(config: SimulatorConfig): Simulator[] {
   const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
   console.log(`\n✓ Created ${simulators.length} Simulators in ${totalTime}s`);
 
-  saveSimulatorConfig(simulators);
   return simulators;
 }
 
-function updateLocalEnvFile(simulators: Simulator[]): void {
+export function updateLocalEnvFile(simulators: Simulator[]): void {
   const envPath = '.env';
   let envContent = existsSync(envPath) ? readFileSync(envPath, 'utf-8') : '';
 
@@ -177,7 +209,7 @@ function updateLocalEnvFile(simulators: Simulator[]): void {
   writeFileSync(envPath, envContent);
 }
 
-function saveSimulatorConfig(simulators: Simulator[]): void {
+export function saveSimulatorConfig(simulators: Simulator[]): void {
   // For running on CI, create a json file that GHA can read the UDIDs from
   if (process.env.CI === '1') {
     writeFileSync('ci-simulators.json', JSON.stringify(simulators, null, 2));
@@ -189,31 +221,32 @@ function saveSimulatorConfig(simulators: Simulator[]): void {
   }
 }
 
-// Main execution
-const numSimulatorsArg = process.argv[2];
+// Main execution (only when invoked directly, e.g. `pnpm create-simulators`).
+// When imported as a module (e.g. by run_ios_parallel.ts) this block does not run.
+if (require.main === module) {
+  const numSimulatorsArg = process.argv[2];
 
-if (!numSimulatorsArg) {
-  console.error('Error: Number of Simulators required');
-  console.error('Usage: pnpm create-simulators <number>');
-  process.exit(1);
-}
+  if (!numSimulatorsArg) {
+    console.error('Error: Number of Simulators required');
+    console.error('Usage: pnpm create-simulators <number>');
+    process.exit(1);
+  }
 
-const numSimulators = parseInt(numSimulatorsArg);
+  const numSimulators = parseInt(numSimulatorsArg);
 
-if (isNaN(numSimulators) || numSimulators < 1) {
-  console.error('Error: Invalid number of Simulators');
-  console.error('Usage: pnpm create-simulators <number>');
-  process.exit(1);
-}
+  if (isNaN(numSimulators) || numSimulators < 1) {
+    console.error('Error: Invalid number of Simulators');
+    console.error('Usage: pnpm create-simulators <number>');
+    process.exit(1);
+  }
 
-try {
-  createIOSSimulators({
-    deviceType: DEVICE_CONFIG.type,
-    runtime: DEVICE_CONFIG.runtime,
-    totalSimulators: numSimulators,
-  });
-} catch (error) {
-  console.error('\n✗ Failed to create Simulators');
-  console.error(error);
-  process.exit(1);
+  try {
+    const deviceConfig = resolveDeviceConfig();
+    const sims = createIOSSimulators({ ...deviceConfig, totalSimulators: numSimulators });
+    saveSimulatorConfig(sims);
+  } catch (error) {
+    console.error('\n✗ Failed to create Simulators');
+    console.error(error);
+    process.exit(1);
+  }
 }

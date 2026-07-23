@@ -211,7 +211,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   // --- IBaseDeviceWrapper: Session Pro ---
 
   // eslint-disable-next-line @typescript-eslint/require-await
-  public async subscribeToPro(user: User): Promise<void> {
+  public async subscribeToPro(_user: User): Promise<void> {
     // Desktop cannot currently subscribe to Pro.
     throw new Error('Desktop cannot subscribe to Pro');
   }
