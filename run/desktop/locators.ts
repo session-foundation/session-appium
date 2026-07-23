@@ -96,6 +96,8 @@ export class Conversation extends Locator {
     'message-request-response-message'
   );
   static readonly microphoneButton = this.testId('microphone-button');
+  // Session Pro badge shown next to the peer's name in the conversation header.
+  static readonly proBadgeConversationHeader = this.testId('pro-badge-conversation-header');
 
   static readonly quoteText = this.testId('quote-text');
   static readonly scrollToBottomButton = this.testId('scroll-to-bottom-button');

@@ -295,7 +295,7 @@ export async function checkPathLight(window: Page, maxWait?: number) {
     return !!pathFilter?.includes('var(--button-path-default-color)');
   });
 
-  console.log('Path built correctly, Yay!', pathFilter);
+  console.log('Path built correctly', pathFilter);
 }
 
 export async function reloadWindow(window: Page, awaitOnionPath: boolean = true) {

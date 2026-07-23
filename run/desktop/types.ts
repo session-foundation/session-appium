@@ -197,6 +197,7 @@ export type DataTestId =
   | 'path-light-container'
   | 'path-light-svg'
   | 'privacy-settings-menu-item'
+  | 'pro-badge-conversation-header'
   | 'profile-name-input'
   | 'quote-text'
   | 'recovery-password-seed-modal'

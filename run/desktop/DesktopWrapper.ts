@@ -16,7 +16,8 @@ import type {
 } from './types';
 
 import { tStripped } from '../localizer/lib';
-import { makeAccountPro } from '../test/utils/mock_pro';
+import { sleepFor } from '../shared/promise_utils';
+import { parseDataImage } from '../test/utils/check_colour';
 import { ctaConfigs, type CTAType } from '../types/cta';
 import {
   openConversationWith as desktopOpenConversationWith,
@@ -25,7 +26,7 @@ import {
 import { createContact } from './create_contact';
 import { joinCommunity, joinOrOpenCommunity } from './join_community';
 import { leaveGroup } from './leave_group';
-import { LeftPane, Settings } from './locators';
+import { Conversation, LeftPane, Settings } from './locators';
 import {
   confirmMessageDeletedFor,
   deleteMessageFor,
@@ -209,9 +210,10 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
 
   // --- IBaseDeviceWrapper: Session Pro ---
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async subscribeToPro(user: User): Promise<void> {
-    // Desktop hits the same dev Pro backend; the provider label is cosmetic there.
-    await makeAccountPro({ user, provider: 'google' });
+    // Desktop cannot currently subscribe to Pro.
+    throw new Error('Desktop cannot subscribe to Pro');
   }
 
   public async assertProFeatureUnlocked(user: Pick<User, 'accountID'>): Promise<void> {
@@ -230,6 +232,88 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
         return true;
       } catch (_e) {
         await this.page.keyboard.press('Escape').catch(() => undefined);
+        return false;
+      }
+    });
+  }
+
+  /** Wait until a message with exactly this text is present in the open conversation. */
+  public async waitForMessage(text: string): Promise<void> {
+    await waitForTextMessage(this.page, text);
+  }
+
+  /**
+   * Open `convoName` and send a >2000-char message, retrying until it is accepted.
+   * A non-Pro account's send is blocked by the "longer messages" upgrade CTA, so the
+   * 'sent' status never arrives; between attempts we press Escape to clear any CTA and
+   * re-open the conversation. Proves this device has Pro active without an app restart.
+   */
+  public async sendLongProMessage(convoName: string, message: string): Promise<void> {
+    await doWhileWithMax(60_000, 1_000, `sendLongProMessage ${this.deviceIdentity}`, async () => {
+      try {
+        await this.openConversationWith(convoName);
+        await desktopSendMessage(this.page, message);
+        await waitForTextMessage(this.page, message);
+        return true;
+      } catch (_e) {
+        await this.page.keyboard.press('Escape').catch(() => undefined);
+        return false;
+      }
+    });
+  }
+
+  // --- Receiver-side Session Pro assertions (desktop-only for now) ---
+  // Mobile has equivalents under different names (verifyElementIsAnimated, the pro-badge
+  // locators); these are the desktop counterparts, used when a desktop client observes a
+  // peer's Pro state. Not promoted to IBaseDeviceWrapper until every platform can satisfy
+  // one shared signature.
+
+  /** Center-pixel hex color of the first element matching `cssSelector` (via screenshot). */
+  private async sampleCenterColor(cssSelector: string): Promise<string> {
+    const buffer = await this.page.locator(cssSelector).first().screenshot();
+    return parseDataImage(buffer.toString('base64'));
+  }
+
+  /**
+   * Assert an element is animated by sampling its center pixel `SAMPLE_SIZE` times: an
+   * animated (GIF/APNG) image cycles frames, so more than one unique color appears. The
+   * whole sampling loop retries within `maxWaitMs` to allow the image to propagate.
+   */
+  public async verifyElementIsAnimated(cssSelector: string, maxWaitMs = 30_000): Promise<void> {
+    const SAMPLE_SIZE = 3;
+    await doWhileWithMax(maxWaitMs, 1_000, `verifyElementIsAnimated ${cssSelector}`, async () => {
+      const colors = new Set<string>();
+      for (let i = 0; i < SAMPLE_SIZE; i++) {
+        colors.add(await this.sampleCenterColor(cssSelector));
+        await sleepFor(250);
+      }
+      return colors.size > 1;
+    });
+  }
+
+  /** Verify THIS account's own avatar (left pane) is animated — e.g. after it synced here. */
+  public async verifyOwnAvatarAnimated(): Promise<void> {
+    await this.verifyElementIsAnimated('[data-testid="leftpane-primary-avatar"] img');
+  }
+
+  /** Open `convoName` and verify the peer's conversation-header avatar is animated. */
+  public async verifySenderAvatarAnimated(convoName: string): Promise<void> {
+    await this.openConversationWith(convoName);
+    await this.verifyElementIsAnimated('[data-testid="conversation-options-avatar"] img');
+  }
+
+  /** Open `convoName` and assert the peer's Session Pro badge shows in the header (polls). */
+  public async assertSenderProBadge(convoName: string): Promise<void> {
+    await this.openConversationWith(convoName);
+    await doWhileWithMax(60_000, 1_000, `assertSenderProBadge ${convoName}`, async () => {
+      try {
+        await waitForElement({
+          window: this.page,
+          locator: Conversation.proBadgeConversationHeader,
+          options: { maxWaitMs: 2_000 },
+        });
+        return true;
+      } catch (_e) {
         return false;
       }
     });

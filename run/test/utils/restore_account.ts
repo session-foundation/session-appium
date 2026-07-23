@@ -44,6 +44,9 @@ export const restoreAccount = async (
   }
   // Wait for permissions modal to pop up
   await handleNotificationPermissions(device, allowNotificationPermissions);
+  // A startup CTA (e.g. the "New Hope for Session" donation appeal) can cover the home
+  // screen after restore; dismiss it via its close button so the home screen is reachable.
+  await device.dismissCTA(true);
   // Check that we're on the home screen
   await device.waitForTextElementToBePresent(new PlusButton(device));
 };
@@ -83,6 +86,9 @@ export const restoreAccountNoFallback = async (
   // Wait for permissions modal to pop up
   await sleepFor(500);
   await handleNotificationPermissions(device, allowNotificationPermissions);
+  // A startup CTA (e.g. the "New Hope for Session" donation appeal) can cover the home
+  // screen after restore; dismiss it via its close button so the home screen is reachable.
+  await device.dismissCTA(true);
   // Check that we're on the home screen
   await device.waitForTextElementToBePresent(new PlusButton(device));
 };

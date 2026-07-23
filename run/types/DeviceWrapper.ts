@@ -2714,14 +2714,32 @@ export class DeviceWrapper implements IMobileWrapper {
     ]);
   }
 
-  // Dismiss any CTA if it shows
-  public async dismissCTA(): Promise<void> {
+  /**
+   * Dismiss any CTA if it shows.
+   *
+   * @param useCloseButton - when true, dismiss via the dialog's close ("X") button; when
+   * false (default) dismiss by tapping outside the dialog at (150,150), the original
+   * behaviour. Some dialogs (e.g. the "New Hope for Session" donation appeal) have no
+   * negative button and do NOT dismiss on a scrim/coordinate tap — pass `true` for those.
+   * The X is exposed only by its content description ("Close" on Android, "Close button"
+   * on iOS).
+   */
+  public async dismissCTA(useCloseButton: boolean = false): Promise<void> {
     const hasCTAAppeared = await this.doesElementExist({
       ...new CTAHeading(this).build(),
       maxWait: 8_000,
     });
-    if (hasCTAAppeared) {
-      this.log('Dismissing CTA');
+    this.log(`hasCTAAppeared: ${hasCTAAppeared ? 'true' : 'false'}`);
+    if (!hasCTAAppeared) {
+      return;
+    }
+    this.log('Dismissing CTA');
+    if (useCloseButton) {
+      await this.clickOnElementAll({
+        strategy: 'accessibility id',
+        selector: this.isIOS() ? 'Close button' : 'Close',
+      });
+    } else {
       await this.clickOnCoordinates(150, 150);
     }
   }
@@ -2814,6 +2832,46 @@ export class DeviceWrapper implements IMobileWrapper {
     const message = 'x'.repeat(2001);
     await this.sendNewMessage(user, message);
     await this.waitForTextElementToBePresent(new MessageBody(this, message));
+  }
+
+  /** Open the conversation whose left-pane name matches `convoName`. */
+  public async openConversationWith(convoName: string): Promise<void> {
+    await this.clickOnElementAll(new ConversationItem(this, convoName));
+  }
+
+  /** Wait until a message with exactly this text is present in the open conversation. */
+  public async waitForMessage(text: string): Promise<void> {
+    await this.waitForTextElementToBePresent(new MessageBody(this, text));
+  }
+
+  /**
+   * Open `convoName` and send a >2000-char message, retrying until it is accepted.
+   * The text is typed once; each attempt clicks send and, if the "longer messages"
+   * CTA blocks it (Pro not active yet on this device), dismisses the CTA and retries
+   * within the time budget. Lets us verify Pro synced to a linked device without an
+   * app restart.
+   */
+  public async sendLongProMessage(convoName: string, message: string): Promise<void> {
+    await this.openConversationWith(convoName);
+    await this.inputText(message, new MessageInput(this));
+    const deadline = Date.now() + 60_000;
+    do {
+      await this.clickOnElementAll(new SendButton(this));
+      const sent = await this.doesElementExist({
+        ...new MessageBody(this, message).build(),
+        maxWait: 5_000,
+      });
+      if (sent) {
+        return;
+      }
+      // Blocked by the upgrade CTA — Pro hasn't propagated yet. Dismiss and retry;
+      // the composed text stays in the input.
+      await this.dismissCTA();
+      await sleepFor(2_000);
+    } while (Date.now() < deadline);
+    throw new Error(
+      `sendLongProMessage: message never sent on ${this.getDeviceIdentity()} (Pro not active after 60s?)`
+    );
   }
 
   public async getElementPixelColor(

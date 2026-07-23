@@ -8,9 +8,9 @@ import { forceCloseAllWindows } from '../../desktop/closeWindows';
 import { DesktopWrapper } from '../../desktop/DesktopWrapper';
 import { openApps, resetTrackedElectronPids, waitFirstWindow } from '../../desktop/open';
 import { type TestRisk, type User, USERNAME } from '../../types/testing';
-import { setupAllureTestInfo } from './allure/allureHelpers';
 import { IOS_PRO_CONTEXT } from './capabilities_ios';
 import { newUser } from './create_account';
+import { openAppsWithStateCrossPlatform } from './cross_platform_state';
 import { unregisterDevicesForTest } from './device_registry';
 import { getNetworkTarget } from './devnet';
 import { captureLogsOnFailure, captureScreenshotsOnFailure } from './failure_artifacts';
@@ -23,20 +23,39 @@ export type CrossPlatformSetup = {
   desktop?: number;
 };
 
-export type CrossPlatformClients = {
-  /** The account all clients are linked to (minted on the first mobile client). */
+/** The clients of a single account (used for the optional second account, "bob"). */
+export type AccountClients = {
   account: User;
-  /** Every client, ordered android → ios → desktop. */
+  android: DeviceWrapper[];
+  ios: DeviceWrapper[];
+  desktop: DesktopWrapper[];
+};
+
+export type CrossPlatformClients = {
+  /** The (first) account all top-level clients are linked to ("alice"). */
+  account: User;
+  /** Every client of "alice", ordered android → ios → desktop. */
   clients: IBaseDeviceWrapper[];
   android: DeviceWrapper[];
   ios: DeviceWrapper[];
   desktop: DesktopWrapper[];
+  /**
+   * A second, distinct account and its clients, present only when `bob` is requested.
+   * When set, "alice" and "bob" are seeded as mutual friends via the qa-seeder.
+   */
+  bob?: AccountClients;
 };
 
 type CrossPlatformTestArgs = {
   title: string;
   risk: TestRisk;
   setup: CrossPlatformSetup;
+  /**
+   * Optional second account ("bob") with its own clients. When set, both accounts are
+   * created as mutual friends via the qa-seeder (instead of minting a single account),
+   * so a peer-visibility conversation exists on every client from the start.
+   */
+  bob?: CrossPlatformSetup;
   testCb: (clients: CrossPlatformClients, testInfo: TestInfo) => Promise<void>;
   shouldSkip?: boolean;
   isPro?: boolean;
@@ -65,11 +84,10 @@ export function crossPlatformTest({
   title,
   risk,
   setup,
+  bob,
   testCb,
   shouldSkip = false,
   isPro = false,
-  allureSuites,
-  allureDescription,
 }: CrossPlatformTestArgs) {
   const androidCount = setup.android ?? 0;
   const iosCount = setup.ios ?? 0;
@@ -95,11 +113,12 @@ export function crossPlatformTest({
     }
     console.info(`\n\n==========> Running "${testName}"\n\n`);
 
-    await setupAllureTestInfo({
-      suites: allureSuites,
-      description: allureDescription,
-      platform: androidCount > 0 ? 'android' : 'ios',
-    });
+    // Note: no allure test suite as an allure suite is per platforms
+    // await setupAllureTestInfo({
+    //   suites: allureSuites,
+    //   description: allureDescription,
+    //   platform: androidCount > 0 ? 'android' : 'ios',
+    // });
 
     // Enable Session Pro (dev backend) before launching desktop windows.
     if (isPro) {
@@ -116,46 +135,87 @@ export function crossPlatformTest({
     let testFailed = false;
 
     try {
-      if (androidCount > 0) {
-        androidDevices.push(...(await openAppMultipleDevices('android', androidCount, testInfo)));
-      }
-      if (iosCount > 0) {
-        iosDevices.push(
-          ...(await openAppMultipleDevices(
-            'ios',
-            iosCount,
-            testInfo,
-            isPro ? IOS_PRO_CONTEXT : undefined
-          ))
-        );
-      }
-      if (desktopCount > 0) {
-        const apps = await openApps(desktopCount);
-        for (let i = 0; i < apps.length; i++) {
-          const page = await waitFirstWindow(apps[i]);
-          desktopWindows.push(page);
-          desktopClients.push(new DesktopWrapper(page, `alice-desktop${i + 1}`));
+      let clientsArg: CrossPlatformClients;
+
+      if (bob) {
+        // Two-account path: seed alice + bob as mutual friends via the qa-seeder and open
+        // every client (across platforms) restored from the right seed.
+        const state = await openAppsWithStateCrossPlatform({
+          stateToBuildKey: '2friends',
+          groupName: undefined,
+          perUser: [
+            { android: androidCount, ios: iosCount, desktop: desktopCount },
+            { android: bob.android ?? 0, ios: bob.ios ?? 0, desktop: bob.desktop ?? 0 },
+          ],
+          testInfo,
+          isPro,
+        });
+        const [aliceClients, bobClients] = state.users;
+
+        // Feed the shared teardown arrays so the finally block cleans up every client.
+        androidDevices.push(...aliceClients.android, ...bobClients.android);
+        iosDevices.push(...aliceClients.ios, ...bobClients.ios);
+        desktopClients.push(...aliceClients.desktop, ...bobClients.desktop);
+        desktopWindows.push(...state.desktopWindows);
+
+        clientsArg = {
+          account: aliceClients.account,
+          clients: aliceClients.all,
+          android: aliceClients.android,
+          ios: aliceClients.ios,
+          desktop: aliceClients.desktop,
+          bob: {
+            account: bobClients.account,
+            android: bobClients.android,
+            ios: bobClients.ios,
+            desktop: bobClients.desktop,
+          },
+        };
+      } else {
+        if (androidCount > 0) {
+          androidDevices.push(...(await openAppMultipleDevices('android', androidCount, testInfo)));
         }
+        if (iosCount > 0) {
+          iosDevices.push(
+            ...(await openAppMultipleDevices(
+              'ios',
+              iosCount,
+              testInfo,
+              isPro ? IOS_PRO_CONTEXT : undefined
+            ))
+          );
+        }
+        if (desktopCount > 0) {
+          const apps = await openApps(desktopCount);
+          for (let i = 0; i < apps.length; i++) {
+            const page = await waitFirstWindow(apps[i]);
+            desktopWindows.push(page);
+            desktopClients.push(new DesktopWrapper(page, `alice-desktop${i + 1}`));
+          }
+        }
+
+        const allMobile = [...androidDevices, ...iosDevices];
+        if (allMobile.length === 0) {
+          throw new Error(
+            'crossPlatformTest needs at least one mobile client to create the account (desktop can only restore an existing account).'
+          );
+        }
+
+        // Mint the account on the first mobile client, then link everyone else to it.
+        const account = await newUser(allMobile[0], USERNAME.ALICE);
+        const toLink: IBaseDeviceWrapper[] = [...allMobile.slice(1), ...desktopClients];
+        await Promise.all(toLink.map(client => client.restoreFromSeed(account.recoveryPhrase)));
+
+        clientsArg = {
+          account,
+          clients: [...androidDevices, ...iosDevices, ...desktopClients],
+          android: androidDevices,
+          ios: iosDevices,
+          desktop: desktopClients,
+        };
       }
 
-      const allMobile = [...androidDevices, ...iosDevices];
-      if (allMobile.length === 0) {
-        throw new Error(
-          'crossPlatformTest needs at least one mobile client to create the account (desktop can only restore an existing account).'
-        );
-      }
-
-      // Mint the account on the first mobile client, then link everyone else to it.
-      const account = await newUser(allMobile[0], USERNAME.ALICE);
-      const toLink: IBaseDeviceWrapper[] = [...allMobile.slice(1), ...desktopClients];
-      await Promise.all(toLink.map(client => client.restoreFromSeed(account.recoveryPhrase)));
-
-      const clients: IBaseDeviceWrapper[] = [...androidDevices, ...iosDevices, ...desktopClients];
-
-      await testCb(
-        { account, clients, android: androidDevices, ios: iosDevices, desktop: desktopClients },
-        testInfo
-      );
+      await testCb(clientsArg, testInfo);
 
       // If the test passed but used healing, fail loudly to surface it in the report.
       const healedAnnotations = testInfo.annotations.filter(a => a.type === 'healed');
