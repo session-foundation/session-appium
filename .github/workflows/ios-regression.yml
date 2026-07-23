@@ -99,12 +99,13 @@ jobs:
       # For devnet the app also needs the seed-node connection details below; they are only read
       # when devnet is selected, so they are harmless on mainnet/testnet runs. Store them as
       # repo-level Actions *variables* (the pubkey is public; the IP/ports are internal), e.g.
-      # Settings > Secrets and variables > Actions. DEVNET_IP must be the address the runner can
-      # reach (the same devnet as Android's sesh-net.local:1280); the seeder derives its seed URL
-      # from DEVNET_IP:DEVNET_HTTP_PORT.
+      # Settings > Secrets and variables > Actions. The seed node exposes three ports the tests use:
+      # DEVNET_RPC_PORT (oxend RPC — the seeder), DEVNET_HTTP_PORT (storage HTTPS — the app) and
+      # DEVNET_OMQ_PORT (storage OMQ/QUIC — the app). See docs/local-devnet-ios.md.
       NETWORK_TARGET: ${{ github.event.inputs.NETWORK_TARGET }}
       DEVNET_PUBKEY: ${{ vars.DEVNET_PUBKEY }}
       DEVNET_IP: ${{ vars.DEVNET_IP }}
+      DEVNET_RPC_PORT: ${{ vars.DEVNET_RPC_PORT }}
       DEVNET_HTTP_PORT: ${{ vars.DEVNET_HTTP_PORT }}
       DEVNET_OMQ_PORT: ${{ vars.DEVNET_OMQ_PORT }}
       _TESTING: 1 # Always hide webdriver logs (@appium/support/ flag)
@@ -134,13 +135,14 @@ jobs:
         if: ${{ github.event.inputs.NETWORK_TARGET == 'devnet' }}
         shell: bash
         run: |
-          if [ -z "$DEVNET_PUBKEY" ] || [ -z "$DEVNET_IP" ] || [ -z "$DEVNET_HTTP_PORT" ] || [ -z "$DEVNET_OMQ_PORT" ]; then
+          if [ -z "$DEVNET_PUBKEY" ] || [ -z "$DEVNET_IP" ] || [ -z "$DEVNET_RPC_PORT" ] || [ -z "$DEVNET_HTTP_PORT" ] || [ -z "$DEVNET_OMQ_PORT" ]; then
             echo "ERROR: NETWORK_TARGET=devnet but not all DEVNET_* Actions variables are set"
             echo "  DEVNET_PUBKEY set? $([ -n "$DEVNET_PUBKEY" ] && echo yes || echo NO)"
-            echo "  DEVNET_IP='$DEVNET_IP' DEVNET_HTTP_PORT='$DEVNET_HTTP_PORT' DEVNET_OMQ_PORT='$DEVNET_OMQ_PORT'"
+            echo "  DEVNET_IP='$DEVNET_IP' DEVNET_RPC_PORT='$DEVNET_RPC_PORT' DEVNET_HTTP_PORT='$DEVNET_HTTP_PORT' DEVNET_OMQ_PORT='$DEVNET_OMQ_PORT'"
             exit 1
           fi
-          SEED="http://${DEVNET_IP}:${DEVNET_HTTP_PORT}"
+          # Probe the seeder's endpoint (oxend RPC); the app's storage ports are validated in-harness.
+          SEED="http://${DEVNET_IP}:${DEVNET_RPC_PORT}"
           echo "Requested devnet -> probing seed node $SEED"
           for attempt in 1 2 3; do
             CODE=$(curl -s -o /dev/null -w '%{http_code}' --connect-timeout 5 --max-time 10 "$SEED" 2>/dev/null || echo '000')

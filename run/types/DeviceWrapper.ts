@@ -1340,6 +1340,25 @@ export class DeviceWrapper {
   }
 
   /**
+   * Fast "element is gone" check: polls until the element is absent, confirmed by 3 consecutive
+   * misses (a built-in debounce against flicker/reappear), and returns as soon as that holds —
+   * so it's near-instant when the element is already gone. Unlike `hasElementBeenDeleted`, it does
+   * NOT require the element to be present first, so it's safe for "already gone" cases.
+   *
+   * Use this instead of `verifyElementNotPresent` ONLY when the intent is "this UI element is gone
+   * after an action". Do NOT use it to prove "a message/content never arrives over a window"
+   * (absent-now != absent-later there) — keep `verifyElementNotPresent` for those.
+   */
+  public async waitForElementToBeGone(
+    args: { text?: string; maxWait?: number } & (LocatorsInterface | StrategyExtractionObj)
+  ): Promise<void> {
+    const { locator, description } = this.resolveLocator(args);
+    const maxWait = args.maxWait ?? 5_000;
+    await this.waitForElementToDisappear(locator, maxWait, args.text);
+    this.log(`Confirmed element gone: ${description}`);
+  }
+
+  /**
    * Waits for an element to be deleted from the screen. The element must exist initially.
    *
    * @param args - Locator (LocatorsInterface or StrategyExtractionObj) with optional properties
