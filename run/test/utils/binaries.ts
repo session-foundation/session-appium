@@ -48,8 +48,17 @@ export const getRepeatEachCount = () => {
   return isFinite(asNumber) ? asNumber : 0;
 };
 
-export const getWorkersCount = () => {
-  const asNumber = toNumber(process.env.PLAYWRIGHT_WORKERS_COUNT);
+export type WorkersPlatform = 'android' | 'desktop' | 'ios';
+
+// Workers are configured per-platform so each platform can be tuned independently
+// (e.g. iOS is capped by the self-hosted runner, Android by the emulator count).
+export const getWorkersCount = (platform: WorkersPlatform | undefined) => {
+  const perPlatform: Record<WorkersPlatform, string | undefined> = {
+    android: process.env.PLAYWRIGHT_WORKERS_COUNT_ANDROID,
+    ios: process.env.PLAYWRIGHT_WORKERS_COUNT_IOS,
+    desktop: process.env.PLAYWRIGHT_WORKERS_COUNT_DESKTOP,
+  };
+  const asNumber = toNumber(platform ? perPlatform[platform] : undefined);
   return isFinite(asNumber) ? asNumber : 1;
 };
 

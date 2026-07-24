@@ -12,17 +12,24 @@ import * as path from 'path';
 import sharp from 'sharp';
 import * as sinon from 'sinon';
 
+import type { SupportedPlatformsType } from '../test/utils/open_app';
+import type { IMobileWrapper } from './IMobileWrapper';
+
 import {
   ChangeProfilePictureButton,
+  ClearInputButton,
   CloseSettings,
   describeLocator,
   DownloadMediaButton,
+  EditUsernameButton,
   FirstGif,
   GIFName,
   ImageName,
   ImagePermissionsModalAllow,
   LocatorsInterface,
   ReadReceiptsButton,
+  UsernameDisplay,
+  UsernameInput,
 } from '../../run/test/locators';
 import {
   animatedProfilePicture,
@@ -67,6 +74,8 @@ import {
 import { LoadingAnimation } from '../test/locators/onboarding';
 import {
   PrivacyMenuItem,
+  ProAnimatedDisplayPictureModalDescription,
+  SaveNameChangeButton,
   SaveProfilePictureButton,
   UserAvatar,
   UserSettings,
@@ -77,7 +86,8 @@ import { clickOnCoordinates, sleepFor, verify } from '../test/utils';
 import { getAdbFullPath } from '../test/utils/binaries';
 import { parseDataImage } from '../test/utils/check_colour';
 import { isSameColor } from '../test/utils/check_colour';
-import { SupportedPlatformsType } from '../test/utils/open_app';
+import { makeAccountPro } from '../test/utils/mock_pro';
+import { restoreAccountNoFallback } from '../test/utils/restore_account';
 import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/utils/utilities';
 import { CTAConfig, ctaConfigs, CTAType } from './cta';
 import {
@@ -104,7 +114,7 @@ type PollResult<T = undefined> = {
   error?: string;
 };
 
-export class DeviceWrapper {
+export class DeviceWrapper implements IMobileWrapper {
   private readonly device: AndroidUiautomator2Driver | XCUITestDriver;
   public readonly udid: string;
   private deviceIdentity: string = '';
@@ -2723,16 +2733,174 @@ export class DeviceWrapper {
     ]);
   }
 
-  // Dismiss any CTA if it shows
-  public async dismissCTA(): Promise<void> {
+  /**
+   * Dismiss any CTA if it shows.
+   *
+   * @param useCloseButton - when true, dismiss via the dialog's close ("X") button; when
+   * false (default) dismiss by tapping outside the dialog at (150,150), the original
+   * behaviour. Some dialogs (e.g. the "New Hope for Session" donation appeal) have no
+   * negative button and do NOT dismiss on a scrim/coordinate tap — pass `true` for those.
+   * The X is exposed only by its content description ("Close" on Android, "Close button"
+   * on iOS).
+   */
+  public async dismissCTA(useCloseButton: boolean = false): Promise<void> {
     const hasCTAAppeared = await this.doesElementExist({
       ...new CTAHeading(this).build(),
       maxWait: 8_000,
     });
-    if (hasCTAAppeared) {
-      this.log('Dismissing CTA');
+    this.log(`hasCTAAppeared: ${hasCTAAppeared ? 'true' : 'false'}`);
+    if (!hasCTAAppeared) {
+      return;
+    }
+    this.log('Dismissing CTA');
+    if (useCloseButton) {
+      await this.clickOnElementAll({
+        strategy: 'accessibility id',
+        selector: this.isIOS() ? 'Close button' : 'Close',
+      });
+    } else {
       await this.clickOnCoordinates(150, 150);
     }
+  }
+
+  /** === Session Pro === */
+
+  /**
+   * Restore/link this device to an existing account from its recovery phrase.
+   * Fails if the account isn't found on the network.
+   */
+  public async restoreFromSeed(recoveryPhrase: string): Promise<void> {
+    await restoreAccountNoFallback(this, recoveryPhrase);
+  }
+
+  /** === Profile === */
+
+  /** Change this account's display name via settings, then return to the home screen. */
+  public async changeDisplayName(name: string): Promise<void> {
+    await this.clickOnElementAll(new UserSettings(this));
+    await this.clickOnElementAll(new EditUsernameButton(this));
+    await this.onIOS().deleteText(new UsernameInput(this));
+    await this.onAndroid().clickOnElementAll(new ClearInputButton(this));
+    await this.inputText(name, new UsernameInput(this));
+    await this.clickOnElementAll(new SaveNameChangeButton(this));
+    await this.waitForTextElementToBePresent(new UsernameDisplay(this, name));
+    await this.clickOnElementAll(new CloseSettings(this));
+  }
+
+  /**
+   * Assert that this account's display name is (or becomes) `name`. Opens settings
+   * and polls the profile name — used on a linked device to wait for a synced change.
+   */
+  public async assertDisplayName(name: string): Promise<void> {
+    // Poll with a REOPEN each iteration: an already-open settings screen does not
+    // live-refresh when a config sync arrives, so we must close and reopen the
+    // dialog to observe a synced name (mirrors the desktop linked-device flow).
+    const deadline = Date.now() + 30_000;
+    let lastError: unknown;
+    do {
+      try {
+        await this.clickOnElementAll(new UserSettings(this));
+        await this.waitForTextElementToBePresent({
+          ...new UsernameDisplay(this, name).build(),
+          maxWait: 1_000,
+        });
+        await this.clickOnElementAll(new CloseSettings(this));
+        return;
+      } catch (e) {
+        lastError = e;
+        await this.clickOnElementAll(new CloseSettings(this)).catch(() => {});
+        await sleepFor(500);
+      }
+    } while (Date.now() < deadline);
+    throw new Error(
+      `assertDisplayName: "${name}" did not appear within 30s. Last error: ${lastError instanceof Error ? lastError.message : String(lastError)}`
+    );
+  }
+
+  /**
+   * Register this device's account as a Session Pro subscriber against the dev
+   * backend (fake payment). The provider is derived from the device platform.
+   * NOTE: Pro becomes visible to this and any linked device without an app
+   * restart — reopen the Pro/settings dialog to observe the new state.
+   */
+  public async subscribeToPro(user: User): Promise<void> {
+    const provider = this.isIOS() ? 'apple' : 'google';
+    await makeAccountPro({ user, provider });
+  }
+
+  /**
+   * Assert that Session Pro is active for this account by opening the profile
+   * picture modal and checking the "Pro Activated" CTA. Does NOT restart the
+   * app. Cross-platform observers waiting for a subscription to sync should call
+   * this inside a retry that reopens the dialog between attempts.
+   */
+  public async assertProActive(): Promise<void> {
+    await this.clickOnElementAll(new UserSettings(this));
+    await this.clickOnElementAll(new UserAvatar(this));
+    await this.waitForTextElementToBePresent(new ChangeProfilePictureButton(this));
+    await this.clickOnElementAll(new ProAnimatedDisplayPictureModalDescription(this));
+    await this.checkCTA('alreadyActivated');
+  }
+
+  /**
+   * Assert that a Pro-gated feature is unlocked by sending a message longer than
+   * the standard 2000-char cap and confirming it sends (a non-Pro account would
+   * be blocked by the "longer messages" upgrade CTA instead).
+   */
+  public async assertProFeatureUnlocked(user: Pick<User, 'accountID'>): Promise<void> {
+    const message = 'x'.repeat(2001);
+    await this.sendNewMessage(user, message);
+    await this.waitForTextElementToBePresent(new MessageBody(this, message));
+  }
+
+  /** Open the conversation whose left-pane name matches `convoName`. */
+  public async openConversationWith(convoName: string): Promise<void> {
+    // If a conversation is already open (e.g. this client just sent a message), the
+    // conversation-list item isn't on screen — step back to the list first. The message
+    // input box only exists inside a conversation, so it's our "am I in a thread?" signal.
+    const insideConversation = await this.doesElementExist({
+      ...new MessageInput(this).build(),
+      maxWait: 2_000,
+    });
+    if (insideConversation) {
+      await this.navigateBack();
+    }
+    await this.clickOnElementAll(new ConversationItem(this, convoName));
+  }
+
+  /** Wait until a message with exactly this text is present in the open conversation. */
+  public async waitForMessage(text: string): Promise<void> {
+    await this.waitForTextElementToBePresent(new MessageBody(this, text));
+  }
+
+  /**
+   * Open `convoName` and send a >2000-char message, retrying until it is accepted.
+   * The text is typed once; each attempt clicks send and, if the "longer messages"
+   * CTA blocks it (Pro not active yet on this device), dismisses the CTA and retries
+   * within the time budget. Lets us verify Pro synced to a linked device without an
+   * app restart.
+   */
+  public async sendLongProMessage(convoName: string, message: string): Promise<void> {
+    await this.openConversationWith(convoName);
+    await this.inputText(message, new MessageInput(this));
+    const deadline = Date.now() + 60_000;
+    do {
+      await this.clickOnElementAll(new SendButton(this));
+      const sent = await this.doesElementExist({
+        ...new MessageBody(this, message).build(),
+        maxWait: 5_000,
+      });
+      if (sent) {
+        return;
+      }
+      // Blocked by the upgrade CTA — Pro hasn't propagated yet. Dismiss and retry;
+      // the composed text stays in the input.
+      await this.dismissCTA();
+      await sleepFor(2_000);
+    } while (Date.now() < deadline);
+    throw new Error(
+      `sendLongProMessage: message never sent on ${this.getDeviceIdentity()} (Pro not active after 60s?)`
+    );
   }
 
   public async getElementPixelColor(

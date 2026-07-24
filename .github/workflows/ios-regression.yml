@@ -56,7 +56,7 @@ on:
           - '2'
         default: '0'
 
-      PLAYWRIGHT_WORKERS_COUNT:
+      PLAYWRIGHT_WORKERS_COUNT_IOS:
         description: 'number of workers to use (ios only)'
         required: true
         type: choice
@@ -111,7 +111,7 @@ jobs:
       _TESTING: 1 # Always hide webdriver logs (@appium/support/ flag)
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL != 'minimal' && '1' || '0' }} # Show stdout/stderr if test fails (@session-foundation/playwright-reporter/ flag)
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'verbose' && '1' || '0' }} # Show everything as it happens (@session-foundation/playwright-reporter/ flag)
-      PLAYWRIGHT_WORKERS_COUNT: 3 # for iOS, this is the max we can have on our self-hosted runner
+      PLAYWRIGHT_WORKERS_COUNT_IOS: ${{ github.event.inputs.PLAYWRIGHT_WORKERS_COUNT_IOS }} # defaults to 3, the max on our self-hosted runner
       SOGS_ADMIN_SEED: ${{ secrets.SOGS_ADMIN_SEED }}
       PRO_GREP_INVERT: ${{ inputs.RUN_PRO_TESTS != true && '--grep-invert @pro' || '' }}
 

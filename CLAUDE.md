@@ -59,7 +59,7 @@ Only a subset matters per platform (all read in `run/test/utils/binaries.ts` /
 - **Android:** `ANDROID_APK`, `APPIUM_ADB_FULL_PATH`, `EMULATOR_FULL_PATH`,
   `ANDROID_SDK_ROOT`. Emulators must be **created and running** beforehand (Appium won't
   boot them); see `README.md`.
-- **Run tuning:** `PLAYWRIGHT_WORKERS_COUNT` (default 1), `PLAYWRIGHT_RETRIES_COUNT`
+- **Run tuning:** `PLAYWRIGHT_WORKERS_COUNT_IOS` (default 1), `PLAYWRIGHT_RETRIES_COUNT`
   (default 0), `PLAYWRIGHT_REPEAT_COUNT`.
 - **Network target.** iOS defaults to **mainnet** but supports **testnet/devnet** too — set
   `NETWORK_TARGET=mainnet|testnet|devnet` (same var the CI workflows/report use). `devnet` also
@@ -124,11 +124,19 @@ an existing spec (e.g. `run/test/specs/app_disguise_icons.spec.ts`).
 ## CI vs local
 
 CI (`.github/workflows/ios-regression.yml`) runs on a **self-hosted macOS** runner with
-`CI=1`, `PLAYWRIGHT_WORKERS_COUNT=3`, `DEVICES_PER_TEST_COUNT=4` (→ 12 simulators from
+`CI=1`, `PLAYWRIGHT_WORKERS_COUNT_IOS=3`, `DEVICES_PER_TEST_COUNT=4` (→ 12 simulators from
 `ci-simulators.json`), and `IOS_APP_PATH_PREFIX` pointing at an extracted `Session.app`.
-Locally, simulators come from `.env` (`IOS_N_SIMULATOR`) instead of `ci-simulators.json`,
-and device allocation is simpler (no per-worker device-pool offsetting). Keep this split in
-mind when editing `capabilities_ios.ts` / `open_app.ts`.
+Locally, simulators come from `.env` (`IOS_N_SIMULATOR`) instead of `ci-simulators.json`.
+
+Device allocation is the **same code path** locally and on CI: `openiOSApp` (in
+`open_app.ts`) always offsets each worker's device pool by its parallel index
+(`DEVICES_PER_TEST_COUNT * TEST_PARALLEL_INDEX`) and rotates within that pool on retry. At a
+single worker (the local default) this simply collapses to devices `0..N-1`; with more
+workers it fans out (worker 0: devices 0–3, worker 1: 4–7, …), so N workers need
+`N * DEVICES_PER_TEST_COUNT` simulators. To run multi-worker locally, use
+`pnpm test-ios-parallel` (`scripts/run_ios_parallel.ts`), which provisions exactly that many
+throwaway simulators and wires their UDIDs into the run. Keep this in mind when editing
+`capabilities_ios.ts` / `open_app.ts`.
 
 ## Gotchas
 

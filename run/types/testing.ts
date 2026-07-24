@@ -1,5 +1,7 @@
 import { USERNAME as usernameFromSeeder, UserNameType } from '@session-foundation/qa-seeder';
 
+import type { DisappearActions } from '../shared/constants';
+
 import { DeviceWrapper } from './DeviceWrapper';
 
 export type User = {
@@ -54,7 +56,7 @@ export type Strategy = '-android uiautomator' | 'accessibility id' | 'class name
 export type ConversationType = '1:1' | 'Community' | 'Group' | 'Note to Self';
 
 export type DisappearModes = 'read' | 'send';
-export type DisappearActions = 'read' | 'sent';
+export type { DisappearActions };
 
 export enum DISAPPEARING_TIMES {
   FIVE_SECONDS = '5 seconds',

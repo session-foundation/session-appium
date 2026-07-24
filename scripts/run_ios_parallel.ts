@@ -1,8 +1,11 @@
 import { spawn } from 'child_process';
 import dotenv from 'dotenv';
 
-import type { Simulator } from '../run/test/utils/capabilities_ios';
-
+import {
+  ALLOWED_IOS_NETWORKS,
+  type IosServiceNetwork,
+  type Simulator,
+} from '../run/test/utils/capabilities_ios';
 import { createIOSSimulators, resolveDeviceConfig } from './create_ios_simulators';
 import { deleteSimulators } from './ios_shared';
 
@@ -125,6 +128,12 @@ function validate(args: ParsedArgs): number {
     console.error('IOS_APP_PATH_PREFIX is not set — point it at a simulator Session.app first.');
     process.exit(1);
   }
+  // Validate --network before provisioning: an unknown value (e.g. a "devent" typo) would
+  // otherwise create the whole simulator pool and spawn Playwright before failing downstream.
+  if (args.network && !ALLOWED_IOS_NETWORKS.includes(args.network as IosServiceNetwork)) {
+    console.error(`Invalid --network "${args.network}". Use ${ALLOWED_IOS_NETWORKS.join(' | ')}.`);
+    process.exit(1);
+  }
   if (isNaN(args.workers) || args.workers < 1) {
     console.error(`Invalid --workers value: ${args.workers}`);
     process.exit(1);
@@ -173,7 +182,7 @@ function main(): void {
     childEnv[`IOS_${i + 1}_SIMULATOR`] = sim.udid;
   });
   childEnv.PLATFORM = 'ios';
-  childEnv.PLAYWRIGHT_WORKERS_COUNT = String(args.workers);
+  childEnv.PLAYWRIGHT_WORKERS_COUNT_IOS = String(args.workers);
   childEnv.DEVICES_PER_TEST_COUNT = String(args.devicesPerTest);
   childEnv._TESTING = childEnv._TESTING ?? '1';
   // Service network selection (mainnet default). Devnet also needs DEVNET_* vars in .env — see

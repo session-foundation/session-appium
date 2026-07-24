@@ -9,7 +9,6 @@ import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { getAdbFullPath } from './binaries';
 import { iOSBundleId } from './capabilities_ios';
 import { deviceRegistry, LogContext, registryKey } from './device_registry';
-import { SupportedPlatformsType } from './open_app';
 import { runScriptAndLog } from './utilities';
 
 // --- Screenshots ---
@@ -194,12 +193,8 @@ export async function captureScreenshotsOnFailure(testInfo: TestInfo): Promise<v
 
 // --- Logs ---
 
-async function collectLogBuffer(
-  platform: SupportedPlatformsType,
-  device: DeviceWrapper,
-  logCtx: LogContext
-): Promise<Buffer | null> {
-  if (platform === 'android') {
+async function collectLogBuffer(device: DeviceWrapper, logCtx: LogContext): Promise<Buffer | null> {
+  if (device.isAndroid()) {
     const startEpochSec = (logCtx.startMs / 1000).toFixed(3);
     const parts = [
       `${getAdbFullPath()} -s ${device.udid} logcat -d -T ${startEpochSec}`,
@@ -209,7 +204,7 @@ async function collectLogBuffer(
     return Buffer.from(output);
   }
 
-  if (platform === 'ios') {
+  if (device.isIOS()) {
     const containerPath = execSync(
       `xcrun simctl get_app_container ${device.udid} ${iOSBundleId} data`,
       { encoding: 'utf8' }
@@ -264,7 +259,7 @@ export async function captureLogsOnFailure(testInfo: TestInfo): Promise<void> {
       if (!logCtx) return;
 
       try {
-        const raw = await collectLogBuffer(context.platform, device, logCtx);
+        const raw = await collectLogBuffer(device, logCtx);
         if (!raw) return;
 
         const buffer = tailBuffer(raw);
