@@ -30,9 +30,17 @@ export const IOS_PRO_CONTEXT: IOSTestContext = { sessionProEnabled: 'true' };
 
 export type IosServiceNetwork = 'devnet' | 'mainnet' | 'testnet';
 
+// The devnet seed node is a single node that plays two roles with THREE different ports, because
+// the app and the qa-seeder talk to different services on it:
+//   - rpcPort  (oxend RPC, HTTP)   -> the SEEDER hits `http://ip:rpcPort/json_rpc` (get_service_nodes)
+//   - httpPort (storage HTTPS)     -> the APP's devnetHttpPort (Snode.httpsPort)
+//   - omqPort  (storage OMQ/QUIC)  -> the APP's devnetOmqPort  (Snode.omqPort, the QUIC connection)
+// On the Sesh-Net-Docker devnet these map to the `IP:RPC`, `Storage HTTPS` and `Storage OMQ`
+// columns of the seed node's row (e.g. 1280 / 1300 / 1305 for the `oxend@1280` node).
 export type IosDevnetConfig = {
   pubkey: string;
   ip: string;
+  rpcPort: string;
   httpPort: string;
   omqPort: string;
 };
@@ -48,42 +56,51 @@ export function getIosServiceNetwork(): IosServiceNetwork {
 }
 
 /**
- * Devnet connection details for the iOS app, read from the environment. Mirrors the validation the
- * app itself does, and throws (listing what's missing/invalid) so a misconfigured devnet run fails
- * fast here rather than the app silently falling back to testnet.
+ * Devnet connection details, read from the environment. Mirrors the validation the app itself does,
+ * and throws (listing what's missing/invalid) so a misconfigured devnet run fails fast here rather
+ * than the app silently falling back to testnet.
  */
 export function getIosDevnetConfig(): IosDevnetConfig {
   const pubkey = (process.env.DEVNET_PUBKEY ?? '').trim();
   const ip = (process.env.DEVNET_IP ?? '').trim();
+  const rpcPort = (process.env.DEVNET_RPC_PORT ?? '').trim();
   const httpPort = (process.env.DEVNET_HTTP_PORT ?? '').trim();
   const omqPort = (process.env.DEVNET_OMQ_PORT ?? '').trim();
 
+  const isPort = (p: string) => /^\d{1,5}$/.test(p) && Number(p) <= 65535;
+
   const errors: string[] = [];
   if (!/^[0-9a-fA-F]{64}$/.test(pubkey)) {
-    errors.push('DEVNET_PUBKEY must be a 64-character hex string');
+    errors.push('DEVNET_PUBKEY must be a 64-character hex string (seed node ed25519 pubkey)');
   }
   const octets = ip.split('.');
   if (octets.length !== 4 || !octets.every(o => /^\d{1,3}$/.test(o) && Number(o) <= 255)) {
     errors.push('DEVNET_IP must be an IPv4 address like 10.0.0.1');
   }
-  if (!/^\d{1,5}$/.test(httpPort) || Number(httpPort) > 65535) {
-    errors.push('DEVNET_HTTP_PORT must be a number between 0 and 65535');
+  if (!isPort(rpcPort)) {
+    errors.push('DEVNET_RPC_PORT must be a number 0-65535 (seed oxend RPC, for the seeder)');
   }
-  if (!/^\d{1,5}$/.test(omqPort) || Number(omqPort) > 65535) {
-    errors.push('DEVNET_OMQ_PORT must be a number between 0 and 65535');
+  if (!isPort(httpPort)) {
+    errors.push('DEVNET_HTTP_PORT must be a number 0-65535 (seed storage HTTPS, for the app)');
+  }
+  if (!isPort(omqPort)) {
+    errors.push('DEVNET_OMQ_PORT must be a number 0-65535 (seed storage OMQ/QUIC, for the app)');
   }
   if (errors.length > 0) {
     throw new Error(
       `NETWORK_TARGET=devnet requires valid devnet env vars:\n  - ${errors.join('\n  - ')}`
     );
   }
-  return { pubkey, ip, httpPort, omqPort };
+  return { pubkey, ip, rpcPort, httpPort, omqPort };
 }
 
-/** Seed-node URL the seeder should use for devnet (same devnet the app connects to). */
+/**
+ * Seed URL the SEEDER (qa-seeder) uses for devnet — the seed node's oxend RPC (`/json_rpc`
+ * get_service_nodes), which is a different port from the storage ports the app connects to.
+ */
 export function getIosDevnetSeedUrl(): `http://${string}` {
-  const { ip, httpPort } = getIosDevnetConfig();
-  return `http://${ip}:${httpPort}`;
+  const { ip, rpcPort } = getIosDevnetConfig();
+  return `http://${ip}:${rpcPort}`;
 }
 
 /** Extra processArguments.env keys that point the app at the selected service network. */
@@ -105,16 +122,40 @@ function buildServiceNetworkEnv(): Record<string, string> {
   };
 }
 
+/**
+ * Optional custom file server (e.g. a local Sesh-Net-Docker file server). When `FILE_SERVER_URL`
+ * is set, the app is pointed at it via `customFileServerUrl` (+ `customFileServerPubkey`), which
+ * speeds up media tests. `FILE_SERVER_PUBKEY` is the file server's **X25519** pubkey: LibSession-Util
+ * consumes it directly as `x25519_pubkey::from_hex(...)` (its built-in default `da21…` is an X25519
+ * key) — it does NOT convert from ed25519, and the app passes this value to libsession raw. If
+ * omitted the app falls back to its default file server pubkey. Independent of the network target —
+ * but only really useful alongside a devnet.
+ */
+function buildCustomFileServerEnv(): Record<string, string> {
+  const url = (process.env.FILE_SERVER_URL ?? '').trim();
+  if (!url) {
+    return {};
+  }
+  const pubkey = (process.env.FILE_SERVER_PUBKEY ?? '').trim();
+  if (pubkey && !/^[0-9a-fA-F]{64}$/.test(pubkey)) {
+    throw new Error('FILE_SERVER_PUBKEY must be a 64-character hex string (X25519 pubkey)');
+  }
+  return {
+    customFileServerUrl: url,
+    ...(pubkey ? { customFileServerPubkey: pubkey } : {}),
+  };
+}
+
 // Resolved lazily and memoised on first iOS capability build (NOT at module load): this file is
 // also imported on Android runs, where NETWORK_TARGET may be `devnet` — we must not try to read
-// (and throw on) the iOS-only DEVNET_* vars there. getIosCapabilities is iOS-only, so validation
-// happens exactly when/where it's relevant.
-let serviceNetworkEnvCache: Record<string, string> | undefined;
-function getServiceNetworkEnv(): Record<string, string> {
-  if (serviceNetworkEnvCache === undefined) {
-    serviceNetworkEnvCache = buildServiceNetworkEnv();
+// (and throw on) the iOS-only DEVNET_*/FILE_SERVER_* vars there. getIosCapabilities is iOS-only, so
+// validation happens exactly when/where it's relevant.
+let appEnvOverridesCache: Record<string, string> | undefined;
+function getAppEnvOverrides(): Record<string, string> {
+  if (appEnvOverridesCache === undefined) {
+    appEnvOverridesCache = { ...buildServiceNetworkEnv(), ...buildCustomFileServerEnv() };
   }
-  return serviceNetworkEnvCache;
+  return appEnvOverridesCache;
 }
 
 const iosPathPrefix = process.env.IOS_APP_PATH_PREFIX;
@@ -261,9 +302,9 @@ export function getIosCapabilities(
   }
 
   // Rebuild the processArguments block with merged env vars.
-  // The service-network env (mainnet/testnet/devnet selection) is layered under per-test customEnv.
+  // App env overrides (network selection + optional custom file server) sit under per-test customEnv.
   caps['appium:processArguments'] = {
-    env: { ...baseEnv, ...getServiceNetworkEnv(), ...customEnv },
+    env: { ...baseEnv, ...getAppEnvOverrides(), ...customEnv },
   };
 
   return {

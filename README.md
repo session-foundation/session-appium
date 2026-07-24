@@ -74,6 +74,10 @@ Prerequisites: Xcode installed and the appropriate simulator runtime available -
    IOS_APP_PATH_PREFIX=/path/to/Session.app
    ```
 
+> **Faster runs against a local devnet:** the slowest multi-device tests are bound by mainnet
+> network latency. To run the iOS suite against a local devnet instead, see
+> [docs/local-devnet.md](docs/local-devnet.md).
+
 ### Environment Configuration
 
 ```bash
