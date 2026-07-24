@@ -1,8 +1,11 @@
 import { spawn } from 'child_process';
 import dotenv from 'dotenv';
 
-import type { Simulator } from '../run/test/utils/capabilities_ios';
-
+import {
+  ALLOWED_IOS_NETWORKS,
+  type IosServiceNetwork,
+  type Simulator,
+} from '../run/test/utils/capabilities_ios';
 import { createIOSSimulators, resolveDeviceConfig } from './create_ios_simulators';
 import { deleteSimulators } from './ios_shared';
 
@@ -123,6 +126,12 @@ function parseArgs(argv: string[]): ParsedArgs {
 function validate(args: ParsedArgs): number {
   if (!process.env.IOS_APP_PATH_PREFIX) {
     console.error('IOS_APP_PATH_PREFIX is not set — point it at a simulator Session.app first.');
+    process.exit(1);
+  }
+  // Validate --network before provisioning: an unknown value (e.g. a "devent" typo) would
+  // otherwise create the whole simulator pool and spawn Playwright before failing downstream.
+  if (args.network && !ALLOWED_IOS_NETWORKS.includes(args.network as IosServiceNetwork)) {
+    console.error(`Invalid --network "${args.network}". Use ${ALLOWED_IOS_NETWORKS.join(' | ')}.`);
     process.exit(1);
   }
   if (isNaN(args.workers) || args.workers < 1) {
