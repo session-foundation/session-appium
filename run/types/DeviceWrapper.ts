@@ -2836,6 +2836,16 @@ export class DeviceWrapper implements IMobileWrapper {
 
   /** Open the conversation whose left-pane name matches `convoName`. */
   public async openConversationWith(convoName: string): Promise<void> {
+    // If a conversation is already open (e.g. this client just sent a message), the
+    // conversation-list item isn't on screen — step back to the list first. The message
+    // input box only exists inside a conversation, so it's our "am I in a thread?" signal.
+    const insideConversation = await this.doesElementExist({
+      ...new MessageInput(this).build(),
+      maxWait: 2_000,
+    });
+    if (insideConversation) {
+      await this.navigateBack();
+    }
     await this.clickOnElementAll(new ConversationItem(this, convoName));
   }
 

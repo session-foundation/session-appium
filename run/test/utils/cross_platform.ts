@@ -1,3 +1,5 @@
+import type { PrebuiltStateKey, StateGroup, UserNameType } from '@session-foundation/qa-seeder';
+
 import { type Page, test, type TestInfo } from '@playwright/test';
 
 import type { AllureSuiteConfig } from '../../types/allure';
@@ -6,57 +8,84 @@ import type { IBaseDeviceWrapper } from '../../types/IBaseDeviceWrapper';
 
 import { forceCloseAllWindows } from '../../desktop/closeWindows';
 import { DesktopWrapper } from '../../desktop/DesktopWrapper';
-import { openApps, resetTrackedElectronPids, waitFirstWindow } from '../../desktop/open';
-import { type TestRisk, type User, USERNAME } from '../../types/testing';
-import { IOS_PRO_CONTEXT } from './capabilities_ios';
-import { newUser } from './create_account';
+import { resetTrackedElectronPids } from '../../desktop/open';
+import { type TestRisk, type User } from '../../types/testing';
 import { openAppsWithStateCrossPlatform } from './cross_platform_state';
+import { focusConvoCrossPlatform } from './cross_platform_state_builder';
 import { unregisterDevicesForTest } from './device_registry';
 import { getNetworkTarget } from './devnet';
 import { captureLogsOnFailure, captureScreenshotsOnFailure } from './failure_artifacts';
-import { closeApp, openAppMultipleDevices } from './open_app';
+import { closeApp } from './open_app';
 
-/** How many clients of each platform to open, all linked to ONE account ("alice"). */
+/** How many clients of each platform a single account should have. */
 export type CrossPlatformSetup = {
   android?: number;
   ios?: number;
   desktop?: number;
 };
 
-/** The clients of a single account (used for the optional second account, "bob"). */
+/** One account together with the clients (across platforms) linked to it. */
 export type AccountClients = {
   account: User;
-  android: DeviceWrapper[];
-  ios: DeviceWrapper[];
-  desktop: DesktopWrapper[];
-};
-
-export type CrossPlatformClients = {
-  /** The (first) account all top-level clients are linked to ("alice"). */
-  account: User;
-  /** Every client of "alice", ordered android → ios → desktop. */
+  /** Every client of this account, ordered android → ios → desktop. */
   clients: IBaseDeviceWrapper[];
   android: DeviceWrapper[];
   ios: DeviceWrapper[];
   desktop: DesktopWrapper[];
-  /**
-   * A second, distinct account and its clients, present only when `bob` is requested.
-   * When set, "alice" and "bob" are seeded as mutual friends via the qa-seeder.
-   */
-  bob?: AccountClients;
 };
 
-type CrossPlatformTestArgs = {
+/**
+ * Account-handle key: the seeder's usernames (`UserNameType`) lowercased — `'Alice'` →
+ * `'alice'`. These are the keys the setup factories use and that the test callback's
+ * `accounts` map is keyed by. Concrete values live in `ACCOUNT` (cross_platform_state_builder).
+ */
+export type AccountName = Lowercase<UserNameType>;
+
+/** One account's requested clients, tagged with the seed username it maps to. */
+export type NamedAccountSpec = {
+  name: AccountName;
+  platforms: CrossPlatformSetup;
+};
+
+/**
+ * A cross-platform state "setup": WHICH qa-seeder state to build and, per account, how
+ * many clients of each platform to link to it. Produced by the factory helpers in
+ * `cross_platform_state_builder.ts` (`friends`, `strangers`, `friendsInGroup`,
+ * `linkedDevices`) so specs declare the setup TYPE declaratively instead of hand-picking a
+ * state key. Every account is seeded (no UI onboarding) and every client is restored from
+ * its account's seed.
+ *
+ * `Names` is the union of account names this setup exposes (e.g. `'alice' | 'bob'`), used
+ * to type the callback's name-keyed `accounts` map.
+ */
+export type CrossPlatformStateSetup<Names extends AccountName = AccountName> = {
+  stateKey: PrebuiltStateKey;
+  groupName: string | undefined;
+  /** Per account, index-aligned with the seeder's users (Alice, Bob, Charlie…). */
+  accounts: NamedAccountSpec[];
+  /** Account names in seed order — carries `Names` for callback typing. */
+  names: readonly Names[];
+  /** For group setups: open the group conversation on every client before the test. */
+  focusGroup: boolean;
+};
+
+export type CrossPlatformClients<Names extends AccountName = AccountName> = {
+  /** Built clients keyed by account name (as declared by the setup factory). */
+  accounts: Record<Names, AccountClients>;
+  /** The seeded group, present only for group setups. */
+  group?: StateGroup;
+};
+
+type CrossPlatformTestArgs<Names extends AccountName> = {
   title: string;
   risk: TestRisk;
-  setup: CrossPlatformSetup;
   /**
-   * Optional second account ("bob") with its own clients. When set, both accounts are
-   * created as mutual friends via the qa-seeder (instead of minting a single account),
-   * so a peer-visibility conversation exists on every client from the start.
+   * The state to build, produced by a factory in `cross_platform_state_builder.ts`
+   * (e.g. `friends({ alice: { android: 1 }, bob: { desktop: 1 } })`). Drives seeding,
+   * how many clients open per account/platform, and (for groups) whether to focus.
    */
-  bob?: CrossPlatformSetup;
-  testCb: (clients: CrossPlatformClients, testInfo: TestInfo) => Promise<void>;
+  setup: CrossPlatformStateSetup<Names>;
+  testCb: (clients: CrossPlatformClients<Names>, testInfo: TestInfo) => Promise<void>;
   shouldSkip?: boolean;
   isPro?: boolean;
   allureSuites?: AllureSuiteConfig;
@@ -65,9 +94,14 @@ type CrossPlatformTestArgs = {
 
 /**
  * Test template spanning MULTIPLE platforms in one run: opens the requested
- * Android/iOS (Appium) and Desktop (Electron) clients, mints one account on the
- * first mobile client, links every other client to it, and hands the built
- * clients to the callback.
+ * Android/iOS (Appium) and Desktop (Electron) clients for one OR several accounts,
+ * seeds every account (and their relationship/group) via the qa-seeder, links every
+ * client to its account, and hands the built clients — keyed by account name — to the
+ * callback.
+ *
+ * Account creation is ALWAYS seeder-based — for a single account too. No client is ever
+ * onboarded through the UI; every client (mobile and desktop) is restored from its
+ * account's recovery phrase.
  *
  * Lifecycle ownership (why this is a template and not per-wrapper cleanup):
  * - Desktop: `resetTrackedElectronPids()` on start and `forceCloseAllWindows()` on
@@ -80,18 +114,16 @@ type CrossPlatformTestArgs = {
  * Tagged `@cross-platform` (NOT `@android`/`@ios`) so it stays out of the
  * single-platform CI shards. Run with `--grep '@cross-platform'`.
  */
-export function crossPlatformTest({
+export function crossPlatformTest<Names extends AccountName>({
   title,
   risk,
   setup,
-  bob,
   testCb,
   shouldSkip = false,
   isPro = false,
-}: CrossPlatformTestArgs) {
-  const androidCount = setup.android ?? 0;
-  const iosCount = setup.ios ?? 0;
-  const desktopCount = setup.desktop ?? 0;
+}: CrossPlatformTestArgs<Names>) {
+  const totalAndroid = setup.accounts.reduce((sum, a) => sum + (a.platforms.android ?? 0), 0);
+  const totalIos = setup.accounts.reduce((sum, a) => sum + (a.platforms.ios ?? 0), 0);
 
   const proTag = isPro ? ' @pro' : '';
   const testName = `${title} @cross-platform @${risk ?? 'default'}-risk${proTag}`;
@@ -105,10 +137,10 @@ export function crossPlatformTest({
 
   // eslint-disable-next-line no-empty-pattern
   test(testName, async ({}, testInfo) => {
-    if (androidCount > 0) {
+    if (totalAndroid > 0) {
       await getNetworkTarget('android');
     }
-    if (iosCount > 0) {
+    if (totalIos > 0) {
       await getNetworkTarget('ios');
     }
     console.info(`\n\n==========> Running "${testName}"\n\n`);
@@ -117,7 +149,7 @@ export function crossPlatformTest({
     // await setupAllureTestInfo({
     //   suites: allureSuites,
     //   description: allureDescription,
-    //   platform: androidCount > 0 ? 'android' : 'ios',
+    //   platform: totalAndroid > 0 ? 'android' : 'ios',
     // });
 
     // Enable Session Pro (dev backend) before launching desktop windows.
@@ -135,85 +167,49 @@ export function crossPlatformTest({
     let testFailed = false;
 
     try {
-      let clientsArg: CrossPlatformClients;
+      // Every account — single or multiple — is seeded via the qa-seeder and every client is
+      // linked (restore-from-seed only; no UI account creation).
+      const state = await openAppsWithStateCrossPlatform({
+        stateToBuildKey: setup.stateKey,
+        groupName: setup.groupName,
+        perUser: setup.accounts.map(a => ({
+          android: a.platforms.android ?? 0,
+          ios: a.platforms.ios ?? 0,
+          desktop: a.platforms.desktop ?? 0,
+        })),
+        testInfo,
+        isPro,
+      });
 
-      if (bob) {
-        // Two-account path: seed alice + bob as mutual friends via the qa-seeder and open
-        // every client (across platforms) restored from the right seed.
-        const state = await openAppsWithStateCrossPlatform({
-          stateToBuildKey: '2friends',
-          groupName: undefined,
-          perUser: [
-            { android: androidCount, ios: iosCount, desktop: desktopCount },
-            { android: bob.android ?? 0, ios: bob.ios ?? 0, desktop: bob.desktop ?? 0 },
-          ],
-          testInfo,
-          isPro,
-        });
-        const [aliceClients, bobClients] = state.users;
-
-        // Feed the shared teardown arrays so the finally block cleans up every client.
-        androidDevices.push(...aliceClients.android, ...bobClients.android);
-        iosDevices.push(...aliceClients.ios, ...bobClients.ios);
-        desktopClients.push(...aliceClients.desktop, ...bobClients.desktop);
-        desktopWindows.push(...state.desktopWindows);
-
-        clientsArg = {
-          account: aliceClients.account,
-          clients: aliceClients.all,
-          android: aliceClients.android,
-          ios: aliceClients.ios,
-          desktop: aliceClients.desktop,
-          bob: {
-            account: bobClients.account,
-            android: bobClients.android,
-            ios: bobClients.ios,
-            desktop: bobClients.desktop,
-          },
-        };
-      } else {
-        if (androidCount > 0) {
-          androidDevices.push(...(await openAppMultipleDevices('android', androidCount, testInfo)));
-        }
-        if (iosCount > 0) {
-          iosDevices.push(
-            ...(await openAppMultipleDevices(
-              'ios',
-              iosCount,
-              testInfo,
-              isPro ? IOS_PRO_CONTEXT : undefined
-            ))
-          );
-        }
-        if (desktopCount > 0) {
-          const apps = await openApps(desktopCount);
-          for (let i = 0; i < apps.length; i++) {
-            const page = await waitFirstWindow(apps[i]);
-            desktopWindows.push(page);
-            desktopClients.push(new DesktopWrapper(page, `alice-desktop${i + 1}`));
-          }
-        }
-
-        const allMobile = [...androidDevices, ...iosDevices];
-        if (allMobile.length === 0) {
-          throw new Error(
-            'crossPlatformTest needs at least one mobile client to create the account (desktop can only restore an existing account).'
-          );
-        }
-
-        // Mint the account on the first mobile client, then link everyone else to it.
-        const account = await newUser(allMobile[0], USERNAME.ALICE);
-        const toLink: IBaseDeviceWrapper[] = [...allMobile.slice(1), ...desktopClients];
-        await Promise.all(toLink.map(client => client.restoreFromSeed(account.recoveryPhrase)));
-
-        clientsArg = {
-          account,
-          clients: [...androidDevices, ...iosDevices, ...desktopClients],
-          android: androidDevices,
-          ios: iosDevices,
-          desktop: desktopClients,
-        };
+      // Feed the shared teardown arrays so the finally block cleans up every client.
+      for (const user of state.users) {
+        androidDevices.push(...user.android);
+        iosDevices.push(...user.ios);
+        desktopClients.push(...user.desktop);
       }
+      desktopWindows.push(...state.desktopWindows);
+
+      const group = 'group' in state.prebuilt ? state.prebuilt.group : undefined;
+
+      // Key the built clients by the account names the setup declared (seed order).
+      const accountsByName = {} as Record<Names, AccountClients>;
+      state.users.forEach((user, i) => {
+        const name = setup.names[i];
+        accountsByName[name] = {
+          account: user.account,
+          clients: user.all,
+          android: user.android,
+          ios: user.ios,
+          desktop: user.desktop,
+        };
+      });
+
+      // Group setups: open the group conversation on every client before the test runs.
+      if (setup.focusGroup && group) {
+        await focusConvoCrossPlatform(state.allClients, group.groupName);
+      }
+
+      const clientsArg: CrossPlatformClients<Names> = { accounts: accountsByName, group };
 
       await testCb(clientsArg, testInfo);
 

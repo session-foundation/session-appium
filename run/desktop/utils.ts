@@ -239,6 +239,8 @@ export async function doWhileWithMax(
   const start = Date.now();
   let iteration = 0;
   let wasSuccess = false;
+  let lastError: string | undefined;
+  let loggedError: string | undefined;
   do {
     try {
       wasSuccess = await actionTodo();
@@ -249,17 +251,26 @@ export async function doWhileWithMax(
       if (message.includes('has been closed') || message.includes('Target closed')) {
         throw new Error(`doWhileWithMax with label:"${label}" aborted (window closed): ${message}`);
       }
-      console.error(
-        `doWhileWithMax with label:"${label}" iteration:${iteration} failed with: ${message}`,
-        e
-      );
+      lastError = message;
+      // This is a poll: a per-iteration miss is expected, so log only the first line
+      // (Playwright appends a multi-line "Call log:") and only when it changes — otherwise
+      // an N-second wait floods the output with the same error once per iteration.
+      const firstLine = message.split('\n')[0];
+      if (firstLine !== loggedError) {
+        console.error(`doWhileWithMax "${label}" not ready (iteration ${iteration}): ${firstLine}`);
+        loggedError = firstLine;
+      }
     }
     iteration++;
     await sleepFor(waitBetweenMs);
   } while (!wasSuccess && Date.now() - start < maxWaitMs);
 
   if (!wasSuccess) {
-    throw new Error(`doWhileWithMax with label:"${label}" still failing after ${maxWaitMs}ms`);
+    throw new Error(
+      `doWhileWithMax with label:"${label}" still failing after ${maxWaitMs}ms${
+        lastError ? `: ${lastError.split('\n')[0]}` : ''
+      }`
+    );
   }
 }
 
