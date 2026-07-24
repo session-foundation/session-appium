@@ -101,7 +101,7 @@ jobs:
       # repo-level Actions *variables* (the pubkey is public; the IP/ports are internal), e.g.
       # Settings > Secrets and variables > Actions. The seed node exposes three ports the tests use:
       # DEVNET_RPC_PORT (oxend RPC — the seeder), DEVNET_HTTP_PORT (storage HTTPS — the app) and
-      # DEVNET_OMQ_PORT (storage OMQ/QUIC — the app). See docs/local-devnet-ios.md.
+      # DEVNET_OMQ_PORT (storage OMQ/QUIC — the app). See docs/local-devnet.md.
       NETWORK_TARGET: ${{ github.event.inputs.NETWORK_TARGET }}
       DEVNET_PUBKEY: ${{ vars.DEVNET_PUBKEY }}
       DEVNET_IP: ${{ vars.DEVNET_IP }}

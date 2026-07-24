@@ -70,7 +70,7 @@ Only a subset matters per platform (all read in `run/test/utils/binaries.ts` /
   `getIosDevnetSeedUrl`). Running on devnet avoids full mainnet onion-routing latency, which
   dominates the slowest multi-device tests. Android reaches devnet differently — it switches build
   variant (`IS_AUTOMATIC_QA` / an AQA build) rather than reading `NETWORK_TARGET` in the harness.
-  Local devnet setup (incl. OrbStack on the same Mac as the simulators): `docs/local-devnet-ios.md`.
+  Local devnet setup (incl. OrbStack on the same Mac as the simulators): `docs/local-devnet.md`.
 
 ### iOS simulators
 

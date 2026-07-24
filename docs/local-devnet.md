@@ -9,6 +9,12 @@ This guide covers running that devnet **on the same Mac as the simulators** usin
 [OrbStack](https://orbstack.dev/). The harness support is already in place
 (`NETWORK_TARGET=devnet` + `DEVNET_*`, see [Environment](#environment)); the work is operational.
 
+> **Scope.** Most of this guide — the devnet itself, `LISTEN_IP`, OrbStack, the local file server
+> and SOGS — is **platform-agnostic**; only the harness wiring (`NETWORK_TARGET`/`DEVNET_*` →
+> `capabilities_ios.ts`) and the `pnpm test-ios*` run commands are iOS-specific. Android reaches a
+> devnet **differently** (it switches to an AQA build variant rather than reading `NETWORK_TARGET`
+> in the harness — see `CLAUDE.md`), so the run steps here don't apply to Android as written.
+
 > If you only need CI, you don't need any of this locally — CI reaches a Linux-hosted devnet over
 > the network via repo Actions variables. See [CI](#ci).
 
@@ -56,7 +62,10 @@ Pick whichever fits; both leave CI untouched (CI just uses a different value —
 - **Tailscale IP (best local/CI parity).** Give the devnet its own tailnet identity (run
   `tailscaled` in the container: `network_mode: host` + `cap_add: [NET_ADMIN]` + `/dev/net/tun`,
   which OrbStack supports) and use its `100.x` address. Then local and CI are identical, and it's
-  reachable from other machines too — at the cost of more moving parts.
+  reachable from other machines **on the same tailnet** too — at the cost of more moving parts.
+  (Tailscale _node sharing_ won't work: the sharee sees a different IP for the machine than your
+  `LISTEN_IP`, so the advertised registry IP won't match for them. Same-tailnet membership is what
+  keeps the address identical for everyone.)
 
 ## 2. Start the devnet
 
@@ -229,8 +238,12 @@ difference is the IP value, which is already env-driven.
 - **One devnet per host** — `network_mode: host` means only one can run at a time on a machine.
 - **Self-signed HTTPS storage** (the readiness probe uses `curl --insecure`). Fine for Session's
   x25519-keyed snode connections; worth a one-time confirmation the iOS client accepts it on devnet.
-- **File server is optional** — see [4b](#4b-optional-local-file-server). Set `FILE_SERVER_URL`
-  (+ `FILE_SERVER_PUBKEY`) to route media through the local file server; leave unset to use the
-  production one.
+- **The file server and the community/SOGS are both optional** — see
+  [4b](#4b-optional-local-file-server) and [4c](#4c-optional-local-community--sogs). They come up
+  with the devnet either way; you only route the app at them by setting `FILE_SERVER_URL`
+  (+ `FILE_SERVER_PUBKEY`) / `COMMUNITY_LINK` (+ `COMMUNITY_NAME`/`COMMUNITY_ROOM`). Leave those
+  unset to use the production file server / remote community.
 - **Ignore `docker-compose.yml.wip`** at the Sesh-Net-Docker root — it's a separate, half-finished
-  Postgres+fileserver stack. Use the `sesh-net/` compose (this guide) and the `file-server/` flow.
+  Postgres+fileserver stack. Use the **parent `docker-compose.yml`** at the repo root (step 2),
+  which `include`s the `sesh-net/`, `file-server/` and `sogs/` composes; run an individual one from
+  its own subdirectory if you want just that piece.
