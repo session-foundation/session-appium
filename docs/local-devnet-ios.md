@@ -154,6 +154,47 @@ Notes:
   field as ed25519, which conflicts with libsession consuming it as x25519 — a Session_iOS
   inconsistency worth raising if the two paths ever both matter.
 
+## 4c. (Optional) local community / SOGS
+
+The community specs (`Join community test` and ~10 others) join a Session community and wait for a
+message to be present. By default they use the remote `test-chat.session.codes`. The Sesh-Net-Docker
+stack also ships a local **SOGS** (`sogs` container, published on `:8080`, self-contained
+sqlite + uwsgi) so that traffic stays on the devnet. Like the file server it comes up with the
+parent compose (step 2), with a **deterministic key** so its pubkey / community link is stable, and
+on first boot it creates the `local-devnet-community` room (plus `local-devnet-community-2..6` for
+the multi-community tests) and **seeds each with one message** (a fresh room is empty, and the join
+check waits for any message).
+
+Grab the room link from the container logs (the pubkey is fixed by the baked key):
+
+```bash
+docker compose logs sogs | grep -A1 'server pubkey'
+#   SOGS X25519 server pubkey : aa7c…a613
+#   Community link (web view) : http://localhost:8080/local-devnet-community?public_key=aa7c…a613
+```
+
+Then add to `.env` — use the **devnet host** (reachable from the snodes), the fixed room and pubkey:
+
+```bash
+COMMUNITY_LINK=http://<DEVNET_IP>:8080/local-devnet-community?public_key=aa7c2b3bcd6433e52d6616356fcdba68668e8b506d84a3c7a1a196d63235a613
+COMMUNITY_NAME=Local Devnet Community
+COMMUNITY_ROOM=local-devnet-community
+```
+
+Notes:
+
+- The app reaches the SOGS via an **onion request through the devnet snodes**, so `COMMUNITY_LINK`'s
+  host must be reachable **from the snodes** (the OrbStack VM) — `DEVNET_IP:8080` satisfies that (and
+  macOS too). The `public_key` in the link is the SOGS' X25519 server pubkey and is what pins the
+  community, independent of host.
+- Leave `COMMUNITY_LINK` unset to keep using the remote `test-chat.session.codes` community (the CI
+  default — CI is unchanged).
+- Setting `COMMUNITY_LINK` switches the **whole** community set to local-only rooms: the harness
+  derives the extra `local-devnet-community-2..6` rooms from your link's host + `public_key`
+  automatically, so the multi-community tests (`user_actions_pin_unpin`, `recovery_banner`) don't
+  reach out to any remote community. The room count is fixed at 6 (`LOCAL_COMMUNITY_COUNT` in
+  `run/constants/community.ts`, matching `ROOM_COUNT` in the SOGS `entrypoint.sh`).
+
 ## 5. Run
 
 ```bash
