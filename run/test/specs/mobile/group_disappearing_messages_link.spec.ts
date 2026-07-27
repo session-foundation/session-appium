@@ -1,0 +1,103 @@
+import { test, type TestInfo } from '@playwright/test';
+
+import { testLink } from '../../../constants';
+import { tStripped } from '../../../localizer/lib';
+import { TestSteps } from '../../../types/allure';
+import { bothPlatformsIt } from '../../../types/sessionIt';
+import { DISAPPEARING_TIMES } from '../../../types/testing';
+import { LinkPreviewMessage } from '../../locators';
+import {
+  MessageBody,
+  MessageInput,
+  OutgoingMessageStatusSent,
+  SendButton,
+} from '../../locators/conversation';
+import { EnableLinkPreviewsModalButton } from '../../locators/global';
+import { open_Alice1_Bob1_Charlie1_friends_group } from '../../state_builder';
+import { sleepFor } from '../../utils';
+import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
+import { setDisappearingMessage } from '../../utils/set_disappearing_messages';
+
+bothPlatformsIt({
+  title: 'Disappearing link to group',
+  risk: 'low',
+  testCb: disappearingLinkMessageGroup,
+  countOfDevicesNeeded: 3,
+  allureSuites: {
+    parent: 'Disappearing Messages',
+    suite: 'Message Types',
+  },
+  allureDescription: 'Verifies that a link preview disappears as expected in a group conversation',
+});
+const timerType = 'Disappear after send option';
+const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+const maxWait = 35_000; // 30s plus buffer
+
+async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  let sentTimestamp: number;
+  const testGroupName = 'Testing disappearing messages';
+  const {
+    devices: { alice1, bob1, charlie1 },
+  } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
+    return await open_Alice1_Bob1_Charlie1_friends_group({
+      platform,
+      groupName: testGroupName,
+      focusGroupConvo: true,
+      testInfo,
+    });
+  });
+  await test.step(TestSteps.DISAPPEARING_MESSAGES.SET(time), async () => {
+    await setDisappearingMessage(alice1, ['Group', timerType, time]);
+  });
+  await test.step(TestSteps.SEND.LINK, async () => {
+    await alice1.inputText(testLink, new MessageInput(alice1));
+    // Enable link preview modal appears as soon as link is typed on android but on iOS it appears after
+    await test.step(TestSteps.VERIFY.GENERIC_MODAL, async () => {
+      await alice1.checkModalStrings(
+        tStripped('linkPreviewsEnable'),
+        tStripped('linkPreviewsFirstDescription')
+      );
+    });
+    // Accept link preview modal
+    await alice1.clickOnElementAll(new EnableLinkPreviewsModalButton(alice1));
+    // On iOS, Appium types so the link preview modal interrupts typing the link, must be deleted and typed again
+    await alice1.onIOS().deleteText(new MessageInput(alice1));
+    await alice1.onIOS().inputText(testLink, new MessageInput(alice1));
+    // Let preview load
+    await sleepFor(5000);
+    await alice1.clickOnElementAll(new SendButton(alice1));
+    await alice1.waitForTextElementToBePresent({
+      ...new OutgoingMessageStatusSent(alice1).build(),
+      maxWait: 20000,
+    });
+    sentTimestamp = Date.now();
+  });
+  // Wait for 30 seconds to disappear
+  await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
+    if (platform === 'ios') {
+      await Promise.all(
+        [alice1, bob1, charlie1].map(device =>
+          device.hasElementDisappeared({
+            ...new MessageBody(device, testLink).build(),
+            maxWait,
+            actualStartTime: sentTimestamp,
+          })
+        )
+      );
+    }
+    if (platform === 'android') {
+      await Promise.all(
+        [alice1, bob1, charlie1].map(device =>
+          device.hasElementDisappeared({
+            ...new LinkPreviewMessage(device).build(),
+            maxWait,
+            actualStartTime: sentTimestamp,
+          })
+        )
+      );
+    }
+  });
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(alice1, bob1, charlie1);
+  });
+}

@@ -1,7 +1,5 @@
 import type { TestInfo } from '@playwright/test';
 
-import type { SupportedPlatformsType } from './open_app';
-
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { getAdbFullPath } from './binaries';
 import { androidAppPackage } from './capabilities_android';
@@ -13,8 +11,10 @@ export type LogContext = {
 };
 
 export type DeviceContext = {
+  // Devices of ANY platform registered for this test. Log/screenshot capture derives
+  // the platform per device (device.isAndroid()/isIOS()), so one test can hold devices
+  // of different platforms.
   devices: DeviceWrapper[];
-  platform: SupportedPlatformsType;
   logCtxByUdid?: Map<string, LogContext>;
 };
 
@@ -25,37 +25,41 @@ export function registryKey(testInfo: TestInfo): string {
 }
 
 // Async because Android registration fetches per-device PID for scoped logcat on failure.
-export async function registerDevicesForTest(
-  testInfo: TestInfo,
-  devices: DeviceWrapper[],
-  platform: SupportedPlatformsType
-) {
+// Registering again for the same test MERGES the new devices into the existing entry, so a
+// single test can open devices of different platforms (e.g. an Android device + iOS device)
+// across multiple opener calls. The platform is derived per device rather than per call.
+export async function registerDevicesForTest(testInfo: TestInfo, devices: DeviceWrapper[]) {
   const key = registryKey(testInfo);
-  // Throw if registry already has an entry — indicates a previous test didn't unregister properly
-  if (deviceRegistry.has(key)) {
-    throw new Error(`Device registry already contains entry for test "${testInfo.title}"`);
-  }
-
   const startMs = Date.now();
-  const logCtxByUdid = new Map<string, LogContext>();
 
-  if (platform === 'android') {
-    await Promise.all(
-      devices.map(async device => {
+  // Resolve log contexts for the NEW devices into a local map first (this is the only
+  // awaited step — Android needs its PID for scoped logcat; iOS only needs a timestamp).
+  const newLogCtx = new Map<string, LogContext>();
+  await Promise.all(
+    devices.map(async device => {
+      if (device.isAndroid()) {
         const pidOutput = await runScriptAndLog(
           `${getAdbFullPath()} -s ${device.udid} shell pidof ${androidAppPackage}`
         );
         const pid = pidOutput.trim() || null;
-        logCtxByUdid.set(device.udid, { startMs, pid });
-      })
-    );
-  } else if (platform === 'ios') {
-    for (const device of devices) {
-      logCtxByUdid.set(device.udid, { startMs });
-    }
-  }
+        newLogCtx.set(device.udid, { startMs, pid });
+      } else {
+        newLogCtx.set(device.udid, { startMs });
+      }
+    })
+  );
 
-  deviceRegistry.set(key, { devices, platform, logCtxByUdid });
+  // Read-merge-write with NO await in between so concurrent registrations for the same
+  // test key (the merge behavior is designed for multi-opener calls) can't lose-update:
+  // each call reads the freshest entry here and appends its devices atomically.
+  const existing = deviceRegistry.get(key);
+  const logCtxByUdid = existing?.logCtxByUdid ?? new Map<string, LogContext>();
+  newLogCtx.forEach((ctx, udid) => logCtxByUdid.set(udid, ctx));
+
+  deviceRegistry.set(key, {
+    devices: existing ? [...existing.devices, ...devices] : devices,
+    logCtxByUdid,
+  });
 }
 
 export function unregisterDevicesForTest(testInfo: TestInfo) {

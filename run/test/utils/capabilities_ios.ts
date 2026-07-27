@@ -30,6 +30,14 @@ export const IOS_PRO_CONTEXT: IOSTestContext = { sessionProEnabled: 'true' };
 
 export type IosServiceNetwork = 'devnet' | 'mainnet' | 'testnet';
 
+// Accepted `--network` values (forwarded to the child as NETWORK_TARGET). Kept in sync with
+// `IosServiceNetwork` via `satisfies` so this list can't drift from what capabilities_ios accepts.
+export const ALLOWED_IOS_NETWORKS = [
+  'mainnet',
+  'testnet',
+  'devnet',
+] as const satisfies readonly IosServiceNetwork[];
+
 // The devnet seed node is a single node that plays two roles with THREE different ports, because
 // the app and the qa-seeder talk to different services on it:
 //   - rpcPort  (oxend RPC, HTTP)   -> the SEEDER hits `http://ip:rpcPort/json_rpc` (get_service_nodes)

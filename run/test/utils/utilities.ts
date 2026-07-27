@@ -5,11 +5,11 @@ import { pick } from 'lodash';
 import path from 'path';
 import * as util from 'util';
 
+import { sleepFor } from '../../shared/promise_utils';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { PlusButton } from '../locators/home';
 import { androidAppActivity, androidAppPackage } from './capabilities_android';
 import { iOSBundleId } from './capabilities_ios';
-import { sleepFor } from './sleep_for';
 
 const exec = util.promisify(execNotPromised);
 
@@ -78,12 +78,8 @@ export function getDiffDirectory() {
   return diffsDir;
 }
 
-export async function assertUrlIsReachable(url: string): Promise<void> {
-  const response = await fetch(url);
-  if (response.status !== 200) {
-    throw new Error(`Expected status 200 but got ${response.status} for URL: ${url}`);
-  }
-}
+// Shared cross-platform helper (mobile + desktop) lives in run/shared/url.ts.
+export { assertUrlIsReachable } from '../../shared/url';
 
 /**
  * Eliminate any potential mismatches by mocking the status bar to always be the same

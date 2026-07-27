@@ -17,9 +17,9 @@ export type CTAConfig = {
 
 export const ctaConfigs: Record<CTAType, CTAConfig> = {
   donate: {
-    heading: tStripped('donateSessionAppealTitle'),
-    body: tStripped('donateSessionAppealDescription'),
-    positiveButton: tStripped('donateSessionAppealReadMore'),
+    heading: tStripped('ongoingAppeal'),
+    body: tStripped('ongoingAppealDescription'),
+    positiveButton: tStripped('readMoreCapital'),
   },
   longerMessages: {
     heading: tStripped('upgradeTo'),

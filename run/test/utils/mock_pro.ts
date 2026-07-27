@@ -21,15 +21,20 @@ import { randomBytes } from 'crypto';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
+import type { SupportedPlatformsType } from './open_app';
+
 import { PRO_BACKEND_URL } from '../../constants';
 import { User } from '../../types/testing';
-import { SupportedPlatformsType } from './open_app';
 
-type PaymentProvider = 'apple' | 'google';
+export type PaymentProvider = 'apple' | 'google';
 
 type MakeAccountProParams = {
   user: User;
-  platform: SupportedPlatformsType;
+  // Provider is derived from the platform (ios -> apple, android -> google) unless
+  // an explicit `provider` is given. `provider` lets non-mobile callers (e.g. desktop)
+  // register a Pro payment without coupling to a mobile `SupportedPlatformsType`.
+  platform?: SupportedPlatformsType;
+  provider?: PaymentProvider;
   dryRun?: boolean; // If true, build and print the request but don't send it
 };
 
@@ -325,9 +330,9 @@ async function addProPayment(
 
 // Registers a test account as a Pro subscriber against the dev backend.
 export async function makeAccountPro(params: MakeAccountProParams): Promise<ProProof | null> {
-  const { user, platform, dryRun = false } = params;
+  const { user, platform, provider: providerParam, dryRun = false } = params;
   const mnemonic = user.recoveryPhrase;
-  const provider: PaymentProvider = platform === 'ios' ? 'apple' : 'google';
+  const provider: PaymentProvider = providerParam ?? (platform === 'ios' ? 'apple' : 'google');
   const seedHex = mnemonicToSeedHex(mnemonic);
   const masterKey = deriveProMasterKey(seedHex);
   const rotatingKey = generateRotatingKey();
