@@ -4,6 +4,7 @@
   "scripts": {
     "cleanup-simulators": "npx ts-node scripts/cleanup_ios_simulators.ts",
     "create-simulators": "pnpm cleanup-simulators && npx ts-node scripts/create_ios_simulators.ts",
+    "build-wda": "npx ts-node scripts/build_wda.ts",
     "recover-emulators": "npx ts-node scripts/emulator_health.ts",
     "setup-virtual-scene": "npx ts-node scripts/setup_virtual_scene.ts",
     "lint": "pnpm prettier . --write --cache && pnpm eslint . --cache ",

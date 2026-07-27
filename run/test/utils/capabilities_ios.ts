@@ -2,8 +2,10 @@ import type { Capabilities } from '@wdio/types';
 
 import { W3CXCUITestDriverCaps } from 'appium-xcuitest-driver/build/lib/driver';
 import dotenv from 'dotenv';
-import { existsSync, readFileSync } from 'fs';
+import { existsSync } from 'fs';
 
+import { WDA_DERIVED_DATA_PATH, WDA_PREBUILT_APP_PATH } from '../../../scripts/build_wda';
+import { resolveRunSimulators, type Simulator } from '../../../scripts/ios_shared';
 import { IntRange } from '../../types/RangeType';
 
 dotenv.config({ quiet: true });
@@ -177,7 +179,34 @@ if (!iosPathPrefix) {
 const iosAppFullPath = `${iosPathPrefix}`;
 console.log(`iOS app full path: ${iosAppFullPath}`);
 
+// Reuse a prebuilt WebDriverAgent runner instead of building/launching WDA via `xcodebuild` on
+// every session. Freshly-created simulators have no WDA installed, so without this the driver
+// rebuilds+launches WDA per session — the slowest, flakiest part of startup on a cold clone (it
+// intermittently dies before binding wdaLocalPort → `ECONNREFUSED 127.0.0.1:<port>`) and forces a
+// redundant reinstall of the app-under-test around the test runner. With a prebuilt runner the
+// driver installs it with `simctl` and launches it directly — no per-session xcodebuild.
+//
+// Build it once with `pnpm build-wda` (run_ios_parallel does this automatically). These caps only
+// activate when the prebuilt runner actually exists, so plain `pnpm test-ios` / CI runs that
+// haven't built it fall back to the driver's default build-per-session behaviour.
+// Typed loosely because the @wdio caps type doesn't declare the prebuilt-WDA keys; the shared
+// template below is `as`-cast to AppiumXCUITestCapabilities, which is where they get applied.
+const wdaCapabilities: Record<string, boolean | number | string> = existsSync(WDA_PREBUILT_APP_PATH)
+  ? {
+      'appium:usePreinstalledWDA': true,
+      'appium:prebuiltWDAPath': WDA_PREBUILT_APP_PATH,
+      'appium:derivedDataPath': WDA_DERIVED_DATA_PATH,
+      'appium:wdaLaunchTimeout': 120000,
+      'appium:wdaConnectionTimeout': 120000,
+    }
+  : {};
+
+if (Object.keys(wdaCapabilities).length === 0) {
+  console.log('No prebuilt WDA found — WDA will build per session. Run `pnpm build-wda` to reuse.');
+}
+
 const sharediOSCapabilities: AppiumXCUITestCapabilities = {
+  ...wdaCapabilities,
   'appium:app': iosAppFullPath,
   'appium:platformName': 'iOS',
   'appium:platformVersion': '26.2',
@@ -198,70 +227,41 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   },
 } as AppiumXCUITestCapabilities;
 
-export type Simulator = {
-  name: string;
-  udid: string;
-  wdaPort: number;
-};
+// Re-exported for the scripts that build/clean simulators; the resolution itself lives in
+// scripts/ios_shared so global-setup can use it without importing this iOS-only module.
+export type { Simulator };
 
-function loadSimulators(): Simulator[] {
-  const jsonPath = 'ci-simulators.json';
+const simulators = resolveRunSimulators();
 
-  // Load from .env variables
-  const envVars = [
-    'IOS_1_SIMULATOR',
-    'IOS_2_SIMULATOR',
-    'IOS_3_SIMULATOR',
-    'IOS_4_SIMULATOR',
-    'IOS_5_SIMULATOR',
-    'IOS_6_SIMULATOR',
-    'IOS_7_SIMULATOR',
-    'IOS_8_SIMULATOR',
-    'IOS_9_SIMULATOR',
-    'IOS_10_SIMULATOR',
-    'IOS_11_SIMULATOR',
-    'IOS_12_SIMULATOR',
-  ];
+// Ports where global-setup started a long-lived WebDriverAgent (local runs only). Devices covered
+// here attach to that WDA via `webDriverAgentUrl`, which reduces the driver's WDA launch to a single
+// `/status` call — it skips both the per-session install AND the cross-device lock that otherwise
+// serialises session startup (~8s saved on a 3-device test). Anything not listed keeps the
+// prebuilt-WDA path below, so a WDA that failed to start just costs speed, not correctness.
+const wdaReusePorts = new Set(
+  (process.env.WDA_REUSE_PORTS ?? '')
+    .split(',')
+    .map(port => parseInt(port.trim()))
+    .filter(port => Number.isFinite(port))
+);
 
-  const simulators = envVars
-    .map((envVar, index) => {
-      const udid = process.env[envVar];
-      if (!udid) return null; // No need for all 12 sim variables to be set
-      return { name: `Sim-${index + 1}`, udid, wdaPort: 1253 + index };
-    })
-    .filter((sim): sim is Simulator => sim !== null);
+const capabilities = simulators.map(sim => {
+  const base = {
+    ...sharediOSCapabilities,
+    'appium:udid': sim.udid,
+    'appium:wdaLocalPort': sim.wdaPort,
+  } as Record<string, unknown>;
 
-  // If we have simulators from env, use them (local dev)
-  if (simulators.length > 0) {
-    console.log(`Using ${simulators.length} simulators from .env file`);
-    return simulators;
+  if (wdaReusePorts.has(sim.wdaPort)) {
+    // `usePreinstalledWDA` must go: the driver still runs its install step when that cap is set,
+    // even though `webDriverAgentUrl` takes precedence for the launch itself.
+    delete base['appium:usePreinstalledWDA'];
+    delete base['appium:prebuiltWDAPath'];
+    base['appium:webDriverAgentUrl'] = `http://127.0.0.1:${sim.wdaPort}`;
   }
 
-  // No env simulators - check if we're on CI
-  if (process.env.CI === '1') {
-    // CI should use JSON
-    if (existsSync(jsonPath)) {
-      console.log('Using simulators from ios-simulators.json (CI)');
-      const sims: Simulator[] = JSON.parse(readFileSync(jsonPath, 'utf-8'));
-      return sims;
-    }
-    throw new Error('CI mode: ios-simulators.json not found');
-  }
-
-  // Local dev with no .env entries
-  throw new Error(
-    'No iOS simulators found in .env\n' +
-      'Run: pnpm create-simulators <number>\n' +
-      'Example: pnpm create-simulators 4'
-  );
-}
-const simulators = loadSimulators();
-
-const capabilities = simulators.map(sim => ({
-  ...sharediOSCapabilities,
-  'appium:udid': sim.udid,
-  'appium:wdaLocalPort': sim.wdaPort,
-}));
+  return base as AppiumXCUITestCapabilities;
+});
 
 // Use a constant max that matches the envVars array length for type safety
 const _MAX_CAPABILITIES_INDEX = 12 as const;
