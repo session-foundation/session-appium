@@ -6,7 +6,6 @@ import {
   type IosServiceNetwork,
   type Simulator,
 } from '../run/test/utils/capabilities_ios';
-
 import { ensureWdaBuilt } from './build_wda';
 import { createIOSSimulators, resolveDeviceConfig } from './create_ios_simulators';
 import { deleteSimulators } from './ios_shared';

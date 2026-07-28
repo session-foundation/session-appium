@@ -47,7 +47,7 @@ export default async function globalSetup(_config: FullConfig) {
   // first thing to revert; it is purely an optimisation and the driver can do all of it itself.
   if (isIosRun(platform)) {
     const isCI = process.env.CI === '1';
-    const workers = getWorkersCount();
+    const workers = getWorkersCount('ios');
     const devicesPerWorker = getDevicesPerTestCount();
 
     // Resolved from .env locally and ci-simulators.json on CI, each carrying its wdaLocalPort.

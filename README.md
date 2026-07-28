@@ -105,7 +105,7 @@ UPDATE_BASELINES=true                # Auto-save new screenshot baselines if una
 SOGS_ADMIN_SEED='word1 word2...'     # 13-word recovery phrase of an account that's an admin in the testing SOGS.
 ```
 
-> **Keep `PLAYWRIGHT_WORKERS_COUNT=1` for local runs.** Each booted simulator spawns roughly 280
+> **Keep `PLAYWRIGHT_WORKERS_COUNT_IOS=1` for local runs.** Each booted simulator spawns roughly 280
 > host processes, so running multiple workers (and therefore multiple simulator pools) saturates the
 > machine — on a 14-core Mac, 6 simulators drove the load average to ~500 and made specs fail on
 > timeouts unrelated to the app; the same specs passed immediately at 1 worker. The suite warns you
