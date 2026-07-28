@@ -4,7 +4,6 @@ import { testLink } from '../../../constants';
 import { tStripped } from '../../../localizer/lib';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsItSeparate } from '../../../types/sessionIt';
-import { DISAPPEARING_TIMES } from '../../../types/testing';
 import { LinkPreview, LinkPreviewMessage } from '../../locators';
 import {
   MessageBody,
@@ -14,9 +13,12 @@ import {
 } from '../../locators/conversation';
 import { EnableLinkPreviewsModalButton } from '../../locators/global';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
-import { sleepFor } from '../../utils';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
-import { setDisappearingMessage } from '../../utils/set_disappearing_messages';
+import {
+  getDisappearingTestTime,
+  getDisappearingTestTiming,
+  setDisappearingMessage,
+} from '../../utils/set_disappearing_messages';
 
 bothPlatformsItSeparate({
   title: 'Disappearing link message 1:1',
@@ -35,9 +37,9 @@ bothPlatformsItSeparate({
   allureDescription: 'Verifies that a link preview disappears as expected in a 1:1 conversation',
 });
 
-const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+const time = getDisappearingTestTime();
 const timerType = 'Disappear after read option';
-const maxWait = 35_000; // 30s plus buffer
+const { expectedDuration, maxWait } = getDisappearingTestTiming();
 let sentTimestamp: number;
 
 async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -74,13 +76,14 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
     });
     sentTimestamp = Date.now();
   });
-  // Wait for 30 seconds to disappear
+  // Wait out the disappearing timer
   await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
     await Promise.all(
       [alice1, bob1].map(device =>
         device.hasElementDisappeared({
           ...new MessageBody(device, testLink).build(),
           maxWait,
+          expectedDuration,
           actualStartTime: sentTimestamp,
         })
       )
@@ -117,8 +120,8 @@ async function disappearingLinkMessage1o1Android(
       );
     });
     await alice1.clickOnElementAll(new EnableLinkPreviewsModalButton(alice1));
-    // Preview takes a while to load
-    await sleepFor(5000);
+    // Wait for the link preview to load (poll rather than a fixed sleep)
+    await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
     await alice1.clickOnElementAll(new SendButton(alice1));
     await alice1.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(alice1).build(),
@@ -132,6 +135,7 @@ async function disappearingLinkMessage1o1Android(
         device.hasElementDisappeared({
           ...new LinkPreviewMessage(device).build(),
           maxWait,
+          expectedDuration,
           actualStartTime: sentTimestamp,
         })
       )

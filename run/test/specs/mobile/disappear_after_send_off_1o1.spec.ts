@@ -2,7 +2,7 @@ import type { TestInfo } from '@playwright/test';
 
 import { tStripped } from '../../../localizer/lib';
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import { DisappearActions, DISAPPEARING_TIMES, DisappearModes } from '../../../types/testing';
+import { DisappearActions, DisappearModes } from '../../../types/testing';
 import { ConversationSettings } from '../../locators/conversation';
 import {
   DisableDisappearingMessages,
@@ -13,7 +13,10 @@ import {
 import { ConversationItem } from '../../locators/home';
 import { open_Alice2_Bob1_friends } from '../../state_builder';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
-import { setDisappearingMessage } from '../../utils/set_disappearing_messages';
+import {
+  getDisappearingTestTime,
+  setDisappearingMessage,
+} from '../../utils/set_disappearing_messages';
 
 bothPlatformsIt({
   title: 'Disappear after send off 1:1',
@@ -36,7 +39,7 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType, testIn
 
   const mode: DisappearModes = 'send';
   const controlMode: DisappearActions = 'sent';
-  const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+  const time = getDisappearingTestTime();
   // Select disappearing messages option
   await setDisappearingMessage(alice1, ['1:1', `Disappear after ${mode} option`, time]);
   // Check control messages on both devices and sync to linked device
@@ -79,7 +82,7 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType, testIn
   // Check conversation subtitle?
   await Promise.all(
     [alice1, bob1, alice2].map(device =>
-      device.verifyElementNotPresent({
+      device.waitForElementToBeGone({
         ...new DisappearingMessagesSubtitle(device).build(),
         maxWait: 5_000,
       })

@@ -3,11 +3,15 @@ import { test, type TestInfo } from '@playwright/test';
 import { tStripped } from '../../../localizer/lib';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import { DISAPPEARING_TIMES, DisappearModes } from '../../../types/testing';
+import { DisappearModes } from '../../../types/testing';
 import { MessageBody } from '../../locators/conversation';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
-import { setDisappearingMessage } from '../../utils/set_disappearing_messages';
+import {
+  getDisappearingTestTime,
+  getDisappearingTestTiming,
+  setDisappearingMessage,
+} from '../../utils/set_disappearing_messages';
 
 bothPlatformsIt({
   title: 'Disappear after read',
@@ -36,8 +40,8 @@ async function disappearAfterRead(platform: SupportedPlatformsType, testInfo: Te
   const testMessage = 'Checking disappear after read is working';
   const mode: DisappearModes = 'read';
   // TODO: Consider refactoring DISAPPEARING_TIMES to include ms values
-  const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
-  const maxWait = 35_000; // 30s plus buffer
+  const time = getDisappearingTestTime();
+  const { expectedDuration, maxWait } = getDisappearingTestTiming();
   let sentTimestamp: number;
   // Click conversation options menu (three dots)
   await test.step(TestSteps.DISAPPEARING_MESSAGES.SET(time), async () => {
@@ -69,6 +73,7 @@ async function disappearAfterRead(platform: SupportedPlatformsType, testInfo: Te
         device.hasElementDisappeared({
           ...new MessageBody(device, testMessage).build(),
           maxWait,
+          expectedDuration,
           actualStartTime: sentTimestamp,
         })
       )

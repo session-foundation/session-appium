@@ -5,7 +5,11 @@ import { DISAPPEARING_TIMES } from '../../../types/testing';
 import { MediaMessage, MessageBody } from '../../locators/conversation';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
-import { setDisappearingMessage } from '../../utils/set_disappearing_messages';
+import {
+  getDisappearingTestTime,
+  getDisappearingTestTiming,
+  setDisappearingMessage,
+} from '../../utils/set_disappearing_messages';
 
 bothPlatformsIt({
   title: 'Disappearing video message 1:1',
@@ -20,11 +24,14 @@ bothPlatformsIt({
 });
 
 // Sending and receiving the video can take a while so this is bumped to 60s
-const time = DISAPPEARING_TIMES.ONE_MINUTE;
+const time = getDisappearingTestTime(DISAPPEARING_TIMES.ONE_MINUTE);
 const timerType = 'Disappear after send option';
 const testMessage = 'Testing disappearing messages for videos';
 const initialMaxWait = 20_000; // Downloading the attachment can take a while
-const maxWait = 70_000; // 60s plus buffer
+const { expectedDuration, maxWait } = getDisappearingTestTiming(
+  DISAPPEARING_TIMES.ONE_MINUTE,
+  10_000
+);
 
 async function disappearingVideoMessage1o1(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
@@ -50,6 +57,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType, tes
           ...new MessageBody(device, testMessage).build(),
           initialMaxWait,
           maxWait,
+          expectedDuration,
           actualStartTime: sentTimestamp,
         })
       )
@@ -61,6 +69,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType, tes
           ...new MediaMessage(device).build(),
           initialMaxWait,
           maxWait,
+          expectedDuration,
           actualStartTime: sentTimestamp,
         })
       )

@@ -1434,6 +1434,7 @@ export class DeviceWrapper implements IMobileWrapper {
       text?: string;
       initialMaxWait?: number;
       maxWait?: number;
+      expectedDuration?: number;
     } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<void> {
     const { locator, description } = this.resolveLocator(args);
@@ -1453,8 +1454,18 @@ export class DeviceWrapper implements IMobileWrapper {
     // Elements should not disappear too early (could be a DM bug)
     const totalTime = (Date.now() - args.actualStartTime) / 1000;
     const deletionPhaseTime = (Date.now() - foundTime) / 1000;
-    const expectedTotalTime = maxWait / 1000;
-    const minAcceptableTotalTimeFactor = 0.65; // Catches egregiously early deletions but still enough leeway for sending/trusting/receiving
+    // Prefer an explicit `expectedDuration` (the disappearing timer itself) over inferring it from
+    // `maxWait`, which is the timer PLUS an allowance for send/propagation/poll debounce. Inferring
+    // works at 30s, where the allowance is small relative to the timer, but not at 10s: there the
+    // allowance is a third of the total, so a floor derived from the padded timeout lands above the
+    // real deletion time and rejects a perfectly good run.
+    //
+    // The two factors differ because they measure different things. Against the real timer we can
+    // be strict (0.8); against a padded timeout we have to stay loose (0.65) or we'd reject callers
+    // that are behaving correctly. Callers still on the inferred path keep exactly their previous
+    // behaviour.
+    const expectedTotalTime = (args.expectedDuration ?? maxWait) / 1000;
+    const minAcceptableTotalTimeFactor = args.expectedDuration ? 0.8 : 0.65;
     const minAcceptableTotalTime = expectedTotalTime * minAcceptableTotalTimeFactor;
 
     if (totalTime < minAcceptableTotalTime) {
@@ -1959,6 +1970,35 @@ export class DeviceWrapper implements IMobileWrapper {
 
   public async getAttribute(attribute: string, elementId: string) {
     return this.toShared().getAttribute(attribute, elementId);
+  }
+
+  /**
+   * Poll an element's `value` attribute until it equals `expectedValue`, returning true as soon as
+   * it matches (or false on timeout). The element is re-found each iteration because its ref can go
+   * stale while the control updates. Use this instead of a fixed "sleep then read once" wait for an
+   * async control (e.g. the Local Network permission switch flipping to '1' after mic/camera access
+   * is granted) — it returns the moment the value flips rather than always paying the full wait.
+   */
+  public async waitForElementValue(
+    locator: StrategyExtractionObj,
+    expectedValue: string,
+    maxWait: number = 10_000
+  ): Promise<boolean> {
+    const start = Date.now();
+    do {
+      const el = await this.doesElementExist({ ...locator, maxWait: 1_000 });
+      if (el) {
+        try {
+          if ((await this.getAttribute('value', el.ELEMENT)) === expectedValue) {
+            return true;
+          }
+        } catch {
+          // Element went stale as the control updated — re-find on the next iteration.
+        }
+      }
+      await sleepFor(300);
+    } while (Date.now() - start < maxWait);
+    return false;
   }
 
   public async assertAttribute(

@@ -5,7 +5,11 @@ import { DISAPPEARING_TIMES, USERNAME } from '../../../types/testing';
 import { MediaMessage } from '../../locators/conversation';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
-import { setDisappearingMessage } from '../../utils/set_disappearing_messages';
+import {
+  getDisappearingTestTime,
+  getDisappearingTestTiming,
+  setDisappearingMessage,
+} from '../../utils/set_disappearing_messages';
 
 bothPlatformsIt({
   title: 'Disappearing GIF message 1:1',
@@ -20,9 +24,12 @@ bothPlatformsIt({
 });
 
 // The timing with 30 seconds was a bit tight in terms of the attachment downloading and becoming visible
-const time = DISAPPEARING_TIMES.ONE_MINUTE;
+const time = getDisappearingTestTime(DISAPPEARING_TIMES.ONE_MINUTE);
 const initialMaxWait = 15_000; // GIFs could be large so give them a bit more time to be found
-const maxWait = 70_000; // 60s plus buffer
+const { expectedDuration, maxWait } = getDisappearingTestTiming(
+  DISAPPEARING_TIMES.ONE_MINUTE,
+  10_000
+);
 const timerType = 'Disappear after send option';
 
 async function disappearingGifMessage1o1(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -42,6 +49,7 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType, testI
         ...new MediaMessage(device).build(),
         initialMaxWait,
         maxWait,
+        expectedDuration,
         actualStartTime: sentTimestamp,
       })
     )

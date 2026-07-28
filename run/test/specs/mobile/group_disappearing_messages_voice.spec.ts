@@ -1,10 +1,14 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import { DISAPPEARING_TIMES, GROUPNAME } from '../../../types/testing';
+import { GROUPNAME } from '../../../types/testing';
 import { open_Alice1_Bob1_Charlie1_friends_group } from '../../state_builder';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
-import { setDisappearingMessage } from '../../utils/set_disappearing_messages';
+import {
+  getDisappearingTestTime,
+  getDisappearingTestTiming,
+  setDisappearingMessage,
+} from '../../utils/set_disappearing_messages';
 
 bothPlatformsIt({
   title: 'Disappearing voice message to group',
@@ -20,9 +24,9 @@ bothPlatformsIt({
 
 async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testGroupName: GROUPNAME = 'Testing voice';
-  const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+  const time = getDisappearingTestTime();
   const timerType = 'Disappear after send option';
-  const maxWait = 35_000; // 30s plus buffer
+  const { expectedDuration, maxWait } = getDisappearingTestTiming();
   const {
     devices: { alice1, bob1, charlie1 },
   } = await open_Alice1_Bob1_Charlie1_friends_group({
@@ -42,6 +46,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType, t
         strategy: 'accessibility id',
         selector: 'Voice message',
         maxWait,
+        expectedDuration,
         actualStartTime: sentTimestamp,
       })
     )
