@@ -39,7 +39,6 @@ async function blockedRequest(platform: SupportedPlatformsType, testInfo: TestIn
   // Bob clicks on block option
   await device2.clickOnByAccessibilityID('Block message request');
   // Confirm block on android
-  await sleepFor(1000);
   await device2.checkModalStrings(
     tStripped('block'),
     tStripped('blockDescription', { name: alice.userName })
@@ -52,7 +51,7 @@ async function blockedRequest(platform: SupportedPlatformsType, testInfo: TestIn
       strategy: 'accessibility id',
       selector: messageRequestsNonePending as AccessibilityId,
     }),
-    device3.verifyElementNotPresent({
+    device3.waitForElementToBeGone({
       ...new MessageRequestsBanner(device3).build(),
       maxWait: 10_000,
     }),

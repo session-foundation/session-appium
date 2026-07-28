@@ -52,7 +52,8 @@ export const retryMsgSentForBanner = async (
     if (!messageRequest) {
       device1.log(`Retrying message request`);
       await device1.sendMessage('Retry');
-      await sleepFor(5000);
+      // No fixed sleep: the next loop iteration's doesElementExist(maxWait: 5000) already polls for
+      // the banner, giving the retried request time to arrive.
     } else {
       device2.log('Found message request: No need for retry');
     }

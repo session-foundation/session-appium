@@ -79,8 +79,6 @@ async function sendDocumentGroupAndroid(platform: SupportedPlatformsType, testIn
     )
   );
   // Reply to image - user B
-  // Sleep for is waiting for image to load
-  await sleepFor(1000);
   await bob1.longPressMessage(new DocumentMessage(bob1));
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);

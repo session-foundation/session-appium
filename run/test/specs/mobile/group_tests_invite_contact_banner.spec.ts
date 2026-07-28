@@ -35,6 +35,6 @@ async function inviteContactGroupBanner(platform: SupportedPlatformsType, testIn
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   await alice1.clickOnElementAll(new ManageMembersMenuItem(alice1));
   await alice1.clickOnElementAll(new InviteContactsMenuItem(alice1));
-  await alice1.verifyElementNotPresent(new LatestReleaseBanner(alice1));
+  await alice1.waitForElementToBeGone(new LatestReleaseBanner(alice1));
   await closeApp(alice1, bob1, charlie1);
 }

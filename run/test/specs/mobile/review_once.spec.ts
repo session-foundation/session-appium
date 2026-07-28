@@ -54,7 +54,7 @@ async function reviewPromptOnce(platform: SupportedPlatformsType, testInfo: Test
   });
   await test.step('Verify review prompt is not shown again', async () => {
     await device.waitForTextElementToBePresent(new PlusButton(device)); // Making sure we're on the home screen
-    await device.verifyElementNotPresent(new ModalHeading(device));
+    await device.waitForElementToBeGone(new ModalHeading(device));
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);

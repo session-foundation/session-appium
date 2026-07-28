@@ -43,7 +43,7 @@ async function hideRecoveryPassword(platform: SupportedPlatformsType, testInfo: 
   // Click on Yes
   await device1.clickOnElementAll(new YesButton(device1));
   // Has recovery password menu item disappeared?
-  await device1.verifyElementNotPresent({
+  await device1.waitForElementToBeGone({
     ...new RecoveryPasswordMenuItem(device1).build(),
     maxWait: 1000,
   });

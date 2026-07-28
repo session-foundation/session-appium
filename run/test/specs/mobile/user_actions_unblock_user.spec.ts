@@ -60,5 +60,5 @@ async function unblockUser(platform: SupportedPlatformsType, testInfo: TestInfo)
     tStripped('blockUnblockName', { name: bob.userName })
   );
   await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Unblock' });
-  await alice1.verifyElementNotPresent({ ...new BlockedBanner(alice1).build(), maxWait: 2000 });
+  await alice1.waitForElementToBeGone({ ...new BlockedBanner(alice1).build(), maxWait: 2000 });
 }

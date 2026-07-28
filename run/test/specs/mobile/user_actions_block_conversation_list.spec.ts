@@ -42,7 +42,7 @@ async function blockUserInConversationList(platform: SupportedPlatformsType, tes
   );
   await alice1.clickOnByAccessibilityID('Block');
   // Once you block the conversation disappears from the home screen
-  await alice1.verifyElementNotPresent({
+  await alice1.waitForElementToBeGone({
     ...new ConversationItem(alice1, bob.userName).build(),
     maxWait: 5_000,
   });

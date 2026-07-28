@@ -140,13 +140,13 @@ export async function forceStopAndRestart(
       `adb -s ${device.udid} shell am start -n ${androidAppPackage}/${androidAppActivity}`,
       true
     );
-    await sleepFor(1_000);
   } else if (device.isIOS()) {
     await runScriptAndLog(`xcrun simctl terminate ${device.udid} ${iOSBundleId}`, true);
     await sleepFor(1_000);
     await runScriptAndLog(`xcrun simctl launch ${device.udid} ${iOSBundleId}`, true);
-    await sleepFor(1_000);
   }
+  // The post-launch settle is covered by the PlusButton wait below (when waitForRestart is set),
+  // which polls — no fixed sleep needed.
   // Ensure we're on the home screen again if desired
   if (waitForRestart) {
     await device.waitForTextElementToBePresent(new PlusButton(device));

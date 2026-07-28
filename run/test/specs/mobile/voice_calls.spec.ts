@@ -7,7 +7,6 @@ import { CloseSettings } from '../../locators';
 import { CallButton, NotificationSwitch } from '../../locators/conversation';
 import { SettingsModalsEnableButton } from '../../locators/settings';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
-import { sleepFor } from '../../utils/index';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 
 bothPlatformsItSeparate({
@@ -62,16 +61,16 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
     await alice1.clickOnElementAll(new SettingsModalsEnableButton(alice1));
     // Need to allow microphone access
     await alice1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
-    await sleepFor(1_000);
     // Need to allow camera access
     await alice1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
-    await sleepFor(10_000); // Wait a bit for the toggles to turn to TRUE
-    const aliceLocalNetworkSwitch = await alice1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Local Network Permission - Switch',
-    });
-    const aliceAttr = await alice1.getAttribute('value', aliceLocalNetworkSwitch.ELEMENT);
-    if (aliceAttr !== '1') {
+    // Poll the toggle until it flips to enabled rather than a fixed 10s wait — returns as soon as
+    // it's on (this auto-grant is a known-flaky Simulator behaviour).
+    const aliceLocalNetworkEnabled = await alice1.waitForElementValue(
+      { strategy: 'accessibility id', selector: 'Local Network Permission - Switch' },
+      '1',
+      10_000
+    );
+    if (!aliceLocalNetworkEnabled) {
       throw new Error(
         `Local Network Permission was not enabled automatically.
       This is a known Simulator bug that fails randomly with no pattern or fix.
@@ -107,16 +106,16 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
   await bob1.clickOnElementAll(new SettingsModalsEnableButton(bob1));
   // Need to allow microphone access
   await bob1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
-  await sleepFor(1_000);
   // Need to allow camera access
   await bob1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
-  await sleepFor(10_000); // Wait a bit for the toggles to turn to TRUE
-  const bobLocalNetworkSwitch = await bob1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Local Network Permission - Switch',
-  });
-  const bobAttr = await bob1.getAttribute('value', bobLocalNetworkSwitch.ELEMENT);
-  if (bobAttr !== '1') {
+  // Poll the toggle until it flips to enabled rather than a fixed 10s wait — returns as soon as
+  // it's on (this auto-grant is a known-flaky Simulator behaviour).
+  const bobLocalNetworkEnabled = await bob1.waitForElementValue(
+    { strategy: 'accessibility id', selector: 'Local Network Permission - Switch' },
+    '1',
+    10_000
+  );
+  if (!bobLocalNetworkEnabled) {
     throw new Error(
       `Local Network Permission was not enabled automatically.
       This is a known Simulator bug that fails randomly with no pattern or fix.

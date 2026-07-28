@@ -902,12 +902,13 @@ export class DeviceWrapper implements IMobileWrapper {
         }
 
         await this.longClick(el, 3000);
-        await sleepFor(1000);
+        // No fixed settle — findWithFallback polls for the menu and returns as soon as it appears
+        // (widened to 2000 to preserve the previous total budget while catching it sooner).
         // Either Pin or Unpin will be present depending on whether the conversation is already pinned
         const longPressSuccess = await this.findWithFallback(
           new PinConversationOption(this),
           new UnpinConversationOption(this),
-          1000
+          2000
         );
 
         if (longPressSuccess) {
@@ -1454,6 +1455,7 @@ export class DeviceWrapper implements IMobileWrapper {
     // Elements should not disappear too early (could be a DM bug)
     const totalTime = (Date.now() - args.actualStartTime) / 1000;
     const deletionPhaseTime = (Date.now() - foundTime) / 1000;
+
     // Prefer an explicit `expectedDuration` (the disappearing timer itself) over inferring it from
     // `maxWait`, which is the timer PLUS an allowance for send/propagation/poll debounce. Inferring
     // works at 30s, where the allowance is small relative to the timer, but not at 10s: there the
@@ -2166,7 +2168,7 @@ export class DeviceWrapper implements IMobileWrapper {
       strategy: 'id',
       selector: 'com.android.permissioncontroller:id/permission_allow_all_button',
     });
-    await sleepFor(2000);
+    // No fixed settle needed — the doesElementExist below already polls up to maxWait for the video.
     let videoElement = await this.doesElementExist({
       strategy: 'id',
       selector: 'android:id/title',
@@ -2250,7 +2252,7 @@ export class DeviceWrapper implements IMobileWrapper {
         strategy: 'id',
         selector: 'com.android.permissioncontroller:id/permission_allow_all_button',
       });
-      await sleepFor(1000);
+      // No fixed settle needed — the doesElementExist below already polls up to maxWait for the file.
       let documentElement = await this.doesElementExist({
         strategy: 'id',
         selector: 'android:id/title',
@@ -2364,7 +2366,7 @@ export class DeviceWrapper implements IMobileWrapper {
       // Push file first
       await this.pushMediaToDevice(uploadPicture);
       await this.clickOnElementAll(new ImagePermissionsModalAllow(this));
-      await sleepFor(1000);
+      // clickOnElementAll below already waits for the 'Image button' — no fixed settle needed.
       await this.clickOnElementAll({
         strategy: 'id',
         selector: 'Image button',
@@ -2428,7 +2430,7 @@ export class DeviceWrapper implements IMobileWrapper {
     // I kept getting stale element references on iOS in this method
     // This is an attempt to let the UI settle before we look for the untrusted attachment
     if (this.isIOS()) {
-      await sleepFor(2000);
+      await sleepFor(1000);
     }
 
     await this.clickOnElementAll({
@@ -2509,8 +2511,13 @@ export class DeviceWrapper implements IMobileWrapper {
   }
 
   public async scrollToBottom() {
+    // The scroll-to-bottom button only exists when the conversation isn't already at the bottom.
+    // Callers reach here with the message view already rendered (e.g. after awaiting a message), so
+    // if the button applies it's already in the tree — a short probe is enough. `maxWait` only
+    // bounds the ABSENT case (a present button returns as soon as it's found), so keeping this low
+    // avoids burning the full wait every time the view opens already at the bottom.
     if (
-      await this.doesElementExist({ ...new ScrollToBottomButton(this).build(), maxWait: 3_000 })
+      await this.doesElementExist({ ...new ScrollToBottomButton(this).build(), maxWait: 1_000 })
     ) {
       await this.clickOnElementAll(new ScrollToBottomButton(this));
     } else {
@@ -2635,9 +2642,12 @@ export class DeviceWrapper implements IMobileWrapper {
 
     try {
       // Execute the action in the home screen context
+      // Honor the caller's maxWait (e.g. cleanPermissions passes a short 500ms probe for a
+      // leftover modal that's normally absent). Only fall back to 3s for callers that expect a
+      // permission dialog to actually appear (present-case → returns as soon as it's found).
       const iosPermissions = await this.doesElementExist({
         ...args,
-        maxWait: 3_000,
+        maxWait: args.maxWait ?? 3_000,
       });
       if (iosPermissions) {
         await this.clickOnElementAll({ ...args, maxWait });
@@ -2765,11 +2775,13 @@ export class DeviceWrapper implements IMobileWrapper {
   }
 
   public async verifyNoCTAShows(): Promise<void> {
+    // A CTA appears synchronously with the action that triggers it, so a short absence window is
+    // enough — no need for verifyElementNotPresent's default 2s per check.
     await Promise.all([
-      this.verifyElementNotPresent(new CTAHeading(this)),
-      this.verifyElementNotPresent(new CTABody(this)),
-      this.verifyElementNotPresent(new CTAButtonNegative(this)),
-      this.verifyElementNotPresent(new CTAButtonPositive(this)),
+      this.verifyElementNotPresent({ ...new CTAHeading(this).build(), maxWait: 1_000 }),
+      this.verifyElementNotPresent({ ...new CTABody(this).build(), maxWait: 1_000 }),
+      this.verifyElementNotPresent({ ...new CTAButtonNegative(this).build(), maxWait: 1_000 }),
+      this.verifyElementNotPresent({ ...new CTAButtonPositive(this).build(), maxWait: 1_000 }),
     ]);
   }
 
@@ -2786,7 +2798,7 @@ export class DeviceWrapper implements IMobileWrapper {
   public async dismissCTA(useCloseButton: boolean = false): Promise<void> {
     const hasCTAAppeared = await this.doesElementExist({
       ...new CTAHeading(this).build(),
-      maxWait: 8_000,
+      maxWait: 3_000,
     });
     this.log(`hasCTAAppeared: ${hasCTAAppeared ? 'true' : 'false'}`);
     if (!hasCTAAppeared) {

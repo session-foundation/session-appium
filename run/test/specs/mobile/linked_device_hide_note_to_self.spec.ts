@@ -55,7 +55,7 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
   await test.step('Verify Note to Self is hidden on both devices', async () => {
     if (platform === 'android') {
       await Promise.all([
-        alice1.verifyElementNotPresent({
+        alice1.waitForElementToBeGone({
           ...new ConversationItem(alice1, noteToSelf).build(),
           maxWait: 5_000,
         }),

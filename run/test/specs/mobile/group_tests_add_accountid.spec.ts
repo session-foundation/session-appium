@@ -18,7 +18,6 @@ import {
 import { MessageRequestItem, MessageRequestsBanner } from '../../locators/home';
 import { EnterAccountID, NextButton } from '../../locators/start_conversation';
 import { open_Alice1_Bob1_Charlie1_Unknown1 } from '../../state_builder';
-import { sleepFor } from '../../utils';
 import { newUser } from '../../utils/create_account';
 import { truncatePubkey } from '../../utils/get_account_id';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
@@ -69,7 +68,6 @@ async function addAccountIDToGroup(platform: SupportedPlatformsType, testInfo: T
     await alice1.clickOnElementAll(new ConversationSettings(alice1));
     // Select edit group
     await alice1.clickOnElementAll(new ManageMembersMenuItem(alice1));
-    await sleepFor(1000);
     // Add contact to group
     await alice1.clickOnElementAll(new InviteAccountIDOrONS(alice1));
     await alice1.inputText(userD.accountID, new EnterAccountID(alice1));

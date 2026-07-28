@@ -47,7 +47,7 @@ async function sendEmojiReactionGroup(platform: SupportedPlatformsType, testInfo
         await device.longPressMessage(new MessageBody(device, message));
         await device.clickOnElementAll(new FirstEmojiReact(device));
         // Verify long press menu disappeared (so next found emoji is in convo and not in react bar)
-        await device.verifyElementNotPresent({
+        await device.waitForElementToBeGone({
           strategy: 'accessibility id',
           selector: 'Reply to message',
         });

@@ -55,7 +55,7 @@ async function deleteConversationCS(platform: SupportedPlatformsType, testInfo: 
 
   await test.step('Verify conversation deleted on both alice devices', async () => {
     await Promise.all([
-      alice1.verifyElementNotPresent({
+      alice1.waitForElementToBeGone({
         ...new ConversationItem(alice1, bob.userName).build(),
         maxWait: 5_000,
       }),

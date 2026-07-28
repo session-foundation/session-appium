@@ -73,9 +73,12 @@ export const restoreAccountNoFallback = async (
   await device.clickOnElementAll(new ContinueButton(device));
   // Wait for loading animation to look for display name
   await device.waitForLoadingOnboarding();
+  // Here the display name input showing up means the account WASN'T found, so the happy path always
+  // pays this wait in full — keep it short. `waitForLoadingOnboarding` above has already polled the
+  // loading animation away, so the screen has settled and the input would be rendered by now.
   const displayName = await device.doesElementExist({
     ...new DisplayNameInput(device).build(),
-    maxWait: 2000,
+    maxWait: 600,
   });
   if (displayName) {
     const network = process.env.DETECTED_NETWORK_TARGET ?? 'unknown';
@@ -83,8 +86,7 @@ export const restoreAccountNoFallback = async (
   }
   device.info('Display name found: Loading account');
 
-  // Wait for permissions modal to pop up
-  await sleepFor(500);
+  // No settle needed before this — processPermissions polls for the modal itself.
   await handleNotificationPermissions(device, allowNotificationPermissions);
   // A startup CTA (e.g. the "New Hope for Session" donation appeal) can cover the home
   // screen after restore; dismiss it via its close button so the home screen is reachable.

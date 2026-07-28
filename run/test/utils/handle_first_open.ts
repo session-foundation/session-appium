@@ -7,10 +7,10 @@ import { iOSPhotosContinuebutton } from '../locators/external';
 // If someone already pressed the "Use without an account" button, only the notifications prompt may appear.
 export async function handleChromeFirstTimeOpen(device: DeviceWrapper) {
   const [useWithoutAccount, notifications] = await Promise.all([
-    device.doesElementExist({ ...new ChromeUseWithoutAnAccount(device).build(), maxWait: 5_000 }),
+    device.doesElementExist({ ...new ChromeUseWithoutAnAccount(device).build(), maxWait: 2_500 }),
     device.doesElementExist({
       ...new ChromeNotificationsNegativeButton(device).build(),
-      maxWait: 5_000,
+      maxWait: 2_500,
     }),
   ]);
 

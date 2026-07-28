@@ -131,7 +131,10 @@ for (const testCase of messageLengthTestCases) {
             new MessageLengthCountdown(device, expectedCount)
           );
         } else {
-          await device.verifyElementNotPresent(new MessageLengthCountdown(device));
+          await device.verifyElementNotPresent({
+            ...new MessageLengthCountdown(device).build(),
+            maxWait: 1000,
+          });
         }
 
         await device.clickOnElementAll(new SendButton(device));
@@ -143,7 +146,10 @@ for (const testCase of messageLengthTestCases) {
           // For Non Pro, a CTA appears
           await device.checkCTA('longerMessages');
           await device.clickOnElementAll(new CTAButtonNegative(device));
-          await device.verifyElementNotPresent(new MessageBody(device, message));
+          await device.verifyElementNotPresent({
+            ...new MessageBody(device, message).build(),
+            maxWait: 1000,
+          });
         } else if (testCase.pro) {
           // For Pro, a normal message length dialog appears
           await device.checkModalStrings(
@@ -151,7 +157,10 @@ for (const testCase of messageLengthTestCases) {
             tStripped('modalMessageTooLongDescription', { limit: expectedMax.toString() })
           );
           await device.clickOnElementAll(new MessageLengthOkayButton(device));
-          await device.verifyElementNotPresent(new MessageBody(device, message));
+          await device.verifyElementNotPresent({
+            ...new MessageBody(device, message).build(),
+            maxWait: 1000,
+          });
         }
       });
 

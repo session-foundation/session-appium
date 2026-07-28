@@ -19,7 +19,6 @@ import {
 } from '../../locators/groups';
 import { ConversationItem, PlusButton } from '../../locators/home';
 import { open_Alice1_Bob1_Charlie1_friends_group } from '../../state_builder';
-import { sleepFor } from '../../utils';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 
 androidIt({
@@ -100,7 +99,7 @@ async function soloAdminLeave(platform: SupportedPlatformsType, testInfo: TestIn
       )
     );
     await alice1.waitForTextElementToBePresent(new PlusButton(alice1)); // Ensure we're on the home screen
-    await alice1.verifyElementNotPresent(new ConversationItem(alice1, testGroupName).build());
+    await alice1.waitForElementToBeGone(new ConversationItem(alice1, testGroupName).build());
   });
 
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
@@ -159,10 +158,9 @@ async function multiAdminLeave(platform: SupportedPlatformsType, testInfo: TestI
   await test.step('Verify promotion status is correct', async () => {
     await alice1.clickOnElementAll(new ConversationSettings(alice1));
     await alice1.clickOnElementAll(new ManageAdminsMenuItem(alice1));
-    await alice1.verifyElementNotPresent(
+    await alice1.waitForElementToBeGone(
       new MemberStatus(alice1).build(tStripped('adminPromotionSent'))
     );
-    await sleepFor(1_000);
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Leave Group'), async () => {
     await alice1.navigateBack();
@@ -184,7 +182,7 @@ async function multiAdminLeave(platform: SupportedPlatformsType, testInfo: TestI
       )
     );
     await alice1.waitForTextElementToBePresent(new PlusButton(alice1));
-    await alice1.verifyElementNotPresent(new ConversationItem(alice1, testGroupName).build());
+    await alice1.waitForElementToBeGone(new ConversationItem(alice1, testGroupName).build());
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, bob1, charlie1);
