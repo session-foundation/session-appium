@@ -1380,6 +1380,12 @@ export class DeviceWrapper implements IMobileWrapper {
    * @throws Error if:
    * - The element is never found within initialMaxWait
    * - The element still exists after maxWait
+   *
+   * Only use this when the element is guaranteed to still be there when phase 1 looks. If whatever
+   * removes it is already under way — a linked device applying a synced delete, say — phase 1 is a
+   * race, and losing it fails the test *because the app was fast*. When presence has already been
+   * asserted before the removal was triggered, use waitForElementToBeGone: the appears-then-
+   * disappears assertion still holds, with the "appears" half anchored where it can't race.
    */
   public async hasElementBeenDeleted(
     args: {

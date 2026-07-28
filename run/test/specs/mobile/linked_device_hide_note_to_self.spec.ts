@@ -52,31 +52,24 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
     });
     await alice1.clickOnByAccessibilityID('Hide');
   });
+  // Note to Self was shown on alice2 above, before the hide, so both devices only need to be seen to
+  // lose it here. hasElementBeenDeleted would re-check presence first, which races the hide: on
+  // alice2 against the sync, and on alice1 against its own local update.
+  //
+  // The iOS branch this replaces attributed itself to page structure, but both platforms allowed the
+  // same 5s for the element to go — all the extra iOS wait bought was time for it to be *found*
+  // first, which is the phase being dropped. So the windows are unchanged.
   await test.step('Verify Note to Self is hidden on both devices', async () => {
-    if (platform === 'android') {
-      await Promise.all([
-        alice1.waitForElementToBeGone({
-          ...new ConversationItem(alice1, noteToSelf).build(),
-          maxWait: 5_000,
-        }),
-        alice2.hasElementBeenDeleted({
-          ...new ConversationItem(alice2, noteToSelf).build(),
-          maxWait: 20_000,
-        }),
-      ]);
-    } else {
-      // iOS page structure is more flaky and the element can still be present
-      await Promise.all([
-        alice1.hasElementBeenDeleted({
-          ...new ConversationItem(alice1, noteToSelf).build(),
-          maxWait: 5_000,
-        }),
-        alice2.hasElementBeenDeleted({
-          ...new ConversationItem(alice2, noteToSelf).build(),
-          maxWait: 20_000,
-        }),
-      ]);
-    }
+    await Promise.all([
+      alice1.waitForElementToBeGone({
+        ...new ConversationItem(alice1, noteToSelf).build(),
+        maxWait: 5_000,
+      }),
+      alice2.waitForElementToBeGone({
+        ...new ConversationItem(alice2, noteToSelf).build(),
+        maxWait: 20_000,
+      }),
+    ]);
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, alice2);

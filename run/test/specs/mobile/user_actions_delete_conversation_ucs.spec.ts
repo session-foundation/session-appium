@@ -53,13 +53,16 @@ async function deleteConversationCS(platform: SupportedPlatformsType, testInfo: 
     await alice1.clickOnElementAll(new DeleteConversationModalConfirm(alice1));
   });
 
+  // Both devices were shown to have the conversation above, before the delete, so we only need to
+  // see it go here. hasElementBeenDeleted would re-check presence first, which on alice2 races the
+  // delete syncing across — if the sync lands before that check, the test fails for being fast.
   await test.step('Verify conversation deleted on both alice devices', async () => {
     await Promise.all([
       alice1.waitForElementToBeGone({
         ...new ConversationItem(alice1, bob.userName).build(),
         maxWait: 5_000,
       }),
-      alice2.hasElementBeenDeleted({
+      alice2.waitForElementToBeGone({
         ...new ConversationItem(alice2, bob.userName).build(),
         maxWait: 20_000,
       }),
