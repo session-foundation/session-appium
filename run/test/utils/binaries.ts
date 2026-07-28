@@ -1,6 +1,8 @@
 import { existsSync, lstatSync } from 'fs';
 import { toNumber } from 'lodash';
 
+import type { ClientPlatform } from '../../types/target';
+
 function existsAndFileOrThrow(path: string, id: string) {
   if (!existsSync(path) || !lstatSync(path).isFile()) {
     throw new Error(`"${id}" does not exist at: ${path} or not a path`);
@@ -48,12 +50,10 @@ export const getRepeatEachCount = () => {
   return isFinite(asNumber) ? asNumber : 0;
 };
 
-export type WorkersPlatform = 'android' | 'desktop' | 'ios';
-
 // Workers are configured per-platform so each platform can be tuned independently
 // (e.g. iOS is capped by the self-hosted runner, Android by the emulator count).
-export const getWorkersCount = (platform: WorkersPlatform | undefined) => {
-  const perPlatform: Record<WorkersPlatform, string | undefined> = {
+export const getWorkersCount = (platform: ClientPlatform | undefined) => {
+  const perPlatform: Record<ClientPlatform, string | undefined> = {
     android: process.env.PLAYWRIGHT_WORKERS_COUNT_ANDROID,
     ios: process.env.PLAYWRIGHT_WORKERS_COUNT_IOS,
     desktop: process.env.PLAYWRIGHT_WORKERS_COUNT_DESKTOP,

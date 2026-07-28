@@ -1,5 +1,7 @@
 import type { Capabilities } from '@wdio/types';
 
+import type { ServiceNetwork } from '../../types/target';
+
 import { W3CXCUITestDriverCaps } from 'appium-xcuitest-driver/build/lib/driver';
 import dotenv from 'dotenv';
 import { existsSync } from 'fs';
@@ -30,15 +32,13 @@ export const IOS_PRO_CONTEXT: IOSTestContext = { sessionProEnabled: 'true' };
 // The devnet the *app* connects to (below) MUST be the same one the *seeder* points at
 // (see getNetworkTarget in devnet.ts, which uses getIosDevnetSeedUrl()).
 
-export type IosServiceNetwork = 'devnet' | 'mainnet' | 'testnet';
-
 // Accepted `--network` values (forwarded to the child as NETWORK_TARGET). Kept in sync with
-// `IosServiceNetwork` via `satisfies` so this list can't drift from what capabilities_ios accepts.
+// `ServiceNetwork` via `satisfies` so this list can't drift from what capabilities_ios accepts.
 export const ALLOWED_IOS_NETWORKS = [
   'mainnet',
   'testnet',
   'devnet',
-] as const satisfies readonly IosServiceNetwork[];
+] as const satisfies readonly ServiceNetwork[];
 
 // The devnet seed node is a single node that plays two roles with THREE different ports, because
 // the app and the qa-seeder talk to different services on it:
@@ -55,7 +55,7 @@ export type IosDevnetConfig = {
   omqPort: string;
 };
 
-export function getIosServiceNetwork(): IosServiceNetwork {
+export function getIosServiceNetwork(): ServiceNetwork {
   const raw = (process.env.NETWORK_TARGET ?? 'mainnet').trim().toLowerCase();
   if (raw === 'mainnet' || raw === 'testnet' || raw === 'devnet') {
     return raw;
@@ -168,16 +168,24 @@ function getAppEnvOverrides(): Record<string, string> {
   return appEnvOverridesCache;
 }
 
-const iosPathPrefix = process.env.IOS_APP_PATH_PREFIX;
-
 export const iOSBundleId = 'com.loki-project.loki-messenger';
 
-if (!iosPathPrefix) {
-  throw new Error('IOS_APP_PATH_PREFIX environment variable is not set');
+// Resolved lazily (NOT at module load) for the same reason as `getAppEnvOverrides` above: this module
+// is imported on Android- and Desktop-only runs too — `cross_platform_state` pulls in IOS_PRO_CONTEXT
+// — and throwing at import time would make those runs impossible without a full iOS setup. Every throw
+// below now fires only when an iOS capability is actually built.
+let iosAppFullPathCache: string | undefined;
+function getIosAppFullPath(): string {
+  if (iosAppFullPathCache === undefined) {
+    const iosPathPrefix = process.env.IOS_APP_PATH_PREFIX;
+    if (!iosPathPrefix) {
+      throw new Error('IOS_APP_PATH_PREFIX environment variable is not set');
+    }
+    iosAppFullPathCache = iosPathPrefix;
+    console.log(`iOS app full path: ${iosAppFullPathCache}`);
+  }
+  return iosAppFullPathCache;
 }
-
-const iosAppFullPath = `${iosPathPrefix}`;
-console.log(`iOS app full path: ${iosAppFullPath}`);
 
 // Reuse a prebuilt WebDriverAgent runner instead of building/launching WDA via `xcodebuild` on
 // every session. Freshly-created simulators have no WDA installed, so without this the driver
@@ -207,7 +215,6 @@ if (Object.keys(wdaCapabilities).length === 0) {
 
 const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   ...wdaCapabilities,
-  'appium:app': iosAppFullPath,
   'appium:platformName': 'iOS',
   'appium:platformVersion': '26.2',
   'appium:deviceName': 'iPhone 17',
@@ -236,7 +243,6 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
 // scripts/ios_shared so global-setup can use it without importing this iOS-only module.
 export type { Simulator };
 
-const simulators = resolveRunSimulators();
 
 // Ports where global-setup started a long-lived WebDriverAgent (local runs only). Devices covered
 // here attach to that WDA via `webDriverAgentUrl`, which reduces the driver's WDA launch to a single
@@ -250,29 +256,42 @@ const wdaReusePorts = new Set(
     .filter(port => Number.isFinite(port))
 );
 
-const capabilities = simulators.map(sim => {
-  const base = {
-    ...sharediOSCapabilities,
-    'appium:udid': sim.udid,
-    'appium:wdaLocalPort': sim.wdaPort,
-  } as Record<string, unknown>;
-
-  if (wdaReusePorts.has(sim.wdaPort)) {
-    // `usePreinstalledWDA` must go: the driver still runs its install step when that cap is set,
-    // even though `webDriverAgentUrl` takes precedence for the launch itself.
-    delete base['appium:usePreinstalledWDA'];
-    delete base['appium:prebuiltWDAPath'];
-    base['appium:webDriverAgentUrl'] = `http://127.0.0.1:${sim.wdaPort}`;
+// Lazily resolved and memoised, for the same reason as getIosAppFullPath: `resolveRunSimulators`
+// throws when no simulator is configured, which must not happen merely because this module was
+// imported by a Desktop- or Android-only run.
+let capabilitiesCache: Array<AppiumXCUITestCapabilities> | undefined;
+function getCapabilities(): Array<AppiumXCUITestCapabilities> {
+  if (capabilitiesCache !== undefined) {
+    return capabilitiesCache;
   }
 
-  return base as AppiumXCUITestCapabilities;
-});
+  capabilitiesCache = resolveRunSimulators().map(sim => {
+    const base = {
+      ...sharediOSCapabilities,
+      'appium:app': getIosAppFullPath(),
+      'appium:udid': sim.udid,
+      'appium:wdaLocalPort': sim.wdaPort,
+    } as Record<string, unknown>;
+
+    if (wdaReusePorts.has(sim.wdaPort)) {
+      // `usePreinstalledWDA` must go: the driver still runs its install step when that cap is set,
+      // even though `webDriverAgentUrl` takes precedence for the launch itself.
+      delete base['appium:usePreinstalledWDA'];
+      delete base['appium:prebuiltWDAPath'];
+      base['appium:webDriverAgentUrl'] = `http://127.0.0.1:${sim.wdaPort}`;
+    }
+
+    return base as AppiumXCUITestCapabilities;
+  });
+
+  return capabilitiesCache;
+}
 
 // Use a constant max that matches the envVars array length for type safety
 const _MAX_CAPABILITIES_INDEX = 12 as const;
 
 // For runtime validation, check against actual loaded simulators
-export const getMaxCapabilitiesIndex = () => capabilities.length;
+export const getMaxCapabilitiesIndex = () => getCapabilities().length;
 
 // Type is still based on the constant for compile-time safety
 export type CapabilitiesIndexType = IntRange<0, typeof _MAX_CAPABILITIES_INDEX>;
@@ -281,7 +300,7 @@ export function capabilityIsValid(
   capabilitiesIndex: number
 ): capabilitiesIndex is CapabilitiesIndexType {
   // Runtime validation against actual loaded capabilities
-  if (capabilitiesIndex < 0 || capabilitiesIndex >= capabilities.length) {
+  if (capabilitiesIndex < 0 || capabilitiesIndex >= getCapabilities().length) {
     return false;
   }
   return true;
@@ -291,6 +310,7 @@ export function getIosCapabilities(
   capabilitiesIndex: CapabilitiesIndexType,
   customCaps?: IOSTestContext
 ): W3CXCUITestDriverCaps {
+  const capabilities = getCapabilities();
   if (capabilitiesIndex >= capabilities.length) {
     throw new Error(
       `Asked invalid ios cap index: ${capabilitiesIndex}. Number of iOS capabilities: ${capabilities.length}.`
@@ -327,6 +347,7 @@ export function getIosCapabilities(
 }
 
 export function getCapabilitiesForWorker(workerId: number) {
+  const capabilities = getCapabilities();
   const emulator = capabilities[workerId % capabilities.length];
   return {
     ...sharediOSCapabilities,

@@ -10,15 +10,21 @@ import {
 
 import type { DeviceWrapper } from '../../types/DeviceWrapper';
 import type { IBaseDeviceWrapper } from '../../types/IBaseDeviceWrapper';
+import type { ClientPlatform } from '../../types/target';
 import type { User } from '../../types/testing';
 
 import { DesktopWrapper } from '../../desktop/DesktopWrapper';
 import { openApps, waitFirstWindow } from '../../desktop/open';
+import { getDevicesPerTestCount } from './binaries';
+import { getAndroidPoolSize } from './capabilities_android';
 import { IOS_PRO_CONTEXT } from './capabilities_ios';
-import { getNetworkTarget } from './devnet';
+import { assertConsistentNetworkTarget } from './devnet';
 import { openAppMultipleDevices } from './open_app';
 
-/** How many clients of each platform a single account should have. */
+/**
+ * How many clients of each platform a single account should have. Defined here (the leaf) and
+ * re-exported by `cross_platform.ts` as `CrossPlatformSetup`, which is the name specs use.
+ */
 export type PerUserPlatforms = {
   android?: number;
   ios?: number;
@@ -34,6 +40,31 @@ export type UserClients = {
   /** Every client of this account, ordered android → ios → desktop. */
   all: IBaseDeviceWrapper[];
 };
+
+/**
+ * Fail before the (slow) seeding step if this test asks for more mobile clients than the machine
+ * has. Without it the run pays for a full `buildStateForTest` and then dies one device at a time
+ * inside the opener, which is a much worse signal.
+ *
+ * Desktop is uncapped: each window gets its own `NODE_APP_INSTANCE`, so there is no pool.
+ */
+function assertPoolsCanFit(totalAndroid: number, totalIos: number): void {
+  const devicesPerWorker = getDevicesPerTestCount();
+  if (totalIos > devicesPerWorker) {
+    throw new Error(
+      `This test needs ${totalIos} iOS simulator(s), but each worker is allocated only ` +
+        `${devicesPerWorker} (DEVICES_PER_TEST_COUNT=${devicesPerWorker}). Re-run with a larger ` +
+        `pool, e.g. \`pnpm test-ios-parallel --devices ${totalIos}\`.`
+    );
+  }
+  const androidPoolSize = getAndroidPoolSize();
+  if (totalAndroid > androidPoolSize) {
+    throw new Error(
+      `This test needs ${totalAndroid} Android emulator(s), but the harness only knows about ` +
+        `${androidPoolSize} (see the udid list in capabilities_android.ts).`
+    );
+  }
+}
 
 function toUser(stateUser: StateUser): User {
   return {
@@ -81,10 +112,23 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
   const totalIos = perUser.reduce((sum, u) => sum + (u.ios ?? 0), 0);
   const totalDesktop = perUser.reduce((sum, u) => sum + (u.desktop ?? 0), 0);
 
-  // The seeder needs a network target; derive it from whichever mobile platform is present
-  // (getNetworkTarget caches into DETECTED_NETWORK_TARGET, so this is consistent per run).
-  const primaryPlatform = totalAndroid > 0 ? 'android' : 'ios';
-  const net = await getNetworkTarget(primaryPlatform);
+  // Every platform in this test must be on the SAME Session network, or the seeder writes the
+  // account onto one network while a client polls another and the test hangs until it times out.
+  // Each platform resolves its network from a different source, so cross-check them all up front
+  // (before the slow seeding step) and use the agreed network for the seeder.
+  const present: ClientPlatform[] = [];
+  if (totalAndroid > 0) {
+    present.push('android');
+  }
+  if (totalIos > 0) {
+    present.push('ios');
+  }
+  if (totalDesktop > 0) {
+    present.push('desktop');
+  }
+  assertPoolsCanFit(totalAndroid, totalIos);
+
+  const net = await assertConsistentNetworkTarget(present);
   const prebuilt = await buildStateForTest(stateToBuildKey, groupName, net);
   const seedUsers = (prebuilt as { users: StateUser[] }).users;
 
@@ -95,14 +139,18 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
   }
 
   // Open each platform once, then slice per user (preserves Appium capability-index order).
-  const androidPool =
-    totalAndroid > 0 ? await openAppMultipleDevices('android', totalAndroid, testInfo) : [];
-  const iosPool =
+  // The three platforms open CONCURRENTLY — a mixed test would otherwise pay the sum of three slow
+  // openers. Windows within the desktop group still open sequentially: `openApps` does that
+  // deliberately, because launching Electron windows in parallel triggers a sqlite error.
+  const [androidPool, iosPool, desktopWindows] = await Promise.all([
+    totalAndroid > 0 ? openAppMultipleDevices('android', totalAndroid, testInfo) : [],
     totalIos > 0
-      ? await openAppMultipleDevices('ios', totalIos, testInfo, isPro ? IOS_PRO_CONTEXT : undefined)
-      : [];
-  const desktopApps = totalDesktop > 0 ? await openApps(totalDesktop) : [];
-  const desktopWindows = await Promise.all(desktopApps.map(app => waitFirstWindow(app)));
+      ? openAppMultipleDevices('ios', totalIos, testInfo, isPro ? IOS_PRO_CONTEXT : undefined)
+      : [],
+    totalDesktop > 0
+      ? openApps(totalDesktop).then(apps => Promise.all(apps.map(app => waitFirstWindow(app))))
+      : [],
+  ]);
   const desktopPool = desktopWindows.map(page => new DesktopWrapper(page));
 
   let ai = 0;
