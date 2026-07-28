@@ -14,8 +14,6 @@ crossPlatformTest({
   title: 'Display name change syncs (Android changes, Desktop sees)',
   risk: 'medium',
   setup: linkedDevices({ android: 1, desktop: 1 }),
-  allureSuites: { parent: 'User Actions', suite: 'Change Username' },
-  allureDescription: 'Android changes its display name; a linked Desktop client reflects it.',
   testCb: async ({ accounts: { alice } }) => {
     await alice.android[0].changeDisplayName(NEW_NAME);
     await alice.desktop[0].assertDisplayName(NEW_NAME);
@@ -26,8 +24,6 @@ crossPlatformTest({
   title: 'Display name change syncs (Desktop changes, Android sees)',
   risk: 'medium',
   setup: linkedDevices({ android: 1, desktop: 1 }),
-  allureSuites: { parent: 'User Actions', suite: 'Change Username' },
-  allureDescription: 'Desktop changes its display name; a linked Android client reflects it.',
   testCb: async ({ accounts: { alice } }) => {
     await alice.desktop[0].changeDisplayName(NEW_NAME);
     await alice.android[0].assertDisplayName(NEW_NAME);

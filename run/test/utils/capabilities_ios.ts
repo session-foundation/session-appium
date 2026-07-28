@@ -4,6 +4,8 @@ import { W3CXCUITestDriverCaps } from 'appium-xcuitest-driver/build/lib/driver';
 import dotenv from 'dotenv';
 import { existsSync, readFileSync } from 'fs';
 
+import type { ServiceNetwork } from '../../types/target';
+
 import { IntRange } from '../../types/RangeType';
 
 dotenv.config({ quiet: true });
@@ -28,15 +30,13 @@ export const IOS_PRO_CONTEXT: IOSTestContext = { sessionProEnabled: 'true' };
 // The devnet the *app* connects to (below) MUST be the same one the *seeder* points at
 // (see getNetworkTarget in devnet.ts, which uses getIosDevnetSeedUrl()).
 
-export type IosServiceNetwork = 'devnet' | 'mainnet' | 'testnet';
-
 // Accepted `--network` values (forwarded to the child as NETWORK_TARGET). Kept in sync with
-// `IosServiceNetwork` via `satisfies` so this list can't drift from what capabilities_ios accepts.
+// `ServiceNetwork` via `satisfies` so this list can't drift from what capabilities_ios accepts.
 export const ALLOWED_IOS_NETWORKS = [
   'mainnet',
   'testnet',
   'devnet',
-] as const satisfies readonly IosServiceNetwork[];
+] as const satisfies readonly ServiceNetwork[];
 
 // The devnet seed node is a single node that plays two roles with THREE different ports, because
 // the app and the qa-seeder talk to different services on it:
@@ -53,7 +53,7 @@ export type IosDevnetConfig = {
   omqPort: string;
 };
 
-export function getIosServiceNetwork(): IosServiceNetwork {
+export function getIosServiceNetwork(): ServiceNetwork {
   const raw = (process.env.NETWORK_TARGET ?? 'mainnet').trim().toLowerCase();
   if (raw === 'mainnet' || raw === 'testnet' || raw === 'devnet') {
     return raw;
@@ -166,19 +166,26 @@ function getAppEnvOverrides(): Record<string, string> {
   return appEnvOverridesCache;
 }
 
-const iosPathPrefix = process.env.IOS_APP_PATH_PREFIX;
-
 export const iOSBundleId = 'com.loki-project.loki-messenger';
 
-if (!iosPathPrefix) {
-  throw new Error('IOS_APP_PATH_PREFIX environment variable is not set');
+// Resolved lazily (NOT at module load) for the same reason as `getAppEnvOverrides` above: this
+// module is imported on Android- and Desktop-only runs too (e.g. cross_platform_state imports
+// IOS_PRO_CONTEXT), and throwing at import time would make those runs impossible without a full
+// iOS setup. Every throw below now fires only when an iOS capability is actually built.
+let iosAppFullPathCache: string | undefined;
+function getIosAppFullPath(): string {
+  if (iosAppFullPathCache === undefined) {
+    const iosPathPrefix = process.env.IOS_APP_PATH_PREFIX;
+    if (!iosPathPrefix) {
+      throw new Error('IOS_APP_PATH_PREFIX environment variable is not set');
+    }
+    iosAppFullPathCache = iosPathPrefix;
+    console.log(`iOS app full path: ${iosAppFullPathCache}`);
+  }
+  return iosAppFullPathCache;
 }
 
-const iosAppFullPath = `${iosPathPrefix}`;
-console.log(`iOS app full path: ${iosAppFullPath}`);
-
 const sharediOSCapabilities: AppiumXCUITestCapabilities = {
-  'appium:app': iosAppFullPath,
   'appium:platformName': 'iOS',
   'appium:platformVersion': '26.2',
   'appium:deviceName': 'iPhone 17',
@@ -255,19 +262,24 @@ function loadSimulators(): Simulator[] {
       'Example: pnpm create-simulators 4'
   );
 }
-const simulators = loadSimulators();
 
-const capabilities = simulators.map(sim => ({
-  ...sharediOSCapabilities,
-  'appium:udid': sim.udid,
-  'appium:wdaLocalPort': sim.wdaPort,
-}));
+// Lazily resolved and memoised — see the note on getIosAppFullPath. `loadSimulators` throws when
+// no simulator is configured, which must not happen just because this module was imported.
+let capabilitiesCache: Array<AppiumXCUITestCapabilities> | undefined;
+function getCapabilities(): Array<AppiumXCUITestCapabilities> {
+  if (capabilitiesCache === undefined) {
+    capabilitiesCache = loadSimulators().map(sim => ({
+      ...sharediOSCapabilities,
+      'appium:app': getIosAppFullPath(),
+      'appium:udid': sim.udid,
+      'appium:wdaLocalPort': sim.wdaPort,
+    }));
+  }
+  return capabilitiesCache;
+}
 
 // Use a constant max that matches the envVars array length for type safety
 const _MAX_CAPABILITIES_INDEX = 12 as const;
-
-// For runtime validation, check against actual loaded simulators
-export const getMaxCapabilitiesIndex = () => capabilities.length;
 
 // Type is still based on the constant for compile-time safety
 export type CapabilitiesIndexType = IntRange<0, typeof _MAX_CAPABILITIES_INDEX>;
@@ -276,7 +288,7 @@ export function capabilityIsValid(
   capabilitiesIndex: number
 ): capabilitiesIndex is CapabilitiesIndexType {
   // Runtime validation against actual loaded capabilities
-  if (capabilitiesIndex < 0 || capabilitiesIndex >= capabilities.length) {
+  if (capabilitiesIndex < 0 || capabilitiesIndex >= getCapabilities().length) {
     return false;
   }
   return true;
@@ -286,6 +298,7 @@ export function getIosCapabilities(
   capabilitiesIndex: CapabilitiesIndexType,
   customCaps?: IOSTestContext
 ): W3CXCUITestDriverCaps {
+  const capabilities = getCapabilities();
   if (capabilitiesIndex >= capabilities.length) {
     throw new Error(
       `Asked invalid ios cap index: ${capabilitiesIndex}. Number of iOS capabilities: ${capabilities.length}.`
@@ -319,13 +332,4 @@ export function getIosCapabilities(
     firstMatch: [{}],
     alwaysMatch: caps,
   } as W3CXCUITestDriverCaps;
-}
-
-export function getCapabilitiesForWorker(workerId: number) {
-  const emulator = capabilities[workerId % capabilities.length];
-  return {
-    ...sharediOSCapabilities,
-    'appium:udid': emulator['appium:udid'],
-    'appium:wdaLocalPort': emulator['appium:wdaLocalPort'],
-  };
 }

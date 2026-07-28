@@ -43,6 +43,19 @@ function getAllCaps() {
   return emulatorCapabilities;
 }
 
+/** Number of emulators this harness knows about (the Android capability pool size). */
+export const getAndroidPoolSize = () => emulatorCapabilities.length;
+
+/**
+ * Android counterpart of `capabilityIsValid`. Android used to be validated against the *iOS* pool
+ * length, which only ever worked because both pools happen to be 4 entries long.
+ */
+export function androidCapabilityIsValid(
+  capabilitiesIndex: number
+): capabilitiesIndex is CapabilitiesIndexType {
+  return capabilitiesIndex >= 0 && capabilitiesIndex < emulatorCapabilities.length;
+}
+
 export function getAndroidCapabilities(
   capabilitiesIndex: CapabilitiesIndexType
 ): W3CUiautomator2DriverCaps {
