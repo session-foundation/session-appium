@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import { isString } from 'lodash';
 
 import { getAndroidApk } from './binaries';
-import { CapabilitiesIndexType } from './capabilities_ios';
 dotenv.config({ quiet: true });
 // Access the environment variable
 
@@ -49,18 +48,19 @@ export const getAndroidPoolSize = () => emulatorCapabilities.length;
 /**
  * Android counterpart of `capabilityIsValid`. Android used to be validated against the *iOS* pool
  * length, which only ever worked because both pools happen to be 4 entries long.
+ *
+ * Returns a plain boolean over a plain `number` rather than narrowing to the iOS
+ * `CapabilitiesIndexType`: the bound checked here is `emulatorCapabilities.length`, so narrowing to
+ * an iOS-derived type asserted something this function never verified. The Android pool is a
+ * runtime list (`udids`), so the bound stays a runtime check — the two consumers below share it.
  */
-export function androidCapabilityIsValid(
-  capabilitiesIndex: number
-): capabilitiesIndex is CapabilitiesIndexType {
+export function androidCapabilityIsValid(capabilitiesIndex: number): boolean {
   return capabilitiesIndex >= 0 && capabilitiesIndex < emulatorCapabilities.length;
 }
 
-export function getAndroidCapabilities(
-  capabilitiesIndex: CapabilitiesIndexType
-): W3CUiautomator2DriverCaps {
+export function getAndroidCapabilities(capabilitiesIndex: number): W3CUiautomator2DriverCaps {
   const allCaps = getAllCaps();
-  if (capabilitiesIndex >= allCaps.length) {
+  if (!androidCapabilityIsValid(capabilitiesIndex)) {
     throw new Error(`Asked invalid android capability index: ${capabilitiesIndex}`);
   }
   const cap = allCaps[capabilitiesIndex];
@@ -69,10 +69,10 @@ export function getAndroidCapabilities(
     alwaysMatch: { ...cap },
   } as W3CUiautomator2DriverCaps;
 }
-export function getAndroidUdid(udidIndex: CapabilitiesIndexType): string {
+export function getAndroidUdid(udidIndex: number): string {
   const allCaps = getAllCaps();
 
-  if (udidIndex >= allCaps.length) {
+  if (!androidCapabilityIsValid(udidIndex)) {
     throw new Error(`Asked invalid android udid index: ${udidIndex}`);
   }
   const cap = allCaps[udidIndex];
