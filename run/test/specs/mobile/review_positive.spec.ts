@@ -56,7 +56,7 @@ async function reviewPromptPositive(platform: SupportedPlatformsType, testInfo: 
       tStripped('rateSessionModalDescriptionUpdated', { storevariant })
     );
     await device.waitForTextElementToBePresent(new ReviewPromptRateAppButton(device));
-    await device.verifyElementNotPresent(new ReviewPromptNotNowButton(device)); // This modal now only has the Rate button
+    await device.waitForElementToBeGone(new ReviewPromptNotNowButton(device)); // This modal now only has the Rate button
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);

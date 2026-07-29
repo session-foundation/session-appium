@@ -75,7 +75,7 @@ async function deleteGroup(platform: SupportedPlatformsType, testInfo: TestInfo)
     await Promise.all(
       [alice1, alice2].map(async device => {
         await device.waitForTextElementToBePresent(new PlusButton(device)); // Ensure we're on the home screen
-        await device.verifyElementNotPresent(new ConversationItem(device, testGroupName).build());
+        await device.waitForElementToBeGone(new ConversationItem(device, testGroupName).build());
       })
     );
   });

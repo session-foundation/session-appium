@@ -3,11 +3,15 @@ import { test, type TestInfo } from '@playwright/test';
 import { tStripped } from '../../../localizer/lib';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import { DisappearActions, DISAPPEARING_TIMES } from '../../../types/testing';
+import { DisappearActions } from '../../../types/testing';
 import { MessageBody } from '../../locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from '../../state_builder';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
-import { setDisappearingMessage } from '../../utils/set_disappearing_messages';
+import {
+  getDisappearingTestTime,
+  getDisappearingTestTiming,
+  setDisappearingMessage,
+} from '../../utils/set_disappearing_messages';
 
 bothPlatformsIt({
   title: 'Disappear after send groups',
@@ -26,8 +30,8 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType, testIn
   const testGroupName = 'Disappear after send test';
   const testMessage = 'Testing disappear after sent in groups';
   const controlMode: DisappearActions = 'sent';
-  const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
-  const maxWait = 35_000; // 30s plus buffer
+  const time = getDisappearingTestTime();
+  const { expectedDuration, maxWait } = getDisappearingTestTiming();
   let sentTimestamp: number;
   const {
     devices: { alice1, bob1, charlie1 },
@@ -72,6 +76,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType, testIn
         device.hasElementDisappeared({
           ...new MessageBody(device, testMessage).build(),
           maxWait,
+          expectedDuration,
           actualStartTime: sentTimestamp,
         })
       )

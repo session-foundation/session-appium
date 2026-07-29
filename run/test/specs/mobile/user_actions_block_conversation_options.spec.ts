@@ -53,7 +53,6 @@ async function blockUserInConversationSettings(
   );
   // Confirm block option
   await alice1.clickOnElementAll(new BlockUserConfirmationModal(alice1));
-  await sleepFor(1000);
   // Navigate back to conversation screen to confirm block
   await alice1.navigateBack();
   // Look for alert at top of screen (Bob is blocked. Unblock them?)

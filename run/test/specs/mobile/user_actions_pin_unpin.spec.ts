@@ -92,7 +92,7 @@ async function pinConversation(platform: SupportedPlatformsType, testInfo: TestI
   });
   if (platform === 'android') {
     await test.step('Assert pin icon is gone after unpinning', async () => {
-      await device.verifyElementNotPresent(new ConversationPinnedIcon(device, toPin));
+      await device.waitForElementToBeGone(new ConversationPinnedIcon(device, toPin));
     });
   }
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

@@ -15,7 +15,6 @@ import {
 } from '../../locators/groups';
 import { ErrorMessage } from '../../locators/onboarding';
 import { open_Alice1_Bob1_Charlie1_friends_group } from '../../state_builder';
-import { sleepFor } from '../../utils';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 
 bothPlatformsItSeparate({
@@ -67,7 +66,6 @@ async function changeGroupDescriptionIOS(platform: SupportedPlatformsType, testI
 
   await test.step(TestSteps.OPEN.UPDATE_GROUP_INFO, async () => {
     await alice1.clickOnElementAll(new ConversationSettings(alice1));
-    await sleepFor(1000);
     await alice1.clickOnElementAll(new UpdateGroupInformation(alice1, testGroupName));
   });
 
@@ -117,7 +115,6 @@ async function changeGroupDescriptionAndroid(platform: SupportedPlatformsType, t
 
   await test.step(TestSteps.OPEN.UPDATE_GROUP_INFO, async () => {
     await alice1.clickOnElementAll(new ConversationSettings(alice1));
-    await sleepFor(1000);
     await alice1.clickOnElementAll(new UpdateGroupInformation(alice1, testGroupName));
   });
 

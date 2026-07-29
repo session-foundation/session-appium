@@ -3,7 +3,6 @@ import type { TestInfo } from '@playwright/test';
 import { bothPlatformsItSeparate } from '../../../types/sessionIt';
 import { MediaMessage, MessageBody } from '../../locators/conversation';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
-import { sleepFor } from '../../utils';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 
 bothPlatformsItSeparate({
@@ -68,7 +67,6 @@ async function sendVideoAndroid(platform: SupportedPlatformsType, testInfo: Test
   await bob1.longPressMessage(new MediaMessage(bob1));
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);
-  await sleepFor(2000);
   await alice1.waitForTextElementToBePresent(new MessageBody(alice1, replyMessage));
   // Close app and server
   await closeApp(alice1, bob1);

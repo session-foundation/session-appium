@@ -15,7 +15,6 @@ import {
 } from '../../locators/groups';
 import { ConversationItem } from '../../locators/home';
 import { open_Alice1_Bob1_Charlie1_Unknown1 } from '../../state_builder';
-import { sleepFor } from '../../utils';
 import { newUser } from '../../utils/create_account';
 import { newContact } from '../../utils/create_contact';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
@@ -71,7 +70,6 @@ async function addContactToGroupNoHistory(platform: SupportedPlatformsType, test
     await alice1.clickOnElementAll(new ConversationSettings(alice1));
     // Select edit group
     await alice1.clickOnElementAll(new ManageMembersMenuItem(alice1));
-    await sleepFor(1000);
     // Add contact to group
     await alice1.clickOnElementAll(new InviteContactsMenuItem(alice1));
     // Select new user

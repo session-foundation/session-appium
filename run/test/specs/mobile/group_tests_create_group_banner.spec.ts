@@ -33,6 +33,6 @@ async function createGroupBanner(platform: SupportedPlatformsType, testInfo: Tes
   await alice1.clickOnElementAll(new PlusButton(alice1));
   await alice1.clickOnElementAll(new CreateGroupOption(alice1));
   // Verify the banner is not present
-  await alice1.verifyElementNotPresent(new LatestReleaseBanner(alice1));
+  await alice1.waitForElementToBeGone(new LatestReleaseBanner(alice1));
   await closeApp(alice1, bob1);
 }

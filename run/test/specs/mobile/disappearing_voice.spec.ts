@@ -1,11 +1,14 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import { DISAPPEARING_TIMES } from '../../../types/testing';
 import { VoiceMessage } from '../../locators/conversation';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
-import { setDisappearingMessage } from '../../utils/set_disappearing_messages';
+import {
+  getDisappearingTestTime,
+  getDisappearingTestTiming,
+  setDisappearingMessage,
+} from '../../utils/set_disappearing_messages';
 
 bothPlatformsIt({
   title: 'Disappearing voice message 1:1',
@@ -19,9 +22,9 @@ bothPlatformsIt({
   allureDescription: 'Verifies that a voice message disappears as expected in a 1:1 conversation',
 });
 
-const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+const time = getDisappearingTestTime();
 const timerType = 'Disappear after send option';
-const maxWait = 35_000; // 30s plus buffer
+const { expectedDuration, maxWait } = getDisappearingTestTiming();
 
 async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
@@ -40,6 +43,7 @@ async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType, tes
       device.hasElementDisappeared({
         ...new VoiceMessage(device).build(),
         maxWait,
+        expectedDuration,
         actualStartTime: sentTimestamp,
       })
     )

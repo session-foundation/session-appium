@@ -6,6 +6,7 @@ import {
   type IosServiceNetwork,
   type Simulator,
 } from '../run/test/utils/capabilities_ios';
+import { ensureWdaBuilt } from './build_wda';
 import { createIOSSimulators, resolveDeviceConfig } from './create_ios_simulators';
 import { deleteSimulators } from './ios_shared';
 
@@ -18,16 +19,16 @@ import { deleteSimulators } from './ios_shared';
  * inspection or for reuse with `pnpm test-ios`.
  *
  * Why this exists: locally the suite runs single-worker, so ~250 iOS tests execute one at a
- * time. Each Playwright worker owns a fixed pool of `--devices` simulators (offset by its
+ * time. Each Playwright worker owns a fixed pool of `--devices-per-worker` simulators (offset by its
  * worker index — see openiOSApp in open_app.ts), so N workers need N * devices simulators.
  * This script provisions exactly that many, wires their UDIDs into the child process's
  * environment (without touching your .env), and cleans up after itself.
  *
  * Usage:
- *   pnpm test-ios-parallel                          # 2 workers x 2 devices (4 sims), grep @ios
- *   pnpm test-ios-parallel --devices 4              # 2 workers x 4 devices (8 sims)
- *   pnpm test-ios-parallel --workers 3 --devices 4  # 3 workers x 4 devices (12 sims)
- *   pnpm test-ios-parallel --grep '@ios @high-risk' # subset
+ *   pnpm test-ios-parallel                                      # 2 workers x 2 devices (4 sims), grep @ios
+ *   pnpm test-ios-parallel --devices-per-worker 4               # 2 workers x 4 devices (8 sims)
+ *   pnpm test-ios-parallel --workers 3 --devices-per-worker 4   # 3 workers x 4 devices (12 sims)
+ *   pnpm test-ios-parallel --grep '@ios @high-risk'             # subset
  *   pnpm test-ios-parallel --keep                   # don't delete simulators afterwards
  *   pnpm test-ios-parallel --runtime 26.1           # pin the iOS runtime (default: newest)
  *   pnpm test-ios-parallel --network devnet         # run against devnet (needs DEVNET_* in .env)
@@ -41,11 +42,15 @@ import { deleteSimulators } from './ios_shared';
  *   - `--runtime` picks the iOS simulator runtime (a version like "26.1" or a full identifier).
  *     If omitted, the preferred runtime is used when installed, otherwise the newest installed
  *     iOS runtime. Device type is overridable via the IOS_SIM_DEVICE_TYPE env var.
- *   - `--devices` is the per-worker simulator pool. It must be >= the largest test's device
- *     count in your grep, otherwise those tests fail fast with a clear error (see openiOSApp).
- *     The default of 2 covers @1-devices / @2-devices tests; use `--devices 4` to include the
- *     @3-devices / @4-devices tests (i.e. the full suite).
- *   - Simulators are created shut down; Appium boots each on demand at session start (as on CI).
+ *   - `--devices-per-worker` is the per-worker simulator pool. It must be >=
+ *     the largest test's device count in your grep, otherwise those tests fail fast with a clear
+ *     error (see openiOSApp). The default of 2 covers @1-devices / @2-devices tests; use
+ *     `--devices-per-worker 4` to include the @3-devices / @4-devices tests (i.e. the full suite).
+ *     Total simulators created = workers x devices-per-worker.
+ *   - Simulators are created shut down; `global-setup.ts` then pre-boots the pool, pre-installs the
+ *     app and starts a WebDriverAgent per simulator before any test runs.
+ *   - Prefer `--workers 1`. Each booted simulator spawns ~280 host processes, so more workers
+ *     saturate the machine and produce timeout failures unrelated to the app — see CLAUDE.md.
  *   - Total simulators (workers * devices) must not exceed 12 (the IOS_N_SIMULATOR cap).
  *   - Creating simulators has a one-off cost (clone + media). For fast iteration, run once with
  *     `--keep`, paste the printed IOS_N_SIMULATOR lines into .env, then use `pnpm test-ios`.
@@ -57,7 +62,7 @@ const MAX_SIMULATORS = 12;
 
 type ParsedArgs = {
   workers: number;
-  devicesPerTest: number;
+  devicesPerWorker: number;
   grep: string;
   keep: boolean;
   runtime?: string;
@@ -68,7 +73,7 @@ type ParsedArgs = {
 function parseArgs(argv: string[]): ParsedArgs {
   const args: ParsedArgs = {
     workers: 2,
-    devicesPerTest: 2,
+    devicesPerWorker: 2,
     grep: '@ios',
     keep: false,
     passthrough: [],
@@ -98,9 +103,9 @@ function parseArgs(argv: string[]): ParsedArgs {
       const [value, consumedNext] = readValue(arg, ownArgs[i + 1]);
       args.workers = parseInt(value);
       if (consumedNext) i++;
-    } else if (arg.startsWith('--devices')) {
+    } else if (arg.startsWith('--devices-per-worker')) {
       const [value, consumedNext] = readValue(arg, ownArgs[i + 1]);
-      args.devicesPerTest = parseInt(value);
+      args.devicesPerWorker = parseInt(value);
       if (consumedNext) i++;
     } else if (arg.startsWith('--grep')) {
       const [value, consumedNext] = readValue(arg, ownArgs[i + 1]);
@@ -138,15 +143,16 @@ function validate(args: ParsedArgs): number {
     console.error(`Invalid --workers value: ${args.workers}`);
     process.exit(1);
   }
-  if (isNaN(args.devicesPerTest) || args.devicesPerTest < 1) {
-    console.error(`Invalid --devices value: ${args.devicesPerTest}`);
+  if (isNaN(args.devicesPerWorker) || args.devicesPerWorker < 1) {
+    console.error(`Invalid --devices-per-worker value: ${args.devicesPerWorker}`);
     process.exit(1);
   }
-  const totalSimulators = args.workers * args.devicesPerTest;
+  const totalSimulators = args.workers * args.devicesPerWorker;
   if (totalSimulators > MAX_SIMULATORS) {
     console.error(
-      `Requested ${args.workers} workers x ${args.devicesPerTest} devices = ${totalSimulators} ` +
-        `simulators, but the maximum is ${MAX_SIMULATORS}. Lower --workers or --devices.`
+      `Requested ${args.workers} workers x ${args.devicesPerWorker} devices-per-worker = ` +
+        `${totalSimulators} simulators, but the maximum is ${MAX_SIMULATORS}. ` +
+        `Lower --workers or --devices-per-worker.`
     );
     process.exit(1);
   }
@@ -166,9 +172,14 @@ function main(): void {
   const args = parseArgs(process.argv.slice(2));
   const totalSimulators = validate(args);
 
+  // Build the WebDriverAgent runner once up front so the driver reuses it across every simulator
+  // instead of building/launching WDA per session (the slowest, flakiest part of a cold-sim
+  // startup). No-op once built — see scripts/build_wda.ts.
+  ensureWdaBuilt();
+
   console.log(
     `\nProvisioning ${totalSimulators} simulator(s) for ${args.workers} worker(s) ` +
-      `x ${args.devicesPerTest} device(s)...`
+      `x ${args.devicesPerWorker} device(s) per worker...`
   );
 
   const deviceConfig = resolveDeviceConfig({ runtime: args.runtime });
@@ -183,7 +194,7 @@ function main(): void {
   });
   childEnv.PLATFORM = 'ios';
   childEnv.PLAYWRIGHT_WORKERS_COUNT_IOS = String(args.workers);
-  childEnv.DEVICES_PER_TEST_COUNT = String(args.devicesPerTest);
+  childEnv.DEVICES_PER_TEST_COUNT = String(args.devicesPerWorker);
   childEnv._TESTING = childEnv._TESTING ?? '1';
   // Service network selection (mainnet default). Devnet also needs DEVNET_* vars in .env — see
   // capabilities_ios.ts / .env.sample. Left unset here so .env's NETWORK_TARGET is respected.

@@ -31,6 +31,10 @@ async function blockUserInConversationOptions(
     devices: { alice1, alice2, bob1 },
     prebuilt: { bob },
   } = await open_Alice2_Bob1_friends({ platform, focusFriendsConvo: true, testInfo });
+  // Establish that the linked device has the conversation *before* blocking, so the check afterwards
+  // only has to watch it go. Doing it the other way round — looking for it once the block is already
+  // in flight — fails whenever the sync gets there first.
+  await alice2.waitForTextElementToBePresent(new ConversationItem(alice2, bob.userName));
   // Block contact
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   // Select Block option
@@ -43,7 +47,10 @@ async function blockUserInConversationOptions(
   );
   // Confirm block option
   await alice1.clickOnElementAll(new BlockUserConfirmationModal(alice1));
-  await alice2.hasElementBeenDeleted(new ConversationItem(alice2, bob.userName));
+  await alice2.waitForElementToBeGone({
+    ...new ConversationItem(alice2, bob.userName).build(),
+    maxWait: 20_000,
+  });
   await alice1.navigateBack();
   await alice1.waitForTextElementToBePresent(new BlockedBanner(alice1));
   // Check settings for blocked user

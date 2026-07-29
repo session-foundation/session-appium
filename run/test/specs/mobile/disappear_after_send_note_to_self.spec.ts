@@ -2,18 +2,21 @@ import { test, type TestInfo } from '@playwright/test';
 
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import { DisappearActions, DISAPPEARING_TIMES, USERNAME } from '../../../types/testing';
+import { DisappearActions, USERNAME } from '../../../types/testing';
 import { MessageBody } from '../../locators/conversation';
 import { PlusButton } from '../../locators/home';
 import { EnterAccountID, NewMessageOption, NextButton } from '../../locators/start_conversation';
-import { sleepFor } from '../../utils';
 import { newUser } from '../../utils/create_account';
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
-import { setDisappearingMessage } from '../../utils/set_disappearing_messages';
+import {
+  getDisappearingTestTime,
+  getDisappearingTestTiming,
+  setDisappearingMessage,
+} from '../../utils/set_disappearing_messages';
 
 bothPlatformsIt({
   title: 'Disappear after send note to self',
@@ -31,8 +34,8 @@ bothPlatformsIt({
 async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testMessage = `Testing disappearing messages in Note to Self`;
   const controlMode: DisappearActions = 'sent';
-  const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
-  const maxWait = 35_000; // 30s plus buffer
+  const time = getDisappearingTestTime();
+  const { expectedDuration, maxWait } = getDisappearingTestTiming();
   let sentTimestamp: number;
 
   const { device, alice } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
@@ -51,7 +54,6 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, te
   await test.step(TestSteps.DISAPPEARING_MESSAGES.SET(time), async () => {
     // Enable disappearing messages
     await setDisappearingMessage(device, ['Note to Self', 'Disappear after send option', time]);
-    await sleepFor(1000);
     await device.waitForControlMessageToBePresent(
       `You set messages to disappear ${time} after they have been ${controlMode}.`
     );
@@ -63,6 +65,7 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType, te
     await device.hasElementDisappeared({
       ...new MessageBody(device, testMessage).build(),
       maxWait,
+      expectedDuration,
       actualStartTime: sentTimestamp,
     });
   });

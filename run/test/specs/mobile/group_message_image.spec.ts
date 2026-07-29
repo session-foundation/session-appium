@@ -88,8 +88,6 @@ async function sendImageGroupAndroid(platform: SupportedPlatformsType, testInfo:
     [bob1, charlie1].map(device => device.waitForTextElementToBePresent(new MediaMessage(device)))
   );
   // Reply to image - user B
-  // Sleep for is waiting for image to load
-  await sleepFor(1000);
   await bob1.longPressMessage(new MediaMessage(bob1));
   await bob1.clickOnByAccessibilityID('Reply to message');
   await bob1.sendMessage(replyMessage);

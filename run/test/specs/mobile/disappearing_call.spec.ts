@@ -3,14 +3,17 @@ import { test, type TestInfo } from '@playwright/test';
 import { tStripped } from '../../../localizer/lib';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsItSeparate } from '../../../types/sessionIt';
-import { DISAPPEARING_TIMES } from '../../../types/testing';
 import { CloseSettings } from '../../locators';
 import { CallButton, NotificationSwitch } from '../../locators/conversation';
 import { SettingsModalsEnableButton } from '../../locators/settings';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
 import { sleepFor } from '../../utils';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
-import { setDisappearingMessage } from '../../utils/set_disappearing_messages';
+import {
+  getDisappearingTestTime,
+  getDisappearingTestTiming,
+  setDisappearingMessage,
+} from '../../utils/set_disappearing_messages';
 
 bothPlatformsItSeparate({
   title: 'Disappearing call message 1:1',
@@ -33,9 +36,9 @@ bothPlatformsItSeparate({
   },
 });
 
-const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+const time = getDisappearingTestTime();
 const timerType = 'Disappear after send option';
-const maxWait = 35_000; // 30s plus buffer
+const { expectedDuration, maxWait } = getDisappearingTestTiming();
 
 // TODO: abstract call logic into utils since they're reused in multiple tests
 async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType, testInfo: TestInfo) {
@@ -57,13 +60,14 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType, t
   await sleepFor(1_000);
   // Need to allow camera access
   await alice1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
-  await sleepFor(10_000); // Wait a bit for the toggles to turn to TRUE
-  const aliceLocalNetworkSwitch = await alice1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Local Network Permission - Switch',
-  });
-  const aliceAttr = await alice1.getAttribute('value', aliceLocalNetworkSwitch.ELEMENT);
-  if (aliceAttr !== '1') {
+  // Poll the toggle until it flips to enabled rather than a fixed 10s wait — returns as soon as
+  // it's on (this auto-grant is a known-flaky Simulator behaviour).
+  const aliceLocalNetworkEnabled = await alice1.waitForElementValue(
+    { strategy: 'accessibility id', selector: 'Local Network Permission - Switch' },
+    '1',
+    10_000
+  );
+  if (!aliceLocalNetworkEnabled) {
     throw new Error(
       `Local Network Permission was not enabled automatically.
       This is a known Simulator bug that fails randomly with no pattern or fix.
@@ -103,6 +107,7 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType, t
       selector: 'Control message',
       text: callsYouCalled,
       maxWait,
+      expectedDuration,
       actualStartTime: callEndTimestamp,
     }),
     bob1.hasElementDisappeared({
@@ -110,6 +115,7 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType, t
       selector: 'Control message',
       text: callsMissedCallFrom,
       maxWait,
+      expectedDuration,
       actualStartTime: callEndTimestamp,
     }),
   ]);
@@ -170,6 +176,7 @@ async function disappearingCallMessage1o1Android(
       selector: 'network.loki.messenger:id/call_text_view',
       text: `You called ${bob.userName}`,
       maxWait,
+      expectedDuration,
       actualStartTime: callEndTimestamp,
     }),
     bob1.hasElementDisappeared({
@@ -177,6 +184,7 @@ async function disappearingCallMessage1o1Android(
       selector: 'network.loki.messenger:id/call_text_view',
       text: `Missed call from ${alice.userName}`,
       maxWait,
+      expectedDuration,
       actualStartTime: callEndTimestamp,
     }),
   ]);

@@ -9,7 +9,6 @@ import {
   UpdateGroupInformation,
 } from '../../locators/groups';
 import { open_Alice1_Bob1_Charlie1_friends_group } from '../../state_builder';
-import { sleepFor } from '../../utils';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 
 bothPlatformsItSeparate({
@@ -44,7 +43,6 @@ async function changeGroupNameIos(platform: SupportedPlatformsType, testInfo: Te
   // Click on settings or three dots
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   // Click on Edit group option
-  await sleepFor(1000);
   // Click on current group name
   await alice1.clickOnElementAll(new UpdateGroupInformation(alice1, testGroupName));
   await alice1.checkModalStrings(
@@ -92,7 +90,6 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType, testInfo
   // Click on settings or three dots
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
   // Click on Edit group option
-  await sleepFor(1000);
   await alice1.clickOnElementAll(new UpdateGroupInformation(alice1));
   await alice1.clickOnElementAll({ strategy: 'id', selector: 'clear-input-button-name' });
   await alice1.clickOnElementAll(new EditGroupNameInput(alice1));

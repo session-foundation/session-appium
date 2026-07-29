@@ -1,11 +1,14 @@
 import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import { DISAPPEARING_TIMES } from '../../../types/testing';
 import { MediaMessage, MessageBody } from '../../locators/conversation';
 import { open_Alice1_Bob1_Charlie1_friends_group } from '../../state_builder';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
-import { setDisappearingMessage } from '../../utils/set_disappearing_messages';
+import {
+  getDisappearingTestTime,
+  getDisappearingTestTiming,
+  setDisappearingMessage,
+} from '../../utils/set_disappearing_messages';
 
 bothPlatformsIt({
   title: 'Disappearing image message to group',
@@ -22,9 +25,9 @@ bothPlatformsIt({
 async function disappearingImageMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const testMessage = 'Testing disappearing messages for images';
   const testGroupName = 'Testing disappearing messages';
-  const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+  const time = getDisappearingTestTime();
   const timerType = 'Disappear after send option';
-  const maxWait = 35_000; // 30s plus buffer
+  const { expectedDuration, maxWait } = getDisappearingTestTiming();
   const {
     devices: { alice1, bob1, charlie1 },
   } = await open_Alice1_Bob1_Charlie1_friends_group({
@@ -42,6 +45,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
         device.hasElementDisappeared({
           ...new MessageBody(device, testMessage).build(),
           maxWait,
+          expectedDuration,
           actualStartTime: sentTimestamp,
         })
       )
@@ -56,6 +60,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType, t
         device.hasElementDisappeared({
           ...new MediaMessage(device).build(),
           maxWait,
+          expectedDuration,
           actualStartTime: sentTimestamp,
         })
       )

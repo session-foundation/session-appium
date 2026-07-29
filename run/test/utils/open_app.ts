@@ -358,7 +358,7 @@ const openiOSApp = async (
     throw new Error(
       `This test needs at least ${capabilitiesIndex + 1} devices, but each worker is allocated ` +
         `only ${devicesPerWorker} simulator(s) (DEVICES_PER_TEST_COUNT=${devicesPerWorker}). ` +
-        `Re-run with a larger pool, e.g. \`pnpm test-ios-parallel --devices ${capabilitiesIndex + 1}\`, ` +
+        `Re-run with a larger pool, e.g. \`pnpm test-ios-parallel --devices-per-worker ${capabilitiesIndex + 1}\`, ` +
         `or filter to tests that fit, e.g. \`--grep '@ios @${devicesPerWorker}-devices'\`.`
     );
   }

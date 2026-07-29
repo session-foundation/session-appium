@@ -71,9 +71,8 @@ async function linkedGroupiOS(platform: SupportedPlatformsType, testInfo: TestIn
   const groupNameNew = tStripped('groupNameNew', { group_name: newGroupName });
   // Control message should be "Group name is now {group_name}."
   await device1.waitForControlMessageToBePresent(groupNameNew);
-  // Wait 5 seconds for name to update
-  await sleepFor(5000);
-  // Check linked device for name change (conversation header name)
+  // Check linked device for name change (conversation header name) — this already polls until the
+  // rename syncs, so no fixed sleep is needed.
   await device2.waitForTextElementToBePresent(new ConversationHeaderName(device2, newGroupName));
   await Promise.all([
     device2.waitForControlMessageToBePresent(groupNameNew),
@@ -101,7 +100,6 @@ async function linkedGroupAndroid(platform: SupportedPlatformsType, testInfo: Te
   // Click on settings or three dots
   await device1.clickOnElementAll(new ConversationSettings(device1));
   // Click on Edit group option
-  await sleepFor(1000);
   await device1.clickOnElementAll(new UpdateGroupInformation(device1));
   // Click on current group name
   await device1.clickOnElementAll(new EditGroupNameInput(device1));

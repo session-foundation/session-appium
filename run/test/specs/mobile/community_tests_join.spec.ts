@@ -5,7 +5,6 @@ import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { ConversationItem } from '../../locators/home';
 import { open_Alice2 } from '../../state_builder';
-import { sleepFor } from '../../utils';
 import { joinCommunity } from '../../utils/community';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 
@@ -32,7 +31,6 @@ async function joinCommunityTest(platform: SupportedPlatformsType, testInfo: Tes
   const testMessage = `Test message + ${new Date().getTime()}`;
   await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
     await joinCommunity(alice1, communities.testCommunity.link, communities.testCommunity.name);
-    await sleepFor(5000);
   });
   await test.step(
     TestSteps.SEND.MESSAGE(alice.userName, communities.testCommunity.name),

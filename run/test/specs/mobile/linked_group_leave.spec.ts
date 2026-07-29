@@ -46,7 +46,7 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType, testInfo
   // Check for group not being visible anymore
   await Promise.all(
     [device3, device4].map(device =>
-      device.verifyElementNotPresent({
+      device.waitForElementToBeGone({
         ...new ConversationItem(device, testGroupName).build(),
         maxWait: 10_000,
       })

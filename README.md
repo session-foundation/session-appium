@@ -97,10 +97,16 @@ _TESTING=1                           # Skip printing appium/wdio logs
 PLAYWRIGHT_RETRIES_COUNT=0           # Test retry attempts
 PLAYWRIGHT_REPEAT_COUNT=0            # Successful test repeat count
 PLAYWRIGHT_WORKERS_COUNT_ANDROID=1   # Parallel test workers for Android (selected via PLATFORM)
-PLAYWRIGHT_WORKERS_COUNT_IOS=1       # Parallel test workers for iOS (selected via PLATFORM)
+PLAYWRIGHT_WORKERS_COUNT_IOS=1       # Parallel test workers for iOS (selected via PLATFORM, keep at 1 locally — see note below)
 PLAYWRIGHT_WORKERS_COUNT_DESKTOP=1   # Parallel test workers for desktop (selected via PLATFORM)
 CI=0                                 # Set to 1 to simulate CI (mostly for Allure reporting)
 ALLURE_ENABLED=false                 # Set to 'true' to generate Allure reports (in conjunction with CI=1)
 UPDATE_BASELINES=true                # Auto-save new screenshot baselines if unavailable
 SOGS_ADMIN_SEED='word1 word2...'     # 13-word recovery phrase of an account that's an admin in the testing SOGS.
 ```
+
+> **Keep `PLAYWRIGHT_WORKERS_COUNT_IOS=1` for local runs.** Each booted simulator spawns roughly 280
+> host processes, so running multiple workers (and therefore multiple simulator pools) saturates the
+> machine — on a 14-core Mac, 6 simulators drove the load average to ~500 and made specs fail on
+> timeouts unrelated to the app; the same specs passed immediately at 1 worker. The suite warns you
+> when more than one worker is configured.

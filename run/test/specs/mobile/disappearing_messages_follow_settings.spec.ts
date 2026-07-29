@@ -2,7 +2,6 @@ import type { TestInfo } from '@playwright/test';
 
 import { tStripped } from '../../../localizer/lib';
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import { DISAPPEARING_TIMES } from '../../../types/testing';
 import { MessageBody } from '../../locators/conversation';
 import {
   DisappearingMessagesSubtitle,
@@ -11,7 +10,11 @@ import {
 } from '../../locators/disappearing_messages';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
-import { setDisappearingMessage } from '../../utils/set_disappearing_messages';
+import {
+  getDisappearingTestTime,
+  getDisappearingTestTiming,
+  setDisappearingMessage,
+} from '../../utils/set_disappearing_messages';
 
 bothPlatformsIt({
   title: 'Disappearing messages follow setting 1:1',
@@ -26,9 +29,10 @@ bothPlatformsIt({
     'Verifies that Bob sees the Follow Setting banner when Alice sets disappearing messages in a 1:1 conversation, and that following applies the setting to both sides',
 });
 
-const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+const time = getDisappearingTestTime();
 const timerType = 'Disappear after send option';
-const disappearMaxWait = 35_000; // 30s plus buffer
+const { expectedDuration: disappearExpected, maxWait: disappearMaxWait } =
+  getDisappearingTestTiming();
 
 async function disappearingMessagesFollowSetting1o1(
   platform: SupportedPlatformsType,
@@ -66,11 +70,13 @@ async function disappearingMessagesFollowSetting1o1(
         ...new MessageBody(device, aliceMsg).build(),
         actualStartTime: aliceTimestamp,
         maxWait: disappearMaxWait,
+        expectedDuration: disappearExpected,
       }),
       device.hasElementDisappeared({
         ...new MessageBody(device, bobMsg).build(),
         actualStartTime: bobTimestamp,
         maxWait: disappearMaxWait,
+        expectedDuration: disappearExpected,
       }),
     ])
   );

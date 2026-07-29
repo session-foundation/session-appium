@@ -4,8 +4,7 @@ import { testLink } from '../../../constants';
 import { tStripped } from '../../../localizer/lib';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import { DISAPPEARING_TIMES } from '../../../types/testing';
-import { LinkPreviewMessage } from '../../locators';
+import { LinkPreview, LinkPreviewMessage } from '../../locators';
 import {
   MessageBody,
   MessageInput,
@@ -14,9 +13,12 @@ import {
 } from '../../locators/conversation';
 import { EnableLinkPreviewsModalButton } from '../../locators/global';
 import { open_Alice1_Bob1_Charlie1_friends_group } from '../../state_builder';
-import { sleepFor } from '../../utils';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
-import { setDisappearingMessage } from '../../utils/set_disappearing_messages';
+import {
+  getDisappearingTestTime,
+  getDisappearingTestTiming,
+  setDisappearingMessage,
+} from '../../utils/set_disappearing_messages';
 
 bothPlatformsIt({
   title: 'Disappearing link to group',
@@ -30,8 +32,8 @@ bothPlatformsIt({
   allureDescription: 'Verifies that a link preview disappears as expected in a group conversation',
 });
 const timerType = 'Disappear after send option';
-const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
-const maxWait = 35_000; // 30s plus buffer
+const time = getDisappearingTestTime();
+const { expectedDuration, maxWait } = getDisappearingTestTiming();
 
 async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
   let sentTimestamp: number;
@@ -63,8 +65,8 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
     // On iOS, Appium types so the link preview modal interrupts typing the link, must be deleted and typed again
     await alice1.onIOS().deleteText(new MessageInput(alice1));
     await alice1.onIOS().inputText(testLink, new MessageInput(alice1));
-    // Let preview load
-    await sleepFor(5000);
+    // Let the preview load (poll rather than a fixed sleep)
+    await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
     await alice1.clickOnElementAll(new SendButton(alice1));
     await alice1.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(alice1).build(),
@@ -72,7 +74,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
     });
     sentTimestamp = Date.now();
   });
-  // Wait for 30 seconds to disappear
+  // Wait out the disappearing timer
   await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
     if (platform === 'ios') {
       await Promise.all(
@@ -80,6 +82,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
           device.hasElementDisappeared({
             ...new MessageBody(device, testLink).build(),
             maxWait,
+            expectedDuration,
             actualStartTime: sentTimestamp,
           })
         )
@@ -91,6 +94,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
           device.hasElementDisappeared({
             ...new LinkPreviewMessage(device).build(),
             maxWait,
+            expectedDuration,
             actualStartTime: sentTimestamp,
           })
         )

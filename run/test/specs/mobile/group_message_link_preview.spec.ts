@@ -102,8 +102,8 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType, testInfo: 
     tStripped('linkPreviewsFirstDescription')
   );
   await alice1.clickOnElementAll(new EnableLinkPreviewsModalButton(alice1));
-  //wait for preview to generate
-  await sleepFor(5000);
+  // Wait for the link preview to generate (poll rather than a fixed sleep)
+  await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
   // No preview on first send
   await alice1.clickOnElementAll(new SendButton(alice1));
   await alice1.waitForTextElementToBePresent({

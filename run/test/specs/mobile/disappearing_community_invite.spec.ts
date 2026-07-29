@@ -12,10 +12,13 @@ import {
 import { GroupMember } from '../../locators/groups';
 import { ConversationItem } from '../../locators/home';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
-import { sleepFor } from '../../utils';
 import { joinCommunity } from '../../utils/community';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
-import { setDisappearingMessage } from '../../utils/set_disappearing_messages';
+import {
+  getDisappearingTestTime,
+  getDisappearingTestTiming,
+  setDisappearingMessage,
+} from '../../utils/set_disappearing_messages';
 
 bothPlatformsIt({
   title: 'Disappearing community invite message 1:1',
@@ -31,9 +34,9 @@ bothPlatformsIt({
 });
 
 // Interacting with communities can be a bit fickle so we give this a bit more time
-const time = DISAPPEARING_TIMES.ONE_MINUTE;
+const time = getDisappearingTestTime(DISAPPEARING_TIMES.ONE_MINUTE);
 const timerType = 'Disappear after send option';
-const maxWait = 65_000; // 60s plus buffer
+const { expectedDuration, maxWait } = getDisappearingTestTiming(DISAPPEARING_TIMES.ONE_MINUTE);
 
 async function disappearingCommunityInviteMessage(
   platform: SupportedPlatformsType,
@@ -52,7 +55,6 @@ async function disappearingCommunityInviteMessage(
   await alice1.navigateBack();
   await joinCommunity(alice1, communities.testCommunity.link, communities.testCommunity.name);
   await alice1.clickOnElementAll(new ConversationSettings(alice1));
-  await sleepFor(1000);
   await alice1.clickOnElementAll(new InviteContactsMenuItem(alice1));
   await alice1.clickOnElementAll(new GroupMember(alice1).build(bob.userName));
   await alice1.clickOnElementAll(new CommunityInviteConfirmButton(alice1));
@@ -63,6 +65,7 @@ async function disappearingCommunityInviteMessage(
   await bob1.hasElementDisappeared({
     ...new CommunityInvitation(bob1).build(),
     maxWait,
+    expectedDuration,
     actualStartTime: communityInviteTimestamp,
   });
   // Leave Invite Contacts, Conversation Settings, Community, and open convo with Bob
@@ -71,6 +74,6 @@ async function disappearingCommunityInviteMessage(
   await alice1.onIOS().navigateBack(); // Android only needs to go back twice
   await alice1.clickOnElementAll(new ConversationItem(alice1, bob.userName));
   // At this point the invite should have disappeared already so we just check it's not there
-  await alice1.verifyElementNotPresent(new CommunityInvitation(alice1));
+  await alice1.waitForElementToBeGone(new CommunityInvitation(alice1));
   await closeApp(alice1, bob1);
 }

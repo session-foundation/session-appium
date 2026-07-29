@@ -47,7 +47,7 @@ async function membersCantSetDisappearingMessages(
     .onIOS()
     .clickOnElementAll(new DisappearingMessageRadial(bob1, DISAPPEARING_TIMES.ONE_DAY));
   // Set button should not be visible
-  await bob1.verifyElementNotPresent({
+  await bob1.waitForElementToBeGone({
     ...new SetDisappearMessagesButton(bob1).build(),
     maxWait: 500,
   });

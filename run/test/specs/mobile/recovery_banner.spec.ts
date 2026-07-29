@@ -55,7 +55,7 @@ androidIt({
 
 async function bannerShouldNotShow(device: DeviceWrapper) {
   await device.waitForTextElementToBePresent(new PlusButton(device));
-  await device.verifyElementNotPresent(new RevealRecoveryPhraseButton(device));
+  await device.waitForElementToBeGone(new RevealRecoveryPhraseButton(device));
   device.log('On home screen, banner did not appear');
 }
 
@@ -115,7 +115,7 @@ async function bannerPersists(platform: SupportedPlatformsType, testInfo: TestIn
     await device.longPressConversation(communities.testCommunity.name);
     await device.clickOnElementAll({ strategy: 'accessibility id', selector: 'Leave' }); // Long press options
     await device.clickOnElementAll({ strategy: 'accessibility id', selector: 'Leave' }); // Modal confirm
-    await device.verifyElementNotPresent(
+    await device.waitForElementToBeGone(
       new ConversationItem(device, communities.testCommunity.name)
     );
     await bannerShouldShow(device);

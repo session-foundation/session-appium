@@ -82,6 +82,31 @@ Locally `DEVICES_PER_TEST_COUNT` defaults to 4 and the largest specs need 4 devi
 (`countOfDevicesNeeded: 4`), so **4 sims covers every iOS spec** at 1 worker. XCUITest
 boots a sim by UDID automatically at session start — no manual boot.
 
+`global-setup.ts` prepares the pool the run will use (`workers × DEVICES_PER_TEST_COUNT`) before any
+test starts — on CI as well as locally. It **pre-boots** the simulators, **pre-installs** the app,
+and starts one long-lived **WebDriverAgent** per simulator, passing the live ports to the workers via
+`WDA_REUSE_PORTS`. Each of those is otherwise paid inside a test: boot and app install land on
+whichever test touches a device first (~150s for 3 cold devices), and WDA is installed *and launched
+per session* behind a process-wide lock, serialising session startup at ~4.3s per device.
+
+With `appium:webDriverAgentUrl` pointing at a running WDA the driver's launch collapses to one
+`/status` call, so both the install and the serialisation disappear (~8s saved on a 3-device test).
+All of it is best-effort: anything that fails falls back to the driver doing it itself. Already-warm
+simulators make the whole step a no-op, so back-to-back runs skip it.
+
+> Note this reverses a CI choice — the workflow's "Start simulators" step is disabled with a comment
+> that letting Appium boot was more reliable. Pre-booting is a prerequisite for launching WDA
+> (`simctl launch` needs a booted device) and uses `simctl bootstatus -b`, which waits for boot to
+> genuinely finish. If CI becomes flaky at startup, this block is the first thing to revert.
+
+> **Stay at 1 worker locally.** Each booted simulator spawns **~280 host processes** — 6 sims took a
+> 14-core Mac to a load average of ~500 and caused specs to fail on timeouts that had nothing to do
+> with the app (they passed immediately at 1 worker). Parallelism *works* (workers get correctly
+> offset device pools), but the host, not the harness, is the bottleneck: throughput barely improves
+> and false failures become indistinguishable from real ones. `global-setup.ts` prints a warning
+> when `workers > 1`. If you must parallelise, use 2 workers × 2 devices (same total sim count)
+> restricted to `@1-devices`/`@2-devices` specs.
+
 ## Running tests
 
 Scripts (see `package.json`); `--grep` filters on the auto-generated test name.

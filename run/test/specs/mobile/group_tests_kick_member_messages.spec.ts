@@ -73,9 +73,9 @@ async function kickMemberDeleteMsg(platform: SupportedPlatformsType, testInfo: T
     });
     await alice1.clickOnElementAll(new RemoveMemberMessagesRadial(alice1));
     await alice1.clickOnElementAll(new ConfirmRemovalButton(alice1));
-    // The Group Member element sometimes disappears slowly, sometimes quickly.
-    // hasElementBeenDeleted would be theoretically better but we just check if element is not there anymore
-    await alice1.verifyElementNotPresent({
+    // The Group Member element sometimes disappears slowly, sometimes quickly, so poll for it to be
+    // gone (returns as soon as it's absent) rather than always waiting the full period.
+    await alice1.waitForElementToBeGone({
       ...new GroupMember(alice1).build(USERNAME.BOB),
       maxWait: 5_000,
     });
