@@ -13,13 +13,14 @@ import type { IBaseDeviceWrapper } from '../../types/IBaseDeviceWrapper';
 import type { ClientPlatform } from '../../types/target';
 import type { User } from '../../types/testing';
 
+import { forceCloseAllWindows } from '../../desktop/closeWindows';
 import { DesktopWrapper } from '../../desktop/DesktopWrapper';
 import { openApps, waitFirstWindow } from '../../desktop/open';
 import { getDevicesPerTestCount } from './binaries';
 import { getAndroidPoolSize } from './capabilities_android';
 import { IOS_PRO_CONTEXT } from './capabilities_ios';
 import { assertConsistentNetworkTarget } from './devnet';
-import { openAppMultipleDevices } from './open_app';
+import { closeApp, openAppMultipleDevices } from './open_app';
 
 /**
  * How many clients of each platform a single account should have. Defined here (the leaf) and
@@ -63,6 +64,31 @@ function assertPoolsCanFit(totalAndroid: number, totalIos: number): void {
       `This test needs ${totalAndroid} Android emulator(s), but the harness only knows about ` +
         `${androidPoolSize} (see the udid list in capabilities_android.ts).`
     );
+  }
+}
+
+/**
+ * One opener rejected: close whatever its siblings managed to open, so a half-open test doesn't
+ * leave live Appium sessions (which hold their simulator/emulator) or Electron processes behind.
+ * Cleanup failures are logged, never thrown — the original opener error is the one worth surfacing.
+ */
+async function closePartiallyOpenedClients(
+  mobile: DeviceWrapper[],
+  desktopWindows: Page[]
+): Promise<void> {
+  if (mobile.length > 0) {
+    try {
+      await closeApp(...mobile);
+    } catch (e) {
+      console.error('Failed to close mobile sessions after a failed cross-platform open:', e);
+    }
+  }
+  // Called even with no page: Electron pids are tracked globally (the caller resets them before
+  // opening), so a window that launched but never yielded a page is only reachable this way.
+  try {
+    await forceCloseAllWindows(desktopWindows);
+  } catch (e) {
+    console.error('forceCloseAllWindows failed after a failed cross-platform open:', e);
   }
 }
 
@@ -142,7 +168,12 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
   // The three platforms open CONCURRENTLY — a mixed test would otherwise pay the sum of three slow
   // openers. Windows within the desktop group still open sequentially: `openApps` does that
   // deliberately, because launching Electron windows in parallel triggers a sqlite error.
-  const [androidPool, iosPool, desktopWindows] = await Promise.all([
+  //
+  // `allSettled`, not `all`: on a rejection `all` returns immediately while its siblings keep
+  // opening, and this function then throws without ever handing the caller the clients that DID
+  // open — so those simulator/emulator sessions stay alive and pin their device for the next test.
+  // Collect every outcome, close what opened, then rethrow the original failure.
+  const [androidSettled, iosSettled, desktopSettled] = await Promise.allSettled([
     totalAndroid > 0 ? openAppMultipleDevices('android', totalAndroid, testInfo) : [],
     totalIos > 0
       ? openAppMultipleDevices('ios', totalIos, testInfo, isPro ? IOS_PRO_CONTEXT : undefined)
@@ -151,6 +182,18 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
       ? openApps(totalDesktop).then(apps => Promise.all(apps.map(app => waitFirstWindow(app))))
       : [],
   ]);
+  const androidPool = androidSettled.status === 'fulfilled' ? androidSettled.value : [];
+  const iosPool = iosSettled.status === 'fulfilled' ? iosSettled.value : [];
+  const desktopWindows = desktopSettled.status === 'fulfilled' ? desktopSettled.value : [];
+
+  const firstFailure = [androidSettled, iosSettled, desktopSettled].find(
+    (r): r is PromiseRejectedResult => r.status === 'rejected'
+  );
+  if (firstFailure) {
+    await closePartiallyOpenedClients([...androidPool, ...iosPool], desktopWindows);
+    throw firstFailure.reason;
+  }
+
   const desktopPool = desktopWindows.map(page => new DesktopWrapper(page));
 
   let ai = 0;
