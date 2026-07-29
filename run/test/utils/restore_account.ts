@@ -12,6 +12,36 @@ import {
 import { BaseSetupOptions } from './create_account';
 import { handleNotificationPermissions } from './permissions';
 
+/**
+ * Wait for the home screen, recovering if the notification prompt turned up too late to be caught.
+ *
+ * `processPermissions` polls for the prompt over a fixed window. A prompt that arrives after that
+ * window closes is never dismissed, and it then sits over the home screen — so the next step fails
+ * looking for something it can't reach, with an error that never mentions permissions. Widening the
+ * window only makes that rarer: a 5s probe has been seen missing it.
+ *
+ * So rather than waiting longer, check whether we actually got where we expected and deal with the
+ * prompt if we didn't. The probe costs nothing when the home screen is up, which is the usual case.
+ */
+const waitForHomeScreenAfterOnboarding = async (
+  device: DeviceWrapper,
+  allowNotificationPermissions: boolean
+) => {
+  const onHomeScreen = await device.doesElementExist({
+    ...new PlusButton(device).build(),
+    maxWait: 5_000,
+  });
+  if (onHomeScreen) {
+    return;
+  }
+  device.info(
+    'Home screen not reached after onboarding — checking for a late permission prompt/CTA'
+  );
+  await handleNotificationPermissions(device, allowNotificationPermissions);
+  await device.dismissCTA(true);
+  await device.waitForTextElementToBePresent(new PlusButton(device));
+};
+
 export const restoreAccount = async (
   device: DeviceWrapper,
   user: User,
@@ -48,7 +78,7 @@ export const restoreAccount = async (
   // screen after restore; dismiss it via its close button so the home screen is reachable.
   await device.dismissCTA(true);
   // Check that we're on the home screen
-  await device.waitForTextElementToBePresent(new PlusButton(device));
+  await waitForHomeScreenAfterOnboarding(device, allowNotificationPermissions);
 };
 
 /**
@@ -92,5 +122,5 @@ export const restoreAccountNoFallback = async (
   // screen after restore; dismiss it via its close button so the home screen is reachable.
   await device.dismissCTA(true);
   // Check that we're on the home screen
-  await device.waitForTextElementToBePresent(new PlusButton(device));
+  await waitForHomeScreenAfterOnboarding(device, allowNotificationPermissions);
 };

@@ -2,7 +2,7 @@ import type { TestInfo } from '@playwright/test';
 
 import { tStripped } from '../../../localizer/lib';
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import { DisappearActions, DisappearModes } from '../../../types/testing';
+import { DisappearActions, DISAPPEARING_TIMES, DisappearModes } from '../../../types/testing';
 import { ConversationSettings } from '../../locators/conversation';
 import {
   DisableDisappearingMessages,
@@ -10,13 +10,10 @@ import {
   DisappearingMessagesSubtitle,
   SetDisappearMessagesButton,
 } from '../../locators/disappearing_messages';
-import { ConversationItem } from '../../locators/home';
 import { open_Alice2_Bob1_friends } from '../../state_builder';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
-import {
-  getDisappearingTestTime,
-  setDisappearingMessage,
-} from '../../utils/set_disappearing_messages';
+import { openConversation } from '../../utils/open_conversation';
+import { setDisappearingMessage } from '../../utils/set_disappearing_messages';
 
 bothPlatformsIt({
   title: 'Disappear after send off 1:1',
@@ -39,7 +36,13 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType, testIn
 
   const mode: DisappearModes = 'send';
   const controlMode: DisappearActions = 'sent';
-  const time = getDisappearingTestTime();
+  // Deliberately not getDisappearingTestTime(): this spec never waits for anything to expire, it
+  // checks that turning the feature off syncs. A short timer is actively harmful here, because the
+  // "You set messages to disappear ..." control message is itself subject to the timer it announces
+  // — so the checks below race a countdown that starts the moment the setting is applied, and the
+  // devices furthest from the action (linked device, recipient) are the ones that lose. A timer that
+  // outlives the test removes the race without costing runtime.
+  const time = DISAPPEARING_TIMES.ONE_WEEK;
   // Select disappearing messages option
   await setDisappearingMessage(alice1, ['1:1', `Disappear after ${mode} option`, time]);
   // Check control messages on both devices and sync to linked device
@@ -56,9 +59,9 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType, testIn
         disappearing_messages_type: controlMode,
       })
     ),
-    alice2
-      .clickOnElementAll(new ConversationItem(alice2, bob.userName))
-      .then(() => alice2.waitForControlMessageToBePresent(setYouMsg)),
+    openConversation(alice2, bob.userName).then(() =>
+      alice2.waitForControlMessageToBePresent(setYouMsg)
+    ),
   ]);
 
   // Turn off disappearing messages on device 1

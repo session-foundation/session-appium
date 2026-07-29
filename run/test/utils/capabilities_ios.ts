@@ -218,6 +218,11 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   'appium:showXcodeLog': false,
   'appium:autoDismissAlerts': false,
   'appium:reduceMotion': true,
+  // WDA waits for the app to be idle before each command. A disappearing-message countdown repaints
+  // every second, so the app never becomes idle and the wait runs to WDA's own limit — single
+  // findElements calls have been measured at 21s and 60s. This bounds that wait rather than removing
+  // it: ordinary screens still get synchronised, a ticking one costs a second.
+  'appium:waitForIdleTimeout': 1,
   'appium:processArguments': {
     env: {
       debugDisappearingMessageDurations: 'true',

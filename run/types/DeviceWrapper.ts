@@ -2600,10 +2600,16 @@ export class DeviceWrapper implements IMobileWrapper {
       });
 
       try {
-        // Execute the action in the home screen context
+        // Execute the action in the home screen context.
+        //
+        // Matches the Android branch above. The dialog is normally already up by the time we look
+        // (found on the first poll), so this ceiling costs nothing in the usual case — it's only
+        // paid when no dialog ever arrives. Missing a slow one is expensive though: it goes on to
+        // cover the home screen, and every subsequent step fails against a screen it can't reach,
+        // far from any mention of permissions.
         const iosPermissions = await this.doesElementExist({
           ...locatorConfig,
-          maxWait: 2_000,
+          maxWait: 5_000,
         });
 
         if (iosPermissions) {
