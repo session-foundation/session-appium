@@ -1,0 +1,94 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+name: build-session-desktop
+
+description: |
+  Build a session-desktop checkout from source, so the harness can launch it.
+
+  The harness runs `<SESSION_DESKTOP_ROOT>/app/ts/mains/main_node.js` with Electron
+  (run/desktop/open.ts) — i.e. the `pnpm build` output of a source checkout, NOT a packaged
+  build. A packaged build blanks NODE_APP_INSTANCE, which kills `isTestIntegration()`, the
+  per-instance userData isolation and multi-window launching.
+
+  Ported from session-desktop's own `actions/setup`, with the paths prefixed for a nested
+  checkout. The caches are what make this ~3-5 min instead of 15-25.
+
+inputs:
+  working-directory:
+    description: 'Path of the session-desktop checkout, relative to the workspace'
+    required: false
+    default: 'desktop'
+  cache_suffix:
+    description: 'Platform/build identifier for cache isolation (e.g. mac-arm64, linux_x64)'
+    required: false
+    default: 'mac-arm64'
+
+runs:
+  using: 'composite'
+  steps:
+    # Native deps (libsession-util, sqlcipher) — the slowest part of a cold build.
+    - name: Setup ccache
+      uses: hendrikmuhs/ccache-action@5ebbd400eff9e74630f759d94ddd7b6c26299639 # v1.2
+      with:
+        key: ${{ runner.os }}-ccache-${{ inputs.cache_suffix }}-${{ github.head_ref || github.ref_name }}
+        # if the exact key is not found, fall back to one matching our cache_suffix
+        restore-keys: ${{ runner.os }}-ccache-${{ inputs.cache_suffix }}-
+
+    # Desktop pins its own pnpm in its package.json (a different patch to the harness's), so
+    # point the setup at the nested checkout rather than the workspace root.
+    - name: Setup pnpm (desktop)
+      uses: pnpm/action-setup@v5
+      with:
+        package_json_file: ${{ inputs.working-directory }}/package.json
+
+    - name: Setup node.js (desktop)
+      uses: actions/setup-node@v6
+      with:
+        node-version-file: ${{ inputs.working-directory }}/.nvmrc
+        cache: 'pnpm'
+        cache-dependency-path: ${{ inputs.working-directory }}/pnpm-lock.yaml
+
+    - name: Setup cache for .electron-gyp
+      uses: actions/cache@v4
+      with:
+        path: ~/.electron-gyp
+        key: electron-gyp-${{ runner.os }}-${{ runner.arch }}-${{ inputs.cache_suffix }}-${{ hashFiles(format('{0}/pnpm-lock.yaml', inputs.working-directory)) }}
+        restore-keys: |
+          electron-gyp-${{ runner.os }}-${{ runner.arch }}-${{ inputs.cache_suffix }}-
+          electron-gyp-${{ runner.os }}-${{ runner.arch }}-
+
+    - name: Setup cache for TypeScript build info
+      uses: actions/cache@v4
+      with:
+        path: ${{ inputs.working-directory }}/tsconfig.tsbuildinfo
+        key: tsbuildinfo-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles(format('{0}/pnpm-lock.yaml', inputs.working-directory), format('{0}/tsconfig.json', inputs.working-directory)) }}
+        restore-keys: |
+          tsbuildinfo-${{ runner.os }}-${{ runner.arch }}-
+
+    # NOT --ignore-scripts: postinstall runs patch-package, `electron-builder install-app-deps`
+    # and build:protobuf, all of which the build needs.
+    # node_modules itself is deliberately NOT cached wholesale — session-playwright's CI has
+    # that commented out with "caching is breaking things up (app doesn't start)".
+    - name: Install Desktop node_modules
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        NPM_CONFIG_LOGLEVEL: verbose
+      run: pnpm install
+
+    # `build`, not `build-release`: the harness never touches the electron-builder output.
+    - name: Build Desktop
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: pnpm build
+
+    - name: Assert the harness entrypoint exists
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        if [ ! -f app/ts/mains/main_node.js ]; then
+          echo "ERROR: app/ts/mains/main_node.js is missing after 'pnpm build'."
+          echo "That is the file the harness launches with Electron (run/desktop/open.ts),"
+          echo "so the tests would fail with an unhelpful Electron error. Failing here instead."
+          exit 1
+        fi
+        echo "Desktop built: $(pwd)/app/ts/mains/main_node.js"
