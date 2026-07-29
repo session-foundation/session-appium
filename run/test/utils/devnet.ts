@@ -30,16 +30,27 @@ function activeSnodeCount(payload: unknown): number | undefined {
 }
 
 /**
- * How many active service nodes the probe asks for, and the minimum it accepts. Capped because an
- * unlimited `get_n_service_nodes` returns every node on the network (>1000 states on mainnet), and
- * the probe only needs enough to know the registry is populated — a local devnet brings up ~12.
+ * Minimum number of active service nodes the probe accepts as "the registry is populated" — a local
+ * devnet brings up ~12.
  */
 const SEED_PROBE_MIN_NODES = 5;
 
 /**
+ * How many the probe asks for. Capped because an unlimited `get_n_service_nodes` returns every node
+ * on the network (>1000 states on mainnet), and kept strictly ABOVE the minimum: `limit` truncates
+ * the reply, so with `limit === SEED_PROBE_MIN_NODES` the count check could only ever pass at
+ * exactly the cap, and raising the minimum alone would make it unsatisfiable.
+ */
+const SEED_PROBE_LIMIT = SEED_PROBE_MIN_NODES * 2;
+
+/**
  * A seed node is only usable if its oxend RPC answers the request its consumers actually make:
  * `get_n_service_nodes` on `/json_rpc`, the same call Desktop's `getSnodesFromSeedUrl` and the
- * qa-seeder (`@session-foundation/network-requests`) send, returning at least one active node.
+ * qa-seeder (`@session-foundation/network-requests`) send, returning at least
+ * `SEED_PROBE_MIN_NODES` active nodes.
+ * `active_only` / `limit` / `fields` are exactly the params those consumers use — the qa-seeder's
+ * `GetSnodesFromSeed` sends all three (with `limit: 20`), while Desktop omits `limit` on purpose
+ * because it prunes cached swarms against the reply, which a liveness probe doesn't do.
  *
  * A bare GET liveness probe is not enough: any listener on the port passes it — a 404, an unrelated
  * service, or an oxend that has come up with zero registered nodes (routine on a freshly started
@@ -57,7 +68,7 @@ async function isDevnetReachable(url: string = DEVNET_URL): Promise<boolean> {
     method: 'get_n_service_nodes',
     params: {
       active_only: true,
-      limit: SEED_PROBE_MIN_NODES,
+      limit: SEED_PROBE_LIMIT,
       fields: { public_ip: true, storage_port: true },
     },
   });
@@ -195,7 +206,11 @@ export function getAppDisplayName(): AppName {
 //   - iOS     : NETWORK_TARGET, injected as app launch args (capabilities_ios.ts)
 //   - Android : the APK build variant (IS_AUTOMATIC_QA / an `automaticQa` filename) — NETWORK_TARGET
 //               is ignored entirely
-//   - Desktop : whichever build SESSION_DESKTOP_ROOT points at, signalled by LOCAL_DEVNET_SEED_URL
+//   - Desktop : LOCAL_DEVNET_SEED_URL, which despite the name is a general seed-node override and
+//               DEFAULTS TO TESTNET here (not mainnet) — see resolveDesktopTarget below
+//
+// So the out-of-the-box combination (iOS mainnet + Desktop testnet) does NOT agree; Desktop has to
+// be pinned with LOCAL_DEVNET_SEED_URL, or iOS moved with NETWORK_TARGET.
 //
 // If they disagree, the seeder writes the account onto one network while a client polls another,
 // and the test simply hangs until the 480s timeout with no clue why. `getNetworkTarget` can't

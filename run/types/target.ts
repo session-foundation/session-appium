@@ -1,11 +1,11 @@
 /**
- * The two axes a test run targets. Both were previously duplicated across modules
- * (`IosServiceNetwork` in capabilities_ios + `NetworkClass` in devnet;
- * `WorkersPlatform` in binaries + `ClientPlatform` in devnet), so they live here instead.
+ * The two axes a test run targets. Both unions had drifted into per-module copies (one in
+ * `capabilities_ios.ts` and another in `devnet.ts`; one in `binaries.ts` and another in
+ * `devnet.ts`), so they are defined once here and imported everywhere else.
  *
  * Deliberately a dependency-free leaf module: it is imported by `playwright.config.ts`,
- * `capabilities_ios.ts` and `devnet.ts`, none of which should pull in a runtime module chain
- * just to name a union.
+ * `binaries.ts`, `capabilities_ios.ts` and `devnet.ts`, none of which should have to pull in a
+ * runtime module chain just to name a union.
  */
 
 /** A platform this suite can drive a client on. */
