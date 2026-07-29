@@ -186,12 +186,39 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
   const iosPool = iosSettled.status === 'fulfilled' ? iosSettled.value : [];
   const desktopWindows = desktopSettled.status === 'fulfilled' ? desktopSettled.value : [];
 
-  const firstFailure = [androidSettled, iosSettled, desktopSettled].find(
-    (r): r is PromiseRejectedResult => r.status === 'rejected'
+  // Report EVERY opener that failed, not just the first. The three run concurrently, so a bad
+  // simulator pool or a stale Desktop build routinely takes down more than one at a time — and
+  // `.find()` would silently drop all but android's reason, which is the case allSettled exists to
+  // handle well. Each reason is logged with its platform (that keeps its own stack intact), then a
+  // single failure is rethrown verbatim and multiple are aggregated.
+  const failures = (
+    [
+      ['android', androidSettled],
+      ['ios', iosSettled],
+      ['desktop', desktopSettled],
+    ] as const satisfies ReadonlyArray<readonly [ClientPlatform, PromiseSettledResult<unknown>]>
+  ).filter(
+    (entry): entry is readonly [ClientPlatform, PromiseRejectedResult] =>
+      entry[1].status === 'rejected'
   );
-  if (firstFailure) {
+  if (failures.length > 0) {
     await closePartiallyOpenedClients([...androidPool, ...iosPool], desktopWindows);
-    throw firstFailure.reason;
+    failures.forEach(([platform, r]) =>
+      console.error(`Cross-platform open failed for ${platform}:`, r.reason)
+    );
+    if (failures.length === 1) {
+      throw failures[0][1].reason;
+    }
+    throw new AggregateError(
+      failures.map(([, r]) => r.reason as unknown),
+      `${failures.length} platform openers failed: ` +
+        failures
+          .map(
+            ([platform, r]) =>
+              `${platform}: ${r.reason instanceof Error ? r.reason.message : String(r.reason)}`
+          )
+          .join(' | ')
+    );
   }
 
   const desktopPool = desktopWindows.map(page => new DesktopWrapper(page));

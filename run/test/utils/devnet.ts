@@ -306,6 +306,10 @@ function resolveDesktopTarget(): ResolvedNetworkTarget {
 /**
  * Resolve the network each given platform is actually pointed at. Unlike `getNetworkTarget` this
  * never consults or writes the DETECTED_NETWORK_TARGET cache, so every platform is really resolved.
+ *
+ * `present` is deduped first: a platform's network is a property of the environment, not of how
+ * many clients of it a test opens, so resolving it twice would only re-read the APK path, log
+ * again, and name the platform twice in the mismatch error. One entry out per DISTINCT platform in.
  */
 export function resolveNetworkTargets(present: Array<ClientPlatform>): ResolvedNetworkTarget[] {
   const resolvers: Record<ClientPlatform, () => ResolvedNetworkTarget> = {
@@ -313,7 +317,8 @@ export function resolveNetworkTargets(present: Array<ClientPlatform>): ResolvedN
     android: resolveAndroidTarget,
     desktop: resolveDesktopTarget,
   };
-  return present.map(platform => resolvers[platform]());
+
+  return [...new Set(present)].map(platform => resolvers[platform]());
 }
 
 /**
@@ -368,10 +373,15 @@ export async function assertConsistentNetworkTarget(
   // endpoint (the `IP:RPC` / DEVNET_RPC_PORT port, 1280 on Sesh-Net-Docker) — Desktop passes it
   // straight to `getSnodesFromSeedUrl`, the same get_n_service_nodes call the seeder makes.
   // Android is preferred purely to preserve the pre-existing behaviour for android+desktop tests.
-  const order: Array<ClientPlatform> = ['android', 'ios', 'desktop'];
-  const seederRef = order
-    .map(p => resolved.find(t => t.platform === p))
-    .find((t): t is ResolvedNetworkTarget => t !== undefined)!.ref;
+  //
+  // A Record, not a list, so the compiler enforces coverage: a fourth ClientPlatform missing from
+  // an `Array<ClientPlatform>` still typechecks and would leave a devnet run made up only of that
+  // platform picking no ref at all. Here it is a build error instead.
+  const seederPreference: Record<ClientPlatform, number> = { android: 0, ios: 1, desktop: 2 };
+  // `resolved` is non-empty: `present` was checked above and dedupe keeps at least one entry.
+  const seederRef = [...resolved].sort(
+    (a, b) => seederPreference[a.platform] - seederPreference[b.platform]
+  )[0].ref;
 
   // Every distinct ref has to be up, not just the seeder's: a client pointed at a dead seed node
   // hangs the test to the timeout with no clue why, even when the seeder's own endpoint is fine.
