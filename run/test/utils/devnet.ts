@@ -261,15 +261,25 @@ function resolveDesktopTarget(): ResolvedNetworkTarget {
       knob,
     };
   }
-  if (!seedUrl.startsWith('http')) {
-    throw new Error(
+  const invalidSeedUrl = () =>
+    new Error(
       `LOCAL_DEVNET_SEED_URL must be an http(s) URL (got "${seedUrl}"). ` +
         `Unset it to let Desktop use its default (testnet under this harness).`
     );
-  }
 
-  // `getSeedNodeList()` returns [seedUrl] verbatim, so the URL alone decides the network.
-  const parsed = new URL(seedUrl);
+  // `getSeedNodeList()` returns [seedUrl] verbatim, so the URL alone decides the network. Parse
+  // rather than string-match on "http": a value like `http-devnet` passes a `startsWith` check and
+  // then dies with a bare `TypeError: Invalid URL`, and `httpx://host` would parse and be silently
+  // accepted as a devnet seed.
+  let parsed: URL;
+  try {
+    parsed = new URL(seedUrl);
+  } catch {
+    throw invalidSeedUrl();
+  }
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+    throw invalidSeedUrl();
+  }
   if (DESKTOP_MAINNET_SEED_HOSTS.includes(parsed.hostname)) {
     const networkClass: ServiceNetwork =
       parsed.port === DESKTOP_TESTNET_PORT ? 'testnet' : 'mainnet';
