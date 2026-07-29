@@ -199,6 +199,16 @@ export type Simulator = {
  * Android runs).
  */
 export function resolveRunSimulators(): Simulator[] {
+  if (process.env.CI === '1') {
+    const jsonPath = 'ci-simulators.json';
+
+    if (existsSync(jsonPath)) {
+      console.log('Using simulators from ci-simulators.json (CI)');
+      return JSON.parse(readFileSync(jsonPath, 'utf-8')) as Simulator[];
+    }
+    throw new Error(`CI mode: ${jsonPath} not found`);
+  }
+
   const fromEnv: Simulator[] = [];
   for (let index = 0; index < MAX_SIMULATORS; index++) {
     const udid = getSimulatorUDID(index + 1);
@@ -211,15 +221,6 @@ export function resolveRunSimulators(): Simulator[] {
   if (fromEnv.length > 0) {
     console.log(`Using ${fromEnv.length} simulators from .env file`);
     return fromEnv;
-  }
-
-  const jsonPath = 'ci-simulators.json';
-  if (process.env.CI === '1') {
-    if (existsSync(jsonPath)) {
-      console.log('Using simulators from ci-simulators.json (CI)');
-      return JSON.parse(readFileSync(jsonPath, 'utf-8')) as Simulator[];
-    }
-    throw new Error(`CI mode: ${jsonPath} not found`);
   }
 
   throw new Error(
