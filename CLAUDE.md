@@ -99,13 +99,39 @@ simulators make the whole step a no-op, so back-to-back runs skip it.
 > (`simctl launch` needs a booted device) and uses `simctl bootstatus -b`, which waits for boot to
 > genuinely finish. If CI becomes flaky at startup, this block is the first thing to revert.
 
-> **Stay at 1 worker locally.** Each booted simulator spawns **~280 host processes** — 6 sims took a
-> 14-core Mac to a load average of ~500 and caused specs to fail on timeouts that had nothing to do
-> with the app (they passed immediately at 1 worker). Parallelism *works* (workers get correctly
-> offset device pools), but the host, not the harness, is the bottleneck: throughput barely improves
-> and false failures become indistinguishable from real ones. `global-setup.ts` prints a warning
-> when `workers > 1`. If you must parallelise, use 2 workers × 2 devices (same total sim count)
-> restricted to `@1-devices`/`@2-devices` specs.
+### Parallelism
+
+Use `pnpm test-ios-parallel --tier standard` (6 simulators). Tiers live in
+`run/constants/parallelism.ts`, which both the local runner and CI read — `--list-tiers` prints them.
+
+`DEVICES_PER_TEST_COUNT` is one global per Playwright invocation, so a single run has to size *every*
+worker's pool for the largest spec: at `D=4` a `@1-devices` spec occupies a worker holding four
+simulators and using one. So parallelism is expressed as one invocation **per device class**, run in
+sequence — which means the simulator draw is the largest pass, not the sum.
+
+Measured 2026-07-30 (`--shard=1/4`, no `@pro`, 14-core Apple Silicon, on a build carrying the
+SnodePool use-after-free fix — 9 configs, 39 min, zero crashes):
+
+| specs | W=1 | W=2 | W=3 | W=4 |
+|---|---|---|---|---|
+| `@1-devices` | 271s | 133s (2.04×) | 105s (2.58×) | 90s (3.01×) |
+| `@2-devices` | 549s | 295s (1.86×) | 226s (2.43×) | — |
+| `@3-devices` | 427s | 227s (1.88×) | — | — |
+
+`standard` totals 543s against 1247s all-serial (**2.30×**). `@4-devices` is unmeasured and gets no
+parallelism below 8 simulators; nothing above W=4 is measured on any host.
+
+> **This supersedes earlier "stay at 1 worker" guidance.** That note reported 6 simulators taking a
+> 14-core Mac to a load average of ~500 with timeout failures unrelated to the app. Both 6-simulator
+> configurations above now run clean, and `@3-devices` at W=2 was the only configuration in the matrix
+> with zero test failures. Two things changed in between: the specs were hardened (several races
+> fixed), and a libsession use-after-free was crashing the app ~1s after launch, which inflated
+> baselines and produced failures that looked like host saturation. `global-setup.ts` still warns when
+> `workers > 1`; that warning is now stale for tiered runs.
+>
+> The underlying constraint is real, though — each booted simulator is **~280 host processes**, and an
+> over-subscribed host fails with timeouts indistinguishable from product bugs. Raise a tier only
+> after measuring it on the hardware in question.
 
 ## Running tests
 
@@ -118,7 +144,13 @@ pnpm test-one '<title> @ios'     # one spec, constrained to a platform
 pnpm test-one-logs '<title>'     # one spec with full device logs
 pnpm test-no-retry '<grep>'      # retries disabled
 pnpm test-high-risk-ios          # --grep '@ios @high-risk'
+
+pnpm test-ios-parallel --tier standard   # tiered, 6 sims — fastest full-suite local run
+pnpm test-ios-parallel --list-tiers      # tiers, their cost and their passes
 ```
+
+`--tier` provisions throwaway simulators and runs one pass per device class; a `--grep` alongside it
+narrows every pass rather than replacing the device-class filter. See **Parallelism** above.
 
 ### How tags work
 
@@ -148,10 +180,17 @@ an existing spec (e.g. `run/test/specs/app_disguise_icons.spec.ts`).
 
 ## CI vs local
 
-CI (`.github/workflows/ios-regression.yml`) runs on a **self-hosted macOS** runner with
-`CI=1`, `PLAYWRIGHT_WORKERS_COUNT_IOS=3`, `DEVICES_PER_TEST_COUNT=4` (→ 12 simulators from
-`ci-simulators.json`), and `IOS_APP_PATH_PREFIX` pointing at an extracted `Session.app`.
-Locally, simulators come from `.env` (`IOS_N_SIMULATOR`) instead of `ci-simulators.json`.
+CI (`.github/workflows/ios-regression.yml`) runs on a **self-hosted macOS** runner with `CI=1`, 12
+simulators from `ci-simulators.json`, and `IOS_APP_PATH_PREFIX` pointing at an extracted
+`Session.app`. Locally, simulators come from `.env` (`IOS_N_SIMULATOR`) instead.
+
+The run step is **tiered** like the local runner: it shells out to `scripts/print_tier.ts ci` and
+does one `npx playwright test` per device class, setting `DEVICES_PER_TEST_COUNT` and
+`PLAYWRIGHT_WORKERS_COUNT_IOS` per pass, so the worker counts are not duplicated in YAML. Every pass
+runs even if an earlier one fails (the step still exits non-zero), and Allure results accumulate
+across invocations because the reporter does not clear `resultsDir` — so the report step still sees
+one merged run. The `ci` tier is deliberately **not** maximum utilisation: its worker counts above 4
+are extrapolated, not measured on the runner.
 
 Device allocation is the **same code path** locally and on CI: `openiOSApp` (in
 `open_app.ts`) always offsets each worker's device pool by its parallel index
@@ -159,9 +198,15 @@ Device allocation is the **same code path** locally and on CI: `openiOSApp` (in
 single worker (the local default) this simply collapses to devices `0..N-1`; with more
 workers it fans out (worker 0: devices 0–3, worker 1: 4–7, …), so N workers need
 `N * DEVICES_PER_TEST_COUNT` simulators. To run multi-worker locally, use
-`pnpm test-ios-parallel` (`scripts/run_ios_parallel.ts`), which provisions exactly that many
-throwaway simulators and wires their UDIDs into the run. Keep this in mind when editing
-`capabilities_ios.ts` / `open_app.ts`.
+`pnpm test-ios-parallel --tier standard` (`scripts/run_ios_parallel.ts`), which provisions exactly
+the simulators the tier's largest pass needs and wires their UDIDs into the run. Keep this in mind
+when editing `capabilities_ios.ts` / `open_app.ts`.
+
+Note this pool is **per worker and uniform** — there is no way to give one worker 4 devices and
+another 2 in the same invocation, which is why tiering is sequential passes rather than a mixed run.
+Making it mixed would mean replacing the offset with a shared pool that specs check out from, which
+introduces a deadlock (two workers holding 3 of 6 simulators, both wanting 4) that the current design
+cannot hit.
 
 ## Gotchas
 

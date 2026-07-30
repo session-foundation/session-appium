@@ -2,6 +2,14 @@ import { spawn } from 'child_process';
 import dotenv from 'dotenv';
 
 import {
+  PARALLEL_TIER_NAMES,
+  PARALLEL_TIERS,
+  type ParallelPass,
+  type ParallelTierName,
+  passGrep,
+  simulatorsRequired,
+} from '../run/constants/parallelism';
+import {
   ALLOWED_IOS_NETWORKS,
   type IosServiceNetwork,
   type Simulator,
@@ -25,6 +33,8 @@ import { deleteSimulators } from './ios_shared';
  * environment (without touching your .env), and cleans up after itself.
  *
  * Usage:
+ *   pnpm test-ios-parallel --tier standard          # tiered: one pass per device class (recommended)
+ *   pnpm test-ios-parallel --list-tiers             # show the tiers and what they cost
  *   pnpm test-ios-parallel                                      # 2 workers x 2 devices (4 sims), grep @ios
  *   pnpm test-ios-parallel --devices-per-worker 4               # 2 workers x 4 devices (8 sims)
  *   pnpm test-ios-parallel --workers 3 --devices-per-worker 4   # 3 workers x 4 devices (12 sims)
@@ -42,6 +52,15 @@ import { deleteSimulators } from './ios_shared';
  *   - `--runtime` picks the iOS simulator runtime (a version like "26.1" or a full identifier).
  *     If omitted, the preferred runtime is used when installed, otherwise the newest installed
  *     iOS runtime. Device type is overridable via the IOS_SIM_DEVICE_TYPE env var.
+ *   - `--tier` runs one Playwright invocation per device class (see run/constants/parallelism.ts),
+ *     each with its own devices-per-worker and worker count. This exists because
+ *     `DEVICES_PER_TEST_COUNT` is a single global per invocation, so a single run has to size its
+ *     pools for the largest spec and wastes simulators on every smaller one. Passes run in sequence,
+ *     so the pool is the largest pass, not the sum. `--tier` replaces `--workers` /
+ *     `--devices-per-worker`; combining them is rejected. A `--grep` given alongside `--tier` is
+ *     ANDed in as an extra lookahead on top of the pass's own platform/device-count filter.
+ *     A failing pass does not stop the remaining passes — you get the whole picture, and the exit
+ *     status is non-zero if any pass failed.
  *   - `--devices-per-worker` is the per-worker simulator pool. It must be >=
  *     the largest test's device count in your grep, otherwise those tests fail fast with a clear
  *     error (see openiOSApp). The default of 2 covers @1-devices / @2-devices tests; use
@@ -60,11 +79,17 @@ dotenv.config({ quiet: true });
 
 const MAX_SIMULATORS = 12;
 
+const DEFAULT_GREP = '@ios';
+
 type ParsedArgs = {
   workers: number;
   devicesPerWorker: number;
   grep: string;
   keep: boolean;
+  tier?: ParallelTierName;
+  listTiers: boolean;
+  /** Set when the caller passed --workers/--devices-per-worker, so --tier can reject the combination. */
+  explicitPools: boolean;
   runtime?: string;
   network?: string;
   passthrough: string[];
@@ -74,8 +99,10 @@ function parseArgs(argv: string[]): ParsedArgs {
   const args: ParsedArgs = {
     workers: 2,
     devicesPerWorker: 2,
-    grep: '@ios',
+    grep: DEFAULT_GREP,
     keep: false,
+    listTiers: false,
+    explicitPools: false,
     passthrough: [],
   };
 
@@ -99,13 +126,25 @@ function parseArgs(argv: string[]): ParsedArgs {
     const arg = ownArgs[i];
     if (arg === '--keep') {
       args.keep = true;
+    } else if (arg === '--list-tiers') {
+      args.listTiers = true;
+    } else if (arg.startsWith('--tier')) {
+      const [value, consumedNext] = readValue(arg, ownArgs[i + 1]);
+      if (!PARALLEL_TIER_NAMES.includes(value as ParallelTierName)) {
+        console.error(`Invalid --tier "${value}". Use ${PARALLEL_TIER_NAMES.join(' | ')}.`);
+        process.exit(1);
+      }
+      args.tier = value as ParallelTierName;
+      if (consumedNext) i++;
     } else if (arg.startsWith('--workers')) {
       const [value, consumedNext] = readValue(arg, ownArgs[i + 1]);
       args.workers = parseInt(value);
+      args.explicitPools = true;
       if (consumedNext) i++;
     } else if (arg.startsWith('--devices-per-worker')) {
       const [value, consumedNext] = readValue(arg, ownArgs[i + 1]);
       args.devicesPerWorker = parseInt(value);
+      args.explicitPools = true;
       if (consumedNext) i++;
     } else if (arg.startsWith('--grep')) {
       const [value, consumedNext] = readValue(arg, ownArgs[i + 1]);
@@ -139,6 +178,23 @@ function validate(args: ParsedArgs): number {
     console.error(`Invalid --network "${args.network}". Use ${ALLOWED_IOS_NETWORKS.join(' | ')}.`);
     process.exit(1);
   }
+  if (args.tier) {
+    if (args.explicitPools) {
+      console.error(
+        `--tier sets devices-per-worker and workers per pass, so it cannot be combined with ` +
+          `--workers / --devices-per-worker. Drop one or the other.`
+      );
+      process.exit(1);
+    }
+    const needed = simulatorsRequired(PARALLEL_TIERS[args.tier]);
+    if (needed > MAX_SIMULATORS) {
+      console.error(
+        `Tier "${args.tier}" needs ${needed} simulators, but the maximum is ${MAX_SIMULATORS}.`
+      );
+      process.exit(1);
+    }
+    return needed;
+  }
   if (isNaN(args.workers) || args.workers < 1) {
     console.error(`Invalid --workers value: ${args.workers}`);
     process.exit(1);
@@ -168,8 +224,66 @@ function printKeepInfo(simulators: Simulator[]): void {
   console.log('`xcrun simctl delete <udid>`.\n');
 }
 
-function main(): void {
+function printTiers(): void {
+  console.log('\nAvailable tiers (see run/constants/parallelism.ts for the measurements):\n');
+  for (const name of PARALLEL_TIER_NAMES) {
+    const tier = PARALLEL_TIERS[name];
+    console.log(`  ${name} — ${tier.summary}`);
+    console.log(`    simulators needed: ${simulatorsRequired(tier)}`);
+    for (const pass of tier.passes) {
+      console.log(
+        `      @${pass.devices}-devices  x${pass.workers} worker(s)  ` +
+          `(${pass.devices * pass.workers} sims)`
+      );
+    }
+    console.log('');
+  }
+}
+
+/** Runs one Playwright invocation to completion and resolves with its exit status. */
+function runPlaywright(playwrightArgs: string[], env: NodeJS.ProcessEnv): Promise<number> {
+  return new Promise((resolve, reject) => {
+    console.log(`\nRunning: npx ${playwrightArgs.join(' ')}\n`);
+    const child = spawn('npx', playwrightArgs, { stdio: 'inherit', env });
+
+    // Attached per invocation and detached on exit. A tiered run spawns one child per pass, so
+    // leaving these registered would leak listeners and signal already-dead children.
+    const forward = (signal: NodeJS.Signals) => () => child.kill(signal);
+    const onInt = forward('SIGINT');
+    const onTerm = forward('SIGTERM');
+    process.on('SIGINT', onInt);
+    process.on('SIGTERM', onTerm);
+    const detach = () => {
+      process.off('SIGINT', onInt);
+      process.off('SIGTERM', onTerm);
+    };
+
+    child.on('error', err => {
+      detach();
+      reject(err);
+    });
+    child.on('exit', (code, signal) => {
+      detach();
+      resolve(code ?? (signal ? 1 : 0));
+    });
+  });
+}
+
+function printTierSummary(name: string, results: { pass: ParallelPass; code: number }[]): void {
+  console.log(`\n=== tier "${name}" summary ===`);
+  for (const { pass, code } of results) {
+    const status = code === 0 ? 'pass' : `FAILED (exit ${code})`;
+    console.log(`  @${pass.devices}-devices x${pass.workers} worker(s): ${status}`);
+  }
+  console.log('');
+}
+
+async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2));
+  if (args.listTiers) {
+    printTiers();
+    return;
+  }
   const totalSimulators = validate(args);
 
   // Build the WebDriverAgent runner once up front so the driver reuses it across every simulator
@@ -217,27 +331,62 @@ function main(): void {
     console.log(`✓ Deleted ${deleted} simulator(s)`);
   };
 
-  const playwrightArgs = ['playwright', 'test', '--grep', args.grep, ...args.passthrough];
-  console.log(`\nRunning: npx ${playwrightArgs.join(' ')}\n`);
+  try {
+    if (args.tier) {
+      const tier = PARALLEL_TIERS[args.tier];
+      const results: { pass: ParallelPass; code: number }[] = [];
 
-  const child = spawn('npx', playwrightArgs, { stdio: 'inherit', env: childEnv });
+      for (const pass of tier.passes) {
+        // The pass owns the platform and device-count filter; a caller-supplied --grep is ANDed on
+        // top as a further lookahead rather than replacing it, so `--grep '@ios @high-risk'` narrows
+        // each pass instead of selecting the wrong device class.
+        const grep =
+          args.grep === DEFAULT_GREP ? passGrep(pass) : `${passGrep(pass)}(?=.*${args.grep})`;
 
-  // Forward interrupts to the child; its 'exit' below then triggers cleanup exactly once.
-  const forward = (signal: NodeJS.Signals) => () => child.kill(signal);
-  process.on('SIGINT', forward('SIGINT'));
-  process.on('SIGTERM', forward('SIGTERM'));
+        console.log(
+          `\n=== tier "${args.tier}": @${pass.devices}-devices, ${pass.workers} worker(s), ` +
+            `${pass.devices * pass.workers} simulator(s) ===`
+        );
 
-  child.on('error', err => {
+        const code = await runPlaywright(
+          [
+            'playwright',
+            'test',
+            '--grep',
+            grep,
+            // An empty pass is not a failure: an extra --grep can legitimately clear one device
+            // class while the others still have work to do.
+            '--pass-with-no-tests',
+            ...args.passthrough,
+          ],
+          {
+            ...childEnv,
+            DEVICES_PER_TEST_COUNT: String(pass.devices),
+            PLAYWRIGHT_WORKERS_COUNT_IOS: String(pass.workers),
+          }
+        );
+        // Deliberately not bailing on the first failure — a regression run is worth completing so
+        // you see every device class, not just up to the first one that broke.
+        results.push({ pass, code });
+      }
+
+      printTierSummary(args.tier, results);
+      cleanup();
+      process.exit(results.some(r => r.code !== 0) ? 1 : 0);
+    }
+
+    const code = await runPlaywright(
+      ['playwright', 'test', '--grep', args.grep, ...args.passthrough],
+      childEnv
+    );
+    cleanup();
+    // Preserve the child's exit status so CI/other callers see the real result.
+    process.exit(code);
+  } catch (err) {
     console.error('Failed to start Playwright:', err);
     cleanup();
     process.exit(1);
-  });
-
-  child.on('exit', (code, signal) => {
-    cleanup();
-    // Preserve the child's exit status so CI/other callers see the real result.
-    process.exit(code ?? (signal ? 1 : 0));
-  });
+  }
 }
 
-main();
+void main();
