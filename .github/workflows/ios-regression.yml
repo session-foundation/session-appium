@@ -190,6 +190,7 @@ jobs:
           PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
           PARALLEL_TIER: ci
         run: |
+          set -uo pipefail
           # One Playwright invocation per device class, driven by run/constants/parallelism.ts so the
           # worker counts live in one place rather than being duplicated here.
           #
@@ -200,7 +201,6 @@ jobs:
           #
           # Allure results accumulate across invocations (the reporter does not clear resultsDir), so
           # the report step below still sees one merged run.
-          set -uo pipefail
 
           PASSES="$(npx --yes ts-node scripts/print_tier.ts "$PARALLEL_TIER")"
           # An empty table would otherwise run zero tests and report success.
@@ -212,9 +212,17 @@ jobs:
           echo "$PASSES"
 
           overall=0
+          summary=""
           while read -r DEVICES WORKERS; do
             [ -n "$DEVICES" ] || continue
-            echo "::group::@${DEVICES}-devices x${WORKERS} worker(s) ($((DEVICES * WORKERS)) simulators)"
+            label="@${DEVICES}-devices x${WORKERS} worker(s) ($((DEVICES * WORKERS)) simulators)"
+
+            # Deliberately NOT wrapped in a ::group::. Groups don't nest in Actions, and the useful
+            # grouping is one level down — the WDA build and each test (run/types/ci_group_reporter.ts)
+            # — which a pass-level group would swallow. A pass-level group also rendered a failing step
+            # as nothing but headers and an exit code.
+            echo "--- $label ---"
+            status=0
             # --pass-with-no-tests: a RISK filter can legitimately empty one device class while the
             # others still have work, and that must not fail the run.
             DEVICES_PER_TEST_COUNT="$DEVICES" \
@@ -222,9 +230,22 @@ jobs:
             npx playwright test \
               --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})(?=.*@${DEVICES}-devices)" \
               --pass-with-no-tests \
-              $PRO_GREP_INVERT || overall=1
-            echo "::endgroup::"
+              $PRO_GREP_INVERT || status=$?
+
+            if [ "$status" -eq 0 ]; then
+              echo "PASS  $label"
+              summary="${summary}PASS  ${label}"$'\n'
+            else
+              # ::error:: surfaces as a job annotation, so the failing pass is visible without
+              # opening the log at all.
+              echo "::error::FAILED  $label (exit $status)"
+              summary="${summary}FAIL  ${label} (exit ${status})"$'\n'
+              overall=1
+            fi
           done <<< "$PASSES"
+
+          echo "Tier '$PARALLEL_TIER' summary:"
+          printf '%s' "$summary"
 
           # Every pass runs even if an earlier one failed, so the report covers the whole suite.
           exit $overall

@@ -35,6 +35,10 @@ const useAllure = process.env.CI === '1' && process.env.ALLURE_ENABLED !== 'fals
 const baseReporter: ReporterDescription = [
   './node_modules/@session-foundation/playwright-reporter/dist/index.js',
 ];
+// Listed BEFORE baseReporter so its onTestEnd opens a collapsible group that the base reporter's
+// per-test output then lands inside — reporters are called in array order. No-op outside GitHub
+// Actions. See run/types/ci_group_reporter.ts.
+const ciGroupReporter: ReporterDescription = ['./run/types/ci_group_reporter.ts'];
 const allureReporter: ReporterDescription = [
   'allure-playwright',
   {
@@ -52,7 +56,9 @@ const allureReporter: ReporterDescription = [
 export default defineConfig({
   timeout: 480000,
   globalTimeout: 18000000, // extends timeout to 5 hours run full suite with 3 retries
-  reporter: useAllure ? [baseReporter, allureReporter] : [baseReporter],
+  reporter: useAllure
+    ? [ciGroupReporter, baseReporter, allureReporter]
+    : [ciGroupReporter, baseReporter],
   globalSetup: require.resolve('./global-setup'),
   testDir: './run/test/specs',
   testIgnore: '*.js',
