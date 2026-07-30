@@ -1,6 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
-import { communities } from '../../../constants/community';
+import { getCommunities } from '../../../constants/community';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { DISAPPEARING_TIMES } from '../../../types/testing';
 import { InviteContactsMenuItem } from '../../locators';
@@ -43,6 +43,7 @@ async function disappearingCommunityInviteMessage(
   platform: SupportedPlatformsType,
   testInfo: TestInfo
 ) {
+  const communities = getCommunities();
   const {
     devices: { alice1, bob1 },
     prebuilt: { bob },

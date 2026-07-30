@@ -1,7 +1,7 @@
 import { test, type TestInfo } from '@playwright/test';
 import { USERNAME } from '@session-foundation/qa-seeder';
 
-import { communities } from '../../../constants/community';
+import { getCommunities } from '../../../constants/community';
 import { TestSteps } from '../../../types/allure';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { androidIt } from '../../../types/sessionIt';
@@ -69,6 +69,7 @@ async function bannerShouldShow(device: DeviceWrapper) {
 }
 
 async function bannerShowsThreeConvos(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
@@ -107,6 +108,7 @@ async function bannerDisappearsAfterOpened(platform: SupportedPlatformsType, tes
 }
 
 async function bannerPersists(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
     await newUser(device, USERNAME.ALICE, { saveUserData: false });

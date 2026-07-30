@@ -87,9 +87,10 @@ const STATIC_COMMUNITIES: Record<string, CommunityConfig> = process.env.COMMUNIT
 /**
  * The community set for the current test.
  *
- * Against a local SOGS each test allocates rooms of its own (see utils/community_rooms.ts), so this
- * has to resolve when it's read rather than when the module loads. Against the shared remote
- * communities nothing can be created, so it stays the fixed list it always was.
+ * A function rather than an exported object because against a local SOGS each test allocates rooms of
+ * its own (see utils/community_rooms.ts), so the answer differs per test and has to be resolved when
+ * it's read. Against the shared remote communities nothing can be created, so it stays the fixed list
+ * it always was.
  *
  * Reading `testCommunity` from a test that didn't declare `communityRooms` is a mistake rather than
  * a fallback: silently handing back a shared room is how tests end up interfering again, and the
@@ -111,16 +112,3 @@ export function getCommunities(): Record<string, CommunityConfig> {
     rooms.map((room, index) => [index === 0 ? 'testCommunity' : `community${index + 1}`, room])
   );
 }
-
-export const communities: Record<string, CommunityConfig> = new Proxy(
-  {},
-  {
-    get: (_target, key: string) => getCommunities()[key],
-    ownKeys: () => Reflect.ownKeys(getCommunities()),
-    getOwnPropertyDescriptor: (_target, key: string) => ({
-      value: getCommunities()[key],
-      enumerable: true,
-      configurable: true,
-    }),
-  }
-) as Record<string, CommunityConfig>;

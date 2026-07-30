@@ -1,7 +1,7 @@
 import { test, type TestInfo } from '@playwright/test';
 import { USERNAME } from '@session-foundation/qa-seeder';
 
-import { communities } from '../../../constants/community';
+import { getCommunities } from '../../../constants/community';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { ConversationPinnedIcon, PlusButton } from '../../locators/home';
@@ -104,6 +104,7 @@ async function pinConversation(platform: SupportedPlatformsType, testInfo: TestI
 }
 
 async function nonProPinnedLimit(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   const numCommunities = 6;
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, IOS_PRO_CONTEXT);
@@ -137,6 +138,7 @@ async function nonProPinnedLimit(platform: SupportedPlatformsType, testInfo: Tes
 }
 
 async function proPinnedLimit(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   const numCommunities = 6;
   const { device, alice } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, IOS_PRO_CONTEXT);

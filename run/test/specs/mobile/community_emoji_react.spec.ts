@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { communities } from '../../../constants/community';
+import { getCommunities } from '../../../constants/community';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { EmojiReactsPill, FirstEmojiReact, MessageBody } from '../../locators/conversation';
@@ -22,6 +22,7 @@ bothPlatformsIt({
 });
 
 async function sendEmojiReactionCommunity(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   const message = `Testing emoji reacts - ${new Date().getTime()} - ${platform}`;
   const {
     devices: { alice1, bob1 },

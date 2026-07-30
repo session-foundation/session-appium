@@ -1,6 +1,6 @@
 import test, { type TestInfo } from '@playwright/test';
 
-import { communities } from '../../../constants/community';
+import { getCommunities } from '../../../constants/community';
 import { tStripped } from '../../../localizer/lib';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
@@ -54,6 +54,7 @@ bothPlatformsIt({
 
 // Bob 1 + Bob 2 get banned by Alice the admin
 async function banUnbanLinked(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   assertAdminIsKnown();
   const msgSig = `${new Date().getTime()} - ${platform}`;
   const msg1 = `Ban, link, unban - ${msgSig}`;
@@ -126,6 +127,7 @@ async function banUnbanLinked(platform: SupportedPlatformsType, testInfo: TestIn
 
 // Bob 1 + Bob 2 get banned by Alice the admin
 async function banAndDeleteLinked(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   assertAdminIsKnown();
   const msgSig = `${new Date().getTime()} - ${platform}`;
   const msg1 = `Ban and delete linked - ${msgSig}`;

@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
 
-import { communities } from '../../constants/community';
+import { getCommunities } from '../../constants/community';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { CommunityInput, JoinCommunityButton } from '../locators';
 import { ConversationHeaderName, MessageBody } from '../locators/conversation';
@@ -54,6 +54,7 @@ export const openOrJoinCommunity = async (
 };
 
 export const joinCommunities = async (device: DeviceWrapper, toJoin: number) => {
+  const communities = getCommunities();
   const available = Object.values(communities).length;
   if (toJoin > available) {
     throw new Error(

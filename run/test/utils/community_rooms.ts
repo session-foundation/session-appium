@@ -119,7 +119,9 @@ function apiTransport(): RoomTransport {
         ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
       },
       method,
-      signal: AbortSignal.timeout(60_000),
+      // Create is the slowest operation and it seeds a message, so it isn't instant — but it has
+      // measured well under 2s, so this is a generous ceiling rather than an expected duration.
+      signal: AbortSignal.timeout(30_000),
     });
 
     const text = await response.text();
@@ -147,6 +149,10 @@ function apiTransport(): RoomTransport {
             `the same value as the sogs container's SOGS_ROOM_API_TOKEN`
         );
       }
+      // `GET /rooms` rather than the API's `/healthz`, deliberately: healthz is unauthenticated, so it
+      // proves only that something is listening. Listing rooms proves reachable *and* token accepted
+      // *and* database queryable — otherwise a wrong token passes the probe and fails on the first
+      // allocation instead. healthz stays useful for "is it up at all" without holding the token.
       await call('GET', '/rooms');
     },
     create: async (token, name) => void (await call('POST', '/rooms', { name, token })),
@@ -169,16 +175,21 @@ let allocated: CommunityRoom[] = [];
 let allocationCounter = 0;
 
 /**
- * Env var carrying the decision from global-setup to the workers, which inherit this process's env.
+ * Carries the decision from global-setup to the workers.
+ *
+ * An env var rather than a module-level boolean because **Playwright runs each worker in its own
+ * process**: `probePerTestRooms` runs once in the main process during global setup, and a variable set
+ * there would simply not exist in any worker. Workers inherit the environment of the process that
+ * spawned them, so this is the channel that crosses the boundary — the same mechanism QA_RUN_ID uses.
  */
 const ENABLED_FLAG = 'PER_TEST_COMMUNITY_ROOMS';
 
 /**
  * Whether this run allocates its own rooms.
  *
- * A cheap read of a decision made once by `probePerTestRooms` — deliberately not a check. This is
- * called on every `communities` property access, so it must not touch the filesystem or the network,
- * and every caller must agree: a test that allocated rooms and a `communities` lookup that decided
+ * A cheap read of a decision made once by `probePerTestRooms` — deliberately not a check. Every
+ * `getCommunities()` call asks this, so it must not touch the filesystem or the network, and every
+ * caller must agree: a test that allocated rooms alongside a `getCommunities()` call that decided
  * otherwise would read a shared room while believing it had its own.
  *
  * Defaults to off when the probe hasn't run, so anything importing this outside a test run gets the

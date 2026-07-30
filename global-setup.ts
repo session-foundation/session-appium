@@ -1,4 +1,5 @@
 import { FullConfig } from '@playwright/test';
+import { v4 as uuidv4 } from 'uuid';
 
 import { getDevicesPerTestCount, getWorkersCount } from './run/test/utils/binaries';
 import { gcCommunityRooms, probePerTestRooms } from './run/test/utils/community_rooms';
@@ -37,9 +38,7 @@ export default async function globalSetup(_config: FullConfig) {
   // Stamped once per run and read by the per-test community room allocator to build tokens that
   // can't collide with a run happening at the same time elsewhere. Set here rather than per-worker
   // because workers inherit this process's env, and they each need the same value.
-  process.env.QA_RUN_ID = `${Date.now().toString(36)}${Math.floor(Math.random() * 1e4)
-    .toString(36)
-    .padStart(3, '0')}`;
+  process.env.QA_RUN_ID = uuidv4();
 
   // Decided once here rather than per test: the check shells out, and every `communities` lookup asks
   // whether per-test rooms are on, so it has to be a cheap read by then. Workers inherit the answer

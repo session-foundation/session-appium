@@ -1,7 +1,7 @@
 import { test, type TestInfo } from '@playwright/test';
 import { USERNAME } from '@session-foundation/qa-seeder';
 
-import { communities } from '../../../constants/community';
+import { getCommunities } from '../../../constants/community';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { CommunityMessageAuthor, UPMMessageButton } from '../../locators/conversation';
@@ -21,6 +21,7 @@ bothPlatformsIt({
 });
 
 async function blindedMessageRequests(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   const message = `I do not accept blinded message requests + ${platform} + ${Date.now()}`;
   const { device1, device2 } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device1, device2 } = await openAppTwoDevices(platform, testInfo);

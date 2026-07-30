@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { communities } from '../../../constants/community';
+import { getCommunities } from '../../../constants/community';
 import { TestSteps } from '../../../types/allure';
 import { androidIt } from '../../../types/sessionIt';
 import { InteractionPoints, USERNAME } from '../../../types/testing';
@@ -128,6 +128,7 @@ async function qrCodeAccountID(platform: SupportedPlatformsType, testInfo: TestI
 }
 
 async function qrCodeCommunity(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   const {
     devices: { alice1, bob1 },
     prebuilt: { bob },
