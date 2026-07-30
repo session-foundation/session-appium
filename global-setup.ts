@@ -39,26 +39,48 @@ export default async function globalSetup(_config: FullConfig) {
     console.log('No PLATFORM variable set, network validation will happen on a per-test level');
   }
 
-  // Local runs only. Pre-booting is a prerequisite for starting WebDriverAgent below (`simctl launch`
-  // needs a booted device) and uses `simctl bootstatus -b`, which waits for boot to genuinely finish
-  // rather than boot-then-sleep.
+  // Build the WebDriverAgent runner everywhere, including CI. This is separate from booting
+  // simulators and launching WDA on them (below, local only): with the runner built,
+  // `capabilities_ios` passes `usePreinstalledWDA` + `prebuiltWDAPath`, so the driver installs it with
+  // `simctl` rather than running `xcodebuild` inside every session — the slowest and flakiest part of
+  // a cold session. It needs no booted device (`-destination 'generic/platform=iOS Simulator'`) and
+  // costs ~31s once per job, against a per-session build otherwise.
+  if (isIosRun(platform)) {
+    try {
+      ensureWdaBuilt();
+    } catch (error: unknown) {
+      // Best-effort: without it the driver builds WDA per session, as it did before any of this.
+      console.warn(
+        `Could not build WebDriverAgent (sessions will build their own): ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
+    }
+  }
+
+  // Pre-booting the pool and pre-launching WDA on it is local only. Pre-booting is a prerequisite for
+  // the launch (`simctl launch` needs a booted device) and uses `simctl bootstatus -b`, which waits for
+  // boot to genuinely finish rather than boot-then-sleep.
   //
   // Off on CI because it cost more than it saved there: preparing the 12-simulator pool took 350s of
   // dead time before the first test, and WebDriverAgent came up on only 1 of those 12 — the fixed
   // port-binding window in launchWdaOnSimulators does not hold when 12 launches contend — so 11
-  // devices paid the per-session cost anyway. Setup went from 67s to 523s. Booting lazily also lets
-  // boots overlap with other workers' tests and only touches simulators a test actually needs, which
-  // paying up front cannot.
+  // devices paid the per-session cost anyway. Setup went from 67s to 523s.
+  //
+  // Note the 350s is not a scheduling problem to be solved by chunking: bootSimulatorPool already
+  // boots concurrently, and 350s/12 ≈ 29s is about what one cold boot costs, so the host is saturated
+  // and the total boot work is roughly fixed however it is ordered. What lazy booting buys is
+  // *overlap* — each worker boots what it needs while other workers are already running tests.
   //
   // Set IOS_PREPARE_SIMULATORS=1 to measure it on CI again once that window and the launch
   // concurrency are addressed — worth revisiting for high worker counts, where the per-session WDA
-  // serialisation this removes is exactly what hurts.
+  // *launch* serialisation it removes is exactly what hurts.
   const prepareSimulators = process.env.CI !== '1' || process.env.IOS_PREPARE_SIMULATORS === '1';
 
   if (isIosRun(platform) && !prepareSimulators) {
     console.log(
-      'Skipping simulator/WebDriverAgent preparation on CI — Appium boots on demand ' +
-        '(set IOS_PREPARE_SIMULATORS=1 to enable).'
+      'Skipping simulator pre-boot and WDA pre-launch on CI — Appium boots on demand, sessions ' +
+        'reuse the prebuilt WDA runner (set IOS_PREPARE_SIMULATORS=1 to enable).'
     );
   }
 

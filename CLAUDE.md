@@ -82,28 +82,36 @@ Locally `DEVICES_PER_TEST_COUNT` defaults to 4 and the largest specs need 4 devi
 (`countOfDevicesNeeded: 4`), so **4 sims covers every iOS spec** at 1 worker. XCUITest
 boots a sim by UDID automatically at session start — no manual boot.
 
-`global-setup.ts` prepares the pool the run will use (`workers × DEVICES_PER_TEST_COUNT`) before any
-test starts — **locally only**. It **pre-boots** the simulators, **pre-installs** the app, and starts
-one long-lived **WebDriverAgent** per simulator, passing the live ports to the workers via
-`WDA_REUSE_PORTS`. Each of those is otherwise paid inside a test: boot and app install land on
-whichever test touches a device first (~150s for 3 cold devices), and WDA is installed *and launched
-per session* behind a process-wide lock, serialising session startup at ~4.3s per device.
+`global-setup.ts` does two separable things:
+
+1. **Builds the WebDriverAgent runner** — everywhere, CI included. `capabilities_ios` then passes
+   `usePreinstalledWDA` + `prebuiltWDAPath`, so the driver installs the runner with `simctl` instead of
+   running `xcodebuild` inside every session. Needs no booted device and costs ~31s once per job.
+2. **Pre-boots the pool** (`workers × DEVICES_PER_TEST_COUNT`), **pre-installs** the app, and starts one
+   long-lived WDA per simulator, passing the ports via `WDA_REUSE_PORTS` — **locally only**.
+
+Without (2) the driver still boots on demand and launches WDA per session behind a process-wide lock
+(~4.3s per device); without (1) it also *builds* WDA per session, which is the slow, flaky part.
 
 With `appium:webDriverAgentUrl` pointing at a running WDA the driver's launch collapses to one
 `/status` call, so both the install and the serialisation disappear (~8s saved on a 3-device test).
 All of it is best-effort: anything that fails falls back to the driver doing it itself. Already-warm
 simulators make the whole step a no-op, so back-to-back runs skip it.
 
-> **Off on CI**, measured: preparing the 12-simulator pool cost 350s of dead time before the first
-> test, and WebDriverAgent came up on only **1 of 12** — `launchWdaOnSimulators` gives each device a
-> fixed 15s to bind its port, which doesn't hold when 12 `simctl launch` calls contend — so 11 devices
-> paid the per-session cost regardless. Setup went from **67s to 523s**. Booting lazily also overlaps
-> boots with other workers' tests and only touches simulators a test needs, which paying up front
-> can't. `IOS_PREPARE_SIMULATORS=1` re-enables it for measurement.
+> **Step 2 is off on CI**, measured: preparing the 12-simulator pool cost 350s of dead time before the
+> first test, and WebDriverAgent came up on only **1 of 12** — `launchWdaOnSimulators` gives each device
+> a fixed 15s to bind its port, which doesn't hold when 12 `simctl launch` calls contend — so 11 devices
+> paid the per-session cost regardless. Setup went from **67s to 523s**.
 >
-> Worth revisiting for the high-worker tiers: per-session WDA serialisation is exactly what this
-> removes, and it scales with worker count. It needs the binding window widened and the launch
-> concurrency bounded first, then measuring on the runner.
+> That 350s is not a scheduling problem: `bootSimulatorPool` already boots concurrently, and
+> 350s/12 ≈ 29s is roughly one cold boot, so the host is saturated and the total boot work is about
+> fixed however it's ordered. Chunking or staggering wouldn't reduce it. What lazy booting buys is
+> **overlap** — each worker boots what it needs while others are already running tests — and, with the
+> tiered passes, the first pass warms the pool for the three that follow.
+>
+> `IOS_PREPARE_SIMULATORS=1` re-enables step 2 for measurement. Worth revisiting for the high-worker
+> tiers, since the per-session WDA *launch* serialisation it removes scales with worker count — but the
+> binding window needs widening and the launch concurrency bounding first.
 
 ### Parallelism
 
