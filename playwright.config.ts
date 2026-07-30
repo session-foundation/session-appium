@@ -35,10 +35,12 @@ const useAllure = process.env.CI === '1' && process.env.ALLURE_ENABLED !== 'fals
 const baseReporter: ReporterDescription = [
   './node_modules/@session-foundation/playwright-reporter/dist/index.js',
 ];
-// Listed BEFORE baseReporter so its onTestEnd opens a collapsible group that the base reporter's
-// per-test output then lands inside — reporters are called in array order. No-op outside GitHub
-// Actions. See run/types/ci_group_reporter.ts.
-const ciGroupReporter: ReporterDescription = ['./run/types/ci_group_reporter.ts'];
+// NOTE: per-test GitHub Actions log grouping was tried and removed. A group has to stay open from one
+// `onTestEnd` to the next (no hook fires after every other reporter has handled a test), and at 12
+// workers everything the other 11 print in that window lands inside it — so the boundaries mean
+// nothing and the log looks like it's swallowing output mid-run. Doing it properly needs the reporter
+// that owns the per-test output to emit the group itself, atomically. The one-off WDA build is still
+// grouped, from scripts/build_wda.ts.
 const allureReporter: ReporterDescription = [
   'allure-playwright',
   {
@@ -56,9 +58,7 @@ const allureReporter: ReporterDescription = [
 export default defineConfig({
   timeout: 480000,
   globalTimeout: 18000000, // extends timeout to 5 hours run full suite with 3 retries
-  reporter: useAllure
-    ? [ciGroupReporter, baseReporter, allureReporter]
-    : [ciGroupReporter, baseReporter],
+  reporter: useAllure ? [baseReporter, allureReporter] : [baseReporter],
   globalSetup: require.resolve('./global-setup'),
   testDir: './run/test/specs',
   testIgnore: '*.js',
