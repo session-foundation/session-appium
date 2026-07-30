@@ -183,15 +183,51 @@ jobs:
           RISK: ${{ github.event.inputs.RISK }}
           PRO_GREP_INVERT: ${{ env.PRO_GREP_INVERT }}
 
-      - name: Run the iOS tests​​ (all device counts)
+      - name: Run the iOS tests​​ (tiered by device count)
         env:
-          DEVICES_PER_TEST_COUNT: 4
           _TESTING: ${{ env._TESTING }}
           PRINT_FAILED_TEST_LOGS: ${{ env.PRINT_FAILED_TEST_LOGS }}
           PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
+          PARALLEL_TIER: ci
         run: |
-          pwd
-          npx playwright test --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})" $PRO_GREP_INVERT #Note: this has to be double quotes
+          # One Playwright invocation per device class, driven by run/constants/parallelism.ts so the
+          # worker counts live in one place rather than being duplicated here.
+          #
+          # Why not a single run: DEVICES_PER_TEST_COUNT is one global per invocation, so a single run
+          # must size every worker's pool for the largest spec — a @1-devices spec then occupies a
+          # worker holding 4 simulators and using 1. Passes run in sequence, so the simulator draw is
+          # the largest pass, not the sum.
+          #
+          # Allure results accumulate across invocations (the reporter does not clear resultsDir), so
+          # the report step below still sees one merged run.
+          set -uo pipefail
+
+          PASSES="$(npx --yes ts-node scripts/print_tier.ts "$PARALLEL_TIER")"
+          # An empty table would otherwise run zero tests and report success.
+          if [ -z "$PASSES" ]; then
+            echo "::error::print_tier.ts produced no passes for tier '$PARALLEL_TIER'"
+            exit 1
+          fi
+          echo "Tier '$PARALLEL_TIER' passes (devices workers):"
+          echo "$PASSES"
+
+          overall=0
+          while read -r DEVICES WORKERS; do
+            [ -n "$DEVICES" ] || continue
+            echo "::group::@${DEVICES}-devices x${WORKERS} worker(s) ($((DEVICES * WORKERS)) simulators)"
+            # --pass-with-no-tests: a RISK filter can legitimately empty one device class while the
+            # others still have work, and that must not fail the run.
+            DEVICES_PER_TEST_COUNT="$DEVICES" \
+            PLAYWRIGHT_WORKERS_COUNT_IOS="$WORKERS" \
+            npx playwright test \
+              --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})(?=.*@${DEVICES}-devices)" \
+              --pass-with-no-tests \
+              $PRO_GREP_INVERT || overall=1
+            echo "::endgroup::"
+          done <<< "$PASSES"
+
+          # Every pass runs even if an earlier one failed, so the report covers the whole suite.
+          exit $overall
 
       - name: Generate and publish test report
         uses: ./github/actions/generate-publish-test-report
