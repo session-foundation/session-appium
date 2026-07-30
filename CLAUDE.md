@@ -83,8 +83,8 @@ Locally `DEVICES_PER_TEST_COUNT` defaults to 4 and the largest specs need 4 devi
 boots a sim by UDID automatically at session start — no manual boot.
 
 `global-setup.ts` prepares the pool the run will use (`workers × DEVICES_PER_TEST_COUNT`) before any
-test starts — on CI as well as locally. It **pre-boots** the simulators, **pre-installs** the app,
-and starts one long-lived **WebDriverAgent** per simulator, passing the live ports to the workers via
+test starts — **locally only**. It **pre-boots** the simulators, **pre-installs** the app, and starts
+one long-lived **WebDriverAgent** per simulator, passing the live ports to the workers via
 `WDA_REUSE_PORTS`. Each of those is otherwise paid inside a test: boot and app install land on
 whichever test touches a device first (~150s for 3 cold devices), and WDA is installed *and launched
 per session* behind a process-wide lock, serialising session startup at ~4.3s per device.
@@ -94,10 +94,16 @@ With `appium:webDriverAgentUrl` pointing at a running WDA the driver's launch co
 All of it is best-effort: anything that fails falls back to the driver doing it itself. Already-warm
 simulators make the whole step a no-op, so back-to-back runs skip it.
 
-> Note this reverses a CI choice — the workflow's "Start simulators" step is disabled with a comment
-> that letting Appium boot was more reliable. Pre-booting is a prerequisite for launching WDA
-> (`simctl launch` needs a booted device) and uses `simctl bootstatus -b`, which waits for boot to
-> genuinely finish. If CI becomes flaky at startup, this block is the first thing to revert.
+> **Off on CI**, measured: preparing the 12-simulator pool cost 350s of dead time before the first
+> test, and WebDriverAgent came up on only **1 of 12** — `launchWdaOnSimulators` gives each device a
+> fixed 15s to bind its port, which doesn't hold when 12 `simctl launch` calls contend — so 11 devices
+> paid the per-session cost regardless. Setup went from **67s to 523s**. Booting lazily also overlaps
+> boots with other workers' tests and only touches simulators a test needs, which paying up front
+> can't. `IOS_PREPARE_SIMULATORS=1` re-enables it for measurement.
+>
+> Worth revisiting for the high-worker tiers: per-session WDA serialisation is exactly what this
+> removes, and it scales with worker count. It needs the binding window widened and the launch
+> concurrency bounded first, then measuring on the runner.
 
 ### Parallelism
 

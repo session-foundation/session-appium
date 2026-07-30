@@ -39,13 +39,30 @@ export default async function globalSetup(_config: FullConfig) {
     console.log('No PLATFORM variable set, network validation will happen on a per-test level');
   }
 
-  // Applies to CI as well as local runs. NOTE: CI previously left simulator booting entirely to
-  // Appium (the workflow's "Start simulators" step is disabled with a comment saying that was more
-  // reliable). Pre-booting here is a prerequisite for starting WebDriverAgent below — `simctl
-  // launch` needs a booted device — and uses `simctl bootstatus -b`, which waits for boot to
-  // actually complete rather than boot-then-sleep. If CI turns flaky at startup, this block is the
-  // first thing to revert; it is purely an optimisation and the driver can do all of it itself.
-  if (isIosRun(platform)) {
+  // Local runs only. Pre-booting is a prerequisite for starting WebDriverAgent below (`simctl launch`
+  // needs a booted device) and uses `simctl bootstatus -b`, which waits for boot to genuinely finish
+  // rather than boot-then-sleep.
+  //
+  // Off on CI because it cost more than it saved there: preparing the 12-simulator pool took 350s of
+  // dead time before the first test, and WebDriverAgent came up on only 1 of those 12 — the fixed
+  // port-binding window in launchWdaOnSimulators does not hold when 12 launches contend — so 11
+  // devices paid the per-session cost anyway. Setup went from 67s to 523s. Booting lazily also lets
+  // boots overlap with other workers' tests and only touches simulators a test actually needs, which
+  // paying up front cannot.
+  //
+  // Set IOS_PREPARE_SIMULATORS=1 to measure it on CI again once that window and the launch
+  // concurrency are addressed — worth revisiting for high worker counts, where the per-session WDA
+  // serialisation this removes is exactly what hurts.
+  const prepareSimulators = process.env.CI !== '1' || process.env.IOS_PREPARE_SIMULATORS === '1';
+
+  if (isIosRun(platform) && !prepareSimulators) {
+    console.log(
+      'Skipping simulator/WebDriverAgent preparation on CI — Appium boots on demand ' +
+        '(set IOS_PREPARE_SIMULATORS=1 to enable).'
+    );
+  }
+
+  if (isIosRun(platform) && prepareSimulators) {
     const isCI = process.env.CI === '1';
     const workers = getWorkersCount('ios');
     const devicesPerWorker = getDevicesPerTestCount();
