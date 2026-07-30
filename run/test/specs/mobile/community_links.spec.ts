@@ -27,6 +27,7 @@ androidIt({
   title: 'Community URL on New Message - not member',
   risk: 'low',
   countOfDevicesNeeded: 1,
+  communityRooms: 1,
   testCb: communityURLNewConvo,
   allureSuites: {
     parent: 'New Conversation',
@@ -38,6 +39,7 @@ androidIt({
   title: 'Join Community URL on Create Group - not member',
   risk: 'low',
   countOfDevicesNeeded: 1,
+  communityRooms: 1,
   testCb: communityURLGroup,
   allureSuites: {
     parent: 'New Conversation',
@@ -49,6 +51,7 @@ androidIt({
   title: 'Community URL on New Message - member',
   risk: 'low',
   countOfDevicesNeeded: 1,
+  communityRooms: 1,
   testCb: communityURLNewConvoMember,
   allureSuites: {
     parent: 'New Conversation',
@@ -60,6 +63,7 @@ androidIt({
   title: 'Join Community URL on Create Group - member',
   risk: 'low',
   countOfDevicesNeeded: 1,
+  communityRooms: 1,
   testCb: communityURLGroupMember,
   allureSuites: {
     parent: 'New Conversation',

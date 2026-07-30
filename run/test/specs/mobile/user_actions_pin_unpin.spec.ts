@@ -22,6 +22,7 @@ bothPlatformsIt({
   risk: 'medium',
   testCb: pinConversation,
   countOfDevicesNeeded: 1,
+  communityRooms: 2,
   allureSuites: {
     parent: 'User Actions',
     suite: 'Pin/Unpin',
@@ -35,6 +36,7 @@ bothPlatformsIt({
   risk: 'high',
   testCb: nonProPinnedLimit,
   countOfDevicesNeeded: 1,
+  communityRooms: 6,
   isPro: true,
   allureSuites: {
     parent: 'Session Pro',
@@ -47,6 +49,7 @@ bothPlatformsIt({
   risk: 'high',
   testCb: proPinnedLimit,
   countOfDevicesNeeded: 1,
+  communityRooms: 6,
   isPro: true,
   allureSuites: {
     parent: 'Session Pro',

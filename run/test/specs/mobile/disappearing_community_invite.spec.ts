@@ -24,6 +24,7 @@ bothPlatformsIt({
   title: 'Disappearing community invite message 1:1',
   risk: 'low',
   countOfDevicesNeeded: 2,
+  communityRooms: 1,
   testCb: disappearingCommunityInviteMessage,
   allureSuites: {
     parent: 'Disappearing Messages',

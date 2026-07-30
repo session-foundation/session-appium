@@ -13,6 +13,7 @@ bothPlatformsIt({
   title: 'Send image to community',
   risk: 'medium',
   countOfDevicesNeeded: 2,
+  communityRooms: 1,
   testCb: sendImageCommunity,
   allureSuites: { parent: 'Sending Messages', suite: 'Message types' },
   allureDescription: 'Verifies that an image can be sent and received in a community',

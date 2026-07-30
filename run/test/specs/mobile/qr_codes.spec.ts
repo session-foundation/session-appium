@@ -49,6 +49,7 @@ androidIt({
   risk: 'medium',
   testCb: qrCodeCommunity,
   countOfDevicesNeeded: 2,
+  communityRooms: 1,
   allureSuites: {
     parent: 'New Conversation',
     suite: 'Join Community',

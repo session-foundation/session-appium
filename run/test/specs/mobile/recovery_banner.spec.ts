@@ -20,6 +20,7 @@ androidIt({
   risk: 'medium',
   testCb: bannerShowsThreeConvos,
   countOfDevicesNeeded: 1,
+  communityRooms: 3,
   allureSuites: {
     parent: 'Settings',
     suite: 'Recovery Password',
@@ -33,6 +34,7 @@ androidIt({
   risk: 'medium',
   testCb: bannerDisappearsAfterOpened,
   countOfDevicesNeeded: 1,
+  communityRooms: 3,
   allureSuites: {
     parent: 'Settings',
     suite: 'Recovery Password',
@@ -45,6 +47,7 @@ androidIt({
   risk: 'medium',
   testCb: bannerPersists,
   countOfDevicesNeeded: 1,
+  communityRooms: 3,
   allureSuites: {
     parent: 'Settings',
     suite: 'Recovery Password',

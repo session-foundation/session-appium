@@ -22,6 +22,7 @@ bothPlatformsIt({
   title: 'Send community invitation',
   risk: 'medium',
   countOfDevicesNeeded: 2,
+  communityRooms: 1,
   testCb: sendCommunityInvitation,
 });
 

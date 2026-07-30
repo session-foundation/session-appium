@@ -12,6 +12,7 @@ bothPlatformsIt({
   title: 'Send emoji react community',
   risk: 'medium',
   countOfDevicesNeeded: 2,
+  communityRooms: 1,
   testCb: sendEmojiReactionCommunity,
   allureSuites: {
     parent: 'Sending Messages',

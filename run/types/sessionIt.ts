@@ -4,6 +4,11 @@ import { omit } from 'lodash';
 import type { AppCountPerTest } from '../test/state_builder';
 
 import { setupAllureTestInfo } from '../test/utils/allure/allureHelpers';
+import {
+  allocateCommunityRooms,
+  perTestRoomsEnabled,
+  releaseCommunityRooms,
+} from '../test/utils/community_rooms';
 import { unregisterDevicesForTest } from '../test/utils/device_registry';
 import { getNetworkTarget } from '../test/utils/devnet';
 import { captureLogsOnFailure, captureScreenshotsOnFailure } from '../test/utils/failure_artifacts';
@@ -20,6 +25,12 @@ type MobileItArgs = {
   testCb: (platform: SupportedPlatformsType, testInfo: TestInfo) => Promise<void>;
   shouldSkip?: boolean;
   isPro?: boolean;
+  /**
+   * How many community rooms this test needs. Against a local SOGS the rooms are created for this
+   * test alone and deleted afterwards, so the test can leave them in any state it likes. Reading
+   * `communities` without declaring this throws — see constants/community.ts.
+   */
+  communityRooms?: number;
   allureSuites?: AllureSuiteConfig;
   allureDescription?: string;
   allureLinks?: {
@@ -45,6 +56,7 @@ function mobileIt({
   shouldSkip = false,
   isPro = false,
   countOfDevicesNeeded,
+  communityRooms,
   allureSuites,
   allureDescription,
   allureLinks,
@@ -73,6 +85,18 @@ function mobileIt({
     });
 
     let testFailed = false;
+
+    if (communityRooms && perTestRoomsEnabled()) {
+      try {
+        await allocateCommunityRooms(communityRooms);
+      } catch (allocationError) {
+        // Allocation sits outside the try below, so its `finally` — where rooms are released — is not
+        // reached if allocation itself fails. A partly-completed allocation has still created rooms,
+        // so release them here rather than leaving them for the gc TTL.
+        await releaseCommunityRooms();
+        throw allocationError;
+      }
+    }
 
     try {
       await testCb(platform, testInfo);
@@ -115,6 +139,14 @@ function mobileIt({
         unregisterDevicesForTest(testInfo);
       } catch (cleanupError) {
         console.error('Failed to unregister devices:', cleanupError);
+      }
+
+      // Anything missed here (timeouts and interrupts skip this block, per the note above) is
+      // collected by the gc sweep in global-setup.
+      try {
+        await releaseCommunityRooms();
+      } catch (cleanupError) {
+        console.error('Failed to release community rooms:', cleanupError);
       }
     }
   });

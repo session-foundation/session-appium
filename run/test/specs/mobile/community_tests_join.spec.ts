@@ -13,6 +13,7 @@ bothPlatformsIt({
   risk: 'high',
   testCb: joinCommunityTest,
   countOfDevicesNeeded: 2,
+  communityRooms: 1,
   allureSuites: {
     parent: 'New Conversation',
     suite: 'Join Community',

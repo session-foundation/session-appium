@@ -23,6 +23,7 @@ bothPlatformsIt({
   title: 'Ban and unban user in community',
   risk: 'medium',
   countOfDevicesNeeded: 2,
+  communityRooms: 1,
   testCb: banUserCommunity,
   allureSuites: {
     parent: 'User Actions',
@@ -37,6 +38,7 @@ bothPlatformsIt({
   title: 'Ban and delete in community',
   risk: 'medium',
   countOfDevicesNeeded: 2,
+  communityRooms: 1,
   testCb: banAndDelete,
   allureSuites: {
     parent: 'User Actions',
