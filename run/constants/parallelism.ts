@@ -80,17 +80,21 @@ export const PARALLEL_TIERS = {
   },
 
   /**
-   * 12 simulators, the `IOS_N_SIMULATOR` / ci-simulators.json cap.
+   * 12 simulators, the `IOS_N_SIMULATOR` / ci-simulators.json cap. Every pass fills the pool.
    *
-   * Deliberately NOT the maximum utilisation the pool allows (that would be W=12 / W=6 / W=4 / W=3).
-   * Every worker count here above 4 is extrapolated, and the failure mode of an over-subscribed
-   * runner is false failures indistinguishable from real ones — the exact problem the old
-   * "stay at 1 worker" guidance was written to avoid. Raise these once measured ON the runner.
+   * A pass boots only `workers × devices` simulators (see global-setup.ts), so the run's peak draw is
+   * 12 whichever pass is running. Holding one below that leaves simulators idle without lowering the
+   * ceiling, which is why the `@1-devices` pass takes 12 workers rather than fewer.
+   *
+   * The worker counts above 4 are extrapolated — nothing above W=4 has been measured on any host —
+   * and an over-subscribed runner fails in a way indistinguishable from real test failures, the exact
+   * problem the old "stay at 1 worker" guidance was written to avoid. Treat the first run on this tier
+   * as a measurement, and lower these before concluding a flake is the app's fault.
    */
   ci: {
-    summary: '12 simulators — conservative starting point for the self-hosted runner',
+    summary: '12 simulators — fills the CI pool; worker counts above 4 are unmeasured',
     passes: [
-      { devices: 1, workers: 6 },
+      { devices: 1, workers: 12 },
       { devices: 2, workers: 6 },
       { devices: 3, workers: 4 },
       { devices: 4, workers: 3 },

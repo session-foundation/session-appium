@@ -189,8 +189,10 @@ does one `npx playwright test` per device class, setting `DEVICES_PER_TEST_COUNT
 `PLAYWRIGHT_WORKERS_COUNT_IOS` per pass, so the worker counts are not duplicated in YAML. Every pass
 runs even if an earlier one fails (the step still exits non-zero), and Allure results accumulate
 across invocations because the reporter does not clear `resultsDir` — so the report step still sees
-one merged run. The `ci` tier is deliberately **not** maximum utilisation: its worker counts above 4
-are extrapolated, not measured on the runner.
+one merged run. Every pass in the `ci` tier fills the 12-simulator pool — a pass boots only
+`workers × devices`, so the run's peak draw is 12 regardless and holding one lower would idle
+simulators without lowering the ceiling. Its worker counts above 4 are extrapolated, not measured on
+the runner, so the first run on it is a measurement.
 
 Device allocation is the **same code path** locally and on CI: `openiOSApp` (in
 `open_app.ts`) always offsets each worker's device pool by its parallel index
