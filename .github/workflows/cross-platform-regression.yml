@@ -1,0 +1,238 @@
+name: Cross-platform regression tests
+run-name: "cross-platform (iOS + Desktop) regressions on ${{ github.head_ref || github.ref }}"
+
+# Runs the cross-platform specs (run/test/specs/cross_platform/), which drive an iOS simulator and
+# a Desktop client from a SINGLE Playwright worker. Both clients therefore have to live on the same
+# machine, and iOS needs macOS — hence the self-hosted macOS runner. These specs are tagged
+# @cross-platform (not @ios/@android) so ios-regression.yml / android-regression.yml never collect
+# them; this workflow is the only thing that runs them.
+#
+# No Allure: cross-platform runs are reported through the run log + the uploaded CSV/artifacts only.
+
+on:
+  workflow_dispatch:
+    inputs:
+      NETWORK_TARGET:
+        description: "network target to run the tests on (both clients are pinned to it)"
+        required: true
+        type: choice
+        options:
+          - "mainnet"
+          - "testnet"
+          - "devnet"
+        default: "mainnet"
+
+      APK_URL:
+        description: "ipa url to test (.tar.xz)"
+        required: true
+        type: string
+
+      DESKTOP_REF:
+        description: "session-desktop branch/tag/SHA to build and test against"
+        required: true
+        type: string
+        default: "dev"
+
+      SPEC_GREP:
+        description: "which cross-platform specs to run (matched against the Playwright test title, which includes the spec file path)"
+        required: true
+        type: string
+        default: 'cross_platform/.*_ios\.spec\.ts'
+
+      PLAYWRIGHT_RETRIES_COUNT:
+        description: "retries of failing tests to do at most"
+        required: true
+        type: choice
+        options:
+          - "0"
+          - "1"
+          - "2"
+        default: "0"
+
+      LOG_LEVEL:
+        description: "Test logging verbosity (WARNING: anything other than minimal mode may crash GitHub Actions on large test runs)"
+        required: true
+        type: choice
+        options:
+          - "minimal" # Recommended for full regressions
+          - "failures" # Show failed test logs only
+          - "verbose" # All test logs - use with caution!
+        default: "minimal"
+
+permissions:
+  contents: read
+
+jobs:
+  cross-platform-regression:
+    runs-on: [self-hosted, macOS]
+    timeout-minutes: 45
+    env:
+      # PLATFORM is deliberately NOT set. getNetworkTarget() throws for anything but ios/android,
+      # and global-setup.ts guards with `if (platform)`, so leaving it unset is the supported way
+      # to run a multi-platform project. It also makes playwright.config.ts resolve
+      # getWorkersCount(undefined) === 1, which is exactly what a cross-platform run needs.
+      CI: 1
+      # Mandatory, not cosmetic: playwright.config.ts turns the Allure reporter on whenever
+      # CI === '1' unless this is exactly 'false'.
+      ALLURE_ENABLED: "false"
+      _TESTING: 1 # Always hide webdriver logs (@appium/support/ flag)
+      APK_URL: ${{ inputs.APK_URL }}
+      IOS_APP_PATH_PREFIX: "./extracted/Session.app"
+      SESSION_DESKTOP_ROOT: ${{ github.workspace }}/desktop
+      # capabilities_android.ts calls getAndroidApk() at module load, even on a run with no
+      # Android client, so these have to be non-empty (same trick as ios-regression.yml).
+      ANDROID_APK: "<just_not_empty>"
+      APPIUM_ADB_FULL_PATH: "<just_not_empty>"
+      ANDROID_SDK_ROOT: "<just_not_empty>"
+      PLAYWRIGHT_RETRIES_COUNT: ${{ inputs.PLAYWRIGHT_RETRIES_COUNT }}
+      # iOS reads NETWORK_TARGET (+ the DEVNET_* vars for devnet) at launch; Desktop reads
+      # LOCAL_DEVNET_SEED_URL, which the "Pin both clients to one network" step derives from it.
+      # assertConsistentNetworkTarget() refuses to start the test if the two disagree.
+      NETWORK_TARGET: ${{ inputs.NETWORK_TARGET }}
+      DEVNET_PUBKEY: ${{ vars.DEVNET_PUBKEY }}
+      DEVNET_IP: ${{ vars.DEVNET_IP }}
+      DEVNET_RPC_PORT: ${{ vars.DEVNET_RPC_PORT }}
+      DEVNET_HTTP_PORT: ${{ vars.DEVNET_HTTP_PORT }}
+      DEVNET_OMQ_PORT: ${{ vars.DEVNET_OMQ_PORT }}
+      PRINT_FAILED_TEST_LOGS: ${{ inputs.LOG_LEVEL != 'minimal' && '1' || '0' }} # Show stdout/stderr if test fails (@session-foundation/playwright-reporter/ flag)
+      PRINT_ONGOING_TEST_LOGS: ${{ inputs.LOG_LEVEL == 'verbose' && '1' || '0' }} # Show everything as it happens (@session-foundation/playwright-reporter/ flag)
+
+    steps:
+      - name: Checkout the test harness
+        uses: actions/checkout@v6
+        with:
+          lfs: true
+          # run/localizer/lib backs tStripped(), used by DesktopWrapper.changeDisplayName
+          submodules: "recursive"
+
+      # Both clients must end up on the SAME network or the seeder writes the account onto one
+      # network while a client polls another, and the test just hangs to the 480s timeout.
+      #
+      # Note there is no reachability probe here on purpose. The harness already does a much
+      # stricter one (devnet.ts isDevnetReachable: POST /json_rpc get_n_service_nodes, requiring
+      # at least 5 active service nodes, 3 attempts on CI) for every ref in the test, with a far
+      # better error message. A curl-any-HTTP-status probe would only add a second, weaker
+      # implementation that can pass where the real one fails. What IS worth doing early is the
+      # zero-cost presence check below, so a misconfigured devnet dispatch dies before the desktop
+      # build and the ipa download rather than after them.
+      - name: Pin both clients to one network
+        shell: bash
+        run: |
+          case "$NETWORK_TARGET" in
+            devnet)
+              if [ -z "$DEVNET_PUBKEY" ] || [ -z "$DEVNET_IP" ] || [ -z "$DEVNET_RPC_PORT" ] || [ -z "$DEVNET_HTTP_PORT" ] || [ -z "$DEVNET_OMQ_PORT" ]; then
+                echo "ERROR: NETWORK_TARGET=devnet but not all DEVNET_* Actions variables are set"
+                echo "  DEVNET_PUBKEY set? $([ -n "$DEVNET_PUBKEY" ] && echo yes || echo NO)"
+                echo "  DEVNET_IP='$DEVNET_IP' DEVNET_RPC_PORT='$DEVNET_RPC_PORT' DEVNET_HTTP_PORT='$DEVNET_HTTP_PORT' DEVNET_OMQ_PORT='$DEVNET_OMQ_PORT'"
+                exit 1
+              fi
+              # Desktop reads this at runtime (useLocalDevNet -> getSeedNodeList), so a plain
+              # build reaches the devnet — no devnet-specific desktop build needed. It is the
+              # same seed oxend RPC endpoint iOS builds from DEVNET_IP/DEVNET_RPC_PORT, so the
+              # harness sees a single devnet ref and probes it once.
+              SEED_URL="http://${DEVNET_IP}:${DEVNET_RPC_PORT}"
+              ;;
+            testnet)
+              # Desktop's default under this harness IS testnet (NODE_APP_INSTANCE is always
+              # test-integration-*), so leaving LOCAL_DEVNET_SEED_URL unset is what pins it.
+              SEED_URL=''
+              ;;
+            mainnet)
+              # Must be explicit: unset means testnet for Desktop, not mainnet. A
+              # DESKTOP_MAINNET_SEED_HOSTS host on a non-38157 port resolves as mainnet.
+              SEED_URL='https://seed2.getsession.org:4443'
+              ;;
+            *)
+              echo "ERROR: unknown NETWORK_TARGET '$NETWORK_TARGET'"
+              exit 1
+              ;;
+          esac
+
+          if [ -n "$SEED_URL" ]; then
+            echo "LOCAL_DEVNET_SEED_URL=$SEED_URL" >> "$GITHUB_ENV"
+          fi
+          echo "Network target: $NETWORK_TARGET"
+          echo "  iOS     <- NETWORK_TARGET=$NETWORK_TARGET"
+          echo "  Desktop <- LOCAL_DEVNET_SEED_URL=${SEED_URL:-<unset, i.e. testnet>}"
+
+      - name: Checkout session-desktop
+        uses: actions/checkout@v6
+        with:
+          repository: session-foundation/session-desktop
+          ref: ${{ inputs.DESKTOP_REF }}
+          path: desktop
+          # ts/localization and dynamic_assets are both required by the build
+          submodules: "recursive"
+
+      - name: Build session-desktop from source
+        uses: ./github/actions/build-session-desktop
+        with:
+          working-directory: desktop
+          cache_suffix: mac-arm64
+
+      - name: Download ipa and extract it
+        env:
+          APK_URL: ${{ inputs.APK_URL }}
+        run: |
+          # -f: a 404/403 must fail here, not write an HTML error body that `tar` then chokes on.
+          # -L: release/artifact URLs redirect (e.g. to objects.githubusercontent.com).
+          curl -fL -o session-ios.sim.tar.xz "$APK_URL"
+          ls
+          pwd
+          tar -tf session-ios.sim.tar.xz
+          tar xf session-ios.sim.tar.xz
+          mkdir -p extracted
+          mv session-ios-*-sim/*.app extracted/
+          ls extracted
+
+      - name: Setup for both platforms
+        uses: ./github/actions/setup
+
+      - name: Stop simulators
+        shell: bash
+        run: |
+          npx --yes ts-node scripts/stop_ios.ts
+
+      # Not ./github/actions/list-tests: it builds a "(?=.*@PLATFORM)(?=.*@RISK)" grep, which
+      # can't express a spec-path selector. Giving that action a GREP input is a follow-up.
+      # Watch this output: a mistyped SPEC_GREP collects 0 tests and the run still goes green.
+      - name: List tests part of this run
+        shell: bash
+        env:
+          SPEC_GREP: ${{ inputs.SPEC_GREP }}
+        run: |
+          npx playwright test --list --reporter list --project cross-platform --grep "$SPEC_GREP"
+
+      - name: Run the cross-platform tests
+        env:
+          # Only needs to cover the iOS clients of a single test (1 for the display-name specs);
+          # Desktop windows aren't pooled. UDIDs come from the committed ci-simulators.json.
+          DEVICES_PER_TEST_COUNT: 1
+          SPEC_GREP: ${{ inputs.SPEC_GREP }}
+        run: |
+          pwd
+          npx playwright test --project cross-platform --grep "$SPEC_GREP"
+
+      - name: Upload results of this run
+        uses: ./github/actions/upload-test-results
+        if: always()
+        with:
+          PLATFORM: "cross-platform"
+          UPLOAD_IDENTIFIER: "cross-platform-test-run"
+
+      - name: Upload csv of this whole run
+        uses: ./github/actions/upload-csv-test-results
+        if: always()
+        with:
+          PLATFORM: "cross-platform"
+
+      - name: Stop simulators and any leftover Electron
+        if: always()
+        continue-on-error: true # just so we don't fail
+        shell: bash
+        run: |
+          npx --yes ts-node scripts/stop_ios.ts
+          # Match the main script this run launched, NOT a bare 'Electron' — the runner is a shared
+          # Mac and a broad pattern would take out unrelated Electron apps on it. Every window the
+          # harness spawns carries this path as its first arg (run/desktop/open.ts).
+          pkill -9 -f "${GITHUB_WORKSPACE}/desktop/app/ts/mains/main_node.js" || true
