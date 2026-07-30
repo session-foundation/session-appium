@@ -14,6 +14,12 @@ on:
           - 'mainnet'
         default: 'mainnet'
 
+      DEVNET_BOOTSTRAP:
+        description: 'devnet seed node as host:port (only used when NETWORK_TARGET=devnet)'
+        required: false
+        type: string
+        default: '192.168.1.114:1280'
+
       APK_URL:
         description: 'ipa url to test (.tar.xz)'
         required: true
@@ -137,7 +143,10 @@ jobs:
         if: ${{ github.event.inputs.NETWORK_TARGET == 'devnet' }}
         shell: bash
         env:
-          DEVNET_BOOTSTRAP_HOST: ${{ vars.DEVNET_BOOTSTRAP_HOST || 'sesh-net.local' }}
+          # Editable per run via the DEVNET_BOOTSTRAP input, so moving the devnet does not need a code
+          # change. Accepts host, host:port or a full URL. `vars.DEVNET_BOOTSTRAP_HOST` remains as a
+          # repo-level fallback for when the input is blanked.
+          DEVNET_BOOTSTRAP_HOST: ${{ github.event.inputs.DEVNET_BOOTSTRAP || vars.DEVNET_BOOTSTRAP_HOST || '192.168.1.114:1280' }}
           # Optional pins. Each is left alone if set, so a variable still overrides autodetection.
           DEVNET_PUBKEY: ${{ vars.DEVNET_PUBKEY }}
           DEVNET_IP: ${{ vars.DEVNET_IP }}

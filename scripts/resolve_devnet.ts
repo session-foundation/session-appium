@@ -34,8 +34,18 @@
  * so an explicit variable still wins over autodetection.
  */
 
-const DEFAULT_HOST = 'sesh-net.local';
-const DEFAULT_RPC_PORT = '1280';
+// Shared with the harness so the default and the parsing cannot drift apart — see
+// run/shared/devnet_bootstrap.ts. That module is deliberately dependency-free, so importing it here
+// does not pull dotenv in: this script must NOT see .env, since existing DEVNET_* values are treated
+// as pins to preserve and would make it echo a stale config back instead of resolving a fresh one.
+import {
+  DEFAULT_DEVNET_BOOTSTRAP,
+  DEFAULT_DEVNET_RPC_PORT,
+  splitBootstrap,
+} from '../run/shared/devnet_bootstrap';
+
+const DEFAULT_HOST = DEFAULT_DEVNET_BOOTSTRAP;
+const DEFAULT_RPC_PORT = DEFAULT_DEVNET_RPC_PORT;
 
 /**
  * Defaults for the optional local file server and SOGS from the same Sesh-Net-Docker stack
@@ -86,8 +96,11 @@ const envOr = (name: string, fallback: string): string => {
 };
 
 function parseArgs(argv: string[]): { host: string; rpcPort: string; skipServices: boolean } {
-  let host = envOr('DEVNET_BOOTSTRAP_HOST', DEFAULT_HOST);
+  const bootstrap = envOr('DEVNET_BOOTSTRAP_HOST', DEFAULT_HOST);
+  let host = bootstrap;
   let rpcPort = envOr('DEVNET_RPC_PORT', DEFAULT_RPC_PORT);
+  // A port pinned explicitly (flag or env var) beats one embedded in the bootstrap address.
+  let rpcPortExplicit = (process.env.DEVNET_RPC_PORT ?? '').trim() !== '';
   let skipServices = false;
 
   for (let i = 0; i < argv.length; i++) {
@@ -100,13 +113,24 @@ function parseArgs(argv: string[]): { host: string; rpcPort: string; skipService
       if (inlineValue === undefined) i++;
     } else if (flag === '--rpc-port') {
       rpcPort = value ?? rpcPort;
+      rpcPortExplicit = true;
       if (inlineValue === undefined) i++;
     } else {
       console.error(`Unknown argument: "${argv[i]}"`);
       process.exit(1);
     }
   }
-  return { host, rpcPort, skipServices };
+
+  const split = splitBootstrap(host);
+  if (split.host === '') {
+    console.error(`Empty devnet bootstrap address (got "${host}").`);
+    process.exit(1);
+  }
+  return {
+    host: split.host,
+    rpcPort: rpcPortExplicit ? rpcPort : (split.port ?? rpcPort),
+    skipServices,
+  };
 }
 
 const reason = (error: unknown): string => (error instanceof Error ? error.message : String(error));

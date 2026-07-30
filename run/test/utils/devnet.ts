@@ -2,7 +2,7 @@ import { buildStateForTest } from '@session-foundation/qa-seeder';
 
 import type { SupportedPlatformsType } from './open_app';
 
-import { DEVNET_URL } from '../../constants';
+import { getDevnetBootstrapUrl } from '../../shared/devnet_bootstrap';
 import { sleepFor } from '../../shared/promise_utils';
 import { AppName } from '../../types/testing';
 import { getAndroidApk } from './binaries';
@@ -12,7 +12,7 @@ import { getIosDevnetSeedUrl, getIosServiceNetwork } from './capabilities_ios';
 type NetworkType = Parameters<typeof buildStateForTest>[2];
 
 // Using native fetch to check devnet accessibility
-async function isDevnetReachable(url: string = DEVNET_URL): Promise<boolean> {
+async function isDevnetReachable(url: string = getDevnetBootstrapUrl()): Promise<boolean> {
   const isCI = process.env.CI === '1';
   const maxAttempts = isCI ? 3 : 1;
   const timeout = isCI ? 10_000 : 2_000;
@@ -101,17 +101,21 @@ export async function getNetworkTarget(platform: SupportedPlatformsType): Promis
     return 'mainnet';
   }
 
-  const canAccessDevnet = await isDevnetReachable();
+  const devnetUrl = getDevnetBootstrapUrl();
+  const canAccessDevnet = await isDevnetReachable(devnetUrl);
   // If you pass an AQA build in the .env but can't access devnet, tests will fail
   if (isAQA && !canAccessDevnet) {
-    throw new Error('Cannot use AQA build without internal network access');
+    throw new Error(
+      `Cannot use AQA build without internal network access (devnet ${devnetUrl} unreachable). ` +
+        `Set DEVNET_BOOTSTRAP_HOST (or the DEVNET_BOOTSTRAP workflow input) if the devnet moved.`
+    );
   }
   // If the devnet is available, mainnet is still an option but you *could* switch to an AQA build
   if (!isAQA && canAccessDevnet) {
     console.log('The internal devnet is available, but using regular build');
   }
 
-  const resolvedTarget = isAQA && canAccessDevnet ? DEVNET_URL : 'mainnet';
+  const resolvedTarget = isAQA && canAccessDevnet ? devnetUrl : 'mainnet';
   process.env.DETECTED_NETWORK_TARGET = resolvedTarget;
   console.log(`Network target: ${resolvedTarget}`);
 

@@ -13,6 +13,12 @@ on:
           - 'mainnet'
         default: 'devnet'
 
+      DEVNET_BOOTSTRAP:
+        description: 'devnet seed node as host:port (only used when NETWORK_TARGET=devnet)'
+        required: false
+        type: string
+        default: '192.168.1.114:1280'
+
       APK_URL:
         description: 'apk url to test (.tar.xz)'
         required: true
@@ -84,6 +90,10 @@ jobs:
       EMULATOR_FULL_PATH: '/opt/android/emulator/emulator'
       ANDROID_SDK_ROOT: '/opt/android'
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
+      # Devnet seed node as host:port, editable per run. Only the reachability probe reads it today —
+      # see the TODO(android-devnet-env) note at that step. `vars.DEVNET_BOOTSTRAP_HOST` is a
+      # repo-level fallback shared with the iOS workflow for when the input is blanked.
+      DEVNET_BOOTSTRAP: ${{ github.event.inputs.DEVNET_BOOTSTRAP || vars.DEVNET_BOOTSTRAP_HOST || '192.168.1.114:1280' }}
       _TESTING: 1 # Always hide webdriver logs (@appium/support/ flag)
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL != 'minimal' && '1' || '0' }} # Show stdout/stderr if test fails (@session-foundation/playwright-reporter/ flag)
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'verbose' && '1' || '0' }} # Show everything as it happens (@session-foundation/playwright-reporter/ flag)
@@ -138,7 +148,18 @@ jobs:
 
           # Always probe devnet reachability so the log explains the decision,
           # regardless of which network target was requested.
-          echo "::group::Devnet reachability probe (http://sesh-net.local:1280)"
+          #
+          # The seed address comes from the DEVNET_BOOTSTRAP input, matching iOS, so moving the devnet
+          # does not need a code change. It replaces a hardcoded `sesh-net.local`, which stopped
+          # resolving — mDNS across the runner's network is not dependable, and it never resolved from
+          # inside the snode containers at all.
+          #
+          # TODO(android-devnet-env): this only feeds the *probe*. Android still reaches devnet via its
+          # AQA build variant rather than harness config, so a green probe here does not yet mean the
+          # app can reach that devnet — and run/constants/index.ts still hardcodes DEVNET_URL, which
+          # `isDevnetReachable()` uses to decide whether an AQA build is usable. Wire both to this
+          # value as part of the wider env-var work.
+          echo "::group::Devnet reachability probe (http://${DEVNET_BOOTSTRAP})"
           DEVNET_ACCESSIBLE=false
           for attempt in 1 2 3; do
             echo "Devnet check attempt $attempt/3..."
@@ -150,7 +171,7 @@ jobs:
             # which a bare assignment would not (a failing curl would abort before the check).
             HTTP_CODE=""
             CURL_RC=0
-            HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' --connect-timeout 5 --max-time 10 http://sesh-net.local:1280 2>/dev/null) || CURL_RC=$?
+            HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' --connect-timeout 5 --max-time 10 "http://${DEVNET_BOOTSTRAP}" 2>/dev/null) || CURL_RC=$?
             if [ "$CURL_RC" -eq 0 ] && [ "$HTTP_CODE" != "000" ]; then
               echo "Devnet is reachable on attempt $attempt (HTTP $HTTP_CODE)"
               DEVNET_ACCESSIBLE=true

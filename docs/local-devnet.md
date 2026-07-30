@@ -259,9 +259,19 @@ input (`devnet`/`testnet`/`mainnet`); the macOS runner reaches a **Linux-hosted*
 network (Tailscale/LAN).
 
 **There is normally nothing to configure.** The "Resolve and probe devnet" step derives the
-connection details from the devnet itself, so the only input is the bootstrap address — which
-defaults to `sesh-net.local:1280`, the same address the Android workflow probes. Override it with a
-`DEVNET_BOOTSTRAP_HOST` repo variable if that name doesn't resolve on the runner.
+connection details from the devnet itself, so the only input is the bootstrap address — exposed as the
+**`DEVNET_BOOTSTRAP`** workflow input (default `192.168.1.114:1280`) so it can be changed per run
+without a code change. It accepts a bare host, `host:port`, or a full URL. A
+`vars.DEVNET_BOOTSTRAP_HOST` repo variable acts as a fallback if the input is blanked.
+
+> Not `sesh-net.local` any more: mDNS stopped resolving on the runner, and it never worked from inside
+> the snode containers regardless (no mDNS resolver there).
+>
+> The Android workflow takes the **same `DEVNET_BOOTSTRAP` input with the same default**, but it only
+> feeds the reachability probe there: Android still reaches devnet via its AQA build variant rather
+> than harness config, and `run/constants/index.ts` hardcodes `DEVNET_URL` (used by
+> `isDevnetReachable()` to decide whether an AQA build is usable). So a green probe on Android does not
+> yet mean the app can reach that devnet — see `TODO(android-devnet-env)`.
 
 Each value below can still be pinned with a repo-level Actions variable of the same name (Settings →
 Secrets and variables → Actions → _Variables_, not Secrets — the workflow reads `vars.*`). A pinned
