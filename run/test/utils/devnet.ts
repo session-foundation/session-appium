@@ -11,7 +11,16 @@ import { getIosDevnetSeedUrl, getIosServiceNetwork } from './capabilities_ios';
 // NOTE this currently only applies to Android as iOS doesn't supply AQA builds yet
 type NetworkType = Parameters<typeof buildStateForTest>[2];
 
-// Using native fetch to check devnet accessibility
+/**
+ * Checks the devnet by asking its oxend RPC for the service-node list — the same call the seeder
+ * makes, so a pass means the address is genuinely usable rather than merely occupied.
+ *
+ * This deliberately does not `GET` the root. oxend answers `404` there (only `POST /json_rpc` is a
+ * route), so a status-only check has to accept 404 as healthy — at which point *any* HTTP listener
+ * passes, and pointing this at the SOGS port or a router page would report the devnet up and push the
+ * real failure into the middle of a test run. It also logged "is accessible (HTTP 404)", which reads
+ * like a fault when it isn't.
+ */
 async function isDevnetReachable(url: string = getDevnetBootstrapUrl()): Promise<boolean> {
   const isCI = process.env.CI === '1';
   const maxAttempts = isCI ? 3 : 1;
@@ -27,10 +36,30 @@ async function isDevnetReachable(url: string = getDevnetBootstrapUrl()): Promise
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-      const response = await fetch(url, { signal: controller.signal });
+      const response = await fetch(`${url}/json_rpc`, {
+        body: JSON.stringify({ id: '0', jsonrpc: '2.0', method: 'get_service_nodes' }),
+        headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        signal: controller.signal,
+      });
       clearTimeout(timeoutId);
 
-      console.log(`Devnet ${url} is accessible (HTTP ${response.status})`);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status} from ${url}/json_rpc`);
+      }
+      const body = (await response.json()) as {
+        result?: { service_node_states?: { active?: boolean }[] };
+      };
+      const nodes = body.result?.service_node_states;
+      if (!Array.isArray(nodes)) {
+        // Something is listening and speaking HTTP, but it is not an oxend RPC.
+        throw new Error(`${url} responded but returned no service_node_states — not a devnet?`);
+      }
+
+      // Node counts rather than a status code: an oxend reporting zero active nodes is reachable but
+      // not yet usable, and that is worth seeing in the log rather than discovering mid-run.
+      const active = nodes.filter(n => n.active).length;
+      console.log(`Devnet ${url} is accessible (${nodes.length} service nodes, ${active} active)`);
       return true;
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Unknown error';
