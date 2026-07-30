@@ -124,6 +124,33 @@ the app's launch-arg env) and the seeder (`getNetworkTarget` targets
 `http://$DEVNET_IP:$DEVNET_RPC_PORT`). If any `DEVNET_*` value is missing/invalid, the run fails
 fast with a message naming what's wrong.
 
+## 4a. Shortcut: resolve everything at once
+
+Sections 4b and 4c explain where each value comes from. To skip the manual capture:
+
+```bash
+npx ts-node scripts/resolve_devnet.ts --host <DEVNET_IP> >> .env
+```
+
+That emits the `DEVNET_*` values plus `FILE_SERVER_URL`, `FILE_SERVER_PUBKEY`, `COMMUNITY_LINK`,
+`COMMUNITY_NAME` and `COMMUNITY_ROOM`.
+
+**The devnet must resolve or the command fails.** The file server and SOGS are then attempted as
+best-effort optimisations — each is probed independently, whichever is reachable is emitted, and
+whichever is not is warned about and omitted so the harness stays on the production file server /
+remote community. A devnet-only stack (`cd sesh-net && docker compose up`) therefore works fine; you
+get two warnings and the `DEVNET_*` values. Pass `--no-services` to skip probing them altogether.
+
+The host for all three services is the devnet IP read from the
+service-node registry, which is what the onion path needs — the app reaches the file server and SOGS
+_through the snodes_, so the URL must resolve inside the snode containers. An mDNS `.local` name will
+**not** work for these two (containers have no mDNS resolver), which is why the resolved IP is used
+even when the bootstrap address was a hostname.
+
+The room token and name are read from the SOGS `/rooms` API. The two pubkeys are baked deterministic
+keys and are not exposed over HTTP, so they are built-in constants — set the matching env var to
+override either. Anything already set in the environment is left alone.
+
 ## 4b. (Optional) local file server
 
 The file server comes up **with the devnet** — the `docker compose up --build` from step 2 also
@@ -228,10 +255,42 @@ After `docker compose up`, confirm before trusting a run:
 ## CI
 
 Nothing in CI changes when you set this up locally. `ios-regression.yml` exposes a `NETWORK_TARGET`
-input (`devnet`/`testnet`/`mainnet`) and reads the devnet connection details from repo-level Actions
-variables (`DEVNET_PUBKEY`, `DEVNET_IP`, `DEVNET_HTTP_PORT`, `DEVNET_OMQ_PORT`). The macOS runner
-reaches a **Linux-hosted** devnet over the network (Tailscale/LAN) — the only per-environment
-difference is the IP value, which is already env-driven.
+input (`devnet`/`testnet`/`mainnet`); the macOS runner reaches a **Linux-hosted** devnet over the
+network (Tailscale/LAN).
+
+**There is normally nothing to configure.** The "Resolve and probe devnet" step derives the
+connection details from the devnet itself, so the only input is the bootstrap address — which
+defaults to `sesh-net.local:1280`, the same address the Android workflow probes. Override it with a
+`DEVNET_BOOTSTRAP_HOST` repo variable if that name doesn't resolve on the runner.
+
+Each value below can still be pinned with a repo-level Actions variable of the same name (Settings →
+Secrets and variables → Actions → _Variables_, not Secrets — the workflow reads `vars.*`). A pinned
+value is used as-is and skips autodetection for that field:
+
+| Variable           | Notes                                                                       |
+| ------------------ | --------------------------------------------------------------------------- |
+| `DEVNET_PUBKEY`    | 64-char hex. **Drifts** whenever the devnet is recreated — see below.       |
+| `DEVNET_IP`        | Must be IPv4 — a hostname is rejected by the harness _and_ by the app.      |
+| `DEVNET_RPC_PORT`  | Seed oxend RPC, used by the seeder. Conventionally `1280`.                  |
+| `DEVNET_HTTP_PORT` | Seed storage HTTPS, used by the app. Per-node, **not** a fixed constant.    |
+| `DEVNET_OMQ_PORT`  | Seed storage OMQ/QUIC, used by the app. Per-node, **not** a fixed constant. |
+
+> The storage ports differ per node and per devnet — a 12-node devnet has twelve different
+> `storage_port`/`storage_lmq_port` pairs, so the example values above are illustrative only. Read
+> them for the node you actually pick rather than assuming `1300`/`1305`.
+
+Rather than maintaining these by hand, `scripts/resolve_devnet.ts` derives everything except the
+bootstrap address from the seed's `get_service_nodes` RPC, so the only thing CI needs to know is
+where to bootstrap:
+
+```bash
+npx ts-node scripts/resolve_devnet.ts --host sesh-net.local --rpc-port 1280
+```
+
+It prints `KEY=value` lines suitable for `$GITHUB_ENV` or a local `.env`, and it takes `public_ip`
+from the registry — the same address the client will be handed — so it cannot drift out of step with
+what the snodes advertise. Values already set in the environment are left alone, so a variable still
+overrides autodetection.
 
 ## Notes & gotchas
 
