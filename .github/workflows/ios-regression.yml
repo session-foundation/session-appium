@@ -147,22 +147,26 @@ jobs:
         run: |
           set -uo pipefail
           BOOT="http://${DEVNET_BOOTSTRAP_HOST}:${DEVNET_RPC_PORT:-1280}"
-          echo "Requested devnet -> probing seed node $BOOT"
+          echo "Requested devnet -> resolving from $BOOT"
+
+          # Retry around resolve_devnet.ts itself rather than a separate curl probe. A second
+          # reachability check is only another thing that can disagree with the real one, and the
+          # naive form of it is subtly wrong: `curl -w '%{http_code}' ... || echo 000` yields
+          # "000000" on a failed connection — curl prints its own 000 *and* exits non-zero — which is
+          # != "000" and therefore reads as success. The script's exit status is the single signal.
+          RESOLVED=""
           for attempt in 1 2 3; do
-            CODE=$(curl -s -o /dev/null -w '%{http_code}' --connect-timeout 5 --max-time 10 "$BOOT" 2>/dev/null || echo '000')
-            if [ "$CODE" != "000" ]; then echo "Devnet reachable (HTTP $CODE)"; break; fi
+            if RESOLVED="$(npx --yes ts-node scripts/resolve_devnet.ts)"; then
+              break
+            fi
             echo "attempt $attempt/3 failed"
             if [ "$attempt" = 3 ]; then
-              echo "::error::devnet seed node $BOOT not reachable after 3 attempts"
+              echo "::error::could not resolve devnet from $BOOT after 3 attempts"
               exit 1
             fi
             sleep "$attempt"
           done
 
-          RESOLVED="$(npx --yes ts-node scripts/resolve_devnet.ts)" || {
-            echo "::error::could not resolve devnet connection details from $BOOT"
-            exit 1
-          }
           # An empty result would otherwise leave the harness to fall back to testnet silently.
           if [ -z "$RESOLVED" ]; then
             echo "::error::resolve_devnet.ts produced no values"

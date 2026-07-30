@@ -142,13 +142,21 @@ jobs:
           DEVNET_ACCESSIBLE=false
           for attempt in 1 2 3; do
             echo "Devnet check attempt $attempt/3..."
-            HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' --connect-timeout 5 --max-time 10 http://sesh-net.local:1280 2>/dev/null || echo '000')
-            if [ "$HTTP_CODE" != "000" ]; then
+            # curl writes its own "000" to stdout *and* exits non-zero when the connection fails, so
+            # its exit status is the signal, not the body. The previous form appended a fallback
+            # `|| echo '000'`, producing "000000" — which compares unequal to "000" and so reported an
+            # unreachable devnet as reachable, making this gate a no-op. The `|| CURL_RC=$?` form both
+            # captures the real status and keeps the step alive under the runner's default `bash -e`,
+            # which a bare assignment would not (a failing curl would abort before the check).
+            HTTP_CODE=""
+            CURL_RC=0
+            HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' --connect-timeout 5 --max-time 10 http://sesh-net.local:1280 2>/dev/null) || CURL_RC=$?
+            if [ "$CURL_RC" -eq 0 ] && [ "$HTTP_CODE" != "000" ]; then
               echo "Devnet is reachable on attempt $attempt (HTTP $HTTP_CODE)"
               DEVNET_ACCESSIBLE=true
               break
             else
-              echo "Devnet attempt $attempt failed (could not connect)"
+              echo "Devnet attempt $attempt failed (curl rc=$CURL_RC, code=${HTTP_CODE:-none})"
               if [ $attempt -lt 3 ]; then
                 echo "Waiting ${attempt}s before retry..."
                 sleep $attempt
