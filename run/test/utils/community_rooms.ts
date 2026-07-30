@@ -27,56 +27,142 @@ export type CommunityRoom = {
  * therefore safe: tests within a worker run one at a time.
  */
 
+/**
+ * How rooms are managed. Two implementations, differing only in how they reach SOGS — the room
+ * semantics, including the `qa-` prefix rule and the gc TTL, are enforced on the server either way.
+ *
+ * `gc` returns its own one-line summary rather than counts: the CLI already prints one, and parsing it
+ * back into numbers just to reformat it would be a brittle way to reach the same log line.
+ */
+type RoomTransport = {
+  create(token: string, name: string): Promise<void>;
+  /** Shown in the "per-test rooms enabled" line. */
+  readonly describe: string;
+  gc(olderThanSeconds: number): Promise<string>;
+  /** Rejects when rooms can't be managed. Used as the availability check by `probePerTestRooms`. */
+  check(): Promise<void>;
+  remove(token: string): Promise<void>;
+};
+
 // Default assumes Sesh-Net-Docker is checked out alongside this repo; override in .env when it isn't.
 const roomCliPath = () =>
   process.env.SOGS_ROOM_CLI ?? path.resolve(process.cwd(), '../Sesh-Net-Docker/sogs/room.sh');
 
-/**
- * The HTTP transport, used when SOGS_ROOM_API is set.
- *
- * `room.sh` needs a local Docker daemon, which the case this exists for doesn't have: a CI runner
- * driving a devnet on another host. Sesh-Net-Docker's sogs container can expose the same operations
- * on a port instead (`sogs/room_api.py`), so the choice here is purely about how we reach it — the
- * room semantics, including the `qa-` prefix rule, are enforced on the server either way.
- */
 const roomApiBase = () => (process.env.SOGS_ROOM_API ?? '').trim().replace(/\/$/, '');
-const useRoomApi = () => roomApiBase() !== '';
 const roomApiToken = () => (process.env.SOGS_ROOM_API_TOKEN ?? '').trim();
 
-async function callRoomApi(
-  method: 'DELETE' | 'GET' | 'POST',
-  route: string,
-  body?: unknown
-): Promise<unknown> {
-  const token = roomApiToken();
-  if (!token) {
-    // The probe checks for this up front and reports it properly; reaching it here would mean the
-    // token was cleared mid-run.
-    throw new Error('SOGS_ROOM_API_TOKEN is empty');
-  }
+/**
+ * Chosen from the environment once per process, then reused.
+ *
+ * Not chosen in `probePerTestRooms` and stored for everyone: workers are separate processes and
+ * inherit the env, not module state, so each derives this for itself. Deriving it once per process
+ * rather than per call is what stops four call sites disagreeing if the environment changes mid-run.
+ */
+let transport: RoomTransport | undefined;
 
-  const response = await fetch(`${roomApiBase()}${route}`, {
-    body: body === undefined ? undefined : JSON.stringify(body),
-    headers: {
-      Authorization: `Bearer ${token}`,
-      ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
+function roomTransport(): RoomTransport {
+  transport ??= roomApiBase() === '' ? cliTransport() : apiTransport();
+  return transport;
+}
+
+/**
+ * Shells into the container via Sesh-Net-Docker's `room.sh`. The default when nothing else is
+ * configured, because it needs no token and no exposed port — with that repo checked out alongside
+ * this one it works with nothing set but COMMUNITY_LINK.
+ */
+function cliTransport(): RoomTransport {
+  const run = async (args: Array<string>): Promise<string> => {
+    const { stdout } = await execFileAsync(roomCliPath(), args, { timeout: 60_000 });
+    return stdout.trim();
+  };
+
+  return {
+    check: async () => {
+      const cli = roomCliPath();
+      if (!existsSync(cli)) {
+        throw new Error(
+          `no room CLI at ${cli} and SOGS_ROOM_API is unset. Point SOGS_ROOM_CLI at your ` +
+            `Sesh-Net-Docker checkout's sogs/room.sh, or set SOGS_ROOM_API + SOGS_ROOM_API_TOKEN`
+        );
+      }
+      await run(['list']);
     },
-    method,
-    signal: AbortSignal.timeout(60_000),
-  });
+    create: async (token, name) => void (await run(['create', token, '--name', name])),
+    describe: `room CLI at ${roomCliPath()}`,
+    gc: async olderThanSeconds =>
+      (await run(['gc', '--older-than', String(olderThanSeconds)])).split('\n')[0],
+    remove: async token => void (await run(['delete', token])),
+  };
+}
 
-  const text = await response.text();
-  if (!response.ok) {
-    // The API answers refusals as JSON `{error}`; surface that rather than a bare status.
-    let detail = text;
-    try {
-      detail = (JSON.parse(text) as { error?: string }).error ?? text;
-    } catch {
-      // Not JSON — a proxy or the wrong port. The raw body is more use than a parse error.
+/**
+ * Talks to `sogs/room_api.py` over HTTP. For hosts that can reach the SOGS container but can't
+ * `docker exec` into it — a CI runner driving a devnet that lives on another host. Takes precedence
+ * when SOGS_ROOM_API is set, since it is the deliberate choice of the two.
+ */
+function apiTransport(): RoomTransport {
+  const call = async (
+    method: 'DELETE' | 'GET' | 'POST',
+    route: string,
+    body?: unknown
+  ): Promise<unknown> => {
+    const token = roomApiToken();
+    if (!token) {
+      // `check` reports this properly; reaching it here would mean the token was cleared mid-run.
+      throw new Error('SOGS_ROOM_API_TOKEN is empty');
     }
-    throw new Error(`room API ${method} ${route} failed (HTTP ${response.status}): ${detail}`);
-  }
-  return text === '' ? {} : (JSON.parse(text) as unknown);
+
+    const response = await fetch(`${roomApiBase()}${route}`, {
+      body: body === undefined ? undefined : JSON.stringify(body),
+      headers: {
+        Authorization: `Bearer ${token}`,
+        ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
+      },
+      method,
+      signal: AbortSignal.timeout(60_000),
+    });
+
+    const text = await response.text();
+    if (!response.ok) {
+      // The API answers refusals as JSON `{error}`; surface that rather than a bare status.
+      let detail = text;
+      try {
+        detail = (JSON.parse(text) as { error?: string }).error ?? text;
+      } catch {
+        // Not JSON — a proxy or the wrong port. The raw body is more use than a parse error.
+      }
+      throw new Error(`room API ${method} ${route} failed (HTTP ${response.status}): ${detail}`);
+    }
+    return text === '' ? {} : (JSON.parse(text) as unknown);
+  };
+
+  return {
+    check: async () => {
+      // Checked before any request so a missing token reads as the configuration mistake it is.
+      // Left to the request it would surface as a transport failure, sending people to look at the
+      // network instead of at their env — and forgetting the token is the likeliest slip here.
+      if (!roomApiToken()) {
+        throw new Error(
+          `SOGS_ROOM_API is set to ${roomApiBase()} but SOGS_ROOM_API_TOKEN is empty. Set it to ` +
+            `the same value as the sogs container's SOGS_ROOM_API_TOKEN`
+        );
+      }
+      await call('GET', '/rooms');
+    },
+    create: async (token, name) => void (await call('POST', '/rooms', { name, token })),
+    describe: `room API at ${roomApiBase()}`,
+    gc: async olderThanSeconds => {
+      const result = (await call('POST', '/rooms/gc', { older_than: olderThanSeconds })) as {
+        kept?: string[];
+        removed?: string[];
+      };
+      return (
+        `gc: removed ${result.removed?.length ?? 0} room(s), left ` +
+        `${result.kept?.length ?? 0} inside the ${olderThanSeconds}s TTL.`
+      );
+    },
+    remove: async token => void (await call('DELETE', `/rooms/${encodeURIComponent(token)}`)),
+  };
 }
 
 let allocated: CommunityRoom[] = [];
@@ -106,28 +192,17 @@ export function perTestRoomsEnabled(): boolean {
  * Decide once, at the start of a run, whether per-test rooms are usable, and record it for the
  * workers.
  *
- * The check is a `list` through whichever transport is configured, not a reachability probe of SOGS
- * itself: what matters is whether we can *create* rooms, and a healthy SOGS API says nothing about
- * that. Over the CLI it needs docker, a running container and a working `room.py`; over HTTP it needs
- * the room API running with a matching token. That distinction is exactly the CI case — SOGS reachable
- * over the network, its container on another host.
+ * The check asks the transport, not SOGS: what matters is whether rooms can be *created*, and a
+ * healthy SOGS API says nothing about that. Over the CLI it needs docker, a running container and a
+ * working `room.py`; over HTTP it needs the room API up with a matching token. That distinction is
+ * exactly the CI case — SOGS reachable over the network, its container on another host.
  *
- * Either being unusable falls back to the shared rooms rather than failing the run, since that
+ * An unusable transport falls back to the shared rooms rather than failing the run, since that
  * configuration still tests everything — it just can't isolate concurrent runs. The warning is
  * deliberately loud: sharing rooms silently while reporting green is the failure mode this feature
  * exists to remove, so it should be obvious in the log which mode a run used.
  */
 export async function probePerTestRooms(): Promise<boolean> {
-  const fallBack = (why: string): boolean => {
-    process.env[ENABLED_FLAG] = '0';
-    console.warn(
-      `\n⚠ Per-test community rooms are OFF — ${why}\n` +
-        `  Community tests will share the fixed rooms in run/constants/community.ts, so a run ` +
-        `against the same SOGS elsewhere can interfere with this one.\n`
-    );
-    return false;
-  };
-
   if (!process.env.COMMUNITY_LINK) {
     // Pointed at the shared remote communities: nothing can be created, and that is a choice rather
     // than a misconfiguration, so it warrants no warning.
@@ -135,51 +210,22 @@ export async function probePerTestRooms(): Promise<boolean> {
     return false;
   }
 
-  // The HTTP API wins when configured: it is the deliberate choice of the two, only set where the
-  // CLI cannot work.
-  if (useRoomApi()) {
-    // Checked before the request so a missing token reads as the configuration mistake it is. Left
-    // to the request below it would surface as "the room API is unusable", which sends people looking
-    // at the network instead of at their env — and forgetting the token is the likeliest slip here.
-    if (!roomApiToken()) {
-      return fallBack(
-        `SOGS_ROOM_API is set to ${roomApiBase()} but SOGS_ROOM_API_TOKEN is empty. Set it to the ` +
-          `same value as the sogs container's SOGS_ROOM_API_TOKEN`
-      );
-    }
-
-    try {
-      await callRoomApi('GET', '/rooms');
-    } catch (e) {
-      return fallBack(
-        `the room API at ${roomApiBase()} is unusable: ${
-          e instanceof Error ? e.message.split('\n')[0] : String(e)
-        }`
-      );
-    }
-    process.env[ENABLED_FLAG] = '1';
-    console.log(`Per-test community rooms enabled (via room API at ${roomApiBase()})`);
-    return true;
-  }
-
-  const cli = roomCliPath();
-  if (!existsSync(cli)) {
-    return fallBack(
-      `no room CLI at ${cli} and SOGS_ROOM_API is unset. Point SOGS_ROOM_CLI at your ` +
-        `Sesh-Net-Docker checkout's sogs/room.sh, or set SOGS_ROOM_API + SOGS_ROOM_API_TOKEN`
-    );
-  }
-
   try {
-    await runRoomCli(['list']);
+    await roomTransport().check();
   } catch (e) {
-    return fallBack(
-      `the room CLI at ${cli} failed: ${e instanceof Error ? e.message.split('\n')[0] : String(e)}`
+    process.env[ENABLED_FLAG] = '0';
+    console.warn(
+      `\n⚠ Per-test community rooms are OFF — ${
+        e instanceof Error ? e.message.split('\n')[0] : String(e)
+      }\n` +
+        `  Community tests will share the fixed rooms in run/constants/community.ts, so a run ` +
+        `against the same SOGS elsewhere can interfere with this one.\n`
     );
+    return false;
   }
 
   process.env[ENABLED_FLAG] = '1';
-  console.log(`Per-test community rooms enabled (via room CLI at ${cli})`);
+  console.log(`Per-test community rooms enabled (via ${roomTransport().describe})`);
   return true;
 }
 
@@ -195,11 +241,6 @@ function nextToken(): string {
   const worker = process.env.TEST_PARALLEL_INDEX ?? '0';
   allocationCounter += 1;
   return `qa-${runId}-w${worker}-${allocationCounter}`;
-}
-
-async function runRoomCli(args: Array<string>): Promise<string> {
-  const { stdout } = await execFileAsync(roomCliPath(), args, { timeout: 60_000 });
-  return stdout.trim();
 }
 
 /**
@@ -222,11 +263,7 @@ export async function allocateCommunityRooms(count: number): Promise<Array<Commu
   for (let i = 0; i < count; i++) {
     const token = nextToken();
     const name = `QA ${token}`;
-    if (useRoomApi()) {
-      await callRoomApi('POST', '/rooms', { name, token });
-    } else {
-      await runRoomCli(['create', token, '--name', name]);
-    }
+    await roomTransport().create(token, name);
     rooms.push({ link: linkForToken(token), name, roomName: token });
   }
   return rooms;
@@ -241,11 +278,7 @@ export async function releaseCommunityRooms(): Promise<void> {
   allocated = [];
   for (const room of toRelease) {
     try {
-      if (useRoomApi()) {
-        await callRoomApi('DELETE', `/rooms/${encodeURIComponent(room.roomName)}`);
-      } else {
-        await runRoomCli(['delete', room.roomName]);
-      }
+      await roomTransport().remove(room.roomName);
     } catch (e) {
       console.warn(
         `Failed to delete community room "${room.roomName}" (gc will collect it): ${
@@ -270,19 +303,7 @@ export async function gcCommunityRooms(olderThanSeconds: number = 3_600): Promis
     return;
   }
   try {
-    if (useRoomApi()) {
-      const result = (await callRoomApi('POST', '/rooms/gc', {
-        older_than: olderThanSeconds,
-      })) as { kept?: string[]; removed?: string[] };
-      console.log(
-        `gc: removed ${result.removed?.length ?? 0} room(s), left ${
-          result.kept?.length ?? 0
-        } inside the ${olderThanSeconds}s TTL.`
-      );
-    } else {
-      const output = await runRoomCli(['gc', '--older-than', String(olderThanSeconds)]);
-      console.log(output.split('\n')[0]);
-    }
+    console.log(await roomTransport().gc(olderThanSeconds));
   } catch (e) {
     console.warn(
       `Community room gc failed (continuing): ${e instanceof Error ? e.message : String(e)}`
