@@ -183,35 +183,35 @@ function prepareConcurrency(poolSize: number): number {
 /**
  * How many WebDriverAgent launches run at once, from IOS_WDA_CONCURRENCY.
  *
- * Serial by default, which is the opposite of what it was first written for. The reasoning then was
- * that launching WDA is mostly *waiting* on a port, so waits should overlap for free and the width
- * should be higher than booting's. The measurements said otherwise: `simctl launch` took under 3.5s on
- * seven devices, ~37s on three and ~120s on two — and the slow ones were always launching at the same
- * moment as each other, which is the signature of contention rather than of slow individual launches.
+ * Defaults to the boot width, i.e. no extra gating — which is where this landed after trying the
+ * alternative and measuring it. Serialising launches (width 1) was tried on the theory that the wildly
+ * uneven `simctl launch` times were concurrent calls blocking each other. It made things worse: total
+ * preparation went 257.9s to 321.0s, because ~298s went into devices queueing for the single slot,
+ * while `gate-wait` (531.7s) exceeded the work inside it (234.0s) by exactly that much.
  *
- * Serialising them should therefore cost little and remove the outliers. The port wait afterwards is
- * *not* serialised — only the launch call itself is gated — so the overlap that actually matters is
- * kept.
+ * It also disproved the theory it was testing. The slow launches persisted at width 1 — 48.2s, 50.8s
+ * and 72.3s on three devices, with only one launch running at a time — so whatever makes a launch take
+ * fifty seconds, it is not contention with other launches. (The slow ones fell on every third device,
+ * matching the boot width, which hints at launching against a simulator still settling after boot. Not
+ * established.)
  *
- * Note this can only usefully go **narrower** than the boot width, not wider: the pipeline already caps
- * devices in flight at `prepareConcurrency`, so a larger value here would never block and would change
- * nothing. Raising it means raising the boot width too.
+ * Note this can only usefully go **narrower** than the boot width, never wider: the pipeline already
+ * caps devices in flight at `prepareConcurrency`, so a larger value here would never block. Raising it
+ * means raising the boot width too.
  */
-const DEFAULT_WDA_CONCURRENCY = 1;
-
 function wdaConcurrency(poolSize: number): number {
   const configured = process.env.IOS_WDA_CONCURRENCY?.trim();
   if (!configured) {
-    return Math.min(DEFAULT_WDA_CONCURRENCY, poolSize);
+    return prepareConcurrency(poolSize);
   }
 
   const width = Number(configured);
   if (!Number.isInteger(width) || width < 1) {
     console.warn(
       `Ignoring IOS_WDA_CONCURRENCY="${configured}" (expected a positive integer); ` +
-        `launching ${DEFAULT_WDA_CONCURRENCY} at a time.`
+        `using the boot width.`
     );
-    return Math.min(DEFAULT_WDA_CONCURRENCY, poolSize);
+    return prepareConcurrency(poolSize);
   }
   return Math.min(width, poolSize);
 }
@@ -226,17 +226,27 @@ function wdaConcurrency(poolSize: number): number {
  *
  * `release` hands its slot straight to the next waiter rather than decrementing and letting it
  * re-acquire — otherwise the count dips between the two and an extra task can slip past the limit.
+ *
+ * `onQueued` reports time spent **waiting for a slot only**, not the task that follows. An earlier
+ * version timed the whole gated call, which made the figure unreadable: it always exceeded the sum of
+ * the stages nested inside it, so a device that never queued still looked like it had waited seconds.
  */
 function createGate(width: number) {
   let active = 0;
   const waiting: Array<() => void> = [];
 
-  return async function gate<T>(task: () => Promise<T>): Promise<T> {
+  return async function gate<T>(
+    task: () => Promise<T>,
+    onQueued?: (queuedMs: number) => void
+  ): Promise<T> {
+    const queueStart = Date.now();
     if (active < width) {
       active += 1;
     } else {
       await new Promise<void>(resolve => waiting.push(resolve));
     }
+    onQueued?.(Date.now() - queueStart);
+
     try {
       return await task();
     } finally {
@@ -489,12 +499,14 @@ export async function prepareSimulatorPool(
       }
 
       if (wdaAppPath) {
-        // Gated separately from the boot: `wda-bind-wait` is time spent waiting on a port, which
-        // overlaps with other waits for free, so this stage can run wider than booting does.
-        // `gate-wait` is how long this device queued for a WDA slot — that separates "the stage is
-        // slow" from "the stage is starved", which one combined number cannot.
-        port = await step('gate-wait', () =>
-          wdaGate(() => startWda(udid, wdaPort, wdaAppPath, timings))
+        // `wda-queue` is time spent waiting for a WDA slot and nothing else, which separates "this
+        // stage is slow" from "this stage is starved of slots" — the two need opposite fixes. At the
+        // default width it should be ~0; anything else means the gate is throttling the pipeline.
+        port = await wdaGate(
+          () => startWda(udid, wdaPort, wdaAppPath, timings),
+          queuedMs => {
+            timings['wda-queue'] = queuedMs;
+          }
         );
       }
     } catch (error: unknown) {

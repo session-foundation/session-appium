@@ -116,9 +116,10 @@ simulators make the whole step a no-op, so back-to-back runs skip it.
 >   4 = 57.4s, 6 = 82.4s, 12 = 76.6s. 3 and 4 are within run-to-run noise of each other; 3 is chosen
 >   because the curve is asymmetric (2 costs 1.25x, 6 costs 1.43x) and the optimum shifts *down* as the
 >   host gets busier, so the lower of two tied widths is the safer one.
-> - **WDA launch contention.** The 1-of-12 was 12 `simctl launch` calls contending for a fixed 15s
->   port-binding window. Launches are now serialised (`IOS_WDA_CONCURRENCY`, default **1**) and the port
->   wait is 10s, then 30s on a retry.
+> - **WDA launch.** The 1-of-12 was 12 `simctl launch` calls sharing a fixed 15s port-binding window.
+>   The window is now 10s, then 30s on a retry, and `--terminate-running-process` is used only on that
+>   retry — dropping it from the first attempt **halved `wda-launch`, 358.6s to 182.7s**, and across 12
+>   devices not one needed the retry, confirming the flag bought nothing on the happy path.
 >
 > Note the 350s was never mostly boot. Per-stage totals across 12 devices, measured on the runner (sums
 > of concurrent work, so they exceed wall clock):
@@ -131,16 +132,22 @@ simulators make the whole step a no-op, so back-to-back runs skip it.
 > | `wda-bind-wait` | 39.2s | ~3.3s/device — WDA binds quickly once launched |
 > | `wda-install` | 11.4s | |
 >
-> `wda-launch` was also bimodal — under 3.5s on seven devices, ~37s on three, ~120s on two — and the slow
-> ones were always launching simultaneously, which is contention, not slow launches. Hence serialising
-> them, and dropping `--terminate-running-process` from the first attempt: the probe has already shown
-> nothing is answering on the port, so there is usually nothing to terminate. It is retried *with* the
-> flag only if the first launch fails to bind, which is the case it actually exists for.
+> `wda-launch` is bimodal — a few seconds on most devices, tens of seconds on two or three — and that is
+> **still unexplained**. Serialising the launches was tried and rejected: it cost ~298s of queueing
+> (total preparation 257.9s → 321.0s) *and* the outliers survived at width 1, where only one launch runs
+> at a time. So it is not contention between launches. The slow devices fell on every third device,
+> matching the boot width, which hints at launching against a simulator still settling after its boot —
+> untested.
 >
-> Two things worth knowing before tuning further: `IOS_WDA_CONCURRENCY` can only usefully go **narrower**
-> than the boot width (the pipeline already caps devices in flight at `IOS_BOOT_CONCURRENCY`, so a larger
-> value never blocks), and app install being ~12s on CI against ~1s locally means local timings do not
-> transfer — APFS clones the bundle locally, and evidently does not on the runner.
+> Three things worth knowing before tuning further:
+>
+> - `IOS_WDA_CONCURRENCY` can only usefully go **narrower** than the boot width, and narrower is measured
+>   worse. The pipeline already caps devices in flight at `IOS_BOOT_CONCURRENCY`, so a larger value never
+>   blocks; raising it means raising the boot width too.
+> - App install is ~12s per device on CI against ~1s locally, so **local timings do not transfer** — APFS
+>   clones the bundle locally and evidently does not on the runner. Measure on the runner.
+> - Run-to-run variance on these totals is substantial (boot 164.7s vs 151.5s, app-install 148.7s vs
+>   173.4s across two runs of the same code), so treat differences under ~15% as noise.
 >
 > Preparation is **pipelined per simulator**, not run as three phases over the pool — each device boots,
 > then installs the app, then starts WDA, so a fast device moves on while others are still booting rather
@@ -236,8 +243,9 @@ an existing spec (e.g. `run/test/specs/app_disguise_icons.spec.ts`).
 ## CI vs local
 
 CI (`.github/workflows/ios-regression.yml`) runs on a **self-hosted macOS** runner with `CI=1`, 12
-simulators from `ci-simulators.json`, and `IOS_APP_PATH_PREFIX` pointing at an extracted
-`Session.app`. Locally, simulators come from `.env` (`IOS_N_SIMULATOR`) instead.
+simulators from `ci-simulators.json`, and `IOS_APP_PATH_PREFIX` pointing at a `Session.app` extracted
+under `$HOME` (not the workspace — it must share an APFS volume with the simulators so `simctl install`
+clones the bundle instead of copying it; the `Prepare simulators` step logs whether it does). Locally, simulators come from `.env` (`IOS_N_SIMULATOR`) instead.
 
 The run step is **tiered** like the local runner: it shells out to `scripts/print_tier.ts ci` and
 does one `npx playwright test` per device class, setting `DEVICES_PER_TEST_COUNT` and

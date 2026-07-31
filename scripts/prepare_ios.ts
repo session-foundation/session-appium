@@ -1,5 +1,8 @@
+import { execSync } from 'child_process';
 import dotenv from 'dotenv';
-import { appendFileSync } from 'fs';
+import { appendFileSync, existsSync } from 'fs';
+import { homedir } from 'os';
+import path from 'path';
 
 import { ensureWdaBuilt } from './build_wda';
 import { prepareSimulatorPool, resolveRunSimulators } from './ios_shared';
@@ -27,6 +30,49 @@ dotenv.config({ quiet: true });
 
 const PREPARED_FLAG = 'IOS_SIMULATORS_PREPARED';
 
+/**
+ * Report whether the app bundle and the simulator containers share a filesystem.
+ *
+ * `simctl install` can clone the bundle instead of copying its bytes, but only within one APFS volume.
+ * The CI workflow now extracts the app under $HOME for exactly this reason, so these should match — this
+ * logs it rather than assuming, because the symptom of getting it wrong is silent: installs measured ~12s
+ * per device on CI against ~1s locally, on the very first device with an idle host, which is a byte copy
+ * rather than contention. If this ever reports two volumes again, that is the cause.
+ */
+function reportAppVolume(appPath: string): void {
+  const simulatorDir = path.join(homedir(), 'Library', 'Developer', 'CoreSimulator');
+  const volumeOf = (target: string): string => {
+    try {
+      // `df -P` prints a header then the device in column 1.
+      return execSync(`df -P ${JSON.stringify(target)}`)
+        .toString()
+        .trim()
+        .split('\n')[1]
+        .split(/\s+/)[0];
+    } catch {
+      return 'unknown';
+    }
+  };
+
+  if (!existsSync(appPath) || !existsSync(simulatorDir)) {
+    return;
+  }
+
+  const appVolume = volumeOf(appPath);
+  const simulatorVolume = volumeOf(simulatorDir);
+  if (appVolume === simulatorVolume) {
+    console.log(
+      `App and simulators share volume ${appVolume}; installs can clone rather than copy.`
+    );
+    return;
+  }
+  console.log(
+    `App is on ${appVolume} but the simulators are on ${simulatorVolume} — different volumes, so each ` +
+      `install copies the whole bundle rather than cloning it. Staging the app onto ` +
+      `${simulatorVolume} once would make every install clone-eligible.`
+  );
+}
+
 async function main(): Promise<void> {
   const [requested] = process.argv.slice(2).map(Number);
   const available = resolveRunSimulators();
@@ -46,6 +92,10 @@ async function main(): Promise<void> {
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     console.warn(`Could not build WebDriverAgent (the driver will build its own): ${message}`);
+  }
+
+  if (process.env.IOS_APP_PATH_PREFIX) {
+    reportAppVolume(process.env.IOS_APP_PATH_PREFIX);
   }
 
   await prepareSimulatorPool(pool, {
