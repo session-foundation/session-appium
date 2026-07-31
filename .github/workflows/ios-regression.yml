@@ -170,11 +170,30 @@ jobs:
         run: |
           npx --yes ts-node scripts/stop_ios.ts
 
-      - name: Start simulators
+      # TEMPORARY — remove once a boot width has been chosen.
+      #
+      # Cold-boots the 12-simulator pool at each of several concurrency widths and prints a table, so
+      # IOS_BOOT_CONCURRENCY can be set from this runner's own numbers rather than extrapolated from a
+      # developer laptop (where one-at-a-time measured ~11s per simulator against the ~29s per simulator
+      # this pool averaged booting all at once). Adds roughly 15 minutes to the job.
+      #
+      # Here rather than in a workflow of its own because a new `workflow_dispatch` workflow is only
+      # offered by the Actions UI once its file reaches the default branch — which would mean merging it
+      # to run it. This workflow is already on main, so a branch's copy of this step runs as soon as the
+      # branch is selected.
+      #
+      # Replaces the disabled "Start simulators" step (scripts/start_ios.ts), which booted all 12 at once
+      # with `simctl boot`, waited a flat 10s, and failed if any device wasn't up yet — a boot race, not
+      # the WebDriverAgent flakiness its comment implied. bootSimulatorPool waits for each boot to
+      # actually complete, which is what makes comparing widths meaningful.
+      #
+      # Leaves the whole pool shut down, so the test run afterwards starts from the state it normally
+      # does (Appium booting on demand).
+      - name: Benchmark simulator boot widths
         shell: bash
-        if: false # appium is starting the simulators (seems to be somewhat more reliable)
+        timeout-minutes: 45
         run: |
-          npx --yes ts-node scripts/start_ios.ts # don't auto start the simulators, let appium do it (seems somewhat more reliable)
+          npx --yes ts-node scripts/bench_simulator_boot.ts
 
       - name: List tests part of this run
         uses: ./github/actions/list-tests
