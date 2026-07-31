@@ -170,30 +170,21 @@ jobs:
         run: |
           npx --yes ts-node scripts/stop_ios.ts
 
-      # TEMPORARY — remove once a boot width has been chosen.
+      # Boot the pool, install the app on it, and start one WebDriverAgent per simulator, before any
+      # test runs. global-setup.ts can do this itself and does locally, but the run below is tiered —
+      # one `playwright test` invocation per device class — so leaving it there would repeat the whole
+      # preparation once per pass. As its own step it happens once, its cost is visible in the job
+      # timing rather than charged to the first pass, and the xcodebuild output stays out of the test
+      # results. It exports IOS_SIMULATORS_PREPARED, which tells global setup to skip to discovering the
+      # WebDriverAgents this started.
       #
-      # Cold-boots the 12-simulator pool at each of several concurrency widths and prints a table, so
-      # IOS_BOOT_CONCURRENCY can be set from this runner's own numbers rather than extrapolated from a
-      # developer laptop (where one-at-a-time measured ~11s per simulator against the ~29s per simulator
-      # this pool averaged booting all at once). Adds roughly 15 minutes to the job.
-      #
-      # Here rather than in a workflow of its own because a new `workflow_dispatch` workflow is only
-      # offered by the Actions UI once its file reaches the default branch — which would mean merging it
-      # to run it. This workflow is already on main, so a branch's copy of this step runs as soon as the
-      # branch is selected.
-      #
-      # Replaces the disabled "Start simulators" step (scripts/start_ios.ts), which booted all 12 at once
-      # with `simctl boot`, waited a flat 10s, and failed if any device wasn't up yet — a boot race, not
-      # the WebDriverAgent flakiness its comment implied. bootSimulatorPool waits for each boot to
-      # actually complete, which is what makes comparing widths meaningful.
-      #
-      # Leaves the whole pool shut down, so the test run afterwards starts from the state it normally
-      # does (Appium booting on demand).
-      - name: Benchmark simulator boot widths
+      # Never fails the job: every part of it has a working fallback (the driver boots, installs and
+      # launches WDA on demand), so a problem here should not stop the tests from running.
+      - name: Prepare simulators
         shell: bash
-        timeout-minutes: 45
+        timeout-minutes: 30
         run: |
-          npx --yes ts-node scripts/bench_simulator_boot.ts
+          npx --yes ts-node scripts/prepare_ios.ts
 
       - name: List tests part of this run
         uses: ./github/actions/list-tests

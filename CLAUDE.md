@@ -82,13 +82,15 @@ Locally `DEVICES_PER_TEST_COUNT` defaults to 4 and the largest specs need 4 devi
 (`countOfDevicesNeeded: 4`), so **4 sims covers every iOS spec** at 1 worker. XCUITest
 boots a sim by UDID automatically at session start — no manual boot.
 
-`global-setup.ts` does two separable things:
+Preparing the pool does two separable things — in `global-setup.ts` locally, and in the
+`Prepare simulators` step (`scripts/prepare_ios.ts`) on CI:
 
-1. **Builds the WebDriverAgent runner** — everywhere, CI included. `capabilities_ios` then passes
+1. **Builds the WebDriverAgent runner** (`ensureWdaBuilt`). `capabilities_ios` then passes
    `usePreinstalledWDA` + `prebuiltWDAPath`, so the driver installs the runner with `simctl` instead of
-   running `xcodebuild` inside every session. Needs no booted device and costs ~31s once per job.
-2. **Pre-boots the pool** (`workers × DEVICES_PER_TEST_COUNT`), **pre-installs** the app, and starts one
-   long-lived WDA per simulator, passing the ports via `WDA_REUSE_PORTS` — **locally only**.
+   running `xcodebuild` inside every session. Needs no booted device and costs ~31s once per job — it's
+   one build for all devices, so it happens before the per-device work rather than inside it.
+2. **Prepares the pool** (`workers × DEVICES_PER_TEST_COUNT` devices): boots each, installs the app, and
+   starts one long-lived WDA per simulator, passing the ports on via `WDA_REUSE_PORTS`.
 
 Without (2) the driver still boots on demand and launches WDA per session behind a process-wide lock
 (~4.3s per device); without (1) it also *builds* WDA per session, which is the slow, flaky part.
@@ -98,29 +100,39 @@ With `appium:webDriverAgentUrl` pointing at a running WDA the driver's launch co
 All of it is best-effort: anything that fails falls back to the driver doing it itself. Already-warm
 simulators make the whole step a no-op, so back-to-back runs skip it.
 
-> **Step 2 is off on CI**, measured: preparing the 12-simulator pool cost 350s of dead time before the
-> first test, and WebDriverAgent came up on only **1 of 12** — `launchWdaOnSimulators` gives each device
-> a fixed 15s to bind its port, which doesn't hold when 12 `simctl launch` calls contend — so 11 devices
-> paid the per-session cost regardless. Setup went from **67s to 523s**.
+> **Both steps run everywhere now, including CI**, and on CI they happen in a **`Prepare simulators`
+> workflow step** (`scripts/prepare_ios.ts`) rather than inside `global-setup.ts`. The CI run is tiered —
+> one `playwright test` invocation per device class — so leaving preparation in global setup repeated it
+> once per pass; as its own step it happens once, its cost is visible in the job timing instead of being
+> charged to the first pass, and the `xcodebuild` output stays out of the test results. The step exports
+> `IOS_SIMULATORS_PREPARED`, which makes global setup skip to *discovering* the running WDAs.
 >
-> That 350s **is** partly a scheduling problem. An earlier version of this note said it wasn't, reasoning
-> that 350s/12 ≈ 29s is about one cold boot so the work is fixed however it's ordered. Measured since:
-> booting eight cold simulators **one at a time** takes ~11s each (90s total, no slowdown as the booted
-> ones accumulate), against the ~29s each the 12-pool averaged booting all at once. Boot contention is
-> most of that cost, so bounding the width should recover much of it.
+> This was previously disabled on CI, where preparing the 12-simulator pool cost **350s** of dead time
+> and WebDriverAgent came up on only **1 of 12** (setup went 67s → 523s). Both causes are now understood
+> and fixed:
 >
-> `bootSimulatorPool` now boots `IOS_BOOT_CONCURRENCY` at a time (default 4), so 1 / 4 / full-pool can
-> be compared on the runner itself — the right width is host-dependent and the numbers above come from a
-> 14-core laptop, not the CI box. Note this bounds the boot only: a booted simulator holds ~230
-> processes for as long as it's up, and the run needs the whole pool booted regardless.
+> - **Boot width.** `prepareSimulatorPool` prepares `IOS_BOOT_CONCURRENCY` devices at a time (default
+>   **3**). Measured on the runner, cold-booting 12: width 1 = 128.4s, 2 = 71.8s, **3 = 58.8s**,
+>   4 = 57.4s, 6 = 82.4s, 12 = 76.6s. 3 and 4 are within run-to-run noise of each other; 3 is chosen
+>   because the curve is asymmetric (2 costs 1.25x, 6 costs 1.43x) and the optimum shifts *down* as the
+>   host gets busier, so the lower of two tied widths is the safer one.
+> - **WDA launch contention.** The 1-of-12 was 12 `simctl launch` calls contending for a fixed 15s
+>   port-binding window. Launches are now bounded to the same width and the window is 30s.
 >
-> What lazy booting buys on top is **overlap** — each worker boots what it needs while others are
-> already running tests — and, with the tiered passes, the first pass warms the pool for the three that
-> follow.
+> Note the 350s was never mostly boot: booting all 12 at once is only 76.6s, so ~275s of it was the app
+> install and the WDA launches. Bounding the boot width alone would have saved ~19s of it.
 >
-> `IOS_PREPARE_SIMULATORS=1` re-enables step 2 for measurement. Worth revisiting for the high-worker
-> tiers, since the per-session WDA *launch* serialisation it removes scales with worker count — but the
-> binding window needs widening and the launch concurrency bounding first.
+> Preparation is **pipelined per simulator**, not run as three phases over the pool — each device boots,
+> then installs the app, then starts WDA, so a fast device moves on while others are still booting rather
+> than waiting at three separate barriers. The stages can't be reordered: `simctl install` and `simctl
+> launch` both fail on a device that isn't booted.
+>
+> All of it is best-effort — anything that fails falls back to the driver doing it itself, and
+> `prepare_ios.ts` deliberately exits 0 so it can never fail a job before a test has run. Already-warm
+> simulators make the whole step close to a no-op, so back-to-back runs skip most of it.
+>
+> Note this bounds the *preparation*, not the load the tests then run against: a booted simulator holds
+> ~230 processes for as long as it's up, and the run needs the whole pool booted regardless.
 
 ### Parallelism
 
