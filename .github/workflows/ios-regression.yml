@@ -196,45 +196,13 @@ jobs:
       # Never fails the job: every part of it has a working fallback (the driver boots, installs and
       # launches WDA on demand), so a problem here should not stop the tests from running.
       #
-      # TEMPORARY — the loop over widths, not the step itself. Remove the loop once a width is chosen.
-      #
-      # Measures the FULL preparation (boot + app install + WDA launch) at each candidate width, all in
-      # one job so every width sees the same host conditions. The earlier benchmark measured boot alone,
-      # which is why 3 won there: boot is largely waiting, so it parallelises well (10.7s/device serial
-      # against 4.9s at width 3). WDA launch is the opposite — its total went 350.0s at width 3 to 182.7s
-      # when serialised — so adding it to the mix should pull the optimum down. 1 and 2 are the
-      # candidates; 4 tied with 3 on boot alone and 12 is known worse, so neither is worth a slot.
-      #
-      # Width 3 runs LAST on purpose: it is the current default, so the pool is left prepared exactly as a
-      # normal run would leave it and the tests below still run against the real configuration rather than
-      # against whichever width happened to be measured last.
-      #
-      # Interpreting it: prepare has measured 258/284/291/321s across four runs of near-identical config,
-      # so ~30s is the noise floor. Treat smaller gaps as ties and prefer the lower width, since the
-      # optimum shifts down as the host gets busier.
+      # Never fails the job: every part of it has a working fallback (the driver boots, installs and
+      # launches WDA on demand), so a problem here should not stop the tests from running.
       - name: Prepare simulators
         shell: bash
-        timeout-minutes: 45
+        timeout-minutes: 30
         run: |
-          for WIDTH in 1 2 3; do
-            echo "=============== prepare at IOS_BOOT_CONCURRENCY=$WIDTH ==============="
-            npx --yes ts-node scripts/stop_ios.ts
-
-            # Let the teardown finish draining before the next width starts, so one width's cleanup is
-            # not charged to the next. Gated on process count, deliberately NOT on load average: load is
-            # a ~1-minute mean and takes about five minutes to fall after twelve simulators shut down,
-            # which would burn the timeout waiting for a number that cannot arrive in time.
-            PREV=0
-            for _ in $(seq 1 20); do
-              sleep 3
-              CURRENT=$(ps ax | wc -l | tr -d ' ')
-              if [ "$PREV" -ne 0 ] && [ $((PREV - CURRENT)) -lt 25 ]; then break; fi
-              PREV=$CURRENT
-            done
-            echo "settled at $(ps ax | wc -l | tr -d ' ') processes"
-
-            IOS_BOOT_CONCURRENCY=$WIDTH npx --yes ts-node scripts/prepare_ios.ts
-          done
+          npx --yes ts-node scripts/prepare_ios.ts
 
       - name: List tests part of this run
         uses: ./github/actions/list-tests

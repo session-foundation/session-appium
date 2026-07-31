@@ -107,54 +107,53 @@ simulators make the whole step a no-op, so back-to-back runs skip it.
 > charged to the first pass, and the `xcodebuild` output stays out of the test results. The step exports
 > `IOS_SIMULATORS_PREPARED`, which makes global setup skip to *discovering* the running WDAs.
 >
-> This was previously disabled on CI, where preparing the 12-simulator pool cost **350s** of dead time
-> and WebDriverAgent came up on only **1 of 12** (setup went 67s → 523s). Both causes are now understood
-> and fixed:
+> **This was 350s with WebDriverAgent on 1 of 12; it is now ~210s with 12 of 12.** Two changes did all of
+> that: bounding the WDA port-binding window (10s, then 30s on a retry), and splitting preparation into two
+> stages so a device waiting to launch WDA does not hold up the boots behind it.
 >
-> - **Boot width.** `prepareSimulatorPool` prepares `IOS_BOOT_CONCURRENCY` devices at a time (default
->   **3**). Measured on the runner, cold-booting 12: width 1 = 128.4s, 2 = 71.8s, **3 = 58.8s**,
->   4 = 57.4s, 6 = 82.4s, 12 = 76.6s. 3 and 4 are within run-to-run noise of each other; 3 is chosen
->   because the curve is asymmetric (2 costs 1.25x, 6 costs 1.43x) and the optimum shifts *down* as the
->   host gets busier, so the lower of two tied widths is the safer one.
-> - **WDA launch.** The 1-of-12 was 12 `simctl launch` calls sharing a fixed 15s port-binding window.
->   The window is now 10s, then 30s on a retry. That is what took WDA from 1/12 to **12/12**, and it is
->   the only change in this area that has measurably helped.
+> `prepareSimulatorPool` runs **boot + app install** at `IOS_BOOT_CONCURRENCY` (default **1**), handing each
+> device to a second stage that launches WDA at `IOS_WDA_CONCURRENCY` (default **1**). The stages overlap —
+> device N's launch runs while device N+1 boots — which is worth ~48s: at width 1 the wall clock (210.2s)
+> comes in *below* the summed per-device work (257.8s).
 >
-> **Everything tried after that has failed to move the wall clock.** Four runs: prepare 258s / 284s /
-> 291s / 321s — that spread is run-to-run variance, not signal. Recorded so nobody repeats them:
+> Measured on the runner, all 12 devices:
 >
-> | configuration | `wda-launch` | prepare |
-> |---|---|---|
-> | width 3, with `--terminate-running-process` | 358.6s | 257.9s |
-> | width 1, no terminate flag | 182.7s | 321.0s |
-> | width 3, no terminate flag | 350.0s | 291.1s |
+> | boot width | prepare | `wda-launch` total | `handoff-wait` total | `app-install` total |
+> |---|---|---|---|---|
+> | **1** | **210.2s** | **5.6s** | **0.3s** | 81.9s |
+> | 2 | 226.3s | 147.5s | 867.8s | 133.1s |
+> | 3 | 231.2s | 156.3s | 1429.8s | 195.7s |
 >
-> - **Dropping `--terminate-running-process` is neutral**: 358.6s vs 350.0s at the same width. The 182.7s
->   came from width 1, not the flag — an attribution error from changing both at once. It is kept only
->   because it is marginally more principled (the probe has already shown nothing is answering, so there
->   is usually nothing to terminate) and because across 12 devices not one needed the retry.
-> - **Serialising launches (width 1) is worse overall.** Contention is real — total `wda-launch` roughly
->   halves at width 1 — but the ~298s of queueing it introduces costs more than the contention it
->   removes. Each device queues behind whichever predecessor had a slow launch, matching that
->   predecessor's hold time almost exactly.
-> - **`app-install` (~13s/device) is not a copy-vs-clone problem.** The runner has a single volume
->   (`/dev/disk3s5` for both the workspace and `$HOME`), confirmed by the diagnostic in `prepare_ios.ts`,
->   so `simctl install` was never crossing a filesystem — an earlier hypothesis here, now disproved.
->   Why it is ~13s on CI against ~1s locally is **unexplained**; likely disk throughput or a larger
->   bundle from the ipa, and not contention, since the first device measured 13.0s on an idle host.
-> - **`wda-launch` itself is unexplained** and is the dominant stage (350.0s of ~734s of staged work). On
->   one run it ranged 0.5s to 92.4s with no model that fits: devices 1-3 all ~19.8s, 4-6 ~6s, 7-8 ~45s,
->   10 and 12 ~90s, while 9 and 11 came in under 1s. It rises with concurrency but not monotonically with
->   how many simulators are already booted.
+> Width 1 despite boot-only measurements favouring 3 (128.4s serial against 58.8s at width 3): this width
+> governs the app install too, which more than doubles across those widths, and above width 1 one
+> `simctl launch` per run reliably goes pathological (130-150s) and everything queues behind it. The
+> wall-clock gaps are inside the ~30s run-to-run noise, so width 1 is chosen for **robustness** rather than
+> proven speed — its launch stage does an order of magnitude less work and never hit the pathological case.
 >
-> `IOS_WDA_CONCURRENCY` can only usefully go **narrower** than the boot width, and narrower measures
-> worse — the pipeline already caps devices in flight at `IOS_BOOT_CONCURRENCY`, so a larger value never
-> blocks. Local timings do not transfer to the runner (app install ~1s vs ~13s), so measure there.
+> **Do not re-run these, they have all been tried and measured worse:**
 >
-> Preparation is **pipelined per simulator**, not run as three phases over the pool — each device boots,
-> then installs the app, then starts WDA, so a fast device moves on while others are still booting rather
-> than waiting at three separate barriers. The stages can't be reordered: `simctl install` and `simctl
-> launch` both fail on a device that isn't booted.
+> - **Gating the WDA launch inside the boot pipeline.** A device waiting for a launch slot still held a boot
+>   slot, stalling the boots behind it: ~298s of queueing, worse wall clock. Read at the time as "narrow
+>   launches are worse", which was the wrong conclusion — the coupling was the problem, hence the split.
+> - **Alternating waves (boot a batch, then launch it exclusively).** 340.6s / 337.0s / 400.8s at widths
+>   1/2/3 — up to 130s worse, because strict alternation gives up the overlap above and buys nothing.
+> - **Dropping `--terminate-running-process`.** Neutral (358.6s vs 350.0s at the same width). Kept only
+>   because the probe has already shown nothing is answering, and no device has ever needed the retry.
+> - **Serialising launches to avoid contention (before the split).** Halved `wda-launch` but cost more in
+>   queueing than it saved.
+> - **Moving the app extraction to `$HOME` so `simctl install` could clone.** The runner has a single volume
+>   (`/dev/disk3s5` for both workspace and `$HOME`), so nothing was ever crossing a filesystem. Harmless,
+>   and the extraction stays there, but it changed nothing.
+>
+> **Still unexplained:** one `simctl launch` per run takes 95-150s instead of ~0.3s. It is **stochastic**,
+> not caused by concurrency — it occurred in a run of twelve waves of one, where by construction nothing
+> else was booting, installing or launching. General load does not predict it either (0.4s at load 731,
+> 17.9s at load 147). Worth ~40s of average wall clock. Every mechanism anyone has proposed for it,
+> including several of mine, has been disproved.
+>
+> Two traps for anyone tuning this further: `app-install` takes ~1s locally and ~5-22s on the runner, so
+> **local timings do not transfer** — measure on CI. And the per-device log line is additive, so the stages
+> sum to the total; an earlier version nested four stages inside `gate-wait` and misled everyone reading it.
 >
 > All of it is best-effort — anything that fails falls back to the driver doing it itself, and
 > `prepare_ios.ts` deliberately exits 0 so it can never fail a job before a test has run. Already-warm
