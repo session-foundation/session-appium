@@ -351,6 +351,28 @@ async function isWdaResponding(port: number): Promise<boolean> {
   }
 }
 
+/**
+ * A snapshot of how busy the host is, for correlating slow stages with load.
+ *
+ * Boot, app install and WDA launch all run code *inside* a simulator, so they compete for host CPU with
+ * every other simulator being prepared and with the whole already-booted pool (~230 processes each). The
+ * stages that run no guest code — the port probe, the bundle install — are consistently fast, which is
+ * what suggests contention rather than anything wrong with CoreSimulator itself.
+ *
+ * Process count is instantaneous and the more useful of the two; load average is a ~1-minute mean and so
+ * lags, but it captures sustained pressure that a single sample misses. Both are cheap enough to take
+ * per device.
+ */
+function hostSnapshot(): string {
+  try {
+    const load = execSync('sysctl -n vm.loadavg').toString().trim().split(/\s+/)[1];
+    const procs = execSync('ps ax | wc -l').toString().trim();
+    return `load ${load}, ${procs} procs`;
+  } catch {
+    return 'load unavailable';
+  }
+}
+
 /** Per-stage durations in ms, for working out where preparation actually spends its time. */
 type StageTimings = Record<string, number>;
 
@@ -470,6 +492,7 @@ export async function prepareSimulatorPool(
     const timings: StageTimings = {};
     allTimings.push(timings);
     let port: number | null = null;
+    let hostAtLaunch = 'not reached';
 
     const step = async <T>(name: string, task: () => Promise<T>): Promise<T> => {
       const began = Date.now();
@@ -503,7 +526,13 @@ export async function prepareSimulatorPool(
         // stage is slow" from "this stage is starved of slots" — the two need opposite fixes. At the
         // default width it should be ~0; anything else means the gate is throttling the pipeline.
         port = await wdaGate(
-          () => startWda(udid, wdaPort, wdaAppPath, timings),
+          () => {
+            // Sampled here specifically: `wda-launch` is the stage with no explanation, ranging from
+            // 0.5s to 92s on one run. If the slow ones line up with load and the fast ones don't, the
+            // cause is host contention; a slow launch at low load would rule that out.
+            hostAtLaunch = hostSnapshot();
+            return startWda(udid, wdaPort, wdaAppPath, timings);
+          },
           queuedMs => {
             timings['wda-queue'] = queuedMs;
           }
@@ -525,7 +554,8 @@ export async function prepareSimulatorPool(
     console.log(
       `  [${finished}/${pool.length}] ${port === null && wdaAppPath ? 'WDA FAILED — ' : ''}` +
         `${((Date.now() - deviceStart) / 1000).toFixed(1)}s total (${breakdown || 'nothing'}) ` +
-        `at ${((Date.now() - start) / 1000).toFixed(1)}s elapsed`
+        `at ${((Date.now() - start) / 1000).toFixed(1)}s elapsed` +
+        `${wdaAppPath ? ` | host at WDA launch: ${hostAtLaunch}` : ''}`
     );
     return port;
   });
