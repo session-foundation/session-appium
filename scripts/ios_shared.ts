@@ -143,7 +143,15 @@ const DEFAULT_PREPARE_CONCURRENCY = 3;
 /** Ceiling for a single `simctl bootstatus` call — see the call site for why it needs one at all. */
 const BOOT_TIMEOUT_MS = 180_000;
 
-/** How long to wait for a freshly launched WDA to bind its port: 60 x 500ms = 30s. */
+/**
+ * How long to wait for a freshly launched WDA to bind its port.
+ *
+ * The first attempt gets a short window (20 x 500ms = 10s) because a healthy launch binds in ~3.3s on
+ * average, so anything much beyond that is a wedged runner rather than a slow one — and a short window
+ * makes the terminate-and-retry below cheap to reach. The retry gets the full 30s, since by then we
+ * have paid for a termination and want it to succeed.
+ */
+const WDA_FIRST_BIND_ATTEMPTS = 20;
 const WDA_PORT_POLL_ATTEMPTS = 60;
 const WDA_PORT_POLL_INTERVAL_MS = 500;
 
@@ -175,27 +183,35 @@ function prepareConcurrency(poolSize: number): number {
 /**
  * How many WebDriverAgent launches run at once, from IOS_WDA_CONCURRENCY.
  *
- * Separate from the boot width because the two stages are bound by different things. Booting is
- * CPU/launchd work and measured a clear optimum at 3. Launching WDA is mostly *waiting* for a process
- * to bind a port, so its optimum is likely higher — a wait overlaps with other waits at no cost.
+ * Serial by default, which is the opposite of what it was first written for. The reasoning then was
+ * that launching WDA is mostly *waiting* on a port, so waits should overlap for free and the width
+ * should be higher than booting's. The measurements said otherwise: `simctl launch` took under 3.5s on
+ * seven devices, ~37s on three and ~120s on two — and the slow ones were always launching at the same
+ * moment as each other, which is the signature of contention rather than of slow individual launches.
  *
- * Defaults to the boot width, so behaviour is unchanged until this is deliberately set. That default is
- * intentional for the first measured run: widen it only once the stage timings show the WDA phase is
- * actually where the time goes.
+ * Serialising them should therefore cost little and remove the outliers. The port wait afterwards is
+ * *not* serialised — only the launch call itself is gated — so the overlap that actually matters is
+ * kept.
+ *
+ * Note this can only usefully go **narrower** than the boot width, not wider: the pipeline already caps
+ * devices in flight at `prepareConcurrency`, so a larger value here would never block and would change
+ * nothing. Raising it means raising the boot width too.
  */
+const DEFAULT_WDA_CONCURRENCY = 1;
+
 function wdaConcurrency(poolSize: number): number {
   const configured = process.env.IOS_WDA_CONCURRENCY?.trim();
   if (!configured) {
-    return prepareConcurrency(poolSize);
+    return Math.min(DEFAULT_WDA_CONCURRENCY, poolSize);
   }
 
   const width = Number(configured);
   if (!Number.isInteger(width) || width < 1) {
     console.warn(
       `Ignoring IOS_WDA_CONCURRENCY="${configured}" (expected a positive integer); ` +
-        `using the boot width.`
+        `launching ${DEFAULT_WDA_CONCURRENCY} at a time.`
     );
-    return prepareConcurrency(poolSize);
+    return Math.min(DEFAULT_WDA_CONCURRENCY, poolSize);
   }
   return Math.min(width, poolSize);
 }
@@ -355,32 +371,53 @@ async function startWda(
   }
 
   await step('wda-install', () => execAsync(`xcrun simctl install ${udid} "${wdaAppPath}"`));
+
   // Mirrors what the driver itself does (WebDriverAgent#launchWithPreinstalledWDA): simctl passes
   // SIMCTL_CHILD_-prefixed vars through to the launched process.
-  await step('wda-launch', () =>
+  const launch = (terminateFirst: boolean) =>
     execAsync(
       `SIMCTL_CHILD_USE_PORT=${port} ` +
         `SIMCTL_CHILD_WDA_PRODUCT_BUNDLE_IDENTIFIER=${WDA_RUNNER_BUNDLE_ID} ` +
-        `xcrun simctl launch --terminate-running-process ${udid} ${WDA_RUNNER_BUNDLE_ID}`
-    )
-  );
+        `xcrun simctl launch ${terminateFirst ? '--terminate-running-process ' : ''}` +
+        `${udid} ${WDA_RUNNER_BUNDLE_ID}`
+    );
 
-  // WDA binds its port a moment after the process starts, so poll rather than assume. The window is
-  // generous because missing it is the expensive outcome — that device falls back to launching WDA
-  // inside its first session, behind a process-wide lock — while waiting costs only this worker's time.
-  // Launching at a bounded width is what keeps the wait short in practice: all twelve at once, each
-  // given a fixed 15s, produced WDA on 1 of 12.
-  return step('wda-bind-wait', async () => {
-    for (let attempt = 0; attempt < WDA_PORT_POLL_ATTEMPTS; attempt++) {
+  // WDA binds its port a moment after the process starts, so poll rather than assume.
+  const waitForBind = async (attempts: number): Promise<number | null> => {
+    for (let attempt = 0; attempt < attempts; attempt++) {
       if (await isWdaResponding(port)) {
         return port;
       }
       await new Promise(resolve => setTimeout(resolve, WDA_PORT_POLL_INTERVAL_MS));
     }
-
-    console.warn(`  WDA on ${udid} (port ${port}) did not bind; falling back for it`);
     return null;
-  });
+  };
+
+  // Launched WITHOUT `--terminate-running-process`, which measured as the single most expensive thing
+  // in the whole preparation: 358.6s across 12 devices, against 164.7s for every boot and 148.7s for
+  // every app install. It was also wildly uneven — under 3.5s on seven devices but 37s on three and
+  // ~120s on two, always on devices launching at the same moment, which points at the termination
+  // waiting on something the simulator serialises globally.
+  //
+  // Skipping it is safe here because the probe above already established nothing is answering on the
+  // port: there is usually no process to terminate, so the flag was buying nothing on the happy path.
+  await step('wda-launch', () => launch(false));
+
+  const bound = await step('wda-bind-wait', () => waitForBind(WDA_FIRST_BIND_ATTEMPTS));
+  if (bound !== null) {
+    return bound;
+  }
+
+  // Nothing bound, so the port is likely held by a wedged runner from an earlier job — the one case
+  // the terminate flag exists for. Pay for it only here, on the path that has already failed, rather
+  // than on all twelve devices. The first window is deliberately short so reaching this stays cheap.
+  await step('wda-relaunch', () => launch(true));
+
+  const rebound = await step('wda-rebind-wait', () => waitForBind(WDA_PORT_POLL_ATTEMPTS));
+  if (rebound === null) {
+    console.warn(`  WDA on ${udid} (port ${port}) did not bind; falling back for it`);
+  }
+  return rebound;
 }
 
 /**

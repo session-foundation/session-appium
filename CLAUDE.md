@@ -117,10 +117,30 @@ simulators make the whole step a no-op, so back-to-back runs skip it.
 >   because the curve is asymmetric (2 costs 1.25x, 6 costs 1.43x) and the optimum shifts *down* as the
 >   host gets busier, so the lower of two tied widths is the safer one.
 > - **WDA launch contention.** The 1-of-12 was 12 `simctl launch` calls contending for a fixed 15s
->   port-binding window. Launches are now bounded to the same width and the window is 30s.
+>   port-binding window. Launches are now serialised (`IOS_WDA_CONCURRENCY`, default **1**) and the port
+>   wait is 10s, then 30s on a retry.
 >
-> Note the 350s was never mostly boot: booting all 12 at once is only 76.6s, so ~275s of it was the app
-> install and the WDA launches. Bounding the boot width alone would have saved ~19s of it.
+> Note the 350s was never mostly boot. Per-stage totals across 12 devices, measured on the runner (sums
+> of concurrent work, so they exceed wall clock):
+>
+> | stage | total | note |
+> |---|---|---|
+> | `wda-launch` | **358.6s** | one `simctl launch` call — the dominant cost |
+> | `boot` | 164.7s | ~13.7s/device at width 3 |
+> | `app-install` | 148.7s | ~12.4s/device; *not* free on CI, unlike locally |
+> | `wda-bind-wait` | 39.2s | ~3.3s/device — WDA binds quickly once launched |
+> | `wda-install` | 11.4s | |
+>
+> `wda-launch` was also bimodal — under 3.5s on seven devices, ~37s on three, ~120s on two — and the slow
+> ones were always launching simultaneously, which is contention, not slow launches. Hence serialising
+> them, and dropping `--terminate-running-process` from the first attempt: the probe has already shown
+> nothing is answering on the port, so there is usually nothing to terminate. It is retried *with* the
+> flag only if the first launch fails to bind, which is the case it actually exists for.
+>
+> Two things worth knowing before tuning further: `IOS_WDA_CONCURRENCY` can only usefully go **narrower**
+> than the boot width (the pipeline already caps devices in flight at `IOS_BOOT_CONCURRENCY`, so a larger
+> value never blocks), and app install being ~12s on CI against ~1s locally means local timings do not
+> transfer — APFS clones the bundle locally, and evidently does not on the runner.
 >
 > Preparation is **pipelined per simulator**, not run as three phases over the pool — each device boots,
 > then installs the app, then starts WDA, so a fast device moves on while others are still booting rather
