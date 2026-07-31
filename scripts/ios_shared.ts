@@ -173,6 +173,68 @@ function prepareConcurrency(poolSize: number): number {
 }
 
 /**
+ * How many WebDriverAgent launches run at once, from IOS_WDA_CONCURRENCY.
+ *
+ * Separate from the boot width because the two stages are bound by different things. Booting is
+ * CPU/launchd work and measured a clear optimum at 3. Launching WDA is mostly *waiting* for a process
+ * to bind a port, so its optimum is likely higher — a wait overlaps with other waits at no cost.
+ *
+ * Defaults to the boot width, so behaviour is unchanged until this is deliberately set. That default is
+ * intentional for the first measured run: widen it only once the stage timings show the WDA phase is
+ * actually where the time goes.
+ */
+function wdaConcurrency(poolSize: number): number {
+  const configured = process.env.IOS_WDA_CONCURRENCY?.trim();
+  if (!configured) {
+    return prepareConcurrency(poolSize);
+  }
+
+  const width = Number(configured);
+  if (!Number.isInteger(width) || width < 1) {
+    console.warn(
+      `Ignoring IOS_WDA_CONCURRENCY="${configured}" (expected a positive integer); ` +
+        `using the boot width.`
+    );
+    return prepareConcurrency(poolSize);
+  }
+  return Math.min(width, poolSize);
+}
+
+/**
+ * A concurrency gate for one stage of the pipeline.
+ *
+ * Needed because the stages want different widths while the pipeline stays per-device: bounding the
+ * whole pipeline would force WDA to share the boot width. A gate lets the WDA stage have its own limit
+ * without splitting the pipeline into phases (which would reintroduce the barrier the pipeline exists
+ * to avoid).
+ *
+ * `release` hands its slot straight to the next waiter rather than decrementing and letting it
+ * re-acquire — otherwise the count dips between the two and an extra task can slip past the limit.
+ */
+function createGate(width: number) {
+  let active = 0;
+  const waiting: Array<() => void> = [];
+
+  return async function gate<T>(task: () => Promise<T>): Promise<T> {
+    if (active < width) {
+      active += 1;
+    } else {
+      await new Promise<void>(resolve => waiting.push(resolve));
+    }
+    try {
+      return await task();
+    } finally {
+      const next = waiting.shift();
+      if (next) {
+        next();
+      } else {
+        active -= 1;
+      }
+    }
+  };
+}
+
+/**
  * Run `task` over `items`, at most `width` at a time, keeping results in input order.
  *
  * A shared queue drained by `width` workers rather than fixed batches: a batch only finishes when its
@@ -263,19 +325,44 @@ async function isWdaResponding(port: number): Promise<boolean> {
   }
 }
 
-/** Install and launch the prebuilt WDA runner on one booted simulator; null if it never binds. */
-async function startWda(udid: string, port: number, wdaAppPath: string): Promise<number | null> {
-  if (await isWdaResponding(port)) {
+/** Per-stage durations in ms, for working out where preparation actually spends its time. */
+type StageTimings = Record<string, number>;
+
+/**
+ * Install and launch the prebuilt WDA runner on one booted simulator; null if it never binds.
+ *
+ * Records each step separately in `timings`. The three are very different operations — a bundle
+ * install, a process launch, then a wait on a port — and lumping them together is what left the
+ * previous run's 284s unexplained.
+ */
+async function startWda(
+  udid: string,
+  port: number,
+  wdaAppPath: string,
+  timings: StageTimings
+): Promise<number | null> {
+  const step = async <T>(name: string, task: () => Promise<T>): Promise<T> => {
+    const began = Date.now();
+    try {
+      return await task();
+    } finally {
+      timings[name] = (timings[name] ?? 0) + (Date.now() - began);
+    }
+  };
+
+  if (await step('wda-probe', () => isWdaResponding(port))) {
     return port; // Left running by an earlier run — reuse it as-is.
   }
 
-  await execAsync(`xcrun simctl install ${udid} "${wdaAppPath}"`);
+  await step('wda-install', () => execAsync(`xcrun simctl install ${udid} "${wdaAppPath}"`));
   // Mirrors what the driver itself does (WebDriverAgent#launchWithPreinstalledWDA): simctl passes
   // SIMCTL_CHILD_-prefixed vars through to the launched process.
-  await execAsync(
-    `SIMCTL_CHILD_USE_PORT=${port} ` +
-      `SIMCTL_CHILD_WDA_PRODUCT_BUNDLE_IDENTIFIER=${WDA_RUNNER_BUNDLE_ID} ` +
-      `xcrun simctl launch --terminate-running-process ${udid} ${WDA_RUNNER_BUNDLE_ID}`
+  await step('wda-launch', () =>
+    execAsync(
+      `SIMCTL_CHILD_USE_PORT=${port} ` +
+        `SIMCTL_CHILD_WDA_PRODUCT_BUNDLE_IDENTIFIER=${WDA_RUNNER_BUNDLE_ID} ` +
+        `xcrun simctl launch --terminate-running-process ${udid} ${WDA_RUNNER_BUNDLE_ID}`
+    )
   );
 
   // WDA binds its port a moment after the process starts, so poll rather than assume. The window is
@@ -283,15 +370,17 @@ async function startWda(udid: string, port: number, wdaAppPath: string): Promise
   // inside its first session, behind a process-wide lock — while waiting costs only this worker's time.
   // Launching at a bounded width is what keeps the wait short in practice: all twelve at once, each
   // given a fixed 15s, produced WDA on 1 of 12.
-  for (let attempt = 0; attempt < WDA_PORT_POLL_ATTEMPTS; attempt++) {
-    if (await isWdaResponding(port)) {
-      return port;
+  return step('wda-bind-wait', async () => {
+    for (let attempt = 0; attempt < WDA_PORT_POLL_ATTEMPTS; attempt++) {
+      if (await isWdaResponding(port)) {
+        return port;
+      }
+      await new Promise(resolve => setTimeout(resolve, WDA_PORT_POLL_INTERVAL_MS));
     }
-    await new Promise(resolve => setTimeout(resolve, WDA_PORT_POLL_INTERVAL_MS));
-  }
 
-  console.warn(`  WDA on ${udid} (port ${port}) did not bind; falling back for it`);
-  return null;
+    console.warn(`  WDA on ${udid} (port ${port}) did not bind; falling back for it`);
+    return null;
+  });
 }
 
 /**
@@ -319,17 +408,30 @@ export async function prepareSimulatorPool(
   }
 
   const width = prepareConcurrency(pool.length);
+  const wdaWidth = wdaConcurrency(pool.length);
+  const wdaGate = createGate(wdaWidth);
   const start = Date.now();
   console.log(
     `Preparing ${pool.length} simulator(s), ${width} at a time ` +
-      `(boot${appPath ? ' + app' : ''}${wdaAppPath ? ' + WDA' : ''})...`
+      `(boot${appPath ? ' + app' : ''}${wdaAppPath ? ` + WDA, ${wdaWidth} at a time` : ''})...`
   );
 
   let finished = 0;
+  const allTimings: Array<StageTimings> = [];
   const results = await withConcurrency(pool, width, async ({ udid, wdaPort }) => {
     const deviceStart = Date.now();
-    const done: Array<string> = [];
+    const timings: StageTimings = {};
+    allTimings.push(timings);
     let port: number | null = null;
+
+    const step = async <T>(name: string, task: () => Promise<T>): Promise<T> => {
+      const began = Date.now();
+      try {
+        return await task();
+      } finally {
+        timings[name] = (timings[name] ?? 0) + (Date.now() - began);
+      }
+    };
 
     try {
       // `bootstatus -b` boots the device if it isn't already booted and only returns once the boot has
@@ -338,20 +440,25 @@ export async function prepareSimulatorPool(
       // Timed out because `bootstatus` waits indefinitely by design: a simulator that wedges mid-boot
       // would otherwise hold this call open until CI's own job limit killed the run, hours later. A
       // cold boot measured ~5s at this width, so this is a "something is broken" ceiling, not a budget.
-      await execAsync(`xcrun simctl bootstatus ${udid} -b`, { timeout: BOOT_TIMEOUT_MS });
-      done.push('booted');
+      await step('boot', () =>
+        execAsync(`xcrun simctl bootstatus ${udid} -b`, { timeout: BOOT_TIMEOUT_MS })
+      );
 
       if (appPath) {
-        // Without this the install lands inside the first test to touch the device (~150s for three
-        // devices, against ~17s warm). It is an upsert, so repeating it is safe — but not free, which
-        // is why CI prepares once up front rather than once per tiered pass.
-        await execAsync(`xcrun simctl install ${udid} "${appPath}"`);
-        done.push('app');
+        // Measured at ~1s even for a 237MB bundle: APFS clones the app rather than copying its bytes,
+        // so this is nearly free and its size barely matters. Worth doing anyway, because left to the
+        // driver it lands inside the first test to touch the device.
+        await step('app-install', () => execAsync(`xcrun simctl install ${udid} "${appPath}"`));
       }
 
       if (wdaAppPath) {
-        port = await startWda(udid, wdaPort, wdaAppPath);
-        done.push(port === null ? 'WDA failed' : 'WDA');
+        // Gated separately from the boot: `wda-bind-wait` is time spent waiting on a port, which
+        // overlaps with other waits for free, so this stage can run wider than booting does.
+        // `gate-wait` is how long this device queued for a WDA slot — that separates "the stage is
+        // slow" from "the stage is starved", which one combined number cannot.
+        port = await step('gate-wait', () =>
+          wdaGate(() => startWda(udid, wdaPort, wdaAppPath, timings))
+        );
       }
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
@@ -360,12 +467,16 @@ export async function prepareSimulatorPool(
 
     // Logged per device so a slow pool shows progress rather than going silent for minutes — with 12
     // devices the gap between the opening line and the closing one is otherwise long enough to look
-    // like a hang, in CI logs and locally alike.
+    // like a hang, in CI logs and locally alike. The per-stage breakdown is what makes a slow device
+    // diagnosable from the CI log alone.
     finished += 1;
+    const breakdown = Object.entries(timings)
+      .map(([name, ms]) => `${name} ${(ms / 1000).toFixed(1)}s`)
+      .join(', ');
     console.log(
-      `  [${finished}/${pool.length}] ${done.join(' + ') || 'nothing'} in ` +
-        `${((Date.now() - deviceStart) / 1000).toFixed(1)}s ` +
-        `(${((Date.now() - start) / 1000).toFixed(1)}s elapsed)`
+      `  [${finished}/${pool.length}] ${port === null && wdaAppPath ? 'WDA FAILED — ' : ''}` +
+        `${((Date.now() - deviceStart) / 1000).toFixed(1)}s total (${breakdown || 'nothing'}) ` +
+        `at ${((Date.now() - start) / 1000).toFixed(1)}s elapsed`
     );
     return port;
   });
@@ -375,6 +486,23 @@ export async function prepareSimulatorPool(
     `✓ ${pool.length} simulator(s) prepared in ${((Date.now() - start) / 1000).toFixed(1)}s` +
       (wdaAppPath ? `, WebDriverAgent on ${ports.length}/${pool.length}` : '')
   );
+
+  // Summed across devices, so the dominant stage is obvious without adding up twelve lines by hand.
+  // These are sums of concurrent work, so they exceed the wall clock — the ratios are the point, not
+  // the totals.
+  const totals: StageTimings = {};
+  for (const timings of allTimings) {
+    for (const [name, ms] of Object.entries(timings)) {
+      totals[name] = (totals[name] ?? 0) + ms;
+    }
+  }
+  const busiest = Object.entries(totals).sort((a, b) => b[1] - a[1]);
+  if (busiest.length > 0) {
+    console.log(
+      `  stage totals across ${pool.length} device(s) (concurrent, so they sum above wall clock): ` +
+        busiest.map(([name, ms]) => `${name} ${(ms / 1000).toFixed(1)}s`).join(', ')
+    );
+  }
   return ports;
 }
 
