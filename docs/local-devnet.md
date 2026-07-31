@@ -228,38 +228,36 @@ somewhere unrelated to the cause.
 
 Mechanics worth knowing:
 
-- **Creation goes through the container**, one way or another. PySOGS has no room-creation endpoint
-  (`PUT /room/<token>` only updates), so it has to happen inside SOGS. Two transports:
-  - **`sogs/room.sh`** (default) — `docker exec`s in. Needs a local Docker daemon. The default path
-    assumes Sesh-Net-Docker sits alongside this repo; set `SOGS_ROOM_CLI` when it doesn't.
-  - **`SOGS_ROOM_API`** + `SOGS_ROOM_API_TOKEN` — the same operations over HTTP, for machines that can
-    reach the container but can't `docker exec` into it. Takes precedence when set. The container side
-    is `sogs/room_api.py`, which only listens when its own `SOGS_ROOM_API_TOKEN` is set; give the
-    harness the same value. The `qa-` prefix rule and the gc TTL are enforced **server-side** in both
-    cases, so the transport can't be a way around them.
-- **Availability is decided once, at startup.** `global-setup.ts` runs `room.sh list`; if that fails —
-  no CLI, no docker, container down — the run **falls back to the shared rooms with a loud warning**
-  rather than failing, since that configuration still tests everything, just without isolating
-  concurrent runs. The check is the CLI rather than SOGS' HTTP API on purpose: a reachable SOGS says
-  nothing about whether rooms can be _created_, which is precisely the CI case. The answer is cached
-  in the environment, so per-test lookups stay cheap and every caller agrees.
+- **Everything goes through SOGS' own HTTP API** — `POST /rooms`, `DELETE /room/<token>`, and
+  `GET /rooms` — so nothing here needs shell or Docker access to the machine running SOGS. That is what
+  lets CI use it: the runner is a different host from the devnet.
+- **Requests are signed as `SOGS_ADMIN_SEED`**, which must be a global admin (locally it is, by
+  default). SOGS requires _blinded_ ids, so the signing is not plain Ed25519 over the account key — see
+  `run/test/utils/sogs_auth.ts`, which mirrors what the clients do.
+- **Availability is decided once, at startup.** `global-setup.ts` lists rooms; if that fails — SOGS
+  unreachable, the account not a global admin, a server too old to have the endpoints — the run **falls
+  back to the shared rooms with a loud warning** rather than failing, since that configuration still
+  tests everything, just without isolating concurrent runs. Listing is the check because it exercises
+  everything creating a room needs, while changing nothing. The answer is cached in the environment, so
+  per-test lookups stay cheap and every caller agrees.
+- **A new room is seeded with one message.** SOGS creates rooms empty, and `joinCommunity` waits for a
+  message body, so a client joining an empty room _hangs_ rather than failing. The message is a real
+  protobuf `Content`, signed by a throwaway per-room identity rather than the admin's — SOGS takes a
+  user's display name from the messages they post, so seeding as the admin would rename it in every
+  room. See `run/test/utils/sogs_seed_message.ts`.
 - **Tokens are `qa-<runId>-w<worker>-<n>`.** `QA_RUN_ID` is stamped once per run in `global-setup.ts`,
-  so concurrent runs can't pick the same token and delete each other's rooms. The `qa-` prefix is what
-  marks a room disposable — `room.py` refuses to delete anything without it, so the six static rooms
-  are safe.
+  so concurrent runs can't pick the same token and delete each other's rooms. The `qa-` prefix marks a
+  room disposable, and since SOGS has no notion of a temporary room that rule lives in the harness —
+  every delete path asserts it, so the six static rooms are safe from a bug pointing a delete at them.
 - **Rooms are released in `sessionIt`'s `finally`**, so a failing test still cleans up. Anything missed
   (a timeout or an interrupt skips that block) is collected by the `gc` sweep `global-setup.ts` runs at
   the start of the next run, which only removes `qa-` rooms older than its TTL — comfortably longer
   than any single test, so it can't delete a room out from under a concurrent run.
-- **The link is rebuilt from `COMMUNITY_LINK`'s origin.** `room.py` prints a link built from the
-  server's own `URL_BASE`, which is `localhost` and unreachable from a simulator.
+- **The link is rebuilt from `COMMUNITY_LINK`'s origin**, since the server's own idea of its address is
+  `localhost` and unreachable from a simulator.
 
-> **CI:** off by default and the fallback handles it — `docker exec` is local, the runner is not the
-> devnet host, so the CLI check fails and the run uses the shared rooms. To turn them on, set
-> `SOGS_ROOM_API_TOKEN` on the devnet's sogs container (which starts the API on `:8081`) and give the
-> runner `SOGS_ROOM_API=http://<devnet-host>:8081` plus the same token. No Docker access or SSH keys
-> needed. Keep that port off public networks: the token guards against accidents, it is not access
-> control.
+> **Server version:** `POST /rooms` and `DELETE /room/<token>` are additions to session-pysogs — a SOGS
+> without them fails the startup check and the run falls back to the shared rooms, naming the reason.
 
 ## 5. Run
 

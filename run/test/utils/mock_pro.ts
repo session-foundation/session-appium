@@ -89,7 +89,7 @@ function getWordlist(): string[] {
 }
 
 // Decodes a 13-word recovery phrase to a 16-byte seed hex string. */
-function mnemonicToSeedHex(mnemonic: string): string {
+export function mnemonicToSeedHex(mnemonic: string): string {
   const wordlist = getWordlist();
   const n = wordlist.length; // 1626
 
@@ -145,7 +145,7 @@ function mnemonicToSeedHex(mnemonic: string): string {
   return Buffer.from(seedBytes).toString('hex');
 }
 
-function padSeed(seedHex: string): Uint8Array {
+export function padSeed(seedHex: string): Uint8Array {
   const seed = Buffer.from(seedHex, 'hex');
   if (seed.length !== 16) {
     throw new Error(`Seed must be 16 bytes, got ${seed.length}`);

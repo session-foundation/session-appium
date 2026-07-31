@@ -1,9 +1,10 @@
-import { execFile } from 'child_process';
-import { existsSync } from 'fs';
-import path from 'path';
-import { promisify } from 'util';
-
-const execFileAsync = promisify(execFile);
+import {
+  describeFailure,
+  identityFromRecoveryPhrase,
+  SogsIdentity,
+  sogsRequest,
+} from './sogs_auth';
+import { buildSeedMessage } from './sogs_seed_message';
 
 export type CommunityRoom = {
   link: string;
@@ -18,157 +19,157 @@ export type CommunityRoom = {
  * a laptop, or two CI jobs — joined, posted, pinned and banned in the same place. Each test now gets
  * rooms of its own, which also means a test is free to leave a room in whatever state it likes.
  *
- * Only possible against a local SOGS: creating a room has no HTTP endpoint in PySOGS, so it goes
- * through `room.sh` (which shells into the container). When COMMUNITY_LINK is unset the suite is
- * pointed at the shared remote communities and there is nothing we can create, so allocation is
- * disabled and the static list in constants/community.ts is used exactly as before.
+ * Only possible against a local SOGS, since it means creating and deleting rooms on it: when
+ * COMMUNITY_LINK is unset the suite is pointed at the shared remote communities, allocation is
+ * disabled, and the static list in constants/community.ts is used exactly as before.
+ *
+ * Everything goes through SOGS's own HTTP API, authenticated as a global admin (SOGS_ADMIN_SEED, the
+ * account the community moderation tests already use). Nothing here needs shell or Docker access to
+ * the machine running SOGS, which is what lets CI — a different host from the devnet — use it.
  *
  * State here is module-level, which is per-worker (Playwright workers are separate processes) and
  * therefore safe: tests within a worker run one at a time.
  */
 
 /**
- * How rooms are managed. Two implementations, differing only in how they reach SOGS — the room
- * semantics, including the `qa-` prefix rule and the gc TTL, are enforced on the server either way.
+ * Marks a room as this suite's to delete.
  *
- * `gc` returns its own one-line summary rather than counts: the CLI already prints one, and parsing it
- * back into numbers just to reformat it would be a brittle way to reach the same log line.
+ * SOGS has no notion of a temporary room, so the rule is ours and is enforced here, on every path
+ * that deletes: a room whose token doesn't start with this is not something a test created, and a bug
+ * that pointed a delete at one would take out a long-lived room. Asserting it in one place is cheap
+ * next to that.
  */
-type RoomTransport = {
-  create(token: string, name: string): Promise<void>;
-  /** Shown in the "per-test rooms enabled" line. */
-  readonly describe: string;
-  gc(olderThanSeconds: number): Promise<string>;
-  /** Rejects when rooms can't be managed. Used as the availability check by `probePerTestRooms`. */
-  check(): Promise<void>;
-  remove(token: string): Promise<void>;
+const DISPOSABLE_PREFIX = 'qa-';
+
+type SogsTarget = {
+  admin: SogsIdentity;
+  base: string;
+  serverPubkey: Uint8Array;
 };
 
-// Default assumes Sesh-Net-Docker is checked out alongside this repo; override in .env when it isn't.
-const roomCliPath = () =>
-  process.env.SOGS_ROOM_CLI ?? path.resolve(process.cwd(), '../Sesh-Net-Docker/sogs/room.sh');
-
-const roomApiBase = () => (process.env.SOGS_ROOM_API ?? '').trim().replace(/\/$/, '');
-const roomApiToken = () => (process.env.SOGS_ROOM_API_TOKEN ?? '').trim();
+let target: SogsTarget | undefined;
 
 /**
- * Chosen from the environment once per process, then reused.
+ * Where to reach SOGS and who to be, derived once per process from the environment.
  *
- * Not chosen in `probePerTestRooms` and stored for everyone: workers are separate processes and
- * inherit the env, not module state, so each derives this for itself. Deriving it once per process
- * rather than per call is what stops four call sites disagreeing if the environment changes mid-run.
+ * Both halves come from configuration the suite already has: the origin and the server's public key
+ * out of COMMUNITY_LINK (the same link the tests hand to the app), and the admin account out of
+ * SOGS_ADMIN_SEED. Nothing further needs setting to turn per-test rooms on.
+ *
+ * Not derived once in `probePerTestRooms` and shared: workers are separate processes and inherit the
+ * environment, not module state, so each derives this for itself.
  */
-let transport: RoomTransport | undefined;
+function sogsTarget(): SogsTarget {
+  if (target) {
+    return target;
+  }
 
-function roomTransport(): RoomTransport {
-  transport ??= roomApiBase() === '' ? cliTransport() : apiTransport();
-  return transport;
+  const link = process.env.COMMUNITY_LINK;
+  if (!link) {
+    throw new Error('COMMUNITY_LINK is unset, so there is no SOGS to create rooms on');
+  }
+  const recoveryPhrase = process.env.SOGS_ADMIN_SEED;
+  if (!recoveryPhrase) {
+    throw new Error(
+      'SOGS_ADMIN_SEED is unset. Creating and deleting rooms requires a global admin on the ' +
+        "SOGS; set it to the recovery phrase of one (locally, the account in the sogs container's " +
+        'SOGS_ADMIN_SESSION_IDS — see Sesh-Net-Docker/sogs/docker-compose.yml)'
+    );
+  }
+
+  const url = new URL(link);
+  const publicKey = url.searchParams.get('public_key');
+  if (!publicKey || !/^[0-9a-fA-F]{64}$/.test(publicKey)) {
+    throw new Error(`COMMUNITY_LINK has no valid public_key parameter: ${link}`);
+  }
+
+  target = {
+    admin: identityFromRecoveryPhrase(recoveryPhrase),
+    base: `${url.protocol}//${url.host}`,
+    serverPubkey: new Uint8Array(Buffer.from(publicKey, 'hex')),
+  };
+  return target;
+}
+
+/** A signed request to SOGS as the admin account. */
+async function asAdmin(method: 'DELETE' | 'GET' | 'POST', path: string, body?: unknown) {
+  const { admin, base, serverPubkey } = sogsTarget();
+  return sogsRequest({ base, body, identity: admin, method, path, serverPubkey });
+}
+
+/** Rooms on the server, with the creation time gc needs. Requires the admin to be a global admin. */
+type RoomListing = { created: number; token: string };
+
+async function listRooms(): Promise<Array<RoomListing>> {
+  const response = await asAdmin('GET', '/rooms');
+  if (response.status === 401) {
+    throw new Error(
+      `SOGS rejected our authentication (${describeFailure(response)}). This is a signing or key ` +
+        `problem rather than a permissions one — check SOGS_ADMIN_SEED is a valid recovery phrase`
+    );
+  }
+  if (response.status === 403) {
+    throw new Error(
+      `the SOGS_ADMIN_SEED account is not a global admin on ${sogsTarget().base}, so it cannot ` +
+        `create or delete rooms (${describeFailure(response)})`
+    );
+  }
+  if (response.status !== 200) {
+    throw new Error(`could not list rooms on ${sogsTarget().base} (${describeFailure(response)})`);
+  }
+  return response.body as Array<RoomListing>;
 }
 
 /**
- * Shells into the container via Sesh-Net-Docker's `room.sh`. The default when nothing else is
- * configured, because it needs no token and no exposed port — with that repo checked out alongside
- * this one it works with nothing set but COMMUNITY_LINK.
+ * Create a room and post the first message to it.
+ *
+ * The message is not optional: `joinCommunity` waits for one, so a client joining an empty room hangs
+ * rather than failing (see sogs_seed_message.ts). SOGS creates rooms empty and has no opinion about
+ * it, so seeding belongs to whoever creates the room — us.
  */
-function cliTransport(): RoomTransport {
-  const run = async (args: Array<string>): Promise<string> => {
-    const { stdout } = await execFileAsync(roomCliPath(), args, { timeout: 60_000 });
-    return stdout.trim();
-  };
+async function createRoom(token: string, name: string): Promise<void> {
+  const created = await asAdmin('POST', '/rooms', { description: null, name, token });
+  if (created.status === 404 || created.status === 405) {
+    throw new Error(
+      `this SOGS has no room creation endpoint (${describeFailure(created)}). POST /rooms and ` +
+        `DELETE /room/<token> were added in session-pysogs; the server needs to be new enough to ` +
+        `have them`
+    );
+  }
+  if (created.status !== 201) {
+    throw new Error(`could not create room "${token}" (${describeFailure(created)})`);
+  }
 
-  return {
-    check: async () => {
-      const cli = roomCliPath();
-      if (!existsSync(cli)) {
-        throw new Error(
-          `no room CLI at ${cli} and SOGS_ROOM_API is unset. Point SOGS_ROOM_CLI at your ` +
-            `Sesh-Net-Docker checkout's sogs/room.sh, or set SOGS_ROOM_API + SOGS_ROOM_API_TOKEN`
-        );
-      }
-      await run(['list']);
-    },
-    create: async (token, name) => void (await run(['create', token, '--name', name])),
-    describe: `room CLI at ${roomCliPath()}`,
-    gc: async olderThanSeconds =>
-      (await run(['gc', '--older-than', String(olderThanSeconds)])).split('\n')[0],
-    remove: async token => void (await run(['delete', token])),
-  };
+  const { identity, request } = buildSeedMessage(token, name, sogsTarget().serverPubkey);
+  const { base, serverPubkey } = sogsTarget();
+  const seeded = await sogsRequest({
+    base,
+    body: request,
+    identity,
+    method: 'POST',
+    path: `/room/${token}/message`,
+    serverPubkey,
+  });
+  if (seeded.status !== 201) {
+    throw new Error(
+      `created room "${token}" but could not post its first message ` +
+        `(${describeFailure(seeded)}); a client joining it would hang, so treating this as fatal`
+    );
+  }
 }
 
-/**
- * Talks to `sogs/room_api.py` over HTTP. For hosts that can reach the SOGS container but can't
- * `docker exec` into it — a CI runner driving a devnet that lives on another host. Takes precedence
- * when SOGS_ROOM_API is set, since it is the deliberate choice of the two.
- */
-function apiTransport(): RoomTransport {
-  const call = async (
-    method: 'DELETE' | 'GET' | 'POST',
-    route: string,
-    body?: unknown
-  ): Promise<unknown> => {
-    const token = roomApiToken();
-    if (!token) {
-      // `check` reports this properly; reaching it here would mean the token was cleared mid-run.
-      throw new Error('SOGS_ROOM_API_TOKEN is empty');
-    }
-
-    const response = await fetch(`${roomApiBase()}${route}`, {
-      body: body === undefined ? undefined : JSON.stringify(body),
-      headers: {
-        Authorization: `Bearer ${token}`,
-        ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
-      },
-      method,
-      // Create is the slowest operation and it seeds a message, so it isn't instant — but it has
-      // measured well under 2s, so this is a generous ceiling rather than an expected duration.
-      signal: AbortSignal.timeout(30_000),
-    });
-
-    const text = await response.text();
-    if (!response.ok) {
-      // The API answers refusals as JSON `{error}`; surface that rather than a bare status.
-      let detail = text;
-      try {
-        detail = (JSON.parse(text) as { error?: string }).error ?? text;
-      } catch {
-        // Not JSON — a proxy or the wrong port. The raw body is more use than a parse error.
-      }
-      throw new Error(`room API ${method} ${route} failed (HTTP ${response.status}): ${detail}`);
-    }
-    return text === '' ? {} : (JSON.parse(text) as unknown);
-  };
-
-  return {
-    check: async () => {
-      // Checked before any request so a missing token reads as the configuration mistake it is.
-      // Left to the request it would surface as a transport failure, sending people to look at the
-      // network instead of at their env — and forgetting the token is the likeliest slip here.
-      if (!roomApiToken()) {
-        throw new Error(
-          `SOGS_ROOM_API is set to ${roomApiBase()} but SOGS_ROOM_API_TOKEN is empty. Set it to ` +
-            `the same value as the sogs container's SOGS_ROOM_API_TOKEN`
-        );
-      }
-      // `GET /rooms` rather than the API's `/healthz`, deliberately: healthz is unauthenticated, so it
-      // proves only that something is listening. Listing rooms proves reachable *and* token accepted
-      // *and* database queryable — otherwise a wrong token passes the probe and fails on the first
-      // allocation instead. healthz stays useful for "is it up at all" without holding the token.
-      await call('GET', '/rooms');
-    },
-    create: async (token, name) => void (await call('POST', '/rooms', { name, token })),
-    describe: `room API at ${roomApiBase()}`,
-    gc: async olderThanSeconds => {
-      const result = (await call('POST', '/rooms/gc', { older_than: olderThanSeconds })) as {
-        kept?: string[];
-        removed?: string[];
-      };
-      return (
-        `gc: removed ${result.removed?.length ?? 0} room(s), left ` +
-        `${result.kept?.length ?? 0} inside the ${olderThanSeconds}s TTL.`
-      );
-    },
-    remove: async token => void (await call('DELETE', `/rooms/${encodeURIComponent(token)}`)),
-  };
+/** Delete a room. A room that has already gone is the normal outcome of a retried teardown. */
+async function deleteRoom(token: string): Promise<void> {
+  if (!token.startsWith(DISPOSABLE_PREFIX)) {
+    throw new Error(
+      `refusing to delete room "${token}": only rooms prefixed "${DISPOSABLE_PREFIX}" are this ` +
+        `suite's to remove`
+    );
+  }
+  const response = await asAdmin('DELETE', `/room/${token}`);
+  if (response.status !== 200 && response.status !== 404) {
+    throw new Error(`could not delete room "${token}" (${describeFailure(response)})`);
+  }
 }
 
 let allocated: CommunityRoom[] = [];
@@ -203,12 +204,12 @@ export function perTestRoomsEnabled(): boolean {
  * Decide once, at the start of a run, whether per-test rooms are usable, and record it for the
  * workers.
  *
- * The check asks the transport, not SOGS: what matters is whether rooms can be *created*, and a
- * healthy SOGS API says nothing about that. Over the CLI it needs docker, a running container and a
- * working `room.py`; over HTTP it needs the room API up with a matching token. That distinction is
- * exactly the CI case — SOGS reachable over the network, its container on another host.
+ * Listing rooms is the check because it exercises everything creating one needs — SOGS reachable, our
+ * request signing accepted, and the account a global admin — and it is the one admin-only read that
+ * changes nothing. A cheaper check that only proved SOGS was up would pass here and fail on the first
+ * allocation instead, which is a much worse place to find out.
  *
- * An unusable transport falls back to the shared rooms rather than failing the run, since that
+ * An unusable server falls back to the shared rooms rather than failing the run, since that
  * configuration still tests everything — it just can't isolate concurrent runs. The warning is
  * deliberately loud: sharing rooms silently while reporting green is the failure mode this feature
  * exists to remove, so it should be obvious in the log which mode a run used.
@@ -222,7 +223,7 @@ export async function probePerTestRooms(): Promise<boolean> {
   }
 
   try {
-    await roomTransport().check();
+    await listRooms();
   } catch (e) {
     process.env[ENABLED_FLAG] = '0';
     console.warn(
@@ -236,7 +237,7 @@ export async function probePerTestRooms(): Promise<boolean> {
   }
 
   process.env[ENABLED_FLAG] = '1';
-  console.log(`Per-test community rooms enabled (via ${roomTransport().describe})`);
+  console.log(`Per-test community rooms enabled (on ${sogsTarget().base})`);
   return true;
 }
 
@@ -244,20 +245,18 @@ export async function probePerTestRooms(): Promise<boolean> {
  * Token for a room, unique across concurrent runs and workers.
  *
  * QA_RUN_ID is stamped once per run in global-setup; without it two runs starting together could
- * pick the same token and delete each other's rooms. The `qa-` prefix is what marks a room
- * disposable — room.py refuses to delete anything without it.
+ * pick the same token and delete each other's rooms.
  */
 function nextToken(): string {
   const runId = process.env.QA_RUN_ID ?? 'local';
   const worker = process.env.TEST_PARALLEL_INDEX ?? '0';
   allocationCounter += 1;
-  return `qa-${runId}-w${worker}-${allocationCounter}`;
+  return `${DISPOSABLE_PREFIX}${runId}-w${worker}-${allocationCounter}`;
 }
 
 /**
- * The link room.py prints is built from the server's own URL_BASE, which is localhost — unreachable
- * from a simulator. The host that does work is already in COMMUNITY_LINK, so reuse its origin and
- * public_key and swap in the new token, mirroring buildLocalCommunities.
+ * The link a client joins the room with. Built from COMMUNITY_LINK's origin and public_key rather
+ * than the server's own idea of its address, which is localhost and unreachable from a simulator.
  */
 function linkForToken(token: string): string {
   const base = new URL(process.env.COMMUNITY_LINK as string);
@@ -274,10 +273,12 @@ export async function allocateCommunityRooms(count: number): Promise<Array<Commu
   for (let i = 0; i < count; i++) {
     const token = nextToken();
     const name = `QA ${token}`;
-    await roomTransport().create(token, name);
+    await createRoom(token, name);
     rooms.push({ link: linkForToken(token), name, roomName: token });
   }
-  return rooms;
+  // A copy: `rooms` *is* the module's record of what to clean up, so handing it out directly would let
+  // a caller drop rooms from it and leak them.
+  return [...rooms];
 }
 
 /**
@@ -289,7 +290,7 @@ export async function releaseCommunityRooms(): Promise<void> {
   allocated = [];
   for (const room of toRelease) {
     try {
-      await roomTransport().remove(room.roomName);
+      await deleteRoom(room.roomName);
     } catch (e) {
       console.warn(
         `Failed to delete community room "${room.roomName}" (gc will collect it): ${
@@ -300,21 +301,37 @@ export async function releaseCommunityRooms(): Promise<void> {
   }
 }
 
+/** A copy, for the same reason `allocateCommunityRooms` returns one. */
 export function getAllocatedRooms(): Array<CommunityRoom> {
-  return allocated;
+  return [...allocated];
 }
 
 /**
- * Remove rooms orphaned by runs that were killed before teardown. The TTL is what stops this
- * deleting a room out from under a test that is still running, so it must comfortably exceed the
- * longest single test.
+ * Remove rooms orphaned by runs that were killed before teardown.
+ *
+ * Which rooms those are is decided here rather than by the server: SOGS reports every room's token
+ * and creation time, and what counts as disposable is this suite's rule, not something SOGS knows
+ * about. The TTL is what stops this deleting a room out from under a test that is still running — a
+ * concurrent run's rooms are indistinguishable from an abandoned one's — so it must comfortably
+ * exceed the longest single test.
  */
 export async function gcCommunityRooms(olderThanSeconds: number = 3_600): Promise<void> {
   if (!perTestRoomsEnabled()) {
     return;
   }
+
   try {
-    console.log(await roomTransport().gc(olderThanSeconds));
+    const cutoff = Date.now() / 1_000 - olderThanSeconds;
+    const disposable = (await listRooms()).filter(room => room.token.startsWith(DISPOSABLE_PREFIX));
+    const stale = disposable.filter(room => room.created <= cutoff);
+
+    for (const room of stale) {
+      await deleteRoom(room.token);
+    }
+    console.log(
+      `gc: removed ${stale.length} room(s), left ${disposable.length - stale.length} inside the ` +
+        `${olderThanSeconds}s TTL.`
+    );
   } catch (e) {
     console.warn(
       `Community room gc failed (continuing): ${e instanceof Error ? e.message : String(e)}`
