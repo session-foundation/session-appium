@@ -114,36 +114,119 @@ export function bootSimulator(udid: string, label?: number | string): boolean {
 }
 
 /**
- * Boot every simulator in `udids` concurrently, returning once they have all finished booting.
+ * How many simulators boot at once by default.
+ *
+ * Bounded rather than all-at-once because boot time per simulator turns out to depend heavily on how
+ * many are booting alongside it. Measured on a 14-core Apple Silicon host, booting eight cold
+ * simulators one at a time took 90s — a flat ~11s each, with no sign of the already-booted ones
+ * slowing the later boots down. The 12-simulator CI pool booting all at once averaged ~29s each.
+ *
+ * So the total boot work is *not* fixed however it is ordered: contention during boot is most of the
+ * cost, and capping the width removes most of that while still overlapping enough of each boot's
+ * waiting (which is largely launchd and daemon startup rather than CPU) to beat booting serially.
+ *
+ * Four is a starting point between the two measured extremes, not a measured optimum — see
+ * IOS_BOOT_CONCURRENCY.
+ */
+const DEFAULT_BOOT_CONCURRENCY = 4;
+
+/** Ceiling for a single `simctl bootstatus` call — see the call site for why it needs one at all. */
+const BOOT_TIMEOUT_MS = 180_000;
+
+/**
+ * Boot width for this run: an explicit `override` if given, otherwise IOS_BOOT_CONCURRENCY.
+ *
+ * Configurable because the answer is host-dependent — a faster runner tolerates more concurrency — so
+ * the useful thing is to measure 1 vs 4 vs the full pool on the machine in question rather than bake
+ * in a number derived from a different one. `bench_simulator_boot.ts` does exactly that, passing the
+ * width directly rather than mutating the environment between measurements. Capped at the pool size,
+ * since a wider setting than there are simulators is just the pool size.
+ */
+function bootConcurrency(poolSize: number, override?: number): number {
+  if (override !== undefined) {
+    return Math.min(Math.max(1, Math.trunc(override)), poolSize);
+  }
+
+  const configured = process.env.IOS_BOOT_CONCURRENCY?.trim();
+  if (!configured) {
+    return Math.min(DEFAULT_BOOT_CONCURRENCY, poolSize);
+  }
+
+  const width = Number(configured);
+  if (!Number.isInteger(width) || width < 1) {
+    console.warn(
+      `Ignoring IOS_BOOT_CONCURRENCY="${configured}" (expected a positive integer); ` +
+        `booting ${DEFAULT_BOOT_CONCURRENCY} at a time.`
+    );
+    return Math.min(DEFAULT_BOOT_CONCURRENCY, poolSize);
+  }
+  return Math.min(width, poolSize);
+}
+
+/**
+ * Boot every simulator in `udids`, at most `IOS_BOOT_CONCURRENCY` at a time, returning once they have
+ * all finished booting.
  *
  * Simulators are created shut down, so without this the first test to touch a given device pays
  * the cold-boot cost inline — and it lands on the critical path at the very start of a run, when
  * every Playwright worker is booting its own pool simultaneously. Booting up front gets it out of
  * the way (and makes the cost visible as its own step rather than hiding inside the first test).
  *
+ * Note this bounds only the *boot*, not the resulting load: a booted simulator holds its processes
+ * (~230 of them, measured) for as long as it stays booted, and the run needs the whole pool booted at
+ * once regardless. Narrowing the width spreads the boot work; it does not reduce the footprint the
+ * tests then run against.
+ *
  * Never throws: a simulator that fails to pre-boot is logged and left for Appium to boot on demand,
  * exactly as before. A best-effort optimisation should not be able to abort a run.
  */
-export async function bootSimulatorPool(udids: string[]): Promise<void> {
+export async function bootSimulatorPool(udids: string[], widthOverride?: number): Promise<void> {
   if (udids.length === 0) {
     return;
   }
 
+  const width = bootConcurrency(udids.length, widthOverride);
   const start = Date.now();
-  console.log(`Pre-booting ${udids.length} simulator(s)...`);
+  console.log(
+    `Pre-booting ${udids.length} simulator(s), ${width} at a time` +
+      `${width === udids.length ? '' : ' (IOS_BOOT_CONCURRENCY)'}...`
+  );
 
-  await Promise.all(
-    udids.map(async udid => {
+  // Shared queue drained by `width` workers, rather than fixed chunks: a chunk only finishes when its
+  // slowest member does, leaving cores idle at the tail of every chunk. Taking the next simulator as
+  // soon as one finishes keeps `width` boots in flight throughout. `shift()` needs no locking — the
+  // workers only interleave at their `await`, and the queue is read synchronously either side of it.
+  const queue = [...udids];
+  let finished = 0;
+  const bootFromQueue = async (): Promise<void> => {
+    for (let udid = queue.shift(); udid !== undefined; udid = queue.shift()) {
+      const bootStart = Date.now();
       try {
         // `bootstatus -b` boots the device if it isn't already booted and only returns once the
         // boot has actually completed (unlike `simctl boot`, which returns immediately).
-        await execAsync(`xcrun simctl bootstatus ${udid} -b`);
+        //
+        // Timed out because `bootstatus` waits indefinitely by design: a simulator that wedges
+        // mid-boot would otherwise hold this call open until CI's own job limit killed the run, hours
+        // later. A cold boot measured ~11s unloaded and ~29s under 12-way contention, so this is a
+        // "something is broken" ceiling, not a budget — and hitting it falls back like any other
+        // failure, leaving Appium to boot that device on demand.
+        await execAsync(`xcrun simctl bootstatus ${udid} -b`, { timeout: BOOT_TIMEOUT_MS });
       } catch (error: unknown) {
         const message = error instanceof Error ? error.message : String(error);
         console.warn(`  Failed to pre-boot ${udid} (Appium will boot it on demand): ${message}`);
       }
-    })
-  );
+      // Logged per simulator so a slow pool shows progress rather than going silent for minutes —
+      // with 12 devices the gap between "Pre-booting..." and "ready" is otherwise long enough to look
+      // like a hang, both in CI logs and locally.
+      finished += 1;
+      console.log(
+        `  [${finished}/${udids.length}] booted in ${((Date.now() - bootStart) / 1000).toFixed(1)}s ` +
+          `(${((Date.now() - start) / 1000).toFixed(1)}s elapsed)`
+      );
+    }
+  };
+
+  await Promise.all(Array.from({ length: width }, () => bootFromQueue()));
 
   console.log(`✓ Simulators ready in ${((Date.now() - start) / 1000).toFixed(1)}s`);
 }

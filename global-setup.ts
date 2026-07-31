@@ -67,14 +67,18 @@ export default async function globalSetup(_config: FullConfig) {
   // port-binding window in launchWdaOnSimulators does not hold when 12 launches contend — so 11
   // devices paid the per-session cost anyway. Setup went from 67s to 523s.
   //
-  // Note the 350s is not a scheduling problem to be solved by chunking: bootSimulatorPool already
-  // boots concurrently, and 350s/12 ≈ 29s is about what one cold boot costs, so the host is saturated
-  // and the total boot work is roughly fixed however it is ordered. What lazy booting buys is
-  // *overlap* — each worker boots what it needs while other workers are already running tests.
+  // That 350s *is* partly a scheduling problem, contrary to what this comment used to claim: booting
+  // eight cold simulators one at a time was later measured at ~11s each, against the ~29s each the
+  // 12-simulator pool averaged booting all at once. Boot contention is most of the cost, so capping
+  // the width should recover much of it — hence IOS_BOOT_CONCURRENCY in bootSimulatorPool.
   //
-  // Set IOS_PREPARE_SIMULATORS=1 to measure it on CI again once that window and the launch
-  // concurrency are addressed — worth revisiting for high worker counts, where the per-session WDA
-  // *launch* serialisation it removes is exactly what hurts.
+  // What lazy booting buys on top of that is *overlap* — each worker boots what it needs while other
+  // workers are already running tests, and with the tiered passes the first pass warms the pool for
+  // the three that follow.
+  //
+  // Set IOS_PREPARE_SIMULATORS=1 to measure it on CI again — worth revisiting for high worker counts,
+  // where the per-session WDA *launch* serialisation it removes is exactly what hurts. The WDA port
+  // window and launch concurrency still need addressing before it wins outright.
   const prepareSimulators = process.env.CI !== '1' || process.env.IOS_PREPARE_SIMULATORS === '1';
 
   if (isIosRun(platform) && !prepareSimulators) {

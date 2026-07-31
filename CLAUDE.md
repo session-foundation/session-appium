@@ -103,11 +103,20 @@ simulators make the whole step a no-op, so back-to-back runs skip it.
 > a fixed 15s to bind its port, which doesn't hold when 12 `simctl launch` calls contend — so 11 devices
 > paid the per-session cost regardless. Setup went from **67s to 523s**.
 >
-> That 350s is not a scheduling problem: `bootSimulatorPool` already boots concurrently, and
-> 350s/12 ≈ 29s is roughly one cold boot, so the host is saturated and the total boot work is about
-> fixed however it's ordered. Chunking or staggering wouldn't reduce it. What lazy booting buys is
-> **overlap** — each worker boots what it needs while others are already running tests — and, with the
-> tiered passes, the first pass warms the pool for the three that follow.
+> That 350s **is** partly a scheduling problem. An earlier version of this note said it wasn't, reasoning
+> that 350s/12 ≈ 29s is about one cold boot so the work is fixed however it's ordered. Measured since:
+> booting eight cold simulators **one at a time** takes ~11s each (90s total, no slowdown as the booted
+> ones accumulate), against the ~29s each the 12-pool averaged booting all at once. Boot contention is
+> most of that cost, so bounding the width should recover much of it.
+>
+> `bootSimulatorPool` now boots `IOS_BOOT_CONCURRENCY` at a time (default 4), so 1 / 4 / full-pool can
+> be compared on the runner itself — the right width is host-dependent and the numbers above come from a
+> 14-core laptop, not the CI box. Note this bounds the boot only: a booted simulator holds ~230
+> processes for as long as it's up, and the run needs the whole pool booted regardless.
+>
+> What lazy booting buys on top is **overlap** — each worker boots what it needs while others are
+> already running tests — and, with the tiered passes, the first pass warms the pool for the three that
+> follow.
 >
 > `IOS_PREPARE_SIMULATORS=1` re-enables step 2 for measurement. Worth revisiting for the high-worker
 > tiers, since the per-session WDA *launch* serialisation it removes scales with worker count — but the
