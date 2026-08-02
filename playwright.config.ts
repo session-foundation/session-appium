@@ -35,6 +35,12 @@ const useAllure = process.env.CI === '1' && process.env.ALLURE_ENABLED !== 'fals
 const baseReporter: ReporterDescription = [
   './node_modules/@session-foundation/playwright-reporter/dist/index.js',
 ];
+// NOTE: per-test GitHub Actions log grouping was tried and removed. A group has to stay open from one
+// `onTestEnd` to the next (no hook fires after every other reporter has handled a test), and at 12
+// workers everything the other 11 print in that window lands inside it — so the boundaries mean
+// nothing and the log looks like it's swallowing output mid-run. Doing it properly needs the reporter
+// that owns the per-test output to emit the group itself, atomically. The one-off WDA build is still
+// grouped, from scripts/build_wda.ts.
 const allureReporter: ReporterDescription = [
   'allure-playwright',
   {

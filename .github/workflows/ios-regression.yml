@@ -89,7 +89,6 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CI: 1
       ALLURE_ENABLED: ${{ github.event.inputs.ALLURE_ENABLED }}
-      IOS_APP_PATH_PREFIX: './extracted/Session.app'
       ANDROID_APK: '<just_not_empty>'
       APPIUM_ADB_FULL_PATH: '<just_not_empty>'
       ANDROID_SDK_ROOT: '<just_not_empty>'
@@ -151,16 +150,32 @@ jobs:
           done
           echo "ERROR: devnet seed node $SEED not reachable after 3 attempts"; exit 1
 
+      # Downloaded AND extracted under $HOME, deliberately, rather than into the workspace.
+      #
+      # `simctl install` can clone the app bundle instead of copying its ~237MB, but only within a single
+      # APFS volume — and the simulators live at $HOME/Library/Developer/CoreSimulator. Self-hosted
+      # runners commonly put the workspace on a separate data disk, which would make every one of the
+      # twelve installs a real byte copy: measured at ~12s per device here against ~1s locally, and ~13s
+      # on the very first device with an idle host, so it is not contention. Anything under $HOME is
+      # guaranteed to share the simulators' volume, and extracting here costs nothing over extracting
+      # into the workspace. `Prepare simulators` logs whether the two volumes actually differ.
+      #
+      # Everything stays on that volume: the archive is downloaded there too, so the final `mv` is a
+      # same-volume rename rather than a copy. IOS_APP_PATH_PREFIX is exported rather than set as a
+      # job-level `env:`, because a job-level value would override what this step writes to GITHUB_ENV.
       - name: Download ipa and extract it
+        shell: bash
         run: |
-          curl -o session-ios.sim.tar.xz ${{ github.event.inputs.APK_URL }}
-          ls
-          pwd
-          tar -tf session-ios.sim.tar.xz
-          tar xf session-ios.sim.tar.xz
-          mkdir -p extracted
-          mv session-ios-*-sim/*.app extracted/
-          ls extracted
+          APP_DIR="$HOME/session-ios-app"
+          rm -rf "$APP_DIR"   # $HOME is not cleaned between runs the way the workspace is
+          mkdir -p "$APP_DIR"
+          curl -o "$APP_DIR/session-ios.sim.tar.xz" ${{ github.event.inputs.APK_URL }}
+          tar -tf "$APP_DIR/session-ios.sim.tar.xz"
+          tar xf "$APP_DIR/session-ios.sim.tar.xz" -C "$APP_DIR"
+          mv "$APP_DIR"/session-ios-*-sim/*.app "$APP_DIR"/
+          rm -f "$APP_DIR/session-ios.sim.tar.xz"
+          ls -la "$APP_DIR"
+          echo "IOS_APP_PATH_PREFIX=$APP_DIR/Session.app" >> "$GITHUB_ENV"
 
       - name: Setup for both platforms
         uses: ./github/actions/setup
@@ -170,11 +185,24 @@ jobs:
         run: |
           npx --yes ts-node scripts/stop_ios.ts
 
-      - name: Start simulators
+      # Boot the pool, install the app on it, and start one WebDriverAgent per simulator, before any
+      # test runs. global-setup.ts can do this itself and does locally, but the run below is tiered —
+      # one `playwright test` invocation per device class — so leaving it there would repeat the whole
+      # preparation once per pass. As its own step it happens once, its cost is visible in the job
+      # timing rather than charged to the first pass, and the xcodebuild output stays out of the test
+      # results. It exports IOS_SIMULATORS_PREPARED, which tells global setup to skip to discovering the
+      # WebDriverAgents this started.
+      #
+      # Never fails the job: every part of it has a working fallback (the driver boots, installs and
+      # launches WDA on demand), so a problem here should not stop the tests from running.
+      #
+      # Never fails the job: every part of it has a working fallback (the driver boots, installs and
+      # launches WDA on demand), so a problem here should not stop the tests from running.
+      - name: Prepare simulators
         shell: bash
-        if: false # appium is starting the simulators (seems to be somewhat more reliable)
+        timeout-minutes: 30
         run: |
-          npx --yes ts-node scripts/start_ios.ts # don't auto start the simulators, let appium do it (seems somewhat more reliable)
+          npx --yes ts-node scripts/prepare_ios.ts
 
       - name: List tests part of this run
         uses: ./github/actions/list-tests
@@ -190,6 +218,7 @@ jobs:
           PRINT_ONGOING_TEST_LOGS: ${{ env.PRINT_ONGOING_TEST_LOGS }}
           PARALLEL_TIER: ci
         run: |
+          set -uo pipefail
           # One Playwright invocation per device class, driven by run/constants/parallelism.ts so the
           # worker counts live in one place rather than being duplicated here.
           #
@@ -200,7 +229,6 @@ jobs:
           #
           # Allure results accumulate across invocations (the reporter does not clear resultsDir), so
           # the report step below still sees one merged run.
-          set -uo pipefail
 
           PASSES="$(npx --yes ts-node scripts/print_tier.ts "$PARALLEL_TIER")"
           # An empty table would otherwise run zero tests and report success.
@@ -212,9 +240,17 @@ jobs:
           echo "$PASSES"
 
           overall=0
+          summary=""
           while read -r DEVICES WORKERS; do
             [ -n "$DEVICES" ] || continue
-            echo "::group::@${DEVICES}-devices x${WORKERS} worker(s) ($((DEVICES * WORKERS)) simulators)"
+            label="@${DEVICES}-devices x${WORKERS} worker(s) ($((DEVICES * WORKERS)) simulators)"
+
+            # Deliberately NOT wrapped in a ::group::. Groups don't nest in Actions, and the useful
+            # grouping is one level down — the WDA build and each test (run/types/ci_group_reporter.ts)
+            # — which a pass-level group would swallow. A pass-level group also rendered a failing step
+            # as nothing but headers and an exit code.
+            echo "--- $label ---"
+            status=0
             # --pass-with-no-tests: a RISK filter can legitimately empty one device class while the
             # others still have work, and that must not fail the run.
             DEVICES_PER_TEST_COUNT="$DEVICES" \
@@ -222,9 +258,22 @@ jobs:
             npx playwright test \
               --grep "(?=.*@${PLATFORM})(?=.*@${{ github.event.inputs.RISK }})(?=.*@${DEVICES}-devices)" \
               --pass-with-no-tests \
-              $PRO_GREP_INVERT || overall=1
-            echo "::endgroup::"
+              $PRO_GREP_INVERT || status=$?
+
+            if [ "$status" -eq 0 ]; then
+              echo "PASS  $label"
+              summary="${summary}PASS  ${label}"$'\n'
+            else
+              # ::error:: surfaces as a job annotation, so the failing pass is visible without
+              # opening the log at all.
+              echo "::error::FAILED  $label (exit $status)"
+              summary="${summary}FAIL  ${label} (exit ${status})"$'\n'
+              overall=1
+            fi
           done <<< "$PASSES"
+
+          echo "Tier '$PARALLEL_TIER' summary:"
+          printf '%s' "$summary"
 
           # Every pass runs even if an earlier one failed, so the report covers the whole suite.
           exit $overall

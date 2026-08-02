@@ -114,71 +114,138 @@ export function bootSimulator(udid: string, label?: number | string): boolean {
 }
 
 /**
- * Boot every simulator in `udids` concurrently, returning once they have all finished booting.
+ * How many simulators boot (and have the app installed) at once.
  *
- * Simulators are created shut down, so without this the first test to touch a given device pays
- * the cold-boot cost inline — and it lands on the critical path at the very start of a run, when
- * every Playwright worker is booting its own pool simultaneously. Booting up front gets it out of
- * the way (and makes the cost visible as its own step rather than hiding inside the first test).
+ * **One**, measured. That is the opposite of what boot alone wanted, and the reason is that this width
+ * governs more than booting. Measured on the runner, preparing all 12 with WDA launches decoupled into a
+ * second stage:
  *
- * Never throws: a simulator that fails to pre-boot is logged and left for Appium to boot on demand,
- * exactly as before. A best-effort optimisation should not be able to abort a run.
+ * | boot width | prepare | `wda-launch` total | `handoff-wait` total |
+ * |---|---|---|---|
+ * | **1** | **210.2s** | **5.6s** | **0.3s** |
+ * | 2 | 226.3s | 147.5s | 867.8s |
+ * | 3 | 231.2s | 156.3s | 1429.8s |
+ *
+ * Boot-only measurements favour 3 (128.4s serial against 58.8s at width 3), and an earlier version of
+ * this comment recommended it on that basis. But every guest-side stage contends — `app-install` goes
+ * 81.9s to 195.7s across those same widths — and above width 1 a `simctl launch` reliably goes
+ * pathological (130-150s) at least once per run, which then holds up everything behind it. Width 1 traded
+ * boot parallelism for never hitting that, and won.
+ *
+ * Note the wall-clock gaps here (21s) are inside the ~30s run-to-run noise, so this is chosen for
+ * *robustness* rather than measured speed: the launch stage does an order of magnitude less work and the
+ * pathological case never appeared at width 1.
  */
-export async function bootSimulatorPool(udids: string[]): Promise<void> {
-  if (udids.length === 0) {
-    return;
+const DEFAULT_PREPARE_CONCURRENCY = 1;
+
+/** Ceiling for a single `simctl bootstatus` call — see the call site for why it needs one at all. */
+const BOOT_TIMEOUT_MS = 180_000;
+
+/**
+ * How long to wait for a freshly launched WDA to bind its port.
+ *
+ * The first attempt gets a short window (20 x 500ms = 10s) because a healthy launch binds in ~3.3s on
+ * average, so anything much beyond that is a wedged runner rather than a slow one — and a short window
+ * makes the terminate-and-retry below cheap to reach. The retry gets the full 30s, since by then we
+ * have paid for a termination and want it to succeed.
+ */
+const WDA_FIRST_BIND_ATTEMPTS = 20;
+const WDA_PORT_POLL_ATTEMPTS = 60;
+const WDA_PORT_POLL_INTERVAL_MS = 500;
+
+/**
+ * Poll interval for the boot -> WDA handoff queue.
+ *
+ * Polled rather than signalled because the stages either side take seconds, so 50ms of granularity is
+ * free, and because waking exactly one of several waiting workers is more machinery than it is worth.
+ */
+const HANDOFF_POLL_INTERVAL_MS = 50;
+
+/**
+ * How many simulators to prepare at once, from IOS_BOOT_CONCURRENCY.
+ *
+ * Configurable because the answer is host-dependent — a faster runner tolerates more concurrency — so
+ * the width can be re-measured on the machine in question rather than inheriting a number derived from
+ * a different one. Capped at the pool size, since a wider setting than there are simulators is just
+ * the pool size.
+ */
+function prepareConcurrency(poolSize: number): number {
+  const configured = process.env.IOS_BOOT_CONCURRENCY?.trim();
+  if (!configured) {
+    return Math.min(DEFAULT_PREPARE_CONCURRENCY, poolSize);
   }
 
-  const start = Date.now();
-  console.log(`Pre-booting ${udids.length} simulator(s)...`);
-
-  await Promise.all(
-    udids.map(async udid => {
-      try {
-        // `bootstatus -b` boots the device if it isn't already booted and only returns once the
-        // boot has actually completed (unlike `simctl boot`, which returns immediately).
-        await execAsync(`xcrun simctl bootstatus ${udid} -b`);
-      } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : String(error);
-        console.warn(`  Failed to pre-boot ${udid} (Appium will boot it on demand): ${message}`);
-      }
-    })
-  );
-
-  console.log(`✓ Simulators ready in ${((Date.now() - start) / 1000).toFixed(1)}s`);
+  const width = Number(configured);
+  if (!Number.isInteger(width) || width < 1) {
+    console.warn(
+      `Ignoring IOS_BOOT_CONCURRENCY="${configured}" (expected a positive integer); ` +
+        `using ${DEFAULT_PREPARE_CONCURRENCY} at a time.`
+    );
+    return Math.min(DEFAULT_PREPARE_CONCURRENCY, poolSize);
+  }
+  return Math.min(width, poolSize);
 }
 
 /**
- * Install `appPath` on every booted simulator in `udids`, concurrently.
+ * How many WebDriverAgent launches run at once, from IOS_WDA_CONCURRENCY.
  *
- * Appium installs the app as part of creating a session, but on a simulator that doesn't have it
- * yet that install lands inline in the first test to touch the device — measured at ~150s for three
- * devices, versus ~17s once they're warm. Doing it up front moves that off the critical path.
+ * **Serial by default**, and unlike the boot width this is not a compromise — overlapping launches is
+ * the single most expensive thing measured in this whole step. On the runner, `simctl launch` costs
+ * ~0.3s when nothing else is launching and 15-106s when launches collide; three devices that entered
+ * their launch at the same instant took 1.2s, 77.6s and 106.3s. Across 12 devices the stage totals
+ * 49.1s at width 1 against 327.5s at width 3.
  *
- * `simctl install` is an upsert, so this is cheap (and effectively a no-op) when the app is already
- * present and unchanged. Best-effort: failures are logged and left for Appium to handle, since the
- * session-creation path installs the app anyway.
+ * Serialising was tried once before and rejected, which was the wrong conclusion drawn from a real
+ * result: the gate then sat *inside* the boot pipeline, so a device waiting for a launch slot still held
+ * a boot slot and stalled the boots behind it (~298s of queueing, worse wall clock). The two stages are
+ * now separate — see `prepareSimulatorPool` — so waiting to launch holds nothing up, and `handoff-wait`
+ * in the per-device output measures whether stage 2 is keeping up with stage 1.
  */
-export async function installAppOnSimulators(udids: string[], appPath: string): Promise<void> {
-  if (udids.length === 0 || !appPath) {
-    return;
+const DEFAULT_WDA_CONCURRENCY = 1;
+
+function wdaConcurrency(poolSize: number): number {
+  const configured = process.env.IOS_WDA_CONCURRENCY?.trim();
+  if (!configured) {
+    return Math.min(DEFAULT_WDA_CONCURRENCY, poolSize);
   }
 
-  const start = Date.now();
-  console.log(`Pre-installing the app on ${udids.length} simulator(s)...`);
+  const width = Number(configured);
+  if (!Number.isInteger(width) || width < 1) {
+    console.warn(
+      `Ignoring IOS_WDA_CONCURRENCY="${configured}" (expected a positive integer); ` +
+        `launching ${DEFAULT_WDA_CONCURRENCY} at a time.`
+    );
+    return Math.min(DEFAULT_WDA_CONCURRENCY, poolSize);
+  }
+  return Math.min(width, poolSize);
+}
 
-  await Promise.all(
-    udids.map(async udid => {
-      try {
-        await execAsync(`xcrun simctl install ${udid} "${appPath}"`);
-      } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : String(error);
-        console.warn(`  Failed to pre-install on ${udid} (Appium will install it): ${message}`);
-      }
-    })
-  );
+/**
+ * Run `task` over `items`, at most `width` at a time, keeping results in input order.
+ *
+ * A shared queue drained by `width` workers rather than fixed batches: a batch only finishes when its
+ * slowest member does, leaving capacity idle at the tail of every batch. Taking the next item as soon
+ * as a worker frees up keeps `width` in flight throughout.
+ *
+ * The index counter needs no locking — workers only interleave at their `await`, and it is read and
+ * incremented synchronously before that.
+ */
+async function withConcurrency<T, R>(
+  items: Array<T>,
+  width: number,
+  task: (item: T) => Promise<R>
+): Promise<Array<R>> {
+  const results = new Array<R>(items.length);
+  let next = 0;
 
-  console.log(`✓ App pre-installed in ${((Date.now() - start) / 1000).toFixed(1)}s`);
+  const worker = async (): Promise<void> => {
+    for (let index = next++; index < items.length; index = next++) {
+      results[index] = await task(items[index]);
+    }
+  };
+
+  await Promise.all(Array.from({ length: Math.min(width, items.length) }, () => worker()));
+  return results;
 }
 
 /** First `wdaLocalPort`; simulator N (0-based) uses WDA_BASE_PORT + N. */
@@ -245,72 +312,318 @@ async function isWdaResponding(port: number): Promise<boolean> {
 }
 
 /**
- * Start a long-lived WebDriverAgent on each simulator and return the ports that came up.
+ * A snapshot of how busy the host is, for correlating slow stages with load.
  *
- * By default the XCUITest driver installs and launches WDA inside *every* session, and it does so
- * behind a process-wide lock (`SHARED_RESOURCES_GUARD`, keyed on the literal `'XCUITestDriver'`
- * whenever `usePreinstalledWDA` is set — see `retrieveDerivedDataPath`, which returns undefined on
- * that path, so a per-device `derivedDataPath` cannot unlock it). That serialises session startup
- * across devices at roughly 4.3s each.
+ * Boot, app install and WDA launch all run code *inside* a simulator, so they compete for host CPU with
+ * every other simulator being prepared and with the whole already-booted pool (~230 processes each). The
+ * stages that run no guest code — the port probe, the bundle install — are consistently fast, which is
+ * what suggests contention rather than anything wrong with CoreSimulator itself.
  *
- * Pointing the driver at an already-running WDA via `webDriverAgentUrl` collapses its launch to a
- * single `/status` call (see `WebDriverAgent#launch`), which removes both the per-session install
- * and the serialisation. Measured at ~8s saved on a 3-device test.
- *
- * Best-effort: only ports confirmed responding are returned, and callers fall back to the driver's
- * own WDA handling for anything missing.
+ * Process count is instantaneous and the more useful of the two; load average is a ~1-minute mean and so
+ * lags, but it captures sustained pressure that a single sample misses. Both are cheap enough to take
+ * per device.
  */
-export async function launchWdaOnSimulators(
-  entries: Array<{ udid: string; port: number }>,
-  wdaAppPath: string
-): Promise<number[]> {
-  if (entries.length === 0 || !wdaAppPath) {
+function hostSnapshot(): string {
+  try {
+    const load = execSync('sysctl -n vm.loadavg').toString().trim().split(/\s+/)[1];
+    const procs = execSync('ps ax | wc -l').toString().trim();
+    return `load ${load}, ${procs} procs`;
+  } catch {
+    return 'load unavailable';
+  }
+}
+
+/** Per-stage durations in ms, for working out where preparation actually spends its time. */
+type StageTimings = Record<string, number>;
+
+/**
+ * Install and launch the prebuilt WDA runner on one booted simulator; null if it never binds.
+ *
+ * Records each step separately in `timings`. The three are very different operations — a bundle
+ * install, a process launch, then a wait on a port — and lumping them together is what left the
+ * previous run's 284s unexplained.
+ */
+async function startWda(
+  udid: string,
+  port: number,
+  wdaAppPath: string,
+  timings: StageTimings
+): Promise<number | null> {
+  const step = async <T>(name: string, task: () => Promise<T>): Promise<T> => {
+    const began = Date.now();
+    try {
+      return await task();
+    } finally {
+      timings[name] = (timings[name] ?? 0) + (Date.now() - began);
+    }
+  };
+
+  if (await step('wda-probe', () => isWdaResponding(port))) {
+    return port; // Left running by an earlier run — reuse it as-is.
+  }
+
+  await step('wda-install', () => execAsync(`xcrun simctl install ${udid} "${wdaAppPath}"`));
+
+  // Mirrors what the driver itself does (WebDriverAgent#launchWithPreinstalledWDA): simctl passes
+  // SIMCTL_CHILD_-prefixed vars through to the launched process.
+  const launch = (terminateFirst: boolean) =>
+    execAsync(
+      `SIMCTL_CHILD_USE_PORT=${port} ` +
+        `SIMCTL_CHILD_WDA_PRODUCT_BUNDLE_IDENTIFIER=${WDA_RUNNER_BUNDLE_ID} ` +
+        `xcrun simctl launch ${terminateFirst ? '--terminate-running-process ' : ''}` +
+        `${udid} ${WDA_RUNNER_BUNDLE_ID}`
+    );
+
+  // WDA binds its port a moment after the process starts, so poll rather than assume.
+  const waitForBind = async (attempts: number): Promise<number | null> => {
+    for (let attempt = 0; attempt < attempts; attempt++) {
+      if (await isWdaResponding(port)) {
+        return port;
+      }
+      await new Promise(resolve => setTimeout(resolve, WDA_PORT_POLL_INTERVAL_MS));
+    }
+    return null;
+  };
+
+  // Launched WITHOUT `--terminate-running-process`, which measured as the single most expensive thing
+  // in the whole preparation: 358.6s across 12 devices, against 164.7s for every boot and 148.7s for
+  // every app install. It was also wildly uneven — under 3.5s on seven devices but 37s on three and
+  // ~120s on two, always on devices launching at the same moment, which points at the termination
+  // waiting on something the simulator serialises globally.
+  //
+  // Skipping it is safe here because the probe above already established nothing is answering on the
+  // port: there is usually no process to terminate, so the flag was buying nothing on the happy path.
+  await step('wda-launch', () => launch(false));
+
+  const bound = await step('wda-bind-wait', () => waitForBind(WDA_FIRST_BIND_ATTEMPTS));
+  if (bound !== null) {
+    return bound;
+  }
+
+  // Nothing bound, so the port is likely held by a wedged runner from an earlier job — the one case
+  // the terminate flag exists for. Pay for it only here, on the path that has already failed, rather
+  // than on all twelve devices. The first window is deliberately short so reaching this stays cheap.
+  await step('wda-relaunch', () => launch(true));
+
+  const rebound = await step('wda-rebind-wait', () => waitForBind(WDA_PORT_POLL_ATTEMPTS));
+  if (rebound === null) {
+    console.warn(`  WDA on ${udid} (port ${port}) did not bind; falling back for it`);
+  }
+  return rebound;
+}
+
+/**
+ * Boot the pool, install the app on it, and start one long-lived WebDriverAgent per simulator.
+ *
+ * Pipelined per simulator rather than run as three phases over the whole pool. Three phases would each
+ * end on a barrier — a phase only finishes when its slowest device does — so the pool would sit idle at
+ * three separate tails. Here a device that boots quickly moves straight on to its own install while
+ * others are still booting, with `prepareConcurrency` devices in flight throughout.
+ *
+ * The stages must run in this order per device: both `simctl install` and `simctl launch` fail on a
+ * device that isn't booted ("Unable to lookup in current state: Shutdown"), so neither can be hoisted
+ * ahead of the boot.
+ *
+ * Returns the ports where WDA answered, for `appium:webDriverAgentUrl`. A device missing from that list
+ * falls back to the driver launching WDA inside its first session, exactly as it would without any of
+ * this — so everything here degrades rather than failing.
+ */
+export async function prepareSimulatorPool(
+  pool: Array<Simulator>,
+  { appPath, wdaAppPath }: { appPath?: string; wdaAppPath?: string }
+): Promise<Array<number>> {
+  if (pool.length === 0) {
     return [];
   }
 
+  const bootWidth = prepareConcurrency(pool.length);
+  const launchWidth = wdaConcurrency(pool.length);
   const start = Date.now();
-  console.log(`Starting WebDriverAgent on ${entries.length} simulator(s)...`);
-
-  const launched = await Promise.all(
-    entries.map(async ({ udid, port }) => {
-      try {
-        if (await isWdaResponding(port)) {
-          return port; // Left running by an earlier run — reuse it as-is.
-        }
-        await execAsync(`xcrun simctl install ${udid} "${wdaAppPath}"`);
-        // Mirrors what the driver itself does (WebDriverAgent#launchWithPreinstalledWDA): simctl
-        // passes SIMCTL_CHILD_-prefixed vars through to the launched process.
-        await execAsync(
-          `SIMCTL_CHILD_USE_PORT=${port} ` +
-            `SIMCTL_CHILD_WDA_PRODUCT_BUNDLE_IDENTIFIER=${WDA_RUNNER_BUNDLE_ID} ` +
-            `xcrun simctl launch --terminate-running-process ${udid} ${WDA_RUNNER_BUNDLE_ID}`
-        );
-
-        // WDA binds its port a moment after the process starts, so poll rather than assume.
-        for (let attempt = 0; attempt < 30; attempt++) {
-          if (await isWdaResponding(port)) {
-            return port;
-          }
-          await new Promise(resolve => setTimeout(resolve, 500));
-        }
-        console.warn(`  WDA on ${udid} (port ${port}) did not come up; falling back for it`);
-        return null;
-      } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : String(error);
-        console.warn(`  Failed to start WDA on ${udid}: ${message}`);
-        return null;
-      }
-    })
-  );
-
-  const ports = launched.filter((port): port is number => port !== null);
   console.log(
-    `✓ WebDriverAgent ready on ${ports.length}/${entries.length} simulator(s) in ` +
-      `${((Date.now() - start) / 1000).toFixed(1)}s`
+    `Preparing ${pool.length} simulator(s): boot${appPath ? ' + app' : ''} ${bootWidth} at a time` +
+      `${wdaAppPath ? `, WDA ${launchWidth} at a time` : ''}...`
   );
+
+  /** A device that has finished booting and is waiting to have WebDriverAgent launched on it. */
+  type Booted = {
+    deviceStart: number;
+    readyAt: number;
+    simulator: Simulator;
+    timings: StageTimings;
+  };
+
+  const waitingForWda: Array<Booted> = [];
+  const launchedPorts: Array<number> = [];
+  const allTimings: Array<StageTimings> = [];
+  let bootingFinished = false;
+  let finished = 0;
+
+  const makeStep =
+    (timings: StageTimings) =>
+    async <T>(name: string, task: () => Promise<T>): Promise<T> => {
+      const began = Date.now();
+      try {
+        return await task();
+      } finally {
+        timings[name] = (timings[name] ?? 0) + (Date.now() - began);
+      }
+    };
+
+  const logDevice = (device: Booted, port: number | null, hostAtLaunch: string): void => {
+    // Logged per device so a slow pool shows progress rather than going silent for minutes — with 12
+    // devices the gap between the opening line and the closing one is otherwise long enough to look
+    // like a hang. The per-stage breakdown is what makes a slow device diagnosable from the log alone.
+    finished += 1;
+    const breakdown = Object.entries(device.timings)
+      .map(([name, ms]) => `${name} ${(ms / 1000).toFixed(1)}s`)
+      .join(', ');
+    console.log(
+      `  [${finished}/${pool.length}] ${port === null && wdaAppPath ? 'WDA FAILED — ' : ''}` +
+        `${((Date.now() - device.deviceStart) / 1000).toFixed(1)}s total (${breakdown || 'nothing'}) ` +
+        `at ${((Date.now() - start) / 1000).toFixed(1)}s elapsed` +
+        `${wdaAppPath ? ` | host at WDA launch: ${hostAtLaunch}` : ''}`
+    );
+  };
+
+  // --- stage 1: boot and install, `bootWidth` at a time -------------------------------------------
+  //
+  // Handing each device to stage 2 by queue rather than doing the launch inline is the whole point of
+  // splitting these. Measured on the runner, `simctl launch` costs ~0.3s when nothing else is launching
+  // and 15-106s when launches overlap — three devices that entered their launch at the same instant took
+  // 1.2s, 77.6s and 106.3s. So launches want to be narrow while boots want to be wide (boot's own total
+  // goes 96.4s serial to 151.2s at width 3, but its wall clock improves).
+  //
+  // An earlier attempt gated the launch *inside* this pipeline, which failed for a reason that was not
+  // obvious: a device waiting for a launch slot still occupied a boot slot, so narrowing the launches
+  // stalled the boots behind them. That showed up as ~298s of queueing and a worse wall clock, and it
+  // was read as "narrow launches are worse" when the real problem was the coupling. Here a device that
+  // is waiting to launch holds nothing.
+  const booting = withConcurrency(pool, bootWidth, async simulator => {
+    const timings: StageTimings = {};
+    allTimings.push(timings);
+    const deviceStart = Date.now();
+    const step = makeStep(timings);
+
+    try {
+      // `bootstatus -b` boots the device if it isn't already booted and only returns once the boot has
+      // actually completed (unlike `simctl boot`, which returns immediately).
+      //
+      // Timed out because `bootstatus` waits indefinitely by design: a simulator that wedges mid-boot
+      // would otherwise hold this call open until CI's own job limit killed the run, hours later. A cold
+      // boot measured ~5-13s, so this is a "something is broken" ceiling, not a budget.
+      await step('boot', () =>
+        execAsync(`xcrun simctl bootstatus ${simulator.udid} -b`, { timeout: BOOT_TIMEOUT_MS })
+      );
+
+      if (appPath) {
+        // ~5s per device when little else is running, ~14s once the pool is full — it runs guest-side
+        // work, so it contends like the boot does. Worth doing here regardless, because left to the
+        // driver it lands inside the first test to touch the device.
+        await step('app-install', () =>
+          execAsync(`xcrun simctl install ${simulator.udid} "${appPath}"`)
+        );
+      }
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.warn(`  ${simulator.udid} could not be prepared (Appium will handle it): ${message}`);
+    }
+
+    waitingForWda.push({ deviceStart, readyAt: Date.now(), simulator, timings });
+    // `finally`, not `then`: if stage 1 rejects outright, the consumers below must still be told to stop,
+    // or they poll an empty queue forever waiting for a producer that has already given up.
+  }).finally(() => {
+    bootingFinished = true;
+  });
+
+  // --- stage 2: launch WebDriverAgent, `launchWidth` at a time ------------------------------------
+  //
+  // Polls the handoff queue rather than being signalled: the check is a shift on an array against stages
+  // that take seconds, so the granularity costs nothing and it avoids the awkwardness of waking exactly
+  // one of several waiting workers. It drains the queue before honouring `bootingFinished`, so nothing
+  // is dropped if the last device is queued as stage 1 completes.
+  const launching = async (): Promise<void> => {
+    for (;;) {
+      const device = waitingForWda.shift();
+      if (!device) {
+        if (bootingFinished) {
+          return;
+        }
+        await new Promise(resolve => setTimeout(resolve, HANDOFF_POLL_INTERVAL_MS));
+        continue;
+      }
+
+      // How long this device sat between finishing its boot and starting its launch. This is the metric
+      // that says whether the split is working: near zero means stage 2 keeps up, large means the
+      // launches are the bottleneck and `bootWidth` is outrunning `launchWidth`.
+      device.timings['handoff-wait'] = Date.now() - device.readyAt;
+
+      let port: number | null = null;
+      let hostAtLaunch = 'not applicable';
+      if (wdaAppPath) {
+        // Sampled here because `wda-launch` is the stage whose cost varies most: general load turned out
+        // not to predict it (0.4s at load 731, 17.9s at load 147), so what matters is whether another
+        // launch is in flight — which this width now controls.
+        hostAtLaunch = hostSnapshot();
+        try {
+          port = await startWda(
+            device.simulator.udid,
+            device.simulator.wdaPort,
+            wdaAppPath,
+            device.timings
+          );
+        } catch (error: unknown) {
+          const message = error instanceof Error ? error.message : String(error);
+          console.warn(`  ${device.simulator.udid} WDA launch failed (falling back): ${message}`);
+        }
+      }
+
+      if (port !== null) {
+        launchedPorts.push(port);
+      }
+      logDevice(device, port, hostAtLaunch);
+    }
+  };
+
+  await Promise.all([booting, ...Array.from({ length: launchWidth }, () => launching())]);
+
+  const ports = launchedPorts;
+  console.log(
+    `✓ ${pool.length} simulator(s) prepared in ${((Date.now() - start) / 1000).toFixed(1)}s` +
+      (wdaAppPath ? `, WebDriverAgent on ${ports.length}/${pool.length}` : '')
+  );
+
+  // Summed across devices, so the dominant stage is obvious without adding up twelve lines by hand.
+  // These are sums of concurrent work, so they exceed the wall clock — the ratios are the point, not
+  // the totals.
+  const totals: StageTimings = {};
+  for (const timings of allTimings) {
+    for (const [name, ms] of Object.entries(timings)) {
+      totals[name] = (totals[name] ?? 0) + ms;
+    }
+  }
+  const busiest = Object.entries(totals).sort((a, b) => b[1] - a[1]);
+  if (busiest.length > 0) {
+    console.log(
+      `  stage totals across ${pool.length} device(s) (concurrent, so they sum above wall clock): ` +
+        busiest.map(([name, ms]) => `${name} ${(ms / 1000).toFixed(1)}s`).join(', ')
+    );
+  }
   return ports;
 }
 
+/**
+ * Ports of the pool's already-running WebDriverAgents.
+ *
+ * For when an earlier step already prepared the pool: the tiered CI run invokes Playwright once per
+ * device class, so global setup runs several times in a job, and redoing the installs each time would
+ * cost more than it saves. Probing is one `/status` call per device, so it is safe to do unconditionally.
+ */
+export async function discoverRunningWda(pool: Array<Simulator>): Promise<Array<number>> {
+  const found = await withConcurrency(pool, pool.length, async ({ wdaPort }) =>
+    (await isWdaResponding(wdaPort)) ? wdaPort : null
+  );
+  return found.filter((port): port is number => port !== null);
+}
 /** UDIDs of the configured IOS_N_SIMULATOR entries, in order, stopping at the first unset one. */
 export function getConfiguredSimulatorUDIDs(max: number = MAX_SIMULATORS): string[] {
   const udids: string[] = [];

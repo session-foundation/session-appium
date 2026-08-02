@@ -82,22 +82,85 @@ Locally `DEVICES_PER_TEST_COUNT` defaults to 4 and the largest specs need 4 devi
 (`countOfDevicesNeeded: 4`), so **4 sims covers every iOS spec** at 1 worker. XCUITest
 boots a sim by UDID automatically at session start — no manual boot.
 
-`global-setup.ts` prepares the pool the run will use (`workers × DEVICES_PER_TEST_COUNT`) before any
-test starts — on CI as well as locally. It **pre-boots** the simulators, **pre-installs** the app,
-and starts one long-lived **WebDriverAgent** per simulator, passing the live ports to the workers via
-`WDA_REUSE_PORTS`. Each of those is otherwise paid inside a test: boot and app install land on
-whichever test touches a device first (~150s for 3 cold devices), and WDA is installed *and launched
-per session* behind a process-wide lock, serialising session startup at ~4.3s per device.
+Preparing the pool does two separable things — in `global-setup.ts` locally, and in the
+`Prepare simulators` step (`scripts/prepare_ios.ts`) on CI:
+
+1. **Builds the WebDriverAgent runner** (`ensureWdaBuilt`). `capabilities_ios` then passes
+   `usePreinstalledWDA` + `prebuiltWDAPath`, so the driver installs the runner with `simctl` instead of
+   running `xcodebuild` inside every session. Needs no booted device and costs ~31s once per job — it's
+   one build for all devices, so it happens before the per-device work rather than inside it.
+2. **Prepares the pool** (`workers × DEVICES_PER_TEST_COUNT` devices): boots each, installs the app, and
+   starts one long-lived WDA per simulator, passing the ports on via `WDA_REUSE_PORTS`.
+
+Without (2) the driver still boots on demand and launches WDA per session behind a process-wide lock
+(~4.3s per device); without (1) it also *builds* WDA per session, which is the slow, flaky part.
 
 With `appium:webDriverAgentUrl` pointing at a running WDA the driver's launch collapses to one
 `/status` call, so both the install and the serialisation disappear (~8s saved on a 3-device test).
 All of it is best-effort: anything that fails falls back to the driver doing it itself. Already-warm
 simulators make the whole step a no-op, so back-to-back runs skip it.
 
-> Note this reverses a CI choice — the workflow's "Start simulators" step is disabled with a comment
-> that letting Appium boot was more reliable. Pre-booting is a prerequisite for launching WDA
-> (`simctl launch` needs a booted device) and uses `simctl bootstatus -b`, which waits for boot to
-> genuinely finish. If CI becomes flaky at startup, this block is the first thing to revert.
+> **Both steps run everywhere now, including CI**, and on CI they happen in a **`Prepare simulators`
+> workflow step** (`scripts/prepare_ios.ts`) rather than inside `global-setup.ts`. The CI run is tiered —
+> one `playwright test` invocation per device class — so leaving preparation in global setup repeated it
+> once per pass; as its own step it happens once, its cost is visible in the job timing instead of being
+> charged to the first pass, and the `xcodebuild` output stays out of the test results. The step exports
+> `IOS_SIMULATORS_PREPARED`, which makes global setup skip to *discovering* the running WDAs.
+>
+> **This was 350s with WebDriverAgent on 1 of 12; it is now ~210s with 12 of 12.** Two changes did all of
+> that: bounding the WDA port-binding window (10s, then 30s on a retry), and splitting preparation into two
+> stages so a device waiting to launch WDA does not hold up the boots behind it.
+>
+> `prepareSimulatorPool` runs **boot + app install** at `IOS_BOOT_CONCURRENCY` (default **1**), handing each
+> device to a second stage that launches WDA at `IOS_WDA_CONCURRENCY` (default **1**). The stages overlap —
+> device N's launch runs while device N+1 boots — which is worth ~48s: at width 1 the wall clock (210.2s)
+> comes in *below* the summed per-device work (257.8s).
+>
+> Measured on the runner, all 12 devices:
+>
+> | boot width | prepare | `wda-launch` total | `handoff-wait` total | `app-install` total |
+> |---|---|---|---|---|
+> | **1** | **210.2s** | **5.6s** | **0.3s** | 81.9s |
+> | 2 | 226.3s | 147.5s | 867.8s | 133.1s |
+> | 3 | 231.2s | 156.3s | 1429.8s | 195.7s |
+>
+> Width 1 despite boot-only measurements favouring 3 (128.4s serial against 58.8s at width 3): this width
+> governs the app install too, which more than doubles across those widths, and above width 1 one
+> `simctl launch` per run reliably goes pathological (130-150s) and everything queues behind it. The
+> wall-clock gaps are inside the ~30s run-to-run noise, so width 1 is chosen for **robustness** rather than
+> proven speed — its launch stage does an order of magnitude less work and never hit the pathological case.
+>
+> **Do not re-run these, they have all been tried and measured worse:**
+>
+> - **Gating the WDA launch inside the boot pipeline.** A device waiting for a launch slot still held a boot
+>   slot, stalling the boots behind it: ~298s of queueing, worse wall clock. Read at the time as "narrow
+>   launches are worse", which was the wrong conclusion — the coupling was the problem, hence the split.
+> - **Alternating waves (boot a batch, then launch it exclusively).** 340.6s / 337.0s / 400.8s at widths
+>   1/2/3 — up to 130s worse, because strict alternation gives up the overlap above and buys nothing.
+> - **Dropping `--terminate-running-process`.** Neutral (358.6s vs 350.0s at the same width). Kept only
+>   because the probe has already shown nothing is answering, and no device has ever needed the retry.
+> - **Serialising launches to avoid contention (before the split).** Halved `wda-launch` but cost more in
+>   queueing than it saved.
+> - **Moving the app extraction to `$HOME` so `simctl install` could clone.** The runner has a single volume
+>   (`/dev/disk3s5` for both workspace and `$HOME`), so nothing was ever crossing a filesystem. Harmless,
+>   and the extraction stays there, but it changed nothing.
+>
+> **Still unexplained:** one `simctl launch` per run takes 95-150s instead of ~0.3s. It is **stochastic**,
+> not caused by concurrency — it occurred in a run of twelve waves of one, where by construction nothing
+> else was booting, installing or launching. General load does not predict it either (0.4s at load 731,
+> 17.9s at load 147). Worth ~40s of average wall clock. Every mechanism anyone has proposed for it,
+> including several of mine, has been disproved.
+>
+> Two traps for anyone tuning this further: `app-install` takes ~1s locally and ~5-22s on the runner, so
+> **local timings do not transfer** — measure on CI. And the per-device log line is additive, so the stages
+> sum to the total; an earlier version nested four stages inside `gate-wait` and misled everyone reading it.
+>
+> All of it is best-effort — anything that fails falls back to the driver doing it itself, and
+> `prepare_ios.ts` deliberately exits 0 so it can never fail a job before a test has run. Already-warm
+> simulators make the whole step close to a no-op, so back-to-back runs skip most of it.
+>
+> Note this bounds the *preparation*, not the load the tests then run against: a booted simulator holds
+> ~230 processes for as long as it's up, and the run needs the whole pool booted regardless.
 
 ### Parallelism
 
@@ -181,8 +244,9 @@ an existing spec (e.g. `run/test/specs/app_disguise_icons.spec.ts`).
 ## CI vs local
 
 CI (`.github/workflows/ios-regression.yml`) runs on a **self-hosted macOS** runner with `CI=1`, 12
-simulators from `ci-simulators.json`, and `IOS_APP_PATH_PREFIX` pointing at an extracted
-`Session.app`. Locally, simulators come from `.env` (`IOS_N_SIMULATOR`) instead.
+simulators from `ci-simulators.json`, and `IOS_APP_PATH_PREFIX` pointing at a `Session.app` extracted
+under `$HOME` (not the workspace — it must share an APFS volume with the simulators so `simctl install`
+clones the bundle instead of copying it; the `Prepare simulators` step logs whether it does). Locally, simulators come from `.env` (`IOS_N_SIMULATOR`) instead.
 
 The run step is **tiered** like the local runner: it shells out to `scripts/print_tier.ts ci` and
 does one `npx playwright test` per device class, setting `DEVICES_PER_TEST_COUNT` and

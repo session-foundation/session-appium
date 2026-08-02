@@ -2,6 +2,8 @@ import { execSync } from 'child_process';
 import { existsSync } from 'fs';
 import * as path from 'path';
 
+import { withLogGroup } from '../run/shared/ci_log_groups';
+
 /**
  * Build the WebDriverAgent (WDA) runner ONCE, up front, so the XCUITest driver can reuse it
  * across every simulator instead of building/launching it via `xcodebuild` on each session.
@@ -73,17 +75,22 @@ export function buildWda(options?: { force?: boolean }): string {
 
   const project = resolveWdaProject();
   console.log(`Building WebDriverAgent (one-off) -> ${WDA_DERIVED_DATA_PATH}`);
-  // build-for-testing produces the *-Runner.app without needing code signing on the simulator SDK.
-  execSync(
-    [
-      'xcodebuild build-for-testing',
-      `-project "${project}"`,
-      '-scheme WebDriverAgentRunner',
-      `-destination 'generic/platform=iOS Simulator'`,
-      `-derivedDataPath "${WDA_DERIVED_DATA_PATH}"`,
-      'CODE_SIGNING_ALLOWED=NO',
-    ].join(' '),
-    { stdio: 'inherit' }
+  // ~6,700 lines of xcodebuild output, collapsed on CI so it doesn't bury the run that follows.
+  // Grouped even on failure (withLogGroup closes in a finally) — an unclosed group would swallow
+  // every later line into it.
+  withLogGroup('Building WebDriverAgent', () =>
+    // build-for-testing produces the *-Runner.app without needing code signing on the simulator SDK.
+    execSync(
+      [
+        'xcodebuild build-for-testing',
+        `-project "${project}"`,
+        '-scheme WebDriverAgentRunner',
+        `-destination 'generic/platform=iOS Simulator'`,
+        `-derivedDataPath "${WDA_DERIVED_DATA_PATH}"`,
+        'CODE_SIGNING_ALLOWED=NO',
+      ].join(' '),
+      { stdio: 'inherit' }
+    )
   );
 
   if (!existsSync(WDA_PREBUILT_APP_PATH)) {
