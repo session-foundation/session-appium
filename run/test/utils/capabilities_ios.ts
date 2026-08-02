@@ -1,10 +1,10 @@
 import type { Capabilities } from '@wdio/types';
 
-import type { ServiceNetwork } from '../../types/target';
-
 import { W3CXCUITestDriverCaps } from 'appium-xcuitest-driver/build/lib/driver';
 import dotenv from 'dotenv';
 import { existsSync } from 'fs';
+
+import type { ServiceNetwork } from '../../types/target';
 
 import { WDA_DERIVED_DATA_PATH, WDA_PREBUILT_APP_PATH } from '../../../scripts/build_wda';
 import { resolveRunSimulators, type Simulator } from '../../../scripts/ios_shared';
@@ -242,7 +242,6 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
 // Re-exported for the scripts that build/clean simulators; the resolution itself lives in
 // scripts/ios_shared so global-setup can use it without importing this iOS-only module.
 export type { Simulator };
-
 
 // Ports where global-setup started a long-lived WebDriverAgent (local runs only). Devices covered
 // here attach to that WDA via `webDriverAgentUrl`, which reduces the driver's WDA launch to a single
