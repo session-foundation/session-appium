@@ -1,5 +1,5 @@
 name: Cross-platform regression tests
-run-name: "cross-platform (iOS + Desktop) regressions on ${{ github.head_ref || github.ref }}"
+run-name: 'cross-platform (iOS + Desktop) regressions on ${{ github.head_ref || github.ref }}'
 
 # Runs the cross-platform specs (run/test/specs/cross_platform/), which drive an iOS simulator and
 # a Desktop client from a SINGLE Playwright worker. Both clients therefore have to live on the same
@@ -13,51 +13,51 @@ on:
   workflow_dispatch:
     inputs:
       NETWORK_TARGET:
-        description: "network target to run the tests on (both clients are pinned to it)"
+        description: 'network target to run the tests on (both clients are pinned to it)'
         required: true
         type: choice
         options:
-          - "mainnet"
-          - "testnet"
-          - "devnet"
-        default: "mainnet"
+          - 'mainnet'
+          - 'testnet'
+          - 'devnet'
+        default: 'mainnet'
 
       APK_URL:
-        description: "ipa url to test (.tar.xz)"
+        description: 'ipa url to test (.tar.xz)'
         required: true
         type: string
 
       DESKTOP_REF:
-        description: "session-desktop branch/tag/SHA to build and test against"
+        description: 'session-desktop branch/tag/SHA to build and test against'
         required: true
         type: string
-        default: "dev"
+        default: 'dev'
 
       SPEC_GREP:
-        description: "which cross-platform specs to run (matched against the Playwright test title, which includes the spec file path)"
+        description: 'which cross-platform specs to run (matched against the Playwright test title, which includes the spec file path)'
         required: true
         type: string
         default: 'cross_platform/.*_ios\.spec\.ts'
 
       PLAYWRIGHT_RETRIES_COUNT:
-        description: "retries of failing tests to do at most"
+        description: 'retries of failing tests to do at most'
         required: true
         type: choice
         options:
-          - "0"
-          - "1"
-          - "2"
-        default: "0"
+          - '0'
+          - '1'
+          - '2'
+        default: '0'
 
       LOG_LEVEL:
-        description: "Test logging verbosity (WARNING: anything other than minimal mode may crash GitHub Actions on large test runs)"
+        description: 'Test logging verbosity (WARNING: anything other than minimal mode may crash GitHub Actions on large test runs)'
         required: true
         type: choice
         options:
-          - "minimal" # Recommended for full regressions
-          - "failures" # Show failed test logs only
-          - "verbose" # All test logs - use with caution!
-        default: "minimal"
+          - 'minimal' # Recommended for full regressions
+          - 'failures' # Show failed test logs only
+          - 'verbose' # All test logs - use with caution!
+        default: 'minimal'
 
 permissions:
   contents: read
@@ -74,16 +74,16 @@ jobs:
       CI: 1
       # Mandatory, not cosmetic: playwright.config.ts turns the Allure reporter on whenever
       # CI === '1' unless this is exactly 'false'.
-      ALLURE_ENABLED: "false"
+      ALLURE_ENABLED: 'false'
       _TESTING: 1 # Always hide webdriver logs (@appium/support/ flag)
       APK_URL: ${{ inputs.APK_URL }}
-      IOS_APP_PATH_PREFIX: "./extracted/Session.app"
+      IOS_APP_PATH_PREFIX: './extracted/Session.app'
       SESSION_DESKTOP_ROOT: ${{ github.workspace }}/desktop
       # capabilities_android.ts calls getAndroidApk() at module load, even on a run with no
       # Android client, so these have to be non-empty (same trick as ios-regression.yml).
-      ANDROID_APK: "<just_not_empty>"
-      APPIUM_ADB_FULL_PATH: "<just_not_empty>"
-      ANDROID_SDK_ROOT: "<just_not_empty>"
+      ANDROID_APK: '<just_not_empty>'
+      APPIUM_ADB_FULL_PATH: '<just_not_empty>'
+      ANDROID_SDK_ROOT: '<just_not_empty>'
       PLAYWRIGHT_RETRIES_COUNT: ${{ inputs.PLAYWRIGHT_RETRIES_COUNT }}
       # iOS reads NETWORK_TARGET (+ the DEVNET_* vars for devnet) at launch; Desktop reads
       # LOCAL_DEVNET_SEED_URL, which the "Pin both clients to one network" step derives from it.
@@ -103,7 +103,7 @@ jobs:
         with:
           lfs: true
           # run/localizer/lib backs tStripped(), used by DesktopWrapper.changeDisplayName
-          submodules: "recursive"
+          submodules: 'recursive'
 
       # Both clients must end up on the SAME network or the seeder writes the account onto one
       # network while a client polls another, and the test just hangs to the 480s timeout.
@@ -162,7 +162,7 @@ jobs:
           ref: ${{ inputs.DESKTOP_REF }}
           path: desktop
           # ts/localization and dynamic_assets are both required by the build
-          submodules: "recursive"
+          submodules: 'recursive'
 
       - name: Build session-desktop from source
         uses: ./github/actions/build-session-desktop
@@ -217,14 +217,14 @@ jobs:
         uses: ./github/actions/upload-test-results
         if: always()
         with:
-          PLATFORM: "cross-platform"
-          UPLOAD_IDENTIFIER: "cross-platform-test-run"
+          PLATFORM: 'cross-platform'
+          UPLOAD_IDENTIFIER: 'cross-platform-test-run'
 
       - name: Upload csv of this whole run
         uses: ./github/actions/upload-csv-test-results
         if: always()
         with:
-          PLATFORM: "cross-platform"
+          PLATFORM: 'cross-platform'
 
       - name: Stop simulators and any leftover Electron
         if: always()
