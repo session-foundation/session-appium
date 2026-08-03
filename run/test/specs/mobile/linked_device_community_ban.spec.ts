@@ -16,7 +16,7 @@ import {
   SendButton,
 } from '../../locators/conversation';
 import { ConversationItem } from '../../locators/home';
-import { assertAdminIsKnown, joinCommunity } from '../../utils/community';
+import { assertAdminIsKnown, joinCommunity, openOrJoinCommunity } from '../../utils/community';
 import { newUser } from '../../utils/create_account';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from '../../utils/open_app';
 import { restoreAccount } from '../../utils/restore_account';
@@ -73,15 +73,11 @@ async function banUnbanLinked(platform: SupportedPlatformsType, testInfo: TestIn
       return await Promise.all([restoreAccount(alice1, alice, 'alice1'), newUser(bob1, 'Bob')]);
     });
   await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
-    const adminJoined = await alice1.doesElementExist(
-      new ConversationItem(alice1, communities.testCommunity.name)
+    await openOrJoinCommunity(
+      alice1,
+      communities.testCommunity.link,
+      communities.testCommunity.name
     );
-    if (!adminJoined) {
-      await joinCommunity(alice1, communities.testCommunity.link, communities.testCommunity.name);
-    } else {
-      await alice1.clickOnElementAll(new ConversationItem(alice1, communities.testCommunity.name));
-      await alice1.scrollToBottom();
-    }
     await joinCommunity(bob1, communities.testCommunity.link, communities.testCommunity.name);
   });
   await test.step(TestSteps.SEND.MESSAGE('Bob', 'community'), async () => {
@@ -103,7 +99,7 @@ async function banUnbanLinked(platform: SupportedPlatformsType, testInfo: TestIn
   });
   await test.step(TestSteps.SETUP.RESTORE_ACCOUNT('Bob'), async () => {
     await restoreAccount(bob2, bob, 'bob2');
-    await bob2.clickOnElementAll(new ConversationItem(alice1, communities.testCommunity.roomName)); // Since we're banned we don't get the "real" name
+    await bob2.clickOnElementAll(new ConversationItem(bob2, communities.testCommunity.roomName)); // Since we're banned we don't get the "real" name
     await bob2.waitForTextElementToBePresent(new EmptyConversation(bob2));
     await bob2.onIOS().waitForTextElementToBePresent({
       strategy: 'xpath',
@@ -147,15 +143,11 @@ async function banAndDeleteLinked(platform: SupportedPlatformsType, testInfo: Te
       return await Promise.all([restoreAccount(alice1, alice, 'alice1'), newUser(bob1, 'Bob')]);
     });
   await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
-    const adminJoined = await alice1.doesElementExist(
-      new ConversationItem(alice1, communities.testCommunity.name)
+    await openOrJoinCommunity(
+      alice1,
+      communities.testCommunity.link,
+      communities.testCommunity.name
     );
-    if (!adminJoined) {
-      await joinCommunity(alice1, communities.testCommunity.link, communities.testCommunity.name);
-    } else {
-      await alice1.clickOnElementAll(new ConversationItem(alice1, communities.testCommunity.name));
-      await alice1.scrollToBottom();
-    }
     await joinCommunity(bob1, communities.testCommunity.link, communities.testCommunity.name);
   });
   await test.step(TestSteps.SEND.MESSAGE('Bob', 'community'), async () => {
@@ -174,7 +166,7 @@ async function banAndDeleteLinked(platform: SupportedPlatformsType, testInfo: Te
   });
   await test.step(TestSteps.SETUP.RESTORE_ACCOUNT('Bob'), async () => {
     await restoreAccount(bob2, bob, 'bob2');
-    await bob2.clickOnElementAll(new ConversationItem(alice1, communities.testCommunity.roomName)); // Since we're banned we don't get the "real" name
+    await bob2.clickOnElementAll(new ConversationItem(bob2, communities.testCommunity.roomName)); // Since we're banned we don't get the "real" name
     await bob2.waitForTextElementToBePresent(new EmptyConversation(bob2));
   });
   await test.step('Verify Bob cannot send messages in community on either device', async () => {

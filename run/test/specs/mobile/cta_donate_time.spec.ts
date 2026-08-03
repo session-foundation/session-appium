@@ -56,12 +56,17 @@ iosIt({
     parent: 'Donations',
   },
   allureDescription:
-    'Mocks a custom install date 6 days, 23 hours, and 58 minutes ago, opens the app, and verifies that the Donate CTA does not show.',
+    'Mocks a custom install date 6 days and 23 hours ago, opens the app, and verifies that the Donate CTA does not show.',
 });
 
 async function donateCTADoesntShowSixDaysAgo(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  // The install date is mocked as an absolute timestamp but the app re-evaluates it live
+  // (DonationsManager.conversationListDidAppear compares it against `now` every time the
+  // conversation list appears), so the gap below has to outlast the whole test — onboarding
+  // included — or the account ages past 7 days mid-run and the CTA legitimately appears.
+  // Anything under 7 days exercises the same branch, so the margin costs no coverage.
   const iosContext: IOSTestContext = {
-    customInstallTime: setIOSFirstInstallDate({ days: -6, hours: -23, minutes: -58 }),
+    customInstallTime: setIOSFirstInstallDate({ days: -6, hours: -23 }),
   };
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, iosContext);
