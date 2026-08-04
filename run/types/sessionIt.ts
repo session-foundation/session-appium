@@ -5,7 +5,7 @@ import type { AppCountPerTest } from '../test/state_builder';
 
 import { setupAllureTestInfo } from '../test/utils/allure/allureHelpers';
 import { unregisterDevicesForTest } from '../test/utils/device_registry';
-import { getNetworkTarget } from '../test/utils/devnet';
+import { resolveNetworkTarget } from '../test/utils/devnet';
 import { captureLogsOnFailure, captureScreenshotsOnFailure } from '../test/utils/failure_artifacts';
 import { SupportedPlatformsType } from '../test/utils/open_app';
 import { AllureSuiteConfig } from './allure';
@@ -61,7 +61,7 @@ function mobileIt({
 
   // eslint-disable-next-line no-empty-pattern
   test(testName, async ({}, testInfo) => {
-    await getNetworkTarget(platform);
+    await resolveNetworkTarget([platform]);
     console.info(`\n\n==========> Running "${testName}"\n\n`);
 
     // Handle Suites, Descriptions and Links

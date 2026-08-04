@@ -18,7 +18,7 @@ import type { User } from '../../types/testing';
 
 import { ConversationItem } from '../locators/home';
 import { IOSTestContext } from '../utils/capabilities_ios';
-import { getNetworkTarget } from '../utils/devnet';
+import { resolveNetworkTarget } from '../utils/devnet';
 import { openAppMultipleDevices, type SupportedPlatformsType } from '../utils/open_app';
 import { restoreAccountNoFallback } from '../utils/restore_account';
 
@@ -111,7 +111,7 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
 }) {
   const [devices, prebuilt] = await Promise.all([
     openAppMultipleDevices(platform, appsToOpen, testInfo, iOSContext),
-    buildStateForTest(stateToBuildKey, groupName, await getNetworkTarget(platform)),
+    buildStateForTest(stateToBuildKey, groupName, await resolveNetworkTarget([platform])),
   ]);
 
   return { devices, prebuilt };

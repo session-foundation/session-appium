@@ -3,11 +3,11 @@ import { FullConfig } from '@playwright/test';
 import { getDevicesPerTestCount, getWorkersCount } from './run/test/utils/binaries';
 import {
   assertRequestedDevnetsReachable,
-  getNetworkTarget,
   pinPlatformsToNetworkTarget,
   requestedDevnetRefs,
+  resolveNetworkTarget,
 } from './run/test/utils/devnet';
-import { resolveDevnetSeedNode } from './run/test/utils/network_target';
+import { getServiceNetwork, resolveDevnetSeedNode } from './run/test/utils/network_target';
 import { SupportedPlatformsType } from './run/test/utils/open_app';
 import { ensureWdaBuilt } from './scripts/build_wda';
 import {
@@ -42,23 +42,31 @@ export default async function globalSetup(_config: FullConfig) {
   // keep working unchanged.
   pinPlatformsToNetworkTarget();
 
+  // Computed once and shared: each call re-runs Android build detection, which logs.
+  const devnetRefs = requestedDevnetRefs();
+
   // Discover the devnet's pubkey/ip/storage ports from the seed node itself, once per run and before
   // any client starts. Done here rather than lazily because the capability builders are synchronous,
   // and because failing in global setup gives a single clear error instead of one per device.
-  if (requestedDevnetRefs().length > 0) {
+  //
+  // Gated on NETWORK_TARGET rather than on `devnetRefs`, because only iOS needs discovered values —
+  // Android and Desktop bootstrap from the seed URL themselves. A Desktop-only devnet run (reached via
+  // LOCAL_DEVNET_SEED_URL, with no NETWORK_TARGET) has a devnet ref but no DEVNET_SEED_URL, and
+  // discovery would fail demanding one it never needed.
+  if (getServiceNetwork() === 'devnet') {
     await resolveDevnetSeedNode();
   }
 
   // Runs for EVERY project (mobile, desktop, cross-platform) and regardless of PLATFORM: if this
   // environment asks for devnet anywhere and that devnet is not usable, stop the whole run here
   // rather than letting each platform discover it separately (or, for Desktop, not at all).
-  await assertRequestedDevnetsReachable();
+  await assertRequestedDevnetsReachable(devnetRefs);
 
   const platform = process.env.PLATFORM as SupportedPlatformsType | undefined;
 
   if (platform) {
     console.log(`Validating build/network configuration...`);
-    await getNetworkTarget(platform); // already logs and throws on error, no need to duplicate it in global config
+    await resolveNetworkTarget([platform]); // already logs and throws on error, no need to duplicate it in global config
   } else {
     // The CI knows the platform variable, this is for local development
     console.log('No PLATFORM variable set, network validation will happen on a per-test level');

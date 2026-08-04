@@ -29,7 +29,7 @@ export const IOS_PRO_CONTEXT: IOSTestContext = { sessionProEnabled: 'true' };
 // default stays mainnet so nothing changes unless NETWORK_TARGET is set.
 //
 // The devnet the *app* connects to (below) MUST be the same one the *seeder* points at
-// (see getNetworkTarget in devnet.ts, which uses getDevnetSeedUrl()).
+// (see resolveNetworkTarget in devnet.ts, which uses getDevnetSeedUrl()).
 
 /** Extra processArguments.env keys that point the app at the selected service network. */
 function buildServiceNetworkEnv(): Record<string, string> {

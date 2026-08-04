@@ -7,13 +7,13 @@ stack: ~12 oxend service nodes + storage servers) removes most of that latency.
 
 This guide covers running that devnet **on the same Mac as the simulators** using
 [OrbStack](https://orbstack.dev/). The harness support is already in place
-(`NETWORK_TARGET=devnet` + `DEVNET_*`, see [Environment](#environment)); the work is operational.
+(`NETWORK_TARGET=devnet` + `DEVNET_SEED_URL`, see [4. Environment](#4-environment)); the work is
+operational.
 
 > **Scope.** Most of this guide — the devnet itself, `LISTEN_IP`, OrbStack, the local file server
-> and SOGS — is **platform-agnostic**; only the harness wiring (`NETWORK_TARGET`/`DEVNET_*` →
-> `capabilities_ios.ts`) and the `pnpm test-ios*` run commands are iOS-specific. Android reaches a
-> devnet **differently** (it switches to an AQA build variant rather than reading `NETWORK_TARGET`
-> in the harness — see `CLAUDE.md`), so the run steps here don't apply to Android as written.
+> and SOGS — is **platform-agnostic**, and `NETWORK_TARGET`/`DEVNET_SEED_URL` now drive all three
+> platforms. Only the `pnpm test-ios*` run commands in [5. Run](#5-run) are iOS-specific; Android
+> additionally needs a QA/AQA APK (see [4. Environment](#4-environment)).
 
 > If you only need CI, you don't need any of this locally — CI reaches a Linux-hosted devnet over
 > the network via repo Actions variables. See [CI](#ci).
@@ -85,11 +85,11 @@ conventional choice (it matches the devnet's own readiness probe and Android's `
 
 ## 3. Capture the seed node's RPC address
 
-One value, from any `SN: Yes` row of the printed node table — its **`IP:RPC`** column (the
-`oxend@1280` row is the conventional choice):
+One value, from any `SN: Yes` row of the printed node table — the host and port in its **`IP:RPC`**
+column (the `oxend@1280` row is the conventional choice):
 
 ```bash
-DEVNET_SEED_URL=http://<IP>:<IP:RPC>      # e.g. http://192.168.139.2:1280
+DEVNET_SEED_URL=http://<LISTEN_IP>:<RPC-PORT>   # e.g. http://192.168.139.2:1280
 ```
 
 That's the seed node's **oxend RPC** endpoint. Everything else the clients need — the node's ed25519
@@ -116,10 +116,17 @@ NETWORK_TARGET=devnet
 DEVNET_SEED_URL=http://<IP>:1280
 ```
 
-`NETWORK_TARGET` is the single switch for **all three platforms**, and the harness translates it into
-whatever each client actually reads at launch — iOS launch arguments, Android launch intent extras
-(`sessionServiceNetwork`/`sessionDevnetSeedUrl`, honoured by QA builds only), and Desktop's
-`LOCAL_DEVNET_SEED_URL`. Do not set `LOCAL_DEVNET_SEED_URL` yourself alongside `NETWORK_TARGET`.
+`NETWORK_TARGET` is the single switch, and the harness translates it into whatever each client
+actually reads at launch:
+
+- **iOS** — launch arguments. Simulator builds only (the instrumentation is compiled under
+  `#if targetEnvironment(simulator)`).
+- **Android** — the `sessionServiceNetwork`/`sessionDevnetSeedUrl` launch intent extras, which **only
+  QA and AQA builds honour**: `QaLaunchConfig` is gated behind the `ALLOW_QA_LAUNCH_CONFIG` build flag
+  and R8 strips it from release builds. A release APK ignores both extras silently and stays on
+  whatever its build variant targets, so `NETWORK_TARGET` cannot move it — `android-regression.yml`
+  fails a devnet run whose APK lacks that support rather than letting the app and the seeder diverge.
+- **Desktop** — `LOCAL_DEVNET_SEED_URL`, which the harness sets for you. Do not also set it by hand.
 
 Before any client starts, `global-setup` verifies the devnet is genuinely usable: the seed's RPC must
 answer `get_n_service_nodes` with registered nodes, and the storage ports it advertises must accept
@@ -231,15 +238,18 @@ After `docker compose up`, confirm before trusting a run:
 
 ## CI
 
-Nothing in CI changes when you set this up locally. `ios-regression.yml` and
-`cross-platform-regression.yml` both expose a `NETWORK_TARGET` input (`devnet`/`testnet`/`mainnet`)
-and read a single repo-level Actions **variable**, `DEVNET_SEED_URL`. The macOS runner reaches a
-**Linux-hosted** devnet over the network (Tailscale/LAN), so the only per-environment difference is
-that URL.
+Nothing in CI changes when you set this up locally. `ios-regression.yml`,
+`cross-platform-regression.yml` and `android-regression.yml` all expose a `NETWORK_TARGET` input and
+read a single repo-level Actions **variable**, `DEVNET_SEED_URL`, so the only per-environment
+difference is that URL. (The Android workflow additionally uses the input to pick the APK variant —
+AQA for devnet, plain QA for mainnet.)
 
-> **The runner has to be on the same LAN as the devnet.** It must reach the seed node's **oxend RPC**
-> port, not just its storage ports, and oxend binds that RPC to a single address — the devnet host's
-> LAN IP.
+> **The runner needs a network path to the seed node's oxend RPC port** — not just to its storage
+> ports. oxend binds that RPC to a **single** address, the one you chose as `LISTEN_IP`, whereas the
+> storage ports bind all interfaces. So which paths work follows from `LISTEN_IP`: with a LAN address
+> only LAN clients reach the RPC (Tailscale peers will find the storage ports open and the RPC closed,
+> which fails confusingly); with a Tailscale address (see [1. Choose `LISTEN_IP`](#1-choose-listen_ip))
+> tailnet peers reach it too.
 
 ## Notes & gotchas
 

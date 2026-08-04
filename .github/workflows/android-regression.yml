@@ -84,9 +84,9 @@ jobs:
       # what makes Android take the same path as iOS and Desktop (previously it was only used in bash
       # below to choose the APK variant, so the harness fell back to a hardcoded devnet URL).
       NETWORK_TARGET: ${{ github.event.inputs.NETWORK_TARGET }}
-      # Devnet only: the seed node's oxend RPC. Everything else is discovered from it. Until the
-      # QaLaunchConfig change ships in the APK, this must match the app's own compile-time devnet
-      # constant, because an older build ignores the launch extra that would redirect it.
+      # Devnet only: the seed node's oxend RPC. Everything else is discovered from it. The APK must
+      # honour the `sessionDevnetSeedUrl` launch extra for this to reach the app — enforced by the
+      # `Verify the APK honours the devnet launch extra` step below.
       DEVNET_SEED_URL: ${{ vars.DEVNET_SEED_URL }}
       APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
       EMULATOR_FULL_PATH: '/opt/android/emulator/emulator'
@@ -182,6 +182,36 @@ jobs:
             echo "ERROR: Unknown network target: $NETWORK_TARGET"
             exit 1
           fi
+
+      # An APK built before QaLaunchConfig landed silently ignores `sessionDevnetSeedUrl` and uses its
+      # own compile-time devnet constant instead. Nothing downstream can detect that: the harness would
+      # seed against DEVNET_SEED_URL while the app talked to a different host, and the run would hang to
+      # the test timeout looking like a product bug.
+      #
+      # Deliberately checks only for launch-extra SUPPORT, not for the compiled endpoint. On a
+      # supporting build the constant is irrelevant (the extra overrides it), and on a non-supporting
+      # one the constant is a hostname whose resolution differs per network — so comparing it against
+      # DEVNET_SEED_URL would be both unnecessary and unreliable.
+      #
+      # Runs before `Setup`, so it fails before any emulator or global setup work.
+      - name: Verify the APK honours the devnet launch extra
+        if: ${{ github.event.inputs.NETWORK_TARGET == 'devnet' }}
+        shell: bash
+        run: |
+          if ! command -v strings >/dev/null 2>&1; then
+            echo "::warning::'strings' unavailable — skipping the APK launch-extra check"
+            exit 0
+          fi
+          if unzip -p extracted/session-android.apk 'classes*.dex' | strings | grep -q sessionDevnetSeedUrl; then
+            echo "APK honours sessionDevnetSeedUrl — DEVNET_SEED_URL will reach the app"
+            exit 0
+          fi
+          echo "ERROR: this APK does not read the 'sessionDevnetSeedUrl' launch extra, so it cannot be"
+          echo "pointed at DEVNET_SEED_URL (${DEVNET_SEED_URL:-<unset>}) and would use its own compiled"
+          echo "devnet endpoint instead — the seeder and the app would end up on different hosts."
+          echo "Build the APK from a revision that includes QaLaunchConfig (Session_Android), or run"
+          echo "this workflow with NETWORK_TARGET=mainnet."
+          exit 1
 
       - name: Setup for both platforms
         uses: ./github/actions/setup

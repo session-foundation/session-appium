@@ -1,7 +1,6 @@
 import { buildStateForTest } from '@session-foundation/qa-seeder';
 
 import type { ClientPlatform, ServiceNetwork } from '../../types/target';
-import type { SupportedPlatformsType } from './open_app';
 
 import { AppName } from '../../types/testing';
 import { getAndroidApk } from './binaries';
@@ -12,7 +11,6 @@ import {
   seedNodeAlreadyVerified,
 } from './network_target';
 
-// NOTE this currently only applies to Android as iOS doesn't supply AQA builds yet
 type NetworkType = Parameters<typeof buildStateForTest>[2];
 
 /**
@@ -50,81 +48,11 @@ function isAutomaticQABuildAndroid(apkPath: string): boolean {
 
   return isAutomaticQA;
 }
-export async function getNetworkTarget(platform: SupportedPlatformsType): Promise<NetworkType> {
-  if (process.env.DETECTED_NETWORK_TARGET) {
-    return process.env.DETECTED_NETWORK_TARGET as NetworkType;
-  }
-  if (platform === 'ios') {
-    // iOS supports mainnet/testnet/devnet via the app's simulator launch-arg env
-    // (DeveloperSettingsViewModel+Testing.swift). Default is mainnet; opt into devnet/testnet
-    // with NETWORK_TARGET (+ DEVNET_SEED_URL for devnet — see network_target.ts).
-    const network = getServiceNetwork();
-
-    if (network === 'devnet') {
-      const seedUrl = getDevnetSeedUrl();
-      const canAccessDevnet = await isDevnetReachable(seedUrl);
-      if (!canAccessDevnet) {
-        throw new Error(
-          `NETWORK_TARGET=devnet, but the devnet seed node at ${seedUrl} is not usable ` +
-            `(reason logged above). Ensure the devnet is running and has registered service ` +
-            `nodes, or set NETWORK_TARGET=mainnet.`
-        );
-      }
-      process.env.DETECTED_NETWORK_TARGET = seedUrl;
-      console.log(`Network target (iOS): devnet via ${seedUrl}`);
-      return seedUrl;
-    }
-
-    if (network === 'testnet') {
-      process.env.DETECTED_NETWORK_TARGET = 'testnet';
-      console.log('Network target (iOS): testnet');
-      return 'testnet';
-    }
-
-    process.env.DETECTED_NETWORK_TARGET = 'mainnet';
-    console.log('Network target (iOS): mainnet');
-    return 'mainnet';
-  }
-  if (platform !== 'android') {
-    throw new Error('getNetworkTarget: unsupported platform');
-  }
-
-  const apkPath = getAndroidApk();
-  const isAQA = isAutomaticQABuildAndroid(apkPath);
-
-  // Early exit for non AQA builds - no need to check devnet
-  if (!isAQA) {
-    process.env.DETECTED_NETWORK_TARGET = 'mainnet';
-    console.log('Network target: mainnet');
-    return 'mainnet';
-  }
-
-  const seedUrl = getDevnetSeedUrl();
-  const canAccessDevnet = await isDevnetReachable(seedUrl);
-  // If you pass an AQA build in the .env but can't access devnet, tests will fail
-  if (isAQA && !canAccessDevnet) {
-    throw new Error(
-      `Cannot use an AQA build without a usable devnet at ${seedUrl} (reason logged above)`
-    );
-  }
-
-  const resolvedTarget = canAccessDevnet ? seedUrl : 'mainnet';
-  process.env.DETECTED_NETWORK_TARGET = resolvedTarget;
-  console.log(`Network target: ${resolvedTarget}`);
-
-  return resolvedTarget;
-}
-
 export function getAppDisplayName(): AppName {
   const apkPath = getAndroidApk();
   return isAutomaticQABuildAndroid(apkPath) ? 'Session AQA' : 'Session QA';
 }
 
-/**
- * Desktop's mainnet seed. Setting LOCAL_DEVNET_SEED_URL is the ONLY way to move Desktop off testnet,
- * because this harness always launches it with a `test-integration-*` NODE_APP_INSTANCE, which trips
- * the app's own `useTestNet` flag (see resolveDesktopTarget).
- */
 /**
  * Session Desktop's seed nodes, from `window.getSeedNodeList()` in `app/preload.js`.
  *
@@ -138,7 +66,7 @@ const DESKTOP_MAINNET_SEED_HOSTS = [
   'seed1.getsession.org',
   'seed2.getsession.org',
   'seed3.getsession.org',
-];
+] as const;
 const DESKTOP_TESTNET_PORT = '38157';
 /** seed2, for continuity with the value CI used to set by hand. */
 const DESKTOP_MAINNET_SEED_URL = `https://${DESKTOP_MAINNET_SEED_HOSTS[1]}:4443`;
@@ -152,6 +80,10 @@ const DESKTOP_MAINNET_SEED_URL = `https://${DESKTOP_MAINNET_SEED_HOSTS[1]}:4443`
  * LOCAL_DEVNET_SEED_URL from its process environment when Electron starts, so we set that ourselves
  * rather than making everyone keep two variables in agreement by hand. This is the same mapping the
  * CI workflow used to do in bash, moved here so local runs behave identically.
+ *
+ * Note setting that variable is the ONLY way to move Desktop off testnet — even to reach mainnet —
+ * because the harness always launches it with a `test-integration-*` NODE_APP_INSTANCE, which trips the
+ * app's own `useTestNet` flag (see `resolveDesktopTarget`).
  *
  * Deliberately a no-op when NETWORK_TARGET is unset: that keeps every existing setup (which selects
  * networks per-platform) working exactly as before.
@@ -223,9 +155,13 @@ export function requestedDevnetRefs(): RequestedDevnet[] {
     }
   }
 
-  const desktop = resolveDesktopTarget();
-  if (desktop.networkClass === 'devnet') {
-    refs.push({ source: 'LOCAL_DEVNET_SEED_URL (Desktop)', url: desktop.ref });
+  // Guarded like Android above: a mobile-only run should neither list a Desktop devnet ref nor be
+  // able to fail on a malformed LOCAL_DEVNET_SEED_URL it will never use.
+  if (process.env.SESSION_DESKTOP_ROOT) {
+    const desktop = resolveDesktopTarget();
+    if (desktop.networkClass === 'devnet') {
+      refs.push({ source: 'LOCAL_DEVNET_SEED_URL (Desktop)', url: desktop.ref });
+    }
   }
 
   return refs;
@@ -237,9 +173,11 @@ export function requestedDevnetRefs(): RequestedDevnet[] {
  *
  * Probes each DISTINCT url once: the common case is several platforms pointing at the same seed
  * node, and there is no reason to hit it three times.
+ *
+ * Takes the refs rather than computing them, so a caller that already has them doesn't pay for a
+ * second `requestedDevnetRefs()` — that would re-run Android build detection, which logs.
  */
-export async function assertRequestedDevnetsReachable(): Promise<void> {
-  const refs = requestedDevnetRefs();
+export async function assertRequestedDevnetsReachable(refs: RequestedDevnet[]): Promise<void> {
   if (refs.length === 0) {
     return;
   }
@@ -271,19 +209,21 @@ export async function assertRequestedDevnetsReachable(): Promise<void> {
 // Every platform picks its network from a DIFFERENT source, and none of them know about each
 // other:
 //   - iOS     : NETWORK_TARGET, injected as app launch args (capabilities_ios.ts)
-//   - Android : the APK build variant (IS_AUTOMATIC_QA / an `automaticQa` filename) — NETWORK_TARGET
-//               is ignored entirely, and the devnet URL is a compile-time constant in the app, so
-//               Android cannot be pointed at a different devnet without a rebuild
+//   - Android : NETWORK_TARGET when it is set, as launch intent extras (capabilities_android.ts);
+//               otherwise the APK build variant (IS_AUTOMATIC_QA / an `automaticQa` filename), which
+//               is all we have to go on
 //   - Desktop : LOCAL_DEVNET_SEED_URL, which despite the name is a general seed-node override and
 //               DEFAULTS TO TESTNET here (not mainnet) — see resolveDesktopTarget below
 //
-// So the out-of-the-box combination (iOS mainnet + Desktop testnet) does NOT agree; Desktop has to
-// be pinned with LOCAL_DEVNET_SEED_URL, or iOS moved with NETWORK_TARGET.
+// So with NETWORK_TARGET unset the platforms do NOT agree (iOS mainnet, Desktop testnet, Android
+// per-APK). Setting it is what puts them on one network; `pinPlatformsToNetworkTarget` then derives
+// Desktop's knob from it.
 //
 // If they disagree, the seeder writes the account onto one network while a client polls another,
-// and the test simply hangs until the 480s timeout with no clue why. `getNetworkTarget` can't
-// catch this: it memoises into DETECTED_NETWORK_TARGET and returns early, so calling it once per
-// platform silently resolves only the first one.
+// and the test simply hangs until the 480s timeout with no clue why. This used to be uncatchable: the
+// per-platform resolver memoised into DETECTED_NETWORK_TARGET and returned early, so calling it once
+// per platform silently resolved only the first one. There is now a single resolver, and it never
+// reads that cache back.
 
 export type ResolvedNetworkTarget = {
   platform: ClientPlatform;
@@ -301,7 +241,7 @@ function resolveIosTarget(): ResolvedNetworkTarget {
     platform: 'ios',
     networkClass,
     ref: networkClass === 'devnet' ? getDevnetSeedUrl() : networkClass,
-    knob: 'NETWORK_TARGET (plus the DEVNET_* vars for devnet)',
+    knob: 'NETWORK_TARGET (plus DEVNET_SEED_URL for devnet)',
   };
 }
 
@@ -363,7 +303,9 @@ function resolveDesktopTarget(): ResolvedNetworkTarget {
   if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
     throw invalidSeedUrl();
   }
-  if (DESKTOP_MAINNET_SEED_HOSTS.includes(parsed.hostname)) {
+  // Widened: the list is `as const` for immutability, which narrows its element type to the three
+  // literals and would reject an arbitrary hostname as an argument.
+  if ((DESKTOP_MAINNET_SEED_HOSTS as readonly string[]).includes(parsed.hostname)) {
     const networkClass: ServiceNetwork =
       parsed.port === DESKTOP_TESTNET_PORT ? 'testnet' : 'mainnet';
     return { platform: 'desktop', networkClass, ref: networkClass, knob };
@@ -372,8 +314,8 @@ function resolveDesktopTarget(): ResolvedNetworkTarget {
 }
 
 /**
- * Resolve the network each given platform is actually pointed at. Unlike `getNetworkTarget` this
- * never consults or writes the DETECTED_NETWORK_TARGET cache, so every platform is really resolved.
+ * Resolve the network each given platform is actually pointed at. Deliberately never consults the
+ * DETECTED_NETWORK_TARGET cache, so every platform is really resolved rather than inheriting the first.
  *
  * `present` is deduped first: a platform's network is a property of the environment, not of how
  * many clients of it a test opens, so resolving it twice would only re-read the APK path, log
@@ -390,21 +332,24 @@ export function resolveNetworkTargets(present: Array<ClientPlatform>): ResolvedN
 }
 
 /**
- * Assert every platform taking part in a cross-platform test is on the SAME network, and return
- * that network for the seeder.
+ * Resolve which network this run targets: assert every platform taking part is on the SAME one, verify
+ * it is usable, publish it for the modules that branch on it, and return it for the seeder.
+ *
+ * The single entry point for every run — a one-platform mobile run is just `[platform]`. It replaced a
+ * second, weaker per-platform resolver whose first act was to return `DETECTED_NETWORK_TARGET` if set;
+ * that early return is precisely what let platforms disagree unnoticed, since resolving one platform
+ * populated the cache for all of them.
  *
  * Mismatched network *classes* (mainnet vs devnet) are fatal — that combination can never work.
  * Devnet URLs are only warned about, because the three platforms genuinely name the same node
  * differently: iOS and Android both resolve DEVNET_SEED_URL, while Desktop uses whatever
- * LOCAL_DEVNET_SEED_URL says (the harness sets it from NETWORK_TARGET, but a run that predates that
- * may still set it by hand). A textual difference is therefore not proof of a problem — but it IS the
+ * LOCAL_DEVNET_SEED_URL says — normally derived from NETWORK_TARGET, but settable by hand on runs that
+ * don't set NETWORK_TARGET. A textual difference is therefore not proof of a problem — but it IS the
  * thing to check first when a devnet run hangs.
  */
-export async function assertConsistentNetworkTarget(
-  present: Array<ClientPlatform>
-): Promise<NetworkType> {
+export async function resolveNetworkTarget(present: Array<ClientPlatform>): Promise<NetworkType> {
   if (present.length === 0) {
-    throw new Error('assertConsistentNetworkTarget: no platforms given');
+    throw new Error('resolveNetworkTarget: no platforms given');
   }
   const resolved = resolveNetworkTargets(present);
   const describe = (t: ResolvedNetworkTarget) =>
@@ -470,6 +415,8 @@ export async function assertConsistentNetworkTarget(
         `test is configured for devnet:\n${resolved.map(describe).join('\n')}`
     );
   }
+  // Published, not memoised: set_disappearing_messages and restore_account both branch on this. It is
+  // deliberately never read back here — see the note on this function.
   process.env.DETECTED_NETWORK_TARGET = seederRef;
   return seederRef;
 }

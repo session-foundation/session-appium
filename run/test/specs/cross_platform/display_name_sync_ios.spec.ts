@@ -6,7 +6,7 @@ import { linkedDevices } from '../../utils/cross_platform_state_builder';
  * `display_name_sync.spec.ts`, deliberately identical in shape so a failure here points at the
  * platform rather than the scenario. An iOS simulator and a Desktop client are linked to one
  * seeded account, one changes the display name, and the other must reflect it. Both clients must
- * be on the SAME Session network (enforced by `assertConsistentNetworkTarget`).
+ * be on the SAME Session network (enforced by `resolveNetworkTarget`).
  */
 
 const NEW_NAME = 'Alice in chains';

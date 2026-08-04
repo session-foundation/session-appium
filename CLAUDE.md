@@ -62,7 +62,9 @@ Only a subset matters per platform (all read in `run/test/utils/binaries.ts` /
 - **Run tuning:** `PLAYWRIGHT_WORKERS_COUNT_IOS` (default 1), `PLAYWRIGHT_RETRIES_COUNT`
   (default 0), `PLAYWRIGHT_REPEAT_COUNT`.
 - **Network target.** `NETWORK_TARGET=mainnet|testnet|devnet` is the **single switch for all three
-  platforms** (default mainnet). Running on devnet avoids full mainnet onion-routing latency, which
+  platforms**, and should be **set explicitly** — leaving it unset does *not* put everything on
+  mainnet, it lets each platform fall back to its own default (see below). Running on devnet avoids
+  full mainnet onion-routing latency, which
   dominates the slowest multi-device tests. For devnet, `DEVNET_SEED_URL` (the seed node's oxend RPC,
   e.g. `http://10.0.0.1:1280`) is the **only** other value needed. Local devnet setup (incl. OrbStack
   on the same Mac as the simulators): `docs/local-devnet.md`.
@@ -80,14 +82,14 @@ Only a subset matters per platform (all read in `run/test/utils/binaries.ts` /
 
   - **`DEVNET_PUBKEY`/`DEVNET_IP`/`DEVNET_HTTP_PORT`/`DEVNET_OMQ_PORT` are gone.** iOS needs four
     devnet values, and they are now *discovered* by asking the seed node for `get_n_service_nodes`
-    (`devnet_discovery.ts`) rather than configured. The devnet regenerates its keys on every rebuild,
+    (`network_target.ts`) rather than configured. The devnet regenerates its keys on every rebuild,
     so a hand-copied pubkey silently rotted — and because only iOS uses it, that failed iOS alone
     while Android and Desktop kept working. Leftover values are warned about, not used.
   - **Desktop defaults to testnet, not mainnet**, whenever `NETWORK_TARGET` is unset: the harness
     always launches it with a `test-integration-*` `NODE_APP_INSTANCE`, which trips the app's own
     `useTestNet` flag. Android with no `NETWORK_TARGET` still takes its network from the APK build
     variant (`IS_AUTOMATIC_QA` / an AQA build). So a run that sets nothing has all three platforms on
-    *different* networks — `assertConsistentNetworkTarget` blocks it rather than letting it hang.
+    *different* networks — `resolveNetworkTarget` blocks it rather than letting it hang.
 
   Requesting devnet when the devnet is unusable aborts the whole run in `global-setup`, on every
   platform and project (`assertRequestedDevnetsReachable`).

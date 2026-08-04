@@ -40,7 +40,7 @@ import { deleteSimulators } from './ios_shared';
  *   pnpm test-ios-parallel --grep '@ios @high-risk'             # subset
  *   pnpm test-ios-parallel --keep                   # don't delete simulators afterwards
  *   pnpm test-ios-parallel --runtime 26.1           # pin the iOS runtime (default: newest)
- *   pnpm test-ios-parallel --network devnet         # run against devnet (needs DEVNET_* in .env)
+ *   pnpm test-ios-parallel --network devnet         # run against devnet (needs DEVNET_SEED_URL in .env)
  *   pnpm test-ios-parallel --workers 2 -- --repeat-each 2   # args after `--` go to Playwright
  *
  * Notes:
@@ -310,8 +310,9 @@ async function main(): Promise<void> {
   childEnv.PLAYWRIGHT_WORKERS_COUNT_IOS = String(args.workers);
   childEnv.DEVICES_PER_TEST_COUNT = String(args.devicesPerWorker);
   childEnv._TESTING = childEnv._TESTING ?? '1';
-  // Service network selection (mainnet default). Devnet also needs DEVNET_* vars in .env — see
-  // capabilities_ios.ts / .env.sample. Left unset here so .env's NETWORK_TARGET is respected.
+  // Service network selection. Devnet also needs DEVNET_SEED_URL in .env — the pubkey and storage
+  // ports are discovered from that seed node (see run/test/utils/network_target.ts), so nothing else
+  // is required. Left unset here so .env's NETWORK_TARGET is respected.
   if (args.network) {
     childEnv.NETWORK_TARGET = args.network;
   }

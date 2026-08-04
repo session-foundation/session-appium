@@ -64,6 +64,13 @@ export const ALLOWED_NETWORKS = [
   'devnet',
 ] as const satisfies readonly ServiceNetwork[];
 
+/**
+ * `satisfies` above only proves every entry IS a ServiceNetwork; this proves none is MISSING, so
+ * adding a network to the union is a build error here rather than a silently unaccepted `--network`.
+ */
+type MissingNetwork = Exclude<ServiceNetwork, (typeof ALLOWED_NETWORKS)[number]>;
+const _allNetworksAllowed: [MissingNetwork] extends [never] ? true : MissingNetwork = true;
+
 /** One devnet node, in the shape the iOS app's launch arguments expect. */
 export type DevnetSeedNode = {
   /** ed25519 pubkey — the app's `devnetPubkey`. */
@@ -84,6 +91,32 @@ export type SeedProbeResult =
 /** Cached across the process; also mirrored into the environment (see `resolveDevnetSeedNode`). */
 const RESOLVED_ENV_KEY = 'DETECTED_DEVNET_SEED_NODE';
 let resolvedCache: DevnetSeedNode | undefined;
+
+/**
+ * The already-discovered node, from this process's cache or from the environment mirror a parent
+ * process left behind. `undefined` when discovery has not run anywhere yet.
+ *
+ * Populates the in-process cache as a side effect, so repeated calls don't re-parse.
+ */
+function cachedSeedNode(): DevnetSeedNode | undefined {
+  if (resolvedCache) {
+    return resolvedCache;
+  }
+  const raw = process.env[RESOLVED_ENV_KEY];
+  if (!raw) {
+    return undefined;
+  }
+  try {
+    resolvedCache = JSON.parse(raw) as DevnetSeedNode;
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : 'unknown error';
+    throw new Error(
+      `Could not parse ${RESOLVED_ENV_KEY} ("${raw}"): ${reason}. It is written by devnet discovery ` +
+        `and inherited by worker processes — something else has overwritten it.`
+    );
+  }
+  return resolvedCache;
+}
 
 /**
  * The single devnet input: the seed node's oxend RPC URL.
@@ -200,14 +233,6 @@ async function portsReachable(node: DevnetSeedNode): Promise<boolean> {
 }
 
 /**
- * Ask the seed node for a usable bootstrap node and verify it, caching the result.
- *
- * Call this once from an async context early in the run (`global-setup`); the synchronous capability
- * builders then read the cache via `getResolvedDevnetSeedNode`. The result is mirrored into the
- * environment so Playwright's worker processes — which are spawned separately and inherit the
- * parent's env — don't each have to rediscover it.
- */
-/**
  * Ask a seed node's oxend RPC for the service nodes it knows about.
  *
  * The single implementation of "is this devnet usable": one HTTP request, shared by devnet discovery
@@ -286,9 +311,17 @@ export async function probeSeedNode(url: string): Promise<SeedProbeResult> {
  * Whether `url` is the configured seed node AND discovery has already validated it. Lets the pre-run
  * gate skip re-probing what discovery just checked far more thoroughly (it also verified the storage
  * ports), instead of making a second identical RPC call.
+ *
+ * Consults the environment mirror as well as the in-process cache, because Playwright spawns each
+ * worker as its own process: discovery runs once in `global-setup`, so a worker's module-level cache is
+ * empty until something happens to populate it. iOS does so incidentally while building capabilities;
+ * Android never would, and would then re-probe on every single test.
  */
 export function seedNodeAlreadyVerified(url: string): boolean {
-  return !!resolvedCache && url.replace(/\/$/, '') === getDevnetSeedUrl();
+  if (!cachedSeedNode()) {
+    return false;
+  }
+  return url.replace(/\/$/, '') === getDevnetSeedUrl();
 }
 
 /**
@@ -300,13 +333,9 @@ export function seedNodeAlreadyVerified(url: string): boolean {
  * parent's env — don't each have to rediscover it.
  */
 export async function resolveDevnetSeedNode(): Promise<DevnetSeedNode> {
-  if (resolvedCache) {
-    return resolvedCache;
-  }
-  const fromEnv = process.env[RESOLVED_ENV_KEY];
-  if (fromEnv) {
-    resolvedCache = JSON.parse(fromEnv) as DevnetSeedNode;
-    return resolvedCache;
+  const cached = cachedSeedNode();
+  if (cached) {
+    return cached;
   }
 
   const seedUrl = getDevnetSeedUrl();
@@ -397,13 +426,9 @@ function warnOnObsoleteDevnetVars(node: DevnetSeedNode): void {
  * run first (it does, from `global-setup`).
  */
 export function getResolvedDevnetSeedNode(): DevnetSeedNode {
-  if (resolvedCache) {
-    return resolvedCache;
-  }
-  const fromEnv = process.env[RESOLVED_ENV_KEY];
-  if (fromEnv) {
-    resolvedCache = JSON.parse(fromEnv) as DevnetSeedNode;
-    return resolvedCache;
+  const cached = cachedSeedNode();
+  if (cached) {
+    return cached;
   }
   throw new Error(
     'Devnet details were requested before discovery ran. resolveDevnetSeedNode() should have been ' +
