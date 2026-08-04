@@ -314,6 +314,64 @@ function resolveDesktopTarget(): ResolvedNetworkTarget {
 }
 
 /**
+ * Verify every devnet reference names the SAME devnet — not merely that each is reachable — and report
+ * which ones are down.
+ *
+ * Reachability alone is not enough: two live seed nodes on two DIFFERENT devnets both probe fine, and
+ * the run then seeds through one while a client polls the other, which looks exactly like the hang this
+ * module exists to prevent. Identity here is the set of service-node pubkeys the seed reports: two
+ * seeds on one devnet return the same registry, two devnets return disjoint ones. That uses only what
+ * `probeSeedNode` already returns, so it costs no extra RPC beyond the reachability probe it replaces —
+ * and it needs no assumption about which oxend fields expose a chain identity.
+ *
+ * Intersection rather than equality, because the registries are read at slightly different moments and
+ * nodes register/deregister; sharing even one node proves a common chain.
+ */
+async function assertOneDevnetAcrossRefs(
+  refs: Set<NetworkType>,
+  resolved: ResolvedNetworkTarget[],
+  describe: (target: ResolvedNetworkTarget) => string
+): Promise<Array<NetworkType>> {
+  const registries = new Map<NetworkType, Set<string>>();
+  const unreachable: Array<NetworkType> = [];
+
+  // No `isDevnetReachable` short-circuit here: identity needs the registry, which the short-circuit
+  // skips fetching. Only reached when the refs actually differ, which is rare.
+  for (const ref of refs) {
+    const probe = await probeSeedNode(ref);
+    if (!probe.usable) {
+      console.log(`Devnet ${ref} is not usable: ${probe.reason}`);
+      unreachable.push(ref);
+      continue;
+    }
+    console.log(`Devnet ${ref} is usable (${probe.nodes.length} usable service node(s))`);
+    registries.set(ref, new Set(probe.nodes.map(node => node.pubkey)));
+  }
+
+  const entries = [...registries.entries()];
+  for (let i = 0; i < entries.length; i++) {
+    for (let j = i + 1; j < entries.length; j++) {
+      const [refA, registryA] = entries[i];
+      const [refB, registryB] = entries[j];
+      if (![...registryA].some(pubkey => registryB.has(pubkey))) {
+        throw new Error(
+          `The clients are pointed at DIFFERENT devnets, not two names for one. ${refA} and ${refB} ` +
+            `report service-node registries with nothing in common, so an account seeded through one ` +
+            `would be invisible to a client using the other.\n${resolved.map(describe).join('\n')}\n` +
+            `Point every platform at one devnet (set NETWORK_TARGET + DEVNET_SEED_URL and let the ` +
+            `harness derive the rest).`
+        );
+      }
+    }
+  }
+
+  if (entries.length > 1) {
+    console.log(`Verified ${entries.length} devnet URLs are aliases of the same devnet`);
+  }
+  return unreachable;
+}
+
+/**
  * Resolve the network each given platform is actually pointed at. Deliberately never consults the
  * DETECTED_NETWORK_TARGET cache, so every platform is really resolved rather than inheriting the first.
  *
@@ -341,11 +399,11 @@ export function resolveNetworkTargets(present: Array<ClientPlatform>): ResolvedN
  * populated the cache for all of them.
  *
  * Mismatched network *classes* (mainnet vs devnet) are fatal — that combination can never work.
- * Devnet URLs are only warned about, because the three platforms genuinely name the same node
- * differently: iOS and Android both resolve DEVNET_SEED_URL, while Desktop uses whatever
- * LOCAL_DEVNET_SEED_URL says — normally derived from NETWORK_TARGET, but settable by hand on runs that
- * don't set NETWORK_TARGET. A textual difference is therefore not proof of a problem — but it IS the
- * thing to check first when a devnet run hangs.
+ * Differing devnet URLs are not fatal on their own, because the platforms can legitimately name one
+ * node differently (iOS and Android resolve DEVNET_SEED_URL; Desktop uses LOCAL_DEVNET_SEED_URL, which
+ * is normally derived from it but settable by hand when NETWORK_TARGET is unset). They are checked
+ * rather than assumed: `assertOneDevnetAcrossRefs` confirms they are aliases of one devnet, and fails
+ * if they are two.
  */
 export async function resolveNetworkTarget(present: Array<ClientPlatform>): Promise<NetworkType> {
   if (present.length === 0) {
@@ -374,39 +432,19 @@ export async function resolveNetworkTarget(present: Array<ClientPlatform>): Prom
     return networkClass;
   }
 
-  // Devnet: warn on differing references, then verify the seed node the seeder will use is up.
+  // Devnet: prove every reference is the same devnet AND that it is up, before anything is chosen.
   const refs = new Set(resolved.map(t => t.ref));
-  if (refs.size > 1) {
-    console.warn(
-      `Warning: platforms reference the devnet by different URLs (${[...refs].join(', ')}). ` +
-        `This is expected when they address the same seed node on different ports, but if the ` +
-        `test hangs, check they really are the same devnet.`
-    );
-  }
 
-  // Any platform's devnet ref works as the seeder URL: all three are the seed node's oxend RPC
-  // endpoint (the `IP:RPC` port, 1280 on Sesh-Net-Docker) — Desktop passes it
-  // straight to `getSnodesFromSeedUrl`, the same get_n_service_nodes call the seeder makes.
-  // Android is preferred purely to preserve the pre-existing behaviour for android+desktop tests.
-  //
-  // A Record, not a list, so the compiler enforces coverage: a fourth ClientPlatform missing from
-  // an `Array<ClientPlatform>` still typechecks and would leave a devnet run made up only of that
-  // platform picking no ref at all. Here it is a build error instead.
-  const seederPreference: Record<ClientPlatform, number> = { android: 0, ios: 1, desktop: 2 };
-  // `resolved` is non-empty: `present` was checked above and dedupe keeps at least one entry.
-  const seederRef = [...resolved].sort(
-    (a, b) => seederPreference[a.platform] - seederPreference[b.platform]
-  )[0].ref;
+  // One ref is the overwhelmingly common case (all platforms derive it from DEVNET_SEED_URL), and there
+  // is nothing to compare it against — so keep the cheap path, which can skip the probe entirely when
+  // discovery already validated this seed.
+  const unreachable =
+    refs.size === 1
+      ? (await isDevnetReachable([...refs][0]))
+        ? []
+        : [...refs]
+      : await assertOneDevnetAcrossRefs(refs, resolved, describe);
 
-  // Every distinct ref has to be up, not just the seeder's: a client pointed at a dead seed node
-  // hangs the test to the timeout with no clue why, even when the seeder's own endpoint is fine.
-  // Sequential: `refs` holds a single entry in the common case, so there is nothing to overlap.
-  const unreachable: Array<NetworkType> = [];
-  for (const ref of refs) {
-    if (!(await isDevnetReachable(ref))) {
-      unreachable.push(ref);
-    }
-  }
   if (unreachable.length > 0) {
     const plural = unreachable.length > 1;
     throw new Error(
@@ -415,6 +453,24 @@ export async function resolveNetworkTarget(present: Array<ClientPlatform>): Prom
         `test is configured for devnet:\n${resolved.map(describe).join('\n')}`
     );
   }
+
+  // Only now pick the URL to hand the seeder: doing it earlier would mean publishing a reference from a
+  // set we had not yet shown to describe one devnet.
+  //
+  // Any of them works — all are the seed node's oxend RPC endpoint (the `IP:RPC` port, 1280 on
+  // Sesh-Net-Docker), which Desktop passes straight to `getSnodesFromSeedUrl`, the same
+  // get_n_service_nodes call the seeder makes. Android is preferred purely to preserve the pre-existing
+  // behaviour for android+desktop tests.
+  //
+  // A Record, not a list, so the compiler enforces coverage: a fourth ClientPlatform missing from an
+  // `Array<ClientPlatform>` still typechecks and would leave a devnet run made up only of that platform
+  // picking no ref at all. Here it is a build error instead.
+  const seederPreference: Record<ClientPlatform, number> = { android: 0, ios: 1, desktop: 2 };
+  // `resolved` is non-empty: `present` was checked above and dedupe keeps at least one entry.
+  const seederRef = [...resolved].sort(
+    (a, b) => seederPreference[a.platform] - seederPreference[b.platform]
+  )[0].ref;
+
   // Published, not memoised: set_disappearing_messages and restore_account both branch on this. It is
   // deliberately never read back here — see the note on this function.
   process.env.DETECTED_NETWORK_TARGET = seederRef;

@@ -109,9 +109,15 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
   testInfo: TestInfo;
   iOSContext?: IOSTestContext;
 }) {
+  // Resolved BEFORE the Promise.all rather than inside it. As an array element the `await` ran after
+  // `openAppMultipleDevices` had already been invoked, so a network-resolution failure (a mismatch, or
+  // an unusable devnet) left devices opening with nothing awaiting them — leaked Appium sessions plus
+  // an unhandled rejection. Now nothing is opened until the network is known good.
+  const network = await resolveNetworkTarget([platform]);
+
   const [devices, prebuilt] = await Promise.all([
     openAppMultipleDevices(platform, appsToOpen, testInfo, iOSContext),
-    buildStateForTest(stateToBuildKey, groupName, await resolveNetworkTarget([platform])),
+    buildStateForTest(stateToBuildKey, groupName, network),
   ]);
 
   return { devices, prebuilt };

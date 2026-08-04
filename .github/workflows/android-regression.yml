@@ -198,11 +198,19 @@ jobs:
         if: ${{ github.event.inputs.NETWORK_TARGET == 'devnet' }}
         shell: bash
         run: |
-          if ! command -v strings >/dev/null 2>&1; then
-            echo "::warning::'strings' unavailable — skipping the APK launch-extra check"
-            exit 0
+          APK=extracted/session-android.apk
+          if [ ! -f "$APK" ]; then
+            echo "ERROR: $APK is missing — the APK selection step should have produced it."
+            exit 1
           fi
-          if unzip -p extracted/session-android.apk 'classes*.dex' | strings | grep -q sessionDevnetSeedUrl; then
+
+          # `grep -a` rather than `strings`: strings ships with binutils and is not guaranteed on a
+          # runner, and treating an unverifiable APK as verified would defeat the point of the check.
+          # `-c` rather than `-q`: -q exits on the first match, and GitHub's `shell: bash` runs with
+          # `-eo pipefail`, so the SIGPIPE'd `unzip` made the whole pipeline exit 141 and the step
+          # failed even on an APK that DOES support the extra. -c consumes the stream.
+          MATCHES=$(unzip -p "$APK" 'classes*.dex' | grep -a -c sessionDevnetSeedUrl || true)
+          if [ "${MATCHES:-0}" -gt 0 ]; then
             echo "APK honours sessionDevnetSeedUrl — DEVNET_SEED_URL will reach the app"
             exit 0
           fi
