@@ -18,9 +18,6 @@ crossPlatformTest({
     alice: { android: 1, desktop: 1 },
     bob: { android: 1, desktop: 1 },
   }),
-  allureSuites: { parent: 'Sending Messages', suite: 'Message types' },
-  allureDescription:
-    'Alice (android + desktop) and Bob (android + desktop) are friends; each sends a message and both messages appear on every device of both users.',
   testCb: async ({ accounts: { alice, bob } }) => {
     const aliceName = alice.account.userName;
     const bobName = bob.account.userName;

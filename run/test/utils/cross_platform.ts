@@ -2,7 +2,6 @@ import type { PrebuiltStateKey, StateGroup, UserNameType } from '@session-founda
 
 import { type Page, test, type TestInfo } from '@playwright/test';
 
-import type { AllureSuiteConfig } from '../../types/allure';
 import type { DeviceWrapper } from '../../types/DeviceWrapper';
 import type { IBaseDeviceWrapper } from '../../types/IBaseDeviceWrapper';
 
@@ -10,19 +9,17 @@ import { forceCloseAllWindows } from '../../desktop/closeWindows';
 import { DesktopWrapper } from '../../desktop/DesktopWrapper';
 import { resetTrackedElectronPids } from '../../desktop/open';
 import { type TestRisk, type User } from '../../types/testing';
-import { openAppsWithStateCrossPlatform } from './cross_platform_state';
+import { openAppsWithStateCrossPlatform, type PerUserPlatforms } from './cross_platform_state';
 import { focusConvoCrossPlatform } from './cross_platform_state_builder';
 import { unregisterDevicesForTest } from './device_registry';
-import { getNetworkTarget } from './devnet';
 import { captureLogsOnFailure, captureScreenshotsOnFailure } from './failure_artifacts';
 import { closeApp } from './open_app';
 
-/** How many clients of each platform a single account should have. */
-export type CrossPlatformSetup = {
-  android?: number;
-  ios?: number;
-  desktop?: number;
-};
+/**
+ * How many clients of each platform a single account should have — the spec-facing name for the
+ * opener's `PerUserPlatforms` (same shape; aliased rather than duplicated).
+ */
+export type CrossPlatformSetup = PerUserPlatforms;
 
 /** One account together with the clients (across platforms) linked to it. */
 export type AccountClients = {
@@ -88,8 +85,6 @@ type CrossPlatformTestArgs<Names extends AccountName> = {
   testCb: (clients: CrossPlatformClients<Names>, testInfo: TestInfo) => Promise<void>;
   shouldSkip?: boolean;
   isPro?: boolean;
-  allureSuites?: AllureSuiteConfig;
-  allureDescription?: string;
 };
 
 /**
@@ -122,9 +117,6 @@ export function crossPlatformTest<Names extends AccountName>({
   shouldSkip = false,
   isPro = false,
 }: CrossPlatformTestArgs<Names>) {
-  const totalAndroid = setup.accounts.reduce((sum, a) => sum + (a.platforms.android ?? 0), 0);
-  const totalIos = setup.accounts.reduce((sum, a) => sum + (a.platforms.ios ?? 0), 0);
-
   const proTag = isPro ? ' @pro' : '';
   const testName = `${title} @cross-platform @${risk ?? 'default'}-risk${proTag}`;
 
@@ -137,20 +129,7 @@ export function crossPlatformTest<Names extends AccountName>({
 
   // eslint-disable-next-line no-empty-pattern
   test(testName, async ({}, testInfo) => {
-    if (totalAndroid > 0) {
-      await getNetworkTarget('android');
-    }
-    if (totalIos > 0) {
-      await getNetworkTarget('ios');
-    }
     console.info(`\n\n==========> Running "${testName}"\n\n`);
-
-    // Note: no allure test suite as an allure suite is per platforms
-    // await setupAllureTestInfo({
-    //   suites: allureSuites,
-    //   description: allureDescription,
-    //   platform: totalAndroid > 0 ? 'android' : 'ios',
-    // });
 
     // Enable Session Pro (dev backend) before launching desktop windows.
     if (isPro) {

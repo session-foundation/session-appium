@@ -15,10 +15,15 @@ import { AndroidDeviceWrapper } from '../../types/AndroidDeviceWrapper';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { IosDeviceWrapper } from '../../types/IosDeviceWrapper';
 import { getAdbFullPath, getDevicesPerTestCount } from './binaries';
-import { androidAppPackage, getAndroidCapabilities, getAndroidUdid } from './capabilities_android';
+import {
+  androidAppPackage,
+  androidCapabilityIsValid,
+  getAndroidCapabilities,
+  getAndroidPoolSize,
+  getAndroidUdid,
+} from './capabilities_android';
 import {
   CapabilitiesIndexType,
-  capabilityIsValid,
   getIosCapabilities,
   iOSBundleId,
   IOSTestContext,
@@ -199,14 +204,19 @@ const openAndroidApp = async (
 ): Promise<{
   device: DeviceWrapper;
 }> => {
-  const parallelIndex = process.env.TEST_PARALLEL_INDEX || '1';
+  // Defaults to worker 0, matching openiOSApp. Playwright always sets TEST_PARALLEL_INDEX, so this
+  // only applies when the opener is driven outside the runner.
+  const parallelIndex = process.env.TEST_PARALLEL_INDEX || '0';
   console.info('process.env.TEST_PARALLEL_INDEX:', process.env.TEST_PARALLEL_INDEX, parallelIndex);
   const parallelIndexNumber = parseInt(parallelIndex);
   const actualCapabilitiesIndex =
     capabilitiesIndex + getDevicesPerTestCount() * parallelIndexNumber;
 
-  if (!capabilityIsValid(actualCapabilitiesIndex)) {
-    throw new Error(`Invalid actual capability given: ${actualCapabilitiesIndex}`);
+  if (!androidCapabilityIsValid(actualCapabilitiesIndex)) {
+    throw new Error(
+      `Invalid actual capability given: ${actualCapabilitiesIndex}. Only ${getAndroidPoolSize()} ` +
+        `emulator(s) are known to the harness.`
+    );
   }
 
   if (isNaN(actualCapabilitiesIndex)) {

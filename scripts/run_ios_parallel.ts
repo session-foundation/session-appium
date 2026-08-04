@@ -1,6 +1,8 @@
 import { spawn } from 'child_process';
 import dotenv from 'dotenv';
 
+import type { ServiceNetwork } from '../run/types/target';
+
 import {
   PARALLEL_TIER_NAMES,
   PARALLEL_TIERS,
@@ -9,11 +11,7 @@ import {
   passGrep,
   simulatorsRequired,
 } from '../run/constants/parallelism';
-import {
-  ALLOWED_IOS_NETWORKS,
-  type IosServiceNetwork,
-  type Simulator,
-} from '../run/test/utils/capabilities_ios';
+import { ALLOWED_IOS_NETWORKS, type Simulator } from '../run/test/utils/capabilities_ios';
 import { ensureWdaBuilt } from './build_wda';
 import { createIOSSimulators, resolveDeviceConfig } from './create_ios_simulators';
 import { deleteSimulators } from './ios_shared';
@@ -174,7 +172,7 @@ function validate(args: ParsedArgs): number {
   }
   // Validate --network before provisioning: an unknown value (e.g. a "devent" typo) would
   // otherwise create the whole simulator pool and spawn Playwright before failing downstream.
-  if (args.network && !ALLOWED_IOS_NETWORKS.includes(args.network as IosServiceNetwork)) {
+  if (args.network && !ALLOWED_IOS_NETWORKS.includes(args.network as ServiceNetwork)) {
     console.error(`Invalid --network "${args.network}". Use ${ALLOWED_IOS_NETWORKS.join(' | ')}.`);
     process.exit(1);
   }

@@ -3,19 +3,16 @@ dotenv.config({ quiet: true });
 
 import { defineConfig, ReporterDescription } from '@playwright/test';
 
+import type { ClientPlatform } from './run/types/target';
+
 import { allureResultsDir } from './run/constants/allure';
-import {
-  getRepeatEachCount,
-  getRetriesCount,
-  getWorkersCount,
-  type WorkersPlatform,
-} from './run/test/utils/binaries';
+import { getRepeatEachCount, getRetriesCount, getWorkersCount } from './run/test/utils/binaries';
 
 // A run always targets a single platform, but that platform is expressed differently depending
 // on the entrypoint: CI sets the PLATFORM env variable, while the local `test-*` scripts only
 // pass it through the `--grep`/`--project` CLI args. Resolve both so the right per-platform
 // worker count is picked. Returns undefined for the cross-platform project (no dedicated count).
-function currentTestPlatform(): WorkersPlatform | undefined {
+function currentTestPlatform(): ClientPlatform | undefined {
   const fromEnv = process.env.PLATFORM;
   if (fromEnv === 'android' || fromEnv === 'ios' || fromEnv === 'desktop') {
     return fromEnv;
