@@ -4,11 +4,10 @@ import { W3CXCUITestDriverCaps } from 'appium-xcuitest-driver/build/lib/driver';
 import dotenv from 'dotenv';
 import { existsSync } from 'fs';
 
-import type { ServiceNetwork } from '../../types/target';
-
 import { WDA_DERIVED_DATA_PATH, WDA_PREBUILT_APP_PATH } from '../../../scripts/build_wda';
 import { resolveRunSimulators, type Simulator } from '../../../scripts/ios_shared';
 import { IntRange } from '../../types/RangeType';
+import { getResolvedDevnetSeedNode, getServiceNetwork } from './network_target';
 
 dotenv.config({ quiet: true });
 
@@ -30,105 +29,26 @@ export const IOS_PRO_CONTEXT: IOSTestContext = { sessionProEnabled: 'true' };
 // default stays mainnet so nothing changes unless NETWORK_TARGET is set.
 //
 // The devnet the *app* connects to (below) MUST be the same one the *seeder* points at
-// (see getNetworkTarget in devnet.ts, which uses getIosDevnetSeedUrl()).
-
-// Accepted `--network` values (forwarded to the child as NETWORK_TARGET). Kept in sync with
-// `ServiceNetwork` via `satisfies` so this list can't drift from what capabilities_ios accepts.
-export const ALLOWED_IOS_NETWORKS = [
-  'mainnet',
-  'testnet',
-  'devnet',
-] as const satisfies readonly ServiceNetwork[];
-
-// The devnet seed node is a single node that plays two roles with THREE different ports, because
-// the app and the qa-seeder talk to different services on it:
-//   - rpcPort  (oxend RPC, HTTP)   -> the SEEDER hits `http://ip:rpcPort/json_rpc` (get_service_nodes)
-//   - httpPort (storage HTTPS)     -> the APP's devnetHttpPort (Snode.httpsPort)
-//   - omqPort  (storage OMQ/QUIC)  -> the APP's devnetOmqPort  (Snode.omqPort, the QUIC connection)
-// On the Sesh-Net-Docker devnet these map to the `IP:RPC`, `Storage HTTPS` and `Storage OMQ`
-// columns of the seed node's row (e.g. 1280 / 1300 / 1305 for the `oxend@1280` node).
-export type IosDevnetConfig = {
-  pubkey: string;
-  ip: string;
-  rpcPort: string;
-  httpPort: string;
-  omqPort: string;
-};
-
-export function getIosServiceNetwork(): ServiceNetwork {
-  const raw = (process.env.NETWORK_TARGET ?? 'mainnet').trim().toLowerCase();
-  if (raw === 'mainnet' || raw === 'testnet' || raw === 'devnet') {
-    return raw;
-  }
-  throw new Error(
-    `Invalid NETWORK_TARGET "${process.env.NETWORK_TARGET}". Use mainnet | testnet | devnet.`
-  );
-}
-
-/**
- * Devnet connection details, read from the environment. Mirrors the validation the app itself does,
- * and throws (listing what's missing/invalid) so a misconfigured devnet run fails fast here rather
- * than the app silently falling back to testnet.
- */
-export function getIosDevnetConfig(): IosDevnetConfig {
-  const pubkey = (process.env.DEVNET_PUBKEY ?? '').trim();
-  const ip = (process.env.DEVNET_IP ?? '').trim();
-  const rpcPort = (process.env.DEVNET_RPC_PORT ?? '').trim();
-  const httpPort = (process.env.DEVNET_HTTP_PORT ?? '').trim();
-  const omqPort = (process.env.DEVNET_OMQ_PORT ?? '').trim();
-
-  const isPort = (p: string) => /^\d{1,5}$/.test(p) && Number(p) <= 65535;
-
-  const errors: string[] = [];
-  if (!/^[0-9a-fA-F]{64}$/.test(pubkey)) {
-    errors.push('DEVNET_PUBKEY must be a 64-character hex string (seed node ed25519 pubkey)');
-  }
-  const octets = ip.split('.');
-  if (octets.length !== 4 || !octets.every(o => /^\d{1,3}$/.test(o) && Number(o) <= 255)) {
-    errors.push('DEVNET_IP must be an IPv4 address like 10.0.0.1');
-  }
-  if (!isPort(rpcPort)) {
-    errors.push('DEVNET_RPC_PORT must be a number 0-65535 (seed oxend RPC, for the seeder)');
-  }
-  if (!isPort(httpPort)) {
-    errors.push('DEVNET_HTTP_PORT must be a number 0-65535 (seed storage HTTPS, for the app)');
-  }
-  if (!isPort(omqPort)) {
-    errors.push('DEVNET_OMQ_PORT must be a number 0-65535 (seed storage OMQ/QUIC, for the app)');
-  }
-  if (errors.length > 0) {
-    throw new Error(
-      `NETWORK_TARGET=devnet requires valid devnet env vars:\n  - ${errors.join('\n  - ')}`
-    );
-  }
-  return { pubkey, ip, rpcPort, httpPort, omqPort };
-}
-
-/**
- * Seed URL the SEEDER (qa-seeder) uses for devnet — the seed node's oxend RPC (`/json_rpc`
- * get_service_nodes), which is a different port from the storage ports the app connects to.
- */
-export function getIosDevnetSeedUrl(): `http://${string}` {
-  const { ip, rpcPort } = getIosDevnetConfig();
-  return `http://${ip}:${rpcPort}`;
-}
+// (see getNetworkTarget in devnet.ts, which uses getDevnetSeedUrl()).
 
 /** Extra processArguments.env keys that point the app at the selected service network. */
 function buildServiceNetworkEnv(): Record<string, string> {
-  const network = getIosServiceNetwork();
+  const network = getServiceNetwork();
   if (network === 'mainnet') {
     return {}; // app default — nothing to set
   }
   if (network === 'testnet') {
     return { serviceNetwork: 'testnet' };
   }
-  const cfg = getIosDevnetConfig();
+  // Discovered from the seed node rather than configured: a hand-copied pubkey rots on every devnet
+  // rebuild and the storage ports were verified by nothing. See network_target.ts.
+  const node = getResolvedDevnetSeedNode();
   return {
     serviceNetwork: 'devnet',
-    devnetPubkey: cfg.pubkey,
-    devnetIp: cfg.ip,
-    devnetHttpPort: cfg.httpPort,
-    devnetOmqPort: cfg.omqPort,
+    devnetPubkey: node.pubkey,
+    devnetIp: node.ip,
+    devnetHttpPort: node.httpPort,
+    devnetOmqPort: node.omqPort,
   };
 }
 

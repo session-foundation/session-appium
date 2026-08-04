@@ -80,6 +80,14 @@ jobs:
       ALLURE_ENABLED: ${{ github.event.inputs.ALLURE_ENABLED }}
       IOS_APP_PATH_PREFIX: '<just_not_empty>'
       ANDROID_APK: './extracted/session-android.apk'
+      # NETWORK_TARGET is the single switch the harness reads for every platform; exporting it here is
+      # what makes Android take the same path as iOS and Desktop (previously it was only used in bash
+      # below to choose the APK variant, so the harness fell back to a hardcoded devnet URL).
+      NETWORK_TARGET: ${{ github.event.inputs.NETWORK_TARGET }}
+      # Devnet only: the seed node's oxend RPC. Everything else is discovered from it. Until the
+      # QaLaunchConfig change ships in the APK, this must match the app's own compile-time devnet
+      # constant, because an older build ignores the launch extra that would redirect it.
+      DEVNET_SEED_URL: ${{ vars.DEVNET_SEED_URL }}
       APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
       EMULATOR_FULL_PATH: '/opt/android/emulator/emulator'
       ANDROID_SDK_ROOT: '/opt/android'
@@ -136,36 +144,13 @@ jobs:
           echo "NOTE: the '*qa.apk' glob also matches '*automaticQa.apk'."
           echo "::endgroup::"
 
-          # Always probe devnet reachability so the log explains the decision,
-          # regardless of which network target was requested.
-          echo "::group::Devnet reachability probe (http://sesh-net.local:1280)"
-          DEVNET_ACCESSIBLE=false
-          for attempt in 1 2 3; do
-            echo "Devnet check attempt $attempt/3..."
-            HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' --connect-timeout 5 --max-time 10 http://sesh-net.local:1280 2>/dev/null || echo '000')
-            if [ "$HTTP_CODE" != "000" ]; then
-              echo "Devnet is reachable on attempt $attempt (HTTP $HTTP_CODE)"
-              DEVNET_ACCESSIBLE=true
-              break
-            else
-              echo "Devnet attempt $attempt failed (could not connect)"
-              if [ $attempt -lt 3 ]; then
-                echo "Waiting ${attempt}s before retry..."
-                sleep $attempt
-              fi
-            fi
-          done
-          echo "Devnet reachable: $DEVNET_ACCESSIBLE"
-          echo "::endgroup::"
-
           # Choose APK based on network target
           if [ "$NETWORK_TARGET" = "devnet" ]; then
-            echo "Requested target=devnet -> want AQA build + reachable devnet"
-
-            if [ "$DEVNET_ACCESSIBLE" = "false" ]; then
-              echo "ERROR: Devnet is not accessible after 3 attempts, but devnet target was selected"
-              exit 1
-            fi
+            # Reachability is NOT checked here: assertRequestedDevnetsReachable (global-setup.ts) does
+            # it for every platform and project, and does it properly — it POSTs get_n_service_nodes and
+            # requires registered service nodes, where a curl that accepts any HTTP status passes
+            # against a 404 or an oxend that has come up with an empty registry.
+            echo "Requested target=devnet -> want AQA build"
 
             # Use AQA build for devnet
             if ls extracted/*automaticQa.apk 1>/dev/null 2>&1; then

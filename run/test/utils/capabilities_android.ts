@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { isString } from 'lodash';
 
 import { getAndroidApk } from './binaries';
+import { buildAndroidLaunchExtras } from './devnet_android';
 dotenv.config({ quiet: true });
 // Access the environment variable
 
@@ -64,9 +65,19 @@ export function getAndroidCapabilities(capabilitiesIndex: number): W3CUiautomato
     throw new Error(`Asked invalid android capability index: ${capabilitiesIndex}`);
   }
   const cap = allCaps[capabilitiesIndex];
+
+  // Android's counterpart of the iOS `processArguments.env` launch variables: appended to the
+  // `am start` the driver issues, and read by QaLaunchConfig in the app (QA builds only).
+  const optionalIntentArguments = buildAndroidLaunchExtras();
+
   return {
     firstMatch: [{}, {}],
-    alwaysMatch: { ...cap },
+    alwaysMatch: {
+      ...cap,
+      ...(optionalIntentArguments
+        ? { 'appium:optionalIntentArguments': optionalIntentArguments }
+        : {}),
+    },
   } as W3CUiautomator2DriverCaps;
 }
 export function getAndroidUdid(udidIndex: number): string {

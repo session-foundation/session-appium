@@ -1,7 +1,13 @@
 import { FullConfig } from '@playwright/test';
 
 import { getDevicesPerTestCount, getWorkersCount } from './run/test/utils/binaries';
-import { getNetworkTarget } from './run/test/utils/devnet';
+import {
+  assertRequestedDevnetsReachable,
+  getNetworkTarget,
+  pinPlatformsToNetworkTarget,
+  requestedDevnetRefs,
+} from './run/test/utils/devnet';
+import { resolveDevnetSeedNode } from './run/test/utils/network_target';
 import { SupportedPlatformsType } from './run/test/utils/open_app';
 import { ensureWdaBuilt } from './scripts/build_wda';
 import {
@@ -31,6 +37,23 @@ function isIosRun(platform: string | undefined): boolean {
 const PREPARED_FLAG = 'IOS_SIMULATORS_PREPARED';
 
 export default async function globalSetup(_config: FullConfig) {
+  // NETWORK_TARGET is the single switch: translate it into the per-platform knob each client reads
+  // at launch (currently only Desktop needs one). No-op when it isn't set, so per-platform setups
+  // keep working unchanged.
+  pinPlatformsToNetworkTarget();
+
+  // Discover the devnet's pubkey/ip/storage ports from the seed node itself, once per run and before
+  // any client starts. Done here rather than lazily because the capability builders are synchronous,
+  // and because failing in global setup gives a single clear error instead of one per device.
+  if (requestedDevnetRefs().length > 0) {
+    await resolveDevnetSeedNode();
+  }
+
+  // Runs for EVERY project (mobile, desktop, cross-platform) and regardless of PLATFORM: if this
+  // environment asks for devnet anywhere and that devnet is not usable, stop the whole run here
+  // rather than letting each platform discover it separately (or, for Desktop, not at all).
+  await assertRequestedDevnetsReachable();
+
   const platform = process.env.PLATFORM as SupportedPlatformsType | undefined;
 
   if (platform) {

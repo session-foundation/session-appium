@@ -83,28 +83,29 @@ It prints a node table (`Name, SN, Pubkey, IP:RPC, P2P, ZMQ, QNET, Storage OMQ, 
 the source for the values below. Pick any `SN: Yes` row as the seed; the `oxend@1280` row is the
 conventional choice (it matches the devnet's own readiness probe and Android's `:1280`).
 
-## 3. Capture the `DEVNET_*` values
+## 3. Capture the seed node's RPC address
 
-The seed is **one node** that the app and the seeder reach on **different ports**, so three ports
-come from its row (example values are the `oxend@1280` row):
+One value, from any `SN: Yes` row of the printed node table — its **`IP:RPC`** column (the
+`oxend@1280` row is the conventional choice):
 
-| `.env` var         | From column          | Used by                     | Example         |
-| ------------------ | -------------------- | --------------------------- | --------------- |
-| `DEVNET_PUBKEY`    | `Pubkey`             | app                         | `a9713f93…a036` |
-| `DEVNET_IP`        | `IP` (= `LISTEN_IP`) | both                        | `192.168.139.2` |
-| `DEVNET_RPC_PORT`  | `IP:RPC`             | seeder (oxend `/json_rpc`)  | `1280`          |
-| `DEVNET_HTTP_PORT` | `Storage HTTPS`      | app (`devnetHttpPort`)      | `1300`          |
-| `DEVNET_OMQ_PORT`  | `Storage OMQ`        | app (`devnetOmqPort`, QUIC) | `1305`          |
+```bash
+DEVNET_SEED_URL=http://<IP>:<IP:RPC>      # e.g. http://192.168.139.2:1280
+```
 
-> **Why three ports:** the seeder calls `get_service_nodes` on the node's **oxend RPC**
-> (`DEVNET_RPC_PORT`), while the app connects to the node's **storage server** over QUIC/HTTPS
-> (`DEVNET_OMQ_PORT` / `DEVNET_HTTP_PORT`). The `QNET`/`P2P`/`ZMQ` columns aren't used.
+That's the seed node's **oxend RPC** endpoint. Everything else the clients need — the node's ed25519
+pubkey and both storage ports — is read back from it by `get_n_service_nodes`, so the `Pubkey`,
+`Storage HTTPS` and `Storage OMQ` columns no longer need copying anywhere.
 
-> **Stable pubkey:** the compose mounts no volume for the data dir, so a fresh `--build`/recreate
-> regenerates the seed keys and `DEVNET_PUBKEY` drifts (it's stable across `restart` of the _same_
-> container). For a paste-once config, add a volume for the cached-devnet data dir; otherwise
-> re-read the pubkey after each recreate. (The `Pubkey` column is the node's `service_node_pubkey`,
-> which is the ed25519 key on current oxen — if the app can't connect to the seed, re-check this.)
+> **Why this replaced the old five variables.** The compose mounts no volume for the data dir, so a
+> fresh `--build`/recreate regenerates the seed keys. A hand-copied pubkey therefore rotted silently —
+> it stayed a valid 64-char hex string, so every check still passed — and because **only iOS** uses
+> that pubkey (Android and Desktop discover snodes from the seed URL themselves), it broke iOS alone
+> while the other two kept working. The same applied to the storage ports, which nothing verified.
+> Discovering them removes both failure modes rather than documenting them.
+>
+> If `DEVNET_PUBKEY`, `DEVNET_IP`, `DEVNET_RPC_PORT`, `DEVNET_HTTP_PORT` or `DEVNET_OMQ_PORT` are
+> still in your `.env`, the run prints what each one _would_ have been versus what the devnet actually
+> reports, then ignores them. You can delete them.
 
 ## 4. Environment
 
@@ -112,17 +113,18 @@ Add to `.env` (see `.env.sample`):
 
 ```bash
 NETWORK_TARGET=devnet
-DEVNET_PUBKEY=<Pubkey column>
-DEVNET_IP=<LISTEN_IP>
-DEVNET_RPC_PORT=1280     # IP:RPC       (seeder)
-DEVNET_HTTP_PORT=1300    # Storage HTTPS (app)
-DEVNET_OMQ_PORT=1305     # Storage OMQ   (app)
+DEVNET_SEED_URL=http://<IP>:1280
 ```
 
-`NETWORK_TARGET` drives both the app (`capabilities_ios.ts` injects `serviceNetwork`/`devnet*` into
-the app's launch-arg env) and the seeder (`getNetworkTarget` targets
-`http://$DEVNET_IP:$DEVNET_RPC_PORT`). If any `DEVNET_*` value is missing/invalid, the run fails
-fast with a message naming what's wrong.
+`NETWORK_TARGET` is the single switch for **all three platforms**, and the harness translates it into
+whatever each client actually reads at launch — iOS launch arguments, Android launch intent extras
+(`sessionServiceNetwork`/`sessionDevnetSeedUrl`, honoured by QA builds only), and Desktop's
+`LOCAL_DEVNET_SEED_URL`. Do not set `LOCAL_DEVNET_SEED_URL` yourself alongside `NETWORK_TARGET`.
+
+Before any client starts, `global-setup` verifies the devnet is genuinely usable: the seed's RPC must
+answer `get_n_service_nodes` with registered nodes, and the storage ports it advertises must accept
+connections. If devnet was requested and any of that fails, the **whole run stops** — on every
+platform and every project — instead of hanging until the 480s test timeout.
 
 ## 4b. (Optional) local file server
 
@@ -143,7 +145,7 @@ docker compose logs fileserver | grep -i pubkey
 Then add to `.env`:
 
 ```bash
-FILE_SERVER_URL=http://<DEVNET_IP>:8000     # reached by the exit snode, so use the devnet IP
+FILE_SERVER_URL=http://<LISTEN_IP>:8000    # reached by the exit snode, so use the devnet IP
 FILE_SERVER_PUBKEY=<X25519 pubkey>          # omit to use the app's default file-server pubkey
 ```
 
@@ -151,7 +153,7 @@ Notes:
 
 - The app reaches the file server via an **onion request through the devnet snodes**, so
   `FILE_SERVER_URL` must be reachable **from the snodes** (i.e. the OrbStack VM) — the devnet
-  `DEVNET_IP:8000` satisfies that (and macOS too).
+  `LISTEN_IP:8000` satisfies that (and macOS too).
 - Leave `FILE_SERVER_URL` unset to keep using the production file server.
 - **Troubleshooting** — if the file server logs `Failed to decrypt onion request (tried 1 pubkeys)`
   (media uploads fail): the request is reaching the server but the client encrypted to a key the
@@ -185,7 +187,7 @@ docker compose logs sogs | grep -A1 'server pubkey'
 Then add to `.env` — use the **devnet host** (reachable from the snodes), the fixed room and pubkey:
 
 ```bash
-COMMUNITY_LINK=http://<DEVNET_IP>:8080/local-devnet-community?public_key=aa7c2b3bcd6433e52d6616356fcdba68668e8b506d84a3c7a1a196d63235a613
+COMMUNITY_LINK=http://<LISTEN_IP>:8080/local-devnet-community?public_key=aa7c2b3bcd6433e52d6616356fcdba68668e8b506d84a3c7a1a196d63235a613
 COMMUNITY_NAME=Local Devnet Community
 COMMUNITY_ROOM=local-devnet-community
 ```
@@ -193,7 +195,7 @@ COMMUNITY_ROOM=local-devnet-community
 Notes:
 
 - The app reaches the SOGS via an **onion request through the devnet snodes**, so `COMMUNITY_LINK`'s
-  host must be reachable **from the snodes** (the OrbStack VM) — `DEVNET_IP:8080` satisfies that (and
+  host must be reachable **from the snodes** (the OrbStack VM) — `LISTEN_IP:8080` satisfies that (and
   macOS too). The `public_key` in the link is the SOGS' X25519 server pubkey and is what pins the
   community, independent of host.
 - Leave `COMMUNITY_LINK` unset to keep using the remote `test-chat.session.codes` community (the CI
@@ -218,20 +220,26 @@ After `docker compose up`, confirm before trusting a run:
 
 1. From macOS the seed responds:
    ```bash
-   curl -s http://$DEVNET_IP:1280/json_rpc -d '{"method":"get_service_nodes"}'
+   curl -s $DEVNET_SEED_URL/json_rpc -d '{"method":"get_n_service_nodes"}'
    ```
-2. In the printed node table, the advertised IP column is `$DEVNET_IP` — **not** a `127.x`/`172.x`
-   address (if it is, `LISTEN_IP` was wrong and the client won't be able to reach the snodes).
+2. In the printed node table, the advertised IP column is your `LISTEN_IP` — **not** a `127.x`/`172.x`
+   address (if it is, `LISTEN_IP` was wrong and the clients won't be able to reach the snodes).
+   The harness checks this for you: discovery only accepts a node whose advertised storage ports it can
+   actually connect to.
 3. (Optional) the same `curl` from a booted simulator — but #1 passing is normally sufficient since
    simulators share the Mac's routes.
 
 ## CI
 
-Nothing in CI changes when you set this up locally. `ios-regression.yml` exposes a `NETWORK_TARGET`
-input (`devnet`/`testnet`/`mainnet`) and reads the devnet connection details from repo-level Actions
-variables (`DEVNET_PUBKEY`, `DEVNET_IP`, `DEVNET_HTTP_PORT`, `DEVNET_OMQ_PORT`). The macOS runner
-reaches a **Linux-hosted** devnet over the network (Tailscale/LAN) — the only per-environment
-difference is the IP value, which is already env-driven.
+Nothing in CI changes when you set this up locally. `ios-regression.yml` and
+`cross-platform-regression.yml` both expose a `NETWORK_TARGET` input (`devnet`/`testnet`/`mainnet`)
+and read a single repo-level Actions **variable**, `DEVNET_SEED_URL`. The macOS runner reaches a
+**Linux-hosted** devnet over the network (Tailscale/LAN), so the only per-environment difference is
+that URL.
+
+> **The runner has to be on the same LAN as the devnet.** It must reach the seed node's **oxend RPC**
+> port, not just its storage ports, and oxend binds that RPC to a single address — the devnet host's
+> LAN IP.
 
 ## Notes & gotchas
 
