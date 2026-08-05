@@ -1,7 +1,7 @@
 import { test, type TestInfo } from '@playwright/test';
 import { USERNAME } from '@session-foundation/qa-seeder';
 
-import { communities } from '../../../constants/community';
+import { getCommunities } from '../../../constants/community';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { CloseSettings } from '../../locators';
@@ -29,6 +29,7 @@ bothPlatformsIt({
   risk: 'medium',
   testCb: blindedMessageRequests,
   countOfDevicesNeeded: 2,
+  communityRooms: 1,
   allureSuites: { parent: 'Settings', suite: 'Privacy' },
   allureDescription:
     'Verifies that a message request can be sent when Community Message Requests are on.',
@@ -38,6 +39,7 @@ bothPlatformsIt({
 });
 
 async function blindedMessageRequests(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   const message = `I accept blinded message requests + ${platform} + ${Date.now()}`;
   const messageRequestMessage = 'Howdy';
   const messageRequestReply = 'Howdy back';

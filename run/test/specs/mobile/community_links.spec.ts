@@ -1,7 +1,7 @@
 import { test, TestInfo } from '@playwright/test';
 import { USERNAME } from '@session-foundation/qa-seeder';
 
-import { communities } from '../../../constants/community';
+import { getCommunities } from '../../../constants/community';
 import { tStripped } from '../../../localizer/lib';
 import { TestSteps } from '../../../types/allure';
 import { androidIt } from '../../../types/sessionIt';
@@ -27,6 +27,7 @@ androidIt({
   title: 'Community URL on New Message - not member',
   risk: 'low',
   countOfDevicesNeeded: 1,
+  communityRooms: 1,
   testCb: communityURLNewConvo,
   allureSuites: {
     parent: 'New Conversation',
@@ -38,6 +39,7 @@ androidIt({
   title: 'Join Community URL on Create Group - not member',
   risk: 'low',
   countOfDevicesNeeded: 1,
+  communityRooms: 1,
   testCb: communityURLGroup,
   allureSuites: {
     parent: 'New Conversation',
@@ -49,6 +51,7 @@ androidIt({
   title: 'Community URL on New Message - member',
   risk: 'low',
   countOfDevicesNeeded: 1,
+  communityRooms: 1,
   testCb: communityURLNewConvoMember,
   allureSuites: {
     parent: 'New Conversation',
@@ -60,6 +63,7 @@ androidIt({
   title: 'Join Community URL on Create Group - member',
   risk: 'low',
   countOfDevicesNeeded: 1,
+  communityRooms: 1,
   testCb: communityURLGroupMember,
   allureSuites: {
     parent: 'New Conversation',
@@ -68,6 +72,7 @@ androidIt({
 });
 
 async function communityURLNewConvo(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
@@ -98,6 +103,7 @@ async function communityURLNewConvo(platform: SupportedPlatformsType, testInfo: 
 }
 
 async function communityURLGroup(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
@@ -128,6 +134,7 @@ async function communityURLGroup(platform: SupportedPlatformsType, testInfo: Tes
 }
 
 async function communityURLNewConvoMember(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
@@ -165,6 +172,7 @@ async function communityURLNewConvoMember(platform: SupportedPlatformsType, test
 }
 
 async function communityURLGroupMember(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
     await newUser(device, USERNAME.ALICE, { saveUserData: false });

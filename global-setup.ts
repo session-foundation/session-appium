@@ -1,6 +1,8 @@
 import { FullConfig } from '@playwright/test';
+import { v4 as uuidv4 } from 'uuid';
 
 import { getDevicesPerTestCount, getWorkersCount } from './run/test/utils/binaries';
+import { gcCommunityRooms, probePerTestRooms } from './run/test/utils/community_rooms';
 import {
   assertRequestedDevnetsReachable,
   pinPlatformsToNetworkTarget,
@@ -63,6 +65,20 @@ export default async function globalSetup(_config: FullConfig) {
   await assertRequestedDevnetsReachable(devnetRefs);
 
   const platform = process.env.PLATFORM as SupportedPlatformsType | undefined;
+
+  // Stamped once per run and read by the per-test community room allocator to build tokens that
+  // can't collide with a run happening at the same time elsewhere. Set here rather than per-worker
+  // because workers inherit this process's env, and they each need the same value.
+  process.env.QA_RUN_ID = uuidv4();
+
+  // Decided once here rather than per test: the check shells out, and every `communities` lookup asks
+  // whether per-test rooms are on, so it has to be a cheap read by then. Workers inherit the answer
+  // through this process's env. Falls back to the shared rooms (loudly) when rooms can't be created.
+  await probePerTestRooms();
+
+  // Collect rooms orphaned by runs that were killed before their teardown ran. The TTL keeps this
+  // clear of anything a concurrent run is still using.
+  await gcCommunityRooms();
 
   if (platform) {
     console.log(`Validating build/network configuration...`);

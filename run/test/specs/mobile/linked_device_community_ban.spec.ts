@@ -1,6 +1,6 @@
 import test, { type TestInfo } from '@playwright/test';
 
-import { communities } from '../../../constants/community';
+import { getCommunities } from '../../../constants/community';
 import { tStripped } from '../../../localizer/lib';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
@@ -16,7 +16,7 @@ import {
   SendButton,
 } from '../../locators/conversation';
 import { ConversationItem } from '../../locators/home';
-import { assertAdminIsKnown, joinCommunity } from '../../utils/community';
+import { assertAdminIsKnown, joinCommunity, openOrJoinCommunity } from '../../utils/community';
 import { newUser } from '../../utils/create_account';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from '../../utils/open_app';
 import { restoreAccount } from '../../utils/restore_account';
@@ -25,6 +25,7 @@ bothPlatformsIt({
   title: 'Ban and unban user in community - linked device',
   risk: 'medium',
   countOfDevicesNeeded: 3,
+  communityRooms: 1,
   testCb: banUnbanLinked,
   allureSuites: {
     parent: 'User Actions',
@@ -40,6 +41,7 @@ bothPlatformsIt({
   title: 'Ban and delete in community - linked device',
   risk: 'medium',
   countOfDevicesNeeded: 3,
+  communityRooms: 1,
   testCb: banAndDeleteLinked,
   allureSuites: {
     parent: 'User Actions',
@@ -52,6 +54,7 @@ bothPlatformsIt({
 
 // Bob 1 + Bob 2 get banned by Alice the admin
 async function banUnbanLinked(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   assertAdminIsKnown();
   const msgSig = `${new Date().getTime()} - ${platform}`;
   const msg1 = `Ban, link, unban - ${msgSig}`;
@@ -73,15 +76,11 @@ async function banUnbanLinked(platform: SupportedPlatformsType, testInfo: TestIn
       return await Promise.all([restoreAccount(alice1, alice, 'alice1'), newUser(bob1, 'Bob')]);
     });
   await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
-    const adminJoined = await alice1.doesElementExist(
-      new ConversationItem(alice1, communities.testCommunity.name)
+    await openOrJoinCommunity(
+      alice1,
+      communities.testCommunity.link,
+      communities.testCommunity.name
     );
-    if (!adminJoined) {
-      await joinCommunity(alice1, communities.testCommunity.link, communities.testCommunity.name);
-    } else {
-      await alice1.clickOnElementAll(new ConversationItem(alice1, communities.testCommunity.name));
-      await alice1.scrollToBottom();
-    }
     await joinCommunity(bob1, communities.testCommunity.link, communities.testCommunity.name);
   });
   await test.step(TestSteps.SEND.MESSAGE('Bob', 'community'), async () => {
@@ -103,7 +102,7 @@ async function banUnbanLinked(platform: SupportedPlatformsType, testInfo: TestIn
   });
   await test.step(TestSteps.SETUP.RESTORE_ACCOUNT('Bob'), async () => {
     await restoreAccount(bob2, bob, 'bob2');
-    await bob2.clickOnElementAll(new ConversationItem(alice1, communities.testCommunity.roomName)); // Since we're banned we don't get the "real" name
+    await bob2.clickOnElementAll(new ConversationItem(bob2, communities.testCommunity.roomName)); // Since we're banned we don't get the "real" name
     await bob2.waitForTextElementToBePresent(new EmptyConversation(bob2));
     await bob2.onIOS().waitForTextElementToBePresent({
       strategy: 'xpath',
@@ -128,6 +127,7 @@ async function banUnbanLinked(platform: SupportedPlatformsType, testInfo: TestIn
 
 // Bob 1 + Bob 2 get banned by Alice the admin
 async function banAndDeleteLinked(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   assertAdminIsKnown();
   const msgSig = `${new Date().getTime()} - ${platform}`;
   const msg1 = `Ban and delete linked - ${msgSig}`;
@@ -147,15 +147,11 @@ async function banAndDeleteLinked(platform: SupportedPlatformsType, testInfo: Te
       return await Promise.all([restoreAccount(alice1, alice, 'alice1'), newUser(bob1, 'Bob')]);
     });
   await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
-    const adminJoined = await alice1.doesElementExist(
-      new ConversationItem(alice1, communities.testCommunity.name)
+    await openOrJoinCommunity(
+      alice1,
+      communities.testCommunity.link,
+      communities.testCommunity.name
     );
-    if (!adminJoined) {
-      await joinCommunity(alice1, communities.testCommunity.link, communities.testCommunity.name);
-    } else {
-      await alice1.clickOnElementAll(new ConversationItem(alice1, communities.testCommunity.name));
-      await alice1.scrollToBottom();
-    }
     await joinCommunity(bob1, communities.testCommunity.link, communities.testCommunity.name);
   });
   await test.step(TestSteps.SEND.MESSAGE('Bob', 'community'), async () => {
@@ -174,7 +170,7 @@ async function banAndDeleteLinked(platform: SupportedPlatformsType, testInfo: Te
   });
   await test.step(TestSteps.SETUP.RESTORE_ACCOUNT('Bob'), async () => {
     await restoreAccount(bob2, bob, 'bob2');
-    await bob2.clickOnElementAll(new ConversationItem(alice1, communities.testCommunity.roomName)); // Since we're banned we don't get the "real" name
+    await bob2.clickOnElementAll(new ConversationItem(bob2, communities.testCommunity.roomName)); // Since we're banned we don't get the "real" name
     await bob2.waitForTextElementToBePresent(new EmptyConversation(bob2));
   });
   await test.step('Verify Bob cannot send messages in community on either device', async () => {

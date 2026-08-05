@@ -1,6 +1,6 @@
 import type { TestInfo } from '@playwright/test';
 
-import { communities } from '../../../constants/community';
+import { getCommunities } from '../../../constants/community';
 import { tStripped } from '../../../localizer/lib';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { InviteContactsMenuItem, JoinCommunityModalButton } from '../../locators';
@@ -22,10 +22,12 @@ bothPlatformsIt({
   title: 'Send community invitation',
   risk: 'medium',
   countOfDevicesNeeded: 2,
+  communityRooms: 1,
   testCb: sendCommunityInvitation,
 });
 
 async function sendCommunityInvitation(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   const {
     devices: { alice1, bob1 },
     prebuilt: { bob },

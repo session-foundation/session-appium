@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { communities } from '../../../constants/community';
+import { getCommunities } from '../../../constants/community';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { ConversationItem } from '../../locators/home';
@@ -13,6 +13,7 @@ bothPlatformsIt({
   risk: 'high',
   testCb: joinCommunityTest,
   countOfDevicesNeeded: 2,
+  communityRooms: 1,
   allureSuites: {
     parent: 'New Conversation',
     suite: 'Join Community',
@@ -22,6 +23,7 @@ bothPlatformsIt({
 });
 
 async function joinCommunityTest(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   const {
     devices: { alice1, alice2 },
     prebuilt: { alice },

@@ -1,10 +1,10 @@
 import { test } from '@playwright/test';
 
-import { communities } from '../../constants/community';
+import { getCommunities } from '../../constants/community';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { CommunityInput, JoinCommunityButton } from '../locators';
 import { ConversationHeaderName, MessageBody } from '../locators/conversation';
-import { PlusButton } from '../locators/home';
+import { ConversationItem, PlusButton } from '../locators/home';
 import { JoinCommunityOption } from '../locators/start_conversation';
 
 export function assertAdminIsKnown() {
@@ -29,7 +29,32 @@ export const joinCommunity = async (
   await device.scrollToBottom();
 };
 
+/**
+ * Leave `device` inside the community's conversation, joining it first if it isn't there already.
+ *
+ * Accounts restored from a seed (the SOGS admin) may or may not have the community yet, depending
+ * on what their config sync has restored, so both outcomes are expected. Both paths assert the
+ * conversation actually opened before returning: an iOS tap that silently doesn't register would
+ * otherwise leave the caller on the home screen and surface several steps later as a missing
+ * message, which points at entirely the wrong thing.
+ */
+export const openOrJoinCommunity = async (
+  device: DeviceWrapper,
+  communityLink: string,
+  communityName: string
+) => {
+  const alreadyJoined = await device.doesElementExist(new ConversationItem(device, communityName));
+  if (!alreadyJoined) {
+    await joinCommunity(device, communityLink, communityName);
+    return;
+  }
+  await device.clickOnElementAll(new ConversationItem(device, communityName));
+  await device.waitForTextElementToBePresent(new ConversationHeaderName(device, communityName));
+  await device.scrollToBottom();
+};
+
 export const joinCommunities = async (device: DeviceWrapper, toJoin: number) => {
+  const communities = getCommunities();
   const available = Object.values(communities).length;
   if (toJoin > available) {
     throw new Error(

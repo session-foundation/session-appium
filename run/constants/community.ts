@@ -1,5 +1,7 @@
 import dotenv from 'dotenv';
 
+import { getAllocatedRooms, perTestRoomsEnabled } from '../test/utils/community_rooms';
+
 dotenv.config({ quiet: true });
 
 type CommunityConfig = {
@@ -78,6 +80,35 @@ const REMOTE_COMMUNITIES: Record<string, CommunityConfig> = {
   },
 };
 
-export const communities: Record<string, CommunityConfig> = process.env.COMMUNITY_LINK
+const STATIC_COMMUNITIES: Record<string, CommunityConfig> = process.env.COMMUNITY_LINK
   ? buildLocalCommunities(process.env.COMMUNITY_LINK)
   : REMOTE_COMMUNITIES;
+
+/**
+ * The community set for the current test.
+ *
+ * A function rather than an exported object because against a local SOGS each test allocates rooms of
+ * its own (see utils/community_rooms.ts), so the answer differs per test and has to be resolved when
+ * it's read. Against the shared remote communities nothing can be created, so it stays the fixed list
+ * it always was.
+ *
+ * Reading `testCommunity` from a test that didn't declare `communityRooms` is a mistake rather than
+ * a fallback: silently handing back a shared room is how tests end up interfering again, and the
+ * failure would surface somewhere unrelated. So it throws, naming what to add.
+ */
+export function getCommunities(): Record<string, CommunityConfig> {
+  if (!perTestRoomsEnabled()) {
+    return STATIC_COMMUNITIES;
+  }
+
+  const rooms = getAllocatedRooms();
+  if (rooms.length === 0) {
+    throw new Error(
+      'No community rooms allocated for this test. Add `communityRooms: <n>` to its sessionIt declaration.'
+    );
+  }
+
+  return Object.fromEntries(
+    rooms.map((room, index) => [index === 0 ? 'testCommunity' : `community${index + 1}`, room])
+  );
+}
