@@ -40,32 +40,27 @@ simulator can reach too — no NAT dance like Android emulators.)
 
 ## 1. Choose `LISTEN_IP`
 
-Pick whichever fits; both leave CI untouched (CI just uses a different value — see [CI](#ci)).
+**Use the OrbStack VM's IP.** OrbStack runs a single shared Linux VM that is up whenever OrbStack is
+running (you do **not** need the devnet compose for it to exist), and macOS sits on the same subnet as
+that VM — so its `eth0` IP is reachable from macOS, and therefore from the simulators. Read it with a
+throwaway container:
 
-- **OrbStack VM IP (simplest, local-only) — recommended.** OrbStack runs a single shared Linux VM
-  that is up whenever OrbStack is running (you do **not** need the devnet compose for it to exist),
-  and macOS sits on the same subnet as that VM — so its `eth0` IP is reachable from macOS (and
-  therefore the simulators). Read it with a throwaway container:
+```bash
+LISTEN_IP=$(docker run --rm --network host alpine \
+  ip -4 -o addr show eth0 | awk '{sub(/\/.*/,"",$4); print $4}')
+echo "$LISTEN_IP"   # e.g. 192.168.139.2
+```
 
-  ```bash
-  LISTEN_IP=$(docker run --rm --network host alpine \
-    ip -4 -o addr show eth0 | awk '{sub(/\/.*/,"",$4); print $4}')
-  echo "$LISTEN_IP"   # e.g. 192.168.139.2
-  ```
+This value is stable across restarts for a given OrbStack install (it's the VM's fixed address), so
+it's a discover-once value you can paste into `.env`. It differs per machine/OrbStack version, which is
+why you read it rather than hardcode it. Keep the compose's `network_mode: host`; the snodes bind to
+and advertise this IP, and macOS reaches it directly. (Verified: a host-network service bound to this
+IP responds to `curl`/`ping` from macOS.)
 
-  This value is stable across restarts for a given OrbStack install (it's the VM's fixed address),
-  so it's a discover-once value you can paste into `.env`. It differs per machine/OrbStack version,
-  which is why you read it rather than hardcode it. Keep the compose's `network_mode: host`; the
-  snodes bind to and advertise this IP, and macOS reaches it directly. (Verified: a host-network
-  service bound to this IP responds to `curl`/`ping` from macOS.)
-
-- **Tailscale IP (best local/CI parity).** Give the devnet its own tailnet identity (run
-  `tailscaled` in the container: `network_mode: host` + `cap_add: [NET_ADMIN]` + `/dev/net/tun`,
-  which OrbStack supports) and use its `100.x` address. Then local and CI are identical, and it's
-  reachable from other machines **on the same tailnet** too — at the cost of more moving parts.
-  (Tailscale _node sharing_ won't work: the sharee sees a different IP for the machine than your
-  `LISTEN_IP`, so the advertised registry IP won't match for them. Same-tailnet membership is what
-  keeps the address identical for everyone.)
+The devnet is a **local-network** thing by design: whatever address you pick is the one the snodes
+advertise in their registry, so every client — simulators, the harness, CI — has to be able to reach
+that exact address. A devnet is therefore usable from the machine it runs on and from the LAN it sits
+on, and nowhere else. CI just runs its own, with its own `LISTEN_IP` (see [CI](#ci)).
 
 ## 2. Start the devnet
 
@@ -95,6 +90,9 @@ DEVNET_SEED_URL=http://<LISTEN_IP>:<RPC-PORT>   # e.g. http://192.168.139.2:1280
 That's the seed node's **oxend RPC** endpoint. Everything else the clients need — the node's ed25519
 pubkey and both storage ports — is read back from it by `get_n_service_nodes`, so the `Pubkey`,
 `Storage HTTPS` and `Storage OMQ` columns no longer need copying anywhere.
+
+A bare host, `host:port` or a full `http://host:port` are all accepted (a trailing path is ignored,
+and the port defaults to `1280`), so pasting straight out of the node table works.
 
 > **Why this replaced the old five variables.** The compose mounts no volume for the data dir, so a
 > fresh `--build`/recreate regenerates the seed keys. A hand-copied pubkey therefore rotted silently —
@@ -133,6 +131,10 @@ answer `get_n_service_nodes` with registered nodes, and the storage ports it adv
 connections. If devnet was requested and any of that fails, the **whole run stops** — on every
 platform and every project — instead of hanging until the 480s test timeout.
 
+The two services in 4b and 4c are then discovered off the same devnet IP, so they need no addresses of
+their own. Unlike the devnet they are **optimisations**: whatever is unreachable is reported and
+skipped, and the run continues on the remote community / production file server.
+
 ## 4b. (Optional) local file server
 
 The file server comes up **with the devnet** — the `docker compose up --build` from step 2 also
@@ -149,19 +151,28 @@ docker compose logs fileserver | grep -i pubkey
 #   which is X25519 pubkey:     51bd…       <- use this one
 ```
 
-Then add to `.env`:
+Then add **just the pubkey** to `.env`:
 
 ```bash
-FILE_SERVER_URL=http://<LISTEN_IP>:8000    # reached by the exit snode, so use the devnet IP
-FILE_SERVER_PUBKEY=<X25519 pubkey>          # omit to use the app's default file-server pubkey
+FILE_SERVER_PUBKEY=<X25519 pubkey>
 ```
+
+The address is discovered: on a devnet run the harness probes `:8000` on the devnet's advertised IP
+and sets `FILE_SERVER_URL` itself (`run/test/utils/devnet_services.ts`). Override with
+`FILE_SERVER_URL`, or with `FILE_SERVER_HOST`/`FILE_SERVER_PORT` if the file server is not on the
+devnet's host.
 
 Notes:
 
+- **The pubkey is the one thing you must state.** It is used to encrypt the _inside_ of the onion
+  request, so nothing on this side of the snodes can tell a right key from a wrong one — a wrong one
+  surfaces as an upload failing partway through a run. Rather than guess it, discovery reports the
+  server it found and leaves the suite on the production file server until you set the key.
 - The app reaches the file server via an **onion request through the devnet snodes**, so
   `FILE_SERVER_URL` must be reachable **from the snodes** (i.e. the OrbStack VM) — the devnet
-  `LISTEN_IP:8000` satisfies that (and macOS too).
-- Leave `FILE_SERVER_URL` unset to keep using the production file server.
+  `LISTEN_IP:8000` satisfies that (and macOS too), which is why the advertised devnet IP is what
+  discovery uses rather than the address you reach it on.
+- Leave `FILE_SERVER_PUBKEY` unset to keep using the production file server.
 - **Troubleshooting** — if the file server logs `Failed to decrypt onion request (tried 1 pubkeys)`
   (media uploads fail): the request is reaching the server but the client encrypted to a key the
   server can't match. Check, in order: (1) the value is the **X25519** pubkey (LibSession-Util uses
@@ -191,22 +202,27 @@ docker compose logs sogs | grep -A1 'server pubkey'
 #   Community link (web view) : http://localhost:8080/local-devnet-community?public_key=aa7c…a613
 ```
 
-Then add to `.env` — use the **devnet host** (reachable from the snodes), the fixed room and pubkey:
-
-```bash
-COMMUNITY_LINK=http://<LISTEN_IP>:8080/local-devnet-community?public_key=aa7c2b3bcd6433e52d6616356fcdba68668e8b506d84a3c7a1a196d63235a613
-COMMUNITY_NAME=Local Devnet Community
-COMMUNITY_ROOM=local-devnet-community
-```
+**On a devnet run there is normally nothing to add to `.env`.** The harness builds `COMMUNITY_LINK`
+itself from the devnet's advertised IP, `:8080` and the stack's baked pubkey, and lists the server's
+rooms to fill in `COMMUNITY_NAME`/`COMMUNITY_ROOM` (`run/test/utils/devnet_services.ts`). Set
+`COMMUNITY_LINK` by hand only to point somewhere else; it is then left alone.
 
 Notes:
 
+- **The link is verified before it is used.** Discovery makes one signed request to the server, which
+  only succeeds if the `public_key` it is about to publish really is that server's — SOGS signatures
+  are computed over the server's key, so a wrong one comes back `401`. If it does, discovery says so
+  and publishes nothing, leaving the run on the remote community. That matters because a link that is
+  merely _reachable_ would take per-test rooms down with it (see below) and hand the community specs
+  a local server they cannot authenticate to.
+- If your SOGS is not the local stack's — a different deployment, CI's — set `SOGS_PUBKEY` to its
+  X25519 server pubkey, and `SOGS_HOST`/`SOGS_PORT` if it does not share the devnet's address.
 - The app reaches the SOGS via an **onion request through the devnet snodes**, so `COMMUNITY_LINK`'s
   host must be reachable **from the snodes** (the OrbStack VM) — `LISTEN_IP:8080` satisfies that (and
-  macOS too). The `public_key` in the link is the SOGS' X25519 server pubkey and is what pins the
-  community, independent of host.
-- Leave `COMMUNITY_LINK` unset to keep using the remote `test-chat.session.codes` community (the CI
-  default — CI is unchanged).
+  macOS too), which is why discovery keys off the advertised devnet IP. The `public_key` in the link
+  is the SOGS' X25519 server pubkey and is what pins the community, independent of host.
+- On a non-devnet run nothing is discovered, so leaving `COMMUNITY_LINK` unset keeps using the remote
+  `test-chat.session.codes` community.
 - Setting `COMMUNITY_LINK` switches the **whole** community set to local-only rooms: the harness
   derives the extra `local-devnet-community-2..6` rooms from your link's host + `public_key`
   automatically, so the multi-community tests (`user_actions_pin_unpin`, `recovery_banner`) don't
@@ -299,12 +315,18 @@ read a single repo-level Actions **variable**, `DEVNET_SEED_URL`, so the only pe
 difference is that URL. (The Android workflow additionally uses the input to pick the APK variant —
 AQA for devnet, plain QA for mainnet.)
 
+The local SOGS and file server are discovered on CI too, from the devnet CI is pointed at. Its keys
+and ports need not match a local stack's, and the two behave differently when they don't: a wrong
+`SOGS_PUBKEY` is **detected** (the signed check fails, so the run stays on the remote community),
+while a wrong `FILE_SERVER_PUBKEY` cannot be, which is why that one is never assumed. To use either on
+CI, set the matching repo variable — `SOGS_PUBKEY`, `FILE_SERVER_PUBKEY`, and `SOGS_HOST`/`SOGS_PORT`
+or `FILE_SERVER_HOST`/`FILE_SERVER_PORT` if they are not on the devnet's own host.
+
 > **The runner needs a network path to the seed node's oxend RPC port** — not just to its storage
-> ports. oxend binds that RPC to a **single** address, the one you chose as `LISTEN_IP`, whereas the
-> storage ports bind all interfaces. So which paths work follows from `LISTEN_IP`: with a LAN address
-> only LAN clients reach the RPC (Tailscale peers will find the storage ports open and the RPC closed,
-> which fails confusingly); with a Tailscale address (see [1. Choose `LISTEN_IP`](#1-choose-listen_ip))
-> tailnet peers reach it too.
+> ports. oxend binds that RPC to a **single** address, the one chosen as `LISTEN_IP`, whereas the
+> storage ports bind all interfaces. A client off that network therefore finds the storage ports open
+> and the RPC closed, which fails confusingly. So the runner and the devnet have to be on the same
+> local network, which is the arrangement this is built around.
 
 ## Notes & gotchas
 

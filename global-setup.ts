@@ -9,6 +9,7 @@ import {
   requestedDevnetRefs,
   resolveNetworkTarget,
 } from './run/test/utils/devnet';
+import { resolveDevnetServices } from './run/test/utils/devnet_services';
 import { getServiceNetwork, resolveDevnetSeedNode } from './run/test/utils/network_target';
 import { SupportedPlatformsType } from './run/test/utils/open_app';
 import { ensureWdaBuilt } from './scripts/build_wda';
@@ -56,7 +57,13 @@ export default async function globalSetup(_config: FullConfig) {
   // LOCAL_DEVNET_SEED_URL, with no NETWORK_TARGET) has a devnet ref but no DEVNET_SEED_URL, and
   // discovery would fail demanding one it never needed.
   if (getServiceNetwork() === 'devnet') {
-    await resolveDevnetSeedNode();
+    const seedNode = await resolveDevnetSeedNode();
+
+    // The local SOGS and file server share the devnet's host, so their addresses are derivable from
+    // the node we just resolved rather than worth maintaining by hand alongside it. Best-effort and
+    // never fatal — whatever is missing leaves the suite on the remote community / production file
+    // server. Must run before `probePerTestRooms` below, which reads the COMMUNITY_LINK it may set.
+    await resolveDevnetServices(seedNode.ip);
   }
 
   // Runs for EVERY project (mobile, desktop, cross-platform) and regardless of PLATFORM: if this

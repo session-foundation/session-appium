@@ -119,15 +119,78 @@ function cachedSeedNode(): DevnetSeedNode | undefined {
 }
 
 /**
+ * Fallback RPC port when the configured address carries no `:port`. The conventional oxend RPC port
+ * on Sesh-Net-Docker, and the one docs/local-devnet.md tells you to pick.
+ */
+const DEFAULT_DEVNET_RPC_PORT = '1280';
+
+/** Warned at most once per process: the value is read on every capability build. */
+let warnedAboutSeedUrlScheme = false;
+
+/**
+ * Canonicalise a configured seed address into `http://host:port`.
+ *
+ * The value is surfaced as a single free-text field — a repo variable, an `.env` line, a paste out of
+ * the devnet's node table — so it has to tolerate what people actually write: a bare host, `host:port`,
+ * a full URL, a trailing slash or path. Being strict here failed in a way that read as a devnet
+ * problem rather than a typo, and being *loose* is worse: leaving a scheme on the front turns into
+ * `http://http://host:1280/json_rpc`, which 404s and looks like an unreachable node.
+ *
+ * `https` is accepted and downgraded with a warning rather than rejected: oxend's RPC is plain HTTP,
+ * so an `https://` value is always a mistake, but it is an obvious one to correct rather than a reason
+ * to refuse to start.
+ */
+function normaliseSeedUrl(raw: string): `http://${string}` {
+  const invalid = (why: string) =>
+    new Error(
+      `DEVNET_SEED_URL ${why} (got "${raw}"). It is the seed node's oxend RPC endpoint — a bare ` +
+        `host, host:port, or http://host:port are all accepted; the port defaults to ` +
+        `${DEFAULT_DEVNET_RPC_PORT}.`
+    );
+
+  const scheme = /^([a-z][a-z0-9+.-]*):\/\//i.exec(raw)?.[1]?.toLowerCase();
+  if (scheme && scheme !== 'http' && scheme !== 'https') {
+    throw invalid(`must be an http address`);
+  }
+  if (scheme === 'https' && !warnedAboutSeedUrlScheme) {
+    warnedAboutSeedUrlScheme = true;
+    console.warn(
+      `Warning: DEVNET_SEED_URL is https, but oxend's RPC is plain HTTP — using http instead.`
+    );
+  }
+
+  const bare = raw
+    .replace(/^[a-z][a-z0-9+.-]*:\/\//i, '') // scheme
+    .replace(/[/?#].*$/, ''); // path, query, fragment
+
+  const match = /^(.*):(\d{1,5})$/.exec(bare);
+  const host = match ? match[1] : bare;
+  const port = match ? match[2] : DEFAULT_DEVNET_RPC_PORT;
+
+  if (host === '' || /\s/.test(host)) {
+    throw invalid('has no host');
+  }
+  if (Number(port) < 1 || Number(port) > 65535) {
+    throw invalid(`has an out-of-range port "${port}"`);
+  }
+
+  return `http://${host}:${port}`;
+}
+
+/**
  * The single devnet input: the seed node's oxend RPC URL.
  *
  * This is the ONLY devnet value that is configured. Everything the clients need — pubkey, IP and both
  * storage ports — is discovered from it, so there is deliberately no second way to express it.
+ *
+ * Always returns the canonical `http://host:port` form, whatever shape it was configured in. Every
+ * caller goes through here, so the refs they compare (and the URL published to Desktop as
+ * LOCAL_DEVNET_SEED_URL) are all normalised the same way.
  */
 export function getDevnetSeedUrl(): `http://${string}` {
-  const url = (process.env.DEVNET_SEED_URL ?? '').trim().replace(/\/$/, '');
+  const configured = (process.env.DEVNET_SEED_URL ?? '').trim();
 
-  if (!url) {
+  if (!configured) {
     // If the retired pair is still set, show the exact replacement rather than making them work it out.
     const legacyIp = (process.env.DEVNET_IP ?? '').trim();
     const legacyPort = (process.env.DEVNET_RPC_PORT ?? '').trim();
@@ -141,14 +204,7 @@ export function getDevnetSeedUrl(): `http://${string}` {
     );
   }
 
-  if (!/^http:\/\/[^/\s]+$/.test(url)) {
-    throw new Error(
-      `DEVNET_SEED_URL must look like http://<host>:<port> (got "${url}"). ` +
-        `It is the seed node's oxend RPC endpoint.`
-    );
-  }
-
-  return url as `http://${string}`;
+  return normaliseSeedUrl(configured);
 }
 
 /** A single node as returned by oxend, before validation. */

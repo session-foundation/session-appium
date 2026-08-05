@@ -65,9 +65,10 @@ Only a subset matters per platform (all read in `run/test/utils/binaries.ts` /
   platforms**, and should be **set explicitly** — leaving it unset does *not* put everything on
   mainnet, it lets each platform fall back to its own default (see below). Running on devnet avoids
   full mainnet onion-routing latency, which
-  dominates the slowest multi-device tests. For devnet, `DEVNET_SEED_URL` (the seed node's oxend RPC,
-  e.g. `http://10.0.0.1:1280`) is the **only** other value needed. Local devnet setup (incl. OrbStack
-  on the same Mac as the simulators): `docs/local-devnet.md`.
+  dominates the slowest multi-device tests. For devnet, `DEVNET_SEED_URL` (the seed node's oxend RPC)
+  is the **only** other value needed — a bare host, `host:port` or `http://host:port` all work, port
+  defaulting to 1280. Local devnet setup (incl. OrbStack on the same Mac as the simulators):
+  `docs/local-devnet.md`.
 
   Each client is told the network differently, and the harness translates `NETWORK_TARGET` into all
   three (`pinPlatformsToNetworkTarget` in `devnet.ts`, plus the capability builders):
@@ -93,6 +94,15 @@ Only a subset matters per platform (all read in `run/test/utils/binaries.ts` /
 
   Requesting devnet when the devnet is unusable aborts the whole run in `global-setup`, on every
   platform and project (`assertRequestedDevnetsReachable`).
+
+- **Local SOGS / file server are discovered too** (`devnet_services.ts`, from `global-setup` on devnet
+  runs), keyed off the devnet's advertised service-node IP — the address the app needs, since it
+  reaches both through the snodes. Unlike the devnet they are optimisations: anything unreachable is
+  reported and skipped, leaving the run on the remote community / production file server. The SOGS
+  link is *verified* before use (one signed request — a wrong `SOGS_PUBKEY` comes back 401), so it
+  cannot take per-test community rooms down with it. `FILE_SERVER_PUBKEY` has no such check — the key
+  only matters inside the onion request — so it is never guessed: set it, or the production file
+  server is used. `SOGS_HOST`/`SOGS_PORT`/`FILE_SERVER_HOST`/`FILE_SERVER_PORT` override the address.
 
 ### iOS simulators
 
