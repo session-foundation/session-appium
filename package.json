@@ -4,6 +4,7 @@
   "scripts": {
     "cleanup-simulators": "npx ts-node scripts/cleanup_ios_simulators.ts",
     "create-simulators": "pnpm cleanup-simulators && npx ts-node scripts/create_ios_simulators.ts",
+    "create-emulators": "npx ts-node scripts/create_android_emulators.ts",
     "build-wda": "npx ts-node scripts/build_wda.ts",
     "recover-emulators": "npx ts-node scripts/emulator_health.ts",
     "setup-virtual-scene": "npx ts-node scripts/setup_virtual_scene.ts",
@@ -22,7 +23,8 @@
     "start-server": "./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --allow-cors",
     "allure-generate": "allure generate allure/allure-results --clean",
     "allure-open": "allure open",
-    "mock-pro": "npx ts-node run/test/utils/mock_pro.ts"
+    "mock-pro": "npx ts-node run/test/utils/mock_pro.ts",
+    "test-pro-keys": "npx ts-node run/test/utils/mock_pro.ts --self-test"
   },
   "devDependencies": {
     "@appium/execute-driver-plugin": "^6.0.0",
@@ -60,7 +62,8 @@
     "ts-node": "^10.9.2",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.58.0",
-    "undici": "^7.24.6"
+    "undici": "^7.24.6",
+    "uuid": "^13.0.0"
   },
   "license": "MIT",
   "engines": {

@@ -57,8 +57,10 @@ Only a subset matters per platform (all read in `run/test/utils/binaries.ts` /
   (`*-iphonesimulator`, not a device build). `IOS_1_SIMULATOR … IOS_12_SIMULATOR` hold
   simulator UDIDs — **`pnpm create-simulators <n>` writes these for you.**
 - **Android:** `ANDROID_APK`, `APPIUM_ADB_FULL_PATH`, `EMULATOR_FULL_PATH`,
-  `ANDROID_SDK_ROOT`. Emulators must be **created and running** beforehand (Appium won't
-  boot them); see `README.md`.
+  `ANDROID_SDK_ROOT` — **`pnpm create-emulators <n>` writes the last three for you**, creates Pixel 6 /
+  API 34 AVDs, pins them to the udids the suite expects (`emulator-5554/5556/5558/5560`, hardcoded in
+  `capabilities_android.ts`) and boots them. Appium will not boot emulators itself. Note `ANDROID_APK`
+  is a versioned filename, so it needs repointing after a version bump.
 - **Run tuning:** `PLAYWRIGHT_WORKERS_COUNT_IOS` (default 1), `PLAYWRIGHT_RETRIES_COUNT`
   (default 0), `PLAYWRIGHT_REPEAT_COUNT`.
 - **Network target.** `NETWORK_TARGET=mainnet|testnet|devnet` is the **single switch for all three
