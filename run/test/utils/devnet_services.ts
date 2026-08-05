@@ -193,7 +193,13 @@ async function discoverFileServer(host: string): Promise<Array<string>> {
   try {
     // Any answer counts: the root 404s when the server is healthy, so this asks whether something is
     // there rather than whether it liked the request.
-    await fetch(`${url}/`, { signal: AbortSignal.timeout(5_000) });
+    //
+    // The body is cancelled rather than ignored: undici keeps the socket checked out of its
+    // connection pool until the body is consumed or collected, so dropping it leaks a connection to a
+    // service we are probably not going to talk to again. GET rather than HEAD because the probe only
+    // needs *something* to answer, and a server that serves GET can still answer HEAD differently.
+    const response = await fetch(`${url}/`, { signal: AbortSignal.timeout(5_000) });
+    await response.body?.cancel();
   } catch (error) {
     return [
       `${label} unavailable at ${url} (${reason(error)})`,
