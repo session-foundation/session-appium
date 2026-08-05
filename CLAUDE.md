@@ -77,6 +77,11 @@ Only a subset matters per platform (all read in `run/test/utils/binaries.ts` /
   |---|---|
   | iOS | launch-arg env keys `serviceNetwork`/`devnet*`, consumed by `DeveloperSettingsViewModel+Testing.swift` |
   | Android | launch intent extras `sessionServiceNetwork`/`sessionDevnetSeedUrl`, consumed by `QaLaunchConfig` (QA builds only) |
+
+  Android's extras are **persisted, not applied live** — `QaLaunchConfig` writes them to prefs, so
+  `openAndroidApp` relaunches once before handing the device to the spec. Extras values must contain
+  no spaces and no leading hyphen: `appium-adb`'s parser treats any space-preceded `-`-prefixed token
+  as a new flag.
   | Desktop | `LOCAL_DEVNET_SEED_URL`, which the harness sets — do **not** set it by hand alongside `NETWORK_TARGET` |
 
   Two things to know before touching this:

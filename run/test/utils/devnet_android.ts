@@ -1,4 +1,5 @@
 import { getDevnetSeedUrl, getServiceNetwork } from './network_target';
+import { getProBackendOverride } from './pro_backend';
 
 /**
  * Android's equivalent of the iOS `appium:processArguments.env` launch variables.
@@ -9,24 +10,49 @@ import { getDevnetSeedUrl, getServiceNetwork } from './network_target';
  * `ALLOW_QA_LAUNCH_CONFIG` build flag (the launcher is an exported activity-alias, so acting on
  * extras in a release build would let any installed app repoint the network).
  *
- * Returns `undefined` unless NETWORK_TARGET is explicitly set. That is important for compatibility:
- * an `automaticQa` APK already defaults to devnet via `BuildConfig.DEFAULT_ENVIRONMENT`, so sending
- * `sessionServiceNetwork=mainnet` by default would *override* that and quietly move every existing
- * Android devnet run onto mainnet.
+ * The network extras are omitted unless NETWORK_TARGET is explicitly set. That is important for
+ * compatibility: an `automaticQa` APK already defaults to devnet via `BuildConfig.DEFAULT_ENVIRONMENT`,
+ * so sending `sessionServiceNetwork=mainnet` by default would *override* that and quietly move every
+ * existing Android devnet run onto mainnet.
+ *
+ * **Two constraints on values, from `appium-adb`'s parser** (`buildStartCmd` →
+ * `parseOptionalIntentArguments`): it splits on whitespace and treats any space-preceded `-`-prefixed
+ * token as a new flag, so a value must contain **no spaces and no leading hyphen**. URLs, hex keys and
+ * enum names are fine; a display string would not be.
  */
 export function buildAndroidLaunchExtras(): string | undefined {
-  if (!(process.env.NETWORK_TARGET ?? '').trim()) {
-    return undefined;
+  const extras: string[] = [];
+
+  if ((process.env.NETWORK_TARGET ?? '').trim()) {
+    const network = getServiceNetwork();
+    extras.push(`--es sessionServiceNetwork ${network}`);
+
+    if (network === 'devnet') {
+      // Android only needs the seed URL: unlike iOS it discovers the snode pool itself, so it needs
+      // neither the pubkey nor the storage ports.
+      extras.push(`--es sessionDevnetSeedUrl ${getDevnetSeedUrl()}`);
+    }
   }
 
-  const network = getServiceNetwork();
-  const extras = [`--es sessionServiceNetwork ${network}`];
-
-  if (network === 'devnet') {
-    // Android only needs the seed URL: unlike iOS it discovers the snode pool itself, so it needs
-    // neither the pubkey nor the storage ports.
-    extras.push(`--es sessionDevnetSeedUrl ${getDevnetSeedUrl()}`);
+  // Both or neither: the app rejects a half-supplied pair, because a QA URL paired with the production
+  // signing key reads every QA-signed proof as invalid and silently strips Pro content.
+  const proBackend = getProBackendOverride();
+  if (proBackend) {
+    extras.push(
+      `--es sessionProBackendUrl ${proBackend.url}`,
+      `--es sessionProBackendPubkey ${proBackend.pubkey}`
+    );
   }
 
-  return extras.join(' ');
+  return extras.length > 0 ? extras.join(' ') : undefined;
+}
+
+/**
+ * Whether any launch extra was supplied, and so whether the app needs a relaunch to apply it.
+ *
+ * `QaLaunchConfig` persists the extras rather than applying them to the running process, so they only
+ * take effect on the next launch.
+ */
+export function androidNeedsQaConfigRelaunch(): boolean {
+  return buildAndroidLaunchExtras() !== undefined;
 }

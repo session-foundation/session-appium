@@ -14,6 +14,7 @@ import { sleepFor } from '../../shared/promise_utils';
 import { AndroidDeviceWrapper } from '../../types/AndroidDeviceWrapper';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { IosDeviceWrapper } from '../../types/IosDeviceWrapper';
+import { CreateAccountButton } from '../locators/onboarding';
 import { getAdbFullPath, getDevicesPerTestCount } from './binaries';
 import {
   androidAppPackage,
@@ -29,7 +30,8 @@ import {
   IOSTestContext,
 } from './capabilities_ios';
 import { registerDevicesForTest } from './device_registry';
-import { runScriptAndLog } from './utilities';
+import { androidNeedsQaConfigRelaunch } from './devnet_android';
+import { forceStopAndRestart, runScriptAndLog } from './utilities';
 
 const APPIUM_PORT = 4728;
 
@@ -243,11 +245,6 @@ const openAndroidApp = async (
   console.log(targetName, ' emulator booted');
 
   const capabilities = getAndroidCapabilities(actualCapabilitiesIndex);
-  console.log(
-    `Android App Full Path: ${
-      getAndroidCapabilities(actualCapabilitiesIndex)['alwaysMatch']['appium:app'] as any
-    }`
-  );
   console.info('capabilities', capabilities);
 
   const opts: DriverOpts = {
@@ -280,6 +277,21 @@ const openAndroidApp = async (
     enableMultiWindows: true,
     disableIdLocatorAutocompletion: true,
   });
+
+  // `QaLaunchConfig` persists the launch extras rather than applying them to the running process (its
+  // consumers are app-scoped singletons that may resolve either side of the first activity), so they
+  // only take effect on the next launch. Restart here, before the spec gets the device, rather than
+  // leaving it to each spec: without it a spec that onboards immediately would create its account on
+  // whichever network the build defaulted to, which surfaces as an unexplained network failure rather
+  // than a config problem.
+  //
+  // `forceStopAndRestart`'s default readiness wait is the home-screen PlusButton, which doesn't exist
+  // yet — the app is a fresh install sitting on onboarding — so wait for the landing screen instead.
+  if (androidNeedsQaConfigRelaunch()) {
+    await forceStopAndRestart(wrappedDevice, false);
+    await wrappedDevice.waitForTextElementToBePresent(new CreateAccountButton(wrappedDevice));
+  }
+
   return { device: wrappedDevice };
 };
 
