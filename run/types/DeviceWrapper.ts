@@ -2522,12 +2522,23 @@ export class DeviceWrapper implements IMobileWrapper {
     // if the button applies it's already in the tree — a short probe is enough. `maxWait` only
     // bounds the ABSENT case (a present button returns as soon as it's found), so keeping this low
     // avoids burning the full wait every time the view opens already at the bottom.
-    if (
-      await this.doesElementExist({ ...new ScrollToBottomButton(this).build(), maxWait: 1_000 })
-    ) {
-      await this.clickOnElementAll(new ScrollToBottomButton(this));
-    } else {
+    const button = await this.doesElementExist({
+      ...new ScrollToBottomButton(this).build(),
+      maxWait: 1_000,
+    });
+    if (!button) {
       this.info('Scroll button not found, continuing');
+      return;
+    }
+    // Tap the handle the probe returned rather than looking it up again: the button removes itself
+    // as soon as the list reaches the bottom (an incoming message auto-scrolling is enough), and a
+    // second lookup would wait the default 60s and then throw — turning a best-effort helper into a
+    // test failure.
+    try {
+      await this.click(button.ELEMENT);
+    } catch {
+      // Losing it between the probe and the tap means we're already where we wanted to be.
+      this.info('Scroll button disappeared before it could be tapped, continuing');
     }
   }
   public async pullToRefresh(): Promise<void> {
