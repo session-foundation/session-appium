@@ -17,13 +17,11 @@
 
 import { ed25519 } from '@noble/curves/ed25519.js';
 import { blake2b } from '@noble/hashes/blake2.js';
-import { randomBytes } from 'crypto';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
 import type { SupportedPlatformsType } from './open_app';
 
-import { PRO_BACKEND_URL } from '../../constants';
 import { User } from '../../types/testing';
 
 export type PaymentProvider = 'apple' | 'google';
@@ -35,35 +33,47 @@ type MakeAccountProParams = {
   // register a Pro payment without coupling to a mobile `SupportedPlatformsType`.
   platform?: SupportedPlatformsType;
   provider?: PaymentProvider;
+  /** Billing period to grant (default `1M`). */
+  plan?: '12M' | '1M' | '3M';
   dryRun?: boolean; // If true, build and print the request but don't send it
 };
 
-type AddProPaymentRequest = {
-  version: number;
+/**
+ * Provider codes as the backend names them. The protocol transmits enums as stable string codes,
+ * never integers (pro-wire-protocol.md §1; backend `base.PaymentProvider`).
+ *
+ * We mint against the store providers rather than the out-of-band one so the resulting account looks
+ * like a real purchase. That also keeps us clear of the `rangeproof` → `stf` rename currently
+ * landing on the clients: these two names are not changing.
+ */
+const PROVIDER_CODE: Record<PaymentProvider, string> = {
+  google: 'google_play',
+  apple: 'app_store',
+};
+
+type DevAddPaymentRequest = {
   master_pkey: string;
-  rotating_pkey: string;
-  master_sig: string;
-  rotating_sig: string;
-  payment_tx: {
-    provider: number;
-    google_payment_token?: string;
-    google_order_id?: string;
-    apple_tx_id?: string;
-  };
+  provider: string;
+  /** Billing period. The route also accepts the wire codes (`1m`/`3m`/`1y`). */
+  plan: '12M' | '1M' | '3M';
+  /** Optional override of the plan's nominal length, in seconds — for short-expiry tests. */
+  duration?: number;
 };
 
-type ProProof = {
-  version: number;
-  expiry_unix_ts_ms: number;
-  gen_index_hash: string;
-  rotating_pkey: string;
-  sig: string;
+type DevAddPaymentResult = {
+  provider: string;
+  payment_id: string;
+  plan: string;
+  /** Account entitlement end, in unix seconds. 0 when the payment was left unclaimed. */
+  account_expiry_ts: number;
+  redeemed: boolean;
 };
 
-type AddProPaymentResponse = {
-  status: number;
-  result?: ProProof;
-  errors?: string[];
+type DevAddPaymentResponse = {
+  status: string;
+  result?: DevAddPaymentResult;
+  error?: string;
+  error_code?: string;
 };
 
 let WORDLIST_CACHE: string[] | null = null;
@@ -158,6 +168,42 @@ export function padSeed(seedHex: string): Uint8Array {
 }
 
 // Derives the Pro master keypair from the seed using Blake2b with "SessionProRandom" as the key.
+/**
+ * The Account ID (`05` + x25519 pubkey) for a seed, used to prove a mint targets the account actually
+ * under test.
+ *
+ * This exists because a wrong seed is otherwise invisible: `/dev/add_payment` creates a `users` row for
+ * **whatever** key it is given, so minting for the wrong account still answers `redeemed=true` with a
+ * real expiry, and the only symptom is the client later reporting `never` — which is indistinguishable
+ * from "never subscribed". Seeded accounts are regenerated per run, so this is a genuinely easy mistake
+ * to make when comparing values by hand across runs.
+ */
+function accountIdFromSeed(seedHex: string): string {
+  const edPub = ed25519.getPublicKey(padSeed(seedHex));
+
+  // ed25519 -> curve25519 public key: u = (1 + y) / (1 - y) mod p, little-endian.
+  const p = (1n << 255n) - 19n;
+  const mod = (a: bigint) => ((a % p) + p) % p;
+  const invert = (a: bigint) => {
+    let [oldR, r, oldS, sCur] = [mod(a), p, 1n, 0n];
+    while (r !== 0n) {
+      const q = oldR / r;
+      [oldR, r] = [r, oldR - q * r];
+      [oldS, sCur] = [sCur, oldS - q * sCur];
+    }
+    return mod(oldS);
+  };
+  const y = ed25519.Point.fromBytes(edPub).toAffine().y;
+  let u = mod((1n + y) * invert(mod(1n - y)));
+
+  const le = Buffer.alloc(32);
+  for (let i = 0; i < 32; i++) {
+    le[i] = Number(u & 0xffn);
+    u >>= 8n;
+  }
+  return `05${le.toString('hex')}`;
+}
+
 function deriveProMasterKey(seedHex: string): {
   privateKey: Uint8Array;
   publicKey: Uint8Array;
@@ -176,122 +222,42 @@ function deriveProMasterKey(seedHex: string): {
   return { privateKey, publicKey };
 }
 
-// Generates a random ephemeral rotating keypair for the payment request.
-function generateRotatingKey(): { privateKey: Uint8Array; publicKey: Uint8Array } {
-  const privateKey = ed25519.utils.randomSecretKey();
-  const publicKey = ed25519.getPublicKey(privateKey);
-  return { privateKey, publicKey };
+/**
+ * Mint a Pro subscription through the backend's dev route, which exists only on an instance started
+ * with `dev_endpoints` (and which refuses to boot unless `provider_dry_run` is set too). No store,
+ * no provider notification, and no signature — the route is unauthenticated by design because it
+ * cannot exist in production.
+ *
+ * This is the only way a test account can become Pro. The authenticated endpoints all *redeem* a
+ * payment the backend already witnessed from Apple or Google; none of them mints one, so a payment
+ * a client invented can never be redeemed.
+ */
+/**
+ * The QA Pro backend to mint against — never the production one.
+ *
+ * `TEST_PRO_BACKEND_URL` is set by `resolveDevnetServices` once it has probed a Pro backend (or pinned
+ * by hand). Deliberately not falling back to `PRO_BACKEND_URL`: that is production, where `/dev/*`
+ * does not exist by design, so a fallback would turn a missing local backend into a confusing 404
+ * against a live service.
+ */
+function devProBackendUrl(): string {
+  const url = (process.env.TEST_PRO_BACKEND_URL ?? '').trim();
+  if (!url) {
+    throw new Error(
+      'No QA Pro backend to mint against: TEST_PRO_BACKEND_URL is unset. Start the Sesh-Net-Docker ' +
+        '`pro-backend` container and set TEST_PRO_BACKEND_ED_PK (from `docker logs sesh-net-pro-backend`) ' +
+        'so discovery can resolve it, or pin TEST_PRO_BACKEND_URL directly.'
+    );
+  }
+  return url;
 }
 
-function makeAddProPaymentHash(
-  version: number,
-  masterPubkey: Uint8Array,
-  rotatingPubkey: Uint8Array,
-  provider: number,
-  paymentToken?: string,
-  orderId?: string,
-  appleTxId?: string
-): Uint8Array {
-  const personalization = Buffer.from('ProAddPayment___', 'utf-8'); // 16 bytes
-
-  const parts: Uint8Array[] = [
-    new Uint8Array([version]),
-    masterPubkey,
-    rotatingPubkey,
-    new Uint8Array([provider]),
-  ];
-
-  if (provider === 1) {
-    // Google
-    if (!paymentToken || !orderId) {
-      throw new Error('Google provider requires payment_token and order_id');
-    }
-    parts.push(Buffer.from(paymentToken, 'utf-8'));
-    parts.push(Buffer.from(orderId, 'utf-8'));
-  } else if (provider === 2) {
-    // Apple
-    if (!appleTxId) {
-      throw new Error('Apple provider requires tx_id');
-    }
-    parts.push(Buffer.from(appleTxId, 'utf-8'));
-  }
-
-  // Concatenate all parts
-  const totalLen = parts.reduce((sum, p) => sum + p.length, 0);
-  const message = new Uint8Array(totalLen);
-  let offset = 0;
-  for (const part of parts) {
-    message.set(part, offset);
-    offset += part.length;
-  }
-
-  return blake2b(message, { dkLen: 32, personalization });
-}
-
-// Builds a signed add_pro_payment request body with fake payment tokens.
-function buildAddProPaymentRequest(
-  masterKey: { privateKey: Uint8Array; publicKey: Uint8Array },
-  rotatingKey: { privateKey: Uint8Array; publicKey: Uint8Array },
-  provider: PaymentProvider
-): AddProPaymentRequest {
-  const version = 0;
-  const providerNum = provider === 'google' ? 1 : 2;
-
-  let paymentToken: string | undefined;
-  let orderId: string | undefined;
-  let appleTxId: string | undefined;
-
-  const timestamp = Date.now();
-  const nonce = randomBytes(4).toString('hex');
-
-  if (provider === 'google') {
-    paymentToken = `DEV.${timestamp}.${nonce}`;
-    orderId = `DEV.${timestamp}.${nonce}`;
-  } else {
-    appleTxId = `DEV.${timestamp}.${nonce}`;
-  }
-
-  const hash = makeAddProPaymentHash(
-    version,
-    masterKey.publicKey,
-    rotatingKey.publicKey,
-    providerNum,
-    paymentToken,
-    orderId,
-    appleTxId
-  );
-
-  const masterSig = ed25519.sign(hash, masterKey.privateKey);
-  const rotatingSig = ed25519.sign(hash, rotatingKey.privateKey);
-
-  const paymentTx: AddProPaymentRequest['payment_tx'] = {
-    provider: providerNum,
-  };
-
-  if (provider === 'google') {
-    paymentTx.google_payment_token = paymentToken;
-    paymentTx.google_order_id = orderId;
-  } else {
-    paymentTx.apple_tx_id = appleTxId;
-  }
-
-  return {
-    version,
-    master_pkey: Buffer.from(masterKey.publicKey).toString('hex'),
-    rotating_pkey: Buffer.from(rotatingKey.publicKey).toString('hex'),
-    master_sig: Buffer.from(masterSig).toString('hex'),
-    rotating_sig: Buffer.from(rotatingSig).toString('hex'),
-    payment_tx: paymentTx,
-  };
-}
-
-// POSTs the payment request to the Pro backend with retries and timeout.
-async function addProPayment(
+async function devAddPayment(
   backendUrl: string,
-  request: AddProPaymentRequest,
+  request: DevAddPaymentRequest,
   { maxAttempts = 3, timeout = 10_000 } = {}
-): Promise<AddProPaymentResponse> {
-  const url = `${backendUrl}/add_pro_payment`;
+): Promise<DevAddPaymentResult> {
+  const url = `${backendUrl}/dev/add_payment`;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
@@ -306,62 +272,145 @@ async function addProPayment(
       });
 
       clearTimeout(timeoutId);
+      const data = (await response.json()) as DevAddPaymentResponse;
 
-      const data = (await response.json()) as AddProPaymentResponse;
-
-      if (!response.ok || data.status !== 0) {
-        throw new Error(
-          `Failed to add Pro payment: ${data.errors?.join(', ') || `HTTP ${response.status}`}`
-        );
+      if (!response.ok || data.status !== 'ok' || !data.result) {
+        // The backend answers 200 with status "fail" and its reason in `error`/`error_code`, so the
+        // HTTP code alone says nothing. Fall back to the raw body rather than the status line.
+        const reason =
+          data.error || `HTTP ${response.status}, body: ${JSON.stringify(data).slice(0, 300)}`;
+        throw new Error(reason);
       }
 
-      return data;
+      return data.result;
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'Unknown error';
       if (attempt === maxAttempts) {
-        throw new Error(`add_pro_payment failed after ${maxAttempts} attempts: ${msg}`);
+        throw new Error(
+          `dev/add_payment failed after ${maxAttempts} attempts: ${msg}\n` +
+            `Is a QA Pro backend running at ${backendUrl}? The Sesh-Net-Docker \`pro-backend\` ` +
+            `container publishes one on :8090; production has no /dev routes.`
+        );
       }
-      console.log(`add_pro_payment attempt ${attempt}/${maxAttempts} failed: ${msg}, retrying...`);
+      console.log(`dev/add_payment attempt ${attempt}/${maxAttempts} failed: ${msg}, retrying...`);
     }
   }
 
   throw new Error('Unreachable');
 }
 
-// Registers a test account as a Pro subscriber against the dev backend.
-export async function makeAccountPro(params: MakeAccountProParams): Promise<ProProof | null> {
-  const { user, platform, provider: providerParam, dryRun = false } = params;
-  const mnemonic = user.recoveryPhrase;
+export async function makeAccountPro(
+  params: MakeAccountProParams
+): Promise<DevAddPaymentResult | null> {
+  const { user, platform, provider: providerParam, plan = '1M', dryRun = false } = params;
   const provider: PaymentProvider = providerParam ?? (platform === 'ios' ? 'apple' : 'google');
-  const seedHex = mnemonicToSeedHex(mnemonic);
+  // The master Pro key is derived from the account's recovery phrase, so the grant binds to the
+  // account the test just created without the app having to tell us anything.
+  const seedHex = mnemonicToSeedHex(user.recoveryPhrase);
+
+  // Fail at the mint rather than three screens later. `accountID` is 'not_needed' when a spec opted out
+  // of reading it, in which case there is nothing to check against.
+  if (user.accountID && user.accountID.startsWith('05')) {
+    const derived = accountIdFromSeed(seedHex);
+    if (derived !== user.accountID) {
+      throw new Error(
+        `makeAccountPro: the recovery phrase does not belong to ${user.userName}. Derived ${derived} ` +
+          `but the account under test is ${user.accountID}. Minting would silently grant Pro to a ` +
+          `different account, and the client would then report "never" as if nothing was purchased.`
+      );
+    }
+  }
+
   const masterKey = deriveProMasterKey(seedHex);
-  const rotatingKey = generateRotatingKey();
-  // Build request
-  const request = buildAddProPaymentRequest(masterKey, rotatingKey, provider);
-  console.log(`\nRequest body:
-    ${JSON.stringify(request, null, 2)}`);
+
+  const request: DevAddPaymentRequest = {
+    master_pkey: Buffer.from(masterKey.publicKey).toString('hex'),
+    provider: PROVIDER_CODE[provider],
+    plan,
+  };
+
+  const backendUrl = devProBackendUrl();
 
   if (dryRun) {
-    console.log('\nDRY RUN - Request not sent');
+    console.log(`DRY RUN — would POST to ${backendUrl}/dev/add_payment:`);
+    console.log(JSON.stringify(request, null, 2));
     return null;
   }
 
-  // Send request
-  console.log(`\nSending request to ${PRO_BACKEND_URL}...`);
-  const response = await addProPayment(PRO_BACKEND_URL, request);
+  const result = await devAddPayment(backendUrl, request);
 
-  if (!response.result) {
-    throw new Error('No proof in response');
+  // `redeemed: false` means the payment was minted but left unbound. Redemption is implicit, so the
+  // account holder's next authenticated request reconciles it — but the app won't be Pro yet at the
+  // moment this returns, which is the sort of thing that reads as a flaky test rather than a timing
+  // one, so say it plainly.
+  // The master_pkey is logged because a mismatch between it and the key the CLIENT signs with is
+  // indistinguishable, from the client's side, from "never subscribed": the backend's status lookup is
+  // a bare `WHERE master_pkey = ?`, so a wrong key yields `never` rather than an error.
+  console.log(
+    `Minted a ${result.plan} ${result.provider} payment (redeemed=${result.redeemed}) ` +
+      `for master_pkey ${request.master_pkey}, ` +
+      `entitlement until ${
+        result.account_expiry_ts
+          ? new Date(result.account_expiry_ts * 1000).toISOString()
+          : 'unclaimed'
+      }`
+  );
+
+  return result;
+}
+
+/**
+ * Committed libsession test vectors (`tests/test_ed25519.cpp`), plus one derived by `pro-task-review`
+ * for a zero-padded 16-byte seed — the shape Session accounts actually use.
+ *
+ * These pin the Pro master-key derivation to libsession with no device and no backend. Worth keeping:
+ * a divergence here is otherwise only observable as a client reporting `never`, which reads as a
+ * product bug or a flaky test rather than a harness one.
+ */
+const PRO_KEY_VECTORS: ReadonlyArray<{ ed25519Seed: string; masterPkey: string }> = [
+  {
+    ed25519Seed: 'e5481635020d6f7b327e94e6d63e33a431fccabc4d2775845c43a8486a9f2884',
+    masterPkey: 'b6d20c075eddd2edb69d4d7da9b7e580f187ce0537585da2b5e454b77980d0c8',
+  },
+  {
+    ed25519Seed: '743d646706b6b04b97b752036dd6cf5f2adc4b339fcfdfb4b496f0764bb93a84',
+    masterPkey: '539d0a3be9658ebb6ba3ce97b25d4f6b716f7ef6d6ae6343bd0733519f5a51e8',
+  },
+  {
+    ed25519Seed: 'c5fc4263e28ab3ad0e3de67789b23dd100000000000000000000000000000000',
+    masterPkey: '7bcccfab74ea2e0929208a4a610e3b30b2046b38a9c78efe6ec221905b8ef595',
+  },
+];
+
+/** Throws if the Pro master-key derivation has drifted from libsession. */
+export function assertProKeyDerivationMatchesLibSession(): void {
+  const failures = PRO_KEY_VECTORS.flatMap(({ ed25519Seed, masterPkey }) => {
+    // The vectors are full 32-byte ed25519 seeds, so bypass the 16 -> 32 padding step.
+    const proSeed = blake2b(Buffer.from(ed25519Seed, 'hex'), {
+      dkLen: 32,
+      key: Buffer.from('SessionProRandom', 'utf-8'),
+    });
+    const actual = Buffer.from(ed25519.getPublicKey(proSeed)).toString('hex');
+    return actual === masterPkey
+      ? []
+      : [`  seed ${ed25519Seed}\n    expected ${masterPkey}\n    actual   ${actual}`];
+  });
+
+  if (failures.length > 0) {
+    throw new Error(
+      `Pro master-key derivation no longer matches libsession:\n${failures.join('\n')}`
+    );
   }
-
-  console.log('Account successfully registered as Pro');
-  console.log(`  Expiry: ${new Date(response.result.expiry_unix_ts_ms).toISOString()}`);
-
-  return response.result;
 }
 
 if (require.main === module) {
   const args = process.argv.slice(2);
+
+  if (args.includes('--self-test')) {
+    assertProKeyDerivationMatchesLibSession();
+    console.log(`Pro key derivation matches libsession (${PRO_KEY_VECTORS.length} vectors)`);
+    process.exit(0);
+  }
 
   if (args.length < 2) {
     console.error(
