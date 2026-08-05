@@ -1,0 +1,182 @@
+import { test, type TestInfo } from '@playwright/test';
+
+import { TestSteps } from '../../../types/allure';
+import { iosIt } from '../../../types/sessionIt';
+import { USERNAME } from '../../../types/testing';
+import {
+  ProBadgeSettingRow,
+  ProFeaturesHeader,
+  ProManageSectionHeader,
+  ProPlanExpiry,
+  ProSettingsEntry,
+  ProStatsHeader,
+  ProStatusBanner,
+  UpdateProAccessRow,
+} from '../../locators/pro';
+import { UserSettings } from '../../locators/settings';
+import { IOSTestContext } from '../../utils/capabilities_ios';
+import { newUser } from '../../utils/create_account';
+import {
+  closeApp,
+  openAppOnPlatformSingleDevice,
+  SupportedPlatformsType,
+} from '../../utils/open_app';
+
+/**
+ * Session Pro settings screens, driven entirely by the mocked launch-arg env — no Pro backend, no
+ * entitlement, and no store. Each state below is otherwise unreachable in a test: `active` needs a
+ * real subscription, `expired` needs one that has lapsed, and the loading/error banners need the
+ * backend to be slow or down.
+ *
+ * iOS-only because the mocks are: Android has no env injection yet (a plan for a QA-build-only
+ * equivalent is being scoped). They also assert no cryptographic outcome, so nothing here wants a
+ * real backend even once one is wired up — see the mock-vs-backend split.
+ */
+
+/**
+ * Whole days of remaining access to grant the `active` cases.
+ *
+ * The app ceilings the remaining interval into day/hour/minute units, so a timestamp exactly N days
+ * out renders as `N days` for the whole first day — which makes the rendered string deterministic
+ * regardless of how long onboarding took.
+ */
+const ACCESS_DAYS = 30;
+const accessExpiry = () => String(Math.floor(Date.now() / 1000) + ACCESS_DAYS * 24 * 60 * 60);
+
+iosIt({
+  title: 'Pro settings screen (subscribed)',
+  risk: 'medium',
+  countOfDevicesNeeded: 1,
+  testCb: proSettingsSubscribed,
+  isPro: true,
+  allureSuites: { parent: 'Session Pro' },
+});
+
+iosIt({
+  title: 'Pro settings entry (expired)',
+  risk: 'medium',
+  countOfDevicesNeeded: 1,
+  testCb: proSettingsExpired,
+  isPro: true,
+  allureSuites: { parent: 'Session Pro' },
+});
+
+iosIt({
+  title: 'Pro status checking state',
+  risk: 'low',
+  countOfDevicesNeeded: 1,
+  testCb: proStatusChecking,
+  isPro: true,
+  allureSuites: { parent: 'Session Pro' },
+});
+
+iosIt({
+  title: 'Pro status error state',
+  risk: 'low',
+  countOfDevicesNeeded: 1,
+  testCb: proStatusError,
+  isPro: true,
+  allureSuites: { parent: 'Session Pro' },
+});
+
+async function openSettingsAsNewUser(
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo,
+  iosContext: IOSTestContext
+) {
+  const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, iosContext);
+    await newUser(device, USERNAME.ALICE, { saveUserData: false });
+    return { device };
+  });
+  await device.clickOnElementAll(new UserSettings(device));
+  return device;
+}
+
+async function proSettingsSubscribed(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const device = await openSettingsAsNewUser(platform, testInfo, {
+    sessionProEnabled: 'true',
+    proBackendStatus: 'active',
+    proAccessExpiry: accessExpiry(),
+  });
+
+  await test.step('Open Pro settings', async () => {
+    await device.clickOnElementAll(new ProSettingsEntry(device));
+  });
+
+  await test.step('Verify the subscribed Pro settings screen', async () => {
+    await device.waitForTextElementToBePresent(new ProStatsHeader(device));
+    await device.waitForTextElementToBePresent(new ProManageSectionHeader(device));
+    await device.waitForTextElementToBePresent(new UpdateProAccessRow(device));
+    await device.waitForTextElementToBePresent(new ProPlanExpiry(device, `${ACCESS_DAYS} days`));
+    await device.waitForTextElementToBePresent(new ProBadgeSettingRow(device));
+    await device.waitForTextElementToBePresent(new ProFeaturesHeader(device));
+  });
+
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(device);
+  });
+}
+
+async function proSettingsExpired(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const device = await openSettingsAsNewUser(platform, testInfo, {
+    sessionProEnabled: 'true',
+    proBackendStatus: 'expired',
+  });
+
+  // An expired subscription does not open the Pro settings screen at all — the entry point goes
+  // straight to the renewal CTA, which is the behaviour worth pinning here.
+  await test.step('Open the expired Pro entry', async () => {
+    await device.clickOnElementAll(new ProSettingsEntry(device));
+  });
+
+  await test.step('Verify the renewal CTA', async () => {
+    await device.checkCTA('proExpired');
+  });
+
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(device);
+  });
+}
+
+async function proStatusChecking(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const device = await openSettingsAsNewUser(platform, testInfo, {
+    sessionProEnabled: 'true',
+    proBackendStatus: 'never',
+    proLoadingState: 'loading',
+  });
+
+  await test.step('Open Pro settings', async () => {
+    await device.clickOnElementAll(new ProSettingsEntry(device));
+  });
+
+  await test.step('Verify the checking-status banner', async () => {
+    await device.waitForTextElementToBePresent(new ProStatusBanner(device, 'checking'));
+    await device.waitForTextElementToBePresent(new ProFeaturesHeader(device));
+  });
+
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(device);
+  });
+}
+
+async function proStatusError(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const device = await openSettingsAsNewUser(platform, testInfo, {
+    sessionProEnabled: 'true',
+    proBackendStatus: 'never',
+    proLoadingState: 'error',
+  });
+
+  await test.step('Open Pro settings', async () => {
+    await device.clickOnElementAll(new ProSettingsEntry(device));
+  });
+
+  await test.step('Verify the backend-unavailable banner', async () => {
+    await device.waitForTextElementToBePresent(new ProStatusBanner(device, 'error'));
+    await device.waitForTextElementToBePresent(new ProFeaturesHeader(device));
+  });
+
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(device);
+  });
+}

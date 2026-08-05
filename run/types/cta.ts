@@ -5,7 +5,8 @@ export type CTAType =
   | 'animatedProfilePicture'
   | 'donate'
   | 'longerMessages'
-  | 'pinnedConversations';
+  | 'pinnedConversations'
+  | 'proExpired';
 
 export type CTAConfig = {
   heading: string;
@@ -47,6 +48,19 @@ export const ctaConfigs: Record<CTAType, CTAConfig> = {
     heading: tStripped('proActivated'),
     body: tStripped('proAnimatedDisplayPicture'),
     negativeButton: tStripped('close'),
+  },
+  // Shown when an expired subscriber opens the Pro entry in settings — the expired entry point goes
+  // to this CTA instead of the Pro settings screen.
+  proExpired: {
+    heading: tStripped('proExpired'),
+    body: tStripped('proExpiredDescription'),
+    negativeButton: tStripped('cancel'),
+    positiveButton: tStripped('renew'),
+    features: [
+      tStripped('proFeatureListLongerMessages'),
+      tStripped('proFeatureListPinnedConversations'),
+      tStripped('proFeatureListAnimatedDisplayPicture'),
+    ],
   },
   pinnedConversations: {
     heading: tStripped('upgradeTo'),

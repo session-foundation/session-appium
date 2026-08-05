@@ -126,6 +126,9 @@ export type XPath =
   | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
+  | `//*[@name="${string}"][@label="${string}"]`
+  | `//*[@name="${string}"][contains(@label, "${string}")]`
+  | `//*[@name="${string}"]//XCUIElementTypeStaticText[@name="${string}"]`
   | `//*[@resource-id='network.loki.messenger:id/callTitle' and contains(@text, ':')]`
   | `//*[starts-with(@content-desc, "GIF taken on")]`
   | `//*[starts-with(@content-desc, "Photo taken on")]`
@@ -171,6 +174,7 @@ export type UiAutomatorQuery =
   | `new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().textStartsWith(${string}))`
   | `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-text"))`
   | `new UiSelector().resourceId(${string}).childSelector(new UiSelector().className("android.widget.TextView"))`
+  | `new UiSelector().resourceId(${string}).childSelector(new UiSelector().resourceId(${string}))`
   | `new UiSelector().text(${string})`;
 
 export type AccessibilityId =
@@ -370,6 +374,15 @@ export type AccessibilityId =
   | 'Photos'
   | 'Pin'
   | 'Please enter a shorter group name'
+  | 'pro-badge-icon'
+  | 'pro-menu-item'
+  | 'pro-settings-features-header'
+  | 'pro-settings-manage-header'
+  | 'pro-settings-show-badge-toggle'
+  | 'pro-settings-show-badge'
+  | 'pro-settings-stats-header'
+  | 'pro-settings-status-banner'
+  | 'pro-settings-update-plan'
   | 'rate-app-button'
   | 'Read Receipts - Switch'
   | 'Recents'
@@ -589,7 +602,16 @@ export type Id =
   | 'preferred-display-name'
   | 'Privacy'
   | 'Privacy policy button'
+  | 'pro-badge-icon'
   | 'pro-badge-text'
+  | 'pro-menu-item'
+  | 'pro-settings-features-header'
+  | 'pro-settings-manage-header'
+  | 'pro-settings-show-badge-toggle'
+  | 'pro-settings-show-badge'
+  | 'pro-settings-stats-header'
+  | 'pro-settings-status-banner'
+  | 'pro-settings-update-plan'
   | 'promote-members-menu-option'
   | 'Promote'
   | 'qa-collapsing-footer-action_invite'
