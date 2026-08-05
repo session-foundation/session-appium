@@ -4,13 +4,16 @@ import { DISPOSABLE_PREFIX } from './community_rooms';
 import { describeFailure, identityFromSeed, sogsRequest } from './sogs_auth';
 
 /**
- * The optional local services that live on the devnet's host: the SOGS the community tests use, and
- * the file server the media tests upload to (docs/local-devnet.md §4b/§4c).
+ * The optional local services that live on the devnet's host: the SOGS the community tests use, the
+ * file server the media tests upload to (docs/local-devnet.md §4b/§4c), and the Pro backend.
  *
- * Both are **optimisations, not requirements**. Leaving them unset puts the suite on the remote
- * community and the production file server, which is a working configuration — just a slower one. So
- * nothing here ever fails a run: a service that is absent, or that we cannot prove we would talk to
- * correctly, is warned about and skipped.
+ * The first two are **optimisations, not requirements**. Leaving them unset puts the suite on the
+ * remote community and the production file server, which is a working configuration — just a slower
+ * one. So nothing here ever fails a run: a service that is absent, or that we cannot prove we would
+ * talk to correctly, is warned about and skipped.
+ *
+ * The Pro backend is the exception to that framing, and `discoverProBackend` says why: there is no
+ * usable fallback for it, so a run that asked for it and did not get one is warned about loudly.
  *
  * ## Why discover them at all
  *
@@ -41,9 +44,20 @@ import { describeFailure, identityFromSeed, sogsRequest } from './sogs_auth';
  */
 const SERVICE_DEFAULTS = {
   fileServerPort: '8000',
+  proBackendPort: '8090',
   sogsPort: '8080',
   sogsPubkey: 'aa7c2b3bcd6433e52d6616356fcdba68668e8b506d84a3c7a1a196d63235a613',
 } as const;
+
+/**
+ * A POST-only route on the Pro backend, used as an identity probe.
+ *
+ * A GET returns `405` when the route exists, where the root returns a plain `404` — so this
+ * distinguishes "the Pro backend is here" from "something else holds the port", which a liveness
+ * check on `/` cannot. Worth having because, unlike SOGS, nothing here can verify the backend's keys
+ * (see `discoverProBackend`), making the address the only thing we *can* check.
+ */
+const PRO_BACKEND_PROBE_PATH = '/get_pro_revocations';
 
 /** The room `buildLocalCommunities` falls back to when SOGS has no non-disposable room to offer. */
 const CONVENTIONAL_ROOM = { name: 'Local Devnet Community', token: 'local-devnet-community' };
@@ -229,6 +243,91 @@ async function discoverFileServer(host: string): Promise<Array<string>> {
 }
 
 /**
+ * Find the local Pro backend and publish the dev-target values the clients read.
+ *
+ * Only the address is discovered. The signing key cannot be: no route returns it (checked against the
+ * running instance and the backend's own route table), and unlike the SOGS and file-server keys it is
+ * not a baked deterministic value — the container generates a keypair into its data volume, so it
+ * differs per instance. Hence `TEST_PRO_BACKEND_ED_PK`, from the startup banner
+ * (`docker logs sesh-net-pro-backend`).
+ *
+ * One key, not two: the X25519 key the onion request encrypts to is derived from the Ed25519 one by
+ * the client (see ProBackendTarget in session-desktop), because the backend prints two
+ * representations of a single keypair.
+ *
+ * The probe is an identity check rather than a liveness one — see `PRO_BACKEND_PROBE_PATH`.
+ *
+ * Skipped entirely when neither `TEST_PRO_BACKEND` nor a key is set, so an ordinary devnet run neither
+ * pays for the probe nor reports a service it was never asked for.
+ */
+async function discoverProBackend(host: string): Promise<Array<string>> {
+  const label = '  pro backend :';
+  if (envValue('TEST_PRO_BACKEND_URL')) {
+    return [`${label} TEST_PRO_BACKEND_URL is already set — leaving it alone`];
+  }
+
+  // `TEST_PRO_BACKEND` is the clients' on/off switch for the dev backend. Note ANY non-empty value
+  // enables it there, `0` included.
+  const requested = !!envValue('TEST_PRO_BACKEND');
+  const edPk = envValue('TEST_PRO_BACKEND_ED_PK').toLowerCase();
+  if (!requested && !edPk) {
+    return [];
+  }
+
+  const url = `http://${envValue('PRO_BACKEND_HOST') || host}:${envValue('PRO_BACKEND_PORT') || SERVICE_DEFAULTS.proBackendPort}`;
+
+  // A run that asked for the dev backend and does not get one is not a slower run, it is a broken one:
+  // in session-desktop the unconfigured case throws inside SwarmPolling.pollOnceForKey, which kills
+  // every poll cycle — messages send but never arrive. Worth shouting about here rather than leaving it
+  // to be diagnosed from a test that times out waiting for a message.
+  const unusable = (lines: Array<string>) =>
+    requested
+      ? [
+          ...lines,
+          `               !! TEST_PRO_BACKEND is set, so clients will FAIL rather than fall back:`,
+          `                  Desktop throws on every swarm poll, so no message is ever received.`,
+          `                  Unset TEST_PRO_BACKEND, or fix the above.`,
+        ]
+      : lines;
+
+  try {
+    const response = await fetch(`${url}${PRO_BACKEND_PROBE_PATH}`, {
+      method: 'GET',
+      signal: AbortSignal.timeout(5_000),
+    });
+    await response.body?.cancel();
+    if (response.status === 404) {
+      return unusable([
+        `${label} something is at ${url} but it is not a Pro backend`,
+        `               (${PRO_BACKEND_PROBE_PATH} returned 404 — a Pro backend answers 405 there)`,
+      ]);
+    }
+  } catch (error) {
+    return unusable([`${label} unavailable at ${url} (${reason(error)})`]);
+  }
+
+  if (!edPk) {
+    return unusable([
+      `${label} reachable at ${url}, but TEST_PRO_BACKEND_ED_PK is unset`,
+      `               Set it to the "Ed25519 signing pubkey" from \`docker logs`,
+      `               sesh-net-pro-backend\`. It is generated per instance, so unlike the SOGS and`,
+      `               file-server keys there is no default to fall back on.`,
+    ]);
+  }
+  if (!HEX64.test(edPk)) {
+    return unusable([
+      `${label} TEST_PRO_BACKEND_ED_PK is not a 64-character hex string ("${edPk}") — skipping`,
+    ]);
+  }
+
+  process.env.TEST_PRO_BACKEND_URL = url;
+  return [
+    `${label} ${url} — using TEST_PRO_BACKEND_ED_PK ${edPk.slice(0, 8)}… (X25519 key derived from it)`,
+    ...(requested ? [] : [`               note: set TEST_PRO_BACKEND to actually use it`]),
+  ];
+}
+
+/**
  * Point the suite at the local SOGS and file server, if they are there.
  *
  * Called from `global-setup` once the devnet's own details are known, and **before**
@@ -238,12 +337,13 @@ async function discoverFileServer(host: string): Promise<Array<string>> {
  * this runs. Anything set explicitly is left alone, so a deliberate pin still wins.
  */
 export async function resolveDevnetServices(devnetIp: string): Promise<void> {
-  const [sogs, fileServer] = await Promise.all([
+  const [sogs, fileServer, proBackend] = await Promise.all([
     discoverSogs(devnetIp),
     discoverFileServer(devnetIp),
+    discoverProBackend(devnetIp),
   ]);
 
   // Probed together but reported in a fixed order, so the log reads the same way every run.
   console.log('Optional local services (the run continues without them):');
-  [...sogs, ...fileServer].forEach(line => console.log(line));
+  [...sogs, ...fileServer, ...proBackend].forEach(line => console.log(line));
 }
