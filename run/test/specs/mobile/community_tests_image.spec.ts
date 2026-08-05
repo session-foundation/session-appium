@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { communities } from '../../../constants/community';
+import { getCommunities } from '../../../constants/community';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { MessageBody } from '../../locators/conversation';
@@ -13,12 +13,14 @@ bothPlatformsIt({
   title: 'Send image to community',
   risk: 'medium',
   countOfDevicesNeeded: 2,
+  communityRooms: 1,
   testCb: sendImageCommunity,
   allureSuites: { parent: 'Sending Messages', suite: 'Message types' },
   allureDescription: 'Verifies that an image can be sent and received in a community',
 });
 
 async function sendImageCommunity(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   const {
     devices: { alice1, bob1 },
   } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {

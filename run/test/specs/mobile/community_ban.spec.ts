@@ -1,6 +1,6 @@
 import test, { type TestInfo } from '@playwright/test';
 
-import { communities } from '../../../constants/community';
+import { getCommunities } from '../../../constants/community';
 import { tStripped } from '../../../localizer/lib';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
@@ -23,6 +23,7 @@ bothPlatformsIt({
   title: 'Ban and unban user in community',
   risk: 'medium',
   countOfDevicesNeeded: 2,
+  communityRooms: 1,
   testCb: banUserCommunity,
   allureSuites: {
     parent: 'User Actions',
@@ -37,6 +38,7 @@ bothPlatformsIt({
   title: 'Ban and delete in community',
   risk: 'medium',
   countOfDevicesNeeded: 2,
+  communityRooms: 1,
   testCb: banAndDelete,
   allureSuites: {
     parent: 'User Actions',
@@ -47,6 +49,7 @@ bothPlatformsIt({
 });
 
 async function banUserCommunity(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   assertAdminIsKnown();
   const msgSig = `${new Date().getTime()} - ${platform}`;
   const msg1 = `Ban and unban me - ${msgSig}`;
@@ -115,6 +118,7 @@ async function banUserCommunity(platform: SupportedPlatformsType, testInfo: Test
 }
 
 async function banAndDelete(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   assertAdminIsKnown();
   const msgSig = `${new Date().getTime()} - ${platform}`;
   const msg1 = `Ban and delete - ${msgSig}`;

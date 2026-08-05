@@ -204,6 +204,61 @@ Notes:
   reach out to any remote community. The room count is fixed at 6 (`LOCAL_COMMUNITY_COUNT` in
   `run/constants/community.ts`, matching `ROOM_COUNT` in the SOGS `entrypoint.sh`).
 
+### Per-test rooms
+
+With `COMMUNITY_LINK` set, the six rooms above stop being what the tests actually use: each community
+test creates rooms of its own and deletes them afterwards. Two runs against the same SOGS — CI and a
+laptop, or two CI jobs — therefore can't join, post, pin or ban in the same place, and a test is free
+to leave its rooms in whatever state it likes.
+
+A test opts in by declaring how many it needs:
+
+```ts
+iosIt({
+  title: 'Join community test',
+  communityRooms: 1, // becomes communities.testCommunity
+  ...
+});
+```
+
+`communities` resolves per test, so `communityRooms: 2` gives `testCommunity` and `community2`.
+Reading `communities` **without** declaring `communityRooms` throws rather than falling back to a
+shared room — a silent fallback is how tests start interfering again, and the failure would surface
+somewhere unrelated to the cause.
+
+Mechanics worth knowing:
+
+- **Everything goes through SOGS' own HTTP API** — `POST /rooms`, `DELETE /room/<token>`, and
+  `GET /rooms` — so nothing here needs shell or Docker access to the machine running SOGS. That is what
+  lets CI use it: the runner is a different host from the devnet.
+- **Requests are signed as `SOGS_ADMIN_SEED`**, which must be a global admin (locally it is, by
+  default). SOGS requires _blinded_ ids, so the signing is not plain Ed25519 over the account key — see
+  `run/test/utils/sogs_auth.ts`, which mirrors what the clients do.
+- **Availability is decided once, at startup.** `global-setup.ts` lists rooms; if that fails — SOGS
+  unreachable, the account not a global admin, a server too old to have the endpoints — the run **falls
+  back to the shared rooms with a loud warning** rather than failing, since that configuration still
+  tests everything, just without isolating concurrent runs. Listing is the check because it exercises
+  everything creating a room needs, while changing nothing. The answer is cached in the environment, so
+  per-test lookups stay cheap and every caller agrees.
+- **A new room is seeded with one message.** SOGS creates rooms empty, and `joinCommunity` waits for a
+  message body, so a client joining an empty room _hangs_ rather than failing. The message is a real
+  protobuf `Content`, signed by a throwaway per-room identity rather than the admin's — SOGS takes a
+  user's display name from the messages they post, so seeding as the admin would rename it in every
+  room. See `run/test/utils/sogs_seed_message.ts`.
+- **Tokens are `qa-<runId>-w<worker>-<n>`.** `QA_RUN_ID` is stamped once per run in `global-setup.ts`,
+  so concurrent runs can't pick the same token and delete each other's rooms. The `qa-` prefix marks a
+  room disposable, and since SOGS has no notion of a temporary room that rule lives in the harness —
+  every delete path asserts it, so the six static rooms are safe from a bug pointing a delete at them.
+- **Rooms are released in `sessionIt`'s `finally`**, so a failing test still cleans up. Anything missed
+  (a timeout or an interrupt skips that block) is collected by the `gc` sweep `global-setup.ts` runs at
+  the start of the next run, which only removes `qa-` rooms older than its TTL — comfortably longer
+  than any single test, so it can't delete a room out from under a concurrent run.
+- **The link is rebuilt from `COMMUNITY_LINK`'s origin**, since the server's own idea of its address is
+  `localhost` and unreachable from a simulator.
+
+> **Server version:** `POST /rooms` and `DELETE /room/<token>` are additions to session-pysogs — a SOGS
+> without them fails the startup check and the run falls back to the shared rooms, naming the reason.
+
 ## 5. Run
 
 ```bash

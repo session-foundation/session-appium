@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { communities } from '../../../constants/community';
+import { getCommunities } from '../../../constants/community';
 import { TestSteps } from '../../../types/allure';
 import { androidIt } from '../../../types/sessionIt';
 import { InteractionPoints, USERNAME } from '../../../types/testing';
@@ -49,6 +49,7 @@ androidIt({
   risk: 'medium',
   testCb: qrCodeCommunity,
   countOfDevicesNeeded: 2,
+  communityRooms: 1,
   allureSuites: {
     parent: 'New Conversation',
     suite: 'Join Community',
@@ -127,6 +128,7 @@ async function qrCodeAccountID(platform: SupportedPlatformsType, testInfo: TestI
 }
 
 async function qrCodeCommunity(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const communities = getCommunities();
   const {
     devices: { alice1, bob1 },
     prebuilt: { bob },
