@@ -85,15 +85,10 @@ jobs:
       APPIUM_ADB_FULL_PATH: '<just_not_empty>'
       ANDROID_SDK_ROOT: '<just_not_empty>'
       PLAYWRIGHT_RETRIES_COUNT: ${{ inputs.PLAYWRIGHT_RETRIES_COUNT }}
-      # iOS reads NETWORK_TARGET (+ the DEVNET_* vars for devnet) at launch; Desktop reads
-      # LOCAL_DEVNET_SEED_URL, which the "Pin both clients to one network" step derives from it.
-      # assertConsistentNetworkTarget() refuses to start the test if the two disagree.
+      # NETWORK_TARGET is the single switch: the harness translates it into iOS launch arguments and
+      # Desktop's LOCAL_DEVNET_SEED_URL, and refuses to start if the two end up disagreeing.
       NETWORK_TARGET: ${{ inputs.NETWORK_TARGET }}
-      DEVNET_PUBKEY: ${{ vars.DEVNET_PUBKEY }}
-      DEVNET_IP: ${{ vars.DEVNET_IP }}
-      DEVNET_RPC_PORT: ${{ vars.DEVNET_RPC_PORT }}
-      DEVNET_HTTP_PORT: ${{ vars.DEVNET_HTTP_PORT }}
-      DEVNET_OMQ_PORT: ${{ vars.DEVNET_OMQ_PORT }}
+      DEVNET_SEED_URL: ${{ vars.DEVNET_SEED_URL }}
       PRINT_FAILED_TEST_LOGS: ${{ inputs.LOG_LEVEL != 'minimal' && '1' || '0' }} # Show stdout/stderr if test fails (@session-foundation/playwright-reporter/ flag)
       PRINT_ONGOING_TEST_LOGS: ${{ inputs.LOG_LEVEL == 'verbose' && '1' || '0' }} # Show everything as it happens (@session-foundation/playwright-reporter/ flag)
 
@@ -105,55 +100,12 @@ jobs:
           # run/localizer/lib backs tStripped(), used by DesktopWrapper.changeDisplayName
           submodules: 'recursive'
 
-      # Both clients must end up on the SAME network or the seeder writes the account onto one
-      # network while a client polls another, and the test just hangs to the 480s timeout.
-      #
-      # Note there is no reachability probe here on purpose. The harness already does a much
-      # stricter one (devnet.ts isDevnetReachable: POST /json_rpc get_n_service_nodes, requiring
-      # at least 5 active service nodes, 3 attempts on CI) for every ref in the test, with a far
-      # better error message. A curl-any-HTTP-status probe would only add a second, weaker
-      # implementation that can pass where the real one fails. What IS worth doing early is the
-      # zero-cost presence check below, so a misconfigured devnet dispatch dies before the desktop
-      # build and the ipa download rather than after them.
-      - name: Pin both clients to one network
-        shell: bash
-        run: |
-          case "$NETWORK_TARGET" in
-            devnet)
-              if [ -z "$DEVNET_PUBKEY" ] || [ -z "$DEVNET_IP" ] || [ -z "$DEVNET_RPC_PORT" ] || [ -z "$DEVNET_HTTP_PORT" ] || [ -z "$DEVNET_OMQ_PORT" ]; then
-                echo "ERROR: NETWORK_TARGET=devnet but not all DEVNET_* Actions variables are set"
-                echo "  DEVNET_PUBKEY set? $([ -n "$DEVNET_PUBKEY" ] && echo yes || echo NO)"
-                echo "  DEVNET_IP='$DEVNET_IP' DEVNET_RPC_PORT='$DEVNET_RPC_PORT' DEVNET_HTTP_PORT='$DEVNET_HTTP_PORT' DEVNET_OMQ_PORT='$DEVNET_OMQ_PORT'"
-                exit 1
-              fi
-              # Desktop reads this at runtime (useLocalDevNet -> getSeedNodeList), so a plain
-              # build reaches the devnet — no devnet-specific desktop build needed. It is the
-              # same seed oxend RPC endpoint iOS builds from DEVNET_IP/DEVNET_RPC_PORT, so the
-              # harness sees a single devnet ref and probes it once.
-              SEED_URL="http://${DEVNET_IP}:${DEVNET_RPC_PORT}"
-              ;;
-            testnet)
-              # Desktop's default under this harness IS testnet (NODE_APP_INSTANCE is always
-              # test-integration-*), so leaving LOCAL_DEVNET_SEED_URL unset is what pins it.
-              SEED_URL=''
-              ;;
-            mainnet)
-              # Must be explicit: unset means testnet for Desktop, not mainnet. A
-              # DESKTOP_MAINNET_SEED_HOSTS host on a non-38157 port resolves as mainnet.
-              SEED_URL='https://seed2.getsession.org:4443'
-              ;;
-            *)
-              echo "ERROR: unknown NETWORK_TARGET '$NETWORK_TARGET'"
-              exit 1
-              ;;
-          esac
-
-          if [ -n "$SEED_URL" ]; then
-            echo "LOCAL_DEVNET_SEED_URL=$SEED_URL" >> "$GITHUB_ENV"
-          fi
-          echo "Network target: $NETWORK_TARGET"
-          echo "  iOS     <- NETWORK_TARGET=$NETWORK_TARGET"
-          echo "  Desktop <- LOCAL_DEVNET_SEED_URL=${SEED_URL:-<unset, i.e. testnet>}"
+      # NOTE there is deliberately no network-pinning step here any more. `pinPlatformsToNetworkTarget`
+      # (global-setup.ts) now derives Desktop's LOCAL_DEVNET_SEED_URL from NETWORK_TARGET itself, so
+      # local runs and CI go through exactly the same code instead of this job re-implementing it in
+      # bash. `assertRequestedDevnetsReachable` then verifies the devnet is actually usable — it POSTs
+      # get_n_service_nodes and requires registered nodes, which a curl-any-HTTP-status probe could not
+      # do — and refuses to start the run if any platform disagrees about the network.
 
       - name: Checkout session-desktop
         uses: actions/checkout@v6

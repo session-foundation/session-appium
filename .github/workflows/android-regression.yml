@@ -80,6 +80,14 @@ jobs:
       ALLURE_ENABLED: ${{ github.event.inputs.ALLURE_ENABLED }}
       IOS_APP_PATH_PREFIX: '<just_not_empty>'
       ANDROID_APK: './extracted/session-android.apk'
+      # NETWORK_TARGET is the single switch the harness reads for every platform; exporting it here is
+      # what makes Android take the same path as iOS and Desktop (previously it was only used in bash
+      # below to choose the APK variant, so the harness fell back to a hardcoded devnet URL).
+      NETWORK_TARGET: ${{ github.event.inputs.NETWORK_TARGET }}
+      # Devnet only: the seed node's oxend RPC. Everything else is discovered from it. The APK must
+      # honour the `sessionDevnetSeedUrl` launch extra for this to reach the app — enforced by the
+      # `Verify the APK honours the devnet launch extra` step below.
+      DEVNET_SEED_URL: ${{ vars.DEVNET_SEED_URL }}
       APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
       EMULATOR_FULL_PATH: '/opt/android/emulator/emulator'
       ANDROID_SDK_ROOT: '/opt/android'
@@ -136,36 +144,13 @@ jobs:
           echo "NOTE: the '*qa.apk' glob also matches '*automaticQa.apk'."
           echo "::endgroup::"
 
-          # Always probe devnet reachability so the log explains the decision,
-          # regardless of which network target was requested.
-          echo "::group::Devnet reachability probe (http://sesh-net.local:1280)"
-          DEVNET_ACCESSIBLE=false
-          for attempt in 1 2 3; do
-            echo "Devnet check attempt $attempt/3..."
-            HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' --connect-timeout 5 --max-time 10 http://sesh-net.local:1280 2>/dev/null || echo '000')
-            if [ "$HTTP_CODE" != "000" ]; then
-              echo "Devnet is reachable on attempt $attempt (HTTP $HTTP_CODE)"
-              DEVNET_ACCESSIBLE=true
-              break
-            else
-              echo "Devnet attempt $attempt failed (could not connect)"
-              if [ $attempt -lt 3 ]; then
-                echo "Waiting ${attempt}s before retry..."
-                sleep $attempt
-              fi
-            fi
-          done
-          echo "Devnet reachable: $DEVNET_ACCESSIBLE"
-          echo "::endgroup::"
-
           # Choose APK based on network target
           if [ "$NETWORK_TARGET" = "devnet" ]; then
-            echo "Requested target=devnet -> want AQA build + reachable devnet"
-
-            if [ "$DEVNET_ACCESSIBLE" = "false" ]; then
-              echo "ERROR: Devnet is not accessible after 3 attempts, but devnet target was selected"
-              exit 1
-            fi
+            # Reachability is NOT checked here: assertRequestedDevnetsReachable (global-setup.ts) does
+            # it for every platform and project, and does it properly — it POSTs get_n_service_nodes and
+            # requires registered service nodes, where a curl that accepts any HTTP status passes
+            # against a 404 or an oxend that has come up with an empty registry.
+            echo "Requested target=devnet -> want AQA build"
 
             # Use AQA build for devnet
             if ls extracted/*automaticQa.apk 1>/dev/null 2>&1; then
@@ -197,6 +182,44 @@ jobs:
             echo "ERROR: Unknown network target: $NETWORK_TARGET"
             exit 1
           fi
+
+      # An APK built before QaLaunchConfig landed silently ignores `sessionDevnetSeedUrl` and uses its
+      # own compile-time devnet constant instead. Nothing downstream can detect that: the harness would
+      # seed against DEVNET_SEED_URL while the app talked to a different host, and the run would hang to
+      # the test timeout looking like a product bug.
+      #
+      # Deliberately checks only for launch-extra SUPPORT, not for the compiled endpoint. On a
+      # supporting build the constant is irrelevant (the extra overrides it), and on a non-supporting
+      # one the constant is a hostname whose resolution differs per network — so comparing it against
+      # DEVNET_SEED_URL would be both unnecessary and unreliable.
+      #
+      # Runs before `Setup`, so it fails before any emulator or global setup work.
+      - name: Verify the APK honours the devnet launch extra
+        if: ${{ github.event.inputs.NETWORK_TARGET == 'devnet' }}
+        shell: bash
+        run: |
+          APK=extracted/session-android.apk
+          if [ ! -f "$APK" ]; then
+            echo "ERROR: $APK is missing — the APK selection step should have produced it."
+            exit 1
+          fi
+
+          # `grep -a` rather than `strings`: strings ships with binutils and is not guaranteed on a
+          # runner, and treating an unverifiable APK as verified would defeat the point of the check.
+          # `-c` rather than `-q`: -q exits on the first match, and GitHub's `shell: bash` runs with
+          # `-eo pipefail`, so the SIGPIPE'd `unzip` made the whole pipeline exit 141 and the step
+          # failed even on an APK that DOES support the extra. -c consumes the stream.
+          MATCHES=$(unzip -p "$APK" 'classes*.dex' | grep -a -c sessionDevnetSeedUrl || true)
+          if [ "${MATCHES:-0}" -gt 0 ]; then
+            echo "APK honours sessionDevnetSeedUrl — DEVNET_SEED_URL will reach the app"
+            exit 0
+          fi
+          echo "ERROR: this APK does not read the 'sessionDevnetSeedUrl' launch extra, so it cannot be"
+          echo "pointed at DEVNET_SEED_URL (${DEVNET_SEED_URL:-<unset>}) and would use its own compiled"
+          echo "devnet endpoint instead — the seeder and the app would end up on different hosts."
+          echo "Build the APK from a revision that includes QaLaunchConfig (Session_Android), or run"
+          echo "this workflow with NETWORK_TARGET=mainnet."
+          exit 1
 
       - name: Setup for both platforms
         uses: ./github/actions/setup

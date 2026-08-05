@@ -1,0 +1,493 @@
+import net from 'net';
+
+import type { ServiceNetwork } from '../../types/target';
+
+/**
+ * Which Session network this run targets, and — for devnet — the details discovered from its seed
+ * node. The single place that answers "what are we pointed at", for every platform.
+ *
+ * ## Devnet auto-discovery
+ *
+ * Everything the clients need is derived from the ONE thing we configure: the seed node's oxend RPC
+ * URL.
+ *
+ * ## Why derive instead of configure
+ *
+ * The iOS app needs four values to bootstrap onto a devnet (`devnetPubkey`, `devnetIp`,
+ * `devnetHttpPort`, `devnetOmqPort`). Supplying those by hand made two whole classes of failure
+ * possible, both of which present identically — a test that hangs until it times out — and both of
+ * which hit iOS only, because Android and Desktop discover snodes from the seed URL themselves and
+ * never use the pubkey or the storage ports:
+ *
+ *  - **Stale pubkey.** The devnet regenerates its seed keys on every `--build`/recreate (its compose
+ *    mounts no volume for the data dir), so a hand-copied `DEVNET_PUBKEY` silently rots. It stays a
+ *    valid 64-char hex string, so every validation still passes.
+ *  - **Wrong storage ports.** `DEVNET_HTTP_PORT`/`DEVNET_OMQ_PORT` were consumed by nothing except
+ *    the app, so no probe, seeder call or reachability check ever verified them.
+ *
+ * oxend already publishes all four values, and (verified on Sesh-Net-Docker, which uses host
+ * networking) advertises host-published ports rather than container-internal ones. So we ask it.
+ *
+ * ## What we pick
+ *
+ * Any active, storage-reachable node works: these four values describe *a node to bootstrap from*,
+ * not "the seed" specifically. Nodes on the same host as the seed URL are preferred so a run stays
+ * on one box, but there is deliberately no port arithmetic to identify a particular node — that was
+ * the fragile part of doing this by hand.
+ */
+
+/**
+ * The network this run targets, from `NETWORK_TARGET` (default mainnet).
+ *
+ * Platform-neutral despite historically living in `capabilities_ios.ts` under the name
+ * `getIosServiceNetwork`: iOS receives it as a launch argument, Android as a launch intent extra, and
+ * Desktop through the seed URL the harness derives for it. One switch, three delivery mechanisms.
+ */
+export function getServiceNetwork(): ServiceNetwork {
+  const raw = (process.env.NETWORK_TARGET ?? 'mainnet').trim().toLowerCase();
+  if (raw === 'mainnet' || raw === 'testnet' || raw === 'devnet') {
+    return raw;
+  }
+  throw new Error(
+    `Invalid NETWORK_TARGET "${process.env.NETWORK_TARGET}". Use mainnet | testnet | devnet.`
+  );
+}
+
+/**
+ * Accepted `--network` values for `run_ios_parallel` (forwarded to the child as NETWORK_TARGET). Kept
+ * in sync with `ServiceNetwork` via `satisfies`, so it cannot drift from what `getServiceNetwork`
+ * accepts.
+ */
+export const ALLOWED_NETWORKS = [
+  'mainnet',
+  'testnet',
+  'devnet',
+] as const satisfies readonly ServiceNetwork[];
+
+/**
+ * `satisfies` above only proves every entry IS a ServiceNetwork; this proves none is MISSING, so
+ * adding a network to the union is a build error here rather than a silently unaccepted `--network`.
+ */
+type MissingNetwork = Exclude<ServiceNetwork, (typeof ALLOWED_NETWORKS)[number]>;
+const _allNetworksAllowed: [MissingNetwork] extends [never] ? true : MissingNetwork = true;
+
+/** One devnet node, in the shape the iOS app's launch arguments expect. */
+export type DevnetSeedNode = {
+  /** ed25519 pubkey — the app's `devnetPubkey`. */
+  pubkey: string;
+  /** The app's `devnetIp`. */
+  ip: string;
+  /** oxend's `storage_port` — the app's `devnetHttpPort` (storage HTTPS). */
+  httpPort: string;
+  /** oxend's `storage_lmq_port` — the app's `devnetOmqPort` (storage OMQ/QUIC). */
+  omqPort: string;
+};
+
+/** Outcome of asking a seed node for its service nodes. */
+export type SeedProbeResult =
+  | { usable: false; reason: string }
+  | { usable: true; nodes: DevnetSeedNode[] };
+
+/** Cached across the process; also mirrored into the environment (see `resolveDevnetSeedNode`). */
+const RESOLVED_ENV_KEY = 'DETECTED_DEVNET_SEED_NODE';
+let resolvedCache: DevnetSeedNode | undefined;
+
+/**
+ * The already-discovered node, from this process's cache or from the environment mirror a parent
+ * process left behind. `undefined` when discovery has not run anywhere yet.
+ *
+ * Populates the in-process cache as a side effect, so repeated calls don't re-parse.
+ */
+function cachedSeedNode(): DevnetSeedNode | undefined {
+  if (resolvedCache) {
+    return resolvedCache;
+  }
+  const raw = process.env[RESOLVED_ENV_KEY];
+  if (!raw) {
+    return undefined;
+  }
+  try {
+    resolvedCache = JSON.parse(raw) as DevnetSeedNode;
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : 'unknown error';
+    throw new Error(
+      `Could not parse ${RESOLVED_ENV_KEY} ("${raw}"): ${reason}. It is written by devnet discovery ` +
+        `and inherited by worker processes — something else has overwritten it.`
+    );
+  }
+  return resolvedCache;
+}
+
+/**
+ * Fallback RPC port when the configured address carries no `:port`. The conventional oxend RPC port
+ * on Sesh-Net-Docker, and the one docs/local-devnet.md tells you to pick.
+ */
+const DEFAULT_DEVNET_RPC_PORT = '1280';
+
+/** Warned at most once per process: the value is read on every capability build. */
+let warnedAboutSeedUrlScheme = false;
+
+/**
+ * Canonicalise a configured seed address into `http://host:port`.
+ *
+ * The value is surfaced as a single free-text field — a repo variable, an `.env` line, a paste out of
+ * the devnet's node table — so it has to tolerate what people actually write: a bare host, `host:port`,
+ * a full URL, a trailing slash or path. Being strict here failed in a way that read as a devnet
+ * problem rather than a typo, and being *loose* is worse: leaving a scheme on the front turns into
+ * `http://http://host:1280/json_rpc`, which 404s and looks like an unreachable node.
+ *
+ * `https` is accepted and downgraded with a warning rather than rejected: oxend's RPC is plain HTTP,
+ * so an `https://` value is always a mistake, but it is an obvious one to correct rather than a reason
+ * to refuse to start.
+ */
+function normaliseSeedUrl(raw: string): `http://${string}` {
+  const invalid = (why: string) =>
+    new Error(
+      `DEVNET_SEED_URL ${why} (got "${raw}"). It is the seed node's oxend RPC endpoint — a bare ` +
+        `host, host:port, or http://host:port are all accepted; the port defaults to ` +
+        `${DEFAULT_DEVNET_RPC_PORT}.`
+    );
+
+  const scheme = /^([a-z][a-z0-9+.-]*):\/\//i.exec(raw)?.[1]?.toLowerCase();
+  if (scheme && scheme !== 'http' && scheme !== 'https') {
+    throw invalid(`must be an http address`);
+  }
+  if (scheme === 'https' && !warnedAboutSeedUrlScheme) {
+    warnedAboutSeedUrlScheme = true;
+    console.warn(
+      `Warning: DEVNET_SEED_URL is https, but oxend's RPC is plain HTTP — using http instead.`
+    );
+  }
+
+  const bare = raw
+    .replace(/^[a-z][a-z0-9+.-]*:\/\//i, '') // scheme
+    .replace(/[/?#].*$/, ''); // path, query, fragment
+
+  const match = /^(.*):(\d{1,5})$/.exec(bare);
+  const host = match ? match[1] : bare;
+  const port = match ? match[2] : DEFAULT_DEVNET_RPC_PORT;
+
+  if (host === '' || /\s/.test(host)) {
+    throw invalid('has no host');
+  }
+  if (Number(port) < 1 || Number(port) > 65535) {
+    throw invalid(`has an out-of-range port "${port}"`);
+  }
+
+  return `http://${host}:${port}`;
+}
+
+/**
+ * The single devnet input: the seed node's oxend RPC URL.
+ *
+ * This is the ONLY devnet value that is configured. Everything the clients need — pubkey, IP and both
+ * storage ports — is discovered from it, so there is deliberately no second way to express it.
+ *
+ * Always returns the canonical `http://host:port` form, whatever shape it was configured in. Every
+ * caller goes through here, so the refs they compare (and the URL published to Desktop as
+ * LOCAL_DEVNET_SEED_URL) are all normalised the same way.
+ */
+export function getDevnetSeedUrl(): `http://${string}` {
+  const configured = (process.env.DEVNET_SEED_URL ?? '').trim();
+
+  if (!configured) {
+    // If the retired pair is still set, show the exact replacement rather than making them work it out.
+    const legacyIp = (process.env.DEVNET_IP ?? '').trim();
+    const legacyPort = (process.env.DEVNET_RPC_PORT ?? '').trim();
+    const hint =
+      legacyIp && legacyPort
+        ? `\nDEVNET_IP and DEVNET_RPC_PORT are no longer used — replace them with:\n  DEVNET_SEED_URL=http://${legacyIp}:${legacyPort}`
+        : '';
+    throw new Error(
+      `Devnet requested but no seed node configured. Set DEVNET_SEED_URL=http://<host>:<rpcPort> ` +
+        `(the seed node's oxend RPC endpoint).${hint}`
+    );
+  }
+
+  return normaliseSeedUrl(configured);
+}
+
+/** A single node as returned by oxend, before validation. */
+type RawNodeState = {
+  public_ip?: unknown;
+  storage_port?: unknown;
+  storage_lmq_port?: unknown;
+  pubkey_ed25519?: unknown;
+  storage_server_reachable?: unknown;
+};
+
+function isPort(value: unknown): value is number {
+  return typeof value === 'number' && Number.isInteger(value) && value > 0 && value <= 65535;
+}
+
+function isIpv4(value: unknown): value is string {
+  if (typeof value !== 'string') {
+    return false;
+  }
+  const octets = value.split('.');
+  return octets.length === 4 && octets.every(o => /^\d{1,3}$/.test(o) && Number(o) <= 255);
+}
+
+/**
+ * Nodes usable as a bootstrap target: active (the query already filters), storage-reachable per
+ * oxend's own tracking, and carrying a complete, well-formed set of the four values we need.
+ */
+function usableNodes(payload: unknown): DevnetSeedNode[] {
+  const states = (payload as { result?: { service_node_states?: unknown } })?.result
+    ?.service_node_states;
+  if (!Array.isArray(states)) {
+    return [];
+  }
+
+  return (states as RawNodeState[])
+    .filter(n => n.storage_server_reachable === true)
+    .filter(
+      n =>
+        typeof n.pubkey_ed25519 === 'string' &&
+        /^[0-9a-fA-F]{64}$/.test(n.pubkey_ed25519) &&
+        isIpv4(n.public_ip) &&
+        isPort(n.storage_port) &&
+        isPort(n.storage_lmq_port)
+    )
+    .map(n => ({
+      pubkey: n.pubkey_ed25519 as string,
+      ip: n.public_ip as string,
+      httpPort: String(n.storage_port),
+      omqPort: String(n.storage_lmq_port),
+    }));
+}
+
+/** Can we open a TCP connection to host:port within `timeoutMs`? */
+function canConnect(host: string, port: number, timeoutMs = 2000): Promise<boolean> {
+  return new Promise(resolve => {
+    const socket = new net.Socket();
+    const done = (ok: boolean) => {
+      socket.destroy();
+      resolve(ok);
+    };
+    socket.setTimeout(timeoutMs);
+    socket.once('connect', () => done(true));
+    socket.once('timeout', () => done(false));
+    socket.once('error', () => done(false));
+    socket.connect(port, host);
+  });
+}
+
+/**
+ * Both storage ports must actually accept connections. oxend advertising host-published ports is an
+ * observed property of this devnet layout, not a guarantee: a port-mapped devnet could advertise
+ * container-internal ports, and silently handing the app unreachable ports would put us right back
+ * to the hanging-test failure this discovery exists to remove. A plain TCP check is used rather than
+ * an HTTP one because the OMQ port speaks QUIC/OMQ, not HTTP.
+ */
+async function portsReachable(node: DevnetSeedNode): Promise<boolean> {
+  const [http, omq] = await Promise.all([
+    canConnect(node.ip, Number(node.httpPort)),
+    canConnect(node.ip, Number(node.omqPort)),
+  ]);
+  return http && omq;
+}
+
+/**
+ * Ask a seed node's oxend RPC for the service nodes it knows about.
+ *
+ * The single implementation of "is this devnet usable": one HTTP request, shared by devnet discovery
+ * and by the pre-run gate in `devnet.ts`. It deliberately checks more than reachability, because a
+ * bare liveness probe passes against things that then hang a test to its timeout — a 404, an unrelated
+ * service on the port, or an oxend that has come up with an empty registry (routine on a
+ * freshly-started devnet).
+ *
+ * Retries on CI, where a devnet may still be settling when the job starts.
+ */
+export async function probeSeedNode(url: string): Promise<SeedProbeResult> {
+  const endpoint = `${url.replace(/\/$/, '')}/json_rpc`;
+  const isCI = process.env.CI === '1';
+  const maxAttempts = isCI ? 3 : 1;
+  const timeoutMs = isCI ? 10_000 : 5_000;
+
+  const body = JSON.stringify({
+    jsonrpc: '2.0',
+    id: '0',
+    method: 'get_n_service_nodes',
+    params: {
+      active_only: true,
+      limit: 50,
+      fields: {
+        public_ip: true,
+        storage_port: true,
+        storage_lmq_port: true,
+        pubkey_ed25519: true,
+        storage_server_reachable: true,
+      },
+    },
+  });
+
+  let lastReason = 'unknown error';
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body,
+        signal: AbortSignal.timeout(timeoutMs),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const payload = (await response.json()) as unknown;
+      const states = (payload as { result?: { service_node_states?: unknown } })?.result
+        ?.service_node_states;
+      if (!Array.isArray(states)) {
+        throw new Error('not an oxend RPC endpoint (no result.service_node_states in the reply)');
+      }
+
+      const nodes = usableNodes(payload);
+      if (nodes.length === 0) {
+        throw new Error(
+          `oxend answered with ${states.length} active node(s), but none are usable as a bootstrap ` +
+            `target (need one that is storage-reachable and advertises a pubkey, IP and both storage ports)`
+        );
+      }
+
+      return { usable: true, nodes };
+    } catch (error) {
+      lastReason = error instanceof Error ? error.message : 'unknown error';
+      if (attempt < maxAttempts) {
+        console.log(`Seed node ${url} attempt ${attempt}/${maxAttempts} failed: ${lastReason}`);
+        await new Promise(r => setTimeout(r, attempt * 1000));
+      }
+    }
+  }
+
+  return { usable: false, reason: lastReason };
+}
+
+/**
+ * Whether `url` is the configured seed node AND discovery has already validated it. Lets the pre-run
+ * gate skip re-probing what discovery just checked far more thoroughly (it also verified the storage
+ * ports), instead of making a second identical RPC call.
+ *
+ * Consults the environment mirror as well as the in-process cache, because Playwright spawns each
+ * worker as its own process: discovery runs once in `global-setup`, so a worker's module-level cache is
+ * empty until something happens to populate it. iOS does so incidentally while building capabilities;
+ * Android never would, and would then re-probe on every single test.
+ */
+export function seedNodeAlreadyVerified(url: string): boolean {
+  if (!cachedSeedNode()) {
+    return false;
+  }
+  return url.replace(/\/$/, '') === getDevnetSeedUrl();
+}
+
+/**
+ * Ask the seed node for a usable bootstrap node and verify it, caching the result.
+ *
+ * Call this once from an async context early in the run (`global-setup`); the synchronous capability
+ * builders then read the cache via `getResolvedDevnetSeedNode`. The result is mirrored into the
+ * environment so Playwright's worker processes — which are spawned separately and inherit the
+ * parent's env — don't each have to rediscover it.
+ */
+export async function resolveDevnetSeedNode(): Promise<DevnetSeedNode> {
+  const cached = cachedSeedNode();
+  if (cached) {
+    return cached;
+  }
+
+  const seedUrl = getDevnetSeedUrl();
+  const probe = await probeSeedNode(seedUrl);
+
+  if (!probe.usable) {
+    throw new Error(
+      `Could not use the devnet seed node's oxend RPC at ${seedUrl}/json_rpc: ${probe.reason}.\n` +
+        `This is the endpoint the seeder uses and the one every devnet value is derived from.\n` +
+        `Note oxend binds this RPC to a single address — the devnet host's LAN IP — while the storage ` +
+        `ports bind all interfaces. So the storage ports can be reachable from here while this one is ` +
+        `not, which means this machine has to be on the same LAN as the devnet.`
+    );
+  }
+
+  // Prefer nodes on the same host as the seed URL, so a run stays on one box where possible.
+  const seedHost = seedUrl.replace(/^http:\/\//, '').split(':')[0];
+  const ordered = [
+    ...probe.nodes.filter(n => n.ip === seedHost),
+    ...probe.nodes.filter(n => n.ip !== seedHost),
+  ];
+
+  const tried: string[] = [];
+  for (const node of ordered) {
+    if (await portsReachable(node)) {
+      console.log(
+        `Devnet discovery: bootstrapping from ${node.ip} ` +
+          `(https ${node.httpPort}, omq ${node.omqPort}, pubkey ${node.pubkey.slice(0, 8)}…) ` +
+          `— ${probe.nodes.length} usable node(s) reported by ${seedUrl}`
+      );
+      warnOnObsoleteDevnetVars(node);
+      resolvedCache = node;
+      process.env[RESOLVED_ENV_KEY] = JSON.stringify(node);
+      return node;
+    }
+    tried.push(`${node.ip}:${node.httpPort}/${node.omqPort}`);
+  }
+
+  throw new Error(
+    `The devnet at ${seedUrl} reported ${probe.nodes.length} node(s), but none had both storage ` +
+      `ports reachable from here. Tried: ${tried.join(', ')}.\n` +
+      `Either those ports are firewalled, or this devnet advertises container-internal ports (in ` +
+      `which case the advertised numbers cannot be used and the devnet's port publishing needs fixing).`
+  );
+}
+
+/**
+ * Warn about the hand-configured devnet variables this discovery replaced.
+ *
+ * All of them are inert now, but silence would be the wrong behaviour: a stale `DEVNET_PUBKEY` is the
+ * single most likely reason an otherwise-correct devnet run used to fail on iOS *alone* (iOS needs the
+ * pubkey to reach its bootstrap node; Android and Desktop discover snodes themselves and never use
+ * it). Showing configured-vs-actual turns that into a one-line diagnosis.
+ */
+function warnOnObsoleteDevnetVars(node: DevnetSeedNode): void {
+  const replaced: Array<[string, string | undefined, string | undefined]> = [
+    ['DEVNET_PUBKEY', process.env.DEVNET_PUBKEY, node.pubkey],
+    ['DEVNET_HTTP_PORT', process.env.DEVNET_HTTP_PORT, node.httpPort],
+    ['DEVNET_OMQ_PORT', process.env.DEVNET_OMQ_PORT, node.omqPort],
+    ['DEVNET_IP', process.env.DEVNET_IP, node.ip],
+    // Superseded by DEVNET_SEED_URL rather than discovered, so there is nothing to compare against.
+    ['DEVNET_RPC_PORT', process.env.DEVNET_RPC_PORT, undefined],
+  ];
+
+  const present = replaced.filter(([, configured]) => !!configured?.trim());
+  if (present.length === 0) {
+    return;
+  }
+
+  const lines = present.map(([name, configured, actual]) => {
+    if (actual === undefined) {
+      return `  - ${name}: superseded by DEVNET_SEED_URL`;
+    }
+    const configuredValue = configured!.trim();
+    return configuredValue.toLowerCase() === actual.toLowerCase()
+      ? `  - ${name}: matches the devnet, but is no longer read`
+      : `  - ${name}: STALE — configured ${configuredValue}, actual ${actual}`;
+  });
+
+  console.warn(
+    `Warning: these DEVNET_* variables are no longer used (the devnet is now queried for them) ` +
+      `and can be deleted:\n${lines.join('\n')}`
+  );
+}
+
+/**
+ * The discovered node. Synchronous, for the capability builders — `resolveDevnetSeedNode` must have
+ * run first (it does, from `global-setup`).
+ */
+export function getResolvedDevnetSeedNode(): DevnetSeedNode {
+  const cached = cachedSeedNode();
+  if (cached) {
+    return cached;
+  }
+  throw new Error(
+    'Devnet details were requested before discovery ran. resolveDevnetSeedNode() should have been ' +
+      'called during global setup — is this running outside the Playwright runner?'
+  );
+}

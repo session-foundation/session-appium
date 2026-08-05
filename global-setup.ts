@@ -1,9 +1,16 @@
 import { FullConfig } from '@playwright/test';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 
 import { getDevicesPerTestCount, getWorkersCount } from './run/test/utils/binaries';
 import { gcCommunityRooms, probePerTestRooms } from './run/test/utils/community_rooms';
-import { getNetworkTarget } from './run/test/utils/devnet';
+import {
+  assertRequestedDevnetsReachable,
+  pinPlatformsToNetworkTarget,
+  requestedDevnetRefs,
+  resolveNetworkTarget,
+} from './run/test/utils/devnet';
+import { resolveDevnetServices } from './run/test/utils/devnet_services';
+import { getServiceNetwork, resolveDevnetSeedNode } from './run/test/utils/network_target';
 import { SupportedPlatformsType } from './run/test/utils/open_app';
 import { ensureWdaBuilt } from './scripts/build_wda';
 import {
@@ -33,12 +40,43 @@ function isIosRun(platform: string | undefined): boolean {
 const PREPARED_FLAG = 'IOS_SIMULATORS_PREPARED';
 
 export default async function globalSetup(_config: FullConfig) {
+  // NETWORK_TARGET is the single switch: translate it into the per-platform knob each client reads
+  // at launch (currently only Desktop needs one). No-op when it isn't set, so per-platform setups
+  // keep working unchanged.
+  pinPlatformsToNetworkTarget();
+
+  // Computed once and shared: each call re-runs Android build detection, which logs.
+  const devnetRefs = requestedDevnetRefs();
+
+  // Discover the devnet's pubkey/ip/storage ports from the seed node itself, once per run and before
+  // any client starts. Done here rather than lazily because the capability builders are synchronous,
+  // and because failing in global setup gives a single clear error instead of one per device.
+  //
+  // Gated on NETWORK_TARGET rather than on `devnetRefs`, because only iOS needs discovered values —
+  // Android and Desktop bootstrap from the seed URL themselves. A Desktop-only devnet run (reached via
+  // LOCAL_DEVNET_SEED_URL, with no NETWORK_TARGET) has a devnet ref but no DEVNET_SEED_URL, and
+  // discovery would fail demanding one it never needed.
+  if (getServiceNetwork() === 'devnet') {
+    const seedNode = await resolveDevnetSeedNode();
+
+    // The local SOGS and file server share the devnet's host, so their addresses are derivable from
+    // the node we just resolved rather than worth maintaining by hand alongside it. Best-effort and
+    // never fatal — whatever is missing leaves the suite on the remote community / production file
+    // server. Must run before `probePerTestRooms` below, which reads the COMMUNITY_LINK it may set.
+    await resolveDevnetServices(seedNode.ip);
+  }
+
+  // Runs for EVERY project (mobile, desktop, cross-platform) and regardless of PLATFORM: if this
+  // environment asks for devnet anywhere and that devnet is not usable, stop the whole run here
+  // rather than letting each platform discover it separately (or, for Desktop, not at all).
+  await assertRequestedDevnetsReachable(devnetRefs);
+
   const platform = process.env.PLATFORM as SupportedPlatformsType | undefined;
 
   // Stamped once per run and read by the per-test community room allocator to build tokens that
   // can't collide with a run happening at the same time elsewhere. Set here rather than per-worker
   // because workers inherit this process's env, and they each need the same value.
-  process.env.QA_RUN_ID = uuidv4();
+  process.env.QA_RUN_ID = randomUUID();
 
   // Decided once here rather than per test: the check shells out, and every `communities` lookup asks
   // whether per-test rooms are on, so it has to be a cheap read by then. Workers inherit the answer
@@ -51,7 +89,7 @@ export default async function globalSetup(_config: FullConfig) {
 
   if (platform) {
     console.log(`Validating build/network configuration...`);
-    await getNetworkTarget(platform); // already logs and throws on error, no need to duplicate it in global config
+    await resolveNetworkTarget([platform]); // already logs and throws on error, no need to duplicate it in global config
   } else {
     // The CI knows the platform variable, this is for local development
     console.log('No PLATFORM variable set, network validation will happen on a per-test level');

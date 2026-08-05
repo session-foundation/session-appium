@@ -1,10 +1,10 @@
 import { TestInfo } from '@playwright/test';
 import * as fs from 'fs';
 import looksSame from 'looks-same';
+import { randomUUID } from 'node:crypto';
 import * as path from 'path';
 import sharp from 'sharp';
 import { ssim } from 'ssim.js';
-import { v4 as uuidv4 } from 'uuid';
 
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { ScreenshotFileNames } from '../../types/testing';
@@ -92,7 +92,7 @@ async function compareWithSSIM(
 
   if (mssim < threshold) {
     // Generate visual diff for debugging
-    const uuid = uuidv4();
+    const uuid = randomUUID();
     const diffsDir = getDiffDirectory();
     const actualPath = path.join(diffsDir, `${uuid}_actual.png`);
     const diffPath = path.join(diffsDir, `${uuid}_diff.png`);
@@ -158,7 +158,7 @@ async function compareWithSSIM(
 function ensureBaseline(actualBuffer: Buffer, baselinePath: string): void {
   if (!fs.existsSync(baselinePath)) {
     const diffsDir = getDiffDirectory();
-    const uuid = uuidv4();
+    const uuid = randomUUID();
     const tempPath = path.join(diffsDir, `${uuid}_new_baseline.png`);
     fs.writeFileSync(tempPath, actualBuffer);
 

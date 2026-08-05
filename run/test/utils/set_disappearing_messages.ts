@@ -19,7 +19,7 @@ import {
  *
  * Devnet is detected two ways because neither alone is sufficient: `DETECTED_NETWORK_TARGET` is the
  * resolved value (a seed URL when on devnet, on both platforms) but is only set once
- * `getNetworkTarget` has run, which is after module load — and some specs pick their duration at
+ * `resolveNetworkTarget` has run, which is after module load — and some specs pick their duration at
  * module level. `NETWORK_TARGET` is the user-supplied setting, available immediately. Anything we
  * can't positively identify as devnet keeps its off-devnet duration.
  *

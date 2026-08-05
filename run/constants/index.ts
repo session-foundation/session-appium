@@ -19,8 +19,6 @@ export { longText } from '../shared/constants';
 
 export { testLink } from '../shared/constants';
 
-export const DEVNET_URL = 'http://sesh-net.local:1280';
-
 export const PRO_BACKEND_URL = 'https://pro.session.codes';
 
 export const ONS_MAPPINGS = {

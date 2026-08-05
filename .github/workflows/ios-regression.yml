@@ -95,18 +95,12 @@ jobs:
       PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
       # iOS selects the network at launch (one build, no AQA/regular variants like Android):
       # NETWORK_TARGET drives capabilities_ios.ts + getNetworkTarget (and is used for the report).
-      # For devnet the app also needs the seed-node connection details below; they are only read
-      # when devnet is selected, so they are harmless on mainnet/testnet runs. Store them as
-      # repo-level Actions *variables* (the pubkey is public; the IP/ports are internal), e.g.
-      # Settings > Secrets and variables > Actions. The seed node exposes three ports the tests use:
-      # DEVNET_RPC_PORT (oxend RPC — the seeder), DEVNET_HTTP_PORT (storage HTTPS — the app) and
-      # DEVNET_OMQ_PORT (storage OMQ/QUIC — the app). See docs/local-devnet.md.
+      # For devnet, the seed node's oxend RPC URL is the ONLY value needed: the harness queries it for
+      # the pubkey, IP and both storage ports (see run/test/utils/devnet_discovery.ts), so they can no
+      # longer go stale when the devnet regenerates its keys. Store as a repo-level Actions *variable*
+      # (Settings > Secrets and variables > Actions). Only read on devnet runs. See docs/local-devnet.md.
       NETWORK_TARGET: ${{ github.event.inputs.NETWORK_TARGET }}
-      DEVNET_PUBKEY: ${{ vars.DEVNET_PUBKEY }}
-      DEVNET_IP: ${{ vars.DEVNET_IP }}
-      DEVNET_RPC_PORT: ${{ vars.DEVNET_RPC_PORT }}
-      DEVNET_HTTP_PORT: ${{ vars.DEVNET_HTTP_PORT }}
-      DEVNET_OMQ_PORT: ${{ vars.DEVNET_OMQ_PORT }}
+      DEVNET_SEED_URL: ${{ vars.DEVNET_SEED_URL }}
       _TESTING: 1 # Always hide webdriver logs (@appium/support/ flag)
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL != 'minimal' && '1' || '0' }} # Show stdout/stderr if test fails (@session-foundation/playwright-reporter/ flag)
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.LOG_LEVEL == 'verbose' && '1' || '0' }} # Show everything as it happens (@session-foundation/playwright-reporter/ flag)
@@ -127,42 +121,6 @@ jobs:
           PLATFORM: ${{ env.PLATFORM }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Fail fast (before the app download / sim setup) if devnet was requested but its
-      # connection details are missing or the seed node is unreachable. Mirrors the Android
-      # workflow's probe. On mainnet this step is skipped entirely.
-      - name: Probe devnet reachability
-        if: ${{ github.event.inputs.NETWORK_TARGET == 'devnet' }}
-        shell: bash
-        run: |
-          if [ -z "$DEVNET_PUBKEY" ] || [ -z "$DEVNET_IP" ] || [ -z "$DEVNET_RPC_PORT" ] || [ -z "$DEVNET_HTTP_PORT" ] || [ -z "$DEVNET_OMQ_PORT" ]; then
-            echo "ERROR: NETWORK_TARGET=devnet but not all DEVNET_* Actions variables are set"
-            echo "  DEVNET_PUBKEY set? $([ -n "$DEVNET_PUBKEY" ] && echo yes || echo NO)"
-            echo "  DEVNET_IP='$DEVNET_IP' DEVNET_RPC_PORT='$DEVNET_RPC_PORT' DEVNET_HTTP_PORT='$DEVNET_HTTP_PORT' DEVNET_OMQ_PORT='$DEVNET_OMQ_PORT'"
-            exit 1
-          fi
-          # Probe the seeder's endpoint (oxend RPC); the app's storage ports are validated in-harness.
-          SEED="http://${DEVNET_IP}:${DEVNET_RPC_PORT}"
-          echo "Requested devnet -> probing seed node $SEED"
-          for attempt in 1 2 3; do
-            CODE=$(curl -s -o /dev/null -w '%{http_code}' --connect-timeout 5 --max-time 10 "$SEED" 2>/dev/null || echo '000')
-            if [ "$CODE" != "000" ]; then echo "Devnet reachable (HTTP $CODE)"; exit 0; fi
-            echo "attempt $attempt/3 failed"; [ "$attempt" -lt 3 ] && sleep "$attempt"
-          done
-          echo "ERROR: devnet seed node $SEED not reachable after 3 attempts"; exit 1
-
-      # Downloaded AND extracted under $HOME, deliberately, rather than into the workspace.
-      #
-      # `simctl install` can clone the app bundle instead of copying its ~237MB, but only within a single
-      # APFS volume — and the simulators live at $HOME/Library/Developer/CoreSimulator. Self-hosted
-      # runners commonly put the workspace on a separate data disk, which would make every one of the
-      # twelve installs a real byte copy: measured at ~12s per device here against ~1s locally, and ~13s
-      # on the very first device with an idle host, so it is not contention. Anything under $HOME is
-      # guaranteed to share the simulators' volume, and extracting here costs nothing over extracting
-      # into the workspace. `Prepare simulators` logs whether the two volumes actually differ.
-      #
-      # Everything stays on that volume: the archive is downloaded there too, so the final `mv` is a
-      # same-volume rename rather than a copy. IOS_APP_PATH_PREFIX is exported rather than set as a
-      # job-level `env:`, because a job-level value would override what this step writes to GITHUB_ENV.
       - name: Download ipa and extract it
         shell: bash
         run: |

@@ -3,8 +3,8 @@
 // ELECTRON_RUN_AS_NODE stripped from the launch env (see the launch call below).
 import { _electron as electron, type ElectronApplication, type Page } from '@playwright/test';
 import { isEmpty } from 'lodash';
+import { randomUUID } from 'node:crypto';
 import { join } from 'path';
-import { v4 } from 'uuid';
 
 const logNodeConsole = process.env.LOG_NODE_CONSOLE === '1';
 
@@ -52,7 +52,7 @@ function mockNetworkPageNodeCount(networkPageNodeCount?: number) {
 const openElectronAppOnly = async (multi: string, context?: TestContext) => {
   process.env.MULTI = `${multi}`;
   // using a v4 uuid, as timestamps to the ms are sometimes the same (when a bunch of workers are started)
-  const fullUniqueId = v4();
+  const fullUniqueId = randomUUID();
   const uniqueId = fullUniqueId.slice(0, 8);
   process.env.NODE_APP_INSTANCE = `${MULTI_PREFIX}-devprod-${uniqueId}-${process.env.MULTI}`;
   process.env.NODE_ENV = NODE_ENV;

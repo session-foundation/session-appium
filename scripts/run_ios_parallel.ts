@@ -11,7 +11,8 @@ import {
   passGrep,
   simulatorsRequired,
 } from '../run/constants/parallelism';
-import { ALLOWED_IOS_NETWORKS, type Simulator } from '../run/test/utils/capabilities_ios';
+import { type Simulator } from '../run/test/utils/capabilities_ios';
+import { ALLOWED_NETWORKS } from '../run/test/utils/network_target';
 import { ensureWdaBuilt } from './build_wda';
 import { createIOSSimulators, resolveDeviceConfig } from './create_ios_simulators';
 import { deleteSimulators } from './ios_shared';
@@ -39,14 +40,15 @@ import { deleteSimulators } from './ios_shared';
  *   pnpm test-ios-parallel --grep '@ios @high-risk'             # subset
  *   pnpm test-ios-parallel --keep                   # don't delete simulators afterwards
  *   pnpm test-ios-parallel --runtime 26.1           # pin the iOS runtime (default: newest)
- *   pnpm test-ios-parallel --network devnet         # run against devnet (needs DEVNET_* in .env)
+ *   pnpm test-ios-parallel --network devnet         # run against devnet (needs DEVNET_SEED_URL in .env)
  *   pnpm test-ios-parallel --workers 2 -- --repeat-each 2   # args after `--` go to Playwright
  *
  * Notes:
  *   - `--network` selects the service network (mainnet | testnet | devnet; default mainnet).
- *     devnet also requires DEVNET_PUBKEY / DEVNET_IP / DEVNET_HTTP_PORT / DEVNET_OMQ_PORT in .env
- *     (see .env.sample) and a reachable devnet — running against devnet avoids full mainnet
- *     onion-routing latency, the dominant cost of the slowest multi-device tests.
+ *     devnet also requires DEVNET_SEED_URL in .env (the seed node's oxend RPC; see .env.sample) and
+ *     a reachable devnet — running against devnet avoids full mainnet onion-routing latency, the
+ *     dominant cost of the slowest multi-device tests. The pubkey and storage ports are discovered
+ *     from the seed node, so no other DEVNET_* value is needed.
  *   - `--runtime` picks the iOS simulator runtime (a version like "26.1" or a full identifier).
  *     If omitted, the preferred runtime is used when installed, otherwise the newest installed
  *     iOS runtime. Device type is overridable via the IOS_SIM_DEVICE_TYPE env var.
@@ -172,8 +174,8 @@ function validate(args: ParsedArgs): number {
   }
   // Validate --network before provisioning: an unknown value (e.g. a "devent" typo) would
   // otherwise create the whole simulator pool and spawn Playwright before failing downstream.
-  if (args.network && !ALLOWED_IOS_NETWORKS.includes(args.network as ServiceNetwork)) {
-    console.error(`Invalid --network "${args.network}". Use ${ALLOWED_IOS_NETWORKS.join(' | ')}.`);
+  if (args.network && !ALLOWED_NETWORKS.includes(args.network as ServiceNetwork)) {
+    console.error(`Invalid --network "${args.network}". Use ${ALLOWED_NETWORKS.join(' | ')}.`);
     process.exit(1);
   }
   if (args.tier) {
@@ -308,8 +310,9 @@ async function main(): Promise<void> {
   childEnv.PLAYWRIGHT_WORKERS_COUNT_IOS = String(args.workers);
   childEnv.DEVICES_PER_TEST_COUNT = String(args.devicesPerWorker);
   childEnv._TESTING = childEnv._TESTING ?? '1';
-  // Service network selection (mainnet default). Devnet also needs DEVNET_* vars in .env — see
-  // capabilities_ios.ts / .env.sample. Left unset here so .env's NETWORK_TARGET is respected.
+  // Service network selection. Devnet also needs DEVNET_SEED_URL in .env — the pubkey and storage
+  // ports are discovered from that seed node (see run/test/utils/network_target.ts), so nothing else
+  // is required. Left unset here so .env's NETWORK_TARGET is respected.
   if (args.network) {
     childEnv.NETWORK_TARGET = args.network;
   }

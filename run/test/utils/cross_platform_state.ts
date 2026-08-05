@@ -19,7 +19,7 @@ import { openApps, waitFirstWindow } from '../../desktop/open';
 import { getDevicesPerTestCount } from './binaries';
 import { getAndroidPoolSize } from './capabilities_android';
 import { IOS_PRO_CONTEXT } from './capabilities_ios';
-import { assertConsistentNetworkTarget } from './devnet';
+import { resolveNetworkTarget } from './devnet';
 import { closeApp, openAppMultipleDevices } from './open_app';
 
 /**
@@ -154,7 +154,7 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
   }
   assertPoolsCanFit(totalAndroid, totalIos);
 
-  const net = await assertConsistentNetworkTarget(present);
+  const net = await resolveNetworkTarget(present);
   const prebuilt = await buildStateForTest(stateToBuildKey, groupName, net);
   const seedUsers = (prebuilt as { users: StateUser[] }).users;
 

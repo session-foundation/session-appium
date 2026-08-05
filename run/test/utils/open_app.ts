@@ -398,10 +398,43 @@ const openiOSApp = async (
     iOSContext
   );
   const udid = capabilities.alwaysMatch['appium:udid'] as string;
+  logIosLaunchEnv(udid, capabilities);
 
   const { device: wrappedDevice } = await cleanPermissions(opts, udid, capabilities, testInfo);
   return { device: wrappedDevice };
 };
+
+/**
+ * Log the launch-arg env the app is about to receive. This is the ONLY record of what the harness
+ * actually handed the app, and it is worth having because
+ * `DeveloperSettingsViewModel.processUnitTestEnvVariablesIfNeeded` (Session_iOS) fails *soft* in
+ * both directions:
+ *
+ *  - `serviceNetwork: 'devnet'` with any of `devnetPubkey`/`devnetIp`/`devnetHttpPort`/
+ *    `devnetOmqPort` missing or malformed -> the app logs a warning and silently uses **testnet**.
+ *  - no `serviceNetwork` key at all (e.g. the app was relaunched without processArguments) -> the
+ *    app silently uses its default, **mainnet**.
+ *
+ * Either way the app ends up on a different network from the seeder, and the only symptom is a test
+ * that hangs waiting for data that was written elsewhere. Comparing this line against the app's own
+ * log tells you immediately which of the two happened.
+ */
+function logIosLaunchEnv(udid: string, capabilities: W3CXCUITestDriverCaps): void {
+  const env =
+    (capabilities.alwaysMatch['appium:processArguments'] as { env?: Record<string, string> })
+      ?.env ?? {};
+  // The devnet pubkey is a devnet seed-node key, not a credential, but there is no reason to print
+  // 64 chars of it on every device open.
+  const redacted = Object.fromEntries(
+    Object.entries(env).map(([k, v]) => [k, k === 'devnetPubkey' ? `${v.slice(0, 8)}…` : v])
+  );
+  console.info(`iOS launch env for ${udid}:`, JSON.stringify(redacted));
+  if (!('serviceNetwork' in env)) {
+    console.info(
+      `  note: no 'serviceNetwork' key -> the app will use its default (mainnet). Set NETWORK_TARGET to change this.`
+    );
+  }
+}
 
 export const closeApp = async (...devices: Array<DeviceWrapper>) => {
   await Promise.all(compact(devices).map(d => d.deleteSession()));

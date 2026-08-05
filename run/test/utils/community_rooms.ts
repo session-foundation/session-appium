@@ -39,7 +39,7 @@ export type CommunityRoom = {
  * that pointed a delete at one would take out a long-lived room. Asserting it in one place is cheap
  * next to that.
  */
-const DISPOSABLE_PREFIX = 'qa-';
+export const DISPOSABLE_PREFIX = 'qa-';
 
 type SogsTarget = {
   admin: SogsIdentity;
