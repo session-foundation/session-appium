@@ -131,9 +131,10 @@ answer `get_n_service_nodes` with registered nodes, and the storage ports it adv
 connections. If devnet was requested and any of that fails, the **whole run stops** — on every
 platform and every project — instead of hanging until the 480s test timeout.
 
-The two services in 4b and 4c are then discovered off the same devnet IP, so they need no addresses of
-their own. Unlike the devnet they are **optimisations**: whatever is unreachable is reported and
-skipped, and the run continues on the remote community / production file server.
+The services in 4b, 4c and 4d are then discovered off the same devnet IP, so they need no addresses of
+their own. The first two are **optimisations**: whatever is unreachable is reported and skipped, and the
+run continues on the remote community / production file server. The Pro backend (4d) is not — see
+there.
 
 ## 4b. (Optional) local file server
 
@@ -283,6 +284,42 @@ Mechanics worth knowing:
 
 > **Server version:** `POST /rooms` and `DELETE /room/<token>` are additions to session-pysogs — a SOGS
 > without them fails the startup check and the run falls back to the shared rooms, naming the reason.
+
+## 4d. (Optional) local Pro backend
+
+The stack also brings up a **Pro backend** (`pro-backend` + `pro-backend-db` containers, published on
+`:8090`) with its `/dev/*` routes enabled, so it will mint Pro subscriptions for any caller — which is
+what `pro.session.codes` refuses to do and why Pro tests could not run against it.
+
+Unlike 4b and 4c this is **not an optimisation**. There is no fallback: with `TEST_PRO_BACKEND` set,
+session-desktop throws inside `SwarmPolling.pollOnceForKey` when it cannot reach a dev backend, which
+kills every poll cycle — messages send but are never received, and the symptom is a test timing out
+nowhere near anything Pro-related. The harness warns loudly rather than letting you discover that.
+
+Its address is discovered off the devnet IP. Its **signing key is not discoverable** — no route exposes
+it, and it is generated per instance into the container's data volume rather than baked deterministic
+like the SOGS and file-server keys — so read it from the startup banner:
+
+```bash
+docker compose logs pro-backend | grep -i 'signing pubkey'
+#   Ed25519 signing pubkey : cf1079a5…
+```
+
+Then add to `.env`:
+
+```bash
+TEST_PRO_BACKEND=1
+TEST_PRO_BACKEND_ED_PK=<Ed25519 signing pubkey>
+```
+
+Notes:
+
+- **Only the Ed25519 key.** The banner also prints an X25519 onion pubkey, but that is the same keypair
+  in its other representation — the client derives it (`crypto_sign_ed25519_pk_to_curve25519`). Setting
+  it separately would only create a way for the pair to disagree.
+- `TEST_PRO_BACKEND` is a presence check, not a boolean: **any** non-empty value enables it, `0`
+  included. Leave it unset (or empty) to use the production backend.
+- `PRO_BACKEND_HOST`/`PRO_BACKEND_PORT` override the discovered address.
 
 ## 5. Run
 

@@ -95,14 +95,19 @@ Only a subset matters per platform (all read in `run/test/utils/binaries.ts` /
   Requesting devnet when the devnet is unusable aborts the whole run in `global-setup`, on every
   platform and project (`assertRequestedDevnetsReachable`).
 
-- **Local SOGS / file server are discovered too** (`devnet_services.ts`, from `global-setup` on devnet
-  runs), keyed off the devnet's advertised service-node IP — the address the app needs, since it
-  reaches both through the snodes. Unlike the devnet they are optimisations: anything unreachable is
-  reported and skipped, leaving the run on the remote community / production file server. The SOGS
-  link is *verified* before use (one signed request — a wrong `SOGS_PUBKEY` comes back 401), so it
-  cannot take per-test community rooms down with it. `FILE_SERVER_PUBKEY` has no such check — the key
-  only matters inside the onion request — so it is never guessed: set it, or the production file
-  server is used. `SOGS_HOST`/`SOGS_PORT`/`FILE_SERVER_HOST`/`FILE_SERVER_PORT` override the address.
+- **Local SOGS / file server / Pro backend are discovered too** (`devnet_services.ts`, from
+  `global-setup` on devnet runs), keyed off the devnet's advertised service-node IP — the address the
+  app needs, since it reaches all three through the snodes. SOGS and the file server are optimisations:
+  anything unreachable is reported and skipped, leaving the run on the remote community / production
+  file server. The SOGS link is *verified* before use (one signed request — a wrong `SOGS_PUBKEY` comes
+  back 401), so it cannot take per-test community rooms down with it. `FILE_SERVER_PUBKEY` has no such
+  check — the key only matters inside the onion request — so it is never guessed: set it, or the
+  production file server is used. `*_HOST`/`*_PORT` vars override each address.
+- **The Pro backend is the exception**: with `TEST_PRO_BACKEND` set there is no fallback, because
+  session-desktop throws inside `SwarmPolling.pollOnceForKey` when it can't reach a dev backend —
+  killing every poll cycle, so messages send but never arrive, with a symptom nowhere near Pro. Set
+  `TEST_PRO_BACKEND_ED_PK` (Ed25519, from `docker logs sesh-net-pro-backend`); the X25519 onion key is
+  *derived* from it, never configured. Note `TEST_PRO_BACKEND` is a presence check — `0` enables it.
 
 ### iOS simulators
 
