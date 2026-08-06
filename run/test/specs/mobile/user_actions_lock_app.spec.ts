@@ -10,6 +10,7 @@ import {
   PrivacyMenuItem,
   UserSettings,
 } from '../../locators/settings';
+import { getAdbFullPath } from '../../utils/binaries';
 import { newUser } from '../../utils/create_account';
 import {
   closeApp,
@@ -41,7 +42,10 @@ async function lockApp(platform: SupportedPlatformsType, testInfo: TestInfo) {
   });
   try {
     await test.step('Set device PIN', async () => {
-      await runScriptAndLog(`adb -s ${device.udid} shell locksettings set-pin ${pin}`, true);
+      await runScriptAndLog(
+        `${getAdbFullPath()} -s ${device.udid} shell locksettings set-pin ${pin}`,
+        true
+      );
     });
     await test.step('Enable app lock', async () => {
       await device.clickOnElementAll(new UserSettings(device));
@@ -57,8 +61,8 @@ async function lockApp(platform: SupportedPlatformsType, testInfo: TestInfo) {
       await device.waitForElementToBeGone({ ...new PlusButton(device).build(), maxWait: 10_000 });
     });
     await test.step('Enter PIN to unlock app', async () => {
-      await runScriptAndLog(`adb -s ${device.udid} shell input text ${pin}`, true);
-      await runScriptAndLog(`adb -s ${device.udid} shell input keyevent 66`, true);
+      await runScriptAndLog(`${getAdbFullPath()} -s ${device.udid} shell input text ${pin}`, true);
+      await runScriptAndLog(`${getAdbFullPath()} -s ${device.udid} shell input keyevent 66`, true);
     });
     await test.step('Verify home screen is visible', async () => {
       await device.waitForTextElementToBePresent(new PlusButton(device));
@@ -67,6 +71,9 @@ async function lockApp(platform: SupportedPlatformsType, testInfo: TestInfo) {
       await closeApp(device);
     });
   } finally {
-    await runScriptAndLog(`adb -s ${device.udid} shell locksettings clear --old ${pin}`, true);
+    await runScriptAndLog(
+      `${getAdbFullPath()} -s ${device.udid} shell locksettings clear --old ${pin}`,
+      true
+    );
   }
 }
