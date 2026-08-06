@@ -8,6 +8,7 @@ import {
   sessionTestOneWindow,
   test_Alice_2W,
   test_Alice_2W_Bob_1W,
+  test_Alice_2W_Bob_1W_friends,
 } from '../../../desktop/sessionTest';
 import {
   doWhileWithMax,
@@ -97,6 +98,8 @@ test_Alice_2W('Avatar syncs', async ({ alice, alice2 }, testInfo) => {
   });
 });
 
+// Kept UI-driven on purpose: the subject IS contact creation syncing to a linked device, so the
+// contact must be created through the app rather than seeded onto the swarm.
 test_Alice_2W_Bob_1W('Contacts syncs', async ({ alice, alice2, bob }) => {
   await alice.createContactWith(bob);
   // linked device (aliceWindow2)
@@ -104,10 +107,9 @@ test_Alice_2W_Bob_1W('Contacts syncs', async ({ alice, alice2, bob }) => {
   console.info('Contacts correctly synced');
 });
 
-test_Alice_2W_Bob_1W('Blocked user syncs', async ({ alice, alice2, bob }) => {
+test_Alice_2W_Bob_1W_friends('Blocked user syncs', async ({ alice, alice2, bob }) => {
   const testMessage = 'Testing blocking functionality for linked device';
 
-  await alice.createContactWith(bob);
   await alice.sendMessage(testMessage);
   // Navigate to conversation on linked device and check for message from user A to user B
   await alice2.rightClickOnWithText(HomeScreen.conversationItemName, bob.userName);
@@ -136,9 +138,7 @@ test_Alice_2W_Bob_1W('Blocked user syncs', async ({ alice, alice2, bob }) => {
   await alice2.waitForTestIdWithText(Global.contactItem.selector, bob.userName);
 });
 
-test_Alice_2W_Bob_1W('Deleted conversation syncs', async ({ alice, alice2, bob }) => {
-  // Create contact and send new message
-  await alice.createContactWith(bob);
+test_Alice_2W_Bob_1W_friends('Deleted conversation syncs', async ({ alice, alice2, bob }) => {
   await Promise.all(
     [alice, alice2, bob].map(w =>
       w.clickOnElement({
@@ -162,11 +162,14 @@ test_Alice_2W_Bob_1W('Deleted conversation syncs', async ({ alice, alice2, bob }
   );
   await alice.clickOnWithText(Global.confirmButton, tStripped('delete'));
   // Check if conversation is deleted
-  // Need to wait for deletion to propagate to linked device
+  // Deleting an approved contact hides it (priority) rather than erasing it, so the linked device
+  // only drops the row once alice's contacts config has been pushed and alice2 has polled it — the
+  // same conf-sync round trip 'Blocked user syncs' below budgets 50s for. Measured at ~22s here, so
+  // the old 10s was never the propagation time, just enough for the way the contact used to be made.
   await Promise.all(
     [alice, alice2].map(w =>
       hasElementBeenDeleted(w.getPage(), HomeScreen.conversationItemName, {
-        maxWait: 10_000,
+        maxWait: 50_000,
         text: bob.userName,
       })
     )

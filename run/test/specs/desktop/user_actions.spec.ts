@@ -5,7 +5,7 @@ import { expect } from '@playwright/test';
 import { Conversation, Global, HomeScreen, LeftPane, Settings } from '../../../desktop/locators';
 import { compareElementScreenshot } from '../../../desktop/screenshot';
 import {
-  test_Alice_1W_Bob_1W,
+  test_Alice_1W_Bob_1W_friends,
   test_Alice_1W_no_network,
   test_Alice_2W,
 } from '../../../desktop/sessionTest';
@@ -22,9 +22,7 @@ const cancelString = tStripped('cancel');
 const saveString = tStripped('save');
 const removeString = tStripped('remove');
 
-test_Alice_1W_Bob_1W('Block user in conversation list', async ({ alice, bob }) => {
-  // Create contact and send new message
-  await alice.createContactWith(bob);
+test_Alice_1W_Bob_1W_friends('Block user in conversation list', async ({ alice, bob }) => {
   // Check to see if User B is a contact
   await alice.clickOn(HomeScreen.plusButton);
   await alice.waitForTestIdWithText(Global.contactItem.selector, bob.userName);
@@ -138,10 +136,9 @@ test_Alice_1W_no_network('Remove avatar', async ({ alice }) => {
   ).toBeVisible();
 });
 
-test_Alice_1W_Bob_1W('Set nickname', async ({ alice, bob }) => {
+test_Alice_1W_Bob_1W_friends('Set nickname', async ({ alice, bob }) => {
   const nickname = 'new nickname for Bob';
 
-  await alice.createContactWith(bob);
   await alice.rightClickOnWithText(HomeScreen.conversationItemName, bob.userName);
   await alice.clickOnMatchingText(tStripped('nicknameSet'));
   await sleepFor(1000);
@@ -165,8 +162,7 @@ test_Alice_1W_Bob_1W('Set nickname', async ({ alice, bob }) => {
   expect(conversationListUsername).toBe(nickname);
 });
 
-test_Alice_1W_Bob_1W('Read status', async ({ alice, bob }) => {
-  await alice.createContactWith(bob);
+test_Alice_1W_Bob_1W_friends('Read status', async ({ alice, bob }) => {
   await alice.clickOnElement({
     strategy: 'data-testid',
     selector: LeftPane.settingsButton.selector,
@@ -195,9 +191,7 @@ test_Alice_1W_Bob_1W('Read status', async ({ alice, bob }) => {
   await alice.waitForMessageStatus('Testing read receipts', 'read');
 });
 
-test_Alice_1W_Bob_1W('Delete conversation', async ({ alice, bob }) => {
-  // Create contact and send new message
-  await alice.createContactWith(bob);
+test_Alice_1W_Bob_1W_friends('Delete conversation', async ({ alice, bob }) => {
   await Promise.all(
     [alice, bob].map(w =>
       w.clickOnElement({

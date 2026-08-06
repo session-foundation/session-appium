@@ -15,20 +15,18 @@ import {
   HomeScreen,
 } from '../../../desktop/locators';
 import {
-  sessionTestTwoWindows,
   test_Alice_1W,
-  test_Alice_1W_Bob_1W,
+  test_Alice_1W_Bob_1W_friends,
   test_Alice_2W,
-  test_Alice_2W_Bob_1W,
+  test_Alice_2W_Bob_1W_friends,
 } from '../../../desktop/sessionTest';
 import { tStripped } from '../../../localizer/lib';
 import { sleepFor } from '../../../shared/promise_utils';
 
 mediaArray.forEach(({ mediaType, path, attachmentType, shouldCheckMediaPreview }) => {
-  test_Alice_1W_Bob_1W(`Send ${mediaType} 1:1`, async ({ alice, bob }) => {
+  test_Alice_1W_Bob_1W_friends(`Send ${mediaType} 1:1`, async ({ alice, bob }) => {
     const testMessage = `${alice.userName} sending ${mediaType} to ${bob.userName}`;
     const testReply = `${bob.userName} replying to ${mediaType} from ${alice.userName}`;
-    await alice.createContactWith(bob);
     if (mediaType === 'voice') {
       await alice.sendVoiceMessage();
     } else {
@@ -57,9 +55,8 @@ mediaArray.forEach(({ mediaType, path, attachmentType, shouldCheckMediaPreview }
   });
 });
 
-test_Alice_1W_Bob_1W('Send long text 1:1', async ({ alice, bob }) => {
+test_Alice_1W_Bob_1W_friends('Send long text 1:1', async ({ alice, bob }) => {
   const testReply = `${bob.userName} replying to long text message from ${alice.userName}`;
-  await alice.createContactWith(bob);
   await alice.pasteIntoInput('message-input-text-area', longText);
   await sleepFor(100);
   await alice.clickOnElement({
@@ -75,10 +72,9 @@ test_Alice_1W_Bob_1W('Send long text 1:1', async ({ alice, bob }) => {
   });
 });
 
-test_Alice_1W_Bob_1W('Send link preview 1:1', async ({ alice, bob }) => {
+test_Alice_1W_Bob_1W_friends('Send link preview 1:1', async ({ alice, bob }) => {
   const testReply = `${bob.userName} replying to link from ${alice.userName}`;
 
-  await alice.createContactWith(bob);
   await alice.sendLinkPreview(testLink);
   await bob.waitForElement({
     locator: Conversation.linkPreviewTitle,
@@ -95,8 +91,7 @@ test_Alice_1W_Bob_1W('Send link preview 1:1', async ({ alice, bob }) => {
   });
 });
 
-test_Alice_1W_Bob_1W('Send community invite', async ({ alice, bob }) => {
-  await alice.createContactWith(bob);
+test_Alice_1W_Bob_1W_friends('Send community invite', async ({ alice, bob }) => {
   await alice.joinCommunity();
   await alice.clickOn(Conversation.conversationSettingsIcon);
   await alice.clickOn(ConversationSettings.inviteContactsOption);
@@ -133,37 +128,39 @@ const delete1o1TypeArray = [
 ] as const;
 
 delete1o1TypeArray.forEach(deleteType => {
-  test_Alice_2W_Bob_1W(`Delete message 1:1 ${deleteType}`, async ({ alice, alice2, bob }) => {
-    const messageToDelete = `Testing deletion functionality for ${deleteType}`;
-    await alice.createContactWith(bob);
-    await alice.sendMessage(messageToDelete);
-    // Navigate to conversation on linked device and for message from user A to user B
-    await alice2.openConversationWith(bob.userName);
+  test_Alice_2W_Bob_1W_friends(
+    `Delete message 1:1 ${deleteType}`,
+    async ({ alice, alice2, bob }) => {
+      const messageToDelete = `Testing deletion functionality for ${deleteType}`;
+      await alice.sendMessage(messageToDelete);
+      // Navigate to conversation on linked device and for message from user A to user B
+      await alice2.openConversationWith(bob.userName);
 
-    await Promise.all([
-      alice2.waitForTextMessage(messageToDelete, 15_000),
-      bob.waitForTextMessage(messageToDelete, 15_000),
-    ]);
+      await Promise.all([
+        alice2.waitForTextMessage(messageToDelete, 15_000),
+        bob.waitForTextMessage(messageToDelete, 15_000),
+      ]);
 
-    // Alice sent the message, device_only_incoming means getting Bob to delete Alice's message locally.
-    // Otherwise, it's an action that Alice does on her own message.
+      // Alice sent the message, device_only_incoming means getting Bob to delete Alice's message locally.
+      // Otherwise, it's an action that Alice does on her own message.
 
-    const windowInitiatingDelete = deleteType === 'device_only_incoming' ? bob : alice;
-    const otherWindows = [alice, alice2, bob].filter(w => w !== windowInitiatingDelete);
+      const windowInitiatingDelete = deleteType === 'device_only_incoming' ? bob : alice;
+      const otherWindows = [alice, alice2, bob].filter(w => w !== windowInitiatingDelete);
 
-    const simplifiedDeleteType =
-      deleteType === 'device_only_incoming' || deleteType === 'device_only_outgoing'
-        ? 'device_only'
-        : 'for_everyone';
+      const simplifiedDeleteType =
+        deleteType === 'device_only_incoming' || deleteType === 'device_only_outgoing'
+          ? 'device_only'
+          : 'for_everyone';
 
-    await windowInitiatingDelete.deleteMessageFor(messageToDelete, simplifiedDeleteType);
+      await windowInitiatingDelete.deleteMessageFor(messageToDelete, simplifiedDeleteType);
 
-    await windowInitiatingDelete.confirmMessageDeletedFor({
-      deleteType: simplifiedDeleteType,
-      messageToDelete,
-      otherWindows,
-    });
-  });
+      await windowInitiatingDelete.confirmMessageDeletedFor({
+        deleteType: simplifiedDeleteType,
+        messageToDelete,
+        otherWindows,
+      });
+    }
+  );
 });
 
 const deleteNtsTypeArray = ['device_only', 'for_all_my_devices'] as const;
@@ -189,10 +186,7 @@ deleteNtsTypeArray.forEach(deleteType => {
   });
 });
 
-sessionTestTwoWindows('Check performance', async ([alice, bob]) => {
-  await Promise.all([alice.onboard('Alice'), bob.onboard('Bob')]);
-  // Create contact
-  await alice.createContactWith(bob);
+test_Alice_1W_Bob_1W_friends('Check performance', async ({ alice }) => {
   const timesArray: Array<number> = [];
 
   let i;
@@ -231,10 +225,9 @@ const messageLengthTestCases = [
 ];
 
 messageLengthTestCases.forEach(testCase => {
-  test_Alice_1W_Bob_1W(
+  test_Alice_1W_Bob_1W_friends(
     `Message length limit (${testCase.length} chars)`,
     async ({ alice, bob }) => {
-      await alice.createContactWith(bob);
       const expectedCount =
         testCase.length < countdownThreshold ? null : (maxChars - testCase.length).toString();
       const message = testCase.char.repeat(testCase.length);

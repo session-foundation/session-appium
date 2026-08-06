@@ -9,7 +9,7 @@ import {
   testLinkTitle,
 } from '../../../desktop/constants/variables';
 import { Conversation, ConversationSettings, Global } from '../../../desktop/locators';
-import { test_Alice_1W_Bob_1W } from '../../../desktop/sessionTest';
+import { test_Alice_1W_Bob_1W_friends } from '../../../desktop/sessionTest';
 import {
   formatTimeOption,
   hasElementBeenDeleted,
@@ -22,10 +22,9 @@ import { sleepFor } from '../../../shared/promise_utils';
 const { timeOption, disappearingMessagesType, disappearAction } = defaultDisappearingOptions.DAS;
 
 mediaArray.forEach(({ mediaType, path, attachmentType, shouldCheckMediaPreview }) => {
-  test_Alice_1W_Bob_1W(`Send disappearing ${mediaType} 1:1`, async ({ alice, bob }) => {
+  test_Alice_1W_Bob_1W_friends(`Send disappearing ${mediaType} 1:1`, async ({ alice, bob }) => {
     const testMessage = `${alice.userName} sending disappearing ${mediaType} to ${bob.userName}`;
     const formattedTime = formatTimeOption(timeOption);
-    await alice.createContactWith(bob);
     // Set disappearing messages
     await alice.setDisappearingMessages(
       ['1:1', disappearingMessagesType, timeOption, disappearAction],
@@ -73,9 +72,8 @@ mediaArray.forEach(({ mediaType, path, attachmentType, shouldCheckMediaPreview }
   });
 });
 
-test_Alice_1W_Bob_1W(`Send disappearing long text 1:1`, async ({ alice, bob }) => {
+test_Alice_1W_Bob_1W_friends(`Send disappearing long text 1:1`, async ({ alice, bob }) => {
   const formattedTime = formatTimeOption(timeOption);
-  await alice.createContactWith(bob);
   // Set disappearing messages
   await alice.setDisappearingMessages(
     ['1:1', disappearingMessagesType, timeOption, disappearAction],
@@ -108,9 +106,8 @@ test_Alice_1W_Bob_1W(`Send disappearing long text 1:1`, async ({ alice, bob }) =
   await hasTextMessageBeenDeleted(bob.getPage(), longText);
 });
 
-test_Alice_1W_Bob_1W(`Send disappearing link preview 1:1`, async ({ alice, bob }) => {
+test_Alice_1W_Bob_1W_friends(`Send disappearing link preview 1:1`, async ({ alice, bob }) => {
   const formattedTime = formatTimeOption(timeOption);
-  await alice.createContactWith(bob);
   // Set disappearing messages
   await alice.setDisappearingMessages(
     ['1:1', disappearingMessagesType, timeOption, disappearAction],
@@ -150,9 +147,8 @@ test_Alice_1W_Bob_1W(`Send disappearing link preview 1:1`, async ({ alice, bob }
   });
 });
 
-test_Alice_1W_Bob_1W(`Send disappearing community invite 1:1`, async ({ alice, bob }) => {
+test_Alice_1W_Bob_1W_friends(`Send disappearing community invite 1:1`, async ({ alice, bob }) => {
   const formattedTime = formatTimeOption(timeOption);
-  await alice.createContactWith(bob);
   // Set disappearing messages
   await alice.setDisappearingMessages(
     ['1:1', disappearingMessagesType, timeOption, disappearAction],
@@ -216,9 +212,8 @@ test_Alice_1W_Bob_1W(`Send disappearing community invite 1:1`, async ({ alice, b
   );
 });
 
-test_Alice_1W_Bob_1W(`Send disappearing call message 1:1`, async ({ alice, bob }) => {
+test_Alice_1W_Bob_1W_friends(`Send disappearing call message 1:1`, async ({ alice, bob }) => {
   const formattedTime = formatTimeOption(timeOption);
-  await alice.createContactWith(bob);
   // Set disappearing messages
   await alice.setDisappearingMessages(
     ['1:1', disappearingMessagesType, timeOption, disappearAction],

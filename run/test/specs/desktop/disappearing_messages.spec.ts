@@ -4,7 +4,7 @@ import { defaultDisappearingOptions } from '../../../desktop/constants/variables
 import { Conversation, Global } from '../../../desktop/locators';
 import {
   test_Alice_2W,
-  test_Alice_2W_Bob_1W,
+  test_Alice_2W_Bob_1W_friends,
   test_group_Alice_2W_Bob_1W_Charlie_1W,
 } from '../../../desktop/sessionTest';
 import {
@@ -16,7 +16,7 @@ import {
 import { tStripped } from '../../../localizer/lib';
 import { sleepFor } from '../../../shared/promise_utils';
 
-test_Alice_2W_Bob_1W('Disappear after read 1:1', async ({ alice, alice2, bob }) => {
+test_Alice_2W_Bob_1W_friends('Disappear after read 1:1', async ({ alice, alice2, bob }) => {
   const { timeOption, disappearingMessagesType, disappearAction } = defaultDisappearingOptions.DAR;
   const formattedTime = formatTimeOption(timeOption);
   const testMessage = 'Testing disappearing messages timer is working correctly';
@@ -24,8 +24,6 @@ test_Alice_2W_Bob_1W('Disappear after read 1:1', async ({ alice, alice2, bob }) 
     time: formattedTime,
     disappearing_messages_type: tStripped('disappearingMessagesTypeRead'),
   });
-  // Create Contact
-  await alice.createContactWith(bob);
   // Click on conversation in linked device
   await alice2.openConversationWith(bob.userName);
 
@@ -57,7 +55,7 @@ test_Alice_2W_Bob_1W('Disappear after read 1:1', async ({ alice, alice2, bob }) 
   await hasTextMessageBeenDeleted(bob.getPage(), testMessage);
 });
 
-test_Alice_2W_Bob_1W('Disappear after send 1:1', async ({ alice, alice2, bob }) => {
+test_Alice_2W_Bob_1W_friends('Disappear after send 1:1', async ({ alice, alice2, bob }) => {
   const { timeOption, disappearingMessagesType, disappearAction } = defaultDisappearingOptions.DAS;
   const formattedTime = formatTimeOption(timeOption);
   const testMessage = 'Testing disappearing messages timer is working correctly';
@@ -65,9 +63,6 @@ test_Alice_2W_Bob_1W('Disappear after send 1:1', async ({ alice, alice2, bob }) 
     time: formattedTime,
     disappearing_messages_type: tStripped('disappearingMessagesTypeSent'),
   });
-  // Create Contact
-  await alice.createContactWith(bob);
-
   // Click on conversation in linked device
   await alice2.openConversationWith(bob.userName);
   await alice.setDisappearingMessages(
@@ -157,11 +152,10 @@ test_Alice_2W('Disappear after send note to self', async ({ alice, alice2 }) => 
   ]);
 });
 
-test_Alice_2W_Bob_1W('Disappear after send off 1:1', async ({ alice, alice2, bob }) => {
+test_Alice_2W_Bob_1W_friends('Disappear after send off 1:1', async ({ alice, alice2, bob }) => {
   const { disappearAction, disappearingMessagesType, timeOption } = defaultDisappearingOptions.DAS;
   const testMessage = 'Turning disappearing messages off';
   const formattedTime = formatTimeOption(timeOption);
-  await alice.createContactWith(bob);
   // Click on conversation on linked device
   await alice2.openConversationWith(bob.userName);
   // Set disappearing messages to on
