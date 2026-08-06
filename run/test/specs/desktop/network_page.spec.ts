@@ -31,8 +31,8 @@ const NETWORK_DATA_REFRESH_ATTEMPTS = 3;
  * Returns a boolean rather than throwing because both callers want to *decide* on the answer:
  * `waitForNetworkData` retries, the refresh test fails.
  *
- * Not `waitForLoadingAnimationToFinish`: its wait loop has no deadline, so on the "no data" state
- * below it never returns and the test dies on the Playwright timeout with nothing to go on.
+ * Not `waitForLoadingAnimationToFinish`: that throws on a spinner that never clears, and it keys off
+ * the spinner alone. This needs a boolean, and needs the refresh button as proof the page mounted.
  */
 async function networkDataLoaded(window: Page, maxWaitMs: number): Promise<boolean> {
   const spinner = buildSelectorEscapeText(Global.loadingSpinner);
@@ -75,22 +75,30 @@ async function networkDataLoaded(window: Page, maxWaitMs: number): Promise<boole
 async function waitForNetworkData(alice: DesktopWrapper): Promise<void> {
   const window = alice.getPage();
 
-  for (let attempt = 0; attempt <= NETWORK_DATA_REFRESH_ATTEMPTS; attempt++) {
+  // The initial load, then one wait per refresh. Structured this way so every refresh is actually
+  // waited on: looping `attempt <= ATTEMPTS` around "wait then refresh" pressed refresh one extra
+  // time and threw immediately after the last press, without ever giving it a chance.
+  if (await networkDataLoaded(window, NETWORK_DATA_WAIT_MS)) {
+    return;
+  }
+
+  for (let attempt = 1; attempt <= NETWORK_DATA_REFRESH_ATTEMPTS; attempt++) {
+    console.info(
+      `Session Network page still has no data after ${NETWORK_DATA_WAIT_MS}ms, pressing refresh ` +
+        `(attempt ${attempt}/${NETWORK_DATA_REFRESH_ATTEMPTS})`
+    );
+    await alice.clickOn(Settings.refreshButton);
     if (await networkDataLoaded(window, NETWORK_DATA_WAIT_MS)) {
       return;
     }
-    console.info(
-      `Session Network page still has no data after ${NETWORK_DATA_WAIT_MS}ms, pressing refresh ` +
-        `(attempt ${attempt + 1}/${NETWORK_DATA_REFRESH_ATTEMPTS})`
-    );
-    await alice.clickOn(Settings.refreshButton);
   }
 
   throw new Error(
-    `The Session Network page never loaded its data: ${NETWORK_DATA_REFRESH_ATTEMPTS} refreshes, ` +
-      `${NETWORK_DATA_WAIT_MS}ms each, all left it on the spinner. Check the desktop log for ` +
-      `"[networkData/fetchInfoFromSeshServer] rejected" — /info goes to networkv1.getsession.org ` +
-      `over an onion path, so this is usually the request failing rather than the page.`
+    `The Session Network page never loaded its data: the initial load plus ` +
+      `${NETWORK_DATA_REFRESH_ATTEMPTS} refreshes, ${NETWORK_DATA_WAIT_MS}ms each, all left it on ` +
+      `the spinner. Check the desktop log for "[networkData/fetchInfoFromSeshServer] rejected" — ` +
+      `/info goes to networkv1.getsession.org over an onion path, so this is usually the request ` +
+      `failing rather than the page.`
   );
 }
 

@@ -393,6 +393,9 @@ export async function rightClickOnWithText(
   };
 
   const menuItem = '[data-testid="context-menu-item"]';
+  // Bound each menu wait by the caller's maxWait when they gave one, so it bounds the whole
+  // operation and not just the click.
+  const menuWaitMs = options?.maxWait ?? 5_000;
 
   for (let attempt = 0; attempt < 2; attempt++) {
     await window.click(builtSelector, sharedOpts);
@@ -401,7 +404,7 @@ export async function rightClickOnWithText(
     // community's has 9 and was measured at ~230ms, which the previous 100ms budget sat just below —
     // so leaving a community failed almost every time while the shorter 1:1 menus passed.
     const appeared = await window
-      .waitForSelector(menuItem, { timeout: 5_000 })
+      .waitForSelector(menuItem, { timeout: menuWaitMs })
       .then(() => true)
       .catch(() => false);
 

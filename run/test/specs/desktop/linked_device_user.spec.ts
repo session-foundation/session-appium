@@ -164,7 +164,7 @@ test_Alice_2W_Bob_1W_friends('Deleted conversation syncs', async ({ alice, alice
   // Check if conversation is deleted
   // Deleting an approved contact hides it (priority) rather than erasing it, so the linked device
   // only drops the row once alice's contacts config has been pushed and alice2 has polled it — the
-  // same conf-sync round trip 'Blocked user syncs' below budgets 50s for. Measured at ~22s here, so
+  // same conf-sync round trip 'Blocked user syncs' above budgets 50s for. Measured at ~22s here, so
   // the old 10s was never the propagation time, just enough for the way the contact used to be made.
   await Promise.all(
     [alice, alice2].map(w =>

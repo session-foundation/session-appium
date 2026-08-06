@@ -200,10 +200,26 @@ type SeededOptions = {
   context?: TestContext;
 };
 
-type SeededDetails = {
+/**
+ * Prefix on the one message a seeded group is warmed up with (see `focusAndWarmSeededGroup`).
+ *
+ * Exported so a spec can tell the fixture's message from its own. Without it the warm-up read
+ * `Alice to <group>` — byte-identical to what the UI `createGroup` used to send — so anything
+ * matching loosely on message text could not exclude it.
+ */
+export const SEEDED_GROUP_WARM_UP_PREFIX = '[fixture warm-up]';
+
+type SeededFriendsDetails = {
   users: SeededUser[];
   extras: DesktopWrapper[];
-  group?: Group;
+  /** Friend states have no group. Declared as `undefined` so the union discriminates on it. */
+  group?: undefined;
+};
+
+type SeededGroupDetails = {
+  users: SeededUser[];
+  extras: DesktopWrapper[];
+  group: Group;
 };
 
 /**
@@ -246,59 +262,35 @@ async function focusSeededFriendConvos(users: SeededUser[]) {
  * `createGroup` never had this problem because it ends by sending a message from every member and
  * verifying it everywhere. One message from the admin is the cheap equivalent: the send waits for
  * a 'sent' tick (so the admin has keys) and each receiver decrypting it proves the same for them.
+ *
+ * So every seeded group starts with EXACTLY ONE message in it — the admin's, carrying
+ * `SEEDED_GROUP_WARM_UP_PREFIX` so a spec can filter it out.
  */
 async function focusAndWarmSeededGroup(users: SeededUser[], groupName: string) {
   const firstWindows = users.map(u => u.windows[0]);
   await Promise.all(firstWindows.map(w => w.openConversationWith(groupName)));
 
   const [admin, ...members] = firstWindows;
-  const warmUpMessage = `${users[0].account.userName} to ${groupName}`;
+  const warmUpMessage = `${SEEDED_GROUP_WARM_UP_PREFIX} ${users[0].account.userName} to ${groupName}`;
   await admin.sendMessage(warmUpMessage);
   await Promise.all(members.map(w => w.waitForTextMessage(warmUpMessage, 30_000)));
 }
 
-function sessionTestSeeded(
+/**
+ * Shared lifecycle for every seeded builder: reset the tracked Electron pids, run the body, and
+ * force-close whatever it opened. The body pushes its pages onto `pages` as soon as it has them,
+ * so a failure part-way through `openSeededWindows` still gets cleaned up.
+ */
+function seededTest(
   testName: string,
-  stateKey: '2friends' | '3friendsInGroup',
-  { windowsPerUser, extraWindows = 0, context }: SeededOptions,
-  testCallback: (details: SeededDetails, testInfo: TestInfo) => Promise<void>
-) {
+  body: (pages: Page[], testInfo: TestInfo) => Promise<void>
+): void {
   return test(testName, async ({}, testInfo) => {
     resetTrackedElectronPids();
     const pages: Page[] = [];
 
     try {
-      const isGroupState = stateKey === '3friendsInGroup';
-      const opened = await openSeededWindows({
-        stateKey,
-        // Same convention as the UI builder: the group is named after the test.
-        groupName: (isGroupState ? testName : undefined) as never,
-        windowsPerUser,
-        extraWindows,
-        context,
-      });
-      pages.push(...opened.pages);
-
-      const { users, extras } = opened;
-      let group: Group | undefined;
-      if (isGroupState) {
-        if (!opened.group) {
-          throw new Error(`state '${stateKey}' returned no group`);
-        }
-        group = {
-          userName: opened.group.groupName,
-          userOne: users[0].account,
-          userTwo: users[1].account,
-          userThree: users[2].account,
-        };
-        // Mirror `createGroup`, which leaves the group open on each user's first window only —
-        // specs open it on linked windows themselves.
-        await focusAndWarmSeededGroup(users, group.userName);
-      } else {
-        await focusSeededFriendConvos(users);
-      }
-
-      await testCallback({ users, extras, group }, testInfo);
+      await body(pages, testInfo);
     } finally {
       try {
         // Called even with no page: Electron pids are tracked globally (reset above), so windows
@@ -308,6 +300,72 @@ function sessionTestSeeded(
         console.error(`forceCloseAllWindows of ${testName} failed with: `, e);
       }
     }
+  });
+}
+
+/**
+ * One entry point per state rather than one taking a state-key union.
+ *
+ * The union forced two casts that this shape removes by construction: `groupName`'s type in
+ * `openSeededWindows` is conditional on the state key, so a union key collapsed it to `never`;
+ * and a single `SeededDetails` with an optional `group` made every group builder assert
+ * `group as Group`. Here each opener passes a literal key and each callback gets exactly the
+ * details its state produces — `3friendsInGroup` requires a group name and yields a required
+ * `group`, `2friends` takes no group name and yields none.
+ *
+ * (Overloads over one implementation cannot express this without `any`: the implementation's
+ * callback would take the union, and function parameters are contravariant under
+ * `strictFunctionTypes`, so neither narrow overload is assignable to it.)
+ */
+function sessionTestSeededFriends(
+  testName: string,
+  { windowsPerUser, extraWindows = 0, context }: SeededOptions,
+  testCallback: (details: SeededFriendsDetails, testInfo: TestInfo) => Promise<void>
+): void {
+  return seededTest(testName, async (pages, testInfo) => {
+    const opened = await openSeededWindows({
+      stateKey: '2friends',
+      groupName: undefined,
+      windowsPerUser,
+      extraWindows,
+      context,
+    });
+    pages.push(...opened.pages);
+
+    await focusSeededFriendConvos(opened.users);
+    await testCallback({ users: opened.users, extras: opened.extras }, testInfo);
+  });
+}
+
+function sessionTestSeededGroup(
+  testName: string,
+  { windowsPerUser, extraWindows = 0, context }: SeededOptions,
+  testCallback: (details: SeededGroupDetails, testInfo: TestInfo) => Promise<void>
+): void {
+  return seededTest(testName, async (pages, testInfo) => {
+    const opened = await openSeededWindows({
+      stateKey: '3friendsInGroup',
+      // Same convention as the UI builder: the group is named after the test.
+      groupName: testName,
+      windowsPerUser,
+      extraWindows,
+      context,
+    });
+    pages.push(...opened.pages);
+
+    if (!opened.group) {
+      throw new Error(`state '3friendsInGroup' returned no group`);
+    }
+    const group: Group = {
+      userName: opened.group.groupName,
+      userOne: opened.users[0].account,
+      userTwo: opened.users[1].account,
+      userThree: opened.users[2].account,
+    };
+    // Mirror `createGroup`, which leaves the group open on each user's first window only —
+    // specs open it on linked windows themselves.
+    await focusAndWarmSeededGroup(opened.users, group.userName);
+    await testCallback({ users: opened.users, extras: opened.extras, group }, testInfo);
   });
 }
 
@@ -391,9 +449,8 @@ export function test_Alice_1W_Bob_1W_friends(
   ) => Promise<void>,
   context?: TestContext
 ) {
-  return sessionTestSeeded(
+  return sessionTestSeededFriends(
     testName,
-    '2friends',
     { windowsPerUser: [1, 1], context },
     ({ users }, info) =>
       testCallback({ alice: users[0].windows[0], bob: users[1].windows[0] }, info)
@@ -409,9 +466,8 @@ export function test_Alice_2W_Bob_1W_friends(
   ) => Promise<void>,
   context?: TestContext
 ) {
-  return sessionTestSeeded(
+  return sessionTestSeededFriends(
     testName,
-    '2friends',
     { windowsPerUser: [2, 1], context },
     ({ users }, info) =>
       testCallback(
@@ -430,8 +486,10 @@ export function test_Alice_2W_Bob_1W_friends(
  * tests whose subject is something else. `group_testing.spec.ts`'s "Create group" keeps driving
  * the real flow.
  *
- * As with `createGroup`, Alice is the group's admin. Unlike it, the group starts with no messages
- * and no `groupMemberNew` update messages in it.
+ * As with `createGroup`, Alice is the group's admin. Unlike it, the group has no `groupMemberNew`
+ * update messages in it and starts with exactly ONE message — the admin's warm-up, prefixed with
+ * `SEEDED_GROUP_WARM_UP_PREFIX` so a spec can exclude it. See `focusAndWarmSeededGroup` for why it
+ * has to be sent at all.
  */
 export function test_group_Alice_1W_Bob_1W_Charlie_1W(
   testName: string,
@@ -446,9 +504,8 @@ export function test_group_Alice_1W_Bob_1W_Charlie_1W(
   ) => Promise<void>,
   context?: TestContext
 ) {
-  return sessionTestSeeded(
+  return sessionTestSeededGroup(
     testName,
-    '3friendsInGroup',
     { windowsPerUser: [1, 1, 1], context },
     ({ users, group }, info) =>
       testCallback(
@@ -456,7 +513,7 @@ export function test_group_Alice_1W_Bob_1W_Charlie_1W(
           alice: users[0].windows[0],
           bob: users[1].windows[0],
           charlie: users[2].windows[0],
-          groupCreated: group as Group,
+          groupCreated: group,
         },
         info
       )
@@ -478,9 +535,8 @@ export function test_group_Alice_2W_Bob_1W_Charlie_1W(
   ) => Promise<void>,
   context?: TestContext
 ) {
-  return sessionTestSeeded(
+  return sessionTestSeededGroup(
     testName,
-    '3friendsInGroup',
     { windowsPerUser: [2, 1, 1], context },
     ({ users, group }, info) =>
       testCallback(
@@ -489,7 +545,7 @@ export function test_group_Alice_2W_Bob_1W_Charlie_1W(
           alice2: users[0].windows[1],
           bob: users[1].windows[0],
           charlie: users[2].windows[0],
-          groupCreated: group as Group,
+          groupCreated: group,
         },
         info
       )
@@ -512,9 +568,8 @@ export function test_group_Alice_1W_Bob_1W_Charlie_1W_Dracula_1W(
 ) {
   // Hybrid: the seeder tops out at three users, so the group (Alice/Bob/Charlie) is seeded while
   // Dracula — the outsider this fixture exists to add — is still onboarded through the UI.
-  return sessionTestSeeded(
+  return sessionTestSeededGroup(
     testName,
-    '3friendsInGroup',
     { windowsPerUser: [1, 1, 1], extraWindows: 1, context },
     async ({ users, extras, group }, info) => {
       const dracula = extras[0];
@@ -525,7 +580,7 @@ export function test_group_Alice_1W_Bob_1W_Charlie_1W_Dracula_1W(
           bob: users[1].windows[0],
           charlie: users[2].windows[0],
           dracula,
-          groupCreated: group as Group,
+          groupCreated: group,
         },
         info
       );
