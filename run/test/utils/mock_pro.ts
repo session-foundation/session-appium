@@ -299,6 +299,47 @@ async function devAddPayment(
   throw new Error('Unreachable');
 }
 
+/**
+ * The shared moderation account, as a fallback for when `SOGS_ADMIN_SEED` isn't in this process's
+ * environment. Only the public identifier — the phrase is a secret and lives in `.env` / CI secrets.
+ *
+ * Kept in step with `SOGS_ADMIN_SESSION_IDS` in `Sesh-Net-Docker/sogs/docker-compose.yml`.
+ */
+const SOGS_ADMIN_ACCOUNT_ID = '050efb87b8fde0b362ea33f9e87c7ee00ef61c23004d4450e80c7343f384ed4107';
+
+/**
+ * Refuse to grant Pro to the shared moderation account.
+ *
+ * Every other account a test touches is generated per run and discarded, so a grant is disposable —
+ * it lives on a Pro backend that is shared by every job and never reset, but nothing ever looks at
+ * that row again. `SOGS_ADMIN_SEED` is the one exception: a fixed identity reused by every run, on
+ * every platform. Granting it Pro would be **permanent**, and would renew on each re-run.
+ *
+ * The symptom would surface far from the cause — some later spec asserting non-Pro behaviour for the
+ * admin failing on CI only, with no recent change to explain it — which is why this fails loudly at
+ * the mint instead.
+ *
+ * The account-under-test check cannot catch this: a spec that deliberately passes the admin phrase
+ * derives a matching account id and sails through.
+ */
+function assertNotSharedAdminAccount(seedHex: string, userName: string): void {
+  const adminPhrase = (process.env.SOGS_ADMIN_SEED ?? '').trim();
+  const adminAccountId = adminPhrase
+    ? accountIdFromSeed(mnemonicToSeedHex(adminPhrase))
+    : SOGS_ADMIN_ACCOUNT_ID;
+
+  if (accountIdFromSeed(seedHex) !== adminAccountId) {
+    return;
+  }
+
+  throw new Error(
+    `makeAccountPro: refusing to grant Pro to the shared moderation account (as ${userName}). That ` +
+      `account is reused by every run and every CI job, and the Pro backend is shared and never ` +
+      `reset — so the grant would be permanent and would renew on every re-run, breaking any later ` +
+      `test that expects it to be non-Pro. Use a per-test account instead.`
+  );
+}
+
 export async function makeAccountPro(
   params: MakeAccountProParams
 ): Promise<DevAddPaymentResult | null> {
@@ -320,6 +361,8 @@ export async function makeAccountPro(
       );
     }
   }
+
+  assertNotSharedAdminAccount(seedHex, user.userName);
 
   const masterKey = deriveProMasterKey(seedHex);
 
