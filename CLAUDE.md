@@ -116,6 +116,23 @@ Only a subset matters per platform (all read in `run/test/utils/binaries.ts` /
   `TEST_PRO_BACKEND_ED_PK` (Ed25519, from `docker logs sesh-net-pro-backend`); the X25519 onion key is
   *derived* from it, never configured. Note `TEST_PRO_BACKEND` is a presence check — `0` enables it.
 
+  Two things that will otherwise cost you a debugging session:
+
+  - **The key is regenerated whenever the container is recreated.** It lives inside the container (only
+    `vouchers.tsv` is mounted), so a rebuild invalidates `TEST_PRO_BACKEND_ED_PK`. A stale key is not a
+    connection error: the client reads every proof as invalid and *silently strips Pro content*, which
+    looks like an app bug. Re-read it from the logs after any recreate.
+  - **The local backend runs on a compressed clock**, so proofs live **~300s instead of ~30 days**.
+    `pro-backend/docker/entrypoint.sh` writes `provider_testing_env = true` into `config.ini`
+    unconditionally — it is not an environment variable, so `docker inspect` shows nothing and will tell
+    you the opposite. The clients' `PRO_RENEWAL_LEAD` is a hardcoded 60 minutes and does not compress,
+    so a renewal target is permanently in the past. iOS and Desktop absorb that with a 60s floor
+    (`lastProofRequestAt`); Android currently has none and hot-loops. Assume this before diagnosing any
+    Pro expiry, renewal or timing behaviour locally.
+
+  `pnpm test-pro-keys` pins the Pro master-key derivation to libsession's committed vectors, with no
+  device and no backend — the cheapest first check when a grant appears not to take.
+
 ### iOS simulators
 
 ```sh
