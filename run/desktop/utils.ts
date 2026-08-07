@@ -184,49 +184,45 @@ export async function waitForMatchingPlaceholder(
     throw new Error(`Failed to find dataTestId:"${dataTestId}" with placeholder: "${placeholder}"`);
   }
 }
+/**
+ * Wait for a loading animation to run its course — tolerating it never being observable at all.
+ *
+ * A loader is a symptom of slow work, not a guaranteed step: on a fast network (devnet especially)
+ * the work can complete between the action and this call, so the loader either never renders or is
+ * gone before Playwright looks. That is a pass, not a failure. It used to be a failure — the
+ * appearance wait had no explicit timeout, so a loader that had already been and gone cost the full
+ * `waitForSelector` default (30s) and then threw.
+ *
+ * So: give it `appearWithinMs` to show up. If it never does, the work is already done — return. If
+ * it does, wait up to `finishWithinMs` for it to go away.
+ *
+ * `finishWithinMs` also replaces a wait loop that had no deadline at all, which is why
+ * `network_page.spec.ts` grew its own `networkDataLoaded` rather than use this: a loader that never
+ * cleared used to hang until the test timed out with nothing to go on. Now it fails against this
+ * selector, which says what was still spinning.
+ */
 export async function waitForLoadingAnimationToFinish(
   window: Page,
   loader: DataTestId,
-  maxWait?: number
+  appearWithinMs = 2_000,
+  finishWithinMs = 60_000
 ) {
-  let loadingAnimation: ElementHandle<HTMLElement | SVGElement> | undefined;
+  const selector = buildSelectorEscapeText({ strategy: 'data-testid', selector: loader });
 
-  await waitForElement({
-    window,
+  const appeared = await window
+    .waitForSelector(selector, { timeout: appearWithinMs, state: 'visible' })
+    .then(() => true)
+    .catch(() => false);
 
-    locator: {
-      strategy: 'data-testid',
-      selector: `${loader}`,
-    },
-    options: {
-      maxWaitMs: maxWait,
-      shouldLog: false,
-    },
-  });
+  if (!appeared) {
+    console.info(
+      `${loader} did not appear within ${appearWithinMs}ms — the work it covers is already done`
+    );
+    return;
+  }
 
-  let hasLoggedAlready = false;
-  do {
-    try {
-      loadingAnimation = await waitForElement({
-        window,
-        locator: {
-          strategy: 'data-testid',
-          selector: `${loader}`,
-        },
-        options: {
-          maxWaitMs: 100,
-          shouldLog: false,
-        },
-      });
-      await sleepFor(500);
-      if (!hasLoggedAlready) {
-        console.info(`${loader} was found, waiting for it to be gone`);
-        hasLoggedAlready = true;
-      }
-    } catch (_e) {
-      loadingAnimation = undefined;
-    }
-  } while (loadingAnimation);
+  console.info(`${loader} was found, waiting for it to be gone`);
+  await window.waitForSelector(selector, { timeout: finishWithinMs, state: 'hidden' });
   console.info('Loading animation has finished');
 }
 
@@ -396,19 +392,34 @@ export async function rightClickOnWithText(
     button: 'right' as const,
   };
 
+  const menuItem = '[data-testid="context-menu-item"]';
+  // Bound each menu wait by the caller's maxWait when they gave one, so it bounds the whole
+  // operation and not just the click.
+  const menuWaitMs = options?.maxWait ?? 5_000;
+
   for (let attempt = 0; attempt < 2; attempt++) {
     await window.click(builtSelector, sharedOpts);
-    // This is a hack, but sometimes the right click makes the window move slightly, and close the context menu.
-    // So we wait for the context menu to appear (and to stay visible for 100ms), and if it doesn't, we try again.
-    await sleepFor(100, false);
-    const menuVisible = await window
-      .waitForSelector('[data-testid="context-menu-item"]', { timeout: 100 })
+
+    // The menu renders asynchronously and how long it takes scales with how many items it has: a
+    // community's has 9 and was measured at ~230ms, which the previous 100ms budget sat just below —
+    // so leaving a community failed almost every time while the shorter 1:1 menus passed.
+    const appeared = await window
+      .waitForSelector(menuItem, { timeout: menuWaitMs })
       .then(() => true)
       .catch(() => false);
 
-    if (menuVisible) {
-      return;
+    // Sometimes the right click makes the window move slightly, which closes the menu again. So
+    // require it to still be there a moment later rather than trusting the first sighting.
+    if (appeared) {
+      await sleepFor(100, false);
+      if ((await window.locator(menuItem).count()) > 0) {
+        return;
+      }
     }
+
+    // Dismiss whatever is on screen before re-clicking: a right click while the menu is open just
+    // closes it, which made the retry strictly worse than the first attempt.
+    await window.keyboard.press('Escape').catch(() => undefined);
     await sleepFor(500, true);
   }
   throw new Error(`rightClickOnWithText: context menu never appeared for "${text}"`);
