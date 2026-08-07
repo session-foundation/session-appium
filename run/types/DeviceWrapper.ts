@@ -1698,12 +1698,88 @@ export class DeviceWrapper implements IMobileWrapper {
         // Healing succeeded
         return element;
       }
+      // A system ANR dialog covers the app, so the element is genuinely absent from the tree even
+      // though nothing is wrong with the app or the locator. Dismiss it and retry once.
+      //
+      // Must stay BELOW the `skipHealing` early-throw: the check below looks an element up itself,
+      // via `doesElementExist`, which sets `skipHealing` — that early return is the only thing
+      // stopping a failed ANR probe from recursing into another ANR probe.
+      if (await this.dismissSystemAnrIfPresent()) {
+        const afterAnr = await tryFindElement(true);
+        if (afterAnr) {
+          return afterAnr;
+        }
+      }
+
       // Healing failed, re-throw original error
       throw originalError;
     });
     // Element was found as-is
     this.log(`Element with ${description} has been found`);
     return result!; // Result must exist if we reached this point
+  }
+
+  /**
+   * How many system ANR dialogs this device may absorb before the run is called unhealthy.
+   *
+   * One is treated as bad luck; a second says the host is saturated rather than the app being slow,
+   * and every failure after that is noise attributed to whatever spec happened to be running.
+   */
+  private static readonly MAX_ANR_DISMISSALS = 1;
+  private anrDismissals = 0;
+
+  /**
+   * Dismisses an Android "isn't responding" dialog if one is covering the app, and reports whether
+   * it did.
+   *
+   * This is not a product failure and usually not even Session's: the one that prompted this was
+   * `com.android.systemui` freezing under host load, which put a modal over everything and made
+   * ordinary elements unfindable. Left unhandled it surfaces as "element not found" attributed to
+   * whichever spec was unlucky, which is how it stayed unexplained for a day.
+   *
+   * "Wait" rather than "Close app" deliberately — killing the frozen component would take the app
+   * under test with it when the ANR *is* ours.
+   *
+   * Past [MAX_ANR_DISMISSALS] it throws instead, so a saturated machine is reported as a saturated
+   * machine in the test results rather than absorbed silently. That is the point of the cap: one
+   * dismissal keeps a run alive, a stream of them is information we want surfaced.
+   */
+  private async dismissSystemAnrIfPresent(): Promise<boolean> {
+    if (!this.isAndroid()) {
+      return false;
+    }
+
+    const wait = await this.doesElementExist({
+      strategy: 'id',
+      selector: 'android:id/aerr_wait',
+      maxWait: 1000,
+    }).catch(() => null);
+
+    if (!wait) {
+      return false;
+    }
+
+    let title = 'unknown component';
+    try {
+      const titleEl = await this.findElement('id', 'android:id/alertTitle');
+      title = await this.getTextFromElement(titleEl);
+    } catch {
+      // Title is for the error message only; its absence must not mask the ANR itself.
+    }
+
+    this.anrDismissals += 1;
+    if (this.anrDismissals > DeviceWrapper.MAX_ANR_DISMISSALS) {
+      throw new Error(
+        `System ANR: "${title}" — ${this.anrDismissals} not-responding dialogs on ` +
+          `${this.getDeviceIdentity()} in one test. The host is saturated, not the app under test; ` +
+          `reduce concurrent emulators/simulators or restart them. Element lookups will keep ` +
+          `failing while a dialog is covering the app.`
+      );
+    }
+
+    this.log(`Dismissing ANR dialog ("${title}") and retrying`);
+    await this.click(wait.ELEMENT);
+    return true;
   }
 
   public async waitForControlMessageToBePresent(
