@@ -1,3 +1,5 @@
+import type { ProMockContext } from './pro_context';
+
 import { getDevnetSeedUrl, getServiceNetwork } from './network_target';
 import { getProBackendOverride } from './pro_backend';
 
@@ -20,8 +22,18 @@ import { getProBackendOverride } from './pro_backend';
  * token as a new flag, so a value must contain **no spaces and no leading hyphen**. URLs, hex keys and
  * enum names are fine; a display string would not be.
  */
-export function buildAndroidLaunchExtras(): string | undefined {
+export function buildAndroidLaunchExtras(context?: ProMockContext): string | undefined {
   const extras: string[] = [];
+
+  // The mocked Pro state, for specs asserting how Pro screens *render*. Named for the state being
+  // simulated rather than the preference behind it, so a `bothPlatformsIt` spec has one setup that
+  // means the same thing on both platforms — the values are the same vocabulary iOS accepts.
+  if (context?.proBackendStatus) {
+    extras.push(`--es sessionProBackendStatus ${context.proBackendStatus}`);
+  }
+  if (context?.proLoadingState) {
+    extras.push(`--es sessionProLoadingState ${context.proLoadingState}`);
+  }
 
   if ((process.env.NETWORK_TARGET ?? '').trim()) {
     const network = getServiceNetwork();
@@ -53,6 +65,6 @@ export function buildAndroidLaunchExtras(): string | undefined {
  * `QaLaunchConfig` persists the extras rather than applying them to the running process, so they only
  * take effect on the next launch.
  */
-export function androidNeedsQaConfigRelaunch(): boolean {
-  return buildAndroidLaunchExtras() !== undefined;
+export function androidNeedsQaConfigRelaunch(context?: ProMockContext): boolean {
+  return buildAndroidLaunchExtras(context) !== undefined;
 }

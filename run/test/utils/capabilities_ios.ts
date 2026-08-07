@@ -4,6 +4,8 @@ import { W3CXCUITestDriverCaps } from 'appium-xcuitest-driver/build/lib/driver';
 import dotenv from 'dotenv';
 import { existsSync } from 'fs';
 
+import type { ProMockContext } from './pro_context';
+
 import { WDA_DERIVED_DATA_PATH, WDA_PREBUILT_APP_PATH } from '../../../scripts/build_wda';
 import { resolveRunSimulators, type Simulator } from '../../../scripts/ios_shared';
 import { IntRange } from '../../types/RangeType';
@@ -31,13 +33,9 @@ dotenv.config({ quiet: true });
  * value is silently ignored by the app, which would yield a passing *default-state* test rather than
  * a failure, so the typo has to be caught here.
  */
-export type IOSTestContext = {
+export type IOSTestContext = ProMockContext & {
   customInstallTime?: string;
   sessionProEnabled?: string;
-  /** Pro status the backend reports for the current user. */
-  proBackendStatus?: 'active' | 'expired' | 'never' | 'useActual';
-  /** Loading state of the Pro status request — reaches the loading and backend-unavailable screens. */
-  proLoadingState?: 'error' | 'loading' | 'success' | 'useActual';
   /** Platform the subscription was originally purchased on. */
   proOriginatingPlatform?: 'android' | 'iOS' | 'useActual';
   /** Whether the store account matches the one that bought the subscription. */

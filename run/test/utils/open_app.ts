@@ -9,6 +9,8 @@ import {
 import { DriverOpts } from 'appium/build/lib/appium';
 import { compact } from 'lodash';
 
+import type { ProMockContext } from './pro_context';
+
 import { recoverEmulator } from '../../../scripts/emulator_health';
 import { sleepFor } from '../../shared/promise_utils';
 import { AndroidDeviceWrapper } from '../../types/AndroidDeviceWrapper';
@@ -70,7 +72,8 @@ const openAppOnPlatform = async (
   console.info('starting capabilitiesIndex', capabilitiesIndex, platform);
   return platform === 'ios'
     ? openiOSApp(capabilitiesIndex, testInfo, iOSContext)
-    : openAndroidApp(capabilitiesIndex, testInfo);
+    : // Only the shared Pro mock fields cross over; the rest of IOSTestContext is iOS-specific.
+      openAndroidApp(capabilitiesIndex, testInfo, iOSContext);
 };
 
 export const openAppOnPlatformSingleDevice = async (
@@ -202,7 +205,8 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
 
 const openAndroidApp = async (
   capabilitiesIndex: CapabilitiesIndexType,
-  testInfo: TestInfo
+  testInfo: TestInfo,
+  proContext?: ProMockContext
 ): Promise<{
   device: DeviceWrapper;
 }> => {
@@ -244,7 +248,7 @@ const openAndroidApp = async (
   await waitForEmulatorToBeRunning(targetName);
   console.log(targetName, ' emulator booted');
 
-  const capabilities = getAndroidCapabilities(actualCapabilitiesIndex);
+  const capabilities = getAndroidCapabilities(actualCapabilitiesIndex, proContext);
   console.info('capabilities', capabilities);
 
   const opts: DriverOpts = {
@@ -295,7 +299,7 @@ const openAndroidApp = async (
   //
   // `forceStopAndRestart`'s default readiness wait is the home-screen PlusButton, which doesn't exist
   // yet — the app is a fresh install sitting on onboarding — so wait for the landing screen instead.
-  if (androidNeedsQaConfigRelaunch()) {
+  if (androidNeedsQaConfigRelaunch(proContext)) {
     await forceStopAndRestart(wrappedDevice, false);
     await wrappedDevice.waitForTextElementToBePresent(new CreateAccountButton(wrappedDevice));
   }

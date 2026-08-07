@@ -2,6 +2,8 @@ import { W3CUiautomator2DriverCaps } from 'appium-uiautomator2-driver/build/lib/
 import dotenv from 'dotenv';
 import { isString } from 'lodash';
 
+import type { ProMockContext } from './pro_context';
+
 import { getAndroidApk } from './binaries';
 import { buildAndroidLaunchExtras } from './devnet_android';
 dotenv.config({ quiet: true });
@@ -59,7 +61,10 @@ export function androidCapabilityIsValid(capabilitiesIndex: number): boolean {
   return capabilitiesIndex >= 0 && capabilitiesIndex < emulatorCapabilities.length;
 }
 
-export function getAndroidCapabilities(capabilitiesIndex: number): W3CUiautomator2DriverCaps {
+export function getAndroidCapabilities(
+  capabilitiesIndex: number,
+  context?: ProMockContext
+): W3CUiautomator2DriverCaps {
   const allCaps = getAllCaps();
   if (!androidCapabilityIsValid(capabilitiesIndex)) {
     throw new Error(`Asked invalid android capability index: ${capabilitiesIndex}`);
@@ -68,7 +73,7 @@ export function getAndroidCapabilities(capabilitiesIndex: number): W3CUiautomato
 
   // Android's counterpart of the iOS `processArguments.env` launch variables: appended to the
   // `am start` the driver issues, and read by QaLaunchConfig in the app (QA builds only).
-  const optionalIntentArguments = buildAndroidLaunchExtras();
+  const optionalIntentArguments = buildAndroidLaunchExtras(context);
 
   return {
     firstMatch: [{}, {}],

@@ -1,7 +1,7 @@
 import { test, type TestInfo } from '@playwright/test';
 
 import { TestSteps } from '../../../types/allure';
-import { iosIt } from '../../../types/sessionIt';
+import { bothPlatformsIt, iosIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
 import {
   ProBadgeSettingRow,
@@ -23,27 +23,36 @@ import {
 } from '../../utils/open_app';
 
 /**
- * Session Pro settings screens, driven entirely by the mocked launch-arg env — no Pro backend, no
+ * Session Pro settings screens, driven entirely by mocked launch arguments — no Pro backend, no
  * entitlement, and no store. Each state below is otherwise unreachable in a test: `active` needs a
  * real subscription, `expired` needs one that has lapsed, and the loading/error banners need the
  * backend to be slow or down.
  *
- * iOS-only because the mocks are: Android has no env injection yet (a plan for a QA-build-only
- * equivalent is being scoped). They also assert no cryptographic outcome, so nothing here wants a
- * real backend even once one is wired up — see the mock-vs-backend split.
+ * Nothing here asserts a cryptographic outcome, so none of it wants a real backend even though one
+ * is available — see the mock-vs-backend split. That is what makes these the cheapest Pro specs in
+ * the suite.
+ *
+ * Cross-platform via the shared `ProMockContext` fields: iOS reads them as launch-arg env, Android as
+ * intent extras that `QaLaunchConfig` writes to the preferences its debug menu already drives. Only
+ * `proBackendStatus` and `proLoadingState` cross over — `sessionProEnabled` and `proAccessExpiry` are
+ * iOS-specific and are ignored on Android, which reaches the same states through its own fixtures.
  */
 
 /**
- * Whole days of remaining access to grant the `active` cases.
+ * Whole days of remaining access the `active` cases render.
  *
- * The app ceilings the remaining interval into day/hour/minute units, so a timestamp exactly N days
- * out renders as `N days` for the whole first day — which makes the rendered string deterministic
- * regardless of how long onboarding took.
+ * Both platforms ceiling the remaining interval into day/hour/minute units, so an expiry exactly N
+ * days out renders as `N days` for the whole first day — deterministic however long onboarding took.
+ *
+ * 30 is a **shared constant, not an iOS choice**: iOS takes the expiry as a timestamp while Android
+ * uses a fixed debug offset (`EXPIRING_LATER_DAYS` in `ProStatusManager`), and that offset was moved
+ * from 40 to 30 so a single `bothPlatformsIt` spec can assert one rendered string. Changing it here
+ * means changing it there.
  */
 const ACCESS_DAYS = 30;
 const accessExpiry = () => String(Math.floor(Date.now() / 1000) + ACCESS_DAYS * 24 * 60 * 60);
 
-iosIt({
+bothPlatformsIt({
   title: 'Pro settings screen (subscribed)',
   risk: 'medium',
   countOfDevicesNeeded: 1,
@@ -52,7 +61,7 @@ iosIt({
   allureSuites: { parent: 'Session Pro' },
 });
 
-iosIt({
+bothPlatformsIt({
   title: 'Pro settings entry (expired)',
   risk: 'medium',
   countOfDevicesNeeded: 1,
@@ -139,6 +148,19 @@ async function proSettingsExpired(platform: SupportedPlatformsType, testInfo: Te
   });
 }
 
+/**
+ * `Pro status checking state` and `Pro status error state` are **iOS-only until Android catches up**,
+ * for two independent reasons found when they were first ported:
+ *
+ * 1. Android has no `pro-settings-status-banner` — the id does not exist in the app, so there is
+ *    nothing for the locator to match whatever state the screen is in.
+ * 2. Android's loading/error mocks are gated on the Pro state being forced. `proBackendStatus:
+ *    'never'` leaves that gate false, so `proLoadingState` never applies — while on iOS the two are
+ *    independent and these banners are reachable for a non-Pro user.
+ *
+ * Both are Android-side; nothing here needs changing when they land. The other two specs in this file
+ * are cross-platform already.
+ */
 async function proStatusChecking(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const device = await openSettingsAsNewUser(platform, testInfo, {
     sessionProEnabled: 'true',
