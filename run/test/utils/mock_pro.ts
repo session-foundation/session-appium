@@ -17,8 +17,7 @@
 
 import { ed25519 } from '@noble/curves/ed25519.js';
 import { blake2b } from '@noble/hashes/blake2.js';
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { mnDecode } from '@session-foundation/mnemonic';
 
 import type { SupportedPlatformsType } from './open_app';
 
@@ -76,83 +75,22 @@ type DevAddPaymentResponse = {
   error_code?: string;
 };
 
-let WORDLIST_CACHE: string[] | null = null;
-
-function getWordlist(): string[] {
-  if (WORDLIST_CACHE) {
-    return WORDLIST_CACHE;
-  }
-
-  const wordlistPath = join(__dirname, '../../../english_wordlist.txt');
-  const content = readFileSync(wordlistPath, 'utf-8');
-  const words = content
-    .split('\n')
-    .map(w => w.trim())
-    .filter(Boolean);
-
-  if (words.length !== 1626) {
-    throw new Error(`Expected 1626 words in wordlist, got ${words.length}`);
-  }
-
-  WORDLIST_CACHE = words;
-  return words;
-}
-
-// Decodes a 13-word recovery phrase to a 16-byte seed hex string. */
+/**
+ * Decodes a 13-word recovery phrase to a 16-byte seed hex string.
+ *
+ * `mnDecode` is the same decoder the clients use, so the wordset, the prefix matching and the
+ * checksum word are all its problem rather than ours. `pnpm test-pro-keys` pins the result to
+ * libsession's committed vectors.
+ */
 export function mnemonicToSeedHex(mnemonic: string): string {
-  const wordlist = getWordlist();
-  const n = wordlist.length; // 1626
-
-  const words = mnemonic.toLowerCase().trim().split(/\s+/);
-  if (words.length !== 13) {
-    throw new Error(`Expected 13 words, got ${words.length}`);
+  const seedHex = mnDecode(mnemonic.toLowerCase().trim());
+  // Asserted rather than assumed: everything downstream (padSeed, the Pro master key, the Account ID)
+  // is sized off this, and a short seed would surface as an unrelated crypto failure.
+  if (seedHex.length !== 32) {
+    throw new Error(`Expected a 16-byte seed, got ${seedHex.length / 2} bytes`);
   }
 
-  // Build word -> index lookup
-  const wordToIdx = new Map<string, number>();
-  wordlist.forEach((w, i) => wordToIdx.set(w, i));
-
-  // Resolve word indices (with prefix matching support)
-  const indices: number[] = [];
-  for (const word of words) {
-    if (wordToIdx.has(word)) {
-      indices.push(wordToIdx.get(word)!);
-    } else {
-      // Try prefix match (first 4 chars)
-      const matches = wordlist
-        .map((w, i) => ({ w, i }))
-        .filter(({ w }) => w.startsWith(word.slice(0, 4)));
-
-      if (matches.length === 1) {
-        indices.push(matches[0].i);
-      } else {
-        throw new Error(`Unknown or ambiguous mnemonic word: '${word}'`);
-      }
-    }
-  }
-
-  // Decode: every 3 words -> 4 bytes (little-endian)
-  const dataIndices = indices.slice(0, 12);
-  const seedBytes: number[] = [];
-  for (let i = 0; i < 12; i += 3) {
-    const w1 = dataIndices[i];
-    const w2 = dataIndices[i + 1];
-    const w3 = dataIndices[i + 2];
-
-    const x = w1 + n * ((((w2 - w1) % n) + n) % n) + n * n * ((((w3 - w2) % n) + n) % n);
-
-    // Convert to 4 bytes little-endian
-    seedBytes.push(x & 0xff);
-    seedBytes.push((x >> 8) & 0xff);
-    seedBytes.push((x >> 16) & 0xff);
-    seedBytes.push((x >> 24) & 0xff);
-  }
-
-  if (seedBytes.length !== 16) {
-    throw new Error(`Expected 16 bytes, got ${seedBytes.length}`);
-  }
-
-  return Buffer.from(seedBytes).toString('hex');
+  return seedHex;
 }
 
 export function padSeed(seedHex: string): Uint8Array {
