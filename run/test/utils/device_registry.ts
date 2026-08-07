@@ -56,8 +56,15 @@ export async function registerDevicesForTest(testInfo: TestInfo, devices: Device
   const logCtxByUdid = existing?.logCtxByUdid ?? new Map<string, LogContext>();
   newLogCtx.forEach((ctx, udid) => logCtxByUdid.set(udid, ctx));
 
+  // Deduplicated by udid: a device is registered as soon as its session exists (so a failure during
+  // onboarding is still capturable) and again by the opener that returns it, so the same device
+  // arrives twice on the normal path. Without this it would be screenshotted and dumped twice per
+  // failure, which reads as two devices in the report.
+  const merged = existing ? [...existing.devices, ...devices] : devices;
+  const byUdid = new Map(merged.map(device => [device.udid, device]));
+
   deviceRegistry.set(key, {
-    devices: existing ? [...existing.devices, ...devices] : devices,
+    devices: [...byUdid.values()],
     logCtxByUdid,
   });
 }

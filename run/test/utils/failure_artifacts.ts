@@ -275,3 +275,58 @@ export async function captureLogsOnFailure(testInfo: TestInfo): Promise<void> {
     })
   );
 }
+
+// --- Page source ---
+
+/**
+ * A UI tree is only useful whole, so this is generous where the log cap is not: the tail of an XML
+ * document is the least informative part of it.
+ */
+const MAX_PAGE_SOURCE_BYTES = 4 * 1024 * 1024;
+
+/**
+ * Attaches each device's accessibility tree to the report.
+ *
+ * Nearly every failure in this suite is "element not found", and a screenshot cannot distinguish the
+ * three things that produce it: the element is genuinely absent, it is present but not hittable, or
+ * it is present under a different identifier than the locator expects. Only the tree separates them.
+ *
+ * Worth knowing why this is captured here rather than fetched during the failure: `uiautomator dump`
+ * cannot be used while a test is running, because it contends with the UiAutomator2 server driving
+ * the device. Appium's own `getPageSource` is the only way in, so it has to come from inside the
+ * session, before the driver is torn down.
+ */
+export async function capturePageSourceOnFailure(testInfo: TestInfo): Promise<void> {
+  const context = deviceRegistry.get(registryKey(testInfo));
+  if (!context?.devices?.length) {
+    return;
+  }
+
+  await Promise.all(
+    context.devices.map(async device => {
+      const label = device.getDeviceIdentity();
+      try {
+        const source = await device.getPageSource();
+        if (!source) {
+          return;
+        }
+
+        const truncated = source.length > MAX_PAGE_SOURCE_BYTES;
+        // Written to a file and attached by path rather than passed as a body: an in-memory
+        // attachment only survives if a reporter persists it, and the default local reporter does
+        // not — so the tree would exist in the report stream and nowhere a developer can open it.
+        // By path it lands in test-results/ beside the screenshot.
+        const file = testInfo.outputPath(`page-source-${label}.xml`);
+        fs.writeFileSync(file, truncated ? source.slice(0, MAX_PAGE_SOURCE_BYTES) : source);
+        await testInfo.attach(`page-source-${label}`, { path: file, contentType: 'text/xml' });
+        console.log(
+          `Page source captured for ${label} (${source.length} bytes${truncated ? ', truncated' : ''})`
+        );
+      } catch (error) {
+        // Best-effort: a device that has already died is exactly when the rest of the artefacts
+        // matter most, so this must never replace the original failure with its own.
+        console.error(`Failed to capture page source for ${label}:`, error);
+      }
+    })
+  );
+}

@@ -13,7 +13,7 @@ import {
   UserSettings,
 } from '../../locators/settings';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
-import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
+import { IOS_PRO_CONTEXT, iosActiveProContext } from '../../utils/capabilities_ios';
 import { newUser } from '../../utils/create_account';
 import { makeAccountPro } from '../../utils/mock_pro';
 import {
@@ -21,6 +21,7 @@ import {
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { runOnlyOnAndroid } from '../../utils/run_on';
 import { forceStopAndRestart } from '../../utils/utilities';
 import { verifyPageScreenshot } from '../../utils/verify_screenshots';
 
@@ -85,14 +86,36 @@ async function nonProAnimatedDP(platform: SupportedPlatformsType, testInfo: Test
     await closeApp(device);
   });
 }
+/**
+ * This asserts how the CTA *renders* for a Pro user — no cryptographic outcome — so iOS mocks the Pro
+ * state rather than buying it. That removes the mint, the restart and, importantly, a race the real
+ * grant cannot win: the client skips a status refresh if the last one was under a minute ago
+ * (`ProStatusRepository.MIN_UPDATE_INTERVAL_SECONDS`), and the account's first fetch necessarily
+ * happens during onboarding, before there is anything to buy.
+ *
+ * Android keeps the backend route only because it has no launch-arg mocks yet, and is subject to that
+ * race. The assertions below are identical on both platforms — only the setup differs.
+ */
 async function proActivatedCTA(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device, alice } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, IOS_PRO_CONTEXT);
-    const alice = await newUser(device, USERNAME.ALICE);
+    const { device } = await openAppOnPlatformSingleDevice(
+      platform,
+      testInfo,
+      iosActiveProContext()
+    );
+    // The recovery phrase is only needed to derive the Pro master key for a real grant, and reading it
+    // costs a trip through settings — so only pay for it on the platform that mints.
+    const alice = await newUser(device, USERNAME.ALICE, {
+      saveUserData: platform === 'android',
+    });
     return { device, alice };
   });
-  await makeAccountPro({ user: alice, platform });
-  await forceStopAndRestart(device);
+
+  await runOnlyOnAndroid(platform, async () => {
+    await makeAccountPro({ user: alice, platform });
+    await forceStopAndRestart(device);
+  });
+
   await device.dismissCTA();
   await test.step('Verify Pro Activated CTA', async () => {
     await device.clickOnElementAll(new UserSettings(device));

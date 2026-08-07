@@ -8,6 +8,7 @@ import * as util from 'util';
 import { sleepFor } from '../../shared/promise_utils';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { PlusButton } from '../locators/home';
+import { getAdbFullPath } from './binaries';
 import { androidAppActivity, androidAppPackage } from './capabilities_android';
 import { iOSBundleId } from './capabilities_ios';
 
@@ -94,22 +95,24 @@ export async function setConsistentStatusBar(device: DeviceWrapper): Promise<voi
     );
   } else if (device.isAndroid()) {
     // Enable demo mode to set consistent status bar elements
-    await runScriptAndLog(`adb -s ${device.udid} shell settings put global sysui_demo_allowed 1`);
+    await runScriptAndLog(
+      `${getAdbFullPath()} -s ${device.udid} shell settings put global sysui_demo_allowed 1`
+    );
     // Dismiss notifications
     await runScriptAndLog(
-      `adb -s ${device.udid} shell am broadcast -a com.android.systemui.demo -e command notifications -e visible false`
+      `${getAdbFullPath()} -s ${device.udid} shell am broadcast -a com.android.systemui.demo -e command notifications -e visible false`
     );
     // Time: 4:20
     await runScriptAndLog(
-      `adb -s ${device.udid} shell am broadcast -a com.android.systemui.demo -e command clock -e hhmm 0420`
+      `${getAdbFullPath()} -s ${device.udid} shell am broadcast -a com.android.systemui.demo -e command clock -e hhmm 0420`
     );
     // 100% battery
     await runScriptAndLog(
-      `adb -s ${device.udid} shell am broadcast -a com.android.systemui.demo -e command battery -e level 100 -e plugged false`
+      `${getAdbFullPath()} -s ${device.udid} shell am broadcast -a com.android.systemui.demo -e command battery -e level 100 -e plugged false`
     );
     // Full wifi (for some reason shows an ! next to the icon but that's fine)
     await runScriptAndLog(
-      `adb -s ${device.udid} shell am broadcast -a com.android.systemui.demo -e command network -e wifi show -e level 4`
+      `${getAdbFullPath()} -s ${device.udid} shell am broadcast -a com.android.systemui.demo -e command network -e wifi show -e level 4`
     );
   }
 }
@@ -120,7 +123,7 @@ export async function clearStatusBarOverrides(device: DeviceWrapper): Promise<vo
       await runScriptAndLog(`xcrun simctl status_bar ${device.udid} clear`);
     } else if (device.isAndroid()) {
       await runScriptAndLog(
-        `adb -s ${device.udid} shell am broadcast -a com.android.systemui.demo -e command exit`
+        `${getAdbFullPath()} -s ${device.udid} shell am broadcast -a com.android.systemui.demo -e command exit`
       );
     }
   } catch (error) {
@@ -134,10 +137,13 @@ export async function forceStopAndRestart(
   waitForRestart: boolean = true
 ): Promise<void> {
   if (device.isAndroid()) {
-    await runScriptAndLog(`adb -s ${device.udid} shell am force-stop ${androidAppPackage}`, true);
+    await runScriptAndLog(
+      `${getAdbFullPath()} -s ${device.udid} shell am force-stop ${androidAppPackage}`,
+      true
+    );
     await sleepFor(1_000);
     await runScriptAndLog(
-      `adb -s ${device.udid} shell am start -n ${androidAppPackage}/${androidAppActivity}`,
+      `${getAdbFullPath()} -s ${device.udid} shell am start -n ${androidAppPackage}/${androidAppActivity}`,
       true
     );
   } else if (device.isIOS()) {

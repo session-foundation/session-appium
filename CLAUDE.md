@@ -57,8 +57,10 @@ Only a subset matters per platform (all read in `run/test/utils/binaries.ts` /
   (`*-iphonesimulator`, not a device build). `IOS_1_SIMULATOR … IOS_12_SIMULATOR` hold
   simulator UDIDs — **`pnpm create-simulators <n>` writes these for you.**
 - **Android:** `ANDROID_APK`, `APPIUM_ADB_FULL_PATH`, `EMULATOR_FULL_PATH`,
-  `ANDROID_SDK_ROOT`. Emulators must be **created and running** beforehand (Appium won't
-  boot them); see `README.md`.
+  `ANDROID_SDK_ROOT` — **`pnpm create-emulators <n>` writes the last three for you**, creates Pixel 6 /
+  API 34 AVDs, pins them to the udids the suite expects (`emulator-5554/5556/5558/5560`, hardcoded in
+  `capabilities_android.ts`) and boots them. Appium will not boot emulators itself. Note `ANDROID_APK`
+  is a versioned filename, so it needs repointing after a version bump.
 - **Run tuning:** `PLAYWRIGHT_WORKERS_COUNT_IOS` (default 1), `PLAYWRIGHT_RETRIES_COUNT`
   (default 0), `PLAYWRIGHT_REPEAT_COUNT`.
 - **Network target.** `NETWORK_TARGET=mainnet|testnet|devnet` is the **single switch for all three
@@ -77,6 +79,11 @@ Only a subset matters per platform (all read in `run/test/utils/binaries.ts` /
   |---|---|
   | iOS | launch-arg env keys `serviceNetwork`/`devnet*`, consumed by `DeveloperSettingsViewModel+Testing.swift` |
   | Android | launch intent extras `sessionServiceNetwork`/`sessionDevnetSeedUrl`, consumed by `QaLaunchConfig` (QA builds only) |
+
+  Android's extras are **persisted, not applied live** — `QaLaunchConfig` writes them to prefs, so
+  `openAndroidApp` relaunches once before handing the device to the spec. Extras values must contain
+  no spaces and no leading hyphen: `appium-adb`'s parser treats any space-preceded `-`-prefixed token
+  as a new flag.
   | Desktop | `LOCAL_DEVNET_SEED_URL`, which the harness sets — do **not** set it by hand alongside `NETWORK_TARGET` |
 
   Two things to know before touching this:
@@ -108,6 +115,26 @@ Only a subset matters per platform (all read in `run/test/utils/binaries.ts` /
   killing every poll cycle, so messages send but never arrive, with a symptom nowhere near Pro. Set
   `TEST_PRO_BACKEND_ED_PK` (Ed25519, from `docker logs sesh-net-pro-backend`); the X25519 onion key is
   *derived* from it, never configured. Note `TEST_PRO_BACKEND` is a presence check — `0` enables it.
+
+  Two things that will otherwise cost you a debugging session:
+
+  - **The key is regenerated whenever the container is recreated.** It lives inside the container (only
+    `vouchers.tsv` is mounted), so a rebuild invalidates `TEST_PRO_BACKEND_ED_PK`. A stale key is not a
+    connection error: the client reads every proof as invalid and *silently strips Pro content*, which
+    looks like an app bug. Re-read it from the logs after any recreate.
+  - **The local backend runs on a compressed clock**, so proofs live **~300s instead of ~30 days**
+    (`PROVIDER_TESTING_PROOF_EXPIRY_SHAPE`: 290s clamp, 10s "day", 1s renewal lead). The backend does
+    read `SESH_PRO_BACKEND_PROVIDER_TESTING_ENV`, but the compose stack never sets it —
+    `pro-backend/docker/entrypoint.sh` writes `provider_testing_env = true` straight into `config.ini`
+    instead, unconditionally. So `docker inspect` shows nothing and reads as "not in testing mode",
+    which is the opposite of the truth: check the `config.ini` or the startup log, not the container
+    env. The clients' `PRO_RENEWAL_LEAD` is a hardcoded 60 minutes and does not compress, so a renewal
+    target is permanently in the past. All three clients now absorb that with a 60s floor
+    (`lastProofRequestAt`) — Android's landed last and hot-looped until it did. Assume this before
+    diagnosing any Pro expiry, renewal or timing behaviour locally.
+
+  `pnpm test-pro-keys` pins the Pro master-key derivation to libsession's committed vectors, with no
+  device and no backend — the cheapest first check when a grant appears not to take.
 
 ### iOS simulators
 

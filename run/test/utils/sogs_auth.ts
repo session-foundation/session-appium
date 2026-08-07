@@ -179,18 +179,48 @@ export async function sogsRequest(request: SogsRequest): Promise<SogsResponse> {
 
   const { blindedPubkey, signature } = blind15Sign(identity, serverPubkey, signed);
 
-  const response = await fetch(`${base}${path}`, {
-    body: payload,
-    headers: {
-      'X-SOGS-Nonce': base64(nonce),
-      'X-SOGS-Pubkey': `15${hex(blindedPubkey)}`,
-      'X-SOGS-Signature': base64(signature),
-      'X-SOGS-Timestamp': timestamp,
-      ...(payload ? { 'Content-Type': 'application/json' } : {}),
-    },
-    method,
-    signal: AbortSignal.timeout(timeoutMs),
-  });
+  // `fetch` reports every transport failure as a bare `TypeError: fetch failed` and hides what
+  // actually happened in `cause`, which a Playwright failure never prints. That made a real
+  // intermittent failure here undiagnosable: refused, reset, timed out and DNS all looked identical.
+  // Re-throw with the cause folded into the message, plus the request that provoked it.
+  let response: Response;
+  try {
+    response = await fetch(`${base}${path}`, {
+      body: payload,
+      headers: {
+        // Don't reuse the connection. Node pools keep-alive sockets, SOGS (uWSGI) closes idle ones,
+        // and room operations are minutes apart — allocate at the start of a test, release at the end
+        // — so a pooled socket is routinely dead by the time it is picked up again, surfacing as
+        // `read ECONNRESET` on a request the server never saw. Retrying is the wrong fix here:
+        // `POST /rooms` is not idempotent (a second create is a 409), and there are only a handful of
+        // these per test, so a fresh connection each time costs nothing measurable.
+        Connection: 'close',
+        'X-SOGS-Nonce': base64(nonce),
+        'X-SOGS-Pubkey': `15${hex(blindedPubkey)}`,
+        'X-SOGS-Signature': base64(signature),
+        'X-SOGS-Timestamp': timestamp,
+        ...(payload ? { 'Content-Type': 'application/json' } : {}),
+      },
+      method,
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+  } catch (error) {
+    const cause: unknown = (error as { cause?: unknown }).cause;
+    const detail = [
+      (cause as { code?: string })?.code,
+      (cause as { message?: string })?.message,
+      (cause as { errno?: number })?.errno === undefined
+        ? undefined
+        : `errno ${(cause as { errno?: number }).errno}`,
+    ]
+      .filter(Boolean)
+      .join(' — ');
+    throw new Error(
+      `${method} ${base}${path} failed before a response: ` +
+        `${(error as Error).message}${detail ? ` (${detail})` : ' (no cause reported)'}`,
+      { cause: error }
+    );
+  }
 
   const text = await response.text();
   let parsed: unknown = {};
