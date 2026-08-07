@@ -2497,6 +2497,26 @@ export class DeviceWrapper implements IMobileWrapper {
     // let some time for swipe action to happen and UI to update
   }
 
+  /**
+   * Dismisses the soft keyboard if one is up, so a control it was covering becomes tappable.
+   *
+   * Reach for this rather than `scrollDown` when the goal is "get the keyboard out of the way".
+   * `scrollDown` is a raw swipe, not a scroll-container operation, so on a bottom sheet it drags the
+   * *sheet* — which leaves the target still present and findable (the click therefore succeeds and
+   * throws nothing) while the tap lands outside its clickable region. That failure is silent: no
+   * error, no navigation, nothing in the device log.
+   *
+   * Best-effort by design. Both drivers throw if asked to hide a keyboard that isn't showing, and
+   * "there was no keyboard to dismiss" is the desired end state rather than a failure.
+   */
+  public async hideKeyboard(): Promise<void> {
+    try {
+      await this.toShared().execute('mobile: hideKeyboard', {});
+    } catch {
+      this.info('No keyboard to dismiss');
+    }
+  }
+
   // Swipe vertically from 70% to 30% of screen height at the horizontal center
   public async scrollDown() {
     const { width, height } = await this.getWindowRect();
