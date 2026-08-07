@@ -11,7 +11,11 @@ import {
 } from '../test/utils/community_rooms';
 import { unregisterDevicesForTest } from '../test/utils/device_registry';
 import { resolveNetworkTarget } from '../test/utils/devnet';
-import { captureLogsOnFailure, captureScreenshotsOnFailure } from '../test/utils/failure_artifacts';
+import {
+  captureLogsOnFailure,
+  capturePageSourceOnFailure,
+  captureScreenshotsOnFailure,
+} from '../test/utils/failure_artifacts';
 import { SupportedPlatformsType } from '../test/utils/open_app';
 import { AllureSuiteConfig } from './allure';
 import { TestRisk } from './testing';
@@ -129,6 +133,7 @@ function mobileIt({
           testInfo.status === 'timedOut'
         ) {
           await captureScreenshotsOnFailure(testInfo);
+          await capturePageSourceOnFailure(testInfo);
           await captureLogsOnFailure(testInfo);
         }
       } catch (artifactError) {

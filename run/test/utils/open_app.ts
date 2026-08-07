@@ -278,6 +278,14 @@ const openAndroidApp = async (
     disableIdLocatorAutocompletion: true,
   });
 
+  // Registered here rather than only in the callers below, which register once the opener RETURNS.
+  // Everything between this line and that one — the QA relaunch, onboarding, the first wait for the
+  // landing screen — was a blind spot: a failure there produced no screenshot, no page source and no
+  // device log, because capture is keyed on the registry and nothing was in it yet. That is exactly
+  // where the intermittent "Create account button not found" lands, which is why it was so hard to
+  // diagnose. Registration merges and deduplicates by udid, so the caller's call is a no-op.
+  await registerDevicesForTest(testInfo, [wrappedDevice]);
+
   // `QaLaunchConfig` persists the launch extras rather than applying them to the running process (its
   // consumers are app-scoped singletons that may resolve either side of the first activity), so they
   // only take effect on the next launch. Restart here, before the spec gets the device, rather than
