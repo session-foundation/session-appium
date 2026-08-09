@@ -30,6 +30,10 @@ import { LocatorsInterface } from './index';
  *
  * Matching `@label` rather than going through `text:` for the same reason as `ProStatusBanner`: `text:`
  * reads the element's value, and the identifier owns `name`.
+ *
+ * On Android this must target the badge **icon**, not `pro-badge-text`. `ProBadgeText` renders the
+ * display name unconditionally and only the icon behind `if (showBadge)`, so scoping to the text
+ * matches every conversation whether the sender is Pro or not — an assertion that cannot fail.
  */
 export class ConversationHeaderProBadge extends LocatorsInterface {
   public build(): StrategyExtractionObj {
@@ -37,7 +41,7 @@ export class ConversationHeaderProBadge extends LocatorsInterface {
       case 'android':
         return {
           strategy: '-android uiautomator',
-          selector: `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-text"))`,
+          selector: `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-icon"))`,
         } as const;
       case 'ios':
         return {
