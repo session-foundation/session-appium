@@ -90,21 +90,34 @@ export type DisappearOptsGroup = [
 
 export type MergedOptions = DisappearOpts1o1 | DisappearOptsGroup;
 
+/**
+ * `text` and `label` are both "match this element's visible content", but they read different
+ * attributes and are not interchangeable.
+ *
+ * `text` goes through `getText`, which reads the element's *value*. That is the right thing almost
+ * everywhere — but on iOS an accessibility identifier becomes the element's `name` and pushes the
+ * display text out to `label`, so once an element has an id its text is no longer reachable that way.
+ * `label` exists for exactly that case, and it is what removes the need for xpath when a spec has to
+ * assert "this identifier AND this message".
+ */
 export type StrategyExtractionObj =
   | {
       strategy: Extract<Strategy, '-android uiautomator'>;
       selector: UiAutomatorQuery;
       text?: string;
+      label?: string;
     }
   | {
       strategy: Extract<Strategy, 'accessibility id'>;
       selector: AccessibilityId;
       text?: string;
+      label?: string;
     }
   | {
       strategy: Extract<Strategy, 'class name'>;
       selector: string;
       text?: string;
+      label?: string;
     }
   | {
       strategy: Extract<Strategy, 'DMTimeOption'>;
@@ -114,11 +127,13 @@ export type StrategyExtractionObj =
       strategy: Extract<Strategy, 'id'>;
       selector: Id;
       text?: string;
+      label?: string;
     }
   | {
       strategy: Extract<Strategy, 'xpath'>;
       selector: XPath;
       text?: string;
+      label?: string;
     };
 
 export type XPath =

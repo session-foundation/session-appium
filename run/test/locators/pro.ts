@@ -227,9 +227,12 @@ export class ProStatusBanner extends LocatorsInterface {
           text: this.expectedText,
         } as const;
       case 'ios':
+        // `label` rather than `text`: the identifier owns `name` on iOS, so the banner's message is
+        // only reachable on `label`. That is what keeps this an accessibility-id match.
         return {
-          strategy: 'xpath',
-          selector: `//*[@name="pro-settings-status-banner"][@label="${this.expectedText}"]`,
+          strategy: 'accessibility id',
+          selector: 'pro-settings-status-banner',
+          label: this.expectedText,
         } as const;
     }
   }

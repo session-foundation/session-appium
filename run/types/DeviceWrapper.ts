@@ -1106,6 +1106,38 @@ export class DeviceWrapper implements IMobileWrapper {
     return foundElementMatchingText;
   }
 
+  /**
+   * Finds the element in `elements` whose accessibility **label** matches, rather than its value.
+   *
+   * Separate from [findMatchingTextInElementArray] because the two read different attributes and the
+   * distinction is load-bearing on iOS: an accessibility identifier becomes the element's `name` and
+   * displaces the display text into `label`, so a `text` match silently stops working the moment an
+   * element gains an id. Matching the label directly is what lets a locator say "this identifier AND
+   * this message" without dropping to xpath.
+   */
+  public async findMatchingLabelInElementArray(
+    elements: Array<AppiumNextElementType>,
+    labelToLookFor: string
+  ): Promise<AppiumNextElementType | null> {
+    if (!elements?.length) {
+      return null;
+    }
+
+    const normalize = (value: string) =>
+      value
+        // Strip LTR/RTL markers and other whitespace nonsense, matching the text comparison.
+        .replace(/[\u200e\u200f\u202a-\u202e]/g, '')
+        .trim()
+        .toLowerCase();
+
+    const matching = await this.findAsync(elements, async element => {
+      const value = await this.getAttribute('label', element.ELEMENT).catch(() => null);
+      return Boolean(value && normalize(value) === normalize(labelToLookFor));
+    });
+
+    return matching || null;
+  }
+
   public async findMatchingTextInElementArray(
     elements: Array<AppiumNextElementType>,
     textToLookFor: string
@@ -1646,7 +1678,7 @@ export class DeviceWrapper implements IMobileWrapper {
    * @throws If element not found
    */
   public async waitForTextElementToBePresent(
-    args: { text?: string; maxWait?: number; skipHealing?: boolean } & (
+    args: { text?: string; label?: string; maxWait?: number; skipHealing?: boolean } & (
       | LocatorsInterface
       | StrategyExtractionObj
     )
@@ -1655,6 +1687,7 @@ export class DeviceWrapper implements IMobileWrapper {
 
     // Prefer text from args (if passed directly), otherwise check locator
     const text = args.text ?? ('text' in locator ? locator.text : undefined);
+    const label = args.label ?? ('label' in locator ? locator.label : undefined);
 
     const { maxWait = 30_000 } = args;
     const skipHealing = 'skipHealing' in args ? (args.skipHealing ?? false) : false;
@@ -1665,6 +1698,10 @@ export class DeviceWrapper implements IMobileWrapper {
     // Helper function to find element with or without healing
     const tryFindElement = async (allowHealing: boolean): Promise<AppiumNextElementType | null> => {
       try {
+        if (label) {
+          const els = await this.findElements(locator.strategy, locator.selector, !allowHealing);
+          return await this.findMatchingLabelInElementArray(els, label);
+        }
         if (text) {
           const els = await this.findElements(
             locator.strategy,
