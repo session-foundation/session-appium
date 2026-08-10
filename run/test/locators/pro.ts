@@ -39,14 +39,11 @@ export class ConversationHeaderProBadge extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
-        return {
-          strategy: '-android uiautomator',
-          selector: `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-icon"))`,
-        } as const;
+        return { strategy: 'id', selector: 'conversation-header-pro-badge' } as const;
       case 'ios':
         return {
-          strategy: 'xpath',
-          selector: `//*[@name="Conversation header name"][contains(@label, "${tStripped('appPro')}")]`,
+          strategy: 'accessibility id',
+          selector: 'conversation-header-pro-badge',
         } as const;
     }
   }
@@ -152,17 +149,17 @@ export class ProPlanExpiry extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: '-android uiautomator',
-          selector:
-            'new UiSelector().resourceId("pro-settings-update-plan").childSelector(new UiSelector().resourceId("action-item-subtitle"))',
+          strategy: 'id',
+          selector: 'pro-settings-update-plan-subtitle',
           text,
         } as const;
       case 'ios':
+        // `label`, not `text`: now the element carries an identifier, that identifier owns `name` and
+        // the rendered duration is only reachable on `label`.
         return {
-          strategy: 'xpath',
-          selector:
-            '//*[@name="pro-settings-update-plan"]//XCUIElementTypeStaticText[@name="action-item-subtitle"]',
-          text,
+          strategy: 'accessibility id',
+          selector: 'pro-settings-update-plan-subtitle',
+          label: text,
         } as const;
     }
   }
