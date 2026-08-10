@@ -31,7 +31,7 @@
  * Deliberately uses its own `AVD_PREFIX` so it never touches a developer's hand-made AVDs.
  */
 import { execSync } from 'child_process';
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync, rmSync, writeFileSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
 
@@ -246,6 +246,24 @@ function saveSnapshots(paths: AndroidPaths, count: number): void {
   }
 }
 
+/**
+ * Stops the fleet and leaves the host in a state where the next `create-emulators` actually works.
+ *
+ * `adb emu kill` alone is not enough, and the gap costs real debugging time: a stale emulator drifts
+ * into producing failures that look exactly like product bugs (ANR dialogs covering the app, accounts
+ * that cannot be restored), so "restart the emulators" is a common remedy — and it silently did not
+ * work. Twice the recovery needed three more steps by hand.
+ *
+ * Each of the extra steps below is here because it was needed in practice, not defensively:
+ *
+ * 1. **Processes can survive the console kill**, including `pkill -9`, and a survivor holds the ports.
+ * 2. **The adb server is left wedged**, reporting no devices even once emulators are up again.
+ * 3. **Lock files outlive the process.** `hardware-qemu.ini.lock` / `multiinstance.lock` remain in the
+ *    `.avd` directory, and a fresh emulator then boots but never registers with adb — which presents
+ *    as "did not report boot_completed" and looks like a broken image rather than a stale lock.
+ *
+ * Scoped to `AVD_PREFIX` throughout, so a developer's own emulators and their locks are never touched.
+ */
 function killEmulators(paths: AndroidPaths): void {
   for (let i = 0; i < MAX_EMULATORS; i++) {
     const serial = `emulator-${portFor(i)}`;
@@ -255,6 +273,40 @@ function killEmulators(paths: AndroidPaths): void {
     } catch {
       // Not running — the desired end state either way.
     }
+  }
+
+  // Matched on the AVD name rather than on `qemu-system`, which would take a developer's emulators
+  // with it. Failure is expected and fine: it means nothing survived.
+  try {
+    run(`pkill -9 -f "${AVD_PREFIX}_" 2>/dev/null`);
+    console.log('  ✓ reaped surviving emulator processes');
+  } catch {
+    // Nothing left to kill.
+  }
+
+  for (let i = 0; i < MAX_EMULATORS; i++) {
+    const dir = join(homedir(), '.android', 'avd', `${avdName(i)}.avd`);
+    if (!existsSync(dir)) {
+      continue;
+    }
+    for (const lock of ['hardware-qemu.ini.lock', 'multiinstance.lock']) {
+      const path = join(dir, lock);
+      if (existsSync(path)) {
+        rmSync(path, { force: true, recursive: true });
+        console.log(`  ✓ cleared stale ${lock} for ${avdName(i)}`);
+      }
+    }
+  }
+
+  // Last, so it cannot be re-wedged by a process still shutting down above.
+  try {
+    run(`"${paths.adb}" kill-server`);
+    run(`"${paths.adb}" start-server`);
+    console.log('  ✓ restarted the adb server');
+  } catch {
+    console.log(
+      '  ! adb server restart failed — run `adb kill-server` by hand if devices go missing'
+    );
   }
 }
 
