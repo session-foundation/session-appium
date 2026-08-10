@@ -282,6 +282,12 @@ const openAndroidApp = async (
     disableIdLocatorAutocompletion: true,
   });
 
+  // Granted up front so Android's POST_NOTIFICATIONS prompt never fires mid-test. From API 33 it
+  // appears the first time the app posts a notification — i.e. whenever a message happens to arrive —
+  // so it lands at an arbitrary point and covers whatever the spec was doing. A spec that wants to
+  // assert the prompt itself should revoke and relaunch; see `setNotificationPermission`.
+  await wrappedDevice.setNotificationPermission(true);
+
   // Registered here rather than only in the callers below, which register once the opener RETURNS.
   // Everything between this line and that one — the QA relaunch, onboarding, the first wait for the
   // landing screen — was a blind spot: a failure there produced no screenshot, no page source and no

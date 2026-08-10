@@ -84,6 +84,7 @@ import {
 import { EnterAccountID, NewMessageOption, NextButton } from '../test/locators/start_conversation';
 import { clickOnCoordinates, sleepFor, verify } from '../test/utils';
 import { getAdbFullPath } from '../test/utils/binaries';
+import { androidAppPackage } from '../test/utils/capabilities_android';
 import { parseDataImage } from '../test/utils/check_colour';
 import { isSameColor } from '../test/utils/check_colour';
 import { makeAccountPro } from '../test/utils/mock_pro';
@@ -2737,6 +2738,42 @@ export class DeviceWrapper implements IMobileWrapper {
     await this.clickOnElementAll(new ReadReceiptsButton(this));
     await this.navigateBack(false);
     await this.clickOnElementAll(new CloseSettings(this));
+  }
+
+  /**
+   * Grants or revokes Android's runtime notification permission directly, so the system prompt is not
+   * left to appear at a time of Android's choosing.
+   *
+   * From API 33 the `POST_NOTIFICATIONS` prompt fires the first time the app tries to post a
+   * notification, which is whenever a message happens to arrive — so it can land in the middle of an
+   * unrelated step and cover the screen. That produced "element not found" failures attributed to
+   * whatever the spec was doing at the time; three separate red specs in one sweep turned out to be
+   * this one dialog.
+   *
+   * Granting at install removes the race rather than reacting to it. `handleNotificationPermissions`
+   * stays valid either way — it dismisses the dialog only if present, so it becomes a no-op.
+   *
+   * **To write a spec that asserts the prompt appears, revoke first and relaunch.** Revoking a granted
+   * runtime permission makes Android kill the app process, so it has to happen before the app is in
+   * use, not mid-flow.
+   */
+  public async setNotificationPermission(granted: boolean): Promise<void> {
+    if (!this.isAndroid()) {
+      return;
+    }
+
+    const action = granted ? 'grant' : 'revoke';
+    // Deliberately not routed through runScriptAndLog: that logs failures and returns, and a silently
+    // ungranted permission is exactly the state this exists to prevent.
+    try {
+      await this.toShared().execute('mobile: shell', {
+        command: 'pm',
+        args: [action, androidAppPackage, 'android.permission.POST_NOTIFICATIONS'],
+      });
+      this.log(`Notification permission ${granted ? 'granted' : 'revoked'}`);
+    } catch (error) {
+      this.log(`Could not ${action} POST_NOTIFICATIONS: ${(error as Error).message}`);
+    }
   }
 
   public async processPermissions(locator: LocatorsInterface | StrategyExtractionObj) {
