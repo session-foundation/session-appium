@@ -114,6 +114,25 @@ type PollResult<T = undefined> = {
   error?: string;
 };
 
+/**
+ * The generated-avatar palette, lowercase, from `avatarBgColors` in the Android client
+ * (`app/src/main/res/values/colors.xml`, selected by `sha512(address) % 7` in `AvatarUtils`).
+ *
+ * Used to tell "no picture is loaded" apart from "a picture is loaded but static". Because the colour
+ * is derived from the account address, a placeholder shows a different one of these on every run —
+ * which reads as an unstable failure rather than a consistent one, and cost several hours of chasing
+ * a phantom regression before anyone recognised the palette.
+ */
+const GENERATED_AVATAR_COLORS = new Set([
+  '31f196',
+  '57c9fa',
+  'c993ff',
+  'ff95ef',
+  'ff9c8e',
+  'fcb159',
+  'fad657',
+]);
+
 export class DeviceWrapper implements IMobileWrapper {
   private readonly device: AndroidUiautomator2Driver | XCUITestDriver;
   public readonly udid: string;
@@ -3124,11 +3143,53 @@ export class DeviceWrapper implements IMobileWrapper {
 
   // Sample an element's centre pixel color SAMPLE_SIZE times to determine whether it is animated or not.
   // If the set contains more than 1 color it is likely animated.
+  /**
+   * Waits until an avatar stops rendering the generated placeholder, so an animation check that
+   * follows is looking at the uploaded picture rather than the fallback.
+   *
+   * Session draws a flat `avatarBgColors` circle while a picture is absent, loading or failed, and
+   * picks the colour by `sha512(address) % 7` — so a placeholder is a *different* palette colour on
+   * every run, which is exactly what made this look like a per-build regression rather than a race.
+   *
+   * Returns the last colour seen so the caller can say what it was still showing when it gave up.
+   */
+  private async waitForAvatarToLoad(
+    locator: StrategyExtractionObj,
+    maxWait = 10_000
+  ): Promise<string> {
+    const deadline = Date.now() + maxWait;
+    let color = await this.getElementPixelColor(locator);
+
+    while (GENERATED_AVATAR_COLORS.has(color.toLowerCase()) && Date.now() < deadline) {
+      await sleepFor(500);
+      color = await this.getElementPixelColor(locator);
+    }
+    return color;
+  }
+
+  /**
+   * Asserts an element's pixels change over time.
+   *
+   * For avatars the placeholder is checked first and reported separately, because "the picture never
+   * loaded" and "the picture loaded but is frozen" are different bugs with different owners and used
+   * to produce the identical failure. A frozen animated avatar means Pro was false at compose time
+   * (`freezeFrameForUser`); a placeholder means the upload never reached the view at all.
+   */
   public async verifyElementIsAnimated(
     args: LocatorsInterface | StrategyExtractionObj
   ): Promise<void> {
     const { locator, description } = this.resolveLocator(args);
     this.log(`Checking if ${description} is animated`);
+
+    const loaded = await this.waitForAvatarToLoad(locator);
+    if (GENERATED_AVATAR_COLORS.has(loaded.toLowerCase())) {
+      throw new Error(
+        `${description} is still the generated avatar placeholder (${loaded}) — the picture never ` +
+          `loaded, so there is nothing to animate. This is an upload/propagation problem, not an ` +
+          `animation one; a frozen animated avatar would show the image's own first frame instead.`
+      );
+    }
+
     const SAMPLE_SIZE = 3;
     const colors = new Set<string>();
     for (let i = 0; i < SAMPLE_SIZE; i++) {
@@ -3136,7 +3197,9 @@ export class DeviceWrapper implements IMobileWrapper {
     }
     verify(
       colors.size,
-      `Expected element to be animated but detected 1 unique color: ${[...colors][0]}`
+      `Expected ${description} to be animated but detected 1 unique color: ${[...colors][0]}. The ` +
+        `image is loaded but static — on an animated avatar that means Pro was false when it was ` +
+        `composed (freezeFrameForUser), not that the upload failed.`
     ).toBeGreaterThan(1);
   }
 
