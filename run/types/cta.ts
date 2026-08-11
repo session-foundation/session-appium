@@ -49,8 +49,9 @@ export const ctaConfigs: Record<CTAType, CTAConfig> = {
     body: tStripped('proAnimatedDisplayPicture'),
     negativeButton: tStripped('close'),
   },
-  // Shown when an expired subscriber opens the Pro entry in settings — the expired entry point goes
-  // to this CTA instead of the Pro settings screen.
+  // Shown on app open once a subscriber's Pro access has expired — verified on both platforms
+  // 2026-08-11. It is not triggered by opening the Pro entry in settings: on Android it appears
+  // before any navigation and blocks the route to settings entirely.
   proExpired: {
     heading: tStripped('proExpired'),
     body: tStripped('proExpiredDescription'),

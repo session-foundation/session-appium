@@ -166,6 +166,28 @@ export class ProPlanExpiry extends LocatorsInterface {
 }
 
 /**
+ * The "Renew Pro Access" action, shown on the Pro settings screen once access has expired.
+ *
+ * This *replaces* `UpdateProAccessRow` in the expired state rather than sitting alongside it — iOS
+ * returns one or the other from the same branch (`SessionProSettingsViewModel`, `case (.expired, _)`),
+ * so asserting this row is what distinguishes an expired screen from an active one.
+ *
+ * Deliberately **not** paired with its title text. The row reads `proAccessRenew` on both platforms,
+ * but on iOS the identifier owns `name` and the title moves to `@label`, and the copy is Crowdin-owned
+ * either way — the id alone is unambiguous because only one element carries it.
+ */
+export class ProRenewPlanRow extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'pro-settings-renew-plan' } as const;
+      case 'ios':
+        return { strategy: 'accessibility id', selector: 'pro-settings-renew-plan' } as const;
+    }
+  }
+}
+
+/**
  * The Pro entry in the main settings list.
  *
  * Matched on the id alone. The row's label is a pure function of the backend status
