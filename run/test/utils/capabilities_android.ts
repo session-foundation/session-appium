@@ -27,6 +27,27 @@ const sharedCapabilities: W3CUiautomator2DriverCaps['alwaysMatch'] = {
   'appium:newCommandTimeout': 300000,
   'appium:eventTimings': false,
   'appium:injectedImageProperties': {},
+  /**
+   * Reinstall the APK every session, even when the same version is already on the device.
+   *
+   * Appium defaults this to `false`, which means "already installed at this version or newer, skip the
+   * install". Session's `versionCode` does not change between local builds, so that check passes
+   * forever and a rebuilt APK silently never reaches the device — the tests then run against whatever
+   * was installed last, while `ANDROID_APK`, the filename and the version all still look right.
+   *
+   * There is no per-test uninstall to compensate: `uninstallApp` exists but only two specs call it
+   * deliberately. Until 2026-08-11 the only thing forcing fresh installs was recreating the AVDs
+   * (`pnpm create-emulators --kill`), which wipes the app as a side effect — which is why "restart the
+   * emulators" appeared to cure so much, and why some of what it cured was a stale APK rather than a
+   * stale emulator.
+   *
+   * Measured that day: `dumpsys package` reported `lastUpdateTime` three builds behind, and the APK
+   * pulled off the device was missing a diagnostic string the on-disk one contained. Two app-side
+   * handovers were never tested.
+   *
+   * Costs one install per session. That is the correct trade against silently testing the wrong binary.
+   */
+  'appium:enforceAppInstall': true,
 };
 
 const udids = ['emulator-5554', 'emulator-5556', 'emulator-5558', 'emulator-5560'];
