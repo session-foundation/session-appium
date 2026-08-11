@@ -35,15 +35,14 @@ const sharedCapabilities: W3CUiautomator2DriverCaps['alwaysMatch'] = {
    * forever and a rebuilt APK silently never reaches the device — the tests then run against whatever
    * was installed last, while `ANDROID_APK`, the filename and the version all still look right.
    *
-   * There is no per-test uninstall to compensate: `uninstallApp` exists but only two specs call it
-   * deliberately. Until 2026-08-11 the only thing forcing fresh installs was recreating the AVDs
-   * (`pnpm create-emulators --kill`), which wipes the app as a side effect — which is why "restart the
-   * emulators" appeared to cure so much, and why some of what it cured was a stale APK rather than a
-   * stale emulator.
+   * Nothing else compensates: `uninstallApp` exists but only two specs call it deliberately, so the
+   * only other thing that replaces the app is recreating the AVDs (`pnpm create-emulators --kill`),
+   * which wipes it as a side effect. That makes a stale APK indistinguishable from a stale emulator —
+   * both are "cured" by a restart, so a restart fixing something is not evidence of which it was.
    *
-   * Measured that day: `dumpsys package` reported `lastUpdateTime` three builds behind, and the APK
-   * pulled off the device was missing a diagnostic string the on-disk one contained. Two app-side
-   * handovers were never tested.
+   * Verify the **running** system rather than the build output: `adb shell dumpsys package
+   * network.loki.messenger` for `lastUpdateTime`, or pull the installed APK via `adb shell pm path`
+   * and inspect that. The on-disk APK being correct says nothing about what is on the device.
    *
    * Costs one install per session. That is the correct trade against silently testing the wrong binary.
    */

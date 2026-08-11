@@ -32,19 +32,18 @@ import {
  * Nothing here asserts a cryptographic outcome, so none of it needs a real *grant* — see the
  * mock-vs-backend split.
  *
- * **But "mocked" does not mean "backend-free", and on Android it never did.** The debug override
- * replaces only the displayed *type*; `refreshState` still comes from a real `get_pro_status`, and
- * `Success` requires `LoadState.Loaded` **and** `confirmedInThisProcess` (`ProStatusManager.kt:237`,
- * `:119-144`). The Expired CTA is gated on that success (`HomeViewModel.kt:251`), so these specs have a
- * live dependency on the local Pro backend being reachable with a **current** `TEST_PRO_BACKEND_ED_PK`.
- * A stale key does not fail loudly — the client reads every proof as invalid and silently strips Pro
- * content, so the CTA simply never appears and this file fails looking exactly like an app bug. Check
- * the key before believing a red here.
+ * **"Mocked" does not mean "backend-free" on Android.** The debug override replaces only the displayed
+ * *type*; `refreshState` still comes from a real `get_pro_status`, and reaching `Success` requires a
+ * fetch that confirms in-process. The Expired CTA is gated on that success, so this file has a live
+ * dependency on the local Pro backend being reachable with a **current** `TEST_PRO_BACKEND_ED_PK`. A
+ * stale key does not fail loudly — the client reads every proof as invalid and silently strips Pro
+ * content, so the CTA never appears and these specs fail looking exactly like an app bug. Check the key
+ * before believing a red here.
  *
- * The iOS mocks are a different shape and worth not conflating: they override the projected
- * `SessionPro.State`, while the startup status gate on the refresh-unification branch reads *libSession
- * config* (`proAccessExpiryTimestampSeconds`, `proConfig?.proProof`), which no mock writes. A fixture
- * user therefore skips that fetch entirely, so nothing in this file can speak to that behaviour.
+ * **No mock in this file writes libSession config.** They override the projected Pro state only, so a
+ * fixture user has no access expiry and no proof as far as config is concerned. Anything the client
+ * gates on *config* rather than on displayed state is therefore unreachable from here, and a spec that
+ * appears to exercise it is passing for another reason.
  *
  * Cross-platform via the shared `ProMockContext` fields: iOS reads them as launch-arg env, Android as
  * intent extras that `QaLaunchConfig` writes to the preferences its debug menu already drives. Only
@@ -154,15 +153,12 @@ async function proSettingsSubscribed(platform: SupportedPlatformsType, testInfo:
  * The **expired** state, in the order the app actually produces it: the CTA on app open, then the Pro
  * settings screen behind it with the renew action in place of the update-plan row.
  *
- * The CTA is asserted **at app open, before any navigation** — not after tapping into Pro settings,
- * which is what an earlier version of this spec did. That version had it backwards: it inferred the CTA
- * was what the Pro entry point opens, when it is app-open behaviour that happens to still be on screen
- * by the time a spec navigates. On Android it is not merely early, it *blocks* the route to settings —
- * the tap on User settings fails against the CTA's scrim — which is why the earlier shape could never
- * have passed there.
+ * **The CTA is app-open behaviour, not a consequence of opening Pro settings.** It fires before any
+ * navigation and is merely still on screen by the time a spec reaches settings, so asserting it after
+ * the tap would pass for the wrong reason. Assert it where it happens.
  *
- * Dismissing it is therefore a step of the spec, not incidental cleanup: the settings screen is
- * unreachable until it is gone.
+ * Dismissing it is a step of the spec, not incidental cleanup: on Android the CTA's scrim swallows the
+ * tap on User settings, so the settings screen is unreachable until the CTA is gone.
  *
  * `ProStatsHeader` and `ProManageSectionHeader` are absent by design — both platforms gate those
  * sections on the plan being *active*, so asserting them here would assert a bug.
@@ -198,19 +194,17 @@ async function proSettingsExpired(platform: SupportedPlatformsType, testInfo: Te
 }
 
 /**
- * `Pro status checking state` and `Pro status error state` were iOS-only until 2026-08-11, on two stated
- * grounds — and **only one of them was ever true**.
+ * The status banner, in both of its non-success states.
  *
- * The claim that Android's loading/error mocks are gated on the Pro state being forced was simply wrong:
- * `proDataRefreshState` is computed *before* the `forceCurrentUserAsPro` branch and passed through in the
- * non-forced path (`ProStatusManager.kt:126-155`), so `proLoadingState` applies to a never-subscribed
- * user exactly as these specs need. That error kept the pair parked for weeks.
+ * `proLoadingState` applies to a **never-subscribed** user, which is what lets these two run without a
+ * Pro fixture: Android computes `proDataRefreshState` before the `forceCurrentUserAsPro` branch and
+ * passes it through the non-forced path, so forcing Pro is not a precondition for reaching Loading or
+ * Error.
  *
- * The real blocker was narrower than "no id": the banner already rendered, but `extraHeaderContent` sat
- * inside a `clearAndSetSemantics` subtree (`ProComponents.kt`), which **erases** descendants rather than
- * merging them — so neither an id nor the message text existed in the tree, and no locator of any shape
- * could have worked. Fixed by narrowing that call to the decorative logo/badge only, which also stopped
- * TalkBack announcing "Session Pro" over a status message users never heard.
+ * The banner is drawn inside `SessionProSettingsHeader`'s `extraContent`, and that header applies
+ * `clearAndSetSemantics` to its decorative logo and badge. **That call must stay narrow** — widening it
+ * back over `extraContent` erases descendants rather than merging them, which removes the banner's id
+ * *and its text* from the tree, defeating any locator, and mutes the message for TalkBack.
  */
 async function proStatusChecking(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const device = await openSettingsAsNewUser(platform, testInfo, {

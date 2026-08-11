@@ -55,10 +55,6 @@ async function hideNoteToSelf(platform: SupportedPlatformsType, testInfo: TestIn
   // Note to Self was shown on alice2 above, before the hide, so both devices only need to be seen to
   // lose it here. hasElementBeenDeleted would re-check presence first, which races the hide: on
   // alice2 against the sync, and on alice1 against its own local update.
-  //
-  // The iOS branch this replaces attributed itself to page structure, but both platforms allowed the
-  // same 5s for the element to go — all the extra iOS wait bought was time for it to be *found*
-  // first, which is the phase being dropped. So the windows are unchanged.
   await test.step('Verify Note to Self is hidden on both devices', async () => {
     await Promise.all([
       alice1.waitForElementToBeGone({

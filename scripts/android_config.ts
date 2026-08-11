@@ -1,11 +1,10 @@
 /**
  * Single source of truth for the Android SDK versions and device shape the suite expects.
  *
- * **Bump the versions here and nowhere else.** They were previously declared twice — once in
- * `scripts/ci.sh` for the CI machines and once in `create_android_emulators.ts` for local ones — with
- * nothing keeping them in step. Drifting them is not a loud failure: the two fleets simply run
- * different Android versions, and the first symptom is a visual-regression diff or an API-specific
- * behaviour change that looks like a product bug.
+ * **Bump the versions here and nowhere else.** A second declaration anywhere — CI provisioning, the
+ * local emulator script — drifts silently: the two fleets simply run different Android versions, and
+ * the first symptom is a visual-regression diff or an API-specific behaviour change that reads as a
+ * product bug.
  *
  * Deliberately declared rather than detected, matching how iOS handles the same problem: a version
  * bump is a reviewed edit, not something the script quietly follows the host into.
