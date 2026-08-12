@@ -29,9 +29,25 @@ import { withLogGroup } from '../run/shared/ci_log_groups';
  * Overrides:
  *   WDA_DERIVED_DATA_PATH   absolute derived-data dir (default: <repo>/build/wda/derived)
  *   WDA_PREBUILT_WDA_PATH   absolute path to the prebuilt *-Runner.app (default: derived from above)
+ *   BUILD_LOCK_CMD          command prefix that serialises heavy builds (default: none, build directly)
  */
 
 const REPO_ROOT = path.resolve(__dirname, '..');
+
+/**
+ * Optional prefix that serialises this build against other heavy builds on the same machine.
+ *
+ * Unset by default, so a plain checkout and CI build exactly as before. It exists for shared hosts
+ * where something else may be compiling a Session client at the same time: this is a full `xcodebuild`
+ * of WebDriverAgent, and two native builds at once is the load pattern that pushes a machine into swap
+ * and produces test timeouts indistinguishable from product bugs.
+ *
+ * Set it to a command that runs its `--`-separated argument under a mutex, e.g.
+ * `BUILD_LOCK_CMD="/path/to/build-lock.sh run Session_iOS <owner> --"`. Kept as an opaque prefix rather
+ * than a path plus flags so this file needs no knowledge of the locking tool's CLI, and so a machine
+ * with a different one can use it unchanged.
+ */
+const BUILD_LOCK_CMD = process.env.BUILD_LOCK_CMD?.trim();
 
 /** Derived-data directory WDA is built into (env-overridable). */
 export const WDA_DERIVED_DATA_PATH =
@@ -75,6 +91,9 @@ export function buildWda(options?: { force?: boolean }): string {
 
   const project = resolveWdaProject();
   console.log(`Building WebDriverAgent (one-off) -> ${WDA_DERIVED_DATA_PATH}`);
+  if (BUILD_LOCK_CMD) {
+    console.log(`Serialising the build behind: ${BUILD_LOCK_CMD}`);
+  }
   // ~6,700 lines of xcodebuild output, collapsed on CI so it doesn't bury the run that follows.
   // Grouped even on failure (withLogGroup closes in a finally) — an unclosed group would swallow
   // every later line into it.
@@ -82,6 +101,7 @@ export function buildWda(options?: { force?: boolean }): string {
     // build-for-testing produces the *-Runner.app without needing code signing on the simulator SDK.
     execSync(
       [
+        ...(BUILD_LOCK_CMD ? [BUILD_LOCK_CMD] : []),
         'xcodebuild build-for-testing',
         `-project "${project}"`,
         '-scheme WebDriverAgentRunner',
