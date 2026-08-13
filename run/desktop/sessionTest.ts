@@ -70,7 +70,12 @@ async function openWrappedWindows(
     if (pages.length !== count) {
       throw new Error(`openApps should have opened ${count} windows but did not.`);
     }
-    const wrappers = pages.map((page, i) => new DesktopWrapper(page, MAIN_IDENTITIES[i]));
+    const instances = getLaunchedInstances();
+    const wrappers = pages.map((page, i) => {
+      const wrapper = new DesktopWrapper(page, MAIN_IDENTITIES[i]);
+      wrapper.setLaunchIdentity(MULTIS[i], instances[i]);
+      return wrapper;
+    });
     await run(wrappers, testInfo);
   } finally {
     try {

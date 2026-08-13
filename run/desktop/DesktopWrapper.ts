@@ -185,8 +185,16 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
 
   // --- IBaseDeviceWrapper: account ---
 
-  public async restoreFromSeed(recoveryPhrase: string): Promise<void> {
-    await recoverFromSeed(this.page, recoveryPhrase);
+  /**
+   * Restore this window onto an existing account from its recovery phrase.
+   *
+   * `fallbackName` covers the account whose profile has not reached the network yet — restoring one
+   * created moments earlier prompts for a display name, and without a fallback that is an error
+   * rather than something to type past. Supplying it says the spec does not care about the name;
+   * omit it where the name coming back IS the assertion.
+   */
+  public async restoreFromSeed(recoveryPhrase: string, fallbackName?: string): Promise<void> {
+    await recoverFromSeed(this.page, recoveryPhrase, fallbackName ? { fallbackName } : undefined);
     await checkPathLight(this.page);
   }
 
