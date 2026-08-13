@@ -230,6 +230,7 @@ export type AccessibilityId =
   | 'Call'
   | 'Call button'
   | 'Cancel'
+  | 'character-limit-text'
   | 'Classic Light'
   | 'Clear'
   | 'Clear all'

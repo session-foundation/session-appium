@@ -514,6 +514,18 @@ export class MessageInput extends LocatorsInterface {
     } as const;
   }
 }
+/**
+ * The remaining-characters countdown in the composer.
+ *
+ * Constructed WITHOUT a length to assert absence, so the count must stay a separate matcher rather
+ * than part of the selector: a selector that is only valid once a number is supplied cannot express
+ * "no countdown is showing", and silently matches nothing instead.
+ *
+ * On iOS the count is read from `label` — the accessibility identifier owns `name`, so the rendered
+ * number is only reachable there. Absence relies on the app marking the countdown's container
+ * `accessibilityElementsHidden`: it is hidden by alpha rather than removal, so without that flag it
+ * stays in the tree and reads as present-but-blank.
+ */
 export class MessageLengthCountdown extends LocatorsInterface {
   constructor(
     device: DeviceWrapper,
@@ -531,9 +543,9 @@ export class MessageLengthCountdown extends LocatorsInterface {
         } as const;
       case 'ios':
         return {
-          strategy: 'xpath',
-          selector: `//XCUIElementTypeStaticText[@name="${this.length}"]`,
-          text: this.length,
+          strategy: 'accessibility id',
+          selector: 'character-limit-text',
+          ...(this.length === undefined ? {} : { label: this.length }),
         } as const;
     }
   }

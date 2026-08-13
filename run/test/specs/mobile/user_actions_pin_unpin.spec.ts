@@ -2,20 +2,24 @@ import { test, type TestInfo } from '@playwright/test';
 import { USERNAME } from '@session-foundation/qa-seeder';
 
 import { getCommunities } from '../../../constants/community';
+import { makeAccountPro } from '../../../shared/pro_grant';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
+import { CTAButtonNegative } from '../../locators/global';
 import { ConversationPinnedIcon, PlusButton } from '../../locators/home';
 import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { joinCommunities } from '../../utils/community';
 import { assertPinOrder, getConversationOrder } from '../../utils/conversation_order';
 import { newUser } from '../../utils/create_account';
-import { makeAccountPro } from '../../utils/mock_pro';
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
 import { forceStopAndRestart } from '../../utils/utilities';
+
+/** The pinned-conversation limit for a standard account. */
+const STANDARD_PIN_LIMIT = 5;
 
 bothPlatformsIt({
   title: 'Pin and unpin conversation',
@@ -114,23 +118,38 @@ async function nonProPinnedLimit(platform: SupportedPlatformsType, testInfo: Tes
   await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITIES(numCommunities), async () => {
     await joinCommunities(device, numCommunities);
   });
-  await test.step(TestSteps.USER_ACTIONS.PIN_CONVERSATIONS(numCommunities), async () => {
-    let pinned = 0;
-    for (const community of Object.values(communities).slice(0, numCommunities)) {
-      await device.pinConversation(community.name);
-      pinned++;
-      if (pinned < numCommunities) {
-        await device.waitForTextElementToBePresent(new PlusButton(device));
-        await device.verifyNoCTAShows();
-        await device
-          .onAndroid()
-          .waitForTextElementToBePresent(new ConversationPinnedIcon(device, community.name));
-      } else {
-        await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Pinned Conversations CTA'), async () => {
-          await device.checkCTA('pinnedConversations');
-        });
-      }
+  let beforeOrder: string[] = [];
+  await test.step('Capture conversation order before pinning', async () => {
+    beforeOrder = await getConversationOrder(device);
+  });
+  const toPin = Object.values(communities)
+    .slice(0, STANDARD_PIN_LIMIT)
+    .map(community => community.name);
+  const overLimit = Object.values(communities)[STANDARD_PIN_LIMIT].name;
+
+  await test.step(TestSteps.USER_ACTIONS.PIN_CONVERSATIONS(STANDARD_PIN_LIMIT), async () => {
+    for (const name of toPin) {
+      await device.pinConversation(name);
+      await device.waitForTextElementToBePresent(new PlusButton(device));
+      await device.verifyNoCTAShows();
+      await device
+        .onAndroid()
+        .waitForTextElementToBePresent(new ConversationPinnedIcon(device, name));
     }
+  });
+  await test.step('Assert the allowed pins took effect', async () => {
+    assertPinOrder(beforeOrder, toPin, await getConversationOrder(device));
+  });
+
+  await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Pinned Conversations CTA'), async () => {
+    await device.pinConversation(overLimit);
+    await device.checkCTA('pinnedConversations');
+    await device.clickOnElementAll(new CTAButtonNegative(device));
+  });
+  await test.step('Assert the over-limit conversation was NOT pinned', async () => {
+    // The CTA appearing is not the same as the pin being refused: an app that showed the CTA and
+    // pinned anyway satisfies a CTA-only assertion.
+    assertPinOrder(beforeOrder, toPin, await getConversationOrder(device));
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);
@@ -151,15 +170,29 @@ async function proPinnedLimit(platform: SupportedPlatformsType, testInfo: TestIn
   await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITIES(numCommunities), async () => {
     await joinCommunities(device, numCommunities);
   });
+  let beforeOrder: string[] = [];
+  await test.step('Capture conversation order before pinning', async () => {
+    beforeOrder = await getConversationOrder(device);
+  });
+  const toPin = Object.values(communities)
+    .slice(0, numCommunities)
+    .map(community => community.name);
+
   await test.step(TestSteps.USER_ACTIONS.PIN_CONVERSATIONS(numCommunities), async () => {
-    for (const community of Object.values(communities).slice(0, numCommunities)) {
-      await device.pinConversation(community.name);
+    for (const name of toPin) {
+      await device.pinConversation(name);
       await device
         .onAndroid()
-        .waitForTextElementToBePresent(new ConversationPinnedIcon(device, community.name));
+        .waitForTextElementToBePresent(new ConversationPinnedIcon(device, name));
       await device.waitForTextElementToBePresent(new PlusButton(device));
     }
     await device.verifyNoCTAShows();
+  });
+  await test.step('Assert every pin took effect', async () => {
+    // Asserted on the order rather than the pin icon alone: the icon is Android-only, so without
+    // this the iOS half of the spec proves nothing beyond "no CTA appeared" — which is also true if
+    // pinning silently did nothing.
+    assertPinOrder(beforeOrder, toPin, await getConversationOrder(device));
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);

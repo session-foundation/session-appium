@@ -142,6 +142,12 @@ async function proSettingsSubscribed(platform: SupportedPlatformsType, testInfo:
     await device.waitForTextElementToBePresent(new ProPlanExpiry(device, `${ACCESS_DAYS} days`));
     await device.waitForTextElementToBePresent(new ProBadgeSettingRow(device));
     await device.waitForTextElementToBePresent(new ProFeaturesHeader(device));
+    // Both plan rows are what distinguish an active screen from an expired one, and only one is ever
+    // shown — so presence alone would pass an app that rendered both.
+    await device.verifyElementNotPresent({
+      ...new ProRenewPlanRow(device).build(),
+      maxWait: 1000,
+    });
   });
 
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
@@ -186,6 +192,20 @@ async function proSettingsExpired(platform: SupportedPlatformsType, testInfo: Te
   await test.step('Verify the expired Pro settings screen', async () => {
     await device.waitForTextElementToBePresent(new ProRenewPlanRow(device));
     await device.waitForTextElementToBePresent(new ProFeaturesHeader(device));
+    // Asserted absent, not merely unmentioned: both platforms gate these on the plan being active,
+    // so rendering them here would be a bug this spec is meant to catch.
+    await device.verifyElementNotPresent({
+      ...new ProStatsHeader(device).build(),
+      maxWait: 1000,
+    });
+    await device.verifyElementNotPresent({
+      ...new ProManageSectionHeader(device).build(),
+      maxWait: 1000,
+    });
+    await device.verifyElementNotPresent({
+      ...new UpdateProAccessRow(device).build(),
+      maxWait: 1000,
+    });
   });
 
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
