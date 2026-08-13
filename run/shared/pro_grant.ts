@@ -8,7 +8,7 @@
  * https://github.com/session-foundation/session-pro-backend/blob/main/examples/endpoint_example.py
  *
  * Usage:
- *   import { makeAccountPro } from './mock_pro';
+ *   import { makeAccountPro } from '../../shared/pro_grant';
  *
  *   await makeAccountPro({ user: alice, platform });
  *
@@ -19,18 +19,24 @@ import { ed25519 } from '@noble/curves/ed25519.js';
 import { blake2b } from '@noble/hashes/blake2.js';
 import { mnDecode } from '@session-foundation/mnemonic';
 
-import type { SupportedPlatformsType } from './open_app';
-
-import { User } from '../../types/testing';
-
 export type PaymentProvider = 'apple' | 'google';
 
+/**
+ * The account to grant Pro to, structurally rather than as either platform's user type. Mobile's
+ * `User` satisfies it as-is; Desktop's carries the same three values under different names.
+ */
+export type ProAccountUnderTest = {
+  userName: string;
+  /** `05…` Account ID. Optional because some specs opt out of reading it; the mint is guarded when present. */
+  accountID?: string;
+  recoveryPhrase: string;
+};
+
 type MakeAccountProParams = {
-  user: User;
-  // Provider is derived from the platform (ios -> apple, android -> google) unless
-  // an explicit `provider` is given. `provider` lets non-mobile callers (e.g. desktop)
-  // register a Pro payment without coupling to a mobile `SupportedPlatformsType`.
-  platform?: SupportedPlatformsType;
+  user: ProAccountUnderTest;
+  // Provider is derived from the platform (ios -> apple, android -> google) unless an explicit
+  // `provider` is given, which is how Desktop registers a payment with no platform to derive from.
+  platform?: 'android' | 'ios';
   provider?: PaymentProvider;
   /** Billing period to grant (default `1M`). */
   plan?: '12M' | '1M' | '3M';
@@ -394,13 +400,9 @@ if (require.main === module) {
   }
 
   if (args.length < 2) {
-    console.error(
-      'Usage: npx ts-node run/test/utils/mock_pro.ts <mnemonic> <platform> [--dry-run]'
-    );
-    console.error('Example: npx ts-node run/test/utils/mock_pro.ts "word1 word2 ..." android');
-    console.error(
-      '         npx ts-node run/test/utils/mock_pro.ts "word1 word2 ..." ios --dry-run'
-    );
+    console.error('Usage: npx ts-node run/shared/pro_grant.ts <mnemonic> <platform> [--dry-run]');
+    console.error('Example: npx ts-node run/shared/pro_grant.ts "word1 word2 ..." android');
+    console.error('         npx ts-node run/shared/pro_grant.ts "word1 word2 ..." ios --dry-run');
     process.exit(1);
   }
 
@@ -409,8 +411,8 @@ if (require.main === module) {
   const [mnemonic, platform] = filteredArgs;
 
   makeAccountPro({
-    user: { userName: '' as any, accountID: '', recoveryPhrase: mnemonic },
-    platform: platform as SupportedPlatformsType,
+    user: { userName: '', accountID: '', recoveryPhrase: mnemonic },
+    platform: platform as 'android' | 'ios',
     dryRun,
   })
     .then(() => process.exit(0))

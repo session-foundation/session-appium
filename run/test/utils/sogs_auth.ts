@@ -3,7 +3,7 @@ import { blake2b } from '@noble/hashes/blake2.js';
 import { sha512 } from '@noble/hashes/sha2.js';
 import { randomBytes } from 'crypto';
 
-import { mnemonicToSeedHex, padSeed } from './mock_pro';
+import { mnemonicToSeedHex, padSeed } from '../../shared/pro_grant';
 
 /**
  * Authenticated requests to a SOGS (community server) HTTP API.

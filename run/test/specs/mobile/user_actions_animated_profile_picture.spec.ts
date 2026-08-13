@@ -1,5 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
+import { makeAccountPro } from '../../../shared/pro_grant';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
@@ -15,7 +16,6 @@ import {
 import { open_Alice1_Bob1_friends } from '../../state_builder';
 import { IOS_PRO_CONTEXT, iosActiveProContext } from '../../utils/capabilities_ios';
 import { newUser } from '../../utils/create_account';
-import { makeAccountPro } from '../../utils/mock_pro';
 import {
   closeApp,
   openAppOnPlatformSingleDevice,

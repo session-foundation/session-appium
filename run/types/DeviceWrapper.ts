@@ -40,6 +40,7 @@ import {
   testVideoThumbnail,
 } from '../constants/testfiles';
 import { tStripped } from '../localizer/lib';
+import { makeAccountPro } from '../shared/pro_grant';
 import {
   AcceptMessageRequestButton,
   AttachmentsButton,
@@ -87,7 +88,6 @@ import { getAdbFullPath } from '../test/utils/binaries';
 import { androidAppPackage } from '../test/utils/capabilities_android';
 import { parseDataImage } from '../test/utils/check_colour';
 import { isSameColor } from '../test/utils/check_colour';
-import { makeAccountPro } from '../test/utils/mock_pro';
 import { restoreAccountNoFallback } from '../test/utils/restore_account';
 import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/utils/utilities';
 import { CTAConfig, ctaConfigs, CTAType } from './cta';
