@@ -2,9 +2,13 @@
 // CJS project), catch-clause error access cast for the stricter tsconfig, and
 // ELECTRON_RUN_AS_NODE stripped from the launch env (see the launch call below).
 import { _electron as electron, type ElectronApplication, type Page } from '@playwright/test';
+import { execSync } from 'child_process';
 import { isEmpty } from 'lodash';
 import { randomUUID } from 'node:crypto';
 import { join } from 'path';
+
+import { sleepFor } from '../shared/promise_utils';
+import { applyProMocks, type DesktopProContext } from './pro_mocks';
 
 const logNodeConsole = process.env.LOG_NODE_CONSOLE === '1';
 
@@ -12,10 +16,30 @@ export const NODE_ENV = 'production';
 export const MULTI_PREFIX = 'test-integration';
 const multisAvailable = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 let electronPids: Array<number> = [];
+/**
+ * The `NODE_APP_INSTANCE` each window was launched with, in launch order. A restart has to reuse its
+ * window's value or the app comes up against a different user-data directory — i.e. signed out.
+ */
+let launchedInstances: Array<string> = [];
+/** Live pid per `NODE_APP_INSTANCE`, so a restart can kill the process still holding that profile. */
+const pidByInstance = new Map<string, number>();
 
 export type TestContext = {
   dbCreationTimestampMs?: number;
   networkPageNodeCount?: number;
+  /** Presence of this also tags the test `@pro`, so the tag cannot drift from the state under test. */
+  pro?: DesktopProContext;
+  /**
+   * How many community rooms this test needs of its own, mirroring `sessionIt`'s option. Only
+   * meaningful against a local SOGS, where `getCommunities()` throws rather than hand back shared
+   * rooms to a test that did not declare a count.
+   */
+  communityRooms?: number;
+  /**
+   * Absolute path to the image the app's test-integration avatar picker should return. Without it
+   * the picker yields a generated solid-colour JPEG, so nothing animated can ever be selected.
+   */
+  fakeAvatarPickerFile?: string;
 };
 
 export function getAppRootPath() {
@@ -49,17 +73,58 @@ function mockNetworkPageNodeCount(networkPageNodeCount?: number) {
   }
 }
 
-const openElectronAppOnly = async (multi: string, context?: TestContext) => {
+function mockAvatarPickerFile(fakeAvatarPickerFile?: string) {
+  if (fakeAvatarPickerFile) {
+    process.env.SESSION_FAKE_AVATAR_PICKER_FILE = fakeAvatarPickerFile;
+    console.info(`   Avatar picker file: ${fakeAvatarPickerFile}`);
+  } else {
+    delete process.env.SESSION_FAKE_AVATAR_PICKER_FILE;
+  }
+}
+
+/**
+ * Point Desktop at the local file server, if the run has one.
+ *
+ * Without this the client uploads to the PRODUCTION file server over an onion path — minutes per
+ * avatar, and a spec that looks like it never clicked Save.
+ *
+ * Two keys, and they are not interchangeable: `FILE_SERVER_PUBKEY` is the X25519 key the mobile
+ * clients need for onion encryption, while Desktop needs the **Ed25519** one, which it embeds in the
+ * returned URL so the download leg can re-derive X25519 from it. Both are 64 hex characters, so
+ * passing the wrong one fails no format check and breaks downloads rather than uploads.
+ */
+function useLocalFileServer() {
+  const url = process.env.FILE_SERVER_URL?.trim();
+  const edPubkey = process.env.FILE_SERVER_ED_PUBKEY?.trim();
+  if (url && edPubkey) {
+    process.env.TEST_FILE_SERVER_URL = url;
+    process.env.TEST_FILE_SERVER_ED_PK = edPubkey;
+    console.info(`   File server: ${url}`);
+  } else {
+    delete process.env.TEST_FILE_SERVER_URL;
+    delete process.env.TEST_FILE_SERVER_ED_PK;
+  }
+}
+
+const openElectronAppOnly = async (
+  multi: string,
+  context?: TestContext,
+  nodeAppInstance?: string
+) => {
   process.env.MULTI = `${multi}`;
   // using a v4 uuid, as timestamps to the ms are sometimes the same (when a bunch of workers are started)
   const fullUniqueId = randomUUID();
   const uniqueId = fullUniqueId.slice(0, 8);
-  process.env.NODE_APP_INSTANCE = `${MULTI_PREFIX}-devprod-${uniqueId}-${process.env.MULTI}`;
+  process.env.NODE_APP_INSTANCE =
+    nodeAppInstance ?? `${MULTI_PREFIX}-devprod-${uniqueId}-${process.env.MULTI}`;
   process.env.NODE_ENV = NODE_ENV;
 
   // Inject custom env vars if provided
   mockDbCreationTimestamp(context?.dbCreationTimestampMs);
   mockNetworkPageNodeCount(context?.networkPageNodeCount);
+  applyProMocks(context?.pro);
+  mockAvatarPickerFile(context?.fakeAvatarPickerFile);
+  useLocalFileServer();
 
   console.info(`   LOCAL_DEVNET_SEED_URL: ${process.env.LOCAL_DEVNET_SEED_URL}`);
   console.info(`   NON CI RUN`);
@@ -106,6 +171,12 @@ const openElectronAppOnly = async (multi: string, context?: TestContext) => {
     const pid = electronApp.process()?.pid;
     if (pid) {
       electronPids.push(pid);
+    }
+    if (!nodeAppInstance) {
+      launchedInstances.push(process.env.NODE_APP_INSTANCE);
+    }
+    if (pid) {
+      pidByInstance.set(process.env.NODE_APP_INSTANCE, pid);
     }
 
     return electronApp;
@@ -169,6 +240,41 @@ export function getTrackedElectronPids(): Array<number> {
 
 export function resetTrackedElectronPids() {
   electronPids = [];
+  launchedInstances = [];
+}
+
+/** The `NODE_APP_INSTANCE` of each window opened this test, in the order `openApps` created them. */
+export function getLaunchedInstances(): Array<string> {
+  return launchedInstances;
+}
+
+/**
+ * Bring a window back up on the same user-data directory it was using.
+ *
+ * Session Desktop asks the Pro backend for status once, at startup, so a grant made while the app is
+ * running is invisible until it restarts — the same reason the mobile specs call
+ * `forceStopAndRestart`. The relaunched process is pid-tracked like any other, so teardown kills it.
+ */
+export async function relaunchApp(multi: string, nodeAppInstance: string, context?: TestContext) {
+  // The old process must die before the new one starts: Electron's single-instance lock is held on
+  // the user-data directory, so a second launch against the same NODE_APP_INSTANCE exits immediately
+  // instead of opening a window — which surfaces as `firstWindow` timing out, not as a launch error.
+  const previousPid = pidByInstance.get(nodeAppInstance);
+  if (previousPid) {
+    try {
+      execSync(
+        process.platform === 'win32'
+          ? `taskkill /F /T /PID ${previousPid}`
+          : `pkill -9 -P ${previousPid}; kill -9 ${previousPid}`,
+        { stdio: 'ignore' }
+      );
+    } catch (_e) {
+      // Already gone — the window close may have taken the process with it.
+    }
+    // The lock is released when the process is reaped, not when the signal is sent.
+    await sleepFor(1_000);
+  }
+  return openElectronAppOnly(multi, context, nodeAppInstance);
 }
 
 export function isRunningOnDevNet() {

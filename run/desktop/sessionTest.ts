@@ -18,14 +18,38 @@ import { Page, test, TestInfo } from '@playwright/test';
 
 import type { Group } from './types';
 
+import {
+  allocateCommunityRooms,
+  perTestRoomsEnabled,
+  releaseCommunityRooms,
+} from '../test/utils/community_rooms';
 import { forceCloseAllWindows } from './closeWindows';
 import { createGroup } from './create_group';
 import { DesktopWrapper } from './DesktopWrapper';
 import { linkedDevice } from './linked_device';
-import { openApps, resetTrackedElectronPids, TestContext, waitFirstWindow } from './open';
+import {
+  getLaunchedInstances,
+  openApps,
+  resetTrackedElectronPids,
+  TestContext,
+  waitFirstWindow,
+} from './open';
 
 const MAIN_IDENTITIES = ['alice-desktop', 'bob-desktop', 'charlie-desktop', 'dracula-desktop'];
 const USER_NAMES = ['Alice', 'Bob', 'Charlie', 'Dracula'];
+/** Mirrors `openApps`, which assigns multis from the start of the alphabet in launch order. */
+const MULTIS = ['A', 'B', 'C', 'D'];
+
+/**
+ * Appends the `@pro` tag mobile's `sessionIt` generates, so `--grep @pro` selects the same class of
+ * test on every platform.
+ *
+ * Derived from the context rather than declared per test, so it cannot disagree with what the spec
+ * actually sets up — mobile's hand-written `isPro` can.
+ */
+function taggedName(testName: string, context?: TestContext) {
+  return context?.pro ? `${testName} @pro` : testName;
+}
 
 // ---------------------------------------------------------------------------
 // Low-level: open N windows, NO accounts. For onboarding / pre-account tests.
@@ -61,7 +85,7 @@ export function sessionTestOneWindow(
   testCallback: (windows: [DesktopWrapper], testInfo: TestInfo) => Promise<void>,
   context?: TestContext
 ) {
-  return test(testName, async ({}, testInfo) => {
+  return test(taggedName(testName, context), async ({}, testInfo) => {
     await openWrappedWindows(
       1,
       context,
@@ -77,7 +101,7 @@ export function sessionTestTwoWindows(
   testCallback: (windows: [DesktopWrapper, DesktopWrapper], testInfo: TestInfo) => Promise<void>,
   context?: TestContext
 ) {
-  return test(testName, async ({}, testInfo) => {
+  return test(taggedName(testName, context), async ({}, testInfo) => {
     await openWrappedWindows(
       2,
       context,
@@ -96,7 +120,7 @@ export function sessionTestThreeWindows(
   ) => Promise<void>,
   context?: TestContext
 ) {
-  return test(testName, async ({}, testInfo) => {
+  return test(taggedName(testName, context), async ({}, testInfo) => {
     await openWrappedWindows(
       3,
       context,
@@ -132,8 +156,21 @@ function sessionTestGeneric(
   { links, grouped, waitForNetwork = true, context }: GenericOptions,
   testCallback: (details: GenericDetails, testInfo: TestInfo) => Promise<void>
 ) {
-  return test(testName, async ({}, testInfo) => {
+  return test(taggedName(testName, context), async ({}, testInfo) => {
     resetTrackedElectronPids();
+
+    if (context?.communityRooms && perTestRoomsEnabled()) {
+      try {
+        await allocateCommunityRooms(context.communityRooms);
+      } catch (allocationError) {
+        // Allocation sits outside the try below, so its `finally` — where rooms are released — is
+        // not reached if allocation itself fails. A partly-completed allocation has still created
+        // rooms, so release them here rather than leaving them for the gc TTL.
+        await releaseCommunityRooms();
+        throw allocationError;
+      }
+    }
+
     const apps = await openApps(userCount, context);
     const mainPages = await Promise.all(apps.map(app => waitFirstWindow(app)));
     const linkedPages: Page[] = [];
@@ -142,7 +179,14 @@ function sessionTestGeneric(
       if (mainPages.length !== userCount) {
         throw new Error(`openApps should have opened ${userCount} windows but did not.`);
       }
-      const main = mainPages.map((page, i) => new DesktopWrapper(page, MAIN_IDENTITIES[i]));
+      const instances = getLaunchedInstances();
+      const main = mainPages.map((page, i) => {
+        const wrapper = new DesktopWrapper(page, MAIN_IDENTITIES[i]);
+        // Positional: `openApps` launches multis A, B, C… in order and records each instance as it
+        // goes, so index i here is the same window as index i there.
+        wrapper.setLaunchIdentity(MULTIS[i], instances[i]);
+        return wrapper;
+      });
       await Promise.all(main.map((w, i) => w.onboard(USER_NAMES[i], waitForNetwork)));
 
       const linked: DesktopWrapper[] = [];
@@ -178,6 +222,7 @@ function sessionTestGeneric(
       } catch (e) {
         console.error(`forceCloseAllWindows of ${testName} failed with: `, e);
       }
+      await releaseCommunityRooms();
     }
   });
 }
