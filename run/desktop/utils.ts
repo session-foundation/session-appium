@@ -639,6 +639,15 @@ export function removeNewLines(input: string): string {
 }
 
 /**
+ * Drop icon-font glyphs, which live in Unicode's private-use area and carry no meaning to a reader.
+ *
+ * Lucide icons share a text node with the copy beside them, so they turn up in `innerText`.
+ */
+function stripIconGlyphs(input: string): string {
+  return input.replace(/[\uE000-\uF8FF]/g, '').trim();
+}
+
+/**
  * Asserts that actual text matches expected text.
  * @throws Error with detailed message if texts don't match
  */
@@ -703,14 +712,17 @@ export async function checkCTAStrings(
   expectedHeading: string,
   expectedBody: string,
   expectedButtons: Array<string>,
-  expectedFeatures?: Array<string>
+  expectedFeatures?: Array<string>,
+  bodyMatch: 'contains' | 'exact' = 'exact'
 ) {
   // Validate input
   if (expectedFeatures && expectedFeatures.length > 3) {
     throw new Error('CTAs support maximum 3 features');
   }
-  if (expectedButtons.length < 1 || expectedButtons.length > 2) {
-    throw new Error('CTAs must have 1-2 buttons');
+  // Zero is legitimate: an acknowledgement CTA has a cancel button and no confirm, and the buttons
+  // here are positional (confirm first), so it has nothing to pass.
+  if (expectedButtons.length > 2) {
+    throw new Error('CTAs support maximum 2 buttons');
   }
 
   // Find the target CTA modal
@@ -730,7 +742,17 @@ export async function checkCTAStrings(
   const body = targetModal.locator(`[${CTA.description.strategy}="${CTA.description.selector}"]`);
   await body.waitFor({ state: 'visible' });
   const bodyText = await body.innerText();
-  assertTextMatches(bodyText, expectedBody, 'CTA body');
+  if (bodyMatch === 'contains') {
+    const haystack = stripIconGlyphs(bodyText).replace(/\s+/g, ' ');
+    const needle = stripIconGlyphs(expectedBody).replace(/\s+/g, ' ');
+    if (!haystack.includes(needle)) {
+      throw new Error(
+        `CTA body does not contain the expected text.\nExpected: ${needle}\nActual: ${haystack}\n`
+      );
+    }
+  } else {
+    assertTextMatches(bodyText, expectedBody, 'CTA body');
+  }
 
   if (expectedFeatures) {
     for (let i = 0; i < expectedFeatures.length; i++) {
@@ -739,9 +761,17 @@ export async function checkCTAStrings(
         `[${featureLocator.strategy}="${featureLocator.selector}"]`
       );
       await feature.waitFor({ state: 'visible' });
-      const featureText = await feature.innerText();
-      assertTextMatches(featureText, expectedFeatures[i], `CTA feature ${i + 1}`);
+      // Lets the shared cross-platform CTA table be compared verbatim. Without it the failure is
+      // unreadable — the glyph has no width in a terminal, so expected and actual print identically.
+      const featureText = stripIconGlyphs(await feature.innerText());
+      assertTextMatches(featureText, stripIconGlyphs(expectedFeatures[i]), `CTA feature ${i + 1}`);
     }
+  }
+
+  // A CTA may have no confirm button at all (an acknowledgement rather than an offer), in which case
+  // there is nothing positional to check and the caller asserts the cancel button itself.
+  if (!expectedButtons.length) {
+    return;
   }
 
   // Check positive button

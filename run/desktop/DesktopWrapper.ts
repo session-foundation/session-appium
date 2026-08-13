@@ -16,6 +16,7 @@ import type {
 } from './types';
 
 import { tStripped } from '../localizer/lib';
+import { makeAccountPro } from '../shared/pro_grant';
 import { sleepFor } from '../shared/promise_utils';
 import { parseDataImage } from '../test/utils/check_colour';
 import { ctaConfigs, type CTAType } from '../types/cta';
@@ -26,7 +27,7 @@ import {
 import { createContact } from './create_contact';
 import { joinCommunity, joinOrOpenCommunity } from './join_community';
 import { leaveGroup } from './leave_group';
-import { Conversation, LeftPane, Settings } from './locators';
+import { Conversation, CTA, HomeScreen, LeftPane, ProSettings, Settings } from './locators';
 import {
   confirmMessageDeletedFor,
   deleteMessageFor,
@@ -81,13 +82,37 @@ import { makeVoiceCall } from './voice_call';
  * `assertProFeatureUnlocked` (desktop has no "Pro Activated" settings surface yet).
  */
 export class DesktopWrapper implements IBaseDeviceWrapper {
-  private readonly page: Page;
+  private page: Page;
   private deviceIdentity: string;
   private account?: DesktopUser;
+  private launch?: { multi: string; nodeAppInstance: string };
 
   constructor(page: Page, identity: string = 'desktop') {
     this.page = page;
     this.deviceIdentity = identity;
+  }
+
+  /**
+   * Record what this window was launched with, so it can be brought back up on the same user-data
+   * directory. Set by the test template; without it `restartApp` has nothing to restore to.
+   */
+  public setLaunchIdentity(multi: string, nodeAppInstance: string): void {
+    this.launch = { multi, nodeAppInstance };
+  }
+
+  public getLaunchIdentity(): { multi: string; nodeAppInstance: string } {
+    if (!this.launch) {
+      throw new Error(
+        `[${this.deviceIdentity}] has no launch identity, so it cannot be restarted. Only windows ` +
+          `opened by the test template carry one.`
+      );
+    }
+    return this.launch;
+  }
+
+  /** Point this wrapper at the window a restart produced. */
+  public setPage(page: Page): void {
+    this.page = page;
   }
 
   // --- Escape hatch + account accessors ---
@@ -210,10 +235,208 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
 
   // --- IBaseDeviceWrapper: Session Pro ---
 
-  // eslint-disable-next-line @typescript-eslint/require-await
-  public async subscribeToPro(_user: User): Promise<void> {
-    // Desktop cannot currently subscribe to Pro.
-    throw new Error('Desktop cannot subscribe to Pro');
+  /**
+   * Grant this client's account Pro against the QA backend, through the same mint the mobile
+   * wrappers use.
+   *
+   * `provider` is passed explicitly because there is no platform to derive one from. Which store the
+   * payment claims to come from does not affect the entitlement — the grant binds to the master key
+   * derived from the recovery phrase.
+   *
+   * Pro is **not** active when this returns: the client reconciles it on its next authenticated
+   * request, so callers must retry rather than assert immediately.
+   */
+  public async subscribeToPro(): Promise<void> {
+    const account = this.getUser();
+    await makeAccountPro({
+      user: {
+        userName: account.userName,
+        accountID: account.accountid,
+        recoveryPhrase: account.recoveryPassword,
+      },
+      provider: 'google',
+    });
+  }
+
+  /**
+   * Block until this client has reconciled a Pro grant, by reopening the Pro settings page until it
+   * shows the active-plan sections.
+   *
+   * Reopening is the point, not polling one rendered screen: the page fetches status when it opens,
+   * so a screen left open can sit on a pre-grant answer indefinitely.
+   */
+  public async waitForProActive(maxWaitMs = 60_000): Promise<void> {
+    await doWhileWithMax(maxWaitMs, 1_000, 'waiting for the Pro grant to reconcile', async () => {
+      try {
+        await clickOn(this.page, LeftPane.settingsButton);
+        await clickOn(this.page, Settings.proMenuItem);
+        await waitForElement({
+          window: this.page,
+          locator: ProSettings.statsHeader,
+          options: { maxWaitMs: 2_000 },
+        });
+        return true;
+      } catch (e) {
+        this.log(`Pro not active yet: ${(e as Error).message.split('\n')[0]}`);
+        return false;
+      } finally {
+        // Closed through the modal's own button, not Escape: a modal left open swallows the next
+        // iteration's click on the settings button, which turns a slow grant into an infinite one.
+        await clickOnElement({
+          window: this.page,
+          strategy: 'data-testid',
+          selector: 'modal-close-button',
+        }).catch(() => undefined);
+      }
+    });
+  }
+
+  /**
+   * Set this account's display picture from whatever the test-integration picker is configured to
+   * return (`fakeAvatarPickerFile`), leaving the app back on the home screen.
+   *
+   * Returns without saving when a CTA intercepts the upload — a non-Pro account picking an animated
+   * image gets the upsell instead, which is a case the caller asserts rather than an error here.
+   */
+  public async uploadProfilePicture(): Promise<void> {
+    await clickOn(this.page, LeftPane.profileButton);
+    await clickOn(this.page, Settings.displayName);
+    await clickOn(this.page, Settings.imageUploadSection);
+    await clickOn(this.page, Settings.imageUploadClick);
+
+    // Wait for the PREVIEW, not for the Save button. Save reports itself enabled before the picked
+    // image has been processed, and `handleUpload` then returns silently on `!avatarChanged` — so an
+    // early click is swallowed, the image finishes processing a moment later, and nothing clicks
+    // again. The preview appearing is the only signal that Save will actually do something.
+    await this.page
+      .getByTestId(Settings.editProfilePicturePreview.selector)
+      .waitFor({ state: 'visible', timeout: 60_000 });
+
+    await clickOn(this.page, Settings.saveProfileUpdateButton);
+
+    // A non-Pro account picking an animated image gets the upsell CTA instead of an upload, and the
+    // caller asserts that — so this has to distinguish the two outcomes.
+    //
+    // RACED rather than waited on with a timeout. The CTA is dispatched through redux so it is
+    // briefly absent after the click and cannot simply be sampled; but a fixed wait costs its full
+    // duration on every Pro account, where no CTA can ever arrive. The display-picture dialog
+    // closing is the opposite outcome, so whichever resolves first says which path this is.
+    const ctaShown = this.page
+      .getByTestId(CTA.heading.selector)
+      .waitFor({ state: 'visible', timeout: 60_000 })
+      .then(() => true)
+      .catch(() => false);
+    const pictureSaved = this.page
+      .getByTestId(Settings.editProfilePictureProBadge.selector)
+      .waitFor({ state: 'detached', timeout: 60_000 })
+      .then(() => false)
+      .catch(() => false);
+
+    if (await Promise.race([ctaShown, pictureSaved])) {
+      return;
+    }
+
+    // Dismissed immediately rather than waited on. `save-button-profile-update` is carried by the
+    // profile-info dialog's Save as well as this one, so waiting for it to detach waits for a dialog
+    // we are about to dismiss ourselves. The picture is already committed by the display-picture
+    // dialog's own Save and the name was never touched, so whichever control is on offer beneath
+    // discards nothing.
+    await this.closeOpenModals();
+  }
+
+  /**
+   * Dismiss every open modal, topmost first.
+   *
+   * Scoped to the topmost dialog rather than the page: these nest, several carry
+   * `modal-close-button`, and a page-wide match resolves to the OUTERMOST one — which sits under the
+   * stack and cannot be clicked, so the attempt burns a timeout before being discarded.
+   *
+   * Three controls, in this order, because a dialog may offer only one of them and the right choice
+   * changes with state: "Update Profile Information" has no close button, and shows **Cancel** until
+   * something changes and **Save** afterwards — so an avatar upload leaves it wanting Save, while an
+   * untouched visit wants Cancel. Both are safe here: the display picture is already committed by the
+   * Set Display Picture dialog's own Save before this runs.
+   */
+  private async closeOpenModals(): Promise<void> {
+    const dialogs = this.page.getByRole('dialog');
+    for (let guard = 0; guard < 5; guard++) {
+      const open = await dialogs.count();
+      if (open === 0) {
+        return;
+      }
+      const topmost = dialogs.nth(open - 1);
+      const candidates = [
+        topmost.getByTestId('modal-close-button'),
+        topmost.getByRole('button', { name: tStripped('save'), exact: true }),
+        topmost.getByRole('button', { name: tStripped('cancel'), exact: true }),
+      ];
+      let dismissed = false;
+      for (const candidate of candidates) {
+        if (await candidate.count()) {
+          // Short: a dismissal that misses should cost a retry, not the 30s default.
+          await candidate
+            .first()
+            .click({ timeout: 5_000 })
+            .catch(() => undefined);
+          dismissed = true;
+          break;
+        }
+      }
+      if (!dismissed) {
+        throw new Error(
+          `[${this.deviceIdentity}] cannot dismiss "${(await topmost.innerText())
+            .replace(/\s+/g, ' ')
+            .slice(0, 60)}" — it offers no close, save or cancel control.`
+        );
+      }
+    }
+  }
+
+  /**
+   * Turn this account's Pro badge on, leaving the app back on the home screen.
+   *
+   * **Being Pro is not the same as advertising it** — badge visibility is a separate per-user setting
+   * and is off by default, so any spec asserting that someone *else* can see a badge has to call this.
+   *
+   * The ROW is clicked, never the toggle: every settings toggle sits in a `pointer-events: none`
+   * container so the row handles the click once instead of twice. A click aimed at the toggle falls
+   * through and Playwright blames whatever is behind it, which reads as an overlay bug.
+   */
+  public async enableProBadge(): Promise<void> {
+    await clickOn(this.page, LeftPane.settingsButton);
+    await clickOn(this.page, Settings.proMenuItem);
+
+    const toggle = this.page.getByTestId(ProSettings.badgeToggle.selector);
+    if ((await toggle.getAttribute('data-active')) !== 'true') {
+      await clickOn(this.page, ProSettings.badgeRow);
+    }
+    // The click writes the flag to libSession and re-renders off the result, so the attribute lags
+    // the click. Polled rather than read once, or this reports a failure that fixes itself.
+    let state: string | null = null;
+    await doWhileWithMax(10_000, 250, 'waiting for the Pro badge toggle', async () => {
+      state = await toggle.getAttribute('data-active');
+      return state === 'true';
+    }).catch(() => undefined);
+    if (state !== 'true') {
+      throw new Error(
+        `Pro badge toggle is still off (data-active=${state}) after being set. Without it this ` +
+          `account advertises no badge, and any later badge assertion fails as though the feature ` +
+          `were broken.`
+      );
+    }
+
+    await this.closeOpenModals();
+  }
+
+  /**
+   * Open the edit-profile-picture modal and click its Pro badge, which is what raises the
+   * animated-display-picture CTA — activated for a subscriber, the upsell otherwise.
+   */
+  public async openAnimatedDisplayPictureCTA(): Promise<void> {
+    await clickOn(this.page, LeftPane.profileButton);
+    await clickOn(this.page, Settings.displayName);
+    await clickOn(this.page, Settings.imageUploadSection);
+    await clickOn(this.page, Settings.editProfilePictureProBadge);
   }
 
   public async assertProFeatureUnlocked(user: Pick<User, 'accountID'>): Promise<void> {
@@ -296,15 +519,33 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     await this.verifyElementIsAnimated('[data-testid="leftpane-primary-avatar"] img');
   }
 
+  /**
+   * Open a conversation with a peer once their DISPLAY NAME is showing for it.
+   *
+   * A conversation this client created itself — by sending first, as `createContact` does — is
+   * labelled with the peer's account ID until their profile arrives, which rides along with a
+   * message rather than with the contact. Opening by name before then finds nothing, intermittently,
+   * so every assertion that addresses a peer by name has to wait for the name first.
+   */
+  private async openConversationOnceNamed(convoName: string): Promise<void> {
+    await waitForTestIdWithText(
+      this.page,
+      HomeScreen.conversationItemName.selector,
+      convoName,
+      60_000
+    );
+    await this.openConversationWith(convoName);
+  }
+
   /** Open `convoName` and verify the peer's conversation-header avatar is animated. */
   public async verifySenderAvatarAnimated(convoName: string): Promise<void> {
-    await this.openConversationWith(convoName);
+    await this.openConversationOnceNamed(convoName);
     await this.verifyElementIsAnimated('[data-testid="conversation-options-avatar"] img');
   }
 
   /** Open `convoName` and assert the peer's Session Pro badge shows in the header (polls). */
   public async assertSenderProBadge(convoName: string): Promise<void> {
-    await this.openConversationWith(convoName);
+    await this.openConversationOnceNamed(convoName);
     await doWhileWithMax(60_000, 1_000, `assertSenderProBadge ${convoName}`, async () => {
       try {
         await waitForElement({
@@ -402,14 +643,16 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     expectedHeading: string,
     expectedBody: string,
     expectedButtons: Array<string>,
-    expectedFeatures?: Array<string>
+    expectedFeatures?: Array<string>,
+    bodyMatch: 'contains' | 'exact' = 'exact'
   ): Promise<void> {
     await checkCTAStrings(
       this.page,
       expectedHeading,
       expectedBody,
       expectedButtons,
-      expectedFeatures
+      expectedFeatures,
+      bodyMatch
     );
   }
 
@@ -421,9 +664,25 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
    */
   public async checkCTA(type: CTAType): Promise<void> {
     const config = ctaConfigs[type];
-    // checkCTAStrings reads buttons positionally: [0] = positive (confirm), [1] = negative (cancel).
-    const buttons = [config.positiveButton, config.negativeButton].filter((b): b is string => !!b);
-    await this.checkCTAStrings(config.heading, config.body, buttons, config.features);
+    // checkCTAStrings reads buttons positionally: [0] = confirm, [1] = cancel — so a CTA with only a
+    // negative button (`alreadyActivated`) must not be collapsed into slot 0, or its Close is
+    // asserted against a confirm button that does not exist.
+    const buttons = config.positiveButton
+      ? [config.positiveButton, ...(config.negativeButton ? [config.negativeButton] : [])]
+      : [];
+    if (!config.positiveButton && config.negativeButton) {
+      await this.checkCTAStrings(config.heading, config.body, buttons, config.features, 'contains');
+      await this.waitForElement({
+        locator: CTA.cancelButton,
+        options: { text: config.negativeButton },
+      });
+      return;
+    }
+    // The shared table records the sentence that distinguishes one CTA from another, because iOS
+    // splits the body around inline images into several `cta-body` elements and matches whichever
+    // one fits. Desktop renders the whole body as a single node, so some variants carry a lead-in
+    // ("You've already got PRO") ahead of that sentence — hence contains rather than equals.
+    await this.checkCTAStrings(config.heading, config.body, buttons, config.features, 'contains');
   }
 
   public async hasElementPoppedUpThatShouldnt(
