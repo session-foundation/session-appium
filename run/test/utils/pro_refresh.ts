@@ -1,8 +1,9 @@
 import { test } from '@playwright/test';
 
+import { tStripped } from '../../localizer/lib';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { CloseSettings } from '../locators';
-import { ProSettingsEntry, ProStatsHeader } from '../locators/pro';
+import { ProSettingsEntry, ProSettingsEntryTitle, ProStatsHeader } from '../locators/pro';
 import { UserSettings } from '../locators/settings';
 import { forceStopAndRestart } from './utilities';
 
@@ -44,6 +45,31 @@ export async function observeProGrant(device: DeviceWrapper): Promise<void> {
       skipHealing: true,
     });
     await device.navigateBack();
-    await device.clickOnElementAll(new CloseSettings(device));
+    // Back on the parent list, assert the row agrees. It reads the fetched STATUS where the stats
+    // header above reads the active plan, and the two can disagree — a client can hold a good proof,
+    // apply the Pro message cap, and still offer to sell you Pro here. Free to check: the row is on
+    // screen anyway on the way out.
+    await assertProFromSettingsRow(device);
   });
+}
+
+/**
+ * Assert the client currently believes it is Pro, cheaply and without changing what it believes.
+ *
+ * Reads the Pro row's title on the **parent** settings screen, which no client refreshes on opening —
+ * verified in source on all three, so this observes the status the client already held rather than
+ * provoking a fetch that would answer the question being asked. The boundary is exact: the parent list
+ * is passive, tapping the row is not, so this must read and leave.
+ *
+ * Distinct from asserting a Pro *feature* works. Feature gating reads the proof; this row reads the
+ * fetched status, and a restore is where the two come apart.
+ *
+ * Leaves the app on the home screen. Expects settings to be open already.
+ */
+export async function assertProFromSettingsRow(device: DeviceWrapper): Promise<void> {
+  await device.waitForTextElementToBePresent({
+    ...new ProSettingsEntryTitle(device).build(),
+    text: tStripped('sessionProBeta'),
+  });
+  await device.clickOnElementAll(new CloseSettings(device));
 }
