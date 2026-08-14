@@ -6,11 +6,16 @@ export type CTAType =
   | 'donate'
   | 'longerMessages'
   | 'pinnedConversations'
-  | 'proExpired';
+  | 'proExpired'
+  | 'proExpiringSoon';
 
 export type CTAConfig = {
   heading: string;
-  body: string;
+  /**
+   * Omitted where the copy interpolates data the table cannot know — the expiring-soon body carries
+   * the remaining time, which differs per platform fixture. A spec that cares asserts it itself.
+   */
+  body?: string;
   negativeButton?: string;
   positiveButton?: string;
   features?: string[];
@@ -51,6 +56,16 @@ export const ctaConfigs: Record<CTAType, CTAConfig> = {
   },
   // Shown on app open once a subscriber's Pro access has expired, on both platforms — not on opening
   // the Pro entry in settings. On Android it also blocks the route to settings until dismissed.
+  proExpiringSoon: {
+    heading: tStripped('proExpiringSoon'),
+    negativeButton: tStripped('close'),
+    positiveButton: tStripped('update'),
+    features: [
+      tStripped('proFeatureListLongerMessages'),
+      tStripped('proFeatureListPinnedConversations'),
+      tStripped('proFeatureListAnimatedDisplayPicture'),
+    ],
+  },
   proExpired: {
     heading: tStripped('proExpired'),
     body: tStripped('proExpiredDescription'),
