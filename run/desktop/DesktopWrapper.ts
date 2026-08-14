@@ -649,7 +649,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
 
   public async checkCTAStrings(
     expectedHeading: string,
-    expectedBody: string,
+    expectedBody: string | undefined,
     expectedButtons: Array<string>,
     expectedFeatures?: Array<string>,
     bodyMatch: 'contains' | 'exact' = 'exact'

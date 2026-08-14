@@ -34,6 +34,14 @@ export function buildAndroidLaunchExtras(context?: ProMockContext): string | und
   if (context?.proLoadingState) {
     extras.push(`--es sessionProLoadingState ${context.proLoadingState}`);
   }
+  // Overrides `renewingAt` on an expiring subscriber, which is the field the home screen's
+  // expiring-soon warning reads — so `active` plus a near expiry reaches that state without a
+  // dedicated token. A token would also have to live in `sessionProBackendStatus`, whose value space
+  // is the backend's own slugs and is deliberately open to future ones, so a test-only value there
+  // could be shadowed by a real slug later and fail silently as "not subscribed".
+  if (context?.proAccessExpiry) {
+    extras.push(`--es sessionProAccessExpiry ${context.proAccessExpiry}`);
+  }
 
   if ((process.env.NETWORK_TARGET ?? '').trim()) {
     const network = getServiceNetwork();

@@ -53,15 +53,6 @@ export type IOSTestContext = ProMockContext & {
     | 'testFlight'
     | 'useActual';
   /**
-   * Access expiry, in seconds since epoch. Float-quantised inside the app, so assert a range or a
-   * rendered string — never exact equality.
-   *
-   * PAIR THIS WITH `proBackendStatus: 'active'`. Each mock defaults to "use the actual value", so an
-   * `active` status on an account that never subscribed inherits a zero expiry and the app renders
-   * an expiring-soon screen — which then sits over the UI and fails later steps on missing elements.
-   */
-  proAccessExpiry?: string;
-  /**
    * Point the app at a QA Pro backend instead of the compiled-in production one.
    *
    * Set BOTH, and set them on EVERY device in a multi-device test: the pubkey is what libSession

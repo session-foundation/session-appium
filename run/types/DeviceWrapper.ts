@@ -2952,6 +2952,9 @@ export class DeviceWrapper implements IMobileWrapper {
 
     // iOS may split the body around inline images, producing multiple cta-body elements.
     // Wait for the first, then find all and check that the expected text appears in any of them.
+    if (body === undefined) {
+      return;
+    }
     await this.waitForTextElementToBePresent(new CTABody(this));
     const { strategy, selector } = new CTABody(this).build();
     const bodyElements = await this.findElements(strategy, selector, true);

@@ -45,6 +45,7 @@ const PRO_ENV_KEYS = [
   'SESSION_USER_HAS_PRO_CANCELLED',
   'SESSION_PRO_BACKEND_LOADING',
   'SESSION_PRO_BACKEND_ERROR',
+  'SESSION_PRO_BACKEND_SUCCESS',
 ] as const;
 
 /**
@@ -93,6 +94,12 @@ export function applyProMocks(context?: DesktopProContext) {
   }
   if (context.proLoadingState === 'error') {
     process.env.SESSION_PRO_BACKEND_ERROR = '1';
+  }
+  // Reaches the expiry CTAs with no backend: the arming decision is made from a *fetched* response, so
+  // a status mock alone never gets as far as making it. This runs the real `handleExpiryCTAs` over the
+  // mocked values instead, and suppresses the startup fetch so a genuine answer cannot overwrite it.
+  if (context.proLoadingState === 'success') {
+    process.env.SESSION_PRO_BACKEND_SUCCESS = '1';
   }
 
   console.info(
