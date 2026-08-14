@@ -41,6 +41,7 @@ export type DesktopProContext = ProMockContext & {
 const PRO_ENV_KEYS = [
   'SESSION_PRO',
   'SESSION_PRO_CURRENT_STATUS',
+  'SESSION_PRO_MOCK_PROOF',
   'SESSION_PRO_ACCESS_EXPIRY',
   'SESSION_USER_HAS_PRO_CANCELLED',
   'SESSION_PRO_BACKEND_LOADING',
@@ -80,6 +81,20 @@ export function applyProMocks(context?: DesktopProContext) {
   }
   if (context.proAccessExpiry) {
     process.env.SESSION_PRO_ACCESS_EXPIRY = context.proAccessExpiry;
+  }
+  // The ACCESS half. `SESSION_PRO_CURRENT_STATUS` above says what state the plan is in and grants
+  // nothing, so a fixture wanting an ordinary Pro user sets both — the pair is only interesting when
+  // they disagree.
+  //
+  // The lowercasing is LOAD-BEARING, not tidiness: Desktop's value vocabulary is lowercase and it
+  // *throws at flag-init* on anything else, so passing the contract's `useActual` through verbatim
+  // stops the renderer starting rather than failing a test. Deliberately fixed here rather than by
+  // making the app tolerate both cases — one layer owns per-platform translation (the status field
+  // above does the same), and two layers each half-tolerating leaves nobody able to say which is
+  // responsible.
+  if (context.proProof) {
+    process.env.SESSION_PRO_MOCK_PROOF =
+      context.proProof === 'useActual' ? 'useactual' : context.proProof;
   }
   // Only for a mocked-active plan: that is the case where `active` has to mean the same thing on all
   // three clients. Forcing it for an unmocked context would mock away part of a real grant.
