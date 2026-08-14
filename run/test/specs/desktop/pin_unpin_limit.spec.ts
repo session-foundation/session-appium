@@ -80,7 +80,9 @@ test_Alice_1W(
     await alice.hasElementPoppedUpThatShouldnt(CTA.heading);
   },
   {
-    pro: { proBackendStatus: 'active', proAccessExpiry: 'P30D' },
+    // The pinned limit is an ACCESS question, so it reads the proof rather than the plan's state — a
+    // status-only fixture would pin like a free user and fail here for the wrong reason.
+    pro: { proBackendStatus: 'active', proAccessExpiry: 'P30D', proProof: 'valid' },
     communityRooms: COMMUNITY_COUNT,
   }
 );

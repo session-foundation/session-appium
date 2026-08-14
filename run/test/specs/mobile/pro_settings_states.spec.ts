@@ -128,6 +128,8 @@ async function proSettingsSubscribed(platform: SupportedPlatformsType, testInfo:
   const device = await openSettingsAsNewUser(platform, testInfo, {
     sessionProEnabled: 'true',
     proBackendStatus: 'active',
+    // The plan's state grants nothing; the proof is what every feature on this screen reads.
+    proProof: 'valid',
     proAccessExpiry: accessExpiry(),
   });
 

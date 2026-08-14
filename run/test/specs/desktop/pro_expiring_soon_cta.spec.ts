@@ -8,6 +8,10 @@ const EXPIRING_SOON = {
   autoRenewing: false,
   // Load-bearing: the CTA arms only on a confirmed status fetch, which a mocked expiry alone is not.
   proLoadingState: 'success',
+  // Someone about to lapse still holds a usable proof — that is what makes the warning worth showing.
+  // The CTA itself is a DISPLAY question and does not read this; it is here so the fixture describes a
+  // real subscriber rather than an entitlement-less account that merely claims to be one.
+  proProof: 'valid',
 } as const;
 
 /**

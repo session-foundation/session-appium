@@ -17,8 +17,13 @@ const STANDARD_MAX_CHARS = 2000;
  * proof arrived to justify the extra length, and the sender's own copy keeps the full text — so the
  * conversation holds two different messages and neither participant is told.
  *
- * The fixture needs no grant and no restore. A mocked active status supplies the status half while the
- * config stays empty, which is the state exactly: entitlement claimed, nothing to prove it with.
+ * The fixture needs no grant and no restore. `proBackendStatus` supplies the status half and grants
+ * nothing; `proProof: 'none'` denies the access half explicitly. That is the state exactly: entitlement
+ * claimed, nothing to prove it with.
+ *
+ * Both values are set deliberately. Until 2026-08-14 the status mock also granted access, so this state
+ * was unreachable and this spec could not have measured what it claims to — it would have passed by
+ * offering the Pro limit and failing for the reason it exists to catch.
  */
 test_Alice_1W_Bob_1W(
   'No Pro proof means no Pro message limit',
@@ -34,5 +39,5 @@ test_Alice_1W_Bob_1W(
       options: { text: String(STANDARD_MAX_CHARS - OVER_STANDARD) },
     });
   },
-  { pro: { proBackendStatus: 'active', proLoadingState: 'success' } }
+  { pro: { proBackendStatus: 'active', proLoadingState: 'success', proProof: 'none' } }
 );
