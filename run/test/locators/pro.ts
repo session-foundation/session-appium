@@ -206,6 +206,23 @@ export class ProSettingsEntry extends LocatorsInterface {
   }
 }
 
+/**
+ * The Pro row's TITLE in the user settings list, whose text is the account's Pro state.
+ *
+ * Separate from `ProSettingsEntry`, which is the tap target and carries no text of its own on either
+ * platform — so the row's state is only readable through this one.
+ */
+export class ProSettingsEntryTitle extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'pro-menu-item-title' } as const;
+      case 'ios':
+        return { strategy: 'accessibility id', selector: 'pro-menu-item-title' } as const;
+    }
+  }
+}
+
 /** Header above the four usage counters, shown only once Pro is active. */
 export class ProStatsHeader extends LocatorsInterface {
   public build(): StrategyExtractionObj {
