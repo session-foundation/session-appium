@@ -31,7 +31,10 @@ sessionTestTwoWindows(
     // fetched a real entitlement rather than merely rendering a Pro screen.
     await restored.clickOn(LeftPane.settingsButton);
     await restored.clickOn(Settings.proMenuItem, { maxWait: 60_000 });
-    await restored.waitForElement({ locator: ProSettings.statsHeader, options: { maxWaitMs: 60_000 } });
+    await restored.waitForElement({
+      locator: ProSettings.statsHeader,
+      options: { maxWaitMs: 60_000 },
+    });
   },
   { pro: {} }
 );
