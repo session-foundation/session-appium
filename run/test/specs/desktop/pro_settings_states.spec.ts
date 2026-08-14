@@ -36,7 +36,9 @@ test_Alice_1W(
 
     await alice.hasElementPoppedUpThatShouldnt(ProSettings.renewPlanButton);
   },
-  { pro: { proBackendStatus: 'active', proAccessExpiry: 'P30D' } }
+  // A subscribed user holds both halves: `proBackendStatus` is the plan's state and grants nothing,
+  // `proProof` is the entitlement every feature on this screen reads.
+  { pro: { proBackendStatus: 'active', proAccessExpiry: 'P30D', proProof: 'valid' } }
 );
 
 test_Alice_1W(
