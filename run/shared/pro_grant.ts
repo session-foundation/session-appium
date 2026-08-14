@@ -32,6 +32,15 @@ export type ProAccountUnderTest = {
   recoveryPhrase: string;
 };
 
+/**
+ * An entitlement short enough to sit inside every client's expiry-warning window, which is seven days
+ * on all three — far enough from the boundary that a slow run cannot cross it.
+ *
+ * Stated rather than inherited from a plan: the QA backend's compressed clock shortens *proof* expiry,
+ * not the account entitlement, so a nominal `1M` plan really does land 30 days out.
+ */
+export const EXPIRING_SOON_ENTITLEMENT_SECONDS = 2 * 24 * 60 * 60;
+
 type MakeAccountProParams = {
   user: ProAccountUnderTest;
   // Provider is derived from the platform (ios -> apple, android -> google) unless an explicit
@@ -40,6 +49,11 @@ type MakeAccountProParams = {
   provider?: PaymentProvider;
   /** Billing period to grant (default `1M`). */
   plan?: '12M' | '1M' | '3M';
+  /**
+   * Override the plan's nominal length, in seconds, for a spec that needs the entitlement to end at a
+   * particular distance from now. See `EXPIRING_SOON_ENTITLEMENT_SECONDS`.
+   */
+  durationSeconds?: number;
   dryRun?: boolean; // If true, build and print the request but don't send it
 };
 
@@ -287,7 +301,14 @@ function assertNotSharedAdminAccount(seedHex: string, userName: string): void {
 export async function makeAccountPro(
   params: MakeAccountProParams
 ): Promise<DevAddPaymentResult | null> {
-  const { user, platform, provider: providerParam, plan = '1M', dryRun = false } = params;
+  const {
+    user,
+    platform,
+    provider: providerParam,
+    plan = '1M',
+    durationSeconds,
+    dryRun = false,
+  } = params;
   const provider: PaymentProvider = providerParam ?? (platform === 'ios' ? 'apple' : 'google');
   // The master Pro key is derived from the account's recovery phrase, so the grant binds to the
   // account the test just created without the app having to tell us anything.
@@ -314,6 +335,7 @@ export async function makeAccountPro(
     master_pkey: Buffer.from(masterKey.publicKey).toString('hex'),
     provider: PROVIDER_CODE[provider],
     plan,
+    ...(durationSeconds === undefined ? {} : { duration: durationSeconds }),
   };
 
   const backendUrl = devProBackendUrl();
@@ -325,6 +347,21 @@ export async function makeAccountPro(
   }
 
   const result = await devAddPayment(backendUrl, request);
+
+  // A backend that ignored `duration` returns the plan's full length instead — 30 days where a spec
+  // asked for two — and the only symptom is whatever that spec expected of a near expiry quietly not
+  // happening. The tolerance is an hour because the gap being caught is orders of magnitude larger.
+  if (durationSeconds !== undefined && result.account_expiry_ts) {
+    const grantedSeconds = result.account_expiry_ts - Math.floor(Date.now() / 1000);
+    if (grantedSeconds > durationSeconds + 3600) {
+      throw new Error(
+        `makeAccountPro: asked for a ${durationSeconds}s entitlement but the backend granted ` +
+          `${grantedSeconds}s (until ${new Date(result.account_expiry_ts * 1000).toISOString()}). ` +
+          `The \`duration\` override was not applied, so any expiry-window assertion downstream would ` +
+          `be testing the plan's nominal length instead.`
+      );
+    }
+  }
 
   // `redeemed: false` means the payment was minted but left unbound. Redemption is implicit, so the
   // account holder's next authenticated request reconciles it — but the app won't be Pro yet at the
