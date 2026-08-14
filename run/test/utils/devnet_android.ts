@@ -42,6 +42,12 @@ export function buildAndroidLaunchExtras(context?: ProMockContext): string | und
   if (context?.proAccessExpiry) {
     extras.push(`--es sessionProAccessExpiry ${context.proAccessExpiry}`);
   }
+  // The ACCESS half, deliberately separate from `sessionProBackendStatus` above: the status extra says
+  // what state the plan is in and grants nothing on its own. Splitting them is what makes an
+  // active-plan-with-no-proof client expressible, which is the state the silent-truncation bug lives in.
+  if (context?.proProof) {
+    extras.push(`--es sessionProProof ${context.proProof}`);
+  }
 
   if ((process.env.NETWORK_TARGET ?? '').trim()) {
     const network = getServiceNetwork();
