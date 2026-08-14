@@ -9,7 +9,7 @@ import { UserSettings } from '../../locators/settings';
 import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { newUser } from '../../utils/create_account';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from '../../utils/open_app';
-import { forceStopAndRestart } from '../../utils/utilities';
+import { observeProGrant } from '../../utils/pro_refresh';
 
 bothPlatformsIt({
   title: 'Pro survives a restore from seed',
@@ -45,9 +45,9 @@ async function proSurvivesRestore(platform: SupportedPlatformsType, testInfo: Te
 
   await test.step('Alice becomes a Pro subscriber', async () => {
     await makeAccountPro({ user: alice, platform });
-    // The grant is only observed on a fresh launch; the client caches its Pro status otherwise.
-    await forceStopAndRestart(device1);
-    await device1.dismissCTA();
+    // Observed on device1 first so the restore has something synced to find: the expiry this writes to
+    // config is what device2's own startup fetch is gated on.
+    await observeProGrant(device1);
   });
 
   await test.step('Restore the account onto a device that has never seen it', async () => {

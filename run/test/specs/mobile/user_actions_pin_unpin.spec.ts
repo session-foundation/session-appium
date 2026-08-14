@@ -16,7 +16,7 @@ import {
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
-import { forceStopAndRestart } from '../../utils/utilities';
+import { observeProGrant } from '../../utils/pro_refresh';
 
 /** The pinned-conversation limit for a standard account. */
 const STANDARD_PIN_LIMIT = 5;
@@ -165,8 +165,7 @@ async function proPinnedLimit(platform: SupportedPlatformsType, testInfo: TestIn
     return { device, alice };
   });
   await makeAccountPro({ user: alice, platform });
-  await forceStopAndRestart(device);
-  await device.dismissCTA();
+  await observeProGrant(device);
   await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITIES(numCommunities), async () => {
     await joinCommunities(device, numCommunities);
   });

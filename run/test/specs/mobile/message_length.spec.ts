@@ -26,7 +26,7 @@ import {
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
-import { forceStopAndRestart } from '../../utils/utilities';
+import { observeProGrant } from '../../utils/pro_refresh';
 
 const STANDARD_MAX_CHARS = 2000;
 const PRO_MAX_CHARS = 10000;
@@ -136,9 +136,7 @@ for (const testCase of messageLengthTestCases) {
 
       if (testCase.pro) {
         await makeAccountPro({ user: alice, platform });
-        // Restart to notify app of Pro status change
-        await forceStopAndRestart(device);
-        await device.dismissCTA();
+        await observeProGrant(device);
         if (recipientName) {
           await device.clickOnElementAll(new ConversationItem(device, recipientName));
         }
