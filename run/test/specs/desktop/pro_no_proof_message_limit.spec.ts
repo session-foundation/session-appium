@@ -6,6 +6,18 @@ const OVER_STANDARD = 3000;
 const STANDARD_MAX_CHARS = 2000;
 
 /**
+ * The countdown is rendered through `Intl.NumberFormat`, so the raw number never appears — a
+ * four-figure remainder carries a group separator. Asserted as the formatted string rather than
+ * built by hand, because the two must agree for the same reason the app formats at all.
+ *
+ * Nothing caps the input: the composer lets the count go negative and the send gate is what refuses,
+ * so this is the value the user actually sees while over the limit.
+ */
+const EXPECTED_REMAINING = new Intl.NumberFormat('en-US').format(
+  STANDARD_MAX_CHARS - OVER_STANDARD
+);
+
+/**
  * A client that believes it is Pro but holds no proof must not offer the Pro message limit.
  *
  * Pro *status* and a Pro *proof* answer different questions: the status is the plan's state, which only
@@ -36,7 +48,7 @@ test_Alice_1W_Bob_1W(
     await alice.pasteIntoInput('message-input-text-area', 'z'.repeat(OVER_STANDARD));
     await alice.waitForElement({
       locator: Conversation.tooltipCharacterCount,
-      options: { text: String(STANDARD_MAX_CHARS - OVER_STANDARD) },
+      options: { text: EXPECTED_REMAINING },
     });
   },
   { pro: { proBackendStatus: 'active', proLoadingState: 'success', proProof: 'none' } }
