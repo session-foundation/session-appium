@@ -51,6 +51,10 @@ async function proNoProofMessageLimit(platform: SupportedPlatformsType, testInfo
   const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, {
     ...iosActiveProContext(),
     proLoadingState: 'success',
+    // Overrides the shared context's `valid`, and the override IS the subject: this fixture is a plan
+    // that reads active with nothing to prove it. Spread order matters — `iosActiveProContext` means
+    // "an ordinary Pro user" and so grants both halves, where this spec needs exactly one.
+    proProof: 'none',
   });
 
   const alice = await test.step(TestSteps.SETUP.NEW_USER, async () => {
@@ -71,9 +75,12 @@ async function proNoProofMessageLimit(platform: SupportedPlatformsType, testInfo
     // The countdown reflects the limit the client is applying, so it fails here rather than after a
     // send, where the only evidence would be a length mismatch between two devices.
     await device.inputText('x'.repeat(OVER_STANDARD), new MessageInput(device), true);
-    await device.waitForTextElementToBePresent(
-      new MessageLengthCountdown(device, String(STANDARD_MAX_CHARS - OVER_STANDARD))
-    );
+    // Its PRESENCE is the assertion, not its value. The countdown only appears within 200 of the
+    // limit, so at this length it is shown under the standard limit and absent under the Pro one —
+    // which is exactly the question. Deliberately not matched on text: the remainder here is
+    // four figures and each client abbreviates it differently (iOS renders `-1K`), so a literal
+    // would assert the formatter rather than the limit.
+    await device.waitForTextElementToBePresent(new MessageLengthCountdown(device));
   });
 
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

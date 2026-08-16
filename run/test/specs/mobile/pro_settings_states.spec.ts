@@ -175,6 +175,15 @@ async function proSettingsExpired(platform: SupportedPlatformsType, testInfo: Te
   const device = await openAppAsNewUser(platform, testInfo, {
     sessionProEnabled: 'true',
     proBackendStatus: 'expired',
+    // Load-bearing, and only since the startup fetch gate landed: the CTA arms on a CONFIRMED status,
+    // and a client holding no proof and no access expiry is exactly the case the gate declines to
+    // fetch for — so a mocked status alone is never confirmed and no CTA can appear. Forcing the
+    // loading state supplies the confirmation a real lapsed subscriber would get from their own
+    // expiry being in config.
+    proLoadingState: 'success',
+    // A lapsed subscriber has an expiry, and it is in the past. Without one the account is
+    // indistinguishable from never-subscribed as far as anything reading local state is concerned.
+    proAccessExpiry: String(Math.floor(Date.now() / 1000) - 24 * 60 * 60),
   });
 
   await test.step('Verify the expiry CTA on app open', async () => {
