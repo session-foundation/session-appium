@@ -122,7 +122,12 @@ export function resolvePaths({ requireTools = true } = {}): AndroidPaths {
   if (!existsSync(join(paths.sdkRoot, systemImageRelPath(), 'system.img'))) {
     throw new Error(
       `System image missing: ${systemImage()}\n` +
-        `Install it via Android Studio > SDK Manager > SDK Platforms > tick "Show Package Details" ` +
+        `Install it with:\n` +
+        // Quoted: the package name's `;` separators are shell metacharacters, and `--sdk_root` is
+        // passed explicitly so the install lands in the root resolved above rather than whatever
+        // sdkmanager infers from its own location or the caller's environment.
+        `  "${paths.sdkmanager}" --sdk_root="${paths.sdkRoot}" "${systemImage()}"\n` +
+        `or via Android Studio > SDK Manager > SDK Platforms > tick "Show Package Details" ` +
         `> Android ${PLATFORM_VERSION}.0 > the "Google Play" image for your ABI.`
     );
   }
