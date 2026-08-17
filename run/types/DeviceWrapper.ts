@@ -89,7 +89,12 @@ import { androidAppPackage } from '../test/utils/capabilities_android';
 import { parseDataImage } from '../test/utils/check_colour';
 import { isSameColor } from '../test/utils/check_colour';
 import { restoreAccountNoFallback } from '../test/utils/restore_account';
-import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/utils/utilities';
+import {
+  isDeviceAndroid,
+  isDeviceIOS,
+  runScriptAndLog,
+  runScriptOrThrow,
+} from '../test/utils/utilities';
 import { CTAConfig, ctaConfigs, CTAType } from './cta';
 import {
   AccessibilityId,
@@ -2197,7 +2202,7 @@ export class DeviceWrapper implements IMobileWrapper {
       this.warn(
         `pushMediaToDevice on iOS is deprecated. Consider pre-loading it on simulator creation`
       );
-      await runScriptAndLog(`xcrun simctl addmedia ${this.udid} ${filePath}`, true);
+      await runScriptOrThrow(`xcrun simctl addmedia ${this.udid} ${filePath}`, true);
     } else if (this.isAndroid()) {
       const ANDROID_DOWNLOAD_DIR = '/storage/emulated/0/Download';
       // Clear downloads folder at runtime before pushing
@@ -2205,11 +2210,22 @@ export class DeviceWrapper implements IMobileWrapper {
         `${getAdbFullPath()} -s ${this.udid} shell rm -rf ${ANDROID_DOWNLOAD_DIR}/*`,
         true
       );
-      // Push file
-      await runScriptAndLog(
+      // Throws rather than logs: the clear above means a failed push leaves the device with NO media,
+      // so the spec fails later on a missing picker entry with nothing pointing back here.
+      await runScriptOrThrow(
         `${getAdbFullPath()} -s ${this.udid} push ${filePath} ${ANDROID_DOWNLOAD_DIR}`,
         true
       );
+      // Asserted rather than assumed. `adb push` exiting 0 is not the same as the file being there,
+      // and this is the check that survives whatever the next tool decides to print.
+      const listing = await runScriptOrThrow(
+        `${getAdbFullPath()} -s ${this.udid} shell ls ${ANDROID_DOWNLOAD_DIR}/${mediaFileName}`
+      );
+      if (!listing.includes(mediaFileName)) {
+        throw new Error(
+          `pushMediaToDevice: ${mediaFileName} is absent from ${this.udid} after the push (got "${listing.trim()}")`
+        );
+      }
       // Refreshes the photos UI to force the image to appear
       await runScriptAndLog(
         `${getAdbFullPath()} -s ${this.udid} shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file://${ANDROID_DOWNLOAD_DIR}/${mediaFileName}`,
