@@ -9,11 +9,14 @@ import {
 import { DriverOpts } from 'appium/build/lib/appium';
 import { compact } from 'lodash';
 
+import type { ProMockContext } from './pro_context';
+
 import { recoverEmulator } from '../../../scripts/emulator_health';
 import { sleepFor } from '../../shared/promise_utils';
 import { AndroidDeviceWrapper } from '../../types/AndroidDeviceWrapper';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { IosDeviceWrapper } from '../../types/IosDeviceWrapper';
+import { CreateAccountButton } from '../locators/onboarding';
 import { getAdbFullPath, getDevicesPerTestCount } from './binaries';
 import {
   androidAppPackage,
@@ -29,7 +32,8 @@ import {
   IOSTestContext,
 } from './capabilities_ios';
 import { registerDevicesForTest } from './device_registry';
-import { runScriptAndLog } from './utilities';
+import { androidNeedsQaConfigRelaunch } from './devnet_android';
+import { forceStopAndRestart, runScriptAndLog } from './utilities';
 
 const APPIUM_PORT = 4728;
 
@@ -68,7 +72,8 @@ const openAppOnPlatform = async (
   console.info('starting capabilitiesIndex', capabilitiesIndex, platform);
   return platform === 'ios'
     ? openiOSApp(capabilitiesIndex, testInfo, iOSContext)
-    : openAndroidApp(capabilitiesIndex, testInfo);
+    : // Only the shared Pro mock fields cross over; the rest of IOSTestContext is iOS-specific.
+      openAndroidApp(capabilitiesIndex, testInfo, iOSContext);
 };
 
 export const openAppOnPlatformSingleDevice = async (
@@ -200,7 +205,8 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
 
 const openAndroidApp = async (
   capabilitiesIndex: CapabilitiesIndexType,
-  testInfo: TestInfo
+  testInfo: TestInfo,
+  proContext?: ProMockContext
 ): Promise<{
   device: DeviceWrapper;
 }> => {
@@ -242,12 +248,7 @@ const openAndroidApp = async (
   await waitForEmulatorToBeRunning(targetName);
   console.log(targetName, ' emulator booted');
 
-  const capabilities = getAndroidCapabilities(actualCapabilitiesIndex);
-  console.log(
-    `Android App Full Path: ${
-      getAndroidCapabilities(actualCapabilitiesIndex)['alwaysMatch']['appium:app'] as any
-    }`
-  );
+  const capabilities = getAndroidCapabilities(actualCapabilitiesIndex, proContext);
   console.info('capabilities', capabilities);
 
   const opts: DriverOpts = {
@@ -280,6 +281,35 @@ const openAndroidApp = async (
     enableMultiWindows: true,
     disableIdLocatorAutocompletion: true,
   });
+
+  // Granted up front so Android's POST_NOTIFICATIONS prompt never fires mid-test. From API 33 it
+  // appears the first time the app posts a notification — i.e. whenever a message happens to arrive —
+  // so it lands at an arbitrary point and covers whatever the spec was doing. A spec that wants to
+  // assert the prompt itself should revoke and relaunch; see `setNotificationPermission`.
+  await wrappedDevice.setNotificationPermission(true);
+
+  // Registered here rather than only in the callers below, which register once the opener RETURNS.
+  // Everything between this line and that one — the QA relaunch, onboarding, the first wait for the
+  // landing screen — was a blind spot: a failure there produced no screenshot, no page source and no
+  // device log, because capture is keyed on the registry and nothing was in it yet. That is exactly
+  // where the intermittent "Create account button not found" lands, which is why it was so hard to
+  // diagnose. Registration merges and deduplicates by udid, so the caller's call is a no-op.
+  await registerDevicesForTest(testInfo, [wrappedDevice]);
+
+  // `QaLaunchConfig` persists the launch extras rather than applying them to the running process (its
+  // consumers are app-scoped singletons that may resolve either side of the first activity), so they
+  // only take effect on the next launch. Restart here, before the spec gets the device, rather than
+  // leaving it to each spec: without it a spec that onboards immediately would create its account on
+  // whichever network the build defaulted to, which surfaces as an unexplained network failure rather
+  // than a config problem.
+  //
+  // `forceStopAndRestart`'s default readiness wait is the home-screen PlusButton, which doesn't exist
+  // yet — the app is a fresh install sitting on onboarding — so wait for the landing screen instead.
+  if (androidNeedsQaConfigRelaunch(proContext)) {
+    await forceStopAndRestart(wrappedDevice, false);
+    await wrappedDevice.waitForTextElementToBePresent(new CreateAccountButton(wrappedDevice));
+  }
+
   return { device: wrappedDevice };
 };
 

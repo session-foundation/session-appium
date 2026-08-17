@@ -90,21 +90,34 @@ export type DisappearOptsGroup = [
 
 export type MergedOptions = DisappearOpts1o1 | DisappearOptsGroup;
 
+/**
+ * `text` and `label` are both "match this element's visible content", but they read different
+ * attributes and are not interchangeable.
+ *
+ * `text` goes through `getText`, which reads the element's *value*. That is the right thing almost
+ * everywhere — but on iOS an accessibility identifier becomes the element's `name` and pushes the
+ * display text out to `label`, so once an element has an id its text is no longer reachable that way.
+ * `label` exists for exactly that case, and it is what removes the need for xpath when a spec has to
+ * assert "this identifier AND this message".
+ */
 export type StrategyExtractionObj =
   | {
       strategy: Extract<Strategy, '-android uiautomator'>;
       selector: UiAutomatorQuery;
       text?: string;
+      label?: string;
     }
   | {
       strategy: Extract<Strategy, 'accessibility id'>;
       selector: AccessibilityId;
       text?: string;
+      label?: string;
     }
   | {
       strategy: Extract<Strategy, 'class name'>;
       selector: string;
       text?: string;
+      label?: string;
     }
   | {
       strategy: Extract<Strategy, 'DMTimeOption'>;
@@ -114,11 +127,13 @@ export type StrategyExtractionObj =
       strategy: Extract<Strategy, 'id'>;
       selector: Id;
       text?: string;
+      label?: string;
     }
   | {
       strategy: Extract<Strategy, 'xpath'>;
       selector: XPath;
       text?: string;
+      label?: string;
     };
 
 export type XPath =
@@ -126,6 +141,9 @@ export type XPath =
   | `(//android.widget.ImageView[@resource-id="network.loki.messenger:id/thumbnail"])[1]`
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
+  | `//*[@name="${string}"][@label="${string}"]`
+  | `//*[@name="${string}"][contains(@label, "${string}")]`
+  | `//*[@name="${string}"]//XCUIElementTypeStaticText[@name="${string}"]`
   | `//*[@resource-id='network.loki.messenger:id/callTitle' and contains(@text, ':')]`
   | `//*[starts-with(@content-desc, "GIF taken on")]`
   | `//*[starts-with(@content-desc, "Photo taken on")]`
@@ -171,6 +189,7 @@ export type UiAutomatorQuery =
   | `new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().textStartsWith(${string}))`
   | `new UiSelector().resourceId("Conversation header name").childSelector(new UiSelector().resourceId("pro-badge-text"))`
   | `new UiSelector().resourceId(${string}).childSelector(new UiSelector().className("android.widget.TextView"))`
+  | `new UiSelector().resourceId(${string}).childSelector(new UiSelector().resourceId(${string}))`
   | `new UiSelector().text(${string})`;
 
 export type AccessibilityId =
@@ -232,6 +251,7 @@ export type AccessibilityId =
   | 'Continue button'
   | 'Continue with settings'
   | 'Control message'
+  | 'conversation-header-pro-badge'
   | 'Conversation header name'
   | 'Conversation list item'
   | 'Conversations'
@@ -370,6 +390,17 @@ export type AccessibilityId =
   | 'Photos'
   | 'Pin'
   | 'Please enter a shorter group name'
+  | 'pro-badge-icon'
+  | 'pro-menu-item'
+  | 'pro-settings-features-header'
+  | 'pro-settings-manage-header'
+  | 'pro-settings-renew-plan'
+  | 'pro-settings-show-badge-toggle'
+  | 'pro-settings-show-badge'
+  | 'pro-settings-stats-header'
+  | 'pro-settings-status-banner'
+  | 'pro-settings-update-plan-subtitle'
+  | 'pro-settings-update-plan'
   | 'rate-app-button'
   | 'Read Receipts - Switch'
   | 'Recents'
@@ -475,6 +506,7 @@ export type Id =
   | 'Contact'
   | 'Contact status'
   | 'Continue'
+  | 'conversation-header-pro-badge'
   | 'conversation-options-avatar'
   | 'Conversation header name'
   | 'Conversations'
@@ -589,7 +621,18 @@ export type Id =
   | 'preferred-display-name'
   | 'Privacy'
   | 'Privacy policy button'
+  | 'pro-badge-icon'
   | 'pro-badge-text'
+  | 'pro-menu-item'
+  | 'pro-settings-features-header'
+  | 'pro-settings-manage-header'
+  | 'pro-settings-renew-plan'
+  | 'pro-settings-show-badge-toggle'
+  | 'pro-settings-show-badge'
+  | 'pro-settings-stats-header'
+  | 'pro-settings-status-banner'
+  | 'pro-settings-update-plan-subtitle'
+  | 'pro-settings-update-plan'
   | 'promote-members-menu-option'
   | 'Promote'
   | 'qa-collapsing-footer-action_invite'

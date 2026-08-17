@@ -110,7 +110,9 @@ for (const testCase of messageLengthTestCases) {
         await device.clickOnElementAll(new PlusButton(device));
         await device.clickOnElementAll(new NewMessageOption(device));
         await device.inputText(alice.accountID, new EnterAccountID(device));
-        await device.scrollDown();
+        // The keyboard covers Next on smaller screens. Do NOT swipe here: this is a bottom sheet, so
+        // a scroll drags the sheet and the tap silently misses.
+        await device.hideKeyboard();
         await device.clickOnElementAll(new NextButton(device));
       });
 

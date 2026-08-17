@@ -4,21 +4,141 @@ import { W3CXCUITestDriverCaps } from 'appium-xcuitest-driver/build/lib/driver';
 import dotenv from 'dotenv';
 import { existsSync } from 'fs';
 
+import type { ProMockContext } from './pro_context';
+
 import { WDA_DERIVED_DATA_PATH, WDA_PREBUILT_APP_PATH } from '../../../scripts/build_wda';
 import { resolveRunSimulators, type Simulator } from '../../../scripts/ios_shared';
 import { IntRange } from '../../types/RangeType';
 import { getResolvedDevnetSeedNode, getServiceNetwork } from './network_target';
+import { getProBackendOverride } from './pro_backend';
 
 dotenv.config({ quiet: true });
 
-export type IOSTestContext = {
+/**
+ * Per-test overrides injected into the app's launch-arg env
+ * (`DeveloperSettingsViewModel.processUnitTestEnvVariablesIfNeeded` in Session_iOS, compiled only
+ * under `#if targetEnvironment(simulator)`).
+ *
+ * The `pro*` fields simulate what the backend reports, letting a test reach the Pro screens without
+ * a purchase, a second device, or a reachable backend. They are DISPLAY-LEVEL by design — the iOS
+ * source says the mocks are "only reflected in the UI" — so they cover screens, copy and CTAs, but
+ * NOT anything requiring a real cryptographic proof (a Pro badge a peer verifies, long messages the
+ * network accepts). Those need a genuine entitlement via `makeAccountPro`.
+ *
+ * `sessionProEnabled` is the master gate: the other `pro*` values are ignored unless it is `'true'`.
+ * Every mock also accepts `'useActual'`, meaning "don't mock this one".
+ *
+ * The values are the app's own wire codes rather than prettier synonyms, so the test contract reads
+ * the same as what the backend actually sends. Typing them as unions is deliberate — an unrecognised
+ * value is silently ignored by the app, which would yield a passing *default-state* test rather than
+ * a failure, so the typo has to be caught here.
+ */
+export type IOSTestContext = ProMockContext & {
   customInstallTime?: string;
   sessionProEnabled?: string;
+  /** Platform the subscription was originally purchased on. */
+  proOriginatingPlatform?: 'android' | 'iOS' | 'useActual';
+  /** Whether the store account matches the one that bought the subscription. */
+  proOriginatingAccount?: 'nonOriginatingAccount' | 'originatingAccount' | 'useActual';
+  /** Whether a refund has already been requested. */
+  proRefundingStatus?: 'notRefunding' | 'refunding' | 'useActual';
+  /** Build variant, which decides whether billing UI is reachable at all (`ipa` has no billing). */
+  proBuildVariant?:
+    | 'apk'
+    | 'appStore'
+    | 'development'
+    | 'fDroid'
+    | 'huawei'
+    | 'ipa'
+    | 'testFlight'
+    | 'useActual';
+  /**
+   * Access expiry, in seconds since epoch. Float-quantised inside the app, so assert a range or a
+   * rendered string — never exact equality.
+   *
+   * PAIR THIS WITH `proBackendStatus: 'active'`. Each mock defaults to "use the actual value", so an
+   * `active` status on an account that never subscribed inherits a zero expiry and the app renders
+   * an expiring-soon screen — which then sits over the UI and fails later steps on missing elements.
+   */
+  proAccessExpiry?: string;
+  /**
+   * Point the app at a QA Pro backend instead of the compiled-in production one.
+   *
+   * Set BOTH, and set them on EVERY device in a multi-device test: the pubkey is what libSession
+   * verifies other users' proofs against, so a device left on the default reads a QA-signed proof as
+   * invalid, strips the Pro content and stores the sender as non-Pro — which looks like an app bug
+   * rather than a harness gap. `openAppTwoDevices`/`openAppThreeDevices` pass one context to every
+   * device, so this holds as long as no per-device context is introduced.
+   */
+  proBackendUrl?: string;
+  /** The backend's **Ed25519** signing key (`signing_pubkey` from its `GET /status`), not the x25519 form. */
+  proBackendPubkey?: string;
+};
+
+/**
+ * `IOSTestContext` field -> the env key the app reads. The app's `EnvironmentVariable` enum is
+ * `String`-backed with no explicit raw values, so each key is that case's name verbatim; the two
+ * pre-existing entries are here too rather than staying as one-off assignments.
+ */
+const IOS_TEST_ENV_KEYS: Record<keyof IOSTestContext, string> = {
+  customInstallTime: 'customFirstInstallDateTime',
+  sessionProEnabled: 'sessionPro',
+  proBackendStatus: 'mockCurrentUserSessionProBackendStatus',
+  proLoadingState: 'mockCurrentUserSessionProLoadingState',
+  proOriginatingPlatform: 'mockCurrentUserSessionProOriginatingPlatform',
+  proOriginatingAccount: 'mockCurrentUserOriginatingAccount',
+  proRefundingStatus: 'mockCurrentUserSessionProRefundingStatus',
+  proBuildVariant: 'mockCurrentUserSessionProBuildVariant',
+  proAccessExpiry: 'mockCurrentUserAccessExpiryTimestamp',
+  proBackendUrl: 'customProBackendUrl',
+  proBackendPubkey: 'customProBackendPubkey',
 };
 
 type AppiumXCUITestCapabilities = Capabilities.AppiumXCUITestCapabilities;
 
-export const IOS_PRO_CONTEXT: IOSTestContext = { sessionProEnabled: 'true' };
+/**
+ * Pro enabled, talking to the QA Pro backend when one is configured.
+ *
+ * The override belongs here rather than in individual specs because it must be on **every** device in a
+ * test: the pubkey is what libSession verifies other users' proofs against, so a device left on the
+ * default reads a QA-signed proof as invalid, strips the Pro content and stores the sender as non-Pro —
+ * which looks like an app bug rather than a harness gap.
+ */
+export const IOS_PRO_CONTEXT: IOSTestContext = (() => {
+  const proBackend = getProBackendOverride();
+  return {
+    sessionProEnabled: 'true',
+    ...(proBackend ? { proBackendUrl: proBackend.url, proBackendPubkey: proBackend.pubkey } : {}),
+  };
+})();
+
+/**
+ * Whole days of remaining Pro access granted by `iosActiveProContext`.
+ *
+ * The app ceilings the remaining interval into day/hour/minute units, so an expiry exactly N days out
+ * renders as `N days` for the whole first day — deterministic however long onboarding took.
+ */
+export const IOS_PRO_ACCESS_DAYS = 30;
+
+/**
+ * A current user who **is** a Pro subscriber, with no backend, no entitlement and no store involved.
+ *
+ * Use this for anything asserting how the UI *renders* Pro state. Only reach for `makeAccountPro`
+ * when the assertion depends on something a real cryptographic proof produces — another device
+ * verifying a badge, network-enforced limits, proof rotation — because a real grant costs a mint, an
+ * app restart, and a race against the client's status-refresh cache.
+ *
+ * `proAccessExpiry` is not optional in practice: each mock defaults to "use the actual value", so an
+ * `active` status on an account that never subscribed inherits a **zero** expiry and the app renders
+ * an expiring-soon screen over the UI, which then fails later steps on missing elements.
+ */
+export function iosActiveProContext(days: number = IOS_PRO_ACCESS_DAYS): IOSTestContext {
+  return {
+    ...IOS_PRO_CONTEXT,
+    proBackendStatus: 'active',
+    proAccessExpiry: String(Math.floor(Date.now() / 1000) + days * 24 * 60 * 60),
+  };
+}
 
 // --- Service network selection (mainnet / testnet / devnet) ---
 //
@@ -244,13 +364,14 @@ export function getIosCapabilities(
   const baseEnv =
     (caps['appium:processArguments'] as { env?: Record<string, string> } | undefined)?.env ?? {};
 
-  // Build custom env entries from per-test overrides
+  // Build custom env entries from per-test overrides. Unset fields are simply absent, which leaves
+  // the app on its real value — the same thing an explicit 'useActual' asks for.
   const customEnv: Record<string, string> = {};
-  if (customCaps?.customInstallTime) {
-    customEnv.customFirstInstallDateTime = customCaps.customInstallTime;
-  }
-  if (customCaps?.sessionProEnabled) {
-    customEnv.sessionPro = customCaps.sessionProEnabled;
+  for (const [field, envKey] of Object.entries(IOS_TEST_ENV_KEYS)) {
+    const value = customCaps?.[field as keyof IOSTestContext];
+    if (value) {
+      customEnv[envKey] = value;
+    }
   }
 
   // Rebuild the processArguments block with merged env vars.

@@ -33,7 +33,9 @@ async function acceptRequestWithText(platform: SupportedPlatformsType, testInfo:
   // Enter User B's session ID into input box
   await device1.inputText(bob.accountID, new EnterAccountID(device1));
   // Click next
-  await device1.scrollDown();
+  // The keyboard covers Next on smaller screens. Do NOT swipe here: this is a bottom sheet, so
+  // a scroll drags the sheet and the tap silently misses.
+  await device1.hideKeyboard();
   await device1.clickOnElementAll(new NextButton(device1));
   //messageRequestPendingDescription: "You will be able to send voice messages and attachments once the recipient has approved this message request."
   const messageRequestPendingDescription = tStripped('messageRequestPendingDescription');

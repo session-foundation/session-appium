@@ -16,12 +16,18 @@
  * Local dev: Run `pnpm setup-virtual-scene` once and reboot emulators for the changes to take effect.
  */
 
+import dotenv from 'dotenv';
 import { copyFileSync, readFileSync } from 'fs';
 import path from 'path';
 
+// The rest of the project keeps its Android paths in `.env`; without loading it this only worked if
+// ANDROID_SDK_ROOT happened to be exported in the shell, so the documented `pnpm setup-virtual-scene`
+// step failed on a correctly-configured checkout.
+dotenv.config({ quiet: true });
+
 const sdkRoot = process.env.ANDROID_SDK_ROOT;
 if (!sdkRoot) {
-  throw new Error('ANDROID_SDK_ROOT is not set');
+  throw new Error('ANDROID_SDK_ROOT is not set (checked the environment and .env)');
 }
 
 const resourcesDir = path.join(sdkRoot, 'emulator', 'resources');

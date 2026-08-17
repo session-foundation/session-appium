@@ -84,6 +84,7 @@ import {
 import { EnterAccountID, NewMessageOption, NextButton } from '../test/locators/start_conversation';
 import { clickOnCoordinates, sleepFor, verify } from '../test/utils';
 import { getAdbFullPath } from '../test/utils/binaries';
+import { androidAppPackage } from '../test/utils/capabilities_android';
 import { parseDataImage } from '../test/utils/check_colour';
 import { isSameColor } from '../test/utils/check_colour';
 import { makeAccountPro } from '../test/utils/mock_pro';
@@ -113,6 +114,25 @@ type PollResult<T = undefined> = {
   data?: T;
   error?: string;
 };
+
+/**
+ * The generated-avatar palette, lowercase, from `avatarBgColors` in the Android client
+ * (`app/src/main/res/values/colors.xml`, selected by `sha512(address) % 7` in `AvatarUtils`).
+ *
+ * Used to tell "no picture is loaded" apart from "a picture is loaded but static". Because the colour
+ * is derived from the account address, a placeholder shows a different one of these on every run —
+ * which reads as an unstable failure rather than a consistent one, and cost several hours of chasing
+ * a phantom regression before anyone recognised the palette.
+ */
+const GENERATED_AVATAR_COLORS = new Set([
+  '31f196',
+  '57c9fa',
+  'c993ff',
+  'ff95ef',
+  'ff9c8e',
+  'fcb159',
+  'fad657',
+]);
 
 export class DeviceWrapper implements IMobileWrapper {
   private readonly device: AndroidUiautomator2Driver | XCUITestDriver;
@@ -1106,6 +1126,38 @@ export class DeviceWrapper implements IMobileWrapper {
     return foundElementMatchingText;
   }
 
+  /**
+   * Finds the element in `elements` whose accessibility **label** matches, rather than its value.
+   *
+   * Separate from [findMatchingTextInElementArray] because the two read different attributes and the
+   * distinction is load-bearing on iOS: an accessibility identifier becomes the element's `name` and
+   * displaces the display text into `label`, so a `text` match silently stops working the moment an
+   * element gains an id. Matching the label directly is what lets a locator say "this identifier AND
+   * this message" without dropping to xpath.
+   */
+  public async findMatchingLabelInElementArray(
+    elements: Array<AppiumNextElementType>,
+    labelToLookFor: string
+  ): Promise<AppiumNextElementType | null> {
+    if (!elements?.length) {
+      return null;
+    }
+
+    const normalize = (value: string) =>
+      value
+        // Strip LTR/RTL markers and other whitespace nonsense, matching the text comparison.
+        .replace(/[\u200e\u200f\u202a-\u202e]/g, '')
+        .trim()
+        .toLowerCase();
+
+    const matching = await this.findAsync(elements, async element => {
+      const value = await this.getAttribute('label', element.ELEMENT).catch(() => null);
+      return Boolean(value && normalize(value) === normalize(labelToLookFor));
+    });
+
+    return matching || null;
+  }
+
   public async findMatchingTextInElementArray(
     elements: Array<AppiumNextElementType>,
     textToLookFor: string
@@ -1646,7 +1698,7 @@ export class DeviceWrapper implements IMobileWrapper {
    * @throws If element not found
    */
   public async waitForTextElementToBePresent(
-    args: { text?: string; maxWait?: number; skipHealing?: boolean } & (
+    args: { text?: string; label?: string; maxWait?: number; skipHealing?: boolean } & (
       | LocatorsInterface
       | StrategyExtractionObj
     )
@@ -1655,6 +1707,7 @@ export class DeviceWrapper implements IMobileWrapper {
 
     // Prefer text from args (if passed directly), otherwise check locator
     const text = args.text ?? ('text' in locator ? locator.text : undefined);
+    const label = args.label ?? ('label' in locator ? locator.label : undefined);
 
     const { maxWait = 30_000 } = args;
     const skipHealing = 'skipHealing' in args ? (args.skipHealing ?? false) : false;
@@ -1665,6 +1718,10 @@ export class DeviceWrapper implements IMobileWrapper {
     // Helper function to find element with or without healing
     const tryFindElement = async (allowHealing: boolean): Promise<AppiumNextElementType | null> => {
       try {
+        if (label) {
+          const els = await this.findElements(locator.strategy, locator.selector, !allowHealing);
+          return await this.findMatchingLabelInElementArray(els, label);
+        }
         if (text) {
           const els = await this.findElements(
             locator.strategy,
@@ -1698,12 +1755,88 @@ export class DeviceWrapper implements IMobileWrapper {
         // Healing succeeded
         return element;
       }
+      // A system ANR dialog covers the app, so the element is genuinely absent from the tree even
+      // though nothing is wrong with the app or the locator. Dismiss it and retry once.
+      //
+      // Must stay BELOW the `skipHealing` early-throw: the check below looks an element up itself,
+      // via `doesElementExist`, which sets `skipHealing` — that early return is the only thing
+      // stopping a failed ANR probe from recursing into another ANR probe.
+      if (await this.dismissSystemAnrIfPresent()) {
+        const afterAnr = await tryFindElement(true);
+        if (afterAnr) {
+          return afterAnr;
+        }
+      }
+
       // Healing failed, re-throw original error
       throw originalError;
     });
     // Element was found as-is
     this.log(`Element with ${description} has been found`);
     return result!; // Result must exist if we reached this point
+  }
+
+  /**
+   * How many system ANR dialogs this device may absorb before the run is called unhealthy.
+   *
+   * One is treated as bad luck; a second says the host is saturated rather than the app being slow,
+   * and every failure after that is noise attributed to whatever spec happened to be running.
+   */
+  private static readonly MAX_ANR_DISMISSALS = 1;
+  private anrDismissals = 0;
+
+  /**
+   * Dismisses an Android "isn't responding" dialog if one is covering the app, and reports whether
+   * it did.
+   *
+   * This is not a product failure and usually not even Session's: the one that prompted this was
+   * `com.android.systemui` freezing under host load, which put a modal over everything and made
+   * ordinary elements unfindable. Left unhandled it surfaces as "element not found" attributed to
+   * whichever spec was unlucky, which is how it stayed unexplained for a day.
+   *
+   * "Wait" rather than "Close app" deliberately — killing the frozen component would take the app
+   * under test with it when the ANR *is* ours.
+   *
+   * Past [MAX_ANR_DISMISSALS] it throws instead, so a saturated machine is reported as a saturated
+   * machine in the test results rather than absorbed silently. That is the point of the cap: one
+   * dismissal keeps a run alive, a stream of them is information we want surfaced.
+   */
+  private async dismissSystemAnrIfPresent(): Promise<boolean> {
+    if (!this.isAndroid()) {
+      return false;
+    }
+
+    const wait = await this.doesElementExist({
+      strategy: 'id',
+      selector: 'android:id/aerr_wait',
+      maxWait: 1000,
+    }).catch(() => null);
+
+    if (!wait) {
+      return false;
+    }
+
+    let title = 'unknown component';
+    try {
+      const titleEl = await this.findElement('id', 'android:id/alertTitle');
+      title = await this.getTextFromElement(titleEl);
+    } catch {
+      // Title is for the error message only; its absence must not mask the ANR itself.
+    }
+
+    this.anrDismissals += 1;
+    if (this.anrDismissals > DeviceWrapper.MAX_ANR_DISMISSALS) {
+      throw new Error(
+        `System ANR: "${title}" — ${this.anrDismissals} not-responding dialogs on ` +
+          `${this.getDeviceIdentity()} in one test. The host is saturated, not the app under test; ` +
+          `reduce concurrent emulators/simulators or restart them. Element lookups will keep ` +
+          `failing while a dialog is covering the app.`
+      );
+    }
+
+    this.log(`Dismissing ANR dialog ("${title}") and retrying`);
+    await this.click(wait.ELEMENT);
+    return true;
   }
 
   public async waitForControlMessageToBePresent(
@@ -2497,6 +2630,26 @@ export class DeviceWrapper implements IMobileWrapper {
     // let some time for swipe action to happen and UI to update
   }
 
+  /**
+   * Dismisses the soft keyboard if one is up, so a control it was covering becomes tappable.
+   *
+   * Reach for this rather than `scrollDown` when the goal is "get the keyboard out of the way".
+   * `scrollDown` is a raw swipe, not a scroll-container operation, so on a bottom sheet it drags the
+   * *sheet* — which leaves the target still present and findable (the click therefore succeeds and
+   * throws nothing) while the tap lands outside its clickable region. That failure is silent: no
+   * error, no navigation, nothing in the device log.
+   *
+   * Best-effort by design. Both drivers throw if asked to hide a keyboard that isn't showing, and
+   * "there was no keyboard to dismiss" is the desired end state rather than a failure.
+   */
+  public async hideKeyboard(): Promise<void> {
+    try {
+      await this.toShared().execute('mobile: hideKeyboard', {});
+    } catch {
+      this.info('No keyboard to dismiss');
+    }
+  }
+
   // Swipe vertically from 70% to 30% of screen height at the horizontal center
   public async scrollDown() {
     const { width, height } = await this.getWindowRect();
@@ -2585,6 +2738,42 @@ export class DeviceWrapper implements IMobileWrapper {
     await this.clickOnElementAll(new ReadReceiptsButton(this));
     await this.navigateBack(false);
     await this.clickOnElementAll(new CloseSettings(this));
+  }
+
+  /**
+   * Grants or revokes Android's runtime notification permission directly, so the system prompt is not
+   * left to appear at a time of Android's choosing.
+   *
+   * From API 33 the `POST_NOTIFICATIONS` prompt fires the first time the app tries to post a
+   * notification, which is whenever a message happens to arrive — so it can land in the middle of an
+   * unrelated step and cover the screen. That produced "element not found" failures attributed to
+   * whatever the spec was doing at the time; three separate red specs in one sweep turned out to be
+   * this one dialog.
+   *
+   * Granting at install removes the race rather than reacting to it. `handleNotificationPermissions`
+   * stays valid either way — it dismisses the dialog only if present, so it becomes a no-op.
+   *
+   * **To write a spec that asserts the prompt appears, revoke first and relaunch.** Revoking a granted
+   * runtime permission makes Android kill the app process, so it has to happen before the app is in
+   * use, not mid-flow.
+   */
+  public async setNotificationPermission(granted: boolean): Promise<void> {
+    if (!this.isAndroid()) {
+      return;
+    }
+
+    const action = granted ? 'grant' : 'revoke';
+    // Deliberately not routed through runScriptAndLog: that logs failures and returns, and a silently
+    // ungranted permission is exactly the state this exists to prevent.
+    try {
+      await this.toShared().execute('mobile: shell', {
+        command: 'pm',
+        args: [action, androidAppPackage, 'android.permission.POST_NOTIFICATIONS'],
+      });
+      this.log(`Notification permission ${granted ? 'granted' : 'revoked'}`);
+    } catch (error) {
+      this.log(`Could not ${action} POST_NOTIFICATIONS: ${(error as Error).message}`);
+    }
   }
 
   public async processPermissions(locator: LocatorsInterface | StrategyExtractionObj) {
@@ -2991,11 +3180,53 @@ export class DeviceWrapper implements IMobileWrapper {
 
   // Sample an element's centre pixel color SAMPLE_SIZE times to determine whether it is animated or not.
   // If the set contains more than 1 color it is likely animated.
+  /**
+   * Waits until an avatar stops rendering the generated placeholder, so an animation check that
+   * follows is looking at the uploaded picture rather than the fallback.
+   *
+   * Session draws a flat `avatarBgColors` circle while a picture is absent, loading or failed, and
+   * picks the colour by `sha512(address) % 7` — so a placeholder is a *different* palette colour on
+   * every run, which is exactly what made this look like a per-build regression rather than a race.
+   *
+   * Returns the last colour seen so the caller can say what it was still showing when it gave up.
+   */
+  private async waitForAvatarToLoad(
+    locator: StrategyExtractionObj,
+    maxWait = 10_000
+  ): Promise<string> {
+    const deadline = Date.now() + maxWait;
+    let color = await this.getElementPixelColor(locator);
+
+    while (GENERATED_AVATAR_COLORS.has(color.toLowerCase()) && Date.now() < deadline) {
+      await sleepFor(500);
+      color = await this.getElementPixelColor(locator);
+    }
+    return color;
+  }
+
+  /**
+   * Asserts an element's pixels change over time.
+   *
+   * For avatars the placeholder is checked first and reported separately, because "the picture never
+   * loaded" and "the picture loaded but is frozen" are different bugs with different owners and used
+   * to produce the identical failure. A frozen animated avatar means Pro was false at compose time
+   * (`freezeFrameForUser`); a placeholder means the upload never reached the view at all.
+   */
   public async verifyElementIsAnimated(
     args: LocatorsInterface | StrategyExtractionObj
   ): Promise<void> {
     const { locator, description } = this.resolveLocator(args);
     this.log(`Checking if ${description} is animated`);
+
+    const loaded = await this.waitForAvatarToLoad(locator);
+    if (GENERATED_AVATAR_COLORS.has(loaded.toLowerCase())) {
+      throw new Error(
+        `${description} is still the generated avatar placeholder (${loaded}) — the picture never ` +
+          `loaded, so there is nothing to animate. This is an upload/propagation problem, not an ` +
+          `animation one; a frozen animated avatar would show the image's own first frame instead.`
+      );
+    }
+
     const SAMPLE_SIZE = 3;
     const colors = new Set<string>();
     for (let i = 0; i < SAMPLE_SIZE; i++) {
@@ -3003,7 +3234,9 @@ export class DeviceWrapper implements IMobileWrapper {
     }
     verify(
       colors.size,
-      `Expected element to be animated but detected 1 unique color: ${[...colors][0]}`
+      `Expected ${description} to be animated but detected 1 unique color: ${[...colors][0]}. The ` +
+        `image is loaded but static — on an animated avatar that means Pro was false when it was ` +
+        `composed (freezeFrameForUser), not that the upload failed.`
     ).toBeGreaterThan(1);
   }
 

@@ -12,7 +12,11 @@ import { type TestRisk, type User } from '../../types/testing';
 import { openAppsWithStateCrossPlatform, type PerUserPlatforms } from './cross_platform_state';
 import { focusConvoCrossPlatform } from './cross_platform_state_builder';
 import { unregisterDevicesForTest } from './device_registry';
-import { captureLogsOnFailure, captureScreenshotsOnFailure } from './failure_artifacts';
+import {
+  captureLogsOnFailure,
+  capturePageSourceOnFailure,
+  captureScreenshotsOnFailure,
+} from './failure_artifacts';
 import { closeApp } from './open_app';
 
 /**
@@ -211,6 +215,7 @@ export function crossPlatformTest<Names extends AccountName>({
           testInfo.status === 'timedOut'
         ) {
           await captureScreenshotsOnFailure(testInfo);
+          await capturePageSourceOnFailure(testInfo);
           await captureLogsOnFailure(testInfo);
         }
       } catch (artifactError) {
