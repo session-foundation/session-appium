@@ -53,5 +53,5 @@ export type ProMockContext = {
    * Still not a real credential — see the module note above. This makes the client's own answer to
    * "may I" true; it does not produce anything another party can verify.
    */
-  proProof?: 'valid' | 'none' | 'useActual';
+  proProof?: 'none' | 'useActual' | 'valid';
 };

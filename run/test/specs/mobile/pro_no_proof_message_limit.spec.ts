@@ -14,9 +14,11 @@ import {
   SupportedPlatformsType,
 } from '../../utils/open_app';
 
-/** Comfortably past the standard cap, comfortably under the Pro one. */
+/**
+ * Comfortably past the standard cap of 2000, comfortably under the Pro one of 10000 — so the countdown
+ * is shown under the limit this spec expects and absent under the one it does not.
+ */
 const OVER_STANDARD = 3000;
-const STANDARD_MAX_CHARS = 2000;
 
 bothPlatformsIt({
   title: 'No Pro proof means no Pro message limit',
