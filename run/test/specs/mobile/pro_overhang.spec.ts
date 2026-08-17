@@ -1,5 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
+import { tStripped } from '../../../localizer/lib';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
@@ -10,6 +11,7 @@ import { PlusButton } from '../../locators/home';
 import {
   ProManageSectionHeader,
   ProRenewPlanRow,
+  ProSettingsDescription,
   ProSettingsEntry,
   ProStatsHeader,
 } from '../../locators/pro';
@@ -98,6 +100,15 @@ async function proOverhang(platform: SupportedPlatformsType, testInfo: TestInfo)
     await device.clickOnElementAll(new UserSettings(device));
     await device.clickOnElementAll(new ProSettingsEntry(device));
     await device.waitForTextElementToBePresent(new ProRenewPlanRow(device));
+    // The copy is asserted, not just the row, because the two are chosen by different code. The row
+    // follows the plan's status; the description is picked by a separate switch on that same status,
+    // so a client that fixed one and not the other offers to renew under a heading thanking the user
+    // for subscribing. The expired copy is also the only one of the three that tells someone in this
+    // window what to do about it, which is the whole point of showing an expired plan to a user whose
+    // features still work.
+    await device.waitForTextElementToBePresent(
+      new ProSettingsDescription(device, tStripped('proAccessRenewStart'))
+    );
     // Asserted absent as well: the subscribed screen renders these, so their presence would mean the
     // client is showing an active plan rather than an expired one with working features.
     await device.verifyElementNotPresent({

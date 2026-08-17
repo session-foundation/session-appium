@@ -1,5 +1,6 @@
 import { Conversation, LeftPane, ProSettings, Settings } from '../../../desktop/locators';
 import { test_Alice_1W_Bob_1W } from '../../../desktop/sessionTest';
+import { tStripped } from '../../../localizer/lib';
 
 const PRO_MAX_CHARS = 10000;
 const COUNTDOWN_START_THRESHOLD = 200;
@@ -42,6 +43,15 @@ test_Alice_1W_Bob_1W(
     await alice.clickOn(LeftPane.settingsButton);
     await alice.clickOn(Settings.proMenuItem);
     await alice.waitForElement({ locator: ProSettings.renewPlanButton });
+    // The copy is asserted, not just the row, because the two are chosen by different code. The button
+    // follows the plan's status; the hero description is picked by a separate switch on that same
+    // status, so a client that fixed one and not the other offers to renew under a heading thanking the
+    // user for subscribing. It is also the only one of the three that tells someone in this window what
+    // to do about it, which is the point of showing an expired plan to a user whose features work.
+    await alice.waitForElement({
+      locator: ProSettings.description,
+      options: { text: tStripped('proAccessRenewStart') },
+    });
     // Gated on the plan being active, so their presence would mean the client is showing an active plan
     // rather than an expired one whose features still work.
     await alice.hasElementPoppedUpThatShouldnt(ProSettings.statsHeader);

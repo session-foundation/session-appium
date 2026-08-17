@@ -191,10 +191,15 @@ export class Settings extends Locator {
  *
  * `planExpiry` and `badgeRow` are composed app-side (`${base}-settings-sub-text` / `-settings-row`),
  * so grepping session-desktop for the whole string finds nothing.
+ *
+ * `description` must be matched **with its text** for a different reason to `statusBanner`: the id sits
+ * on the shared hero slot, so the non-originating Pro page carries it too and both can be reached from
+ * this screen. The text is what names which status is being displayed, and is the assertion anyway.
  */
 export class ProSettings extends Locator {
   static readonly badgeRow = this.testId('pro-badge-visible-settings-row');
   static readonly badgeToggle = this.testId('pro-badge-visible-settings-toggle');
+  static readonly description = this.testId('pro-settings-description');
   static readonly featuresHeader = this.testId('pro-settings-features-header');
   static readonly manageHeader = this.testId('pro-settings-manage-header');
   /** Renders only while access is active; the expired screen shows `renewPlanButton` instead. */
