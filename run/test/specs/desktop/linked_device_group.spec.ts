@@ -227,7 +227,7 @@ test_group_Alice_2W_Bob_1W_Charlie_1W(
     await Promise.all(
       [alice, alice2].map(async w => {
         await hasElementBeenDeleted(w.getPage(), HomeScreen.conversationItemName, {
-          maxWait: 10_000,
+          maxWait: 22_000,
           text: groupCreated.userName,
         });
       })

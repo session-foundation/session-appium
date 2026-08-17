@@ -709,11 +709,13 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     await waitForMatchingPlaceholder(this.page, dataTestId, placeholder, maxWait);
   }
 
+  /** Returns immediately if the loader never shows — see the helper for why that is a pass. */
   public async waitForLoadingAnimationToFinish(
     loader: DataTestId,
-    maxWait?: number
+    appearWithinMs?: number,
+    finishWithinMs?: number
   ): Promise<void> {
-    await waitForLoadingAnimationToFinish(this.page, loader, maxWait);
+    await waitForLoadingAnimationToFinish(this.page, loader, appearWithinMs, finishWithinMs);
   }
 
   public async clickOnTextMessage(

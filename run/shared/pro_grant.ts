@@ -18,6 +18,7 @@
 import { ed25519 } from '@noble/curves/ed25519.js';
 import { blake2b } from '@noble/hashes/blake2.js';
 import { mnDecode } from '@session-foundation/mnemonic';
+import { isString } from 'lodash';
 
 export type PaymentProvider = 'apple' | 'google';
 
@@ -94,6 +95,9 @@ export function mnemonicToSeedHex(mnemonic: string): string {
   // is sized off this, and a short seed would surface as an unrelated crypto failure.
   if (seedHex.length !== 32) {
     throw new Error(`Expected a 16-byte seed, got ${seedHex.length / 2} bytes`);
+  }
+  if (!isString(seedHex)) {
+    throw new Error(`Expected a string seed, got ${typeof seedHex}`);
   }
 
   return seedHex;
