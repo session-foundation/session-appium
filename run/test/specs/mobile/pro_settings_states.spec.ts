@@ -1,5 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
+import { tStripped } from '../../../localizer/lib';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
@@ -10,6 +11,7 @@ import {
   ProManageSectionHeader,
   ProPlanExpiry,
   ProRenewPlanRow,
+  ProSettingsDescription,
   ProSettingsEntry,
   ProStatsHeader,
   ProStatusBanner,
@@ -144,6 +146,12 @@ async function proSettingsSubscribed(platform: SupportedPlatformsType, testInfo:
     await device.waitForTextElementToBePresent(new ProPlanExpiry(device, `${ACCESS_DAYS} days`));
     await device.waitForTextElementToBePresent(new ProBadgeSettingRow(device));
     await device.waitForTextElementToBePresent(new ProFeaturesHeader(device));
+    // The rows above follow the plan's status; the description is picked by a separate switch on that
+    // same status, so asserting one says nothing about the other. A client that got this wrong would
+    // thank a lapsed subscriber for subscribing, or offer renewal to someone mid-plan.
+    await device.waitForTextElementToBePresent(
+      new ProSettingsDescription(device, tStripped('proThanksForSupporting'))
+    );
     // Both plan rows are what distinguish an active screen from an expired one, and only one is ever
     // shown — so presence alone would pass an app that rendered both.
     await device.verifyElementNotPresent({

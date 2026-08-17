@@ -33,6 +33,13 @@ test_Alice_1W(
       locator: ProSettings.planExpiry,
       options: { text: tStripped('proExpiringTime', { time: `${ACCESS_DAYS} days` }) },
     });
+    // The rows above follow the plan's status; the hero description is picked by a separate switch on
+    // that same status, so asserting one says nothing about the other. A client that got this wrong
+    // would thank a lapsed subscriber for subscribing, or offer renewal to someone mid-plan.
+    await alice.waitForElement({
+      locator: ProSettings.description,
+      options: { text: tStripped('proThanksForSupporting') },
+    });
 
     await alice.hasElementPoppedUpThatShouldnt(ProSettings.renewPlanButton);
   },
