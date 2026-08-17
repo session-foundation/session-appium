@@ -27,7 +27,7 @@ import type { User } from './types';
 
 import { resolveNetworkTarget } from '../test/utils/devnet';
 import { DesktopWrapper } from './DesktopWrapper';
-import { openApps, type TestContext, waitFirstWindow } from './open';
+import { getLaunchedInstances, MULTIS, openApps, type TestContext, waitFirstWindow } from './open';
 
 /** One seeded account together with the windows signed into it. */
 export type SeededUser = {
@@ -98,12 +98,28 @@ export async function openSeededWindows<K extends PrebuiltStateKey>({
     );
   }
 
+  // Positional, exactly as the onboarding templates do it: `openApps` launches windows one at a time
+  // and records each, so a window's index in `pages` is its index here. Without this a seeded window
+  // cannot be restarted — `restartApp` needs the multi and instance to come back up on the same
+  // user-data directory, and it throws rather than guessing.
+  const instances = getLaunchedInstances();
+  const identify = (wrapper: DesktopWrapper, windowIndex: number) => {
+    if (windowIndex >= MULTIS.length || !instances[windowIndex]) {
+      throw new Error(
+        `openSeededWindows: window ${windowIndex + 1} has no launch identity to assign ` +
+          `(${MULTIS.length} multis, ${instances.length} instances recorded)`
+      );
+    }
+    wrapper.setLaunchIdentity(MULTIS[windowIndex], instances[windowIndex]);
+  };
+
   let next = 0;
   const users: SeededUser[] = seedUsers.map((stateUser, i) => {
     const account = toDesktopUser(stateUser);
     const nameLc = stateUser.userName.toLowerCase();
     const windows = pages.slice(next, next + windowsPerUser[i]).map((page, w) => {
       const wrapper = new DesktopWrapper(page, `${nameLc}-desktop${w + 1}`);
+      identify(wrapper, next + w);
       // Restoring from a seed does not tell the wrapper WHICH account it landed on, and specs read
       // `alice.userName` / `alice.accountId` constantly — so hand it the seeded account up front.
       wrapper.setAccount(account);
@@ -113,9 +129,11 @@ export async function openSeededWindows<K extends PrebuiltStateKey>({
     return { account, windows };
   });
 
-  const extras = pages
-    .slice(next)
-    .map((page, i) => new DesktopWrapper(page, `unassigned-desktop${i + 1}`));
+  const extras = pages.slice(next).map((page, i) => {
+    const wrapper = new DesktopWrapper(page, `unassigned-desktop${i + 1}`);
+    identify(wrapper, next + i);
+    return wrapper;
+  });
 
   await Promise.all(
     users.flatMap(u => u.windows.map(w => w.restoreFromSeed(u.account.recoveryPassword)))
