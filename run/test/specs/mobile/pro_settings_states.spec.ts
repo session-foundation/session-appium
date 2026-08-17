@@ -280,6 +280,17 @@ async function proStatusError(platform: SupportedPlatformsType, testInfo: TestIn
   await test.step('Verify the backend-unavailable banner', async () => {
     await device.waitForTextElementToBePresent(new ProStatusBanner(device, 'error'));
     await device.waitForTextElementToBePresent(new ProFeaturesHeader(device));
+    // The never-subscribed copy, asserted here rather than in its own spec because this is the only
+    // fixture that reaches that status on the settings screen. It is independent of the banner: the
+    // description switches on the plan's status while the banner reflects the fetch, which is why an
+    // unreachable backend still renders the upgrade pitch rather than nothing.
+    //
+    // This is the one of the three whose copy carries a line break, so it only compares equal because
+    // label and text matching collapse whitespace — iOS renders a break, Android a `\n`, and the
+    // localizer yields a space.
+    await device.waitForTextElementToBePresent(
+      new ProSettingsDescription(device, tStripped('proFullestPotential'))
+    );
   });
 
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

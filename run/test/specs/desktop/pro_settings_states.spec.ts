@@ -97,6 +97,20 @@ test_Alice_1W(
       options: { text: tStripped('errorCheckingProStatus') },
     });
     await alice.waitForElement({ locator: ProSettings.featuresHeader });
+    // The never-subscribed copy, asserted here rather than in its own spec because this is the only
+    // fixture reaching that status on the settings screen. It is independent of the banner: the
+    // description switches on the plan's status while the banner reflects the fetch, which is why an
+    // unreachable backend still renders the upgrade pitch rather than nothing.
+    //
+    // Only the first sentence, and derived rather than written out. This is the one hero token
+    // carrying a line break, and Desktop renders it as a `<br>` — which contributes no text, so the
+    // DOM runs the sentences together where the localizer joins them with a space. Matching is by
+    // substring, so the opening sentence is enough to name the status, and it stays Crowdin-owned.
+    const [upgradePitchOpening] = tStripped('proFullestPotential').split('?');
+    await alice.waitForElement({
+      locator: ProSettings.description,
+      options: { text: `${upgradePitchOpening}?` },
+    });
   },
   { pro: { proBackendStatus: 'never', proLoadingState: 'error' } }
 );

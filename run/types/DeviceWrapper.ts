@@ -1152,6 +1152,12 @@ export class DeviceWrapper implements IMobileWrapper {
       value
         // Strip LTR/RTL markers and other whitespace nonsense, matching the text comparison.
         .replace(/[\u200e\u200f\u202a-\u202e]/g, '')
+        // Collapse runs of whitespace, so a line break in the rendered copy compares equal to the
+        // space the localizer produces. The same token reaches here in three shapes \u2014 a break on
+        // iOS, `\n` from Android's strings.xml, and a space from `tStripped` \u2014 and the difference is
+        // presentation, not copy. Collapsing, not stripping: removing whitespace entirely would let
+        // genuinely different strings collide.
+        .replace(/\s+/g, ' ')
         .trim()
         .toLowerCase();
 
@@ -1170,10 +1176,13 @@ export class DeviceWrapper implements IMobileWrapper {
     if (elements && elements.length) {
       const matching = await this.findAsync(elements, async e => {
         const text = await this.getTextFromElement(e);
-        // Strip LTR/RTL markers and other whitespace nonsense
+        // Strip LTR/RTL markers and other whitespace nonsense, and collapse whitespace runs for the
+        // same reason as the label comparison: the rendered line break and the localizer's space are
+        // the same copy.
         const normalize = (s: string) =>
           s
             .replace(/[\u200e\u200f\u202a-\u202e]/g, '')
+            .replace(/\s+/g, ' ')
             .trim()
             .toLowerCase();
         const isExactMatch = text && normalize(text) === normalize(textToLookFor);
