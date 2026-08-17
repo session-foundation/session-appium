@@ -25,6 +25,21 @@ export const joinCommunity = async (window: Page) => {
   await waitForLoadingAnimationToFinish(window, Global.loadingSpinner.selector);
 };
 
+/**
+ * Join an arbitrary community by URL — for the multi-community tests, which take their set from the
+ * shared `getCommunities()` rather than the fixed link `joinCommunity` uses.
+ *
+ * Waits on the conversation row, not the spinner: these joins run back to back, and the spinner
+ * belongs to whichever is in flight, so a caller could start the next join before this room existed.
+ */
+export const joinCommunityByLink = async (window: Page, link: string, name: string) => {
+  await clickOn(window, HomeScreen.plusButton);
+  await clickOn(window, HomeScreen.joinCommunityOption);
+  await pasteIntoInput(window, HomeScreen.joinCommunityInput.selector, link);
+  await clickOn(window, HomeScreen.joinCommunityButton);
+  await waitForTestIdWithText(window, HomeScreen.conversationItemName.selector, name, 30_000);
+};
+
 export const joinDefaultCommunity = async (window: Page, communityName: DefaultCommunity) => {
   await clickOn(window, HomeScreen.plusButton);
   await clickOn(window, HomeScreen.joinCommunityOption);

@@ -14,6 +14,7 @@ import {
   Global,
   HomeScreen,
 } from '../../../desktop/locators';
+import { restartApp } from '../../../desktop/restart';
 import {
   test_Alice_1W,
   test_Alice_1W_Bob_1W_friends,
@@ -197,39 +198,86 @@ test_Alice_1W_Bob_1W_friends('Check performance', async ({ alice }) => {
   console.log(timesArray);
 });
 
-// Message length limit tests (pre-pro)
-const maxChars = 2000;
-const countdownThreshold = 1800;
+// Lengths mirror the mobile specs: under the countdown, at its start, at the limit, one over.
+const STANDARD_MAX_CHARS = 2000;
+const PRO_MAX_CHARS = 10000;
+// Characters remaining at which the countdown starts showing.
+const COUNTDOWN_START_THRESHOLD = 200;
 
 const messageLengthTestCases = [
   {
+    pro: false,
     length: 1799,
     char: 'a',
     shouldSend: true,
   },
   {
+    pro: false,
     length: 1800,
     char: 'b',
     shouldSend: true,
   },
   {
+    pro: false,
     length: 2000,
     char: 'c',
     shouldSend: true,
   },
   {
+    pro: false,
     length: 2001,
     char: 'd',
+    shouldSend: false,
+  },
+  {
+    pro: true,
+    length: 9799,
+    char: 'e',
+    shouldSend: true,
+  },
+  {
+    pro: true,
+    length: 9800,
+    char: 'f',
+    shouldSend: true,
+  },
+  {
+    pro: true,
+    length: 10000,
+    char: 'g',
+    shouldSend: true,
+  },
+  {
+    pro: true,
+    length: 10001,
+    char: 'h',
     shouldSend: false,
   },
 ];
 
 messageLengthTestCases.forEach(testCase => {
+  const maxChars = testCase.pro ? PRO_MAX_CHARS : STANDARD_MAX_CHARS;
+
   test_Alice_1W_Bob_1W_friends(
-    `Message length limit (${testCase.length} chars)`,
+    `Message length limit (${testCase.length} chars ${testCase.pro ? 'Pro' : 'non Pro'})`,
     async ({ alice, bob }) => {
+      if (testCase.pro) {
+        // A real grant, not a display mock: over-standard-length messages carry Pro features the
+        // recipient validates, so without a proof the message is composed and simply never arrives.
+        await alice.subscribeToPro();
+        // Desktop asks the backend for status only at startup, so the grant is invisible until the
+        // app comes back up — the same restart the mobile specs do.
+        await restartApp(alice, { pro: {} });
+        await alice.waitForProActive();
+        // The restart came back to the home screen, so the conversation createContactWith left open
+        // has to be reopened before anything can be typed.
+        await alice.openConversationWith(bob.userName);
+      }
+
       const expectedCount =
-        testCase.length < countdownThreshold ? null : (maxChars - testCase.length).toString();
+        testCase.length < maxChars - COUNTDOWN_START_THRESHOLD
+          ? null
+          : (maxChars - testCase.length).toString();
       const message = testCase.char.repeat(testCase.length);
       // Type the message
       await alice.pasteIntoInput('message-input-text-area', message);
@@ -259,7 +307,7 @@ messageLengthTestCases.forEach(testCase => {
         }
         if (countdownVisible) {
           throw new Error(
-            `Countdown should not be visible for messages under ${countdownThreshold} chars`
+            `Countdown should not be visible until ${COUNTDOWN_START_THRESHOLD} characters remain of ${maxChars}`
           );
         }
         console.log('Countdown not present as expected');
@@ -276,7 +324,9 @@ messageLengthTestCases.forEach(testCase => {
           })
         );
       } else {
-        if (process.env.SESSION_PRO) {
+        // A subscriber over the Pro limit has nothing to upgrade to, so they get the plain modal
+        // rather than the upsell CTA.
+        if (!testCase.pro && process.env.SESSION_PRO) {
           console.log('Session Pro detected, checking CTA');
           // Upgrade to pro
           await alice.checkCTAStrings(
@@ -291,13 +341,15 @@ messageLengthTestCases.forEach(testCase => {
           );
           await alice.clickOn(CTA.cancelButton);
         } else {
-          console.log('Session Pro not detected, checking modal');
+          console.log('Checking the too-long modal');
           // Message Too Long modal
           await alice.checkModalStrings(
             tStripped('modalMessageTooLongTitle'),
+            // Mobile doesn't group the number ("2000"); Desktop does and is the behaviour we
+            // want. Deferred to Session 2.0.
             tStripped('modalMessageTooLongDescription', {
               limit: maxChars.toLocaleString('en-AU'),
-            }) // Force "2,000" instead of "2000"
+            })
           );
           await alice.clickOn(Global.confirmButton);
         }
@@ -317,7 +369,11 @@ messageLengthTestCases.forEach(testCase => {
         }
         console.log(`Message didn't send as expected`);
       }
-    }
+    },
+    // The Pro cases need `SESSION_PRO` for the surfaces to exist at all, but mock no status — the
+    // grant above is the real thing. The non-Pro cases take Pro availability from the run's own
+    // config, which is what decides between the upsell CTA and the plain modal.
+    testCase.pro ? { pro: {} } : undefined
   );
 });
 

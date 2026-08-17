@@ -124,6 +124,10 @@ export class Settings extends Locator {
   static readonly accountId = this.testId('your-account-id');
   static readonly displayName = this.testId('your-profile-name');
   static readonly profilePicture = this.testId('avatar-edit-profile-dialog');
+  /** The Pro badge inside the edit-profile-picture modal; opens the animated-DP CTA when clicked. */
+  static readonly editProfilePictureProBadge = this.testId('pro-badge-edit-profile-picture');
+  /** Preview of the newly picked image. Its arrival is what makes Save do anything. */
+  static readonly editProfilePicturePreview = this.testId('avatar-edit-profile-picture-dialog');
   // Update Profile Information
   static readonly displayNameInput = this.testId('update-profile-info-name-input');
   static readonly imageUploadClick = this.testId('image-upload-click');
@@ -136,6 +140,7 @@ export class Settings extends Locator {
   static readonly messageRequestsMenuItem = this.testId('message-requests-settings-menu-item');
   static readonly networkPageMenuItem = this.testId('session-network-settings-menu-item');
   static readonly privacyMenuItem = this.testId('privacy-settings-menu-item');
+  static readonly proMenuItem = this.testId('session-pro-settings-menu-item');
   static readonly recoveryPasswordMenuItem = this.testId('recovery-password-settings-menu-item');
   // Appearance settings
   static readonly classicDarkOption = this.testId('classic-dark-themes-settings-menu-item');
@@ -176,6 +181,27 @@ export class Settings extends Locator {
   static readonly recoveryPasswordQRCode = this.testId('session-recovery-password');
   // Clear Data
   static readonly clearDeviceAndNetworkRadial = this.testId('label-device_and_network');
+}
+
+/**
+ * The Session Pro settings screen.
+ *
+ * `statusBanner` must be matched **with its text**: its wrapper renders in every state including
+ * success (where it is empty), so a bare presence assertion cannot fail.
+ *
+ * `planExpiry` and `badgeRow` are composed app-side (`${base}-settings-sub-text` / `-settings-row`),
+ * so grepping session-desktop for the whole string finds nothing.
+ */
+export class ProSettings extends Locator {
+  static readonly badgeRow = this.testId('pro-badge-visible-settings-row');
+  static readonly badgeToggle = this.testId('pro-badge-visible-settings-toggle');
+  static readonly featuresHeader = this.testId('pro-settings-features-header');
+  static readonly manageHeader = this.testId('pro-settings-manage-header');
+  /** Renders only while access is active; the expired screen shows `renewPlanButton` instead. */
+  static readonly planExpiry = this.testId('update-access-settings-sub-text');
+  static readonly renewPlanButton = this.testId('renew-pro-button');
+  static readonly statsHeader = this.testId('pro-settings-stats-header');
+  static readonly statusBanner = this.testId('pro-settings-status-banner');
 }
 
 export class CTA extends Locator {

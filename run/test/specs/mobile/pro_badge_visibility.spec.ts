@@ -1,11 +1,11 @@
 import { test, type TestInfo } from '@playwright/test';
 
+import { makeAccountPro } from '../../../shared/pro_grant';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { ConversationItem } from '../../locators/home';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
 import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
-import { makeAccountPro } from '../../utils/mock_pro';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 import { enableProBadge, expectProBadgeFromSender } from '../../utils/pro_badge';
 import { forceStopAndRestart } from '../../utils/utilities';

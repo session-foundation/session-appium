@@ -23,8 +23,8 @@
     "start-server": "./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --allow-cors",
     "allure-generate": "allure generate allure/allure-results --clean",
     "allure-open": "allure open",
-    "mock-pro": "npx ts-node run/test/utils/mock_pro.ts",
-    "test-pro-keys": "npx ts-node run/test/utils/mock_pro.ts --self-test"
+    "mock-pro": "npx ts-node run/shared/pro_grant.ts",
+    "test-pro-keys": "npx ts-node run/shared/pro_grant.ts --self-test"
   },
   "devDependencies": {
     "@appium/execute-driver-plugin": "^6.0.0",
