@@ -14,24 +14,24 @@ import { iOSBundleId } from './capabilities_ios';
 
 const exec = util.promisify(execNotPromised);
 
+/**
+ * Run a shell command, tolerating failure.
+ *
+ * Success is the EXIT CODE and nothing else. Plenty of the tools driven here write to stderr on a
+ * perfectly good run — `adb push` reports its throughput there and exits 0 — so treating stderr as
+ * failure reports commands that worked. That is worse than saying nothing: three false "cmd which
+ * failed" lines in a green run teach a reader to skip the string, which is how a real one gets past.
+ *
+ * Failure is swallowed and returned as output, so **the caller cannot tell**. That is right only where
+ * a command is genuinely optional. Where a failed command corrupts the test rather than degrading it —
+ * anything that puts a fixture on the device — use {@link runScriptOrThrow}.
+ */
 export async function runScriptAndLog(toRun: string, verbose = false): Promise<string> {
   try {
     if (verbose) {
       console.log('running ', toRun);
     }
     const result = await exec(toRun);
-
-    if (
-      result &&
-      result.stderr &&
-      !result.stderr.startsWith('All files should be loaded. Notifying the device')
-    ) {
-      if (verbose) {
-        console.log(`cmd which failed: "${toRun}"`);
-        console.log(`result: "${result.stderr}"`);
-      }
-      return ''.concat(result.stderr, result.stdout);
-    }
     if (verbose) {
       console.log('was run: ', toRun, result);
     }
@@ -43,6 +43,26 @@ export async function runScriptAndLog(toRun: string, verbose = false): Promise<s
       console.info(pick(e, ['stdout', 'stderr']));
     }
     return ''.concat(e.stderr as string, e.stdout as string);
+  }
+}
+
+/**
+ * Run a shell command, throwing if it fails.
+ *
+ * For the commands a test's correctness rests on. A silently failed `adb push` leaves the previous
+ * run's media on the device, so the spec goes green against a file its own setup did not put there —
+ * and on a device that never had it, fails somewhere unrelated with no mention of the push.
+ */
+export async function runScriptOrThrow(toRun: string, verbose = false): Promise<string> {
+  try {
+    if (verbose) {
+      console.log('running ', toRun);
+    }
+    const result = await exec(toRun);
+    return ''.concat(result.stderr, result.stdout);
+  } catch (e: any) {
+    const details = pick(e, ['stdout', 'stderr', 'code']);
+    throw new Error(`Command failed: "${toRun}"\n${JSON.stringify(details, null, 2)}`);
   }
 }
 
