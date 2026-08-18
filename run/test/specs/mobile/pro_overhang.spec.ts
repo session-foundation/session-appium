@@ -125,7 +125,7 @@ async function proOverhang(platform: SupportedPlatformsType, testInfo: TestInfo)
   await test.step('Read the account address', async () => {
     // Deferred until after the CTA was handled, which is why `newUser` skipped it: the modal sits over
     // the settings list, and this reads it.
-    ({ accountID } = await harvestAccountData(device, USERNAME.ALICE));
+    ({ accountID } = await harvestAccountData(device));
   });
 
   await test.step('Verify the Pro message limit still applies', async () => {
