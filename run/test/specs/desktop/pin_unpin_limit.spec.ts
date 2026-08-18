@@ -1,6 +1,6 @@
 import { CTA } from '../../../desktop/locators';
 import { joinCommunities, pinConversation, pinIconFor } from '../../../desktop/pin';
-import { test_Alice_1W } from '../../../desktop/sessionTest';
+import { test_Alice_1W, test_Alice_1W_10contacts } from '../../../desktop/sessionTest';
 import { STANDARD_PIN_LIMIT } from '../../../shared/constants';
 
 /**
@@ -17,10 +17,10 @@ import { STANDARD_PIN_LIMIT } from '../../../shared/constants';
 
 const COMMUNITY_COUNT = 6;
 
-test_Alice_1W(
+test_Alice_1W_10contacts(
   'Pinned conversation limit (non Pro)',
-  async ({ alice }) => {
-    const names = await joinCommunities(alice, COMMUNITY_COUNT);
+  async ({ alice, contactNames }) => {
+    const names = contactNames;
 
     for (const name of names.slice(0, STANDARD_PIN_LIMIT)) {
       await pinConversation(alice, name);
@@ -35,7 +35,7 @@ test_Alice_1W(
     // The CTA appearing is not the same as the pin being refused.
     await pinIconFor(alice, overLimit).waitFor({ state: 'hidden' });
   },
-  { pro: { proBackendStatus: 'never' }, communityRooms: COMMUNITY_COUNT }
+  { pro: { proBackendStatus: 'never' } }
 );
 
 test_Alice_1W(

@@ -386,6 +386,34 @@ function sessionTestSeededFriends(
   });
 }
 
+/**
+ * One user with `contactsCount` seeded contacts, and a window for that user only.
+ *
+ * The other accounts exist on the swarm so their conversations appear in the first user's list, but
+ * no app is opened for them — which is the point: this replaces joining N communities, the slowest
+ * setup in the pin specs, with config the seeder writes directly.
+ */
+function sessionTestSeededContacts(
+  testName: string,
+  { context }: { context?: TestContext },
+  testCallback: (details: { alice: DesktopWrapper; contactNames: Array<string> }, testInfo: TestInfo) => Promise<void>
+): void {
+  return seededTest(testName, async (pages, testInfo) => {
+    const opened = await openSeededWindows({
+      stateKey: '1userWith10Contacts',
+      groupName: undefined,
+      // Only the first user gets a window; the rest exist purely as contacts.
+      windowsPerUser: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      context,
+    });
+    pages.push(...opened.pages);
+
+    const alice = opened.users[0].windows[0];
+    const contactNames = opened.users.slice(1).map(u => u.account.userName);
+    await testCallback({ alice, contactNames }, testInfo);
+  });
+}
+
 function sessionTestSeededGroup(
   testName: string,
   { windowsPerUser, extraWindows = 0, context }: SeededOptions,
@@ -524,6 +552,23 @@ export function test_Alice_2W_Bob_1W_friends(
         info
       )
   );
+}
+
+/**
+ * Alice with ten seeded contacts, one window, their conversations already in her list.
+ *
+ * The seeded counterpart of `joinCommunities(N)` for tests that just need a populated conversation
+ * list — pinning, ordering, list limits — and do not care what the conversations are.
+ */
+export function test_Alice_1W_10contacts(
+  testName: string,
+  testCallback: (
+    details: { alice: DesktopWrapper; contactNames: Array<string> },
+    testInfo: TestInfo
+  ) => Promise<void>,
+  context?: TestContext
+) {
+  return sessionTestSeededContacts(testName, { context }, testCallback);
 }
 
 /**
