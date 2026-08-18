@@ -1,5 +1,5 @@
 import { Conversation, LeftPane, ProSettings, Settings } from '../../../desktop/locators';
-import { test_Alice_1W_Bob_1W } from '../../../desktop/sessionTest';
+import { test_Alice_1W_Bob_1W_friends } from '../../../desktop/sessionTest';
 import { tStripped } from '../../../localizer/lib';
 import { COUNTDOWN_START_THRESHOLD, PRO_MAX_CHARS } from '../../../shared/constants';
 
@@ -25,12 +25,9 @@ const AT_PRO_THRESHOLD = PRO_MAX_CHARS - COUNTDOWN_START_THRESHOLD;
  * The composer half runs first so the settings screen can be the last thing opened and nothing has to be
  * navigated back out of.
  */
-test_Alice_1W_Bob_1W(
+test_Alice_1W_Bob_1W_friends(
   'Pro features survive the plan expiring',
-  async ({ alice, bob }) => {
-    await alice.createContactWith(bob);
-    await alice.openConversationWith(bob.userName);
-
+  async ({ alice }) => {
     // At this length the countdown reads 200 under the Pro limit and would have appeared thousands of
     // characters ago under the standard one, so the value names which limit is being applied.
     await alice.pasteIntoInput('message-input-text-area', 'z'.repeat(AT_PRO_THRESHOLD));
