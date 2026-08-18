@@ -19,10 +19,7 @@ test_Alice_1W_pro_access('Pro is granted to a seeded account', async ({ alice, a
   // Before the client is allowed to look: the grant has to exist by the time the gate fires, and the
   // gate fires at startup.
   // No platform: desktop has none to derive a provider from, so the provider is given directly.
-  await makeAccountPro({
-    user: { userName: account.userName, recoveryPhrase: account.recoveryPassword },
-    provider: 'google',
-  });
+  await makeAccountPro({ user: account, provider: 'google' });
 
   // Desktop asks the backend for status only at startup, so the grant is invisible until it restarts.
   await restartApp(alice, { pro: {} });

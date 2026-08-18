@@ -1,9 +1,10 @@
 import { CTA } from '../../../desktop/locators';
-import { joinCommunities, pinConversation, pinIconFor } from '../../../desktop/pin';
-import { test_Alice_1W } from '../../../desktop/sessionTest';
+import { pinConversation, pinIconFor } from '../../../desktop/pin';
+import { test_Alice_1W_10contacts } from '../../../desktop/sessionTest';
 import { STANDARD_PIN_LIMIT } from '../../../shared/constants';
 
-const COMMUNITY_COUNT = 6;
+/** Enough conversations to exceed the standard limit. */
+const CONVERSATION_COUNT = 6;
 
 /**
  * Refused, and not sold to.
@@ -22,10 +23,10 @@ const COMMUNITY_COUNT = 6;
  * action being refused is not the same as no prompt appearing — an implementation that showed the prompt
  * and pinned anyway satisfies either assertion alone.
  */
-test_Alice_1W(
+test_Alice_1W_10contacts(
   'An active plan with no proof is refused without being sold to',
-  async ({ alice }) => {
-    const names = await joinCommunities(alice, COMMUNITY_COUNT);
+  async ({ alice, contactNames }) => {
+    const names = contactNames.slice(0, CONVERSATION_COUNT);
 
     // The standard limit applies, because the limit is ACCESS.
     for (const name of names.slice(0, STANDARD_PIN_LIMIT)) {
@@ -52,6 +53,5 @@ test_Alice_1W(
       proLoadingState: 'success',
       proProof: 'none',
     },
-    communityRooms: COMMUNITY_COUNT,
   }
 );

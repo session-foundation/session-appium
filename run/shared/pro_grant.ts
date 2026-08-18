@@ -30,8 +30,23 @@ export type ProAccountUnderTest = {
   userName: string;
   /** `05…` Account ID. Optional because some specs opt out of reading it; the mint is guarded when present. */
   accountID?: string;
-  recoveryPhrase: string;
+  /**
+   * The account's seed words. Desktop's `User` calls the same value `recoveryPassword` (the app's own
+   * copy uses both names), so either satisfies this — mobile passes `recoveryPhrase`, desktop passes
+   * its account object unchanged.
+   */
+  recoveryPhrase?: string;
+  recoveryPassword?: string;
 };
+
+/** The seed words off either spelling, so callers never have to rename a field to grant Pro. */
+export function seedWordsOf(user: ProAccountUnderTest): string {
+  const words = user.recoveryPhrase ?? user.recoveryPassword;
+  if (!words) {
+    throw new Error(`seedWordsOf: ${user.userName} has neither recoveryPhrase nor recoveryPassword`);
+  }
+  return words;
+}
 
 /**
  * An entitlement short enough to sit inside every client's expiry-warning window, which is seven days
@@ -316,7 +331,7 @@ export async function makeAccountPro(
   const provider: PaymentProvider = providerParam ?? (platform === 'ios' ? 'apple' : 'google');
   // The master Pro key is derived from the account's recovery phrase, so the grant binds to the
   // account the test just created without the app having to tell us anything.
-  const seedHex = mnemonicToSeedHex(user.recoveryPhrase);
+  const seedHex = mnemonicToSeedHex(seedWordsOf(user));
 
   // Fail at the mint rather than three screens later. `accountID` is 'not_needed' when a spec opted out
   // of reading it, in which case there is nothing to check against.
