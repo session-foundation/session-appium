@@ -16,7 +16,7 @@
 
 import { Page, test, TestInfo } from '@playwright/test';
 
-import type { Group } from './types';
+import type { Group, User } from './types';
 
 import {
   allocateCommunityRooms,
@@ -414,6 +414,35 @@ function sessionTestSeededContacts(
   });
 }
 
+/**
+ * One user whose config already carries a Pro access expiry, and a window for them.
+ *
+ * The callback gets the seeded account as well as the window, because the point of this state is to
+ * grant Pro to that same account on the backend before the client ever looks.
+ */
+function sessionTestSeededProAccess(
+  testName: string,
+  { context }: { context?: TestContext },
+  testCallback: (
+    details: { alice: DesktopWrapper; account: User },
+    testInfo: TestInfo
+  ) => Promise<void>
+): void {
+  return seededTest(testName, async (pages, testInfo) => {
+    const opened = await openSeededWindows({
+      stateKey: '1userWithProAccess',
+      groupName: undefined,
+      windowsPerUser: [1],
+      context,
+    });
+    pages.push(...opened.pages);
+    await testCallback(
+      { alice: opened.users[0].windows[0], account: opened.users[0].account },
+      testInfo
+    );
+  });
+}
+
 function sessionTestSeededGroup(
   testName: string,
   { windowsPerUser, extraWindows = 0, context }: SeededOptions,
@@ -560,6 +589,18 @@ export function test_Alice_2W_Bob_1W_friends(
  * The seeded counterpart of `joinCommunities(N)` for tests that just need a populated conversation
  * list — pinning, ordering, list limits — and do not care what the conversations are.
  */
+/** Alice with a Pro access expiry already in her config, one window. */
+export function test_Alice_1W_pro_access(
+  testName: string,
+  testCallback: (
+    details: { alice: DesktopWrapper; account: User },
+    testInfo: TestInfo
+  ) => Promise<void>,
+  context?: TestContext
+) {
+  return sessionTestSeededProAccess(testName, { context }, testCallback);
+}
+
 export function test_Alice_1W_10contacts(
   testName: string,
   testCallback: (
