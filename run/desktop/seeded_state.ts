@@ -27,7 +27,13 @@ import type { User } from './types';
 
 import { resolveNetworkTarget } from '../test/utils/devnet';
 import { DesktopWrapper } from './DesktopWrapper';
-import { getLaunchedInstances, MULTIS, openApps, type TestContext, waitFirstWindow } from './open';
+import {
+  getLaunchedInstances,
+  multisAvailable,
+  openApps,
+  type TestContext,
+  waitFirstWindow,
+} from './open';
 
 /** One seeded account together with the windows signed into it. */
 export type SeededUser = {
@@ -104,13 +110,13 @@ export async function openSeededWindows<K extends PrebuiltStateKey>({
   // user-data directory, and it throws rather than guessing.
   const instances = getLaunchedInstances();
   const identify = (wrapper: DesktopWrapper, windowIndex: number) => {
-    if (windowIndex >= MULTIS.length || !instances[windowIndex]) {
+    if (windowIndex >= multisAvailable.length || !instances[windowIndex]) {
       throw new Error(
         `openSeededWindows: window ${windowIndex + 1} has no launch identity to assign ` +
-          `(${MULTIS.length} multis, ${instances.length} instances recorded)`
+          `(${multisAvailable.length} multis, ${instances.length} instances recorded)`
       );
     }
-    wrapper.setLaunchIdentity(MULTIS[windowIndex], instances[windowIndex]);
+    wrapper.setLaunchIdentity(multisAvailable[windowIndex], instances[windowIndex]);
   };
 
   let next = 0;

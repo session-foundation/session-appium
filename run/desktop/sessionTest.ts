@@ -29,7 +29,7 @@ import { DesktopWrapper } from './DesktopWrapper';
 import { linkedDevice } from './linked_device';
 import {
   getLaunchedInstances,
-  MULTIS,
+  multisAvailable,
   openApps,
   resetTrackedElectronPids,
   TestContext,
@@ -72,7 +72,7 @@ async function openWrappedWindows(
     const instances = getLaunchedInstances();
     const wrappers = pages.map((page, i) => {
       const wrapper = new DesktopWrapper(page, MAIN_IDENTITIES[i]);
-      wrapper.setLaunchIdentity(MULTIS[i], instances[i]);
+      wrapper.setLaunchIdentity(multisAvailable[i], instances[i]);
       return wrapper;
     });
     await run(wrappers, testInfo);
@@ -189,7 +189,7 @@ function sessionTestGeneric(
         const wrapper = new DesktopWrapper(page, MAIN_IDENTITIES[i]);
         // Positional: `openApps` launches multis A, B, C… in order and records each instance as it
         // goes, so index i here is the same window as index i there.
-        wrapper.setLaunchIdentity(MULTIS[i], instances[i]);
+        wrapper.setLaunchIdentity(multisAvailable[i], instances[i]);
         return wrapper;
       });
       await Promise.all(main.map((w, i) => w.onboard(USER_NAMES[i], waitForNetwork)));
