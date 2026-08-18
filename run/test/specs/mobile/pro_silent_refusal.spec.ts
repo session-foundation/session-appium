@@ -2,6 +2,7 @@ import { test, type TestInfo } from '@playwright/test';
 import { USERNAME } from '@session-foundation/qa-seeder';
 
 import { getCommunities } from '../../../constants/community';
+import { STANDARD_PIN_LIMIT } from '../../../shared/constants';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { ConversationPinnedIcon, PlusButton } from '../../locators/home';
@@ -14,8 +15,6 @@ import {
   SupportedPlatformsType,
 } from '../../utils/open_app';
 
-/** The pinned-conversation limit for a standard account. */
-const STANDARD_PIN_LIMIT = 5;
 const COMMUNITY_COUNT = 6;
 const PLAN_DAYS = 30;
 const ONE_DAY_SECONDS = 24 * 60 * 60;

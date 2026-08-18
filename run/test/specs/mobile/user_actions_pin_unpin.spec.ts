@@ -2,6 +2,7 @@ import { test, type TestInfo } from '@playwright/test';
 import { USERNAME } from '@session-foundation/qa-seeder';
 
 import { getCommunities } from '../../../constants/community';
+import { STANDARD_PIN_LIMIT } from '../../../shared/constants';
 import { makeAccountPro } from '../../../shared/pro_grant';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
@@ -17,9 +18,6 @@ import {
   SupportedPlatformsType,
 } from '../../utils/open_app';
 import { observeProGrant } from '../../utils/pro_refresh';
-
-/** The pinned-conversation limit for a standard account. */
-const STANDARD_PIN_LIMIT = 5;
 
 bothPlatformsIt({
   title: 'Pin and unpin conversation',

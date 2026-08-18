@@ -1,9 +1,9 @@
 import { Conversation } from '../../../desktop/locators';
 import { test_Alice_1W_Bob_1W } from '../../../desktop/sessionTest';
+import { STANDARD_MAX_CHARS } from '../../../shared/constants';
 
 /** Comfortably past the standard cap, comfortably under the Pro one. */
 const OVER_STANDARD = 3000;
-const STANDARD_MAX_CHARS = 2000;
 
 /**
  * The countdown is rendered through `Intl.NumberFormat`, so the raw number never appears — a

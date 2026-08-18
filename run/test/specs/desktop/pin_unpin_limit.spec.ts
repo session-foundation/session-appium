@@ -1,6 +1,7 @@
 import { CTA } from '../../../desktop/locators';
 import { joinCommunities, pinConversation, pinIconFor } from '../../../desktop/pin';
 import { test_Alice_1W } from '../../../desktop/sessionTest';
+import { STANDARD_PIN_LIMIT } from '../../../shared/constants';
 
 /**
  * The pinned-conversation limit either side of the Pro boundary: five for a standard user, more for a
@@ -15,7 +16,6 @@ import { test_Alice_1W } from '../../../desktop/sessionTest';
  */
 
 const COMMUNITY_COUNT = 6;
-const STANDARD_PIN_LIMIT = 5;
 
 test_Alice_1W(
   'Pinned conversation limit (non Pro)',

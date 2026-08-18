@@ -1,9 +1,8 @@
 import { Conversation, LeftPane, ProSettings, Settings } from '../../../desktop/locators';
 import { test_Alice_1W_Bob_1W } from '../../../desktop/sessionTest';
 import { tStripped } from '../../../localizer/lib';
+import { COUNTDOWN_START_THRESHOLD, PRO_MAX_CHARS } from '../../../shared/constants';
 
-const PRO_MAX_CHARS = 10000;
-const COUNTDOWN_START_THRESHOLD = 200;
 /** Lands the countdown on exactly the threshold, so the value asserted is the limit being applied. */
 const AT_PRO_THRESHOLD = PRO_MAX_CHARS - COUNTDOWN_START_THRESHOLD;
 

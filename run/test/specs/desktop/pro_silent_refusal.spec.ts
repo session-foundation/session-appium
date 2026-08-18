@@ -1,9 +1,8 @@
 import { CTA } from '../../../desktop/locators';
 import { joinCommunities, pinConversation, pinIconFor } from '../../../desktop/pin';
 import { test_Alice_1W } from '../../../desktop/sessionTest';
+import { STANDARD_PIN_LIMIT } from '../../../shared/constants';
 
-/** The pinned-conversation limit for a standard account. */
-const STANDARD_PIN_LIMIT = 5;
 const COMMUNITY_COUNT = 6;
 
 /**

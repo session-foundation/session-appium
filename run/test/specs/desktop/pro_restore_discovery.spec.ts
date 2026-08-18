@@ -1,9 +1,9 @@
 import { Conversation, HomeScreen } from '../../../desktop/locators';
 import { sessionTestTwoWindows } from '../../../desktop/sessionTest';
 import { tStripped } from '../../../localizer/lib';
+import { PRO_MAX_CHARS } from '../../../shared/constants';
 
-/** The Pro message cap, and how far short of it to stop so the countdown is showing. */
-const PRO_MAX_CHARS = 10000;
+/** How far short of the limit to stop, so the countdown is on screen to be read. */
 const COUNTDOWN_AT = 5;
 
 /**
