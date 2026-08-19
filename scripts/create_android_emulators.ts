@@ -128,8 +128,12 @@ function bootAvd(
     ? `-no-snapshot-save -snapshot ${SNAPSHOT_NAME} -force-snapshot-load`
     : '-no-snapshot-load';
 
+  // The assignment goes BEFORE `nohup`, not after it: only the shell expands `VAR=value cmd`, so
+  // `nohup DISPLAY=:0 …` makes nohup look for a binary named `DISPLAY=:0`, exit 127, and lose its
+  // own error — an empty log, no emulator, and a boot wait that runs to its timeout. macOS never
+  // saw it because `display` is empty there.
   execSync(
-    `nohup ${display}"${paths.emulator}" @${name} -port ${port} ${snapshotArgs} -no-boot-anim ` +
+    `${display}nohup "${paths.emulator}" @${name} -port ${port} ${snapshotArgs} -no-boot-anim ` +
       `> /tmp/emulator-${port}.log 2>&1 &`,
     { stdio: 'ignore' }
   );

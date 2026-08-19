@@ -1,5 +1,7 @@
 import { test } from '@playwright/test';
 
+import type { IBaseDeviceWrapper } from '../../../types/IBaseDeviceWrapper';
+
 import { TestSteps } from '../../../types/allure';
 import { crossPlatformTest } from '../../utils/cross_platform';
 import { friends } from '../../utils/cross_platform_state_builder';
@@ -37,22 +39,24 @@ crossPlatformTest({
       await bob.desktop[0].sendMessage(bobMessage);
     });
 
-    await test.step(`Verify both messages synced to all of ${aliceName}'s devices`, async () => {
-      // Every Alice client shows both messages in the conversation with Bob.
-      for (const client of alice.clients) {
-        await client.openConversationWith(bobName);
-        await client.waitForMessage(aliceMessage);
-        await client.waitForMessage(bobMessage);
-      }
-    });
+    // Both messages must land on one client, in its conversation with `convoName`. The two
+    // waits share a single session (Appium won't take concurrent commands on one), so they
+    // stay sequential here — it's the clients that are verified concurrently, below.
+    const verifyBothMessages = async (client: IBaseDeviceWrapper, convoName: string) => {
+      await client.openConversationWith(convoName);
+      await client.waitForMessage(aliceMessage);
+      await client.waitForMessage(bobMessage);
+    };
 
-    await test.step(`Verify both messages synced to all of ${bobName}'s devices`, async () => {
-      // Every Bob client shows both messages in the conversation with Alice.
-      for (const client of bob.clients) {
-        await client.openConversationWith(aliceName);
-        await client.waitForMessage(aliceMessage);
-        await client.waitForMessage(bobMessage);
-      }
-    });
+    // Every client is an independent session/window and the assertions are read-only polls,
+    // so all four are verified at once rather than paying each client's sync wait in turn.
+    await Promise.all([
+      test.step(`Verify both messages synced to all of ${aliceName}'s devices`, async () => {
+        await Promise.all(alice.clients.map(client => verifyBothMessages(client, bobName)));
+      }),
+      test.step(`Verify both messages synced to all of ${bobName}'s devices`, async () => {
+        await Promise.all(bob.clients.map(client => verifyBothMessages(client, aliceName)));
+      }),
+    ]);
   },
 });
