@@ -16,7 +16,12 @@ import type { User } from '../../types/testing';
 
 import { forceCloseAllWindows } from '../../desktop/closeWindows';
 import { DesktopWrapper } from '../../desktop/DesktopWrapper';
-import { getLaunchedInstances, MULTIS, openApps, waitFirstWindow } from '../../desktop/open';
+import {
+  getLaunchedInstances,
+  multisAvailable,
+  openApps,
+  waitFirstWindow,
+} from '../../desktop/open';
 import { getDevicesPerTestCount } from './binaries';
 import { getAndroidPoolSize } from './capabilities_android';
 import { IOS_PRO_CONTEXT } from './capabilities_ios';
@@ -245,8 +250,8 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
   const launchedInstances = getLaunchedInstances();
   const desktopPool = desktopWindows.map((page, i) => {
     const wrapper = new DesktopWrapper(page);
-    if (MULTIS[i] && launchedInstances[i]) {
-      wrapper.setLaunchIdentity(MULTIS[i], launchedInstances[i]);
+    if (multisAvailable[i] && launchedInstances[i]) {
+      wrapper.setLaunchIdentity(multisAvailable[i], launchedInstances[i]);
     }
     return wrapper;
   });

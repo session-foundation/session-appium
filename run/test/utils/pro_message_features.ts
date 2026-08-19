@@ -24,9 +24,7 @@ export type ProMessageFeature = 'increasedMessageLength' | 'proBadge';
  * Per feature rather than indexed, which is what lets an assertion name *which* features a message
  * carried instead of counting them.
  */
-export type ProFeatureTestId =
-  | 'pro-message-feature-badges'
-  | 'pro-message-feature-longer-messages';
+export type ProFeatureTestId = 'pro-message-feature-badges' | 'pro-message-feature-longer-messages';
 
 export function proFeatureTestId(feature: ProMessageFeature): ProFeatureTestId {
   switch (feature) {

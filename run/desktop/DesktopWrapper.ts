@@ -527,17 +527,22 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     message: string,
     maxWaitMs = 60_000
   ): Promise<void> {
-    await doWhileWithMax(maxWaitMs, 1_000, `sendLongProMessage ${this.deviceIdentity}`, async () => {
-      try {
-        await this.openConversationWith(convoName);
-        await desktopSendMessage(this.page, message);
-        await waitForTextMessage(this.page, message);
-        return true;
-      } catch (_e) {
-        await this.page.keyboard.press('Escape').catch(() => undefined);
-        return false;
+    await doWhileWithMax(
+      maxWaitMs,
+      1_000,
+      `sendLongProMessage ${this.deviceIdentity}`,
+      async () => {
+        try {
+          await this.openConversationWith(convoName);
+          await desktopSendMessage(this.page, message);
+          await waitForTextMessage(this.page, message);
+          return true;
+        } catch (_e) {
+          await this.page.keyboard.press('Escape').catch(() => undefined);
+          return false;
+        }
       }
-    });
+    );
   }
 
   // --- Receiver-side Session Pro assertions ---
