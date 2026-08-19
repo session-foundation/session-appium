@@ -29,6 +29,7 @@ import { DesktopWrapper } from './DesktopWrapper';
 import { linkedDevice } from './linked_device';
 import {
   getLaunchedInstances,
+  MULTIS,
   openApps,
   resetTrackedElectronPids,
   TestContext,
@@ -38,8 +39,6 @@ import { openSeededWindows, type SeededUser } from './seeded_state';
 
 const MAIN_IDENTITIES = ['alice-desktop', 'bob-desktop', 'charlie-desktop', 'dracula-desktop'];
 const USER_NAMES = ['Alice', 'Bob', 'Charlie', 'Dracula'];
-/** Mirrors `openApps`, which assigns multis from the start of the alphabet in launch order. */
-const MULTIS = ['A', 'B', 'C', 'D'];
 
 /**
  * Appends the `@pro` tag mobile's `sessionIt` generates, so `--grep @pro` selects the same class of
@@ -70,7 +69,12 @@ async function openWrappedWindows(
     if (pages.length !== count) {
       throw new Error(`openApps should have opened ${count} windows but did not.`);
     }
-    const wrappers = pages.map((page, i) => new DesktopWrapper(page, MAIN_IDENTITIES[i]));
+    const instances = getLaunchedInstances();
+    const wrappers = pages.map((page, i) => {
+      const wrapper = new DesktopWrapper(page, MAIN_IDENTITIES[i]);
+      wrapper.setLaunchIdentity(MULTIS[i], instances[i]);
+      return wrapper;
+    });
     await run(wrappers, testInfo);
   } finally {
     try {

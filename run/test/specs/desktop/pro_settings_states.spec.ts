@@ -33,10 +33,19 @@ test_Alice_1W(
       locator: ProSettings.planExpiry,
       options: { text: tStripped('proExpiringTime', { time: `${ACCESS_DAYS} days` }) },
     });
+    // The rows above follow the plan's status; the hero description is picked by a separate switch on
+    // that same status, so asserting one says nothing about the other. A client that got this wrong
+    // would thank a lapsed subscriber for subscribing, or offer renewal to someone mid-plan.
+    await alice.waitForElement({
+      locator: ProSettings.description,
+      options: { text: tStripped('proThanksForSupporting') },
+    });
 
     await alice.hasElementPoppedUpThatShouldnt(ProSettings.renewPlanButton);
   },
-  { pro: { proBackendStatus: 'active', proAccessExpiry: 'P30D' } }
+  // A subscribed user holds both halves: `proBackendStatus` is the plan's state and grants nothing,
+  // `proProof` is the entitlement every feature on this screen reads.
+  { pro: { proBackendStatus: 'active', proAccessExpiry: 'P30D', proProof: 'valid' } }
 );
 
 test_Alice_1W(
@@ -88,6 +97,20 @@ test_Alice_1W(
       options: { text: tStripped('errorCheckingProStatus') },
     });
     await alice.waitForElement({ locator: ProSettings.featuresHeader });
+    // The never-subscribed copy, asserted here rather than in its own spec because this is the only
+    // fixture reaching that status on the settings screen. It is independent of the banner: the
+    // description switches on the plan's status while the banner reflects the fetch, which is why an
+    // unreachable backend still renders the upgrade pitch rather than nothing.
+    //
+    // Only the first sentence, and derived rather than written out. This is the one hero token
+    // carrying a line break, and Desktop renders it as a `<br>` — which contributes no text, so the
+    // DOM runs the sentences together where the localizer joins them with a space. Matching is by
+    // substring, so the opening sentence is enough to name the status, and it stays Crowdin-owned.
+    const [upgradePitchOpening] = tStripped('proFullestPotential').split('?');
+    await alice.waitForElement({
+      locator: ProSettings.description,
+      options: { text: `${upgradePitchOpening}?` },
+    });
   },
   { pro: { proBackendStatus: 'never', proLoadingState: 'error' } }
 );

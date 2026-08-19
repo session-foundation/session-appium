@@ -53,15 +53,6 @@ export type IOSTestContext = ProMockContext & {
     | 'testFlight'
     | 'useActual';
   /**
-   * Access expiry, in seconds since epoch. Float-quantised inside the app, so assert a range or a
-   * rendered string — never exact equality.
-   *
-   * PAIR THIS WITH `proBackendStatus: 'active'`. Each mock defaults to "use the actual value", so an
-   * `active` status on an account that never subscribed inherits a zero expiry and the app renders
-   * an expiring-soon screen — which then sits over the UI and fails later steps on missing elements.
-   */
-  proAccessExpiry?: string;
-  /**
    * Point the app at a QA Pro backend instead of the compiled-in production one.
    *
    * Set BOTH, and set them on EVERY device in a multi-device test: the pubkey is what libSession
@@ -90,6 +81,7 @@ const IOS_TEST_ENV_KEYS: Record<keyof IOSTestContext, string> = {
   proRefundingStatus: 'mockCurrentUserSessionProRefundingStatus',
   proBuildVariant: 'mockCurrentUserSessionProBuildVariant',
   proAccessExpiry: 'mockCurrentUserAccessExpiryTimestamp',
+  proProof: 'mockCurrentUserSessionProProof',
   proBackendUrl: 'customProBackendUrl',
   proBackendPubkey: 'customProBackendPubkey',
 };
@@ -131,11 +123,18 @@ export const IOS_PRO_ACCESS_DAYS = 30;
  * `proAccessExpiry` is not optional in practice: each mock defaults to "use the actual value", so an
  * `active` status on an account that never subscribed inherits a **zero** expiry and the app renders
  * an expiring-soon screen over the UI, which then fails later steps on missing elements.
+ *
+ * `proProof` is not optional either, and for a sharper reason: `proBackendStatus` says what state the
+ * plan is in and **grants nothing**. Every feature — the character limit, the badge, the animated
+ * avatar, the pinned limit — reads the proof, so a status-only fixture renders a subscriber whose
+ * features are all switched off. The two were one lever until 2026-08-14; anything that means "this
+ * user is Pro" now has to say both halves.
  */
 export function iosActiveProContext(days: number = IOS_PRO_ACCESS_DAYS): IOSTestContext {
   return {
     ...IOS_PRO_CONTEXT,
     proBackendStatus: 'active',
+    proProof: 'valid',
     proAccessExpiry: String(Math.floor(Date.now() / 1000) + days * 24 * 60 * 60),
   };
 }

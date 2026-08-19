@@ -1,4 +1,3 @@
-import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W_Bob_1W } from '../../../desktop/sessionTest';
 
 const MESSAGE = 'Checking my badge shows for you';
@@ -18,8 +17,9 @@ test_Alice_1W_Bob_1W(
     await alice.createContactWith(bob);
 
     await alice.subscribeToPro();
-    // Desktop asks the backend for status only at startup, so the grant is invisible until restart.
-    await restartApp(alice, { pro: {} });
+    // A restart does not surface a grant this client has never seen — the cold-launch fetch is gated on
+    // already knowing there is access. Opening Pro settings fetches regardless, which is what this does,
+    // and is the same route the mobile specs take.
     await alice.waitForProActive();
     await alice.enableProBadge();
 

@@ -1,5 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
+import { tStripped } from '../../../localizer/lib';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
@@ -10,6 +11,7 @@ import {
   ProManageSectionHeader,
   ProPlanExpiry,
   ProRenewPlanRow,
+  ProSettingsDescription,
   ProSettingsEntry,
   ProStatsHeader,
   ProStatusBanner,
@@ -128,6 +130,8 @@ async function proSettingsSubscribed(platform: SupportedPlatformsType, testInfo:
   const device = await openSettingsAsNewUser(platform, testInfo, {
     sessionProEnabled: 'true',
     proBackendStatus: 'active',
+    // The plan's state grants nothing; the proof is what every feature on this screen reads.
+    proProof: 'valid',
     proAccessExpiry: accessExpiry(),
   });
 
@@ -142,6 +146,12 @@ async function proSettingsSubscribed(platform: SupportedPlatformsType, testInfo:
     await device.waitForTextElementToBePresent(new ProPlanExpiry(device, `${ACCESS_DAYS} days`));
     await device.waitForTextElementToBePresent(new ProBadgeSettingRow(device));
     await device.waitForTextElementToBePresent(new ProFeaturesHeader(device));
+    // The rows above follow the plan's status; the description is picked by a separate switch on that
+    // same status, so asserting one says nothing about the other. A client that got this wrong would
+    // thank a lapsed subscriber for subscribing, or offer renewal to someone mid-plan.
+    await device.waitForTextElementToBePresent(
+      new ProSettingsDescription(device, tStripped('proThanksForSupporting'))
+    );
     // Both plan rows are what distinguish an active screen from an expired one, and only one is ever
     // shown — so presence alone would pass an app that rendered both.
     await device.verifyElementNotPresent({
@@ -173,6 +183,15 @@ async function proSettingsExpired(platform: SupportedPlatformsType, testInfo: Te
   const device = await openAppAsNewUser(platform, testInfo, {
     sessionProEnabled: 'true',
     proBackendStatus: 'expired',
+    // Load-bearing, and only since the startup fetch gate landed: the CTA arms on a CONFIRMED status,
+    // and a client holding no proof and no access expiry is exactly the case the gate declines to
+    // fetch for — so a mocked status alone is never confirmed and no CTA can appear. Forcing the
+    // loading state supplies the confirmation a real lapsed subscriber would get from their own
+    // expiry being in config.
+    proLoadingState: 'success',
+    // A lapsed subscriber has an expiry, and it is in the past. Without one the account is
+    // indistinguishable from never-subscribed as far as anything reading local state is concerned.
+    proAccessExpiry: String(Math.floor(Date.now() / 1000) - 24 * 60 * 60),
   });
 
   await test.step('Verify the expiry CTA on app open', async () => {
@@ -261,6 +280,17 @@ async function proStatusError(platform: SupportedPlatformsType, testInfo: TestIn
   await test.step('Verify the backend-unavailable banner', async () => {
     await device.waitForTextElementToBePresent(new ProStatusBanner(device, 'error'));
     await device.waitForTextElementToBePresent(new ProFeaturesHeader(device));
+    // The never-subscribed copy, asserted here rather than in its own spec because this is the only
+    // fixture that reaches that status on the settings screen. It is independent of the banner: the
+    // description switches on the plan's status while the banner reflects the fetch, which is why an
+    // unreachable backend still renders the upgrade pitch rather than nothing.
+    //
+    // This is the one of the three whose copy carries a line break, so it only compares equal because
+    // label and text matching collapse whitespace — iOS renders a break, Android a `\n`, and the
+    // localizer yields a space.
+    await device.waitForTextElementToBePresent(
+      new ProSettingsDescription(device, tStripped('proFullestPotential'))
+    );
   });
 
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

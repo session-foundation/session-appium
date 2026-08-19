@@ -204,6 +204,7 @@ export type DataTestId =
   | 'pro-badge-visible-settings-toggle'
   | 'pro-message-feature-badges'
   | 'pro-message-feature-longer-messages'
+  | 'pro-settings-description'
   | 'pro-settings-features-header'
   | 'pro-settings-manage-header'
   | 'pro-settings-stats-header'

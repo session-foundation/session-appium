@@ -1,10 +1,6 @@
-import type { DesktopWrapper } from '../../../desktop/DesktopWrapper';
-
-import { getCommunities } from '../../../constants/community';
-import { joinCommunityByLink } from '../../../desktop/join_community';
-import { CTA, Global, HomeScreen } from '../../../desktop/locators';
+import { CTA } from '../../../desktop/locators';
+import { joinCommunities, pinConversation, pinIconFor } from '../../../desktop/pin';
 import { test_Alice_1W } from '../../../desktop/sessionTest';
-import { tStripped } from '../../../localizer/lib';
 
 /**
  * The pinned-conversation limit either side of the Pro boundary: five for a standard user, more for a
@@ -20,31 +16,6 @@ import { tStripped } from '../../../localizer/lib';
 
 const COMMUNITY_COUNT = 6;
 const STANDARD_PIN_LIMIT = 5;
-
-/** The pin marker on one conversation's row. Unscoped it matches whichever row happens to be pinned. */
-function pinIconFor(window: DesktopWrapper, conversationName: string) {
-  return window
-    .getPage()
-    .locator(`css=.${HomeScreen.conversationItemHeader.selector}`)
-    .filter({ hasText: conversationName })
-    .locator(`[data-testid="${HomeScreen.pinnedConversationIcon.selector}"]`);
-}
-
-async function pinConversation(window: DesktopWrapper, conversationName: string) {
-  await window.rightClickOnWithText(HomeScreen.conversationItemName, conversationName);
-  await window.clickOnWithText(Global.contextMenuItem, tStripped('pin'));
-}
-
-async function joinCommunities(window: DesktopWrapper, count: number): Promise<Array<string>> {
-  const communities = Object.values(getCommunities()).slice(0, count);
-  if (communities.length < count) {
-    throw new Error(`Need ${count} communities to test the pin limit, got ${communities.length}`);
-  }
-  for (const community of communities) {
-    await joinCommunityByLink(window.getPage(), community.link, community.name);
-  }
-  return communities.map(community => community.name);
-}
 
 test_Alice_1W(
   'Pinned conversation limit (non Pro)',
@@ -80,7 +51,9 @@ test_Alice_1W(
     await alice.hasElementPoppedUpThatShouldnt(CTA.heading);
   },
   {
-    pro: { proBackendStatus: 'active', proAccessExpiry: 'P30D' },
+    // The pinned limit is an ACCESS question, so it reads the proof rather than the plan's state — a
+    // status-only fixture would pin like a free user and fail here for the wrong reason.
+    pro: { proBackendStatus: 'active', proAccessExpiry: 'P30D', proProof: 'valid' },
     communityRooms: COMMUNITY_COUNT,
   }
 );

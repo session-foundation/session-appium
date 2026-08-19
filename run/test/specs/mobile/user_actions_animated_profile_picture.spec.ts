@@ -21,8 +21,8 @@ import {
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { observeProGrant } from '../../utils/pro_refresh';
 import { runOnlyOnAndroid } from '../../utils/run_on';
-import { forceStopAndRestart } from '../../utils/utilities';
 import { verifyPageScreenshot } from '../../utils/verify_screenshots';
 
 bothPlatformsIt({
@@ -113,7 +113,7 @@ async function proActivatedCTA(platform: SupportedPlatformsType, testInfo: TestI
 
   await runOnlyOnAndroid(platform, async () => {
     await makeAccountPro({ user: alice, platform });
-    await forceStopAndRestart(device);
+    await observeProGrant(device);
   });
 
   await device.dismissCTA();
@@ -137,8 +137,7 @@ async function proAnimatedDP(platform: SupportedPlatformsType, testInfo: TestInf
     return { device, alice };
   });
   await makeAccountPro({ user: alice, platform });
-  await forceStopAndRestart(device);
-  await device.dismissCTA();
+  await observeProGrant(device);
   await test.step(TestSteps.USER_ACTIONS.CHANGE_PROFILE_PICTURE, async () => {
     await device.uploadProfilePicture(true);
   });
@@ -162,8 +161,7 @@ async function proAnimatedDPShows(platform: SupportedPlatformsType, testInfo: Te
   const { alice1, bob1 } = devices;
   const { alice, bob } = prebuilt;
   await makeAccountPro({ user: alice, platform });
-  await forceStopAndRestart(alice1);
-  await alice1.dismissCTA();
+  await observeProGrant(alice1);
   await test.step(TestSteps.USER_ACTIONS.CHANGE_PROFILE_PICTURE, async () => {
     await alice1.uploadProfilePicture(true);
   });

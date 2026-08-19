@@ -249,6 +249,15 @@ export function getLaunchedInstances(): Array<string> {
 }
 
 /**
+ * The `MULTI` suffixes `openApps` assigns, in launch order — index `i` here is the same window as
+ * index `i` in `getLaunchedInstances()`.
+ *
+ * Here rather than beside the test templates because both the onboarding and the seeded openers need
+ * it, and the seeded opener cannot import from the templates: they import it.
+ */
+export const MULTIS = ['A', 'B', 'C', 'D'];
+
+/**
  * Bring a window back up on the same user-data directory it was using.
  *
  * Session Desktop asks the Pro backend for status once, at startup, so a grant made while the app is
