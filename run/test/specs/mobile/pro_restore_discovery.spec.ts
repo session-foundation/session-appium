@@ -57,7 +57,7 @@ async function proRestoreDiscovery(platform: SupportedPlatformsType, testInfo: T
   });
 
   await test.step('Restore onto a device that has never seen the grant', async () => {
-    await device2.restoreFromSeed(alice.recoveryPhrase);
+    await device2.restoreFromSeed(alice.seedPhrase);
     await device2.dismissCTA();
   });
 
@@ -66,7 +66,7 @@ async function proRestoreDiscovery(platform: SupportedPlatformsType, testInfo: T
     // party to message, and the cap applies the same way.
     await device2.clickOnElementAll(new PlusButton(device2));
     await device2.clickOnElementAll(new NewMessageOption(device2));
-    await device2.inputText(alice.accountID, new EnterAccountID(device2));
+    await device2.inputText(alice.sessionId, new EnterAccountID(device2));
     // The keyboard covers Next on smaller screens. Do NOT swipe here: this is a bottom sheet, so a
     // scroll drags the sheet and the tap silently misses.
     await device2.hideKeyboard();

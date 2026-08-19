@@ -14,7 +14,6 @@ import {
 } from '@session-foundation/qa-seeder';
 
 import type { DeviceWrapper } from '../../types/DeviceWrapper';
-import type { User } from '../../types/testing';
 
 import { ConversationItem } from '../locators/home';
 import { IOSTestContext } from '../utils/capabilities_ios';
@@ -22,18 +21,10 @@ import { resolveNetworkTarget } from '../utils/devnet';
 import { openAppMultipleDevices, type SupportedPlatformsType } from '../utils/open_app';
 import { restoreAccountNoFallback } from '../utils/restore_account';
 
-function toUser(stateUser: StateUser): User {
-  return {
-    userName: stateUser.userName,
-    accountID: stateUser.sessionId,
-    recoveryPhrase: stateUser.seedPhrase,
-  };
-}
-
-type WithAlice = { alice: User };
-type WithBob = { bob: User };
-type WithCharlie = { charlie: User };
-type WithDracula = { dracula: User };
+type WithAlice = { alice: StateUser };
+type WithBob = { bob: StateUser };
+type WithCharlie = { charlie: StateUser };
+type WithDracula = { dracula: StateUser };
 
 type WithFocusFriendsConvo = { focusFriendsConvo: boolean };
 type WithFocusGroupConvo = { focusGroupConvo: boolean };
@@ -153,7 +144,7 @@ export async function open_Alice1_with_contacts({
   // populate one list.
   await linkDevices([result.devices[0]], [result.prebuilt.users[0].seedPhrase]);
 
-  const alice = toUser(result.prebuilt.users[0]);
+  const alice = result.prebuilt.users[0];
   const contactNames = result.prebuilt.users.slice(1).map(u => u.userName);
 
   return {
@@ -184,8 +175,8 @@ export async function open_Alice1_Bob1_friends({
   const seedPhrases = result.prebuilt.users.map(m => m.seedPhrase);
   await linkDevices(result.devices, seedPhrases);
 
-  const alice = toUser(result.prebuilt.users[0]);
-  const bob = toUser(result.prebuilt.users[1]);
+  const alice = result.prebuilt.users[0];
+  const bob = result.prebuilt.users[1];
   const alice1 = result.devices[0];
   const bob1 = result.devices[1];
   const formattedDevices = {
@@ -240,9 +231,9 @@ export async function open_Alice1_Bob1_Charlie1_friends_group({
   const seedPhrases = result.prebuilt.users.map(m => m.seedPhrase);
   await linkDevices(result.devices, seedPhrases);
 
-  const alice = toUser(result.prebuilt.users[0]);
-  const bob = toUser(result.prebuilt.users[1]);
-  const charlie = toUser(result.prebuilt.users[2]);
+  const alice = result.prebuilt.users[0];
+  const bob = result.prebuilt.users[1];
+  const charlie = result.prebuilt.users[2];
 
   const alice1 = result.devices[0];
   const bob1 = result.devices[1];
@@ -299,16 +290,11 @@ export async function open_Alice2_Bob1_Charlie1_friends_group({
   result.devices[2].setDeviceIdentity('charlie1');
   result.devices[3].setDeviceIdentity('alice2');
 
-  const alice = toUser(result.prebuilt.users[0]);
-  const bob = toUser(result.prebuilt.users[1]);
-  const charlie = toUser(result.prebuilt.users[2]);
+  const alice = result.prebuilt.users[0];
+  const bob = result.prebuilt.users[1];
+  const charlie = result.prebuilt.users[2];
 
-  const seedPhrases = [
-    alice.recoveryPhrase,
-    bob.recoveryPhrase,
-    charlie.recoveryPhrase,
-    alice.recoveryPhrase,
-  ];
+  const seedPhrases = [alice.seedPhrase, bob.seedPhrase, charlie.seedPhrase, alice.seedPhrase];
   await linkDevices(result.devices, seedPhrases);
 
   const [alice1, bob1, charlie1, alice2] = result.devices;
@@ -384,9 +370,9 @@ export async function open_Alice1_Bob1_Charlie1_Unknown1({
     charlie1,
     unknown1: result.devices[3], // not assigned yet
   };
-  const alice = toUser(result.prebuilt.users[0]);
-  const bob = toUser(result.prebuilt.users[1]);
-  const charlie = toUser(result.prebuilt.users[2]);
+  const alice = result.prebuilt.users[0];
+  const bob = result.prebuilt.users[1];
+  const charlie = result.prebuilt.users[2];
   const formattedUsers: WithUsers<3> = {
     alice,
     bob,
@@ -424,11 +410,11 @@ export async function open_Alice2({
   result.devices[0].setDeviceIdentity('alice1');
   result.devices[1].setDeviceIdentity('alice2');
   // we want the first user to have the first 2 devices linked
-  const alice = toUser(result.prebuilt.users[0]);
+  const alice = result.prebuilt.users[0];
   const alice1 = result.devices[0];
   const alice2 = result.devices[1];
 
-  const seedPhrases = [alice.recoveryPhrase, alice.recoveryPhrase];
+  const seedPhrases = [alice.seedPhrase, alice.seedPhrase];
   await linkDevices(result.devices, seedPhrases);
 
   const formattedUsers: WithUsers<1> = {
@@ -464,13 +450,13 @@ export async function open_Alice1_bob1_notfriends({
   });
   result.devices[0].setDeviceIdentity('alice1');
   result.devices[1].setDeviceIdentity('bob1');
-  const alice = toUser(result.prebuilt.users[0]);
-  const bob = toUser(result.prebuilt.users[1]);
+  const alice = result.prebuilt.users[0];
+  const bob = result.prebuilt.users[1];
 
   const alice1 = result.devices[0];
   const bob1 = result.devices[1];
 
-  const seedPhrases = [alice.recoveryPhrase, bob.recoveryPhrase];
+  const seedPhrases = [alice.seedPhrase, bob.seedPhrase];
   await linkDevices(result.devices, seedPhrases);
 
   const formattedUsers: WithUsers<2> = {
@@ -506,10 +492,10 @@ export async function open_Alice2_Bob1_friends({
   result.devices[0].setDeviceIdentity('alice1');
   result.devices[1].setDeviceIdentity('alice2');
   result.devices[2].setDeviceIdentity('bob1');
-  const alice = toUser(result.prebuilt.users[0]);
-  const bob = toUser(result.prebuilt.users[1]);
+  const alice = result.prebuilt.users[0];
+  const bob = result.prebuilt.users[1];
   // we want the first user to have the first 2 devices linked
-  const seedPhrases = [alice.recoveryPhrase, alice.recoveryPhrase, bob.recoveryPhrase];
+  const seedPhrases = [alice.seedPhrase, alice.seedPhrase, bob.seedPhrase];
   await linkDevices(result.devices, seedPhrases);
 
   const alice1 = result.devices[0];

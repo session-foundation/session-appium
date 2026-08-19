@@ -1,5 +1,6 @@
-/* eslint-disable no-empty-pattern */
+import type { StateUser, UserNameType } from '@session-foundation/qa-seeder';
 
+/* eslint-disable no-empty-pattern */
 // Desktop test-declaration helpers. Adapted from session-playwright
 // (tests/automation/setup/sessionTest.ts) to drive the app through `DesktopWrapper`
 // instances (which implement IBaseDeviceWrapper) rather than raw Playwright `Page`s.
@@ -10,13 +11,12 @@
 // owned here — the wrapper never launches or kills Electron.
 //
 // Naming in the callback: a `DesktopWrapper` IS a window signed into an account. Where
-// session-playwright passed a separate `alice: User` + `aliceWindow1: Page`, we pass a
+// session-playwright passed a separate `alice: StateUser` + `aliceWindow1: Page`, we pass a
 // single `alice: DesktopWrapper` (use `alice.userName` / `alice.accountId` / `alice.getUser()`).
 // A user's second window is `alice2`.
-
 import { Page, test, TestInfo } from '@playwright/test';
 
-import type { Group, User } from './types';
+import type { Group } from './types';
 
 import {
   allocateCommunityRooms,
@@ -39,7 +39,7 @@ import {
 import { openSeededWindows, type SeededUser } from './seeded_state';
 
 const MAIN_IDENTITIES = ['alice-desktop', 'bob-desktop', 'charlie-desktop', 'dracula-desktop'];
-const USER_NAMES = ['Alice', 'Bob', 'Charlie', 'Dracula'];
+const USER_NAMES: Array<UserNameType> = ['Alice', 'Bob', 'Charlie', 'Dracula'];
 
 /**
  * Appends the `@pro` tag mobile's `sessionIt` generates, so `--grep @pro` selects the same class of
@@ -199,7 +199,7 @@ function sessionTestGeneric(
       if (links?.length) {
         for (const link of links) {
           const owner = main[link - 1];
-          const page = await linkedDevice(owner.getUser().recoveryPassword);
+          const page = await linkedDevice(owner.getUser().seedPhrase);
           linkedPages.push(page);
           const wrapper = new DesktopWrapper(page, `${MAIN_IDENTITIES[link - 1]}-2`);
           wrapper.setAccount(owner.getUser());
@@ -459,7 +459,7 @@ function sessionTestSeededProAccess(
   testName: string,
   { context }: { context?: TestContext },
   testCallback: (
-    details: { alice: DesktopWrapper; account: User },
+    details: { alice: DesktopWrapper; account: StateUser },
     testInfo: TestInfo
   ) => Promise<void>
 ): void {
@@ -636,7 +636,7 @@ export function test_Alice_2W_Bob_1W_friends(
 export function test_Alice_1W_pro_access(
   testName: string,
   testCallback: (
-    details: { alice: DesktopWrapper; account: User },
+    details: { alice: DesktopWrapper; account: StateUser },
     testInfo: TestInfo
   ) => Promise<void>,
   context?: TestContext

@@ -37,6 +37,6 @@ async function linkDevice(platform: SupportedPlatformsType, testInfo: TestInfo) 
   await alice2.clickOnElementAll(new UserSettings(alice2));
   // Check username
   await alice2.waitForTextElementToBePresent(new UsernameDisplay(alice2, alice.userName));
-  await alice2.waitForTextElementToBePresent(new AccountIDDisplay(alice2, alice.accountID));
+  await alice2.waitForTextElementToBePresent(new AccountIDDisplay(alice2, alice.sessionId));
   await closeApp(alice1, alice2);
 }

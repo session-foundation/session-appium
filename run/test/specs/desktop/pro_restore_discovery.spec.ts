@@ -30,13 +30,13 @@ sessionTestTwoWindows(
 
     // The account is seconds old, so its profile may not have reached the network yet and the restore
     // prompts for a name. This spec asserts entitlement, not the display name.
-    await restored.restoreFromSeed(account.recoveryPassword, 'Alice');
+    await restored.restoreFromSeed(account.seedPhrase, 'Alice');
 
     // Note to Self rather than a contact: the restored account is Alice's own, so there is no second
     // party to message, and the cap applies the same way.
     await restored.clickOn(HomeScreen.plusButton);
     await restored.clickOn(HomeScreen.newMessageOption);
-    await restored.pasteIntoInput(HomeScreen.newMessageAccountIDInput.selector, account.accountid);
+    await restored.pasteIntoInput(HomeScreen.newMessageAccountIDInput.selector, account.sessionId);
     await restored.clickOn(HomeScreen.newMessageNextButton);
     await restored.waitForTestIdWithText('header-conversation-name', tStripped('noteToSelf'));
 

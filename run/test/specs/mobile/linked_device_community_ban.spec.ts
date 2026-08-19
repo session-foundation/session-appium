@@ -1,10 +1,11 @@
+import type { StateUser } from '@session-foundation/qa-seeder';
+
 import test, { type TestInfo } from '@playwright/test';
 
 import { getCommunities } from '../../../constants/community';
 import { tStripped } from '../../../localizer/lib';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import { User } from '../../../types/testing';
 import {
   EmptyConversation,
   LongPressBanAndDelete,
@@ -61,10 +62,12 @@ async function banUnbanLinked(platform: SupportedPlatformsType, testInfo: TestIn
   const msg2 = `Am I banned? - ${msgSig}`;
   const msg3 = `You'll never catch me alive! - ${msgSig}`;
   const msg3Linked = `${msg3} - linked device`;
-  const alice: User = {
+  const alice: StateUser = {
     userName: 'Alice',
-    accountID: '', // Mandatory property of User type but not needed for this test
-    recoveryPhrase: process.env.SOGS_ADMIN_SEED!,
+    // Mandatory on StateUser but unused here: the SOGS admin is identified by its seed alone.
+    sessionId: '05',
+    seed: new Uint8Array(),
+    seedPhrase: process.env.SOGS_ADMIN_SEED!,
   };
   const {
     device1: alice1,
@@ -132,10 +135,12 @@ async function banAndDeleteLinked(platform: SupportedPlatformsType, testInfo: Te
   const msgSig = `${new Date().getTime()} - ${platform}`;
   const msg1 = `Ban and delete linked - ${msgSig}`;
   const msg2 = `Am I banned? - ${msgSig}`;
-  const alice: User = {
+  const alice: StateUser = {
     userName: 'Alice',
-    accountID: '', // Mandatory property of User type but not needed for this test
-    recoveryPhrase: process.env.SOGS_ADMIN_SEED!,
+    // Mandatory on StateUser but unused here: the SOGS admin is identified by its seed alone.
+    sessionId: '05',
+    seed: new Uint8Array(),
+    seedPhrase: process.env.SOGS_ADMIN_SEED!,
   };
   const {
     device1: alice1,

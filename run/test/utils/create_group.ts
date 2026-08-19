@@ -1,6 +1,8 @@
+import type { StateUser } from '@session-foundation/qa-seeder';
+
 import { tStripped } from '../../localizer/lib';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
-import { Group, GROUPNAME, User } from '../../types/testing';
+import { Group, GROUPNAME } from '../../types/testing';
 import { MessageBody } from '../locators/conversation';
 import { Contact } from '../locators/global';
 import { CreateGroupButton, GroupNameInput } from '../locators/groups';
@@ -13,11 +15,11 @@ import { SupportedPlatformsType } from './open_app';
 export const createGroup = async (
   platform: SupportedPlatformsType,
   device1: DeviceWrapper,
-  userOne: User,
+  userOne: StateUser,
   device2: DeviceWrapper,
-  userTwo: User,
+  userTwo: StateUser,
   device3: DeviceWrapper,
-  userThree: User,
+  userThree: StateUser,
   userName: GROUPNAME,
   checkControlMessage?: boolean
 ): Promise<Group> => {

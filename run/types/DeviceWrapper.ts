@@ -1,4 +1,5 @@
 import type { Constraints, DefaultCreateSessionResult } from '@appium/types';
+import type { StateUser } from '@session-foundation/qa-seeder';
 
 import { getImageOccurrence } from '@appium/opencv';
 import { TestInfo } from '@playwright/test';
@@ -110,7 +111,6 @@ import {
   InteractionPoints,
   Strategy,
   StrategyExtractionObj,
-  User,
   XPath,
 } from './testing';
 
@@ -1871,14 +1871,14 @@ export class DeviceWrapper implements IMobileWrapper {
     return sentTimestamp;
   }
 
-  public async sendNewMessage(user: Pick<User, 'accountID'>, message: string) {
+  public async sendNewMessage(user: Pick<StateUser, 'sessionId'>, message: string) {
     // Sender workflow
     // Click on plus button
     await this.clickOnElementAll(new PlusButton(this));
     // Select direct message option
     await this.clickOnElementAll(new NewMessageOption(this));
     // Enter User B's session ID into input box
-    await this.inputText(user.accountID, new EnterAccountID(this));
+    await this.inputText(user.sessionId, new EnterAccountID(this));
     // Click next
     await this.scrollDown();
     await this.clickOnElementAll(new NextButton(this));
@@ -1907,7 +1907,7 @@ export class DeviceWrapper implements IMobileWrapper {
 
   // TODO instead of blind sleeping, check presence of reply preview
   // Remove blind sleep from other tests that reply as well
-  public async replyToMessage(user: Pick<User, 'userName'>, body: string) {
+  public async replyToMessage(user: Pick<StateUser, 'userName'>, body: string) {
     // Reply to media message from user B
     // Long press on imageSent element
     await this.longPressMessage(new MessageBody(this, body));
@@ -2388,7 +2388,10 @@ export class DeviceWrapper implements IMobileWrapper {
     await this.clickOnElementAll(new SaveProfilePictureButton(this));
   }
 
-  public async mentionContact(platform: SupportedPlatformsType, contact: Pick<User, 'userName'>) {
+  public async mentionContact(
+    platform: SupportedPlatformsType,
+    contact: Pick<StateUser, 'userName'>
+  ) {
     await this.inputText(`@`, new MessageInput(this));
     // Check that all users are showing in mentions box
     await this.waitForTextElementToBePresent({
@@ -2935,7 +2938,7 @@ export class DeviceWrapper implements IMobileWrapper {
    * NOTE: Pro becomes visible to this and any linked device without an app
    * restart — reopen the Pro/settings dialog to observe the new state.
    */
-  public async subscribeToPro(user: User): Promise<void> {
+  public async subscribeToPro(user: StateUser): Promise<void> {
     const provider = this.isIOS() ? 'apple' : 'google';
     await makeAccountPro({ user, provider });
   }
@@ -2959,7 +2962,7 @@ export class DeviceWrapper implements IMobileWrapper {
    * the standard 2000-char cap and confirming it sends (a non-Pro account would
    * be blocked by the "longer messages" upgrade CTA instead).
    */
-  public async assertProFeatureUnlocked(user: Pick<User, 'accountID'>): Promise<void> {
+  public async assertProFeatureUnlocked(user: Pick<StateUser, 'sessionId'>): Promise<void> {
     const message = 'x'.repeat(2001);
     await this.sendNewMessage(user, message);
     await this.waitForTextElementToBePresent(new MessageBody(this, message));

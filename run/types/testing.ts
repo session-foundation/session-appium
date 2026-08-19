@@ -1,14 +1,12 @@
-import { USERNAME as usernameFromSeeder, UserNameType } from '@session-foundation/qa-seeder';
+import {
+  type StateUser,
+  USERNAME as usernameFromSeeder,
+  UserNameType,
+} from '@session-foundation/qa-seeder';
 
 import type { DisappearActions } from '../shared/constants';
 
 import { DeviceWrapper } from './DeviceWrapper';
-
-export type User = {
-  userName: UserNameType;
-  accountID: string;
-  recoveryPhrase: string;
-};
 
 export const USERNAME = usernameFromSeeder;
 
@@ -28,17 +26,17 @@ export type GROUPNAME =
 
 export type Group = {
   userName: GROUPNAME;
-  userOne: User;
-  userTwo: User;
-  userThree: User;
+  userOne: StateUser;
+  userTwo: StateUser;
+  userThree: StateUser;
 };
 
 export type SetupData = {
   device1: DeviceWrapper | undefined;
   device2: DeviceWrapper | undefined;
   device3: DeviceWrapper | undefined;
-  alice: User | undefined;
-  bob: User | undefined;
+  alice: StateUser | undefined;
+  bob: StateUser | undefined;
 };
 
 export type Coordinates = {

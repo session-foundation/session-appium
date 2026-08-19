@@ -33,7 +33,7 @@ test_Alice_1W('Recovery banner 2 windows', async ({ alice }) => {
   await joinDefaultCommunity(alice.getPage(), 'Lokinet Updates');
   await joinDefaultCommunity(alice.getPage(), 'Session Network Updates');
   await joinDefaultCommunity(alice.getPage(), 'Session Updates');
-  const alice2 = new DesktopWrapper(await linkedDevice(alice.getUser().recoveryPassword));
+  const alice2 = new DesktopWrapper(await linkedDevice(alice.getUser().seedPhrase));
   await sleepFor(2_000);
   await bannerShouldNotAppear(alice2);
 });

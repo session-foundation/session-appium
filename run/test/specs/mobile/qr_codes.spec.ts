@@ -119,7 +119,7 @@ async function qrCodeAccountID(platform: SupportedPlatformsType, testInfo: TestI
     await bob1.clickOnElementAll(new ImagePermissionsModalAllow(bob1));
   });
   await test.step(`Verify conversation with ${alice.userName} opened`, async () => {
-    const truncatedPubkey = truncatePubkey(alice.accountID, platform);
+    const truncatedPubkey = truncatePubkey(alice.sessionId, platform);
     await bob1.waitForTextElementToBePresent(new ConversationHeaderName(bob1, truncatedPubkey));
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

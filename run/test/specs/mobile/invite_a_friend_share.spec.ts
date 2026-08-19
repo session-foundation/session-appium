@@ -28,7 +28,7 @@ bothPlatformsIt({
 async function inviteAFriend(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
   let messageElement;
-  // This is a const so that the user.accountID can be used later on
+  // This is a const so that the user.sessionId can be used later on
   const user = await newUser(device, USERNAME.ALICE);
   // Hit the plus button
   await device.clickOnElementAll(new PlusButton(device));
@@ -52,8 +52,8 @@ async function inviteAFriend(platform: SupportedPlatformsType, testInfo: TestInf
   }
   // Retrieve the Share message and validate that it contains the user's Account ID
   const retrievedShareMessage = await device.getTextFromElement(messageElement);
-  if (!retrievedShareMessage.includes(user.accountID)) {
-    console.log(`Expected Share Message to contain Account ID: ${user.accountID}`);
+  if (!retrievedShareMessage.includes(user.sessionId)) {
+    console.log(`Expected Share Message to contain Account ID: ${user.sessionId}`);
     console.log(`Actual Share Message: ${retrievedShareMessage}`);
     throw new Error(`The Invite a Friend message snippet does not contain the user's Account ID.`);
   }

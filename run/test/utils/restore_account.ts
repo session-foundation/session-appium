@@ -1,6 +1,7 @@
+import type { StateUser } from '@session-foundation/qa-seeder';
+
 import { sleepFor } from '.';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
-import { User } from '../../types/testing';
 import { ContinueButton } from '../locators/global';
 import { PlusButton } from '../locators/home';
 import {
@@ -44,14 +45,14 @@ const waitForHomeScreenAfterOnboarding = async (
 
 export const restoreAccount = async (
   device: DeviceWrapper,
-  user: User,
+  user: StateUser,
   deviceIdentity: string,
   options?: BaseSetupOptions
 ) => {
   const { allowNotificationPermissions = false } = options || {};
   device.setDeviceIdentity(deviceIdentity);
   await device.clickOnElementAll(new AccountRestoreButton(device));
-  await device.inputText(user.recoveryPhrase, new SeedPhraseInput(device));
+  await device.inputText(user.seedPhrase, new SeedPhraseInput(device));
   // Wait for continue button to become active
   await sleepFor(500);
   // Continue with recovery phrase

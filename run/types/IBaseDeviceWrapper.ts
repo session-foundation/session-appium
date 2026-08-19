@@ -1,5 +1,6 @@
+import type { StateUser } from '@session-foundation/qa-seeder';
+
 import type { ProMessageFeature } from '../test/utils/pro_message_features';
-import type { User } from './testing';
 
 /**
  * High-level, platform-NEUTRAL capabilities that a Session client of ANY
@@ -40,7 +41,7 @@ export interface IBaseDeviceWrapper {
   waitForMessage(text: string): Promise<void>;
 
   // Session Pro
-  subscribeToPro(user: User): Promise<void>;
+  subscribeToPro(user: StateUser): Promise<void>;
   /**
    * Open the 1:1 with `senderName` and assert their Session Pro badge renders here.
    *
@@ -56,7 +57,7 @@ export interface IBaseDeviceWrapper {
    * particular message carried rather than what the sender's profile currently claims.
    */
   assertMessageProFeatures(message: string, features: ProMessageFeature[]): Promise<void>;
-  assertProFeatureUnlocked(user: Pick<User, 'accountID'>): Promise<void>;
+  assertProFeatureUnlocked(user: Pick<StateUser, 'sessionId'>): Promise<void>;
   /**
    * Open `convoName` and send a message longer than the standard 2000-char cap,
    * retrying until it is accepted (a non-Pro account is blocked by the "longer

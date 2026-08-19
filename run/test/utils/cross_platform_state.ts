@@ -8,11 +8,9 @@ import {
   type WithGroupStateKey,
 } from '@session-foundation/qa-seeder';
 
-import type { User as DesktopUser } from '../../desktop/types';
 import type { DeviceWrapper } from '../../types/DeviceWrapper';
 import type { IBaseDeviceWrapper } from '../../types/IBaseDeviceWrapper';
 import type { ClientPlatform } from '../../types/target';
-import type { User } from '../../types/testing';
 
 import { forceCloseAllWindows } from '../../desktop/closeWindows';
 import { DesktopWrapper } from '../../desktop/DesktopWrapper';
@@ -40,7 +38,7 @@ export type PerUserPlatforms = {
 
 /** One account together with the clients (across platforms) linked to it. */
 export type UserClients = {
-  account: User;
+  account: StateUser;
   android: DeviceWrapper[];
   ios: DeviceWrapper[];
   desktop: DesktopWrapper[];
@@ -96,23 +94,6 @@ async function closePartiallyOpenedClients(
   } catch (e) {
     console.error('forceCloseAllWindows failed after a failed cross-platform open:', e);
   }
-}
-
-function toUser(stateUser: StateUser): User {
-  return {
-    userName: stateUser.userName,
-    accountID: stateUser.sessionId,
-    recoveryPhrase: stateUser.seedPhrase,
-  };
-}
-
-/** The same account under the names the desktop code uses (mirrors `seeded_state.ts`). */
-function toDesktopUser(stateUser: StateUser): DesktopUser {
-  return {
-    userName: stateUser.userName,
-    accountid: stateUser.sessionId,
-    recoveryPassword: stateUser.seedPhrase,
-  };
 }
 
 /**
@@ -261,7 +242,7 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
   let di = 0;
   const users: UserClients[] = seedUsers.map((stateUser, idx) => {
     const spec = perUser[idx];
-    const account = toUser(stateUser);
+    const account = stateUser;
     const nameLc = stateUser.userName.toLowerCase();
 
     const android = androidPool.slice(ai, ai + (spec.android ?? 0));
@@ -278,7 +259,7 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
       // Restoring from a seed does not tell the wrapper WHICH account it landed on, and the desktop
       // verbs read it off the wrapper: `subscribeToPro` mints against `getUser()`, which without this
       // throws rather than minting.
-      d.setAccount(toDesktopUser(stateUser));
+      d.setAccount(stateUser);
     });
 
     return { account, android, ios, desktop, all: [...android, ...ios, ...desktop] };
@@ -286,7 +267,7 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
 
   // Restore every client from its account's recovery phrase, in parallel.
   await Promise.all(
-    users.flatMap(u => u.all.map(client => client.restoreFromSeed(u.account.recoveryPhrase)))
+    users.flatMap(u => u.all.map(client => client.restoreFromSeed(u.account.seedPhrase)))
   );
 
   return {

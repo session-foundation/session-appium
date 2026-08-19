@@ -51,9 +51,9 @@ async function addAccountIDToGroup(platform: SupportedPlatformsType, testInfo: T
   const userD = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     return newUser(unknown1, USERNAME.DRACULA);
   });
-  const aliceTruncatedPubkey = truncatePubkey(alice.accountID, platform);
+  const aliceTruncatedPubkey = truncatePubkey(alice.sessionId, platform);
   const historicMsg = `Hello from ${alice.userName}`;
-  const userDTruncatedPubkey = truncatePubkey(userD.accountID, platform);
+  const userDTruncatedPubkey = truncatePubkey(userD.sessionId, platform);
   const userDMsg = `Hello from ${userD.userName}`;
   await test.step(TestSteps.SEND.MESSAGE(alice.userName, 'group'), async () => {
     await alice1.sendMessage(historicMsg);
@@ -70,7 +70,7 @@ async function addAccountIDToGroup(platform: SupportedPlatformsType, testInfo: T
     await alice1.clickOnElementAll(new ManageMembersMenuItem(alice1));
     // Add contact to group
     await alice1.clickOnElementAll(new InviteAccountIDOrONS(alice1));
-    await alice1.inputText(userD.accountID, new EnterAccountID(alice1));
+    await alice1.inputText(userD.sessionId, new EnterAccountID(alice1));
     await alice1.clickOnElementAll(new NextButton(alice1));
     await alice1.clickOnElementAll(new ShareNewMessagesRadial(alice1));
     await alice1.clickOnElementAll(new InviteContactSendInviteButton(alice1));

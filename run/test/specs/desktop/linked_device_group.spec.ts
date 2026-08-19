@@ -64,7 +64,7 @@ test_group_Alice_1W_Bob_1W_Charlie_1W(
     const aliceWindow2 = new DesktopWrapper(aliceWindow2Page);
     // Check group conversation is in conversation list on linked device
     // Restore account on a linked device
-    await recoverFromSeed(aliceWindow2.getPage(), alice.getUser().recoveryPassword);
+    await recoverFromSeed(aliceWindow2.getPage(), alice.getUser().seedPhrase);
     // Does group appear?
     await aliceWindow2.waitForTestIdWithText(
       HomeScreen.conversationItemName.selector,
@@ -119,7 +119,7 @@ test_group_Alice_1W_Bob_1W_Charlie_1W(
     const aliceWindow2 = new DesktopWrapper(aliceWindow2Page);
     // Check group conversation is in conversation list on linked device
     // Restore account on a linked device
-    await recoverFromSeed(aliceWindow2.getPage(), alice.getUser().recoveryPassword);
+    await recoverFromSeed(aliceWindow2.getPage(), alice.getUser().seedPhrase);
     // Does group appear?
     await aliceWindow2.waitForTestIdWithText(
       HomeScreen.conversationItemName.selector,
@@ -147,7 +147,7 @@ test_group_Alice_1W_Bob_1W_Charlie_1W(
     await clearDataOnWindow(aliceWindow2);
     const [restoredWindowPage] = await openAppsAndWaitWindows(1);
     const restoredWindow = new DesktopWrapper(restoredWindowPage);
-    await recoverFromSeed(restoredWindow.getPage(), alice.getUser().recoveryPassword);
+    await recoverFromSeed(restoredWindow.getPage(), alice.getUser().seedPhrase);
     // Does group appear?
     await restoredWindow.waitForTestIdWithText(
       HomeScreen.conversationItemName.selector,
@@ -176,7 +176,7 @@ test_group_Alice_1W_Bob_1W_Charlie_1W(
     await clearDataOnWindow(restoredWindow);
     const [restoredWindow2Page] = await openAppsAndWaitWindows(1);
     const restoredWindow2 = new DesktopWrapper(restoredWindow2Page);
-    await recoverFromSeed(restoredWindow2.getPage(), alice.getUser().recoveryPassword);
+    await recoverFromSeed(restoredWindow2.getPage(), alice.getUser().seedPhrase);
     // Does group appear?
     await restoredWindow2.waitForTestIdWithText(
       HomeScreen.conversationItemName.selector,

@@ -22,12 +22,12 @@ sessionTestOneWindow('Link a device', async ([alice]) => {
   let aliceWindow2: Page | undefined;
   try {
     const userA = await alice.onboard('Alice');
-    aliceWindow2 = await linkedDevice(userA.recoveryPassword); // not using fixture here as we want to check the behavior finely
+    aliceWindow2 = await linkedDevice(userA.seedPhrase); // not using fixture here as we want to check the behavior finely
     await alice.clickOn(LeftPane.profileButton);
     // Verify Username
     await alice.waitForTestIdWithText(Settings.displayName.selector, userA.userName);
     // Verify Account ID
-    await alice.waitForTestIdWithText(Settings.accountId.selector, userA.accountid);
+    await alice.waitForTestIdWithText(Settings.accountId.selector, userA.sessionId);
     // exit profile modal
     await alice.clickOn(Global.modalCloseButton);
     // The "reveal recovery phrase" / "you're almost finished" prompt must NOT leak onto the

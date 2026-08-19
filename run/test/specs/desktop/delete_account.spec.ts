@@ -18,8 +18,8 @@ sessionTestTwoWindows('Delete account from swarm', async ([windowA, windowB]) =>
     const testReply = `${userB.userName} to ${userA.userName}`;
     // Create contact and send new message
     await Promise.all([
-      windowA.sendNewMessage(userB.accountid, testMessage),
-      windowB.sendNewMessage(userA.accountid, testReply),
+      windowA.sendNewMessage(userB.sessionId, testMessage),
+      windowB.sendNewMessage(userA.sessionId, testReply),
     ]);
     // Delete all data from device
     // Click on settings tab
@@ -45,10 +45,7 @@ sessionTestTwoWindows('Delete account from swarm', async ([windowA, windowB]) =>
     // Sign in with deleted account and check that nothing restores
     await restoringWindow.clickOn(Onboarding.iHaveAnAccountButton);
     // Fill in recovery phrase
-    await restoringWindow.pasteIntoInput(
-      Onboarding.recoveryPhraseInput.selector,
-      userA.recoveryPassword
-    );
+    await restoringWindow.pasteIntoInput(Onboarding.recoveryPhraseInput.selector, userA.seedPhrase);
     // Enter display name
     await restoringWindow.clickOn(Global.continueButton);
     await restoringWindow.waitForLoadingAnimationToFinish('loading-animation');
@@ -99,7 +96,7 @@ sessionTestTwoWindows('Delete account from device', async ([windowA, windowB]) =
     const [restoringWindowPage] = restoringWindows;
     const restoringWindow = new DesktopWrapper(restoringWindowPage, 'alice-restoring');
     // Sign in with deleted account and check that nothing restores
-    await recoverFromSeed(restoringWindow.getPage(), userA.recoveryPassword);
+    await recoverFromSeed(restoringWindow.getPage(), userA.seedPhrase);
     await sleepFor(5000, true); // just to allow any messages from our swarm to show up
     // Check if message from user B is restored
 

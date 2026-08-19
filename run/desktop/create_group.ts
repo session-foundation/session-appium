@@ -1,3 +1,5 @@
+import type { StateUser } from '@session-foundation/qa-seeder';
+
 import { Page } from '@playwright/test';
 
 import { tStripped } from '../localizer/lib';
@@ -6,7 +8,7 @@ import { HomeScreen } from './locators';
 import { sendMessage } from './message';
 import { sortByPubkey } from './pubkey';
 import { sendNewMessage } from './send_message';
-import { Group, User } from './types';
+import { Group } from './types';
 import {
   clickOn,
   clickOnMatchingText,
@@ -17,11 +19,11 @@ import {
 
 export const createGroup = async (
   userName: string,
-  userOne: User,
+  userOne: StateUser,
   windowA: Page,
-  userTwo: User,
+  userTwo: StateUser,
   windowB: Page,
-  userThree: User,
+  userThree: StateUser,
   windowC: Page
 ): Promise<Group> => {
   const group: Group = { userName, userOne, userTwo, userThree };
@@ -37,7 +39,7 @@ export const createGroup = async (
     actionsToDo.map(async action =>
       sendNewMessage(
         action.window,
-        action.receivers[0].accountid,
+        action.receivers[0].sessionId,
         `${action.sender.userName} to ${action.receivers[0].userName}`
       )
     )
@@ -47,7 +49,7 @@ export const createGroup = async (
     actionsToDo.map(async action =>
       sendNewMessage(
         action.window,
-        action.receivers[1].accountid,
+        action.receivers[1].sessionId,
         `${action.sender.userName} to ${action.receivers[1].userName}`
       )
     )

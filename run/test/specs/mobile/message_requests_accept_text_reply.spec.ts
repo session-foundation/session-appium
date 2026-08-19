@@ -31,7 +31,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType, testInfo:
   // Select direct message option
   await device1.clickOnElementAll(new NewMessageOption(device1));
   // Enter User B's session ID into input box
-  await device1.inputText(bob.accountID, new EnterAccountID(device1));
+  await device1.inputText(bob.sessionId, new EnterAccountID(device1));
   // Click next
   // The keyboard covers Next on smaller screens. Do NOT swipe here: this is a bottom sheet, so
   // a scroll drags the sheet and the tap silently misses.

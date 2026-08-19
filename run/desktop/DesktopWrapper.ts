@@ -1,12 +1,11 @@
 // Not a port — the desktop client wrapper written for this repo. Its low-level primitives
 // delegate to the ported run/desktop/ helpers (which are compared against their originals).
 import type { Page } from '@playwright/test';
+import type { StateUser, UserNameType } from '@session-foundation/qa-seeder';
 
 import type { IBaseDeviceWrapper } from '../types/IBaseDeviceWrapper';
-import type { User } from '../types/testing';
 import type {
   DataTestId,
-  User as DesktopUser,
   DisappearOptions,
   Group,
   MediaType,
@@ -85,7 +84,7 @@ import { makeVoiceCall } from './voice_call';
 export class DesktopWrapper implements IBaseDeviceWrapper {
   private page: Page;
   private deviceIdentity: string;
-  private account?: DesktopUser;
+  private account?: StateUser;
   private launch?: { multi: string; nodeAppInstance: string };
 
   constructor(page: Page, identity: string = 'desktop') {
@@ -127,7 +126,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /** The account minted/linked on this client, if any. Throws if none yet. */
-  public getUser(): DesktopUser {
+  public getUser(): StateUser {
     if (!this.account) {
       throw new Error(`[${this.deviceIdentity}] has no account yet (call onboard() first)`);
     }
@@ -135,7 +134,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /** Record which account this client is signed into (e.g. a linked/second window). */
-  public setAccount(account: DesktopUser): void {
+  public setAccount(account: StateUser): void {
     this.account = account;
   }
 
@@ -144,7 +143,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   public get accountId(): string {
-    return this.getUser().accountid;
+    return this.getUser().sessionId;
   }
 
   // --- IBaseDeviceWrapper: logging ---
@@ -197,8 +196,8 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
    * an account created moments earlier, whose profile has not propagated yet, in a spec that asserts
    * something other than the name. Supplying it is a statement that the name is not under test.
    */
-  public async restoreFromSeed(recoveryPhrase: string, fallbackName?: string): Promise<void> {
-    await recoverFromSeed(this.page, recoveryPhrase, fallbackName ? { fallbackName } : undefined);
+  public async restoreFromSeed(seedPhrase: string, fallbackName?: string): Promise<void> {
+    await recoverFromSeed(this.page, seedPhrase, fallbackName ? { fallbackName } : undefined);
     await checkPathLight(this.page);
   }
 
@@ -263,8 +262,8 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     await makeAccountPro({
       user: {
         userName: account.userName,
-        accountID: account.accountid,
-        recoveryPhrase: account.recoveryPassword,
+        sessionId: account.sessionId,
+        seedPhrase: account.seedPhrase,
       },
       provider: 'google',
     });
@@ -490,7 +489,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     await clickOn(this.page, Settings.editProfilePictureProBadge);
   }
 
-  public async assertProFeatureUnlocked(user: Pick<User, 'accountID'>): Promise<void> {
+  public async assertProFeatureUnlocked(user: Pick<StateUser, 'sessionId'>): Promise<void> {
     // A Pro account can send a message longer than the standard 2000-char cap.
     // For a non-Pro account the send is blocked by the "longer messages" upgrade
     // CTA, so the 'sent' status inside sendNewMessage would never arrive.
@@ -501,7 +500,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     // open upgrade CTA / modal (Escape) so the next attempt can re-navigate cleanly.
     await doWhileWithMax(60_000, 1_000, 'assertProFeatureUnlocked', async () => {
       try {
-        await sendNewMessage(this.page, user.accountID, message);
+        await sendNewMessage(this.page, user.sessionId, message);
         await waitForTextMessage(this.page, message);
         return true;
       } catch (_e) {
@@ -664,7 +663,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   // Page-based helpers, passing this client's page/account implicitly.
 
   /** Onboard a fresh account in this window and remember it as this client's account. */
-  public async onboard(userName: string, awaitOnionPath = true): Promise<DesktopUser> {
+  public async onboard(userName: UserNameType, awaitOnionPath = true): Promise<StateUser> {
     this.account = await newUser(this.page, userName, awaitOnionPath);
     return this.account;
   }

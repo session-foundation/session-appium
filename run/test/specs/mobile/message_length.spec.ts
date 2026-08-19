@@ -1,3 +1,5 @@
+import type { StateUser } from '@session-foundation/qa-seeder';
+
 import { test, type TestInfo } from '@playwright/test';
 
 import type { DeviceWrapper } from '../../../types/DeviceWrapper';
@@ -11,7 +13,7 @@ import {
 import { makeAccountPro } from '../../../shared/pro_grant';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import { type User, USERNAME } from '../../../types/testing';
+import { USERNAME } from '../../../types/testing';
 import {
   MessageBody,
   MessageInput,
@@ -105,7 +107,7 @@ for (const testCase of messageLengthTestCases) {
       // The cases that cannot send need no recipient and stay on one device.
       let device: DeviceWrapper;
       let recipient: DeviceWrapper | undefined;
-      let alice: User;
+      let alice: StateUser;
       let recipientName: string | undefined;
 
       if (testCase.shouldSend) {
@@ -148,7 +150,7 @@ for (const testCase of messageLengthTestCases) {
         await test.step(TestSteps.OPEN.NTS, async () => {
           await device.clickOnElementAll(new PlusButton(device));
           await device.clickOnElementAll(new NewMessageOption(device));
-          await device.inputText(alice.accountID, new EnterAccountID(device));
+          await device.inputText(alice.sessionId, new EnterAccountID(device));
           // The keyboard covers Next on smaller screens. Do NOT swipe here: this is a bottom sheet,
           // so a scroll drags the sheet and the tap silently misses.
           await device.hideKeyboard();

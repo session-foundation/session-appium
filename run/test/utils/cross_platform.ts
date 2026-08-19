@@ -1,4 +1,9 @@
-import type { PrebuiltStateKey, StateGroup, UserNameType } from '@session-foundation/qa-seeder';
+import type {
+  PrebuiltStateKey,
+  StateGroup,
+  StateUser,
+  UserNameType,
+} from '@session-foundation/qa-seeder';
 
 import { type Page, test, type TestInfo } from '@playwright/test';
 
@@ -8,7 +13,7 @@ import type { IBaseDeviceWrapper } from '../../types/IBaseDeviceWrapper';
 import { forceCloseAllWindows } from '../../desktop/closeWindows';
 import { DesktopWrapper } from '../../desktop/DesktopWrapper';
 import { resetTrackedElectronPids } from '../../desktop/open';
-import { type TestRisk, type User } from '../../types/testing';
+import { type TestRisk } from '../../types/testing';
 import { openAppsWithStateCrossPlatform, type PerUserPlatforms } from './cross_platform_state';
 import { focusConvoCrossPlatform } from './cross_platform_state_builder';
 import { unregisterDevicesForTest } from './device_registry';
@@ -27,7 +32,7 @@ export type CrossPlatformSetup = PerUserPlatforms;
 
 /** One account together with the clients (across platforms) linked to it. */
 export type AccountClients = {
-  account: User;
+  account: StateUser;
   /** Every client of this account, ordered android → ios → desktop. */
   clients: IBaseDeviceWrapper[];
   android: DeviceWrapper[];

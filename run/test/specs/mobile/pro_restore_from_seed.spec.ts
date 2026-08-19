@@ -51,7 +51,7 @@ async function proSurvivesRestore(platform: SupportedPlatformsType, testInfo: Te
   });
 
   await test.step('Restore the account onto a device that has never seen it', async () => {
-    await device2.restoreFromSeed(alice.recoveryPhrase);
+    await device2.restoreFromSeed(alice.seedPhrase);
     await device2.dismissCTA();
   });
 

@@ -1,9 +1,11 @@
 // Only import paths were rewritten to `./` siblings and `chalk` removed.
 
+import type { StateUser, UserNameType } from '@session-foundation/qa-seeder';
+
 import { Page } from '@playwright/test';
 
+import { mnemonicToSeedHex, padSeed } from '../shared/pro_grant';
 import { Global, LeftPane, Onboarding, Settings } from './locators';
-import { User } from './types';
 import {
   checkPathLight,
   clickOn,
@@ -14,9 +16,9 @@ import {
 
 export const newUser = async (
   window: Page,
-  userName: string,
+  userName: UserNameType,
   awaitOnionPath = true
-): Promise<User> => {
+): Promise<StateUser> => {
   // Create User
   await clickOn(window, Onboarding.createAccountButton);
   // Input username = testuser
@@ -43,9 +45,11 @@ export const newUser = async (
   console.log(
     `${userName}: \n\tAccount ID: "${accountid}" \n\tRecovery password: "${recoveryPassword}"`
   );
+
   await clickOn(window, Global.modalCloseButton);
   if (awaitOnionPath) {
     await checkPathLight(window);
   }
-  return { userName, accountid, recoveryPassword };
+  const seed = padSeed(mnemonicToSeedHex(recoveryPassword));
+  return { userName, sessionId: accountid as `05${string}`, seedPhrase: recoveryPassword, seed };
 };
