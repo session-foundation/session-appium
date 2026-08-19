@@ -69,7 +69,7 @@ test_Alice_1W_Bob_1W_friends(
     // that poll, and on iOS it also forces the view rebuild the badge needs; keeping the same shape on
     // all three clients is why it is a restart here rather than a wait.
     await restartApp(bob, PRO_CONTEXT);
-    await bob.assertNoSenderProBadge(alice.userName);
+    await bob.assertNoSenderProBadge(alice.userName, message);
   },
   PRO_CONTEXT
 );

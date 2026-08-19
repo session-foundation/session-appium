@@ -682,14 +682,18 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
    * Polled because the badge disappears when the revocation job's sweep reaches this conversation, and
    * that dispatch is debounced (500ms, maxWait 1000ms) on top of the fetch.
    */
-  public async assertNoSenderProBadge(convoName: string): Promise<void> {
+  public async assertNoSenderProBadge(convoName: string, anchorMessage?: string): Promise<void> {
     await this.openConversationOnceNamed(convoName);
 
-    const header = this.page
-      .locator(
-        `[${Conversation.conversationHeader.strategy}="${Conversation.conversationHeader.selector}"]`
-      )
-      .first();
+    // A message in this conversation is a stronger anchor than the header: it cannot be satisfied by the
+    // wrong conversation, and unlike a header name it does not change when the badge appears.
+    const header = anchorMessage
+      ? this.page.locator(`[data-testid=message-content]:has-text("${anchorMessage}")`).first()
+      : this.page
+          .locator(
+            `[${Conversation.conversationHeader.strategy}="${Conversation.conversationHeader.selector}"]`
+          )
+          .first();
     const badge = this.page
       .locator(
         `[${Conversation.proBadgeConversationHeader.strategy}="${Conversation.proBadgeConversationHeader.selector}"]`

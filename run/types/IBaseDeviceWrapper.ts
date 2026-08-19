@@ -53,15 +53,21 @@ export interface IBaseDeviceWrapper {
   /**
    * Open the 1:1 with `senderName` and assert their Session Pro badge is **not** rendered here.
    *
-   * Anchored on the sender's name being on screen at the same instant, deliberately. An absence
+   * Anchored on `anchorMessage` — a message known to be in this conversation — being on screen at the
+   * same instant, deliberately. An absence
    * assertion is satisfied by every way of showing nothing — a conversation that never opened, a
    * profile that never arrived, a header still loading — so unanchored it would pass long before the
    * behaviour under test happened, and keep passing if that behaviour broke.
    *
+   * The anchor is a MESSAGE rather than the header name because the name is not stable across the
+   * transition under test: on iOS the header is one accessibility element, so a shown badge turns its
+   * label from "Alice" into "Alice, Session Pro". Anchoring on the name therefore fails to resolve in
+   * exactly the state this assertion exists to catch, and reports it as a navigation fault.
+   *
    * Polls rather than reads once: the badge goes away when the client learns of a revocation, which is
    * an asynchronous fetch, so the interesting outcome is "stops rendering within", not "is absent now".
    */
-  assertNoSenderProBadge(senderName: string): Promise<void>;
+  assertNoSenderProBadge(senderName: string, anchorMessage?: string): Promise<void>;
   /**
    * Open `message`'s info screen and assert it lists the Pro features the message was sent with.
    *

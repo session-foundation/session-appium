@@ -104,7 +104,7 @@ async function proRevocationRecipient(platform: SupportedPlatformsType, testInfo
     // that poll, and on iOS it also forces the view rebuild the badge needs: an already-effective
     // revocation can be fetched, cached and honoured while the badge stays drawn.
     await forceStopAndRestart(bob1);
-    await bob1.assertNoSenderProBadge(prebuilt.alice.userName);
+    await bob1.assertNoSenderProBadge(prebuilt.alice.userName, SENT_WHILE_VALID);
   });
 
   await closeApp(alice1, bob1);

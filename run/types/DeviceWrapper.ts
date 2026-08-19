@@ -3085,17 +3085,18 @@ export class DeviceWrapper implements IMobileWrapper {
    * message distinguishes the two ways this can end, since they have different owners: a header that
    * never rendered is a navigation problem, a badge that never went is the product.
    */
-  public async assertNoSenderProBadge(senderName: string): Promise<void> {
+  public async assertNoSenderProBadge(senderName: string, anchorMessage?: string): Promise<void> {
     await this.openConversationWith(senderName);
 
     let headerSeen = false;
     let cleared = false;
     const deadline = Date.now() + 60_000;
     do {
-      const header = await this.doesElementExist({
-        ...new ConversationHeaderName(this, senderName).build(),
-        maxWait: 2_000,
-      });
+      const header = await this.doesElementExist(
+        anchorMessage
+          ? { ...new MessageBody(this, anchorMessage).build(), maxWait: 2_000 }
+          : { ...new ConversationHeaderName(this, senderName).build(), maxWait: 2_000 }
+      );
       if (header) {
         headerSeen = true;
         const badge = await this.doesElementExist({
