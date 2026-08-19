@@ -3,6 +3,11 @@ import { test, type TestInfo } from '@playwright/test';
 import type { DeviceWrapper } from '../../../types/DeviceWrapper';
 
 import { tStripped } from '../../../localizer/lib';
+import {
+  COUNTDOWN_START_THRESHOLD,
+  PRO_MAX_CHARS,
+  STANDARD_MAX_CHARS,
+} from '../../../shared/constants';
 import { makeAccountPro } from '../../../shared/pro_grant';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
@@ -27,10 +32,6 @@ import {
   SupportedPlatformsType,
 } from '../../utils/open_app';
 import { observeProGrant } from '../../utils/pro_refresh';
-
-const STANDARD_MAX_CHARS = 2000;
-const PRO_MAX_CHARS = 10000;
-const COUNTDOWN_START_THRESHOLD = 200;
 
 const messageLengthTestCases = [
   {

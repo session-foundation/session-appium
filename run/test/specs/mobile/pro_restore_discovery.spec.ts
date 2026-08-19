@@ -1,5 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
+import { PRO_MAX_CHARS } from '../../../shared/constants';
 import { makeAccountPro } from '../../../shared/pro_grant';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
@@ -12,8 +13,7 @@ import { newUser } from '../../utils/create_account';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from '../../utils/open_app';
 import { observeProGrant } from '../../utils/pro_refresh';
 
-/** The Pro message cap, and how far short of it to stop so the countdown is showing. */
-const PRO_MAX_CHARS = 10000;
+/** How far short of the limit to stop, so the countdown is on screen to be read. */
 const COUNTDOWN_AT = 5;
 
 bothPlatformsIt({

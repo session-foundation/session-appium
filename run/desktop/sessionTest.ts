@@ -16,7 +16,7 @@
 
 import { Page, test, TestInfo } from '@playwright/test';
 
-import type { Group } from './types';
+import type { Group, User } from './types';
 
 import {
   allocateCommunityRooms,
@@ -27,9 +27,10 @@ import { forceCloseAllWindows } from './closeWindows';
 import { createGroup } from './create_group';
 import { DesktopWrapper } from './DesktopWrapper';
 import { linkedDevice } from './linked_device';
+import { HomeScreen } from './locators';
 import {
   getLaunchedInstances,
-  MULTIS,
+  multisAvailable,
   openApps,
   resetTrackedElectronPids,
   TestContext,
@@ -72,7 +73,7 @@ async function openWrappedWindows(
     const instances = getLaunchedInstances();
     const wrappers = pages.map((page, i) => {
       const wrapper = new DesktopWrapper(page, MAIN_IDENTITIES[i]);
-      wrapper.setLaunchIdentity(MULTIS[i], instances[i]);
+      wrapper.setLaunchIdentity(multisAvailable[i], instances[i]);
       return wrapper;
     });
     await run(wrappers, testInfo);
@@ -189,7 +190,7 @@ function sessionTestGeneric(
         const wrapper = new DesktopWrapper(page, MAIN_IDENTITIES[i]);
         // Positional: `openApps` launches multis A, B, C… in order and records each instance as it
         // goes, so index i here is the same window as index i there.
-        wrapper.setLaunchIdentity(MULTIS[i], instances[i]);
+        wrapper.setLaunchIdentity(multisAvailable[i], instances[i]);
         return wrapper;
       });
       await Promise.all(main.map((w, i) => w.onboard(USER_NAMES[i], waitForNetwork)));
@@ -330,11 +331,17 @@ async function focusAndWarmSeededGroup(users: SeededUser[], groupName: string) {
  * force-close whatever it opened. The body pushes its pages onto `pages` as soon as it has them,
  * so a failure part-way through `openSeededWindows` still gets cleaned up.
  */
+/**
+ * `context` is taken only so the name carries the `@pro` tag, exactly as the non-seeded builders do.
+ * Without it a seeded Pro spec runs but `--grep @pro` does not select it, so the suite silently reports
+ * less coverage than it has — and the count looks plausible, which is why it went unnoticed.
+ */
 function seededTest(
   testName: string,
-  body: (pages: Page[], testInfo: TestInfo) => Promise<void>
+  body: (pages: Page[], testInfo: TestInfo) => Promise<void>,
+  context?: TestContext
 ): void {
-  return test(testName, async ({}, testInfo) => {
+  return test(taggedName(testName, context), async ({}, testInfo) => {
     resetTrackedElectronPids();
     const pages: Page[] = [];
 
@@ -371,19 +378,108 @@ function sessionTestSeededFriends(
   { windowsPerUser, extraWindows = 0, context }: SeededOptions,
   testCallback: (details: SeededFriendsDetails, testInfo: TestInfo) => Promise<void>
 ): void {
-  return seededTest(testName, async (pages, testInfo) => {
-    const opened = await openSeededWindows({
-      stateKey: '2friends',
-      groupName: undefined,
-      windowsPerUser,
-      extraWindows,
-      context,
-    });
-    pages.push(...opened.pages);
+  return seededTest(
+    testName,
+    async (pages, testInfo) => {
+      const opened = await openSeededWindows({
+        stateKey: '2friends',
+        groupName: undefined,
+        windowsPerUser,
+        extraWindows,
+        context,
+      });
+      pages.push(...opened.pages);
 
-    await focusSeededFriendConvos(opened.users);
-    await testCallback({ users: opened.users, extras: opened.extras }, testInfo);
-  });
+      await focusSeededFriendConvos(opened.users);
+      await testCallback({ users: opened.users, extras: opened.extras }, testInfo);
+    },
+    context
+  );
+}
+
+/**
+ * One user with `contactsCount` seeded contacts, and a window for that user only.
+ *
+ * The other accounts exist on the swarm so their conversations appear in the first user's list, but
+ * no app is opened for them — which is the point: this replaces joining N communities, the slowest
+ * setup in the pin specs, with config the seeder writes directly.
+ */
+function sessionTestSeededContacts(
+  testName: string,
+  { context }: { context?: TestContext },
+  testCallback: (
+    details: { alice: DesktopWrapper; contactNames: Array<string> },
+    testInfo: TestInfo
+  ) => Promise<void>
+): void {
+  return seededTest(
+    testName,
+    async (pages, testInfo) => {
+      const opened = await openSeededWindows({
+        stateKey: '1userWith10Contacts',
+        groupName: undefined,
+        // Only the first user gets a window; the rest exist purely as contacts.
+        windowsPerUser: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        context,
+      });
+      pages.push(...opened.pages);
+
+      const alice = opened.users[0].windows[0];
+      const contactNames = opened.users.slice(1).map(u => u.account.userName);
+
+      // Every conversation present BEFORE the test gets the window. Seeded contacts land in the list as
+      // their config merges, not all at once, so a spec that starts acting immediately races the
+      // arrivals — and only the FIRST seeded test in a process loses that race, because later ones find
+      // the swarm warm. The symptom was a pin that silently never took on the fourth conversation,
+      // which reads as a pin-limit bug rather than a setup one.
+      await Promise.all(
+        contactNames.map(name =>
+          alice
+            .getPage()
+            .locator(`css=.${HomeScreen.conversationItemHeader.selector}`)
+            .filter({ hasText: name })
+            .first()
+            .waitFor({ state: 'visible', timeout: 60_000 })
+        )
+      );
+
+      await testCallback({ alice, contactNames }, testInfo);
+    },
+    context
+  );
+}
+
+/**
+ * One user whose config already carries a Pro access expiry, and a window for them.
+ *
+ * The callback gets the seeded account as well as the window, because the point of this state is to
+ * grant Pro to that same account on the backend before the client ever looks.
+ */
+function sessionTestSeededProAccess(
+  testName: string,
+  { context }: { context?: TestContext },
+  testCallback: (
+    details: { alice: DesktopWrapper; account: User },
+    testInfo: TestInfo
+  ) => Promise<void>
+): void {
+  return seededTest(
+    testName,
+    async (pages, testInfo) => {
+      const opened = await openSeededWindows({
+        stateKey: '1userWithProAccess',
+        groupName: undefined,
+        windowsPerUser: [1],
+        context,
+      });
+      pages.push(...opened.pages);
+      await testCallback(
+        { alice: opened.users[0].windows[0], account: opened.users[0].account },
+        testInfo
+      );
+    },
+    context
+  );
 }
 
 function sessionTestSeededGroup(
@@ -391,31 +487,35 @@ function sessionTestSeededGroup(
   { windowsPerUser, extraWindows = 0, context }: SeededOptions,
   testCallback: (details: SeededGroupDetails, testInfo: TestInfo) => Promise<void>
 ): void {
-  return seededTest(testName, async (pages, testInfo) => {
-    const opened = await openSeededWindows({
-      stateKey: '3friendsInGroup',
-      // Same convention as the UI builder: the group is named after the test.
-      groupName: testName,
-      windowsPerUser,
-      extraWindows,
-      context,
-    });
-    pages.push(...opened.pages);
+  return seededTest(
+    testName,
+    async (pages, testInfo) => {
+      const opened = await openSeededWindows({
+        stateKey: '3friendsInGroup',
+        // Same convention as the UI builder: the group is named after the test.
+        groupName: testName,
+        windowsPerUser,
+        extraWindows,
+        context,
+      });
+      pages.push(...opened.pages);
 
-    if (!opened.group) {
-      throw new Error(`state '3friendsInGroup' returned no group`);
-    }
-    const group: Group = {
-      userName: opened.group.groupName,
-      userOne: opened.users[0].account,
-      userTwo: opened.users[1].account,
-      userThree: opened.users[2].account,
-    };
-    // Mirror `createGroup`, which leaves the group open on each user's first window only —
-    // specs open it on linked windows themselves.
-    await focusAndWarmSeededGroup(opened.users, group.userName);
-    await testCallback({ users: opened.users, extras: opened.extras, group }, testInfo);
-  });
+      if (!opened.group) {
+        throw new Error(`state '3friendsInGroup' returned no group`);
+      }
+      const group: Group = {
+        userName: opened.group.groupName,
+        userOne: opened.users[0].account,
+        userTwo: opened.users[1].account,
+        userThree: opened.users[2].account,
+      };
+      // Mirror `createGroup`, which leaves the group open on each user's first window only —
+      // specs open it on linked windows themselves.
+      await focusAndWarmSeededGroup(opened.users, group.userName);
+      await testCallback({ users: opened.users, extras: opened.extras, group }, testInfo);
+    },
+    context
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -524,6 +624,35 @@ export function test_Alice_2W_Bob_1W_friends(
         info
       )
   );
+}
+
+/**
+ * Alice with ten seeded contacts, one window, their conversations already in her list.
+ *
+ * The seeded counterpart of `joinCommunities(N)` for tests that just need a populated conversation
+ * list — pinning, ordering, list limits — and do not care what the conversations are.
+ */
+/** Alice with a Pro access expiry already in her config, one window. */
+export function test_Alice_1W_pro_access(
+  testName: string,
+  testCallback: (
+    details: { alice: DesktopWrapper; account: User },
+    testInfo: TestInfo
+  ) => Promise<void>,
+  context?: TestContext
+) {
+  return sessionTestSeededProAccess(testName, { context }, testCallback);
+}
+
+export function test_Alice_1W_10contacts(
+  testName: string,
+  testCallback: (
+    details: { alice: DesktopWrapper; contactNames: Array<string> },
+    testInfo: TestInfo
+  ) => Promise<void>,
+  context?: TestContext
+) {
+  return sessionTestSeededContacts(testName, { context }, testCallback);
 }
 
 /**

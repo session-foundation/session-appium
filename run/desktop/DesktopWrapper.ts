@@ -189,10 +189,13 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   /**
    * Restore this window onto an existing account from its recovery phrase.
    *
-   * `fallbackName` covers the account whose profile has not reached the network yet — restoring one
-   * created moments earlier prompts for a display name, and without a fallback that is an error
-   * rather than something to type past. Supplying it says the spec does not care about the name;
-   * omit it where the name coming back IS the assertion.
+   * Being prompted for a display name means the profile was not found on the network, and by default
+   * that THROWS — for a seeded account it means the seeder did not push its config, which is worth
+   * failing on rather than typing past.
+   *
+   * `fallbackName` is the explicit opt-out, for the one case where the prompt is expected and harmless:
+   * an account created moments earlier, whose profile has not propagated yet, in a spec that asserts
+   * something other than the name. Supplying it is a statement that the name is not under test.
    */
   public async restoreFromSeed(recoveryPhrase: string, fallbackName?: string): Promise<void> {
     await recoverFromSeed(this.page, recoveryPhrase, fallbackName ? { fallbackName } : undefined);
@@ -509,8 +512,8 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /** Wait until a message with exactly this text is present in the open conversation. */
-  public async waitForMessage(text: string): Promise<void> {
-    await waitForTextMessage(this.page, text);
+  public async waitForMessage(text: string, maxWaitMs?: number): Promise<void> {
+    await waitForTextMessage(this.page, text, maxWaitMs);
   }
 
   /**

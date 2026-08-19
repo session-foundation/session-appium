@@ -1,25 +1,19 @@
 import { test, type TestInfo } from '@playwright/test';
-import { USERNAME } from '@session-foundation/qa-seeder';
 
-import { getCommunities } from '../../../constants/community';
+import { STANDARD_PIN_LIMIT } from '../../../shared/constants';
+
+/** One past the standard limit: a Pro account must pin all of these without being stopped. */
+const OVER_STANDARD_PIN_LIMIT = STANDARD_PIN_LIMIT + 1;
 import { makeAccountPro } from '../../../shared/pro_grant';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { CTAButtonNegative } from '../../locators/global';
 import { ConversationPinnedIcon, PlusButton } from '../../locators/home';
+import { open_Alice1_with_contacts } from '../../state_builder';
 import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
-import { joinCommunities } from '../../utils/community';
 import { assertPinOrder, getConversationOrder } from '../../utils/conversation_order';
-import { newUser } from '../../utils/create_account';
-import {
-  closeApp,
-  openAppOnPlatformSingleDevice,
-  SupportedPlatformsType,
-} from '../../utils/open_app';
+import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 import { observeProGrant } from '../../utils/pro_refresh';
-
-/** The pinned-conversation limit for a standard account. */
-const STANDARD_PIN_LIMIT = 5;
 
 bothPlatformsIt({
   title: 'Pin and unpin conversation',
@@ -62,14 +56,10 @@ bothPlatformsIt({
 });
 
 async function pinConversation(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const numCommunities = 2;
+  // Seeded contacts rather than joined communities: this only needs a conversation list it can
+  // reorder, and community joins were the slowest part of the run.
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
-    await newUser(device, USERNAME.ALICE, { saveUserData: false });
-    return { device };
-  });
-  await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITIES(numCommunities), async () => {
-    await joinCommunities(device, numCommunities);
+    return await open_Alice1_with_contacts({ platform, testInfo });
   });
   let beforeOrder: string[] = [];
   let toPin = '';
@@ -108,24 +98,17 @@ async function pinConversation(platform: SupportedPlatformsType, testInfo: TestI
 }
 
 async function nonProPinnedLimit(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const communities = getCommunities();
-  const numCommunities = 6;
-  const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, IOS_PRO_CONTEXT);
-    await newUser(device, USERNAME.ALICE, { saveUserData: false });
-    return { device };
-  });
-  await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITIES(numCommunities), async () => {
-    await joinCommunities(device, numCommunities);
+  // Seeded contacts rather than joined communities: this needs a conversation list longer than the
+  // limit, and joining six communities was the slowest part of the run.
+  const { device, contactNames } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
+    return await open_Alice1_with_contacts({ platform, testInfo, iOSContext: IOS_PRO_CONTEXT });
   });
   let beforeOrder: string[] = [];
   await test.step('Capture conversation order before pinning', async () => {
     beforeOrder = await getConversationOrder(device);
   });
-  const toPin = Object.values(communities)
-    .slice(0, STANDARD_PIN_LIMIT)
-    .map(community => community.name);
-  const overLimit = Object.values(communities)[STANDARD_PIN_LIMIT].name;
+  const toPin = contactNames.slice(0, STANDARD_PIN_LIMIT);
+  const overLimit = contactNames[STANDARD_PIN_LIMIT];
 
   await test.step(TestSteps.USER_ACTIONS.PIN_CONVERSATIONS(STANDARD_PIN_LIMIT), async () => {
     for (const name of toPin) {
@@ -157,27 +140,20 @@ async function nonProPinnedLimit(platform: SupportedPlatformsType, testInfo: Tes
 }
 
 async function proPinnedLimit(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const communities = getCommunities();
-  const numCommunities = 6;
-  const { device, alice } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, IOS_PRO_CONTEXT);
-    const alice = await newUser(device, USERNAME.ALICE);
-    return { device, alice };
+  // Seeded contacts rather than joined communities. The grant still has to be real: the pinned limit
+  // is an ACCESS question, so it reads the proof rather than the plan's state.
+  const { device, alice, contactNames } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
+    return await open_Alice1_with_contacts({ platform, testInfo, iOSContext: IOS_PRO_CONTEXT });
   });
   await makeAccountPro({ user: alice, platform });
   await observeProGrant(device);
-  await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITIES(numCommunities), async () => {
-    await joinCommunities(device, numCommunities);
-  });
   let beforeOrder: string[] = [];
   await test.step('Capture conversation order before pinning', async () => {
     beforeOrder = await getConversationOrder(device);
   });
-  const toPin = Object.values(communities)
-    .slice(0, numCommunities)
-    .map(community => community.name);
+  const toPin = contactNames.slice(0, OVER_STANDARD_PIN_LIMIT);
 
-  await test.step(TestSteps.USER_ACTIONS.PIN_CONVERSATIONS(numCommunities), async () => {
+  await test.step(TestSteps.USER_ACTIONS.PIN_CONVERSATIONS(OVER_STANDARD_PIN_LIMIT), async () => {
     for (const name of toPin) {
       await device.pinConversation(name);
       await device

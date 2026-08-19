@@ -1,6 +1,7 @@
 import { test, type TestInfo } from '@playwright/test';
 
 import { tStripped } from '../../../localizer/lib';
+import { COUNTDOWN_START_THRESHOLD, PRO_MAX_CHARS } from '../../../shared/constants';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
@@ -24,8 +25,6 @@ import {
   SupportedPlatformsType,
 } from '../../utils/open_app';
 
-const PRO_MAX_CHARS = 10000;
-const COUNTDOWN_START_THRESHOLD = 200;
 /** Lands the countdown on exactly the threshold, so the value asserted is the limit being applied. */
 const AT_PRO_THRESHOLD = PRO_MAX_CHARS - COUNTDOWN_START_THRESHOLD;
 
@@ -126,7 +125,7 @@ async function proOverhang(platform: SupportedPlatformsType, testInfo: TestInfo)
   await test.step('Read the account address', async () => {
     // Deferred until after the CTA was handled, which is why `newUser` skipped it: the modal sits over
     // the settings list, and this reads it.
-    ({ accountID } = await harvestAccountData(device, USERNAME.ALICE));
+    ({ accountID } = await harvestAccountData(device));
   });
 
   await test.step('Verify the Pro message limit still applies', async () => {

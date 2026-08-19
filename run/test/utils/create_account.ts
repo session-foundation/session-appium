@@ -70,7 +70,7 @@ export async function newUser(
     return { userName, accountID: 'not_needed', recoveryPhrase: 'not_needed' };
   }
 
-  return { userName, ...(await harvestAccountData(device, userName)) };
+  return { userName, ...(await harvestAccountData(device)) };
 }
 
 /**
@@ -84,8 +84,7 @@ export async function newUser(
  * Left as `newUser`'s default so the common case is unchanged.
  */
 export async function harvestAccountData(
-  device: DeviceWrapper,
-  userName: UserNameType
+  device: DeviceWrapper
 ): Promise<{ accountID: string; recoveryPhrase: string }> {
   // Open recovery phrase modal and save recovery phrase
   await device.clickOnElementAll(new UserSettings(device));
@@ -112,7 +111,7 @@ export async function harvestAccountData(
     new RecoveryPhraseContainer(device)
   );
   const recoveryPhrase = await device.getTextFromElement(recoveryPhraseContainer);
-  device.log(`${userName}s recovery phrase is "${recoveryPhrase}"`);
+  device.log(`Recovery phrase is "${recoveryPhrase}"`);
   await device.navigateBack(false);
   await device.scrollUp();
   // Get Account ID from User Settings

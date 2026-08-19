@@ -1,6 +1,7 @@
 import { CTA } from '../../../desktop/locators';
-import { joinCommunities, pinConversation, pinIconFor } from '../../../desktop/pin';
-import { test_Alice_1W } from '../../../desktop/sessionTest';
+import { pinConversation, pinIconFor } from '../../../desktop/pin';
+import { test_Alice_1W_10contacts } from '../../../desktop/sessionTest';
+import { STANDARD_PIN_LIMIT } from '../../../shared/constants';
 
 /**
  * The pinned-conversation limit either side of the Pro boundary: five for a standard user, more for a
@@ -14,13 +15,13 @@ import { test_Alice_1W } from '../../../desktop/sessionTest';
  * or that showed the CTA and pinned anyway, satisfies a CTA-only assertion.
  */
 
-const COMMUNITY_COUNT = 6;
-const STANDARD_PIN_LIMIT = 5;
+/** Enough conversations to exceed the standard limit, which is what both specs turn on. */
+const CONVERSATION_COUNT = 6;
 
-test_Alice_1W(
+test_Alice_1W_10contacts(
   'Pinned conversation limit (non Pro)',
-  async ({ alice }) => {
-    const names = await joinCommunities(alice, COMMUNITY_COUNT);
+  async ({ alice, contactNames }) => {
+    const names = contactNames;
 
     for (const name of names.slice(0, STANDARD_PIN_LIMIT)) {
       await pinConversation(alice, name);
@@ -35,13 +36,14 @@ test_Alice_1W(
     // The CTA appearing is not the same as the pin being refused.
     await pinIconFor(alice, overLimit).waitFor({ state: 'hidden' });
   },
-  { pro: { proBackendStatus: 'never' }, communityRooms: COMMUNITY_COUNT }
+  { pro: { proBackendStatus: 'never' } }
 );
 
-test_Alice_1W(
+test_Alice_1W_10contacts(
   'Pinned conversation limit (Pro)',
-  async ({ alice }) => {
-    const names = await joinCommunities(alice, COMMUNITY_COUNT);
+  async ({ alice, contactNames }) => {
+    // More than the standard limit, which is what the assertion turns on; the rest are surplus.
+    const names = contactNames.slice(0, CONVERSATION_COUNT);
 
     for (const name of names) {
       await pinConversation(alice, name);
@@ -54,6 +56,5 @@ test_Alice_1W(
     // The pinned limit is an ACCESS question, so it reads the proof rather than the plan's state — a
     // status-only fixture would pin like a free user and fail here for the wrong reason.
     pro: { proBackendStatus: 'active', proAccessExpiry: 'P30D', proProof: 'valid' },
-    communityRooms: COMMUNITY_COUNT,
   }
 );

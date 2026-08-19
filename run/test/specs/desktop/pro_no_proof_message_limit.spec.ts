@@ -1,9 +1,9 @@
 import { Conversation } from '../../../desktop/locators';
-import { test_Alice_1W_Bob_1W } from '../../../desktop/sessionTest';
+import { test_Alice_1W_Bob_1W_friends } from '../../../desktop/sessionTest';
+import { STANDARD_MAX_CHARS } from '../../../shared/constants';
 
 /** Comfortably past the standard cap, comfortably under the Pro one. */
 const OVER_STANDARD = 3000;
-const STANDARD_MAX_CHARS = 2000;
 
 /**
  * The countdown is rendered through `Intl.NumberFormat`, so the raw number never appears — a
@@ -37,12 +37,9 @@ const EXPECTED_REMAINING = new Intl.NumberFormat('en-US').format(
  * was unreachable and this spec could not have measured what it claims to — it would have passed by
  * offering the Pro limit and failing for the reason it exists to catch.
  */
-test_Alice_1W_Bob_1W(
+test_Alice_1W_Bob_1W_friends(
   'No Pro proof means no Pro message limit',
-  async ({ alice, bob }) => {
-    await alice.createContactWith(bob);
-    await alice.openConversationWith(bob.userName);
-
+  async ({ alice }) => {
     // The countdown reflects the limit the client is applying, so it fails here rather than after a
     // send, where the only evidence would be a length mismatch between two devices.
     await alice.pasteIntoInput('message-input-text-area', 'z'.repeat(OVER_STANDARD));

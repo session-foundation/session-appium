@@ -14,7 +14,11 @@ const logNodeConsole = process.env.LOG_NODE_CONSOLE === '1';
 
 export const NODE_ENV = 'production';
 export const MULTI_PREFIX = 'test-integration';
-const multisAvailable = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+/**
+ * The `MULTI` suffixes `openApps` assigns, in order — index `i` is the same window as index `i` in
+ * `getLaunchedInstances()`, which is what lets a window be restarted onto its own user-data directory.
+ */
+export const multisAvailable = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 let electronPids: Array<number> = [];
 /**
  * The `NODE_APP_INSTANCE` each window was launched with, in launch order. A restart has to reuse its
@@ -247,15 +251,6 @@ export function resetTrackedElectronPids() {
 export function getLaunchedInstances(): Array<string> {
   return launchedInstances;
 }
-
-/**
- * The `MULTI` suffixes `openApps` assigns, in launch order — index `i` here is the same window as
- * index `i` in `getLaunchedInstances()`.
- *
- * Here rather than beside the test templates because both the onboarding and the seeded openers need
- * it, and the seeded opener cannot import from the templates: they import it.
- */
-export const MULTIS = ['A', 'B', 'C', 'D'];
 
 /**
  * Bring a window back up on the same user-data directory it was using.
