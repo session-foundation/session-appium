@@ -8,6 +8,7 @@ import {
   type WithGroupStateKey,
 } from '@session-foundation/qa-seeder';
 
+import type { User as DesktopUser } from '../../desktop/types';
 import type { DeviceWrapper } from '../../types/DeviceWrapper';
 import type { IBaseDeviceWrapper } from '../../types/IBaseDeviceWrapper';
 import type { ClientPlatform } from '../../types/target';
@@ -15,7 +16,12 @@ import type { User } from '../../types/testing';
 
 import { forceCloseAllWindows } from '../../desktop/closeWindows';
 import { DesktopWrapper } from '../../desktop/DesktopWrapper';
-import { openApps, waitFirstWindow } from '../../desktop/open';
+import {
+  getLaunchedInstances,
+  getLaunchedMultis,
+  openApps,
+  waitFirstWindow,
+} from '../../desktop/open';
 import { getDevicesPerTestCount } from './binaries';
 import { getAndroidPoolSize } from './capabilities_android';
 import { IOS_PRO_CONTEXT } from './capabilities_ios';
@@ -100,6 +106,15 @@ function toUser(stateUser: StateUser): User {
   };
 }
 
+/** The same account under the names the desktop code uses (mirrors `seeded_state.ts`). */
+function toDesktopUser(stateUser: StateUser): DesktopUser {
+  return {
+    userName: stateUser.userName,
+    accountid: stateUser.sessionId,
+    recoveryPassword: stateUser.seedPhrase,
+  };
+}
+
 /**
  * Cross-platform, multi-account counterpart to the mobile `openAppsWithState`
  * (`run/test/state_builder`): seed the requested users/relationships onto the swarm
@@ -179,7 +194,14 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
       ? openAppMultipleDevices('ios', totalIos, testInfo, isPro ? IOS_PRO_CONTEXT : undefined)
       : [],
     totalDesktop > 0
-      ? openApps(totalDesktop).then(apps => Promise.all(apps.map(app => waitFirstWindow(app))))
+      ? // `{ pro: {} }` rather than nothing: `applyProMocks` clears every Pro variable it owns on each
+        // launch and restores only the value `SESSION_PRO` held at module load, so passing no context
+        // *unsets* the flag this test just set — leaving Desktop with no Pro surfaces at all, on a run
+        // that asked for them. An empty context asks for "Pro on, nothing mocked", which is what a
+        // real grant needs.
+        openApps(totalDesktop, isPro ? { pro: {} } : undefined).then(apps =>
+          Promise.all(apps.map(app => waitFirstWindow(app)))
+        )
       : [],
   ]);
   const androidPool = androidSettled.status === 'fulfilled' ? androidSettled.value : [];
@@ -221,7 +243,19 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
     );
   }
 
-  const desktopPool = desktopWindows.map(page => new DesktopWrapper(page));
+  // Hand each window the identity it was launched with, or it cannot be brought back up: `restartApp`
+  // needs the MULTI and NODE_APP_INSTANCE to relaunch against the same user-data directory, and a
+  // restart is the only way a client observes a Pro grant made while it was running. Positional —
+  // `openApps` launches windows in order and records each as it goes.
+  const launchedMultis = getLaunchedMultis();
+  const launchedInstances = getLaunchedInstances();
+  const desktopPool = desktopWindows.map((page, i) => {
+    const wrapper = new DesktopWrapper(page);
+    if (launchedMultis[i] && launchedInstances[i]) {
+      wrapper.setLaunchIdentity(launchedMultis[i], launchedInstances[i]);
+    }
+    return wrapper;
+  });
 
   let ai = 0;
   let ii = 0;
@@ -240,7 +274,13 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
 
     android.forEach((d, i) => d.setDeviceIdentity(`${nameLc}-android${i + 1}`));
     ios.forEach((d, i) => d.setDeviceIdentity(`${nameLc}-ios${i + 1}`));
-    desktop.forEach((d, i) => d.setDeviceIdentity(`${nameLc}-desktop${i + 1}`));
+    desktop.forEach((d, i) => {
+      d.setDeviceIdentity(`${nameLc}-desktop${i + 1}`);
+      // Restoring from a seed does not tell the wrapper WHICH account it landed on, and the desktop
+      // verbs read it off the wrapper: `subscribeToPro` mints against `getUser()`, which without this
+      // throws rather than minting.
+      d.setAccount(toDesktopUser(stateUser));
+    });
 
     return { account, android, ios, desktop, all: [...android, ...ios, ...desktop] };
   });

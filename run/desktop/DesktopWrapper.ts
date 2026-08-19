@@ -19,6 +19,7 @@ import { tStripped } from '../localizer/lib';
 import { makeAccountPro } from '../shared/pro_grant';
 import { sleepFor } from '../shared/promise_utils';
 import { parseDataImage } from '../test/utils/check_colour';
+import { proFeatureTestId, type ProMessageFeature } from '../test/utils/pro_message_features';
 import { ctaConfigs, type CTAType } from '../types/cta';
 import {
   openConversationWith as desktopOpenConversationWith,
@@ -429,6 +430,41 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /**
+   * Block until this client's Pro badge setting reads ON.
+   *
+   * The counterpart to `enableProBadge`, for the client that did NOT set it: badge visibility is a
+   * per-user profile flag, so a linked device learns it through config sync rather than by asking the
+   * backend. Waiting for it is what stops a race with anything the badge should ride along with — a
+   * message sent from here before the flag lands carries no PRO_BADGE feature, and the receiver then
+   * has nothing to render through no fault of its own.
+   *
+   * Reopens the settings page each attempt rather than polling one rendered screen, for the same
+   * reason as `waitForProActive`.
+   */
+  public async waitForProBadgeEnabled(maxWaitMs = 60_000): Promise<void> {
+    await doWhileWithMax(
+      maxWaitMs,
+      1_000,
+      'waiting for the Pro badge setting to sync',
+      async () => {
+        try {
+          await clickOn(this.page, LeftPane.settingsButton);
+          await clickOn(this.page, Settings.proMenuItem);
+          const toggle = this.page.getByTestId(ProSettings.badgeToggle.selector);
+          return (await toggle.getAttribute('data-active')) === 'true';
+        } catch (e) {
+          this.log(`Pro badge setting not on yet: ${(e as Error).message.split('\n')[0]}`);
+          return false;
+        } finally {
+          // Closed between attempts, or the open dialog swallows the next iteration's click on the
+          // settings button and a slow sync becomes an infinite one.
+          await this.closeOpenModals().catch(() => undefined);
+        }
+      }
+    );
+  }
+
+  /**
    * Open the edit-profile-picture modal and click its Pro badge, which is what raises the
    * animated-display-picture CTA — activated for a subscriber, the upsell otherwise.
    */
@@ -485,11 +521,12 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     });
   }
 
-  // --- Receiver-side Session Pro assertions (desktop-only for now) ---
-  // Mobile has equivalents under different names (verifyElementIsAnimated, the pro-badge
-  // locators); these are the desktop counterparts, used when a desktop client observes a
-  // peer's Pro state. Not promoted to IBaseDeviceWrapper until every platform can satisfy
-  // one shared signature.
+  // --- Receiver-side Session Pro assertions ---
+  // Used when this client observes a PEER's Pro state. `assertSenderProBadge` is on
+  // IBaseDeviceWrapper — mobile satisfies the same signature — so a cross-platform spec can
+  // assert it over every client regardless of platform. The animation checks below are still
+  // desktop-only: mobile's equivalent (verifyElementIsAnimated) takes an Appium locator, so
+  // there is no shared signature to promote yet.
 
   /** Center-pixel hex color of the first element matching `cssSelector` (via screenshot). */
   private async sampleCenterColor(cssSelector: string): Promise<string> {
@@ -541,6 +578,44 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   public async verifySenderAvatarAnimated(convoName: string): Promise<void> {
     await this.openConversationOnceNamed(convoName);
     await this.verifyElementIsAnimated('[data-testid="conversation-options-avatar"] img');
+  }
+
+  /**
+   * Open a message's info panel (right-click → Info) and assert it lists the Pro features the message
+   * was sent with.
+   *
+   * The sharpest receiver-side Pro assertion available: the features travel *in the message* as a
+   * bitset, so this names what this particular message carried rather than what the sender's profile
+   * currently claims. A badge elsewhere only says "this person is Pro".
+   *
+   * The rows are matched by the test id all three clients now tag them with (`proFeatureTestId`),
+   * which is also what lets this name *which* features to expect rather than counting rows.
+   */
+  public async assertMessageProFeatures(
+    message: string,
+    features: ProMessageFeature[]
+  ): Promise<void> {
+    await this.rightClickOnWithText(Conversation.messageContent, message);
+    // The menu item carries no test id, only its label.
+    await clickOnMatchingText(this.page, tStripped('info'));
+
+    // Waited on together: the rows render as one list, so there is no order to respect, and a missing
+    // feature costs one timeout instead of one per feature that follows it. Safe here in a way it is
+    // not on mobile — these are independent browser-side polls on one page, whereas Appium serialises
+    // commands per session.
+    await Promise.all(
+      features.map(feature =>
+        waitForElement({
+          window: this.page,
+          locator: { strategy: 'data-testid', selector: proFeatureTestId(feature) },
+          options: { maxWaitMs: 10_000 },
+        })
+      )
+    );
+
+    // `Escape` is the panel's own close shortcut (`KbdShortcut.closeRightPanel`). Left open it covers
+    // the conversation, so anything the spec does next fails on an element it cannot reach.
+    await this.page.keyboard.press('Escape').catch(() => undefined);
   }
 
   /** Open `convoName` and assert the peer's Session Pro badge shows in the header (polls). */

@@ -1,3 +1,5 @@
+import type { ProFeatureTestId } from '../utils/pro_message_features';
+
 import { tStripped } from '../../localizer/lib';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { StrategyExtractionObj } from '../../types/testing';
@@ -50,6 +52,40 @@ export class ConversationHeaderProBadge extends LocatorsInterface {
 }
 
 /**
+ * The "Info" entry of a message's long-press menu, which opens the message-details screen.
+ *
+ * Both platforms show every action at once, so this is reachable straight after the long press.
+ *
+ * Android's long press opens its **own** context menu (`context_menu_item_title` rows: Reply, Copy,
+ * Info, Select, Delete) — NOT the multi-select action mode from `menu_conversation_item_action.xml`,
+ * where "Info" is declared `showAsAction="never"` and lives behind an overflow button. That menu is a
+ * different surface, reached by selecting messages rather than by a plain long press, so nothing here
+ * needs an overflow tap.
+ *
+ * Android matches the row id and filters by text, as the other `LongPress*` menu items do — NOT
+ * `-android uiautomator`. That strategy resolves through UiAutomator's `UiObject` API, which only
+ * searches the **active window**, and this menu is a popup in a window of its own (the page source
+ * merges every window, so the item is plainly there in a dump while a `UiSelector` never finds it —
+ * about as misleading as a failure gets). The `id` strategy goes through `UiObject2`, which walks
+ * every window root, which is why the ANR and permission dialogs are reachable the same way.
+ */
+export class MessageInfoMenuItem extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/context_menu_item_title',
+          text: tStripped('info'),
+        } as const;
+      case 'ios':
+        // iOS gives the action an explicit accessibilityLabel, distinct from its "Info" title.
+        return { strategy: 'accessibility id', selector: 'Message info' } as const;
+    }
+  }
+}
+
+/**
  * The Session Pro badge glyph.
  *
  * Deliberately unscoped. On the *recipient's* device in a 1:1 with a Pro sender, the badge can only
@@ -95,7 +131,31 @@ export class ProBadgeSettingToggle extends LocatorsInterface {
   }
 }
 
-/** Header above the feature list, present in every state of the Pro settings screen. */
+/**
+ * One row of the "This message used the following Session Pro features:" list on the message-info
+ * screen.
+ *
+ * Addressed by the id every client now tags the row with — pass it from `proFeatureTestId`, which
+ * owns the string the three clients agreed on.
+ */
+export class ProFeatureRow extends LocatorsInterface {
+  private readonly testId: ProFeatureTestId;
+
+  constructor(device: DeviceWrapper, testId: ProFeatureTestId) {
+    super(device);
+    this.testId = testId;
+  }
+
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: this.testId } as const;
+      case 'ios':
+        return { strategy: 'accessibility id', selector: this.testId } as const;
+    }
+  }
+}
+
 export class ProFeaturesHeader extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {

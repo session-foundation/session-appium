@@ -18,7 +18,6 @@ export interface IMobileWrapper extends IBaseDeviceWrapper {
   isAndroid(): boolean;
   onIOS(): IMobileWrapper;
   onAndroid(): IMobileWrapper;
-  tap(xCoOrdinates: number, yCoOrdinates: number): Promise<void>;
   pressHome(): Promise<void>;
   getPageSource(): Promise<string>;
 

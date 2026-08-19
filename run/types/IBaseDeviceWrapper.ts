@@ -1,3 +1,4 @@
+import type { ProMessageFeature } from '../test/utils/pro_message_features';
 import type { User } from './testing';
 
 /**
@@ -40,6 +41,21 @@ export interface IBaseDeviceWrapper {
 
   // Session Pro
   subscribeToPro(user: User): Promise<void>;
+  /**
+   * Open the 1:1 with `senderName` and assert their Session Pro badge renders here.
+   *
+   * Receiver-side: the badge belongs to the person the conversation is *with*, so this is never an
+   * assertion about this device's own user. Rendering it means this client verified a real proof —
+   * the display-level Pro mocks produce none, so only a real grant satisfies it.
+   */
+  assertSenderProBadge(senderName: string): Promise<void>;
+  /**
+   * Open `message`'s info screen and assert it lists the Pro features the message was sent with.
+   *
+   * Sharper than any badge: the features travel *in the message* as a bitset, so this names what this
+   * particular message carried rather than what the sender's profile currently claims.
+   */
+  assertMessageProFeatures(message: string, features: ProMessageFeature[]): Promise<void>;
   assertProFeatureUnlocked(user: Pick<User, 'accountID'>): Promise<void>;
   /**
    * Open `convoName` and send a message longer than the standard 2000-char cap,

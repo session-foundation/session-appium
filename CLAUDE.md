@@ -299,6 +299,30 @@ an existing spec (e.g. `run/test/specs/app_disguise_icons.spec.ts`).
   element selectors in `run/test/locators/`, reusable flows in `run/test/utils/`.
 - Prefer the shared account/contact/group helpers (`create_account.ts`, `create_contact.ts`,
   `create_group.ts`) and `state_builder` seeding over re-implementing onboarding per spec.
+- **Locator strategies: `id` and `accessibility id`, and essentially nothing else.** An element the
+  test touches should be addressable by a tag the client gives it. `class name`, `xpath` and
+  `-android uiautomator` are all **last resorts, not fallbacks** — they are slow, and they pin the
+  test to a view hierarchy or a display string that changes for reasons that have nothing to do with
+  the behaviour under test. A `text`/`label` filter alongside an `id` is fine (that is what the
+  `LongPress*` context-menu items do); matching by text with no id is not.
+
+  **If an element cannot be addressed by `id` or `accessibility id`, stop and say so — do not reach
+  for one of the other three.** That is a missing test tag on the client, and the fix belongs there
+  (a Compose `qaTag`, an Android `resource-id`, an iOS `accessibilityIdentifier`, a Desktop
+  `data-testid`), not in a selector here. Say which element and which client file, and let the
+  maintainer decide. The existing `class name` / xpath / uiautomator locators are legacy; don't take
+  them as licence for new ones.
+
+  Two things to know when you do have to read one, or when a selector inexplicably fails:
+
+  - `-android uiautomator` resolves through UiAutomator's `UiObject` API, which searches only the
+    **active window**. A context menu or dialog lives in a window of its own, so the element is
+    plainly there in a page-source dump (which merges every window) and yet never matches — about as
+    misleading as a failure gets. `id` and `class name` go through `UiObject2`, which walks every
+    window root; that is why the ANR and permission dialogs are reachable.
+  - The `text` filter is an **exact** match after normalisation (`findMatchingTextInElementArray`),
+    not a substring one — asserting a prefix of a long message fails against a body that is present
+    and correct.
 - `runOnlyOnIOS` / `runOnlyOnAndroid` (`run/test/utils/run_on.ts`) gate
   platform-specific steps inside a shared spec.
 - Lint/format: `pnpm lint` (prettier + eslint). `pnpm tsc` for typecheck.
