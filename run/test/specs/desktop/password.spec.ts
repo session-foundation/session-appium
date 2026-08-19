@@ -52,7 +52,7 @@ test_Alice_1W_no_network('Set Password', async ({ alice }) => {
   await alice.clickOnMatchingText(tStripped('enter'));
 
   // check that the seed is visible now
-  await expectRecoveryPhraseToBeVisible(alice, alice.getUser().recoveryPassword);
+  await expectRecoveryPhraseToBeVisible(alice, alice.getUser().seedPhrase);
   await alice.clickOn(Global.modalCloseButton);
   await alice.clickOn(LeftPane.settingsButton);
   await alice.clickOn(Settings.privacyMenuItem);
@@ -75,7 +75,7 @@ test_Alice_1W_no_network('Set Password', async ({ alice }) => {
 });
 
 test_Alice_1W_no_network('Wrong Password', async ({ alice }) => {
-  const { recoveryPassword } = alice.getUser();
+  const { seedPhrase } = alice.getUser();
   // Check if incorrect password works
   // Click on settings tab
   await alice.clickOn(LeftPane.settingsButton);
@@ -97,7 +97,7 @@ test_Alice_1W_no_network('Wrong Password', async ({ alice }) => {
   // Confirm the password
   await alice.clickOn(Global.confirmButton);
   // this should print the recovery phrase
-  await expectRecoveryPhraseToBeVisible(alice, recoveryPassword);
+  await expectRecoveryPhraseToBeVisible(alice, seedPhrase);
 
   await alice.clickOn(Global.modalBackButton);
   await sleepFor(500);
@@ -109,7 +109,7 @@ test_Alice_1W_no_network('Wrong Password', async ({ alice }) => {
   await alice.clickOn(Global.confirmButton);
   // this should NOT print the recovery phrase
 
-  await alice.hasElementPoppedUpThatShouldnt(Settings.recoveryPasswordContainer, recoveryPassword);
+  await alice.hasElementPoppedUpThatShouldnt(Settings.recoveryPasswordContainer, seedPhrase);
 
   //  Incorrect password below input showing?
   await alice.waitForTestIdWithText(Global.errorMessage.selector, tStripped('passwordIncorrect'));
@@ -153,7 +153,7 @@ test_Alice_1W_no_network('Do not trim spaces from password', async ({ alice }) =
   await alice.clickOnMatchingText(tStripped('enter'));
 
   // check that the seed is visible now
-  await expectRecoveryPhraseToBeVisible(alice, alice.getUser().recoveryPassword);
+  await expectRecoveryPhraseToBeVisible(alice, alice.getUser().seedPhrase);
   await alice.clickOn(Global.modalCloseButton);
   await alice.clickOn(LeftPane.settingsButton);
   await alice.clickOn(Settings.privacyMenuItem);

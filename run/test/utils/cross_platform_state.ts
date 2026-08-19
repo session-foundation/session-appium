@@ -11,11 +11,15 @@ import {
 import type { DeviceWrapper } from '../../types/DeviceWrapper';
 import type { IBaseDeviceWrapper } from '../../types/IBaseDeviceWrapper';
 import type { ClientPlatform } from '../../types/target';
-import type { User } from '../../types/testing';
 
 import { forceCloseAllWindows } from '../../desktop/closeWindows';
 import { DesktopWrapper } from '../../desktop/DesktopWrapper';
-import { openApps, waitFirstWindow } from '../../desktop/open';
+import {
+  getLaunchedInstances,
+  multisAvailable,
+  openApps,
+  waitFirstWindow,
+} from '../../desktop/open';
 import { getDevicesPerTestCount } from './binaries';
 import { getAndroidPoolSize } from './capabilities_android';
 import { IOS_PRO_CONTEXT } from './capabilities_ios';
@@ -34,7 +38,7 @@ export type PerUserPlatforms = {
 
 /** One account together with the clients (across platforms) linked to it. */
 export type UserClients = {
-  account: User;
+  account: StateUser;
   android: DeviceWrapper[];
   ios: DeviceWrapper[];
   desktop: DesktopWrapper[];
@@ -90,14 +94,6 @@ async function closePartiallyOpenedClients(
   } catch (e) {
     console.error('forceCloseAllWindows failed after a failed cross-platform open:', e);
   }
-}
-
-function toUser(stateUser: StateUser): User {
-  return {
-    userName: stateUser.userName,
-    accountID: stateUser.sessionId,
-    recoveryPhrase: stateUser.seedPhrase,
-  };
 }
 
 /**
@@ -179,7 +175,14 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
       ? openAppMultipleDevices('ios', totalIos, testInfo, isPro ? IOS_PRO_CONTEXT : undefined)
       : [],
     totalDesktop > 0
-      ? openApps(totalDesktop).then(apps => Promise.all(apps.map(app => waitFirstWindow(app))))
+      ? // `{ pro: {} }` rather than nothing: `applyProMocks` clears every Pro variable it owns on each
+        // launch and restores only the value `SESSION_PRO` held at module load, so passing no context
+        // *unsets* the flag this test just set — leaving Desktop with no Pro surfaces at all, on a run
+        // that asked for them. An empty context asks for "Pro on, nothing mocked", which is what a
+        // real grant needs.
+        openApps(totalDesktop, isPro ? { pro: {} } : undefined).then(apps =>
+          Promise.all(apps.map(app => waitFirstWindow(app)))
+        )
       : [],
   ]);
   const androidPool = androidSettled.status === 'fulfilled' ? androidSettled.value : [];
@@ -221,14 +224,25 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
     );
   }
 
-  const desktopPool = desktopWindows.map(page => new DesktopWrapper(page));
+  // Hand each window the identity it was launched with, or it cannot be brought back up: `restartApp`
+  // needs the MULTI and NODE_APP_INSTANCE to relaunch against the same user-data directory, and a
+  // restart is the only way a client observes a Pro grant made while it was running. Positional —
+  // `openApps` launches windows in order and records each as it goes.
+  const launchedInstances = getLaunchedInstances();
+  const desktopPool = desktopWindows.map((page, i) => {
+    const wrapper = new DesktopWrapper(page);
+    if (multisAvailable[i] && launchedInstances[i]) {
+      wrapper.setLaunchIdentity(multisAvailable[i], launchedInstances[i]);
+    }
+    return wrapper;
+  });
 
   let ai = 0;
   let ii = 0;
   let di = 0;
   const users: UserClients[] = seedUsers.map((stateUser, idx) => {
     const spec = perUser[idx];
-    const account = toUser(stateUser);
+    const account = stateUser;
     const nameLc = stateUser.userName.toLowerCase();
 
     const android = androidPool.slice(ai, ai + (spec.android ?? 0));
@@ -240,14 +254,20 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
 
     android.forEach((d, i) => d.setDeviceIdentity(`${nameLc}-android${i + 1}`));
     ios.forEach((d, i) => d.setDeviceIdentity(`${nameLc}-ios${i + 1}`));
-    desktop.forEach((d, i) => d.setDeviceIdentity(`${nameLc}-desktop${i + 1}`));
+    desktop.forEach((d, i) => {
+      d.setDeviceIdentity(`${nameLc}-desktop${i + 1}`);
+      // Restoring from a seed does not tell the wrapper WHICH account it landed on, and the desktop
+      // verbs read it off the wrapper: `subscribeToPro` mints against `getUser()`, which without this
+      // throws rather than minting.
+      d.setAccount(stateUser);
+    });
 
     return { account, android, ios, desktop, all: [...android, ...ios, ...desktop] };
   });
 
   // Restore every client from its account's recovery phrase, in parallel.
   await Promise.all(
-    users.flatMap(u => u.all.map(client => client.restoreFromSeed(u.account.recoveryPhrase)))
+    users.flatMap(u => u.all.map(client => client.restoreFromSeed(u.account.seedPhrase)))
   );
 
   return {

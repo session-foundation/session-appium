@@ -327,6 +327,21 @@ function getExpectedStringFromKey(
       return 'Pin';
     case 'pinUnpin':
       return 'Unpin';
+    case 'info':
+      return 'Info';
+    case 'checkingProStatus':
+      return 'Checking Pro Status';
+    case 'errorCheckingProStatus':
+      return 'Error checking Pro status';
+    case 'proAccessRenewStart':
+      return 'Renew your Pro access to start using powerful Session Pro Beta features and support the project again.';
+    case 'proThanksForSupporting':
+      return 'Thank you for supporting Session!';
+    // The only one of these carrying markup: the copy is two sentences separated by a `<br/>`, which
+    // `tStripped` collapses to a single space. Android's `strings.xml` uses a real `\n` for the same
+    // break, so the mobile locators pairing this copy with an element cannot compare it byte-for-byte.
+    case 'proFullestPotential':
+      return 'Want to use Session to its fullest potential? Upgrade to Session Pro Beta to get access to exclusive features and help support the project.';
     default:
       // returning null means we don't have an expected string yet for this key.
       // This will make the test fail

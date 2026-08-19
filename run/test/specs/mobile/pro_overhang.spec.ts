@@ -93,7 +93,7 @@ async function proOverhang(platform: SupportedPlatformsType, testInfo: TestInfo)
 
   // Both halves run in the SAME launch deliberately: the claim is that one client holds both states at
   // once, which a relaunch between them would not show.
-  let accountID = '';
+  let sessionId = '';
 
   await test.step('Verify the plan displays as expired', async () => {
     await device.clickOnElementAll(new UserSettings(device));
@@ -125,7 +125,7 @@ async function proOverhang(platform: SupportedPlatformsType, testInfo: TestInfo)
   await test.step('Read the account address', async () => {
     // Deferred until after the CTA was handled, which is why `newUser` skipped it: the modal sits over
     // the settings list, and this reads it.
-    ({ accountID } = await harvestAccountData(device));
+    ({ sessionId } = await harvestAccountData(device));
   });
 
   await test.step('Verify the Pro message limit still applies', async () => {
@@ -133,7 +133,7 @@ async function proOverhang(platform: SupportedPlatformsType, testInfo: TestInfo)
     // which one is in force.
     await device.clickOnElementAll(new PlusButton(device));
     await device.clickOnElementAll(new NewMessageOption(device));
-    await device.inputText(accountID, new EnterAccountID(device));
+    await device.inputText(sessionId, new EnterAccountID(device));
     await device.hideKeyboard();
     await device.clickOnElementAll(new NextButton(device));
 

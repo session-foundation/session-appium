@@ -30,8 +30,8 @@ test_Alice_1W(
     await makeAccountPro({
       user: {
         userName: account.userName,
-        accountID: account.accountid,
-        recoveryPhrase: account.recoveryPassword,
+        sessionId: account.sessionId,
+        seedPhrase: account.seedPhrase,
       },
       provider: 'google',
       durationSeconds: EXPIRING_SOON_ENTITLEMENT_SECONDS,

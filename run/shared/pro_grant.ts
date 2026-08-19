@@ -23,29 +23,25 @@ import { isString } from 'lodash';
 export type PaymentProvider = 'apple' | 'google';
 
 /**
- * The account to grant Pro to, structurally rather than as either platform's user type. Mobile's
- * `User` satisfies it as-is; Desktop's carries the same three values under different names.
+ * The account to grant Pro to, kept structural rather than requiring the seeder's full `StateUser`:
+ * both guards below are optional, so a spec that assembled an account itself can still mint.
+ *
+ * This used to bridge two spellings (mobile `recoveryPhrase` / desktop `recoveryPassword`). Both
+ * platforms now use the seeder's `StateUser`, so a `StateUser` satisfies this as-is.
  */
 export type ProAccountUnderTest = {
   userName: string;
   /** `05…` Account ID. Optional because some specs opt out of reading it; the mint is guarded when present. */
-  accountID?: string;
-  /**
-   * The account's seed words. Desktop's `User` calls the same value `recoveryPassword` (the app's own
-   * copy uses both names), so either satisfies this — mobile passes `recoveryPhrase`, desktop passes
-   * its account object unchanged.
-   */
-  recoveryPhrase?: string;
-  recoveryPassword?: string;
+  sessionId?: string;
+  /** The account's seed words. */
+  seedPhrase?: string;
 };
 
-/** The seed words off either spelling, so callers never have to rename a field to grant Pro. */
+/** The seed words, or a clear failure rather than a mint against an empty phrase. */
 export function seedWordsOf(user: ProAccountUnderTest): string {
-  const words = user.recoveryPhrase ?? user.recoveryPassword;
+  const words = user.seedPhrase;
   if (!words) {
-    throw new Error(
-      `seedWordsOf: ${user.userName} has neither recoveryPhrase nor recoveryPassword`
-    );
+    throw new Error(`seedWordsOf: ${user.userName} has no seedPhrase`);
   }
   return words;
 }
@@ -337,12 +333,12 @@ export async function makeAccountPro(
 
   // Fail at the mint rather than three screens later. `accountID` is 'not_needed' when a spec opted out
   // of reading it, in which case there is nothing to check against.
-  if (user.accountID && user.accountID.startsWith('05')) {
+  if (user.sessionId && user.sessionId.startsWith('05')) {
     const derived = accountIdFromSeed(seedHex);
-    if (derived !== user.accountID) {
+    if (derived !== user.sessionId) {
       throw new Error(
         `makeAccountPro: the recovery phrase does not belong to ${user.userName}. Derived ${derived} ` +
-          `but the account under test is ${user.accountID}. Minting would silently grant Pro to a ` +
+          `but the account under test is ${user.sessionId}. Minting would silently grant Pro to a ` +
           `different account, and the client would then report "never" as if nothing was purchased.`
       );
     }
@@ -469,7 +465,7 @@ if (require.main === module) {
   const [mnemonic, platform] = filteredArgs;
 
   makeAccountPro({
-    user: { userName: '', accountID: '', recoveryPhrase: mnemonic },
+    user: { userName: '', sessionId: '', seedPhrase: mnemonic },
     platform: platform as 'android' | 'ios',
     dryRun,
   })

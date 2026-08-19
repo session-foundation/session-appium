@@ -27,7 +27,7 @@ export const linkedDevice = async (
 
   await device2.clickOnElementAll(new AccountRestoreButton(device2));
   // Enter recovery phrase into input box
-  await device2.inputText(user.recoveryPhrase, new SeedPhraseInput(device2));
+  await device2.inputText(user.seedPhrase, new SeedPhraseInput(device2));
   // Wait for continue button to become active
   await sleepFor(500);
   // Continue with recovery phrase

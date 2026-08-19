@@ -60,7 +60,7 @@ actionsToDo.forEach(action => {
       await clickOnWithText(alice1.getPage(), Global.contextMenuItem, unbanUserString, {
         strictMode: false,
       });
-      await alice1.pasteIntoInput(Conversation.unbanUserInput.selector, bob.accountid);
+      await alice1.pasteIntoInput(Conversation.unbanUserInput.selector, bob.sessionId);
       await alice1.clickOn(Conversation.unbanUserButton);
       await alice1.waitForTestIdWithText(Global.toast.selector, tStripped('banUnbanUserUnbanned'));
     }

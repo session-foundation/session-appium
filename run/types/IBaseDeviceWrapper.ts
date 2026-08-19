@@ -1,4 +1,6 @@
-import type { User } from './testing';
+import type { StateUser } from '@session-foundation/qa-seeder';
+
+import type { ProMessageFeature } from '../test/utils/pro_message_features';
 
 /**
  * High-level, platform-NEUTRAL capabilities that a Session client of ANY
@@ -39,8 +41,23 @@ export interface IBaseDeviceWrapper {
   waitForMessage(text: string): Promise<void>;
 
   // Session Pro
-  subscribeToPro(user: User): Promise<void>;
-  assertProFeatureUnlocked(user: Pick<User, 'accountID'>): Promise<void>;
+  subscribeToPro(user: StateUser): Promise<void>;
+  /**
+   * Open the 1:1 with `senderName` and assert their Session Pro badge renders here.
+   *
+   * Receiver-side: the badge belongs to the person the conversation is *with*, so this is never an
+   * assertion about this device's own user. Rendering it means this client verified a real proof —
+   * the display-level Pro mocks produce none, so only a real grant satisfies it.
+   */
+  assertSenderProBadge(senderName: string): Promise<void>;
+  /**
+   * Open `message`'s info screen and assert it lists the Pro features the message was sent with.
+   *
+   * Sharper than any badge: the features travel *in the message* as a bitset, so this names what this
+   * particular message carried rather than what the sender's profile currently claims.
+   */
+  assertMessageProFeatures(message: string, features: ProMessageFeature[]): Promise<void>;
+  assertProFeatureUnlocked(user: Pick<StateUser, 'sessionId'>): Promise<void>;
   /**
    * Open `convoName` and send a message longer than the standard 2000-char cap,
    * retrying until it is accepted (a non-Pro account is blocked by the "longer

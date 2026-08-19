@@ -1,3 +1,5 @@
+import type { StateUser } from '@session-foundation/qa-seeder';
+
 // Desktop (Electron/Playwright) test types. These are desktop-specific and are kept
 // separate from the mobile `run/types/testing.ts` on purpose (different shapes,
 // e.g. testid-based selectors). Only used by the desktop driving code under
@@ -6,17 +8,11 @@ import { Page } from '@playwright/test';
 
 import type { DisappearActions } from '../shared/constants';
 
-export type User = {
-  userName: string;
-  accountid: string;
-  recoveryPassword: string;
-};
-
 export type Group = {
   userName: string;
-  userOne: User;
-  userTwo: User;
-  userThree: User;
+  userOne: StateUser;
+  userTwo: StateUser;
+  userThree: StateUser;
 };
 
 export type ConversationType = '1:1' | 'community' | 'group' | 'note-to-self';
@@ -200,8 +196,11 @@ export type DataTestId =
   | 'privacy-settings-menu-item'
   | 'pro-badge-conversation-header'
   | 'pro-badge-edit-profile-picture'
+  | 'pro-badge-profile-name'
   | 'pro-badge-visible-settings-row'
   | 'pro-badge-visible-settings-toggle'
+  | 'pro-message-feature-badges'
+  | 'pro-message-feature-longer-messages'
   | 'pro-settings-description'
   | 'pro-settings-features-header'
   | 'pro-settings-manage-header'

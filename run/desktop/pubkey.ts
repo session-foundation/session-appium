@@ -1,4 +1,4 @@
-import { User } from './types';
+import type { StateUser } from '@session-foundation/qa-seeder';
 
 export function shortenWithBrackets(str: string) {
   if (str.length <= 8) {
@@ -8,8 +8,8 @@ export function shortenWithBrackets(str: string) {
   return `(${str.slice(0, 4)}...${str.slice(str.length - 4)})`;
 }
 
-export function sortByPubkey(...users: Array<User>) {
+export function sortByPubkey(...users: Array<StateUser>) {
   return [...users]
-    .sort((a, b) => a.accountid.localeCompare(b.accountid))
+    .sort((a, b) => a.sessionId.localeCompare(b.sessionId))
     .map(user => user.userName);
 }

@@ -25,7 +25,7 @@ sessionTestTwoWindows(
 
     // The account is seconds old, so its profile may not have reached the network yet and the
     // restore prompts for a name. This spec asserts entitlement, not the display name.
-    await restored.restoreFromSeed(account.recoveryPassword, 'Alice');
+    await restored.restoreFromSeed(account.seedPhrase, 'Alice');
 
     // The stats section is gated on an active plan, so its presence is the restored client having
     // fetched a real entitlement rather than merely rendering a Pro screen.

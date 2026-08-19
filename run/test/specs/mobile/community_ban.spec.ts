@@ -1,10 +1,11 @@
+import type { StateUser } from '@session-foundation/qa-seeder';
+
 import test, { type TestInfo } from '@playwright/test';
 
 import { getCommunities } from '../../../constants/community';
 import { tStripped } from '../../../localizer/lib';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import { User } from '../../../types/testing';
 import {
   LongPressBanAndDelete,
   LongPressBanUser,
@@ -55,10 +56,12 @@ async function banUserCommunity(platform: SupportedPlatformsType, testInfo: Test
   const msg1 = `Ban and unban me - ${msgSig}`;
   const msg2 = `Am I banned? - ${msgSig}`;
   const msg3 = `Freedom! - ${msgSig}`;
-  const alice: User = {
+  const alice: StateUser = {
     userName: 'Alice',
-    accountID: '', // Mandatory property of User type but not needed for this test
-    recoveryPhrase: process.env.SOGS_ADMIN_SEED!,
+    // Mandatory on StateUser but unused here: the SOGS admin is identified by its seed alone.
+    sessionId: '05',
+    seed: new Uint8Array(),
+    seedPhrase: process.env.SOGS_ADMIN_SEED!,
   };
   const { device1: alice1, device2: bob1 } = await openAppTwoDevices(platform, testInfo);
   const [, bob] =
@@ -123,10 +126,12 @@ async function banAndDelete(platform: SupportedPlatformsType, testInfo: TestInfo
   const msgSig = `${new Date().getTime()} - ${platform}`;
   const msg1 = `Ban and delete - ${msgSig}`;
   const msg2 = `Am I banned? - ${msgSig}`;
-  const alice: User = {
+  const alice: StateUser = {
     userName: 'Alice',
-    accountID: '', // Mandatory property of User type but not needed for this test
-    recoveryPhrase: process.env.SOGS_ADMIN_SEED!,
+    // Mandatory on StateUser but unused here: the SOGS admin is identified by its seed alone.
+    sessionId: '05',
+    seed: new Uint8Array(),
+    seedPhrase: process.env.SOGS_ADMIN_SEED!,
   };
   const { device1: alice1, device2: bob1 } = await openAppTwoDevices(platform, testInfo);
   await test.step('Restore admin account, create new account to be banned', async () => {

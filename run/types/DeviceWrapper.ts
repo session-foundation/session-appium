@@ -1,4 +1,5 @@
 import type { Constraints, DefaultCreateSessionResult } from '@appium/types';
+import type { StateUser } from '@session-foundation/qa-seeder';
 
 import { getImageOccurrence } from '@appium/opencv';
 import { TestInfo } from '@playwright/test';
@@ -74,6 +75,11 @@ import {
 } from '../test/locators/home';
 import { LoadingAnimation } from '../test/locators/onboarding';
 import {
+  ConversationHeaderProBadge,
+  MessageInfoMenuItem,
+  ProFeatureRow,
+} from '../test/locators/pro';
+import {
   PrivacyMenuItem,
   ProAnimatedDisplayPictureModalDescription,
   SaveNameChangeButton,
@@ -88,6 +94,7 @@ import { getAdbFullPath } from '../test/utils/binaries';
 import { androidAppPackage } from '../test/utils/capabilities_android';
 import { parseDataImage } from '../test/utils/check_colour';
 import { isSameColor } from '../test/utils/check_colour';
+import { proFeatureTestId, type ProMessageFeature } from '../test/utils/pro_message_features';
 import { restoreAccountNoFallback } from '../test/utils/restore_account';
 import {
   isDeviceAndroid,
@@ -104,7 +111,6 @@ import {
   InteractionPoints,
   Strategy,
   StrategyExtractionObj,
-  User,
   XPath,
 } from './testing';
 
@@ -205,9 +211,6 @@ export class DeviceWrapper implements IMobileWrapper {
     // this one works for both devices so just call it without casting it
     return this.toShared().click(element);
   }
-  public async doubleClick(elementId: string): Promise<void> {
-    return this.toShared().mobileDoubleTap(elementId);
-  }
 
   public async back(): Promise<void> {
     return this.toShared().back();
@@ -219,10 +222,6 @@ export class DeviceWrapper implements IMobileWrapper {
 
   public async getText(elementId: string): Promise<string> {
     return this.toShared().getText(elementId);
-  }
-
-  public async getDeviceTime(platform: SupportedPlatformsType): Promise<string> {
-    return this.toShared().getDeviceTime(platform);
   }
 
   public async setValueImmediate(text: string, elementId: string): Promise<void> {
@@ -293,17 +292,6 @@ export class DeviceWrapper implements IMobileWrapper {
     await this.toShared().performActions(actions);
   }
 
-  public async tap(xCoOrdinates: number, yCoOrdinates: number): Promise<void> {
-    if (this.isIOS()) {
-      await this.toIOS().mobileTap(xCoOrdinates, yCoOrdinates);
-      return;
-    }
-    if (this.isAndroid()) {
-      await this.toAndroid().mobileClickGesture(undefined, xCoOrdinates, yCoOrdinates);
-      return;
-    }
-  }
-
   public async pressHome(): Promise<void> {
     if (this.isIOS()) {
       await this.toIOS().mobilePressButton('home');
@@ -318,25 +306,12 @@ export class DeviceWrapper implements IMobileWrapper {
     }
   }
 
-  public async performActions(actions: ActionSequence): Promise<void> {
-    await this.toShared().performActions([actions]);
-  }
-
-  public async pushFile(path: string, data: string): Promise<void> {
-    this.log('Did file get pushed', path);
-    await this.toShared().pushFile(path, data);
-  }
-
   public async getElementScreenshot(elementId: string): Promise<string> {
     return this.toShared().getElementScreenshot(elementId);
   }
 
   public async getScreenshot(): Promise<string> {
     return this.toShared().getScreenshot();
-  }
-
-  public async getViewportScreenshot(): Promise<string> {
-    return this.toShared().getViewportScreenshot();
   }
 
   public async getWindowRect(): Promise<{ height: number; width: number; x: number; y: number }> {
@@ -800,31 +775,9 @@ export class DeviceWrapper implements IMobileWrapper {
     await this.click(el.ELEMENT);
   }
 
-  public async clickOnElementXPath(xpath: XPath, maxWait?: number) {
-    await this.waitForTextElementToBePresent({
-      strategy: 'xpath',
-      selector: xpath,
-      maxWait: maxWait,
-    });
-    const el = await this.findElementByXPath(xpath);
-
-    await this.click(el.ELEMENT);
-  }
-
   public async clickOnElementById(id: Id) {
     await this.waitForTextElementToBePresent({ strategy: 'id', selector: id });
     const el = await this.findElement('id', id);
-    await this.click(el.ELEMENT);
-  }
-
-  public async clickOnTextElementById(id: Id, text: string) {
-    const el = await this.findTextElementArrayById(id, text);
-    await this.waitForTextElementToBePresent({
-      strategy: 'id',
-      selector: id,
-      text,
-    });
-
     await this.click(el.ELEMENT);
   }
 
@@ -833,13 +786,6 @@ export class DeviceWrapper implements IMobileWrapper {
     this.log(`Tapped coordinates ${xCoOrdinates}, ${yCoOrdinates}`);
   }
 
-  public async tapOnElement(accessibilityId: AccessibilityId) {
-    const el = await this.findElementByAccessibilityId(accessibilityId);
-    if (!el) {
-      throw new Error(`Tap: Couldnt find accessibilityId: ${accessibilityId}`);
-    }
-    await this.click(el.ELEMENT);
-  }
   public async longPress(
     args: { text?: string; duration?: number } & (LocatorsInterface | StrategyExtractionObj)
   ): Promise<void> {
@@ -976,30 +922,9 @@ export class DeviceWrapper implements IMobileWrapper {
     await this.longClick(el, 2000);
   }
 
-  public async selectByText(accessibilityId: AccessibilityId, text: string) {
-    await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: accessibilityId,
-      text,
-    });
-    const selector = await this.findMatchingTextAndAccessibilityId(accessibilityId, text);
-    await this.click(selector.ELEMENT);
-
-    return text;
-  }
-
   public async getTextFromElement(element: AppiumNextElementType): Promise<string> {
     const text = await this.getText(element.ELEMENT);
 
-    return text;
-  }
-
-  public async grabTextFromAccessibilityId(accessibilityId: AccessibilityId): Promise<string> {
-    const elementId = await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: accessibilityId,
-    });
-    const text = await this.getTextFromElement(elementId);
     return text;
   }
 
@@ -1078,25 +1003,6 @@ export class DeviceWrapper implements IMobileWrapper {
     }
 
     return element;
-  }
-
-  public async findElementByClass(androidClassName: string): Promise<AppiumNextElementType> {
-    const element = await this.findElement('class name', androidClassName);
-    if (!element) {
-      throw new Error(`findElementByClass: Did not find classname: ${androidClassName}`);
-    }
-    return element;
-  }
-
-  public async findElementsByClass(
-    androidClassName: string
-  ): Promise<Array<AppiumNextElementType>> {
-    const elements = await this.findElements('class name', androidClassName);
-    if (!elements) {
-      throw new Error(`findElementsByClass: Did not find classname: ${androidClassName}`);
-    }
-
-    return elements;
   }
 
   public async findTextElementArrayById(
@@ -1205,20 +1111,6 @@ export class DeviceWrapper implements IMobileWrapper {
     const results = await Promise.all(promises);
     const index = results.findIndex(result => result);
     return arr[index];
-  }
-
-  public async findLastElementInArray(
-    accessibilityId: AccessibilityId
-  ): Promise<AppiumNextElementType> {
-    const elements = await this.findElementsByAccessibilityId(accessibilityId);
-
-    const [lastElement] = elements.slice(-1);
-
-    if (!elements) {
-      throw new Error(`No elements found with ${accessibilityId}`);
-    }
-
-    return lastElement;
   }
 
   public async findMessageWithBody(textToLookFor: string): Promise<AppiumNextElementType> {
@@ -1433,54 +1325,6 @@ export class DeviceWrapper implements IMobileWrapper {
     const maxWait = args.maxWait ?? 5_000;
     await this.waitForElementToDisappear(locator, maxWait, args.text);
     this.log(`Confirmed element gone: ${description}`);
-  }
-
-  /**
-   * Waits for an element to be deleted from the screen. The element must exist initially.
-   *
-   * @param args - Locator (LocatorsInterface or StrategyExtractionObj) with optional properties
-   * @param args.text - Optional text content to match within elements of the same type
-   * @param args.initialMaxWait - Time to wait for element to initially appear (defaults to 10_000ms)
-   * @param args.maxWait - Time to wait for deletion AFTER element is found (defaults to 30_000ms)
-   *
-   * @throws Error if:
-   * - The element is never found within initialMaxWait
-   * - The element still exists after maxWait
-   *
-   * Only use this when the element is guaranteed to still be there when phase 1 looks. If whatever
-   * removes it is already under way — a linked device applying a synced delete, say — phase 1 is a
-   * race, and losing it fails the test *because the app was fast*. When presence has already been
-   * asserted before the removal was triggered, use waitForElementToBeGone: the appears-then-
-   * disappears assertion still holds, with the "appears" half anchored where it can't race.
-   */
-  public async hasElementBeenDeleted(
-    args: {
-      text?: string;
-      initialMaxWait?: number;
-      maxWait?: number;
-    } & (LocatorsInterface | StrategyExtractionObj)
-  ): Promise<void> {
-    const { locator, description } = this.resolveLocator(args);
-    const text = args.text;
-    const initialMaxWait = args.initialMaxWait ?? 10_000;
-    const maxWait = args.maxWait ?? 30_000;
-
-    // Track total time from start - disappearing timers begin on send, not on display
-    const functionStartTime = Date.now();
-    // Phase 1: Wait for element to appear
-    this.log(`Waiting for element with ${description} to be deleted...`);
-    await this.waitForElementToAppear(locator, initialMaxWait, text);
-    this.log(`Element with ${description} has been found, now waiting for deletion`);
-
-    // Phase 2: Wait for element to disappear
-    await this.waitForElementToDisappear(locator, maxWait, text);
-
-    // Always calculate total time for logging
-    const totalTime = (Date.now() - functionStartTime) / 1000;
-
-    this.log(
-      `Element with ${description} has been deleted after ${totalTime.toFixed(1)}s total time`
-    );
   }
 
   /**
@@ -2027,14 +1871,14 @@ export class DeviceWrapper implements IMobileWrapper {
     return sentTimestamp;
   }
 
-  public async sendNewMessage(user: Pick<User, 'accountID'>, message: string) {
+  public async sendNewMessage(user: Pick<StateUser, 'sessionId'>, message: string) {
     // Sender workflow
     // Click on plus button
     await this.clickOnElementAll(new PlusButton(this));
     // Select direct message option
     await this.clickOnElementAll(new NewMessageOption(this));
     // Enter User B's session ID into input box
-    await this.inputText(user.accountID, new EnterAccountID(this));
+    await this.inputText(user.sessionId, new EnterAccountID(this));
     // Click next
     await this.scrollDown();
     await this.clickOnElementAll(new NextButton(this));
@@ -2063,7 +1907,7 @@ export class DeviceWrapper implements IMobileWrapper {
 
   // TODO instead of blind sleeping, check presence of reply preview
   // Remove blind sleep from other tests that reply as well
-  public async replyToMessage(user: Pick<User, 'userName'>, body: string) {
+  public async replyToMessage(user: Pick<StateUser, 'userName'>, body: string) {
     // Reply to media message from user B
     // Long press on imageSent element
     await this.longPressMessage(new MessageBody(this, body));
@@ -2544,31 +2388,10 @@ export class DeviceWrapper implements IMobileWrapper {
     await this.clickOnElementAll(new SaveProfilePictureButton(this));
   }
 
-  public async getTimeFromDevice(platform: SupportedPlatformsType): Promise<string> {
-    let timeString = '';
-    try {
-      const time = await this.getDeviceTime(platform);
-      timeString = time.toString();
-      this.log(`Device time: ${timeString}`);
-    } catch (e) {
-      this.log(`Couldn't get time from device`);
-    }
-    return timeString;
-  }
-
-  public async isKeyboardVisible() {
-    if (this.isIOS()) {
-      const spaceBar = await this.doesElementExist({
-        strategy: 'accessibility id',
-        selector: 'space',
-        maxWait: 500,
-      });
-      return Boolean(spaceBar);
-    }
-    this.log(`Not an iOS device: shouldn't use this function`);
-  }
-
-  public async mentionContact(platform: SupportedPlatformsType, contact: Pick<User, 'userName'>) {
+  public async mentionContact(
+    platform: SupportedPlatformsType,
+    contact: Pick<StateUser, 'userName'>
+  ) {
     await this.inputText(`@`, new MessageInput(this));
     // Check that all users are showing in mentions box
     await this.waitForTextElementToBePresent({
@@ -3115,7 +2938,7 @@ export class DeviceWrapper implements IMobileWrapper {
    * NOTE: Pro becomes visible to this and any linked device without an app
    * restart — reopen the Pro/settings dialog to observe the new state.
    */
-  public async subscribeToPro(user: User): Promise<void> {
+  public async subscribeToPro(user: StateUser): Promise<void> {
     const provider = this.isIOS() ? 'apple' : 'google';
     await makeAccountPro({ user, provider });
   }
@@ -3139,7 +2962,7 @@ export class DeviceWrapper implements IMobileWrapper {
    * the standard 2000-char cap and confirming it sends (a non-Pro account would
    * be blocked by the "longer messages" upgrade CTA instead).
    */
-  public async assertProFeatureUnlocked(user: Pick<User, 'accountID'>): Promise<void> {
+  public async assertProFeatureUnlocked(user: Pick<StateUser, 'sessionId'>): Promise<void> {
     const message = 'x'.repeat(2001);
     await this.sendNewMessage(user, message);
     await this.waitForTextElementToBePresent(new MessageBody(this, message));
@@ -3163,6 +2986,41 @@ export class DeviceWrapper implements IMobileWrapper {
   /** Wait until a message with exactly this text is present in the open conversation. */
   public async waitForMessage(text: string): Promise<void> {
     await this.waitForTextElementToBePresent(new MessageBody(this, text));
+  }
+
+  /**
+   * Open a message's info screen and assert it lists exactly the Pro features it was sent with.
+   *
+   * The sharpest receiver-side Pro assertion available: the features travel *in the message* as a
+   * bitset, so this names what this particular message carried rather than what the sender's profile
+   * currently claims. A badge elsewhere only says "this person is Pro".
+   *
+   * `message` must match a message body exactly — the mobile matcher compares whole element text.
+   */
+  public async assertMessageProFeatures(
+    message: string,
+    features: ProMessageFeature[]
+  ): Promise<void> {
+    await this.longPressMessage(new MessageBody(this, message));
+    // Both platforms' long-press menus list every action, so "Info" is one tap away — no overflow.
+    await this.clickOnElementAll(new MessageInfoMenuItem(this));
+
+    for (const feature of features) {
+      await this.waitForTextElementToBePresent(new ProFeatureRow(this, proFeatureTestId(feature)));
+    }
+
+    // Back to the conversation, so this composes with whatever the spec does next.
+    await this.navigateBack();
+  }
+
+  public async assertSenderProBadge(senderName: string): Promise<void> {
+    await this.openConversationWith(senderName);
+    // The badge follows the sender's profile rather than the message, so it can land after the text
+    // does. Waited on generously rather than read once, or this fails on ordering.
+    await this.waitForTextElementToBePresent({
+      ...new ConversationHeaderProBadge(this).build(),
+      maxWait: 60_000,
+    });
   }
 
   /**

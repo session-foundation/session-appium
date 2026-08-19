@@ -23,8 +23,6 @@ import {
   type WithGroupStateKey,
 } from '@session-foundation/qa-seeder';
 
-import type { User } from './types';
-
 import { resolveNetworkTarget } from '../test/utils/devnet';
 import { DesktopWrapper } from './DesktopWrapper';
 import {
@@ -37,18 +35,9 @@ import {
 
 /** One seeded account together with the windows signed into it. */
 export type SeededUser = {
-  account: User;
+  account: StateUser;
   windows: DesktopWrapper[];
 };
-
-/** The qa-seeder's `StateUser` in the shape the desktop code uses everywhere else. */
-function toDesktopUser(stateUser: StateUser): User {
-  return {
-    userName: stateUser.userName,
-    accountid: stateUser.sessionId,
-    recoveryPassword: stateUser.seedPhrase,
-  };
-}
 
 /**
  * Build `stateKey` with the qa-seeder, open `sum(windowsPerUser) + extraWindows` Electron windows,
@@ -121,18 +110,17 @@ export async function openSeededWindows<K extends PrebuiltStateKey>({
 
   let next = 0;
   const users: SeededUser[] = seedUsers.map((stateUser, i) => {
-    const account = toDesktopUser(stateUser);
     const nameLc = stateUser.userName.toLowerCase();
     const windows = pages.slice(next, next + windowsPerUser[i]).map((page, w) => {
       const wrapper = new DesktopWrapper(page, `${nameLc}-desktop${w + 1}`);
       identify(wrapper, next + w);
       // Restoring from a seed does not tell the wrapper WHICH account it landed on, and specs read
-      // `alice.userName` / `alice.accountId` constantly — so hand it the seeded account up front.
-      wrapper.setAccount(account);
+      // `alice.userName` / `alice.sessionId` constantly — so hand it the seeded account up front.
+      wrapper.setAccount(stateUser);
       return wrapper;
     });
     next += windowsPerUser[i];
-    return { account, windows };
+    return { account: stateUser, windows };
   });
 
   const extras = pages.slice(next).map((page, i) => {
@@ -142,7 +130,7 @@ export async function openSeededWindows<K extends PrebuiltStateKey>({
   });
 
   await Promise.all(
-    users.flatMap(u => u.windows.map(w => w.restoreFromSeed(u.account.recoveryPassword)))
+    users.flatMap(u => u.windows.map(w => w.restoreFromSeed(u.account.seedPhrase)))
   );
 
   const group = 'group' in prebuilt ? prebuilt.group : undefined;

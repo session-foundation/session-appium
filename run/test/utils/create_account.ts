@@ -1,7 +1,8 @@
-import type { UserNameType } from '@session-foundation/qa-seeder';
+import type { StateUser, UserNameType } from '@session-foundation/qa-seeder';
 
+import { isAccountId } from '../../shared/constants';
+import { mnemonicToSeedHex, padSeed } from '../../shared/pro_grant';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
-import { User } from '../../types/testing';
 import { CloseSettings } from '../locators';
 import { AccountIDDisplay, ContinueButton, CTAHeading } from '../locators/global';
 import {
@@ -42,7 +43,7 @@ export async function newUser(
   device: DeviceWrapper,
   userName: UserNameType,
   options?: NewUserSetupOptions
-): Promise<User> {
+): Promise<StateUser> {
   const {
     saveUserData = true,
     allowNotificationPermissions = false,
@@ -67,10 +68,18 @@ export async function newUser(
   }
   // Some tests don't need to save the Account ID and Recovery Password
   if (!saveUserData) {
-    return { userName, accountID: 'not_needed', recoveryPhrase: 'not_needed' };
+    // Sentinels rather than real values: `makeAccountPro` guards on the `05` prefix, so this
+    // reads as "not provided" instead of silently minting against the wrong account.
+    return {
+      userName,
+      sessionId: 'not_needed' as `05${string}`,
+      seedPhrase: 'not_needed',
+      seed: new Uint8Array(),
+    };
   }
 
-  return { userName, ...(await harvestAccountData(device)) };
+  const harvested = await harvestAccountData(device);
+  return { userName, ...harvested, seed: padSeed(mnemonicToSeedHex(harvested.seedPhrase)) };
 }
 
 /**
@@ -85,7 +94,7 @@ export async function newUser(
  */
 export async function harvestAccountData(
   device: DeviceWrapper
-): Promise<{ accountID: string; recoveryPhrase: string }> {
+): Promise<Pick<StateUser, 'seedPhrase' | 'sessionId'>> {
   // Open recovery phrase modal and save recovery phrase
   await device.clickOnElementAll(new UserSettings(device));
   await device.onIOS().scrollDown();
@@ -116,7 +125,12 @@ export async function harvestAccountData(
   await device.scrollUp();
   // Get Account ID from User Settings
   const el = await device.waitForTextElementToBePresent(new AccountIDDisplay(device));
-  const accountID = await device.getTextFromElement(el);
+  // Harvested from on-screen text, so its `05…` shape is the app's guarantee rather than the compiler's.
+  const sessionIdText = await device.getTextFromElement(el);
+  if (!isAccountId(sessionIdText)) {
+    throw new Error(`harvestAccountData: invalid Session ID "${sessionIdText}"`);
+  }
+  const sessionId = sessionIdText;
   await device.clickOnElementAll(new CloseSettings(device));
-  return { accountID, recoveryPhrase };
+  return { sessionId, seedPhrase: recoveryPhrase };
 }

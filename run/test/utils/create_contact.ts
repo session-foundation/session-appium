@@ -1,6 +1,7 @@
+import type { StateUser } from '@session-foundation/qa-seeder';
+
 import { runOnlyOnIOS, sleepFor } from '.';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
-import { User } from '../../types/testing';
 import { MessageBody } from '../locators/conversation';
 import { MessageRequestsBanner } from '../locators/home';
 import { SupportedPlatformsType } from './open_app';
@@ -8,9 +9,9 @@ import { SupportedPlatformsType } from './open_app';
 export const newContact = async (
   platform: SupportedPlatformsType,
   device1: DeviceWrapper,
-  sender: Pick<User, 'userName'>,
+  sender: Pick<StateUser, 'userName'>,
   device2: DeviceWrapper,
-  receiver: Pick<User, 'accountID' | 'userName'>
+  receiver: Pick<StateUser, 'sessionId' | 'userName'>
 ) => {
   await device1.sendNewMessage(receiver, `${sender.userName} to ${receiver.userName}`);
   // Click on message request folder

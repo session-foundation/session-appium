@@ -11,15 +11,12 @@ sessionTestOneWindow('Create User', async ([window]) => {
   // check username matches
   await window.waitForTestIdWithText(Settings.displayName.selector, userA.userName);
   // check Account ID matches
-  await window.waitForTestIdWithText(Settings.accountId.selector, userA.accountid);
+  await window.waitForTestIdWithText(Settings.accountId.selector, userA.sessionId);
   // exit profile modal
   await window.clickOn(Global.modalCloseButton);
   // go to settings section
   await window.clickOn(LeftPane.settingsButton);
   // check recovery phrase matches
   await window.clickOn(Settings.recoveryPasswordMenuItem);
-  await window.waitForTestIdWithText(
-    Settings.recoveryPasswordContainer.selector,
-    userA.recoveryPassword
-  );
+  await window.waitForTestIdWithText(Settings.recoveryPasswordContainer.selector, userA.seedPhrase);
 });

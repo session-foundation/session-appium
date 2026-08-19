@@ -1,12 +1,11 @@
 // Not a port — the desktop client wrapper written for this repo. Its low-level primitives
 // delegate to the ported run/desktop/ helpers (which are compared against their originals).
 import type { Page } from '@playwright/test';
+import type { StateUser, UserNameType } from '@session-foundation/qa-seeder';
 
 import type { IBaseDeviceWrapper } from '../types/IBaseDeviceWrapper';
-import type { User } from '../types/testing';
 import type {
   DataTestId,
-  User as DesktopUser,
   DisappearOptions,
   Group,
   MediaType,
@@ -19,6 +18,7 @@ import { tStripped } from '../localizer/lib';
 import { makeAccountPro } from '../shared/pro_grant';
 import { sleepFor } from '../shared/promise_utils';
 import { parseDataImage } from '../test/utils/check_colour';
+import { proFeatureTestId, type ProMessageFeature } from '../test/utils/pro_message_features';
 import { ctaConfigs, type CTAType } from '../types/cta';
 import {
   openConversationWith as desktopOpenConversationWith,
@@ -84,7 +84,7 @@ import { makeVoiceCall } from './voice_call';
 export class DesktopWrapper implements IBaseDeviceWrapper {
   private page: Page;
   private deviceIdentity: string;
-  private account?: DesktopUser;
+  private account?: StateUser;
   private launch?: { multi: string; nodeAppInstance: string };
 
   constructor(page: Page, identity: string = 'desktop') {
@@ -126,7 +126,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /** The account minted/linked on this client, if any. Throws if none yet. */
-  public getUser(): DesktopUser {
+  public getUser(): StateUser {
     if (!this.account) {
       throw new Error(`[${this.deviceIdentity}] has no account yet (call onboard() first)`);
     }
@@ -134,7 +134,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /** Record which account this client is signed into (e.g. a linked/second window). */
-  public setAccount(account: DesktopUser): void {
+  public setAccount(account: StateUser): void {
     this.account = account;
   }
 
@@ -143,7 +143,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   public get accountId(): string {
-    return this.getUser().accountid;
+    return this.getUser().sessionId;
   }
 
   // --- IBaseDeviceWrapper: logging ---
@@ -196,8 +196,8 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
    * an account created moments earlier, whose profile has not propagated yet, in a spec that asserts
    * something other than the name. Supplying it is a statement that the name is not under test.
    */
-  public async restoreFromSeed(recoveryPhrase: string, fallbackName?: string): Promise<void> {
-    await recoverFromSeed(this.page, recoveryPhrase, fallbackName ? { fallbackName } : undefined);
+  public async restoreFromSeed(seedPhrase: string, fallbackName?: string): Promise<void> {
+    await recoverFromSeed(this.page, seedPhrase, fallbackName ? { fallbackName } : undefined);
     await checkPathLight(this.page);
   }
 
@@ -262,8 +262,8 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     await makeAccountPro({
       user: {
         userName: account.userName,
-        accountID: account.accountid,
-        recoveryPhrase: account.recoveryPassword,
+        sessionId: account.sessionId,
+        seedPhrase: account.seedPhrase,
       },
       provider: 'google',
     });
@@ -440,6 +440,45 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /**
+   * Block until this client knows it has Pro, WITHOUT asking the backend.
+   *
+   * For the client that did not subscribe: Pro reaches it through config sync — the proof and the
+   * badge bit live in the same user config object — so nothing here needs to talk to the Pro backend.
+   *
+   * **It deliberately never opens the Pro page.** `ProSettingsPage` does `useMount(() => refetch())`,
+   * so every visit fires `get_pro_status` for THIS account from THIS client. Polling that page once a
+   * second, as the previous version of this did, made a linked device a second client minting against
+   * the same account for as long as the wait ran — and the subscribing client's proof is the one the
+   * spec is testing. Only the client that subscribed should ever reach that screen.
+   *
+   * The badge beside our own name on the settings root is the fetch-free substitute. For ourselves it
+   * is driven by our own Pro status (`useProBadgeOnClickCb`'s `show-our-profile-dialog` branch), not by
+   * the badge-visibility flag — so it says "Pro has landed here", which is the precondition
+   * `sendLongProMessage` needs. It does not prove the badge bit itself has synced; that rides the same
+   * config, and the send retry below is what absorbs the remaining ordering.
+   */
+  public async waitForOwnProBadge(maxWaitMs = 60_000): Promise<void> {
+    await doWhileWithMax(maxWaitMs, 1_000, 'waiting for Pro to sync to this client', async () => {
+      try {
+        await clickOn(this.page, LeftPane.settingsButton);
+        await waitForElement({
+          window: this.page,
+          locator: Settings.ownProBadge,
+          options: { maxWaitMs: 2_000 },
+        });
+        return true;
+      } catch (e) {
+        this.log(`Pro has not synced here yet: ${(e as Error).message.split('\n')[0]}`);
+        return false;
+      } finally {
+        // Closed between attempts, or the open dialog swallows the next iteration's click on the
+        // settings button and a slow sync becomes an infinite one.
+        await this.closeOpenModals().catch(() => undefined);
+      }
+    });
+  }
+
+  /**
    * Open the edit-profile-picture modal and click its Pro badge, which is what raises the
    * animated-display-picture CTA — activated for a subscriber, the upsell otherwise.
    */
@@ -450,7 +489,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     await clickOn(this.page, Settings.editProfilePictureProBadge);
   }
 
-  public async assertProFeatureUnlocked(user: Pick<User, 'accountID'>): Promise<void> {
+  public async assertProFeatureUnlocked(user: Pick<StateUser, 'sessionId'>): Promise<void> {
     // A Pro account can send a message longer than the standard 2000-char cap.
     // For a non-Pro account the send is blocked by the "longer messages" upgrade
     // CTA, so the 'sent' status inside sendNewMessage would never arrive.
@@ -461,7 +500,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     // open upgrade CTA / modal (Escape) so the next attempt can re-navigate cleanly.
     await doWhileWithMax(60_000, 1_000, 'assertProFeatureUnlocked', async () => {
       try {
-        await sendNewMessage(this.page, user.accountID, message);
+        await sendNewMessage(this.page, user.sessionId, message);
         await waitForTextMessage(this.page, message);
         return true;
       } catch (_e) {
@@ -482,25 +521,35 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
    * 'sent' status never arrives; between attempts we press Escape to clear any CTA and
    * re-open the conversation. Proves this device has Pro active without an app restart.
    */
-  public async sendLongProMessage(convoName: string, message: string): Promise<void> {
-    await doWhileWithMax(60_000, 1_000, `sendLongProMessage ${this.deviceIdentity}`, async () => {
-      try {
-        await this.openConversationWith(convoName);
-        await desktopSendMessage(this.page, message);
-        await waitForTextMessage(this.page, message);
-        return true;
-      } catch (_e) {
-        await this.page.keyboard.press('Escape').catch(() => undefined);
-        return false;
+  public async sendLongProMessage(
+    convoName: string,
+    message: string,
+    maxWaitMs = 60_000
+  ): Promise<void> {
+    await doWhileWithMax(
+      maxWaitMs,
+      1_000,
+      `sendLongProMessage ${this.deviceIdentity}`,
+      async () => {
+        try {
+          await this.openConversationWith(convoName);
+          await desktopSendMessage(this.page, message);
+          await waitForTextMessage(this.page, message);
+          return true;
+        } catch (_e) {
+          await this.page.keyboard.press('Escape').catch(() => undefined);
+          return false;
+        }
       }
-    });
+    );
   }
 
-  // --- Receiver-side Session Pro assertions (desktop-only for now) ---
-  // Mobile has equivalents under different names (verifyElementIsAnimated, the pro-badge
-  // locators); these are the desktop counterparts, used when a desktop client observes a
-  // peer's Pro state. Not promoted to IBaseDeviceWrapper until every platform can satisfy
-  // one shared signature.
+  // --- Receiver-side Session Pro assertions ---
+  // Used when this client observes a PEER's Pro state. `assertSenderProBadge` is on
+  // IBaseDeviceWrapper — mobile satisfies the same signature — so a cross-platform spec can
+  // assert it over every client regardless of platform. The animation checks below are still
+  // desktop-only: mobile's equivalent (verifyElementIsAnimated) takes an Appium locator, so
+  // there is no shared signature to promote yet.
 
   /** Center-pixel hex color of the first element matching `cssSelector` (via screenshot). */
   private async sampleCenterColor(cssSelector: string): Promise<string> {
@@ -554,6 +603,44 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     await this.verifyElementIsAnimated('[data-testid="conversation-options-avatar"] img');
   }
 
+  /**
+   * Open a message's info panel (right-click → Info) and assert it lists the Pro features the message
+   * was sent with.
+   *
+   * The sharpest receiver-side Pro assertion available: the features travel *in the message* as a
+   * bitset, so this names what this particular message carried rather than what the sender's profile
+   * currently claims. A badge elsewhere only says "this person is Pro".
+   *
+   * The rows are matched by the test id all three clients now tag them with (`proFeatureTestId`),
+   * which is also what lets this name *which* features to expect rather than counting rows.
+   */
+  public async assertMessageProFeatures(
+    message: string,
+    features: ProMessageFeature[]
+  ): Promise<void> {
+    await this.rightClickOnWithText(Conversation.messageContent, message);
+    // The menu item carries no test id, only its label.
+    await clickOnMatchingText(this.page, tStripped('info'));
+
+    // Waited on together: the rows render as one list, so there is no order to respect, and a missing
+    // feature costs one timeout instead of one per feature that follows it. Safe here in a way it is
+    // not on mobile — these are independent browser-side polls on one page, whereas Appium serialises
+    // commands per session.
+    await Promise.all(
+      features.map(feature =>
+        waitForElement({
+          window: this.page,
+          locator: { strategy: 'data-testid', selector: proFeatureTestId(feature) },
+          options: { maxWaitMs: 10_000 },
+        })
+      )
+    );
+
+    // `Escape` is the panel's own close shortcut (`KbdShortcut.closeRightPanel`). Left open it covers
+    // the conversation, so anything the spec does next fails on an element it cannot reach.
+    await this.page.keyboard.press('Escape').catch(() => undefined);
+  }
+
   /** Open `convoName` and assert the peer's Session Pro badge shows in the header (polls). */
   public async assertSenderProBadge(convoName: string): Promise<void> {
     await this.openConversationOnceNamed(convoName);
@@ -576,7 +663,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   // Page-based helpers, passing this client's page/account implicitly.
 
   /** Onboard a fresh account in this window and remember it as this client's account. */
-  public async onboard(userName: string, awaitOnionPath = true): Promise<DesktopUser> {
+  public async onboard(userName: UserNameType, awaitOnionPath = true): Promise<StateUser> {
     this.account = await newUser(this.page, userName, awaitOnionPath);
     return this.account;
   }

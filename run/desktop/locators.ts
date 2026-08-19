@@ -133,6 +133,11 @@ export class Settings extends Locator {
   static readonly imageUploadClick = this.testId('image-upload-click');
   static readonly imageUploadSection = this.testId('image-upload-section');
   static readonly saveProfileUpdateButton = this.testId('save-button-profile-update');
+  /**
+   * The Pro badge beside our own name on the settings ROOT page. Reachable without entering the Pro
+   * page, which is the entire point: see `DesktopWrapper.waitForOwnProBadge`.
+   */
+  static readonly ownProBadge = this.testId('pro-badge-profile-name');
   // Menu items
   static readonly appearanceMenuItem = this.testId('appearance-settings-menu-item');
   static readonly clearDataMenuItem = this.testId('clear-data-settings-menu-item');

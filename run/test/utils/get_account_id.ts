@@ -1,10 +1,11 @@
-import { User } from '../../types/testing';
+import type { StateUser } from '@session-foundation/qa-seeder';
+
 import { SupportedPlatformsType } from './open_app';
 
 // Sorts users by pubkey hex and returns their usernames
-export function sortByPubkey(...users: Array<User>) {
+export function sortByPubkey(...users: Array<StateUser>) {
   return [...users]
-    .sort((a, b) => a.accountID.localeCompare(b.accountID))
+    .sort((a, b) => a.sessionId.localeCompare(b.sessionId))
     .map(user => user.userName);
 }
 
