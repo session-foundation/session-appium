@@ -15,16 +15,25 @@ import { makeAccountPro } from '../../../shared/pro_grant';
  * The stats section is the assertion because it is gated on an ACTIVE PLAN, so it can only render from a
  * status the client fetched and a proof it actually holds — not from the value the seeder wrote.
  */
-test_Alice_1W_pro_access('Pro is granted to a seeded account', async ({ alice, account }) => {
-  // Before the client is allowed to look: the grant has to exist by the time the gate fires, and the
-  // gate fires at startup.
-  // No platform: desktop has none to derive a provider from, so the provider is given directly.
-  await makeAccountPro({ user: account, provider: 'google' });
+test_Alice_1W_pro_access(
+  'Pro is granted to a seeded account',
+  async ({ alice, account }) => {
+    // Before the client is allowed to look: the grant has to exist by the time the gate fires, and the
+    // gate fires at startup.
+    // No platform: desktop has none to derive a provider from, so the provider is given directly.
+    await makeAccountPro({ user: account, provider: 'google' });
 
-  // Desktop asks the backend for status only at startup, so the grant is invisible until it restarts.
-  await restartApp(alice, { pro: {} });
+    // Desktop asks the backend for status only at startup, so the grant is invisible until it restarts.
+    await restartApp(alice, { pro: {} });
 
-  await alice.clickOn(LeftPane.settingsButton);
-  await alice.clickOn(Settings.proMenuItem, { maxWait: 60_000 });
-  await alice.waitForElement({ locator: ProSettings.statsHeader, options: { maxWaitMs: 60_000 } });
-});
+    await alice.clickOn(LeftPane.settingsButton);
+    await alice.clickOn(Settings.proMenuItem, { maxWait: 60_000 });
+    await alice.waitForElement({
+      locator: ProSettings.statsHeader,
+      options: { maxWaitMs: 60_000 },
+    });
+  },
+  // Tags the test `@pro` without arming a mock: the entitlement here is a real grant, and the fixture
+  // seeds the config the gate reads. Without this the spec runs but `--grep @pro` never selects it.
+  { pro: {} }
+);
