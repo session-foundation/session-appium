@@ -200,6 +200,7 @@ export type DataTestId =
   | 'privacy-settings-menu-item'
   | 'pro-badge-conversation-header'
   | 'pro-badge-edit-profile-picture'
+  | 'pro-badge-profile-name'
   | 'pro-badge-visible-settings-row'
   | 'pro-badge-visible-settings-toggle'
   | 'pro-message-feature-badges'

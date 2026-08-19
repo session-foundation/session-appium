@@ -16,12 +16,7 @@ import type { User } from '../../types/testing';
 
 import { forceCloseAllWindows } from '../../desktop/closeWindows';
 import { DesktopWrapper } from '../../desktop/DesktopWrapper';
-import {
-  getLaunchedInstances,
-  getLaunchedMultis,
-  openApps,
-  waitFirstWindow,
-} from '../../desktop/open';
+import { getLaunchedInstances, MULTIS, openApps, waitFirstWindow } from '../../desktop/open';
 import { getDevicesPerTestCount } from './binaries';
 import { getAndroidPoolSize } from './capabilities_android';
 import { IOS_PRO_CONTEXT } from './capabilities_ios';
@@ -247,12 +242,11 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
   // needs the MULTI and NODE_APP_INSTANCE to relaunch against the same user-data directory, and a
   // restart is the only way a client observes a Pro grant made while it was running. Positional —
   // `openApps` launches windows in order and records each as it goes.
-  const launchedMultis = getLaunchedMultis();
   const launchedInstances = getLaunchedInstances();
   const desktopPool = desktopWindows.map((page, i) => {
     const wrapper = new DesktopWrapper(page);
-    if (launchedMultis[i] && launchedInstances[i]) {
-      wrapper.setLaunchIdentity(launchedMultis[i], launchedInstances[i]);
+    if (MULTIS[i] && launchedInstances[i]) {
+      wrapper.setLaunchIdentity(MULTIS[i], launchedInstances[i]);
     }
     return wrapper;
   });

@@ -65,11 +65,16 @@ crossPlatformTest({
       // The Desktop client never subscribed and is deliberately NOT restarted: it inherits both the
       // entitlement and the badge flag through config sync.
       //
-      // The badge is waited on BEFORE sending, not asserted after: it is a per-user profile flag, so
-      // a message composed here before it arrives goes out without the PRO_BADGE feature. Every badge
+      // Waited on BEFORE sending, not asserted after: the badge is a per-user profile flag, so a
+      // message composed here before it arrives goes out without the PRO_BADGE feature. Every badge
       // assertion below would then fail on receivers that are behaving correctly — and it would fail
       // intermittently, on sync timing.
-      await aliceDesktop.waitForProBadgeEnabled();
+      //
+      // This wait must not reach the Pro settings page. Opening it fires `get_pro_status` on mount, so
+      // a poll loop there turns this linked device into a second client minting against Alice's
+      // account, racing the proof the subscribing client just obtained. Only the subscriber (her
+      // Android, via `enableProBadge` above) goes near that screen.
+      await aliceDesktop.waitForOwnProBadge();
       // The send is the entitlement assertion: >2000 chars is Pro-gated, so a non-Pro client is
       // blocked by the upgrade CTA. It retries until the proof lands rather than asserting at once.
       await aliceDesktop.sendLongProMessage(bobName, PRO_MESSAGE);

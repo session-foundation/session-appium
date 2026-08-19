@@ -438,38 +438,42 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /**
-   * Block until this client's Pro badge setting reads ON.
+   * Block until this client knows it has Pro, WITHOUT asking the backend.
    *
-   * The counterpart to `enableProBadge`, for the client that did NOT set it: badge visibility is a
-   * per-user profile flag, so a linked device learns it through config sync rather than by asking the
-   * backend. Waiting for it is what stops a race with anything the badge should ride along with — a
-   * message sent from here before the flag lands carries no PRO_BADGE feature, and the receiver then
-   * has nothing to render through no fault of its own.
+   * For the client that did not subscribe: Pro reaches it through config sync — the proof and the
+   * badge bit live in the same user config object — so nothing here needs to talk to the Pro backend.
    *
-   * Reopens the settings page each attempt rather than polling one rendered screen, for the same
-   * reason as `waitForProActive`.
+   * **It deliberately never opens the Pro page.** `ProSettingsPage` does `useMount(() => refetch())`,
+   * so every visit fires `get_pro_status` for THIS account from THIS client. Polling that page once a
+   * second, as the previous version of this did, made a linked device a second client minting against
+   * the same account for as long as the wait ran — and the subscribing client's proof is the one the
+   * spec is testing. Only the client that subscribed should ever reach that screen.
+   *
+   * The badge beside our own name on the settings root is the fetch-free substitute. For ourselves it
+   * is driven by our own Pro status (`useProBadgeOnClickCb`'s `show-our-profile-dialog` branch), not by
+   * the badge-visibility flag — so it says "Pro has landed here", which is the precondition
+   * `sendLongProMessage` needs. It does not prove the badge bit itself has synced; that rides the same
+   * config, and the send retry below is what absorbs the remaining ordering.
    */
-  public async waitForProBadgeEnabled(maxWaitMs = 60_000): Promise<void> {
-    await doWhileWithMax(
-      maxWaitMs,
-      1_000,
-      'waiting for the Pro badge setting to sync',
-      async () => {
-        try {
-          await clickOn(this.page, LeftPane.settingsButton);
-          await clickOn(this.page, Settings.proMenuItem);
-          const toggle = this.page.getByTestId(ProSettings.badgeToggle.selector);
-          return (await toggle.getAttribute('data-active')) === 'true';
-        } catch (e) {
-          this.log(`Pro badge setting not on yet: ${(e as Error).message.split('\n')[0]}`);
-          return false;
-        } finally {
-          // Closed between attempts, or the open dialog swallows the next iteration's click on the
-          // settings button and a slow sync becomes an infinite one.
-          await this.closeOpenModals().catch(() => undefined);
-        }
+  public async waitForOwnProBadge(maxWaitMs = 60_000): Promise<void> {
+    await doWhileWithMax(maxWaitMs, 1_000, 'waiting for Pro to sync to this client', async () => {
+      try {
+        await clickOn(this.page, LeftPane.settingsButton);
+        await waitForElement({
+          window: this.page,
+          locator: Settings.ownProBadge,
+          options: { maxWaitMs: 2_000 },
+        });
+        return true;
+      } catch (e) {
+        this.log(`Pro has not synced here yet: ${(e as Error).message.split('\n')[0]}`);
+        return false;
+      } finally {
+        // Closed between attempts, or the open dialog swallows the next iteration's click on the
+        // settings button and a slow sync becomes an infinite one.
+        await this.closeOpenModals().catch(() => undefined);
       }
-    );
+    });
   }
 
   /**
@@ -515,8 +519,12 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
    * 'sent' status never arrives; between attempts we press Escape to clear any CTA and
    * re-open the conversation. Proves this device has Pro active without an app restart.
    */
-  public async sendLongProMessage(convoName: string, message: string): Promise<void> {
-    await doWhileWithMax(60_000, 1_000, `sendLongProMessage ${this.deviceIdentity}`, async () => {
+  public async sendLongProMessage(
+    convoName: string,
+    message: string,
+    maxWaitMs = 60_000
+  ): Promise<void> {
+    await doWhileWithMax(maxWaitMs, 1_000, `sendLongProMessage ${this.deviceIdentity}`, async () => {
       try {
         await this.openConversationWith(convoName);
         await desktopSendMessage(this.page, message);
