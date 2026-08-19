@@ -671,6 +671,56 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     });
   }
 
+  /**
+   * The receiver-side counterpart of `assertSenderProBadge`: the sender's badge is gone from here.
+   *
+   * Both conditions are checked at the SAME instant, and that is the design. The conversation's name
+   * being on screen proves this window is rendering the right conversation, so the absence asserted is
+   * the badge's and not the screen's — otherwise a window that failed to open satisfies this, and would
+   * go on satisfying it if the client stopped honouring revocations entirely.
+   *
+   * Polled because the badge disappears when the revocation job's sweep reaches this conversation, and
+   * that dispatch is debounced (500ms, maxWait 1000ms) on top of the fetch.
+   */
+  public async assertNoSenderProBadge(convoName: string): Promise<void> {
+    await this.openConversationOnceNamed(convoName);
+
+    const header = this.page
+      .locator(
+        `[${Conversation.conversationHeader.strategy}="${Conversation.conversationHeader.selector}"]`
+      )
+      .first();
+    const badge = this.page
+      .locator(
+        `[${Conversation.proBadgeConversationHeader.strategy}="${Conversation.proBadgeConversationHeader.selector}"]`
+      )
+      .first();
+
+    let headerSeen = false;
+    let cleared = false;
+    const deadline = Date.now() + 60_000;
+    do {
+      if (await header.isVisible().catch(() => false)) {
+        headerSeen = true;
+        cleared = !(await badge.isVisible().catch(() => false));
+      }
+      if (!cleared) {
+        await sleepFor(1_000);
+      }
+    } while (!cleared && Date.now() < deadline);
+
+    if (!cleared) {
+      throw new Error(
+        headerSeen
+          ? `${convoName}'s Pro badge is still rendered on the conversation header. The proof was ` +
+              `revoked, so this client is still honouring a credential it should have rejected — or it ` +
+              `never fetched the revocation list (see SESSION_FORCE_PRO_REVOCATION_REFRESH).`
+          : `${convoName}'s conversation header never rendered, so nothing can be said about the ` +
+              `badge. This is a navigation problem, not a Pro one.`
+      );
+    }
+  }
+
   // --- High-level desktop verbs ---
   // These are desktop-only (not on IBaseDeviceWrapper); they delegate to the ported
   // Page-based helpers, passing this client's page/account implicitly.

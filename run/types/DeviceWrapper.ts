@@ -46,6 +46,7 @@ import { makeAccountPro } from '../shared/pro_grant';
 import {
   AcceptMessageRequestButton,
   AttachmentsButton,
+  ConversationHeaderName,
   DocumentsFolderButton,
   GIFButton,
   ImagesFolderButton,
@@ -3070,6 +3071,54 @@ export class DeviceWrapper implements IMobileWrapper {
       `No message body containing "${substring}" appeared within ${maxWaitMs}ms. Either it never ` +
         `arrived, or it arrived without that part of its text.`
     );
+  }
+
+  /**
+   * The receiver-side counterpart of `assertSenderProBadge`: the sender's badge is gone from here.
+   *
+   * Both conditions are checked at the SAME instant, and that is the whole design. The header name
+   * proves this client is rendering the right conversation, so the absence being asserted is the badge's
+   * and not the screen's — otherwise a conversation that failed to open satisfies this, and would go on
+   * satisfying it if the client stopped honouring revocations entirely.
+   *
+   * Polled because the badge disappears when the revocation list arrives, which is a fetch. The failure
+   * message distinguishes the two ways this can end, since they have different owners: a header that
+   * never rendered is a navigation problem, a badge that never went is the product.
+   */
+  public async assertNoSenderProBadge(senderName: string): Promise<void> {
+    await this.openConversationWith(senderName);
+
+    let headerSeen = false;
+    let cleared = false;
+    const deadline = Date.now() + 60_000;
+    do {
+      const header = await this.doesElementExist({
+        ...new ConversationHeaderName(this, senderName).build(),
+        maxWait: 2_000,
+      });
+      if (header) {
+        headerSeen = true;
+        const badge = await this.doesElementExist({
+          ...new ConversationHeaderProBadge(this).build(),
+          maxWait: 2_000,
+        });
+        cleared = !badge;
+      }
+      if (!cleared) {
+        await sleepFor(1_000);
+      }
+    } while (!cleared && Date.now() < deadline);
+
+    if (!cleared) {
+      throw new Error(
+        headerSeen
+          ? `${senderName}'s Pro badge is still rendered on the conversation header. The proof was ` +
+              `revoked, so this client is still honouring a credential it should have rejected — or it ` +
+              `never fetched the revocation list (see forceProRevocationRefresh).`
+          : `${senderName}'s conversation header never rendered their name, so nothing can be said ` +
+              `about the badge. This is a navigation or profile-propagation problem, not a Pro one.`
+      );
+    }
   }
 
   /**
