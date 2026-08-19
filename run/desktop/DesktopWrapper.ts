@@ -264,7 +264,10 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
    * the account lapses within a second or two, while the signed proof stays valid for the whole coverage
    * window, so the client's next status read sees an expired plan and a live credential together.
    */
-  public async subscribeToPro(_user?: User, options?: { durationSeconds?: number }): Promise<void> {
+  public async subscribeToPro(
+    _user?: StateUser,
+    options?: { durationSeconds?: number }
+  ): Promise<void> {
     const account = this.getUser();
     await makeAccountPro({
       user: {
