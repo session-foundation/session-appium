@@ -59,7 +59,10 @@ async function proRevocationRecipient(platform: SupportedPlatformsType, testInfo
   // run, and the final assertion would pass on a client that had simply not looked.
   const { devices, prebuilt } = await open_Alice1_Bob1_friends({
     platform,
-    focusFriendsConvo: true,
+    // NOT focused: every badge assertion here starts from the conversation LIST, and a focused fixture
+    // leaves the device inside the conversation with no list item to click. The failure names a missing
+    // "Conversation list item", which reads as the contact not having synced.
+    focusFriendsConvo: false,
     testInfo,
     iOSContext: { ...IOS_PRO_CONTEXT, forceProRevocationRefresh: true },
   });
