@@ -330,11 +330,17 @@ async function focusAndWarmSeededGroup(users: SeededUser[], groupName: string) {
  * force-close whatever it opened. The body pushes its pages onto `pages` as soon as it has them,
  * so a failure part-way through `openSeededWindows` still gets cleaned up.
  */
+/**
+ * `context` is taken only so the name carries the `@pro` tag, exactly as the non-seeded builders do.
+ * Without it a seeded Pro spec runs but `--grep @pro` does not select it, so the suite silently reports
+ * less coverage than it has — and the count looks plausible, which is why it went unnoticed.
+ */
 function seededTest(
   testName: string,
-  body: (pages: Page[], testInfo: TestInfo) => Promise<void>
+  body: (pages: Page[], testInfo: TestInfo) => Promise<void>,
+  context?: TestContext
 ): void {
-  return test(testName, async ({}, testInfo) => {
+  return test(taggedName(testName, context), async ({}, testInfo) => {
     resetTrackedElectronPids();
     const pages: Page[] = [];
 
@@ -383,7 +389,7 @@ function sessionTestSeededFriends(
 
     await focusSeededFriendConvos(opened.users);
     await testCallback({ users: opened.users, extras: opened.extras }, testInfo);
-  });
+  }, context);
 }
 
 /**
@@ -411,7 +417,7 @@ function sessionTestSeededContacts(
     const alice = opened.users[0].windows[0];
     const contactNames = opened.users.slice(1).map(u => u.account.userName);
     await testCallback({ alice, contactNames }, testInfo);
-  });
+  }, context);
 }
 
 /**
@@ -440,7 +446,7 @@ function sessionTestSeededProAccess(
       { alice: opened.users[0].windows[0], account: opened.users[0].account },
       testInfo
     );
-  });
+  }, context);
 }
 
 function sessionTestSeededGroup(
@@ -472,7 +478,7 @@ function sessionTestSeededGroup(
     // specs open it on linked windows themselves.
     await focusAndWarmSeededGroup(opened.users, group.userName);
     await testCallback({ users: opened.users, extras: opened.extras, group }, testInfo);
-  });
+  }, context);
 }
 
 // ---------------------------------------------------------------------------
