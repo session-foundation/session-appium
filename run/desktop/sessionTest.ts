@@ -377,19 +377,23 @@ function sessionTestSeededFriends(
   { windowsPerUser, extraWindows = 0, context }: SeededOptions,
   testCallback: (details: SeededFriendsDetails, testInfo: TestInfo) => Promise<void>
 ): void {
-  return seededTest(testName, async (pages, testInfo) => {
-    const opened = await openSeededWindows({
-      stateKey: '2friends',
-      groupName: undefined,
-      windowsPerUser,
-      extraWindows,
-      context,
-    });
-    pages.push(...opened.pages);
+  return seededTest(
+    testName,
+    async (pages, testInfo) => {
+      const opened = await openSeededWindows({
+        stateKey: '2friends',
+        groupName: undefined,
+        windowsPerUser,
+        extraWindows,
+        context,
+      });
+      pages.push(...opened.pages);
 
-    await focusSeededFriendConvos(opened.users);
-    await testCallback({ users: opened.users, extras: opened.extras }, testInfo);
-  }, context);
+      await focusSeededFriendConvos(opened.users);
+      await testCallback({ users: opened.users, extras: opened.extras }, testInfo);
+    },
+    context
+  );
 }
 
 /**
@@ -402,22 +406,29 @@ function sessionTestSeededFriends(
 function sessionTestSeededContacts(
   testName: string,
   { context }: { context?: TestContext },
-  testCallback: (details: { alice: DesktopWrapper; contactNames: Array<string> }, testInfo: TestInfo) => Promise<void>
+  testCallback: (
+    details: { alice: DesktopWrapper; contactNames: Array<string> },
+    testInfo: TestInfo
+  ) => Promise<void>
 ): void {
-  return seededTest(testName, async (pages, testInfo) => {
-    const opened = await openSeededWindows({
-      stateKey: '1userWith10Contacts',
-      groupName: undefined,
-      // Only the first user gets a window; the rest exist purely as contacts.
-      windowsPerUser: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      context,
-    });
-    pages.push(...opened.pages);
+  return seededTest(
+    testName,
+    async (pages, testInfo) => {
+      const opened = await openSeededWindows({
+        stateKey: '1userWith10Contacts',
+        groupName: undefined,
+        // Only the first user gets a window; the rest exist purely as contacts.
+        windowsPerUser: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        context,
+      });
+      pages.push(...opened.pages);
 
-    const alice = opened.users[0].windows[0];
-    const contactNames = opened.users.slice(1).map(u => u.account.userName);
-    await testCallback({ alice, contactNames }, testInfo);
-  }, context);
+      const alice = opened.users[0].windows[0];
+      const contactNames = opened.users.slice(1).map(u => u.account.userName);
+      await testCallback({ alice, contactNames }, testInfo);
+    },
+    context
+  );
 }
 
 /**
@@ -434,19 +445,23 @@ function sessionTestSeededProAccess(
     testInfo: TestInfo
   ) => Promise<void>
 ): void {
-  return seededTest(testName, async (pages, testInfo) => {
-    const opened = await openSeededWindows({
-      stateKey: '1userWithProAccess',
-      groupName: undefined,
-      windowsPerUser: [1],
-      context,
-    });
-    pages.push(...opened.pages);
-    await testCallback(
-      { alice: opened.users[0].windows[0], account: opened.users[0].account },
-      testInfo
-    );
-  }, context);
+  return seededTest(
+    testName,
+    async (pages, testInfo) => {
+      const opened = await openSeededWindows({
+        stateKey: '1userWithProAccess',
+        groupName: undefined,
+        windowsPerUser: [1],
+        context,
+      });
+      pages.push(...opened.pages);
+      await testCallback(
+        { alice: opened.users[0].windows[0], account: opened.users[0].account },
+        testInfo
+      );
+    },
+    context
+  );
 }
 
 function sessionTestSeededGroup(
@@ -454,31 +469,35 @@ function sessionTestSeededGroup(
   { windowsPerUser, extraWindows = 0, context }: SeededOptions,
   testCallback: (details: SeededGroupDetails, testInfo: TestInfo) => Promise<void>
 ): void {
-  return seededTest(testName, async (pages, testInfo) => {
-    const opened = await openSeededWindows({
-      stateKey: '3friendsInGroup',
-      // Same convention as the UI builder: the group is named after the test.
-      groupName: testName,
-      windowsPerUser,
-      extraWindows,
-      context,
-    });
-    pages.push(...opened.pages);
+  return seededTest(
+    testName,
+    async (pages, testInfo) => {
+      const opened = await openSeededWindows({
+        stateKey: '3friendsInGroup',
+        // Same convention as the UI builder: the group is named after the test.
+        groupName: testName,
+        windowsPerUser,
+        extraWindows,
+        context,
+      });
+      pages.push(...opened.pages);
 
-    if (!opened.group) {
-      throw new Error(`state '3friendsInGroup' returned no group`);
-    }
-    const group: Group = {
-      userName: opened.group.groupName,
-      userOne: opened.users[0].account,
-      userTwo: opened.users[1].account,
-      userThree: opened.users[2].account,
-    };
-    // Mirror `createGroup`, which leaves the group open on each user's first window only —
-    // specs open it on linked windows themselves.
-    await focusAndWarmSeededGroup(opened.users, group.userName);
-    await testCallback({ users: opened.users, extras: opened.extras, group }, testInfo);
-  }, context);
+      if (!opened.group) {
+        throw new Error(`state '3friendsInGroup' returned no group`);
+      }
+      const group: Group = {
+        userName: opened.group.groupName,
+        userOne: opened.users[0].account,
+        userTwo: opened.users[1].account,
+        userThree: opened.users[2].account,
+      };
+      // Mirror `createGroup`, which leaves the group open on each user's first window only —
+      // specs open it on linked windows themselves.
+      await focusAndWarmSeededGroup(opened.users, group.userName);
+      await testCallback({ users: opened.users, extras: opened.extras, group }, testInfo);
+    },
+    context
+  );
 }
 
 // ---------------------------------------------------------------------------

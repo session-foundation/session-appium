@@ -43,7 +43,9 @@ export type ProAccountUnderTest = {
 export function seedWordsOf(user: ProAccountUnderTest): string {
   const words = user.recoveryPhrase ?? user.recoveryPassword;
   if (!words) {
-    throw new Error(`seedWordsOf: ${user.userName} has neither recoveryPhrase nor recoveryPassword`);
+    throw new Error(
+      `seedWordsOf: ${user.userName} has neither recoveryPhrase nor recoveryPassword`
+    );
   }
   return words;
 }
