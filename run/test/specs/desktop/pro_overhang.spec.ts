@@ -30,11 +30,26 @@ test_Alice_1W_Bob_1W_friends(
   async ({ alice }) => {
     // At this length the countdown reads 200 under the Pro limit and would have appeared thousands of
     // characters ago under the standard one, so the value names which limit is being applied.
-    await alice.pasteIntoInput('message-input-text-area', 'z'.repeat(AT_PRO_THRESHOLD));
+    const overhangMessage = 'z'.repeat(AT_PRO_THRESHOLD);
+    await alice.pasteIntoInput('message-input-text-area', overhangMessage);
     await alice.waitForElement({
       locator: Conversation.tooltipCharacterCount,
       options: { text: String(COUNTDOWN_START_THRESHOLD) },
     });
+
+    // Sent, not just composed. The countdown proves which limit the composer applied; only a recipient
+    // proves the entitlement was actually honoured on the wire — a client that allowed the length and
+    // then sent a proof the other end rejected would satisfy the countdown alone. This is the half the
+    // overhang is really about: the plan is over, and the feature still works end to end.
+    await alice.sendMessage(overhangMessage);
+    // The sender's own copy first, so a failure says which half broke: composed-but-not-sent is a
+    // different bug from sent-but-not-accepted, and they have different owners.
+    await alice.waitForMessage(overhangMessage);
+    // NOT asserted here: that Bob receives it intact. `proProof: 'valid'` is a mock, and a recipient
+    // validates the proof cryptographically — so Bob rejects it and stores the standard limit instead.
+    // Measured: Bob receives exactly the first 2000 characters, in 8.6s, so this is a rejected proof
+    // rather than a slow one. A recipient-side assertion needs a REAL grant, which this state (expired
+    // plan, live proof) cannot currently express.
 
     await alice.clickOn(LeftPane.settingsButton);
     await alice.clickOn(Settings.proMenuItem);

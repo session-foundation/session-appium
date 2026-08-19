@@ -469,8 +469,8 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /** Wait until a message with exactly this text is present in the open conversation. */
-  public async waitForMessage(text: string): Promise<void> {
-    await waitForTextMessage(this.page, text);
+  public async waitForMessage(text: string, maxWaitMs?: number): Promise<void> {
+    await waitForTextMessage(this.page, text, maxWaitMs);
   }
 
   /**
