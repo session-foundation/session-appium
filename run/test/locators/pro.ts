@@ -187,6 +187,47 @@ export class ProRenewPlanRow extends LocatorsInterface {
 }
 
 /**
+ * The description under the logo on the Pro settings screen, paired with the copy it should be showing.
+ *
+ * The copy is a pure function of the displayed status — `expired` -> `proAccessRenewStart`,
+ * `never` -> `proFullestPotential`, `active` -> `proThanksForSupporting`, and nothing at all for
+ * `unknown` — so the pairing is what makes this worth asserting. The id alone would only say a
+ * description is present, which is true on every status that has one.
+ *
+ * Take care extending this to `proFullestPotential`: iOS and Desktop take their copy from Crowdin,
+ * where the line break is `<br/>`, while Android's `strings.xml` uses `\n`. `tStripped` removes the
+ * markup, so the two platforms do not end up with the same whitespace. `proAccessRenewStart` and
+ * `proThanksForSupporting` carry no markup and are unaffected.
+ */
+export class ProSettingsDescription extends LocatorsInterface {
+  private readonly copy: string;
+
+  constructor(device: DeviceWrapper, copy: string) {
+    super(device);
+    this.copy = copy;
+  }
+
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'pro-settings-description',
+          text: this.copy,
+        } as const;
+      case 'ios':
+        // `label`, not `text`, for the same reason as `ProPlanExpiry`: the identifier owns `name`, so
+        // the copy is only reachable on `label`.
+        return {
+          strategy: 'accessibility id',
+          selector: 'pro-settings-description',
+          label: this.copy,
+        } as const;
+    }
+  }
+}
+
+/**
  * The Pro entry in the main settings list.
  *
  * Matched on the id alone. The row's label is a pure function of the backend status
@@ -202,6 +243,23 @@ export class ProSettingsEntry extends LocatorsInterface {
         return { strategy: 'id', selector: 'pro-menu-item' } as const;
       case 'ios':
         return { strategy: 'accessibility id', selector: 'pro-menu-item' } as const;
+    }
+  }
+}
+
+/**
+ * The Pro row's TITLE in the user settings list, whose text is the account's Pro state.
+ *
+ * Separate from `ProSettingsEntry`, which is the tap target and carries no text of its own on either
+ * platform — so the row's state is only readable through this one.
+ */
+export class ProSettingsEntryTitle extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'pro-menu-item-title' } as const;
+      case 'ios':
+        return { strategy: 'accessibility id', selector: 'pro-menu-item-title' } as const;
     }
   }
 }

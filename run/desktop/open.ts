@@ -14,7 +14,11 @@ const logNodeConsole = process.env.LOG_NODE_CONSOLE === '1';
 
 export const NODE_ENV = 'production';
 export const MULTI_PREFIX = 'test-integration';
-const multisAvailable = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+/**
+ * The `MULTI` suffixes `openApps` assigns, in order — index `i` is the same window as index `i` in
+ * `getLaunchedInstances()`, which is what lets a window be restarted onto its own user-data directory.
+ */
+export const multisAvailable = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 let electronPids: Array<number> = [];
 /**
  * The `NODE_APP_INSTANCE` each window was launched with, in launch order. A restart has to reuse its

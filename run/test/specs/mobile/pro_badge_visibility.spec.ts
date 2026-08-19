@@ -8,7 +8,7 @@ import { open_Alice1_Bob1_friends } from '../../state_builder';
 import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 import { enableProBadge, expectProBadgeFromSender } from '../../utils/pro_badge';
-import { forceStopAndRestart } from '../../utils/utilities';
+import { observeProGrant } from '../../utils/pro_refresh';
 
 const MESSAGE = 'Checking my badge shows for you';
 
@@ -51,10 +51,7 @@ async function proBadgeVisibleToOthers(platform: SupportedPlatformsType, testInf
 
   await test.step('Alice becomes a Pro subscriber', async () => {
     await makeAccountPro({ user: alice, platform });
-    // The grant is only observed on a fresh launch: the client caches its Pro status, so without this
-    // Alice's client would still consider her non-Pro.
-    await forceStopAndRestart(alice1);
-    await alice1.dismissCTA();
+    await observeProGrant(alice1);
   });
 
   await enableProBadge(alice1, platform);

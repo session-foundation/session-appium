@@ -89,7 +89,12 @@ import { androidAppPackage } from '../test/utils/capabilities_android';
 import { parseDataImage } from '../test/utils/check_colour';
 import { isSameColor } from '../test/utils/check_colour';
 import { restoreAccountNoFallback } from '../test/utils/restore_account';
-import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/utils/utilities';
+import {
+  isDeviceAndroid,
+  isDeviceIOS,
+  runScriptAndLog,
+  runScriptOrThrow,
+} from '../test/utils/utilities';
 import { CTAConfig, ctaConfigs, CTAType } from './cta';
 import {
   AccessibilityId,
@@ -1147,6 +1152,12 @@ export class DeviceWrapper implements IMobileWrapper {
       value
         // Strip LTR/RTL markers and other whitespace nonsense, matching the text comparison.
         .replace(/[\u200e\u200f\u202a-\u202e]/g, '')
+        // Collapse runs of whitespace, so a line break in the rendered copy compares equal to the
+        // space the localizer produces. The same token reaches here in three shapes \u2014 a break on
+        // iOS, `\n` from Android's strings.xml, and a space from `tStripped` \u2014 and the difference is
+        // presentation, not copy. Collapsing, not stripping: removing whitespace entirely would let
+        // genuinely different strings collide.
+        .replace(/\s+/g, ' ')
         .trim()
         .toLowerCase();
 
@@ -1165,10 +1176,13 @@ export class DeviceWrapper implements IMobileWrapper {
     if (elements && elements.length) {
       const matching = await this.findAsync(elements, async e => {
         const text = await this.getTextFromElement(e);
-        // Strip LTR/RTL markers and other whitespace nonsense
+        // Strip LTR/RTL markers and other whitespace nonsense, and collapse whitespace runs for the
+        // same reason as the label comparison: the rendered line break and the localizer's space are
+        // the same copy.
         const normalize = (s: string) =>
           s
             .replace(/[\u200e\u200f\u202a-\u202e]/g, '')
+            .replace(/\s+/g, ' ')
             .trim()
             .toLowerCase();
         const isExactMatch = text && normalize(text) === normalize(textToLookFor);
@@ -2197,7 +2211,7 @@ export class DeviceWrapper implements IMobileWrapper {
       this.warn(
         `pushMediaToDevice on iOS is deprecated. Consider pre-loading it on simulator creation`
       );
-      await runScriptAndLog(`xcrun simctl addmedia ${this.udid} ${filePath}`, true);
+      await runScriptOrThrow(`xcrun simctl addmedia ${this.udid} ${filePath}`, true);
     } else if (this.isAndroid()) {
       const ANDROID_DOWNLOAD_DIR = '/storage/emulated/0/Download';
       // Clear downloads folder at runtime before pushing
@@ -2205,11 +2219,22 @@ export class DeviceWrapper implements IMobileWrapper {
         `${getAdbFullPath()} -s ${this.udid} shell rm -rf ${ANDROID_DOWNLOAD_DIR}/*`,
         true
       );
-      // Push file
-      await runScriptAndLog(
+      // Throws rather than logs: the clear above means a failed push leaves the device with NO media,
+      // so the spec fails later on a missing picker entry with nothing pointing back here.
+      await runScriptOrThrow(
         `${getAdbFullPath()} -s ${this.udid} push ${filePath} ${ANDROID_DOWNLOAD_DIR}`,
         true
       );
+      // Asserted rather than assumed. `adb push` exiting 0 is not the same as the file being there,
+      // and this is the check that survives whatever the next tool decides to print.
+      const listing = await runScriptOrThrow(
+        `${getAdbFullPath()} -s ${this.udid} shell ls ${ANDROID_DOWNLOAD_DIR}/${mediaFileName}`
+      );
+      if (!listing.includes(mediaFileName)) {
+        throw new Error(
+          `pushMediaToDevice: ${mediaFileName} is absent from ${this.udid} after the push (got "${listing.trim()}")`
+        );
+      }
       // Refreshes the photos UI to force the image to appear
       await runScriptAndLog(
         `${getAdbFullPath()} -s ${this.udid} shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file://${ANDROID_DOWNLOAD_DIR}/${mediaFileName}`,
@@ -2952,6 +2977,9 @@ export class DeviceWrapper implements IMobileWrapper {
 
     // iOS may split the body around inline images, producing multiple cta-body elements.
     // Wait for the first, then find all and check that the expected text appears in any of them.
+    if (body === undefined) {
+      return;
+    }
     await this.waitForTextElementToBePresent(new CTABody(this));
     const { strategy, selector } = new CTABody(this).build();
     const bodyElements = await this.findElements(strategy, selector, true);

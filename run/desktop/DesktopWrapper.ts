@@ -185,8 +185,19 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
 
   // --- IBaseDeviceWrapper: account ---
 
-  public async restoreFromSeed(recoveryPhrase: string): Promise<void> {
-    await recoverFromSeed(this.page, recoveryPhrase);
+  /**
+   * Restore this window onto an existing account from its recovery phrase.
+   *
+   * Being prompted for a display name means the profile was not found on the network, and by default
+   * that THROWS — for a seeded account it means the seeder did not push its config, which is worth
+   * failing on rather than typing past.
+   *
+   * `fallbackName` is the explicit opt-out, for the one case where the prompt is expected and harmless:
+   * an account created moments earlier, whose profile has not propagated yet, in a spec that asserts
+   * something other than the name. Supplying it is a statement that the name is not under test.
+   */
+  public async restoreFromSeed(recoveryPhrase: string, fallbackName?: string): Promise<void> {
+    await recoverFromSeed(this.page, recoveryPhrase, fallbackName ? { fallbackName } : undefined);
     await checkPathLight(this.page);
   }
 
@@ -461,8 +472,8 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /** Wait until a message with exactly this text is present in the open conversation. */
-  public async waitForMessage(text: string): Promise<void> {
-    await waitForTextMessage(this.page, text);
+  public async waitForMessage(text: string, maxWaitMs?: number): Promise<void> {
+    await waitForTextMessage(this.page, text, maxWaitMs);
   }
 
   /**
@@ -641,7 +652,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
 
   public async checkCTAStrings(
     expectedHeading: string,
-    expectedBody: string,
+    expectedBody: string | undefined,
     expectedButtons: Array<string>,
     expectedFeatures?: Array<string>,
     bodyMatch: 'contains' | 'exact' = 'exact'

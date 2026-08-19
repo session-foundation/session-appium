@@ -3,6 +3,11 @@ import { test, type TestInfo } from '@playwright/test';
 import type { DeviceWrapper } from '../../../types/DeviceWrapper';
 
 import { tStripped } from '../../../localizer/lib';
+import {
+  COUNTDOWN_START_THRESHOLD,
+  PRO_MAX_CHARS,
+  STANDARD_MAX_CHARS,
+} from '../../../shared/constants';
 import { makeAccountPro } from '../../../shared/pro_grant';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
@@ -26,11 +31,7 @@ import {
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
-import { forceStopAndRestart } from '../../utils/utilities';
-
-const STANDARD_MAX_CHARS = 2000;
-const PRO_MAX_CHARS = 10000;
-const COUNTDOWN_START_THRESHOLD = 200;
+import { observeProGrant } from '../../utils/pro_refresh';
 
 const messageLengthTestCases = [
   {
@@ -136,9 +137,7 @@ for (const testCase of messageLengthTestCases) {
 
       if (testCase.pro) {
         await makeAccountPro({ user: alice, platform });
-        // Restart to notify app of Pro status change
-        await forceStopAndRestart(device);
-        await device.dismissCTA();
+        await observeProGrant(device);
         if (recipientName) {
           await device.clickOnElementAll(new ConversationItem(device, recipientName));
         }

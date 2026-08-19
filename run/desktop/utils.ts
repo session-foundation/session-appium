@@ -721,7 +721,7 @@ export async function verifyNoCTAShows(window: Page) {
 export async function checkCTAStrings(
   window: Page,
   expectedHeading: string,
-  expectedBody: string,
+  expectedBody: string | undefined,
   expectedButtons: Array<string>,
   expectedFeatures?: Array<string>,
   bodyMatch: 'contains' | 'exact' = 'exact'
@@ -752,6 +752,10 @@ export async function checkCTAStrings(
   // Check body
   const body = targetModal.locator(`[${CTA.description.strategy}="${CTA.description.selector}"]`);
   await body.waitFor({ state: 'visible' });
+  // Some CTAs interpolate data the shared table cannot know, so it carries no body for them.
+  if (expectedBody === undefined) {
+    return;
+  }
   const bodyText = await body.innerText();
   if (bodyMatch === 'contains') {
     const haystack = stripIconGlyphs(bodyText).replace(/\s+/g, ' ');

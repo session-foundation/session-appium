@@ -1,10 +1,7 @@
-import type { DesktopWrapper } from '../../../desktop/DesktopWrapper';
-
-import { getCommunities } from '../../../constants/community';
-import { joinCommunityByLink } from '../../../desktop/join_community';
-import { CTA, Global, HomeScreen } from '../../../desktop/locators';
-import { test_Alice_1W } from '../../../desktop/sessionTest';
-import { tStripped } from '../../../localizer/lib';
+import { CTA } from '../../../desktop/locators';
+import { pinConversation, pinIconFor } from '../../../desktop/pin';
+import { test_Alice_1W_10contacts } from '../../../desktop/sessionTest';
+import { STANDARD_PIN_LIMIT } from '../../../shared/constants';
 
 /**
  * The pinned-conversation limit either side of the Pro boundary: five for a standard user, more for a
@@ -18,38 +15,13 @@ import { tStripped } from '../../../localizer/lib';
  * or that showed the CTA and pinned anyway, satisfies a CTA-only assertion.
  */
 
-const COMMUNITY_COUNT = 6;
-const STANDARD_PIN_LIMIT = 5;
+/** Enough conversations to exceed the standard limit, which is what both specs turn on. */
+const CONVERSATION_COUNT = 6;
 
-/** The pin marker on one conversation's row. Unscoped it matches whichever row happens to be pinned. */
-function pinIconFor(window: DesktopWrapper, conversationName: string) {
-  return window
-    .getPage()
-    .locator(`css=.${HomeScreen.conversationItemHeader.selector}`)
-    .filter({ hasText: conversationName })
-    .locator(`[data-testid="${HomeScreen.pinnedConversationIcon.selector}"]`);
-}
-
-async function pinConversation(window: DesktopWrapper, conversationName: string) {
-  await window.rightClickOnWithText(HomeScreen.conversationItemName, conversationName);
-  await window.clickOnWithText(Global.contextMenuItem, tStripped('pin'));
-}
-
-async function joinCommunities(window: DesktopWrapper, count: number): Promise<Array<string>> {
-  const communities = Object.values(getCommunities()).slice(0, count);
-  if (communities.length < count) {
-    throw new Error(`Need ${count} communities to test the pin limit, got ${communities.length}`);
-  }
-  for (const community of communities) {
-    await joinCommunityByLink(window.getPage(), community.link, community.name);
-  }
-  return communities.map(community => community.name);
-}
-
-test_Alice_1W(
+test_Alice_1W_10contacts(
   'Pinned conversation limit (non Pro)',
-  async ({ alice }) => {
-    const names = await joinCommunities(alice, COMMUNITY_COUNT);
+  async ({ alice, contactNames }) => {
+    const names = contactNames;
 
     for (const name of names.slice(0, STANDARD_PIN_LIMIT)) {
       await pinConversation(alice, name);
@@ -64,13 +36,14 @@ test_Alice_1W(
     // The CTA appearing is not the same as the pin being refused.
     await pinIconFor(alice, overLimit).waitFor({ state: 'hidden' });
   },
-  { pro: { proBackendStatus: 'never' }, communityRooms: COMMUNITY_COUNT }
+  { pro: { proBackendStatus: 'never' } }
 );
 
-test_Alice_1W(
+test_Alice_1W_10contacts(
   'Pinned conversation limit (Pro)',
-  async ({ alice }) => {
-    const names = await joinCommunities(alice, COMMUNITY_COUNT);
+  async ({ alice, contactNames }) => {
+    // More than the standard limit, which is what the assertion turns on; the rest are surplus.
+    const names = contactNames.slice(0, CONVERSATION_COUNT);
 
     for (const name of names) {
       await pinConversation(alice, name);
@@ -80,7 +53,8 @@ test_Alice_1W(
     await alice.hasElementPoppedUpThatShouldnt(CTA.heading);
   },
   {
-    pro: { proBackendStatus: 'active', proAccessExpiry: 'P30D' },
-    communityRooms: COMMUNITY_COUNT,
+    // The pinned limit is an ACCESS question, so it reads the proof rather than the plan's state — a
+    // status-only fixture would pin like a free user and fail here for the wrong reason.
+    pro: { proBackendStatus: 'active', proAccessExpiry: 'P30D', proProof: 'valid' },
   }
 );

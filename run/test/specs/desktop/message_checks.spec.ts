@@ -22,6 +22,11 @@ import {
   test_Alice_2W_Bob_1W_friends,
 } from '../../../desktop/sessionTest';
 import { tStripped } from '../../../localizer/lib';
+import {
+  COUNTDOWN_START_THRESHOLD,
+  PRO_MAX_CHARS,
+  STANDARD_MAX_CHARS,
+} from '../../../shared/constants';
 import { sleepFor } from '../../../shared/promise_utils';
 
 mediaArray.forEach(({ mediaType, path, attachmentType, shouldCheckMediaPreview }) => {
@@ -197,12 +202,6 @@ test_Alice_1W_Bob_1W_friends('Check performance', async ({ alice }) => {
   }
   console.log(timesArray);
 });
-
-// Lengths mirror the mobile specs: under the countdown, at its start, at the limit, one over.
-const STANDARD_MAX_CHARS = 2000;
-const PRO_MAX_CHARS = 10000;
-// Characters remaining at which the countdown starts showing.
-const COUNTDOWN_START_THRESHOLD = 200;
 
 const messageLengthTestCases = [
   {
