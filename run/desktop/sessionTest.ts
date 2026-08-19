@@ -27,6 +27,7 @@ import { forceCloseAllWindows } from './closeWindows';
 import { createGroup } from './create_group';
 import { DesktopWrapper } from './DesktopWrapper';
 import { linkedDevice } from './linked_device';
+import { HomeScreen } from './locators';
 import {
   getLaunchedInstances,
   multisAvailable,
@@ -425,6 +426,23 @@ function sessionTestSeededContacts(
 
       const alice = opened.users[0].windows[0];
       const contactNames = opened.users.slice(1).map(u => u.account.userName);
+
+      // Every conversation present BEFORE the test gets the window. Seeded contacts land in the list as
+      // their config merges, not all at once, so a spec that starts acting immediately races the
+      // arrivals — and only the FIRST seeded test in a process loses that race, because later ones find
+      // the swarm warm. The symptom was a pin that silently never took on the fourth conversation,
+      // which reads as a pin-limit bug rather than a setup one.
+      await Promise.all(
+        contactNames.map(name =>
+          alice
+            .getPage()
+            .locator(`css=.${HomeScreen.conversationItemHeader.selector}`)
+            .filter({ hasText: name })
+            .first()
+            .waitFor({ state: 'visible', timeout: 60_000 })
+        )
+      );
+
       await testCallback({ alice, contactNames }, testInfo);
     },
     context

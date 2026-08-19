@@ -41,8 +41,8 @@ importers:
         specifier: ^0.0.8
         version: 0.0.8
       '@session-foundation/qa-seeder':
-        specifier: ^0.2.1
-        version: 0.2.1
+        specifier: ^0.3.0
+        version: 0.3.0
       appium:
         specifier: ^3.2.2
         version: 3.2.2
@@ -522,8 +522,8 @@ packages:
   '@session-foundation/libsession-crypto@0.0.1':
     resolution: {integrity: sha512-VXbBKGqmfCx3VILCTIiCOD0xwRIWTfVOaKJddpPRury2ZUd0sDOw47W2sQS9JjYbI6IKlqZHZIy1H+EStvcPTA==}
 
-  '@session-foundation/libsession-wasm@0.0.11':
-    resolution: {integrity: sha512-U+KGYlI+s651xlwnRdkin7xSehpydGulPcKYiDliKBAXPNPdC2drLq2Jqu4lR1fP/GleX5/gLrWgY3SMk+yNbg==}
+  '@session-foundation/libsession-wasm@0.0.12':
+    resolution: {integrity: sha512-1WGBlVYQ04Oj8Gg/UMPFw4aYmkCtysHD8VTVFDU/62b7lif0pk1KxjpBdGfEcB6GOcZ+nIwkWks0IRaveUCr1w==}
 
   '@session-foundation/logger@0.0.5':
     resolution: {integrity: sha512-KhUALn7/9X1Qt4WifwSITAxDgvtpZTph8/isx4fSKTnvcCJxCNPm34+yHKoqDC3xA5g2uYsCC4e1egNXq73Y1A==}
@@ -540,8 +540,8 @@ packages:
   '@session-foundation/playwright-reporter@0.0.8':
     resolution: {integrity: sha512-VvEWcl1JgQBqTdiSxhsL/RKZziuXHa+5uginn6F2LDAnKxidNUcB6SnCfXfyr+C0+9YQqQjmkBhYtxYJMJWcWw==}
 
-  '@session-foundation/qa-seeder@0.2.1':
-    resolution: {integrity: sha512-MRnablG+POo1nmcgV7gKmZ4q6f2hNAM6jVu1BJpA4I6/8UAYNuicTL9vCCDE8+RKlT5jorF3SxS7+OJS8zd5qQ==}
+  '@session-foundation/qa-seeder@0.3.0':
+    resolution: {integrity: sha512-acn2daJBsYEUwzNxePxuo2qiCiEIKJ3oPCxPdkmV0haNdmtMnS+6iUkiblU0l6aHYPfUPTbG6oK3mThKerxs3g==}
 
   '@session-foundation/snode-rpc@0.0.1':
     resolution: {integrity: sha512-Ie5wQe3fKRDd0isGsli1KEhbrvs4sSXqrG6DUNiI6PAgt2r/WbLUrVcLpb28KMsre6Cu4cSusDP733vhlt545A==}
@@ -552,8 +552,8 @@ packages:
   '@session-foundation/swarm-routing@0.0.1':
     resolution: {integrity: sha512-9rMY6K13+05ZvoBNY+f+gbEpDgKQMlhTbpJZqfdWphKGDu+0BFLQkXhIt1PI3ogbCEQyCpksubOs4E7meZy+Kw==}
 
-  '@session-foundation/wasm-libsession-crypto@0.0.1':
-    resolution: {integrity: sha512-wQDI2lnOkdM9dbxlvS8SHuQf53q2vd4gm/WTbPvjZtu2mO1fRHhtZ5dUJIj8nLOtil9QqOYo7+s8grMNxremkw==}
+  '@session-foundation/wasm-libsession-crypto@0.0.2':
+    resolution: {integrity: sha512-YWULILcuSBEKs5CSljOTzNX0pLyw8/mE8CbLOQjQsCgHwTydiCKiWE/uc3zP4OGwng7zVHfX0jQlLlZZndqySA==}
 
   '@sidvind/better-ajv-errors@4.0.1':
     resolution: {integrity: sha512-6arF1ssKxItxgitPYXafUoLmsVBA6K7m9+ZGj6hLDoBl7nWpJ33EInwQUdHTle2METeWGxgQiqSex20KZRykew==}
@@ -3756,7 +3756,7 @@ snapshots:
     dependencies:
       '@session-foundation/basic-types': 0.0.7
 
-  '@session-foundation/libsession-wasm@0.0.11': {}
+  '@session-foundation/libsession-wasm@0.0.12': {}
 
   '@session-foundation/logger@0.0.5': {}
 
@@ -3787,16 +3787,16 @@ snapshots:
     dependencies:
       lodash: 4.17.23
 
-  '@session-foundation/qa-seeder@0.2.1':
+  '@session-foundation/qa-seeder@0.3.0':
     dependencies:
       '@session-foundation/basic-types': 0.0.7
       '@session-foundation/libsession-crypto': 0.0.1
-      '@session-foundation/libsession-wasm': 0.0.11
+      '@session-foundation/libsession-wasm': 0.0.12
       '@session-foundation/mnemonic': 0.0.9
       '@session-foundation/network-requests': 0.0.6
       '@session-foundation/node-network-requests': 0.0.5
       '@session-foundation/swarm-network': 0.0.1
-      '@session-foundation/wasm-libsession-crypto': 0.0.1
+      '@session-foundation/wasm-libsession-crypto': 0.0.2
       lodash: 4.17.23
       node-fetch: 3.3.2
 
@@ -3817,10 +3817,10 @@ snapshots:
       '@session-foundation/network-requests': 0.0.6
       lodash: 4.17.23
 
-  '@session-foundation/wasm-libsession-crypto@0.0.1':
+  '@session-foundation/wasm-libsession-crypto@0.0.2':
     dependencies:
       '@session-foundation/libsession-crypto': 0.0.1
-      '@session-foundation/libsession-wasm': 0.0.11
+      '@session-foundation/libsession-wasm': 0.0.12
 
   '@sidvind/better-ajv-errors@4.0.1(ajv@8.18.0)':
     dependencies:
