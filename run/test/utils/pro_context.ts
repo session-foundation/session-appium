@@ -55,3 +55,30 @@ export type ProMockContext = {
    */
   proProof?: 'none' | 'useActual' | 'valid';
 };
+
+/**
+ * Test hooks that change a client's Pro **timing**, as opposed to mocking its Pro state.
+ *
+ * Deliberately not part of `ProMockContext`: everything there convinces one client it is in a state it
+ * is not in, and produces nothing another party can verify. These do the opposite — they are used
+ * alongside a REAL grant, and exist so a spec can observe behaviour the production schedule puts a day
+ * out of reach.
+ */
+export type ProTestHookContext = {
+  /**
+   * Poll the Pro revocation list at launch instead of waiting out the server's cadence.
+   *
+   * Required by every revocation spec, not a convenience. Our QA backend serves `retry_in: 86400` —
+   * the production cadence, and inside libSession's `[60s, 48h]` clamp, so nothing shortens it — which
+   * puts a client's second poll a day after its first. Without this, no client learns of a revocation
+   * within a test run, and a spec asserting enforcement passes only because nothing was ever enforced.
+   *
+   * The clients implement it by moving their own persisted "next poll" instant into the past, so the
+   * production gate then decides to poll unmodified. That matters for what a spec proves: the path
+   * exercised is the real one, not a test-only fetch that could pass while the real path is broken.
+   */
+  forceProRevocationRefresh?: boolean;
+};
+
+/** Everything a spec can ask of a client's Pro setup: the display mocks plus the timing hooks. */
+export type ProContext = ProMockContext & ProTestHookContext;

@@ -1,4 +1,4 @@
-import type { ProMockContext } from './pro_context';
+import type { ProContext } from './pro_context';
 
 import { getDevnetSeedUrl, getServiceNetwork } from './network_target';
 import { getProBackendOverride } from './pro_backend';
@@ -22,7 +22,7 @@ import { getProBackendOverride } from './pro_backend';
  * token as a new flag, so a value must contain **no spaces and no leading hyphen**. URLs, hex keys and
  * enum names are fine; a display string would not be.
  */
-export function buildAndroidLaunchExtras(context?: ProMockContext): string | undefined {
+export function buildAndroidLaunchExtras(context?: ProContext): string | undefined {
   const extras: string[] = [];
 
   // The mocked Pro state, for specs asserting how Pro screens *render*. Named for the state being
@@ -47,6 +47,12 @@ export function buildAndroidLaunchExtras(context?: ProMockContext): string | und
   // active-plan-with-no-proof client expressible, which is the state the silent-truncation bug lives in.
   if (context?.proProof) {
     extras.push(`--es sessionProProof ${context.proProof}`);
+  }
+
+  // A timing hook rather than a state mock, so it sits apart from the four above: it is used WITH a real
+  // grant, to reach behaviour the server's 24h poll cadence otherwise puts out of a test run's reach.
+  if (context?.forceProRevocationRefresh) {
+    extras.push('--es sessionForceProRevocationRefresh true');
   }
 
   if ((process.env.NETWORK_TARGET ?? '').trim()) {
@@ -79,6 +85,6 @@ export function buildAndroidLaunchExtras(context?: ProMockContext): string | und
  * `QaLaunchConfig` persists the extras rather than applying them to the running process, so they only
  * take effect on the next launch.
  */
-export function androidNeedsQaConfigRelaunch(context?: ProMockContext): boolean {
+export function androidNeedsQaConfigRelaunch(context?: ProContext): boolean {
   return buildAndroidLaunchExtras(context) !== undefined;
 }

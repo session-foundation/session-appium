@@ -4,7 +4,7 @@ import { W3CXCUITestDriverCaps } from 'appium-xcuitest-driver/build/lib/driver';
 import dotenv from 'dotenv';
 import { existsSync } from 'fs';
 
-import type { ProMockContext } from './pro_context';
+import type { ProContext } from './pro_context';
 
 import { WDA_DERIVED_DATA_PATH, WDA_PREBUILT_APP_PATH } from '../../../scripts/build_wda';
 import { resolveRunSimulators, type Simulator } from '../../../scripts/ios_shared';
@@ -33,7 +33,7 @@ dotenv.config({ quiet: true });
  * value is silently ignored by the app, which would yield a passing *default-state* test rather than
  * a failure, so the typo has to be caught here.
  */
-export type IOSTestContext = ProMockContext & {
+export type IOSTestContext = ProContext & {
   customInstallTime?: string;
   sessionProEnabled?: string;
   /** Platform the subscription was originally purchased on. */
@@ -84,6 +84,7 @@ const IOS_TEST_ENV_KEYS: Record<keyof IOSTestContext, string> = {
   proProof: 'mockCurrentUserSessionProProof',
   proBackendUrl: 'customProBackendUrl',
   proBackendPubkey: 'customProBackendPubkey',
+  forceProRevocationRefresh: 'forceProRevocationRefresh',
 };
 
 type AppiumXCUITestCapabilities = Capabilities.AppiumXCUITestCapabilities;
@@ -369,7 +370,10 @@ export function getIosCapabilities(
   for (const [field, envKey] of Object.entries(IOS_TEST_ENV_KEYS)) {
     const value = customCaps?.[field as keyof IOSTestContext];
     if (value) {
-      customEnv[envKey] = value;
+      // The launch-arg env is string-valued, so a boolean hook arrives here as `true` and has to be
+      // spelled out. `'true'` rather than `'1'` because the app parses the two consistently and the
+      // string form is what reads correctly in a device log.
+      customEnv[envKey] = value === true ? 'true' : value;
     }
   }
 
