@@ -2989,19 +2989,6 @@ export class DeviceWrapper implements IMobileWrapper {
   }
 
   /**
-   * Open the 1:1 with `senderName` and assert their Session Pro badge renders here.
-   *
-   * In a 1:1 the badge lives in the conversation **header** only, never beside the message: the author
-   * label that carries it is group-only. So this asserts a badge belonging to the person the open
-   * conversation is *with* — never this device's own user, who is not shown in their own header.
-   *
-   * Rendering it at all means this client verified a real cryptographic proof, which is why the
-   * display-level Pro mocks cannot stand in for a grant here.
-   *
-   * `expectProBadgeFromSender` (pro_badge.ts) is the mobile-only variant that waits for a specific
-   * message first, for specs asserting the badge arrived *with* it rather than eventually.
-   */
-  /**
    * Open a message's info screen and assert it lists exactly the Pro features it was sent with.
    *
    * The sharpest receiver-side Pro assertion available: the features travel *in the message* as a

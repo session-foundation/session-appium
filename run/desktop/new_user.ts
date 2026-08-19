@@ -4,6 +4,7 @@ import type { StateUser, UserNameType } from '@session-foundation/qa-seeder';
 
 import { Page } from '@playwright/test';
 
+import { isAccountId } from '../shared/constants';
 import { mnemonicToSeedHex, padSeed } from '../shared/pro_grant';
 import { Global, LeftPane, Onboarding, Settings } from './locators';
 import {
@@ -51,5 +52,8 @@ export const newUser = async (
     await checkPathLight(window);
   }
   const seed = padSeed(mnemonicToSeedHex(recoveryPassword));
-  return { userName, sessionId: accountid as `05${string}`, seedPhrase: recoveryPassword, seed };
+  if (!isAccountId(accountid)) {
+    throw new Error(`newUser: invalid Session ID "${accountid}"`);
+  }
+  return { userName, sessionId: accountid, seedPhrase: recoveryPassword, seed };
 };
