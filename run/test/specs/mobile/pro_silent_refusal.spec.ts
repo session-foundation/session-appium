@@ -1,21 +1,13 @@
 import { test, type TestInfo } from '@playwright/test';
-import { USERNAME } from '@session-foundation/qa-seeder';
 
-import { getCommunities } from '../../../constants/community';
 import { STANDARD_PIN_LIMIT } from '../../../shared/constants';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { ConversationPinnedIcon, PlusButton } from '../../locators/home';
-import { joinCommunities } from '../../utils/community';
+import { open_Alice1_with_contacts } from '../../state_builder';
 import { assertPinOrder, getConversationOrder } from '../../utils/conversation_order';
-import { newUser } from '../../utils/create_account';
-import {
-  closeApp,
-  openAppOnPlatformSingleDevice,
-  SupportedPlatformsType,
-} from '../../utils/open_app';
+import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 
-const COMMUNITY_COUNT = 6;
 const PLAN_DAYS = 30;
 const ONE_DAY_SECONDS = 24 * 60 * 60;
 
@@ -23,7 +15,6 @@ bothPlatformsIt({
   title: 'An active plan with no proof is refused without being sold to',
   risk: 'high',
   countOfDevicesNeeded: 1,
-  communityRooms: COMMUNITY_COUNT,
   testCb: proSilentRefusal,
   isPro: true,
   allureSuites: {
@@ -52,22 +43,25 @@ bothPlatformsIt({
  * anyway satisfies either assertion alone.
  */
 async function proSilentRefusal(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const communities = getCommunities();
-  const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, {
-      sessionProEnabled: 'true',
-      // The plan says active, with time left on it...
-      proBackendStatus: 'active',
-      proLoadingState: 'success',
-      // Not optional. An `active` status with no expiry inherits zero, which the client reads as
-      // expiring imminently and covers the screen with the expiring-soon CTA — documented on the field
-      // itself, and it takes down every step after it rather than the one that caused it.
-      proAccessExpiry: String(Math.floor(Date.now() / 1000) + PLAN_DAYS * ONE_DAY_SECONDS),
-      // ...and there is nothing to prove it with.
-      proProof: 'none',
+  // Seeded contacts rather than joined communities: this needs a conversation list longer than the pin
+  // limit, and joining six communities was the slowest part of the run.
+  const { device, contactNames } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
+    return await open_Alice1_with_contacts({
+      platform,
+      testInfo,
+      iOSContext: {
+        sessionProEnabled: 'true',
+        // The plan says active, with time left on it...
+        proBackendStatus: 'active',
+        proLoadingState: 'success',
+        // Not optional. An `active` status with no expiry inherits zero, which the client reads as
+        // expiring imminently and covers the screen with the expiring-soon CTA — documented on the
+        // field itself, and it takes down every step after it rather than the one that caused it.
+        proAccessExpiry: String(Math.floor(Date.now() / 1000) + PLAN_DAYS * ONE_DAY_SECONDS),
+        // ...and there is nothing to prove it with.
+        proProof: 'none',
+      },
     });
-    await newUser(device, USERNAME.ALICE, { saveUserData: false });
-    return { device };
   });
 
   await test.step('Verify no prompt is raised at launch', async () => {
@@ -76,19 +70,13 @@ async function proSilentRefusal(platform: SupportedPlatformsType, testInfo: Test
     await device.verifyNoCTAShows();
   });
 
-  await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITIES(COMMUNITY_COUNT), async () => {
-    await joinCommunities(device, COMMUNITY_COUNT);
-  });
-
   let beforeOrder: string[] = [];
   await test.step('Capture conversation order before pinning', async () => {
     beforeOrder = await getConversationOrder(device);
   });
 
-  const toPin = Object.values(communities)
-    .slice(0, STANDARD_PIN_LIMIT)
-    .map(community => community.name);
-  const overLimit = Object.values(communities)[STANDARD_PIN_LIMIT].name;
+  const toPin = contactNames.slice(0, STANDARD_PIN_LIMIT);
+  const overLimit = contactNames[STANDARD_PIN_LIMIT];
 
   await test.step(TestSteps.USER_ACTIONS.PIN_CONVERSATIONS(STANDARD_PIN_LIMIT), async () => {
     // The standard limit applies, because the limit is ACCESS. Pinning up to it must not prompt either.

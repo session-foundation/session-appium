@@ -123,6 +123,46 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
   return { devices, prebuilt };
 }
 
+/**
+ * Alice on one device, with ten seeded contacts already in her conversation list.
+ *
+ * The mobile counterpart of desktop's `test_Alice_1W_10contacts`, and the seeded replacement for
+ * `joinCommunities(N)`: the other ten accounts exist on the swarm so their conversations appear, but
+ * only Alice gets a device — which is the saving, since community joins are the slowest setup here.
+ *
+ * Returns the contact names in seeded order so a spec can pin or reorder them without caring which
+ * they are.
+ */
+export async function open_Alice1_with_contacts({
+  platform,
+  testInfo,
+  iOSContext,
+}: WithPlatform & { testInfo: TestInfo; iOSContext?: IOSTestContext }) {
+  const stateToBuildKey = '1userWith10Contacts';
+  const appsToOpen = 1;
+  const result = await openAppsWithState({
+    platform,
+    appsToOpen,
+    stateToBuildKey,
+    groupName: undefined,
+    testInfo,
+    iOSContext,
+  });
+  result.devices[0].setDeviceIdentity('alice1');
+  // Only Alice's phrase: the contacts never get a device, so linking them would open ten apps to
+  // populate one list.
+  await linkDevices([result.devices[0]], [result.prebuilt.users[0].seedPhrase]);
+
+  const alice = toUser(result.prebuilt.users[0]);
+  const contactNames = result.prebuilt.users.slice(1).map(u => u.userName);
+
+  return {
+    device: result.devices[0],
+    alice,
+    contactNames,
+  };
+}
+
 export async function open_Alice1_Bob1_friends({
   platform,
   focusFriendsConvo,
