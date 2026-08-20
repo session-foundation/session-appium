@@ -1,7 +1,7 @@
 import type { ProContext } from '../test/utils/pro_context';
 
 /**
- * Desktop's half of the shared Pro mock vocabulary, extending `ProMockContext` as `IOSTestContext`
+ * Desktop's half of the shared Pro mock vocabulary, extending `ProMockContext` as `MobileTestContext`
  * does so the two shared fields mean the same thing in a Desktop spec as in a `bothPlatformsIt` one.
  *
  * Display-level only: these produce no proof, so they cover screens, copy and CTAs and never

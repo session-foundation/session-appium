@@ -25,7 +25,7 @@ dotenv.config({ quiet: true });
  * NOT anything requiring a real cryptographic proof (a Pro badge a peer verifies, long messages the
  * network accepts). Those need a genuine entitlement via `makeAccountPro`.
  *
- * `sessionProEnabled` is the master gate: the other `pro*` values are ignored unless it is `'true'`.
+ * `iosSessionProEnabled` is the master gate: the other `pro*` values are ignored unless it is `'true'`.
  * Every mock also accepts `'useActual'`, meaning "don't mock this one".
  *
  * The values are the app's own wire codes rather than prettier synonyms, so the test contract reads
@@ -34,21 +34,24 @@ dotenv.config({ quiet: true });
  * a failure, so the typo has to be caught here.
  */
 /**
- * Note the name understates the reach: the `ProContext` half of this is passed to ANDROID too, by
- * `openAppOnPlatform`, which is why the shared helpers take it as `testContext` rather than
- * `iOSContext`. Only the iOS-specific fields below are dropped on the Android path.
+ * The test context both mobile platforms receive.
+ *
+ * `ProContext` is the shared half and is read on iOS AND Android: `openAppOnPlatform` forwards this whole
+ * object to `openAndroidApp`, which turns those fields into launch-intent extras. Everything declared
+ * below is iOS-only and is dropped on the Android path, which is what the `ios` prefix marks — Android
+ * takes its Pro enablement and its backend from the AQA build variant instead of from here.
  */
-export type IOSTestContext = ProContext & {
-  customInstallTime?: string;
-  sessionProEnabled?: string;
+export type MobileTestContext = ProContext & {
+  iosCustomInstallTime?: string;
+  iosSessionProEnabled?: string;
   /** Platform the subscription was originally purchased on. */
-  proOriginatingPlatform?: 'android' | 'iOS' | 'useActual';
+  iosProOriginatingPlatform?: 'android' | 'iOS' | 'useActual';
   /** Whether the store account matches the one that bought the subscription. */
-  proOriginatingAccount?: 'nonOriginatingAccount' | 'originatingAccount' | 'useActual';
+  iosProOriginatingAccount?: 'nonOriginatingAccount' | 'originatingAccount' | 'useActual';
   /** Whether a refund has already been requested. */
-  proRefundingStatus?: 'notRefunding' | 'refunding' | 'useActual';
+  iosProRefundingStatus?: 'notRefunding' | 'refunding' | 'useActual';
   /** Build variant, which decides whether billing UI is reachable at all (`ipa` has no billing). */
-  proBuildVariant?:
+  iosProBuildVariant?:
     | 'apk'
     | 'appStore'
     | 'development'
@@ -66,29 +69,29 @@ export type IOSTestContext = ProContext & {
    * rather than a harness gap. `openAppTwoDevices`/`openAppThreeDevices` pass one context to every
    * device, so this holds as long as no per-device context is introduced.
    */
-  proBackendUrl?: string;
+  iosProBackendUrl?: string;
   /** The backend's **Ed25519** signing key (`signing_pubkey` from its `GET /status`), not the x25519 form. */
-  proBackendPubkey?: string;
+  iosProBackendPubkey?: string;
 };
 
 /**
- * `IOSTestContext` field -> the env key the app reads. The app's `EnvironmentVariable` enum is
+ * `MobileTestContext` field -> the env key the app reads. The app's `EnvironmentVariable` enum is
  * `String`-backed with no explicit raw values, so each key is that case's name verbatim; the two
  * pre-existing entries are here too rather than staying as one-off assignments.
  */
-const IOS_TEST_ENV_KEYS: Record<keyof IOSTestContext, string> = {
-  customInstallTime: 'customFirstInstallDateTime',
-  sessionProEnabled: 'sessionPro',
+const IOS_TEST_ENV_KEYS: Record<keyof MobileTestContext, string> = {
+  iosCustomInstallTime: 'customFirstInstallDateTime',
+  iosSessionProEnabled: 'sessionPro',
   proBackendStatus: 'mockCurrentUserSessionProBackendStatus',
   proLoadingState: 'mockCurrentUserSessionProLoadingState',
-  proOriginatingPlatform: 'mockCurrentUserSessionProOriginatingPlatform',
-  proOriginatingAccount: 'mockCurrentUserOriginatingAccount',
-  proRefundingStatus: 'mockCurrentUserSessionProRefundingStatus',
-  proBuildVariant: 'mockCurrentUserSessionProBuildVariant',
+  iosProOriginatingPlatform: 'mockCurrentUserSessionProOriginatingPlatform',
+  iosProOriginatingAccount: 'mockCurrentUserOriginatingAccount',
+  iosProRefundingStatus: 'mockCurrentUserSessionProRefundingStatus',
+  iosProBuildVariant: 'mockCurrentUserSessionProBuildVariant',
   proAccessExpiry: 'mockCurrentUserAccessExpiryTimestamp',
   proProof: 'mockCurrentUserSessionProProof',
-  proBackendUrl: 'customProBackendUrl',
-  proBackendPubkey: 'customProBackendPubkey',
+  iosProBackendUrl: 'customProBackendUrl',
+  iosProBackendPubkey: 'customProBackendPubkey',
   forceProRevocationRefresh: 'forceProRevocationRefresh',
 };
 
@@ -102,11 +105,13 @@ type AppiumXCUITestCapabilities = Capabilities.AppiumXCUITestCapabilities;
  * default reads a QA-signed proof as invalid, strips the Pro content and stores the sender as non-Pro —
  * which looks like an app bug rather than a harness gap.
  */
-export const IOS_PRO_CONTEXT: IOSTestContext = (() => {
+export const IOS_PRO_CONTEXT: MobileTestContext = (() => {
   const proBackend = getProBackendOverride();
   return {
-    sessionProEnabled: 'true',
-    ...(proBackend ? { proBackendUrl: proBackend.url, proBackendPubkey: proBackend.pubkey } : {}),
+    iosSessionProEnabled: 'true',
+    ...(proBackend
+      ? { iosProBackendUrl: proBackend.url, iosProBackendPubkey: proBackend.pubkey }
+      : {}),
   };
 })();
 
@@ -136,7 +141,7 @@ export const IOS_PRO_ACCESS_DAYS = 30;
  * features are all switched off. The two were one lever until 2026-08-14; anything that means "this
  * user is Pro" now has to say both halves.
  */
-export function iosActiveProContext(days: number = IOS_PRO_ACCESS_DAYS): IOSTestContext {
+export function iosActiveProContext(days: number = IOS_PRO_ACCESS_DAYS): MobileTestContext {
   return {
     ...IOS_PRO_CONTEXT,
     proBackendStatus: 'active',
@@ -352,7 +357,7 @@ export function capabilityIsValid(
 
 export function getIosCapabilities(
   capabilitiesIndex: CapabilitiesIndexType,
-  customCaps?: IOSTestContext
+  customCaps?: MobileTestContext
 ): W3CXCUITestDriverCaps {
   const capabilities = getCapabilities();
   if (capabilitiesIndex >= capabilities.length) {
@@ -373,7 +378,7 @@ export function getIosCapabilities(
   // the app on its real value — the same thing an explicit 'useActual' asks for.
   const customEnv: Record<string, string> = {};
   for (const [field, envKey] of Object.entries(IOS_TEST_ENV_KEYS)) {
-    const value = customCaps?.[field as keyof IOSTestContext];
+    const value = customCaps?.[field as keyof MobileTestContext];
     if (value) {
       // The launch-arg env is string-valued, so a boolean hook arrives here as `true` and has to be
       // spelled out. `'true'` rather than `'1'` because the app parses the two consistently and the

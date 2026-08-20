@@ -16,7 +16,7 @@ import {
 import type { DeviceWrapper } from '../../types/DeviceWrapper';
 
 import { ConversationItem } from '../locators/home';
-import { IOSTestContext } from '../utils/capabilities_ios';
+import { MobileTestContext } from '../utils/capabilities_ios';
 import { resolveNetworkTarget } from '../utils/devnet';
 import { openAppMultipleDevices, type SupportedPlatformsType } from '../utils/open_app';
 import { restoreAccountNoFallback } from '../utils/restore_account';
@@ -98,7 +98,7 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
   stateToBuildKey: K;
   groupName: K extends WithGroupStateKey ? string : undefined;
   testInfo: TestInfo;
-  testContext?: IOSTestContext;
+  testContext?: MobileTestContext;
 }) {
   // Resolved BEFORE the Promise.all rather than inside it. As an array element the `await` ran after
   // `openAppMultipleDevices` had already been invoked, so a network-resolution failure (a mismatch, or
@@ -128,7 +128,7 @@ export async function open_Alice1_with_contacts({
   platform,
   testInfo,
   testContext,
-}: WithPlatform & { testInfo: TestInfo; testContext?: IOSTestContext }) {
+}: WithPlatform & { testInfo: TestInfo; testContext?: MobileTestContext }) {
   const stateToBuildKey = '1userWith10Contacts';
   const appsToOpen = 1;
   const result = await openAppsWithState({
@@ -159,7 +159,7 @@ export async function open_Alice1_Bob1_friends({
   focusFriendsConvo,
   testInfo,
   testContext,
-}: WithPlatform & WithFocusFriendsConvo & { testInfo: TestInfo; testContext?: IOSTestContext }) {
+}: WithPlatform & WithFocusFriendsConvo & { testInfo: TestInfo; testContext?: MobileTestContext }) {
   const stateToBuildKey = '2friends';
   const appsToOpen = 2;
   const result = await openAppsWithState({
@@ -212,7 +212,7 @@ export async function open_Alice1_Bob1_Charlie1_friends_group({
   WithFocusGroupConvo & {
     groupName: string;
     testInfo: TestInfo;
-    testContext?: IOSTestContext;
+    testContext?: MobileTestContext;
   }) {
   const stateToBuildKey = '3friendsInGroup';
   const appsToOpen = 3;
@@ -273,7 +273,7 @@ export async function open_Alice2_Bob1_Charlie1_friends_group({
   WithFocusGroupConvo & {
     groupName: string;
     testInfo: TestInfo;
-    testContext?: IOSTestContext;
+    testContext?: MobileTestContext;
   }) {
   const stateToBuildKey = '3friendsInGroup';
   const appsToOpen = 4;
@@ -339,7 +339,7 @@ export async function open_Alice1_Bob1_Charlie1_Unknown1({
   WithFocusGroupConvo & {
     groupName: string;
     testInfo: TestInfo;
-    testContext?: IOSTestContext;
+    testContext?: MobileTestContext;
   }) {
   const stateToBuildKey = '3friendsInGroup';
   const appsToOpen = 4;
@@ -405,7 +405,7 @@ export async function open_Alice1({
   platform,
   testInfo,
   testContext,
-}: WithPlatform & { testInfo: TestInfo; testContext?: IOSTestContext }) {
+}: WithPlatform & { testInfo: TestInfo; testContext?: MobileTestContext }) {
   const result = await openAppsWithState({
     platform,
     appsToOpen: 1,
@@ -425,7 +425,7 @@ export async function open_Alice2({
   platform,
   testInfo,
   testContext,
-}: WithPlatform & { testInfo: TestInfo; testContext?: IOSTestContext }) {
+}: WithPlatform & { testInfo: TestInfo; testContext?: MobileTestContext }) {
   const prebuiltStateKey = '1user';
   const appsToOpen = 2;
   const result = await openAppsWithState({
@@ -467,7 +467,7 @@ export async function open_Alice1_bob1_notfriends({
   platform,
   testInfo,
   testContext,
-}: WithPlatform & { testInfo: TestInfo; testContext?: IOSTestContext }) {
+}: WithPlatform & { testInfo: TestInfo; testContext?: MobileTestContext }) {
   const appsToOpen = 2;
   const result = await openAppsWithState({
     platform,
@@ -507,7 +507,7 @@ export async function open_Alice2_Bob1_friends({
   focusFriendsConvo,
   testInfo,
   testContext,
-}: WithPlatform & WithFocusFriendsConvo & { testInfo: TestInfo; testContext?: IOSTestContext }) {
+}: WithPlatform & WithFocusFriendsConvo & { testInfo: TestInfo; testContext?: MobileTestContext }) {
   const prebuiltStateKey = '2friends';
   const appsToOpen = 3;
   const result = await openAppsWithState({

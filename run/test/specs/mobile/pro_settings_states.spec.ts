@@ -18,7 +18,7 @@ import {
   UpdateProAccessRow,
 } from '../../locators/pro';
 import { UserSettings } from '../../locators/settings';
-import { IOSTestContext } from '../../utils/capabilities_ios';
+import { MobileTestContext } from '../../utils/capabilities_ios';
 import { newUser } from '../../utils/create_account';
 import {
   closeApp,
@@ -49,7 +49,7 @@ import {
  *
  * Cross-platform via the shared `ProMockContext` fields: iOS reads them as launch-arg env, Android as
  * intent extras that `QaLaunchConfig` writes to the preferences its debug menu already drives. Only
- * `proBackendStatus` and `proLoadingState` cross over — `sessionProEnabled` and `proAccessExpiry` are
+ * `proBackendStatus` and `proLoadingState` cross over — `iosSessionProEnabled` and `proAccessExpiry` are
  * iOS-specific and are ignored on Android, which reaches the same states through its own fixtures.
  */
 
@@ -106,7 +106,7 @@ bothPlatformsIt({
 async function openAppAsNewUser(
   platform: SupportedPlatformsType,
   testInfo: TestInfo,
-  testContext: IOSTestContext
+  testContext: MobileTestContext
 ) {
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, testContext);
@@ -119,7 +119,7 @@ async function openAppAsNewUser(
 async function openSettingsAsNewUser(
   platform: SupportedPlatformsType,
   testInfo: TestInfo,
-  testContext: IOSTestContext
+  testContext: MobileTestContext
 ) {
   const device = await openAppAsNewUser(platform, testInfo, testContext);
   await device.clickOnElementAll(new UserSettings(device));
@@ -128,7 +128,7 @@ async function openSettingsAsNewUser(
 
 async function proSettingsSubscribed(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const device = await openSettingsAsNewUser(platform, testInfo, {
-    sessionProEnabled: 'true',
+    iosSessionProEnabled: 'true',
     proBackendStatus: 'active',
     // The plan's state grants nothing; the proof is what every feature on this screen reads.
     proProof: 'valid',
@@ -181,7 +181,7 @@ async function proSettingsSubscribed(platform: SupportedPlatformsType, testInfo:
  */
 async function proSettingsExpired(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const device = await openAppAsNewUser(platform, testInfo, {
-    sessionProEnabled: 'true',
+    iosSessionProEnabled: 'true',
     proBackendStatus: 'expired',
     // Load-bearing, and only since the startup fetch gate landed: the CTA arms on a CONFIRMED status,
     // and a client holding no proof and no access expiry is exactly the case the gate declines to
@@ -247,7 +247,7 @@ async function proSettingsExpired(platform: SupportedPlatformsType, testInfo: Te
  */
 async function proStatusChecking(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const device = await openSettingsAsNewUser(platform, testInfo, {
-    sessionProEnabled: 'true',
+    iosSessionProEnabled: 'true',
     proBackendStatus: 'never',
     proLoadingState: 'loading',
   });
@@ -268,7 +268,7 @@ async function proStatusChecking(platform: SupportedPlatformsType, testInfo: Tes
 
 async function proStatusError(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const device = await openSettingsAsNewUser(platform, testInfo, {
-    sessionProEnabled: 'true',
+    iosSessionProEnabled: 'true',
     proBackendStatus: 'never',
     proLoadingState: 'error',
   });

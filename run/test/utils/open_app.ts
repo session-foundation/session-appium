@@ -29,7 +29,7 @@ import {
   CapabilitiesIndexType,
   getIosCapabilities,
   iOSBundleId,
-  IOSTestContext,
+  MobileTestContext,
 } from './capabilities_ios';
 import { registerDevicesForTest } from './device_registry';
 import { androidNeedsQaConfigRelaunch } from './devnet_android';
@@ -43,7 +43,7 @@ export const openAppMultipleDevices = async (
   platform: SupportedPlatformsType,
   numberOfDevices: number,
   testInfo: TestInfo,
-  testContext?: IOSTestContext
+  testContext?: MobileTestContext
 ): Promise<DeviceWrapper[]> => {
   // Create an array of promises for each device
   const devicePromises = Array.from({ length: numberOfDevices }, (_, index) =>
@@ -65,21 +65,21 @@ const openAppOnPlatform = async (
   platform: SupportedPlatformsType,
   capabilitiesIndex: CapabilitiesIndexType,
   testInfo: TestInfo,
-  testContext?: IOSTestContext
+  testContext?: MobileTestContext
 ): Promise<{
   device: DeviceWrapper;
 }> => {
   console.info('starting capabilitiesIndex', capabilitiesIndex, platform);
   return platform === 'ios'
     ? openiOSApp(capabilitiesIndex, testInfo, testContext)
-    : // Only the shared Pro mock fields cross over; the rest of IOSTestContext is iOS-specific.
+    : // Only the shared Pro mock fields cross over; the rest of MobileTestContext is iOS-specific.
       openAndroidApp(capabilitiesIndex, testInfo, testContext);
 };
 
 export const openAppOnPlatformSingleDevice = async (
   platform: SupportedPlatformsType,
   testInfo: TestInfo,
-  testContext?: IOSTestContext
+  testContext?: MobileTestContext
 ): Promise<{
   device: DeviceWrapper;
 }> => {
@@ -93,7 +93,7 @@ export const openAppOnPlatformSingleDevice = async (
 export const openAppTwoDevices = async (
   platform: SupportedPlatformsType,
   testInfo: TestInfo,
-  testContext?: IOSTestContext
+  testContext?: MobileTestContext
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
@@ -113,7 +113,7 @@ export const openAppTwoDevices = async (
 export const openAppThreeDevices = async (
   platform: SupportedPlatformsType,
   testInfo: TestInfo,
-  testContext?: IOSTestContext
+  testContext?: MobileTestContext
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
@@ -139,7 +139,7 @@ export const openAppThreeDevices = async (
 export const openAppFourDevices = async (
   platform: SupportedPlatformsType,
   testInfo: TestInfo,
-  testContext?: IOSTestContext
+  testContext?: MobileTestContext
 ): Promise<{
   device1: DeviceWrapper;
   device2: DeviceWrapper;
@@ -374,7 +374,7 @@ const cleanPermissions = async (
 const openiOSApp = async (
   capabilitiesIndex: CapabilitiesIndexType,
   testInfo: TestInfo,
-  iOSContext?: IOSTestContext
+  iOSContext?: MobileTestContext
 ): Promise<{
   device: DeviceWrapper;
 }> => {

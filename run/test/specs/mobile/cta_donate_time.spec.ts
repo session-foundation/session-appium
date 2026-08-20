@@ -5,7 +5,7 @@ import { TestSteps } from '../../../types/allure';
 import { iosIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
 import { PlusButton } from '../../locators/home';
-import { IOSTestContext } from '../../utils/capabilities_ios';
+import { MobileTestContext } from '../../utils/capabilities_ios';
 import { newUser } from '../../utils/create_account';
 import {
   closeApp,
@@ -31,8 +31,8 @@ iosIt({
 });
 
 async function donateCTAShowsSevenDaysAgo(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const iosContext: IOSTestContext = {
-    customInstallTime: setIOSFirstInstallDate({ days: -7, minutes: -2 }),
+  const iosContext: MobileTestContext = {
+    iosCustomInstallTime: setIOSFirstInstallDate({ days: -7, minutes: -2 }),
   };
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, iosContext);
@@ -65,8 +65,8 @@ async function donateCTADoesntShowSixDaysAgo(platform: SupportedPlatformsType, t
   // conversation list appears), so the gap below has to outlast the whole test — onboarding
   // included — or the account ages past 7 days mid-run and the CTA legitimately appears.
   // Anything under 7 days exercises the same branch, so the margin costs no coverage.
-  const iosContext: IOSTestContext = {
-    customInstallTime: setIOSFirstInstallDate({ days: -6, hours: -23 }),
+  const iosContext: MobileTestContext = {
+    iosCustomInstallTime: setIOSFirstInstallDate({ days: -6, hours: -23 }),
   };
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, iosContext);
