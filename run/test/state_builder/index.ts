@@ -392,6 +392,35 @@ export async function open_Alice1_Bob1_Charlie1_Unknown1({
   };
 }
 
+/**
+ * Alice, seeded, on one device and nothing else.
+ *
+ * The seeded account carries its own recovery phrase, so anything deriving a key from it — the Pro
+ * master key, for one — needs no onboarding to read it back.
+ *
+ * `open_Alice1_with_contacts` is this plus ten seeded contacts, which are the bulk of that fixture's
+ * setup cost.
+ */
+export async function open_Alice1({
+  platform,
+  testInfo,
+  testContext,
+}: WithPlatform & { testInfo: TestInfo; testContext?: IOSTestContext }) {
+  const result = await openAppsWithState({
+    platform,
+    appsToOpen: 1,
+    stateToBuildKey: '1user',
+    groupName: undefined,
+    testInfo,
+    testContext,
+  });
+  result.devices[0].setDeviceIdentity('alice1');
+  const alice = result.prebuilt.users[0];
+  await linkDevices([result.devices[0]], [alice.seedPhrase]);
+
+  return { device: result.devices[0], alice };
+}
+
 export async function open_Alice2({
   platform,
   testInfo,
