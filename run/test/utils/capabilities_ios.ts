@@ -33,6 +33,11 @@ dotenv.config({ quiet: true });
  * value is silently ignored by the app, which would yield a passing *default-state* test rather than
  * a failure, so the typo has to be caught here.
  */
+/**
+ * Note the name understates the reach: the `ProContext` half of this is passed to ANDROID too, by
+ * `openAppOnPlatform`, which is why the shared helpers take it as `testContext` rather than
+ * `iOSContext`. Only the iOS-specific fields below are dropped on the Android path.
+ */
 export type IOSTestContext = ProContext & {
   customInstallTime?: string;
   sessionProEnabled?: string;

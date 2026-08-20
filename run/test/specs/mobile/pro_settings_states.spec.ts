@@ -106,10 +106,10 @@ bothPlatformsIt({
 async function openAppAsNewUser(
   platform: SupportedPlatformsType,
   testInfo: TestInfo,
-  iosContext: IOSTestContext
+  testContext: IOSTestContext
 ) {
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, iosContext);
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, testContext);
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
     return { device };
   });
@@ -119,9 +119,9 @@ async function openAppAsNewUser(
 async function openSettingsAsNewUser(
   platform: SupportedPlatformsType,
   testInfo: TestInfo,
-  iosContext: IOSTestContext
+  testContext: IOSTestContext
 ) {
-  const device = await openAppAsNewUser(platform, testInfo, iosContext);
+  const device = await openAppAsNewUser(platform, testInfo, testContext);
   await device.clickOnElementAll(new UserSettings(device));
   return device;
 }

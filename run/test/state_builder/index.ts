@@ -92,13 +92,13 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
   groupName,
   stateToBuildKey,
   testInfo,
-  iOSContext,
+  testContext,
 }: WithPlatform & {
   appsToOpen: A;
   stateToBuildKey: K;
   groupName: K extends WithGroupStateKey ? string : undefined;
   testInfo: TestInfo;
-  iOSContext?: IOSTestContext;
+  testContext?: IOSTestContext;
 }) {
   // Resolved BEFORE the Promise.all rather than inside it. As an array element the `await` ran after
   // `openAppMultipleDevices` had already been invoked, so a network-resolution failure (a mismatch, or
@@ -107,7 +107,7 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
   const network = await resolveNetworkTarget([platform]);
 
   const [devices, prebuilt] = await Promise.all([
-    openAppMultipleDevices(platform, appsToOpen, testInfo, iOSContext),
+    openAppMultipleDevices(platform, appsToOpen, testInfo, testContext),
     buildStateForTest(stateToBuildKey, groupName, network),
   ]);
 
@@ -127,8 +127,8 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
 export async function open_Alice1_with_contacts({
   platform,
   testInfo,
-  iOSContext,
-}: WithPlatform & { testInfo: TestInfo; iOSContext?: IOSTestContext }) {
+  testContext,
+}: WithPlatform & { testInfo: TestInfo; testContext?: IOSTestContext }) {
   const stateToBuildKey = '1userWith10Contacts';
   const appsToOpen = 1;
   const result = await openAppsWithState({
@@ -137,7 +137,7 @@ export async function open_Alice1_with_contacts({
     stateToBuildKey,
     groupName: undefined,
     testInfo,
-    iOSContext,
+    testContext,
   });
   result.devices[0].setDeviceIdentity('alice1');
   // Only Alice's phrase: the contacts never get a device, so linking them would open ten apps to
@@ -158,8 +158,8 @@ export async function open_Alice1_Bob1_friends({
   platform,
   focusFriendsConvo,
   testInfo,
-  iOSContext,
-}: WithPlatform & WithFocusFriendsConvo & { testInfo: TestInfo; iOSContext?: IOSTestContext }) {
+  testContext,
+}: WithPlatform & WithFocusFriendsConvo & { testInfo: TestInfo; testContext?: IOSTestContext }) {
   const stateToBuildKey = '2friends';
   const appsToOpen = 2;
   const result = await openAppsWithState({
@@ -168,7 +168,7 @@ export async function open_Alice1_Bob1_friends({
     stateToBuildKey,
     groupName: undefined,
     testInfo,
-    iOSContext,
+    testContext,
   });
   result.devices[0].setDeviceIdentity('alice1');
   result.devices[1].setDeviceIdentity('bob1');
@@ -207,12 +207,12 @@ export async function open_Alice1_Bob1_Charlie1_friends_group({
   groupName,
   focusGroupConvo,
   testInfo,
-  iOSContext,
+  testContext,
 }: WithPlatform &
   WithFocusGroupConvo & {
     groupName: string;
     testInfo: TestInfo;
-    iOSContext?: IOSTestContext;
+    testContext?: IOSTestContext;
   }) {
   const stateToBuildKey = '3friendsInGroup';
   const appsToOpen = 3;
@@ -222,7 +222,7 @@ export async function open_Alice1_Bob1_Charlie1_friends_group({
     stateToBuildKey,
     groupName,
     testInfo,
-    iOSContext,
+    testContext,
   });
   result.devices[0].setDeviceIdentity('alice1');
   result.devices[1].setDeviceIdentity('bob1');
@@ -268,12 +268,12 @@ export async function open_Alice2_Bob1_Charlie1_friends_group({
   groupName,
   focusGroupConvo,
   testInfo,
-  iOSContext,
+  testContext,
 }: WithPlatform &
   WithFocusGroupConvo & {
     groupName: string;
     testInfo: TestInfo;
-    iOSContext?: IOSTestContext;
+    testContext?: IOSTestContext;
   }) {
   const stateToBuildKey = '3friendsInGroup';
   const appsToOpen = 4;
@@ -283,7 +283,7 @@ export async function open_Alice2_Bob1_Charlie1_friends_group({
     stateToBuildKey,
     groupName,
     testInfo,
-    iOSContext,
+    testContext,
   });
   result.devices[0].setDeviceIdentity('alice1');
   result.devices[1].setDeviceIdentity('bob1');
@@ -334,12 +334,12 @@ export async function open_Alice1_Bob1_Charlie1_Unknown1({
   groupName,
   focusGroupConvo = true,
   testInfo,
-  iOSContext,
+  testContext,
 }: WithPlatform &
   WithFocusGroupConvo & {
     groupName: string;
     testInfo: TestInfo;
-    iOSContext?: IOSTestContext;
+    testContext?: IOSTestContext;
   }) {
   const stateToBuildKey = '3friendsInGroup';
   const appsToOpen = 4;
@@ -349,7 +349,7 @@ export async function open_Alice1_Bob1_Charlie1_Unknown1({
     stateToBuildKey,
     groupName,
     testInfo,
-    iOSContext,
+    testContext,
   });
   result.devices[0].setDeviceIdentity('alice1');
   result.devices[1].setDeviceIdentity('bob1');
@@ -395,8 +395,8 @@ export async function open_Alice1_Bob1_Charlie1_Unknown1({
 export async function open_Alice2({
   platform,
   testInfo,
-  iOSContext,
-}: WithPlatform & { testInfo: TestInfo; iOSContext?: IOSTestContext }) {
+  testContext,
+}: WithPlatform & { testInfo: TestInfo; testContext?: IOSTestContext }) {
   const prebuiltStateKey = '1user';
   const appsToOpen = 2;
   const result = await openAppsWithState({
@@ -405,7 +405,7 @@ export async function open_Alice2({
     stateToBuildKey: prebuiltStateKey,
     groupName: undefined,
     testInfo,
-    iOSContext,
+    testContext,
   });
   result.devices[0].setDeviceIdentity('alice1');
   result.devices[1].setDeviceIdentity('alice2');
@@ -437,8 +437,8 @@ export async function open_Alice2({
 export async function open_Alice1_bob1_notfriends({
   platform,
   testInfo,
-  iOSContext,
-}: WithPlatform & { testInfo: TestInfo; iOSContext?: IOSTestContext }) {
+  testContext,
+}: WithPlatform & { testInfo: TestInfo; testContext?: IOSTestContext }) {
   const appsToOpen = 2;
   const result = await openAppsWithState({
     platform,
@@ -446,7 +446,7 @@ export async function open_Alice1_bob1_notfriends({
     stateToBuildKey: '2users',
     groupName: undefined,
     testInfo,
-    iOSContext,
+    testContext,
   });
   result.devices[0].setDeviceIdentity('alice1');
   result.devices[1].setDeviceIdentity('bob1');
@@ -477,8 +477,8 @@ export async function open_Alice2_Bob1_friends({
   platform,
   focusFriendsConvo,
   testInfo,
-  iOSContext,
-}: WithPlatform & WithFocusFriendsConvo & { testInfo: TestInfo; iOSContext?: IOSTestContext }) {
+  testContext,
+}: WithPlatform & WithFocusFriendsConvo & { testInfo: TestInfo; testContext?: IOSTestContext }) {
   const prebuiltStateKey = '2friends';
   const appsToOpen = 3;
   const result = await openAppsWithState({
@@ -487,7 +487,7 @@ export async function open_Alice2_Bob1_friends({
     stateToBuildKey: prebuiltStateKey,
     groupName: undefined,
     testInfo,
-    iOSContext,
+    testContext,
   });
   result.devices[0].setDeviceIdentity('alice1');
   result.devices[1].setDeviceIdentity('alice2');

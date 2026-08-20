@@ -43,7 +43,7 @@ async function proBadgeVisibleToOthers(platform: SupportedPlatformsType, testInf
       platform,
       focusFriendsConvo: false,
       testInfo,
-      iOSContext: IOS_PRO_CONTEXT,
+      testContext: IOS_PRO_CONTEXT,
     });
   });
   const { alice1, bob1 } = devices;

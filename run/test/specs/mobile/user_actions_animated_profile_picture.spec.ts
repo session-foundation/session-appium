@@ -155,7 +155,7 @@ async function proAnimatedDPShows(platform: SupportedPlatformsType, testInfo: Te
       platform,
       focusFriendsConvo: false,
       testInfo,
-      iOSContext: IOS_PRO_CONTEXT,
+      testContext: IOS_PRO_CONTEXT,
     });
   });
   const { alice1, bob1 } = devices;

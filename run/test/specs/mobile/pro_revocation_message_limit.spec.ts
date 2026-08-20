@@ -121,7 +121,7 @@ async function proRevocationMessageLimit(platform: SupportedPlatformsType, testI
     // Not focused: every step here starts from the conversation list, and a relaunch returns there anyway.
     focusFriendsConvo: false,
     testInfo,
-    iOSContext: { ...IOS_PRO_CONTEXT, forceProRevocationRefresh: true },
+    testContext: { ...IOS_PRO_CONTEXT, forceProRevocationRefresh: true },
   });
   const { alice1, bob1 } = devices;
 

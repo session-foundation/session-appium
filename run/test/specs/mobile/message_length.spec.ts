@@ -116,7 +116,7 @@ for (const testCase of messageLengthTestCases) {
             platform,
             focusFriendsConvo: true,
             testInfo,
-            iOSContext: IOS_PRO_CONTEXT,
+            testContext: IOS_PRO_CONTEXT,
           });
         });
         device = devices.alice1;

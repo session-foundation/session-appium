@@ -101,7 +101,7 @@ async function nonProPinnedLimit(platform: SupportedPlatformsType, testInfo: Tes
   // Seeded contacts rather than joined communities: this needs a conversation list longer than the
   // limit, and joining six communities was the slowest part of the run.
   const { device, contactNames } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    return await open_Alice1_with_contacts({ platform, testInfo, iOSContext: IOS_PRO_CONTEXT });
+    return await open_Alice1_with_contacts({ platform, testInfo, testContext: IOS_PRO_CONTEXT });
   });
   let beforeOrder: string[] = [];
   await test.step('Capture conversation order before pinning', async () => {
@@ -143,7 +143,7 @@ async function proPinnedLimit(platform: SupportedPlatformsType, testInfo: TestIn
   // Seeded contacts rather than joined communities. The grant still has to be real: the pinned limit
   // is an ACCESS question, so it reads the proof rather than the plan's state.
   const { device, alice, contactNames } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    return await open_Alice1_with_contacts({ platform, testInfo, iOSContext: IOS_PRO_CONTEXT });
+    return await open_Alice1_with_contacts({ platform, testInfo, testContext: IOS_PRO_CONTEXT });
   });
   await makeAccountPro({ user: alice, platform });
   await observeProGrant(device);

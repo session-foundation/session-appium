@@ -64,7 +64,7 @@ async function proRevocationRecipient(platform: SupportedPlatformsType, testInfo
     // "Conversation list item", which reads as the contact not having synced.
     focusFriendsConvo: false,
     testInfo,
-    iOSContext: { ...IOS_PRO_CONTEXT, forceProRevocationRefresh: true },
+    testContext: { ...IOS_PRO_CONTEXT, forceProRevocationRefresh: true },
   });
   const { alice1, bob1 } = devices;
 
