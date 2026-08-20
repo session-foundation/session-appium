@@ -2,6 +2,7 @@ import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W_Bob_1W_friends } from '../../../desktop/sessionTest';
 import {
   COUNTDOWN_START_THRESHOLD,
+  MESSAGE_DELIVERY_TIMEOUT_MS,
   PRO_MAX_CHARS,
   STANDARD_MAX_CHARS,
 } from '../../../shared/constants';
@@ -89,7 +90,7 @@ test_Alice_1W_Bob_1W_friends(
     // The control: Bob stores 9,800 characters from Alice while her proof is good. This establishes both
     // that he knows her as Pro and that he is willing to keep a message this long — the two innocent
     // explanations for the truncation asserted below.
-    await bob.waitForMessage(late('HONOURED'), 90_000);
+    await bob.waitForMessage(late('HONOURED'), MESSAGE_DELIVERY_TIMEOUT_MS);
 
     await revokeAccountPro({
       user: alice.getUser(),
@@ -115,7 +116,7 @@ test_Alice_1W_Bob_1W_friends(
 
     // `EARLY` first and separately: it proves the message arrived, so the absence of `LATE` afterwards
     // can only mean it was cut.
-    await bob.waitForMessage(early('REFUSED'), 90_000);
+    await bob.waitForMessage(early('REFUSED'), MESSAGE_DELIVERY_TIMEOUT_MS);
     // Rethrown with the meaning attached: the shared helper reports only "Found message-content, oops..",
     // which for this spec's central assertion names neither the marker nor what its presence implies.
     try {

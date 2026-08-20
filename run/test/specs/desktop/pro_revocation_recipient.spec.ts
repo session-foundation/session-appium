@@ -1,5 +1,6 @@
 import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W_Bob_1W_friends } from '../../../desktop/sessionTest';
+import { MESSAGE_DELIVERY_TIMEOUT_MS } from '../../../shared/constants';
 import { revokeAccountPro } from '../../../shared/pro_grant';
 
 /**
@@ -53,7 +54,7 @@ test_Alice_1W_Bob_1W_friends(
     await alice.sendMessage(message);
     // Waited on before the badge, because the badge follows the sender's PROFILE rather than the message
     // and the profile rides along with it. Asserting the badge first can race the delivery.
-    await bob.waitForMessage(message, 90_000);
+    await bob.waitForMessage(message, MESSAGE_DELIVERY_TIMEOUT_MS);
 
     // The control, and the half a mock cannot reach: Bob has verified a real signature against the
     // backend's key. Measured against a display-level fixture, no badge appears here at all.
