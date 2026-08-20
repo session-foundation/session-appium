@@ -49,3 +49,19 @@ export const COUNTDOWN_START_THRESHOLD = 200;
 
 /** Pinned conversations allowed without Pro. */
 export const STANDARD_PIN_LIMIT = 5;
+
+/**
+ * How long to wait for a message to cross the network and render on the recipient.
+ *
+ * One value, shared, because these waits were previously picked per spec and had drifted to 90s on the Pro
+ * ones — a number nobody had to defend.
+ *
+ * Sized for the SLOWEST legitimate case, which is a delivery arriving after the recipient has been
+ * restarted: it has to reconnect and poll before it can receive, and that is much slower than the steady
+ * state. Measured on Android, both directions: **20s fails, 60s passes.** Steady-state delivery is far
+ * quicker — a desktop spec that onboards two seeded accounts, grants Pro, sends two 9,800-character
+ * messages, restarts a client and asserts on both copies finishes in 14s end to end.
+ *
+ * So do not tune this down against a steady-state measurement; that is the mistake it already caused once.
+ */
+export const MESSAGE_DELIVERY_TIMEOUT_MS = 45_000;

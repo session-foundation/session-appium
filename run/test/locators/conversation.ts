@@ -561,6 +561,42 @@ export class MessageLengthOkayButton extends LocatorsInterface {
   }
 }
 
+/**
+ * The "Read more" affordance on a collapsed message bubble. **Android only, by design.**
+ *
+ * Android needs it: a collapsed bubble puts the hidden remainder out of reach, so a spec asserting on the
+ * tail of a long message has to expand first. The id is on the view whose BOUNDS are the tap target rather
+ * than the one owning the click listener — the handler sits on the content view and hit-tests the touch
+ * against this view's rect — so a coordinate tap works and a synthetic click without coordinates does not.
+ * `accessibility id` rather than `id`, because Android carries this as a `contentDescription`.
+ *
+ * 🔴 **iOS deliberately has no equivalent, and needs none.** There, `readMoreButton` is a subview of
+ * `bubbleView`, which sets `isAccessibilityElement = true` — that makes the bubble a leaf, so no identifier
+ * on the subview can reach XCUITest. Measured, not assumed: an id was added and confirmed compiled into the
+ * app, and the element still could not be found (20s, 120 attempts). It is unnecessary anyway, because iOS
+ * carries a bubble's full text in its accessibility attributes whether or not it is visually collapsed, so
+ * `findMessageContaining` reads the tail without expanding.
+ *
+ * So specs gate expansion on Android with `runOnlyOnAndroid` rather than trying everywhere and swallowing
+ * the failure: an opportunistic attempt on iOS spends 20 seconds finding nothing, and hides a real
+ * difference between the platforms behind an apparent one.
+ */
+export class MessageReadMore extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'accessibility id', selector: 'message-read-more' } as const;
+      case 'ios':
+        throw new Error(
+          'MessageReadMore is Android-only: iOS flattens the message bubble into one accessibility ' +
+            'element, so no identifier on the Read more subview can be found. iOS needs no expansion — ' +
+            "the full text is in the bubble's accessibility attributes regardless. Gate the caller with " +
+            '`runOnlyOnAndroid`.'
+        );
+    }
+  }
+}
+
 export class MessageRequestAcceptDescription extends LocatorsInterface {
   public build() {
     const messageRequestsAcceptDescription = tStripped('messageRequestsAcceptDescription');

@@ -4,7 +4,12 @@ import { Conversation, CTA, LeftPane, ProSettings, Settings } from '../../../des
 import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W_Bob_1W_friends } from '../../../desktop/sessionTest';
 import { tStripped } from '../../../localizer/lib';
-import { COUNTDOWN_START_THRESHOLD, PRO_MAX_CHARS } from '../../../shared/constants';
+import {
+  COUNTDOWN_START_THRESHOLD,
+  MESSAGE_DELIVERY_TIMEOUT_MS,
+  PRO_MAX_CHARS,
+} from '../../../shared/constants';
+import { sleepFor } from '../../../shared/promise_utils';
 
 /** Lands the countdown on exactly the threshold, so the value asserted is the limit being applied. */
 const AT_PRO_THRESHOLD = PRO_MAX_CHARS - COUNTDOWN_START_THRESHOLD;
@@ -71,7 +76,7 @@ test_Alice_1W_Bob_1W_friends(
     // is time the plan was already burning, and sleeping the full length again doubled the run for
     // nothing.
     const lapsedAt = grantedAt + (PLAN_SECONDS + 2) * 1000;
-    await new Promise(r => setTimeout(r, Math.max(0, lapsedAt - Date.now())));
+    await sleepFor(Math.max(0, lapsedAt - Date.now()));
     await restartApp(alice, { pro: {} });
     await dismissAnyProCTA(alice, 2_000);
     // The relaunch lands on the conversation list, not in the conversation the fixture had open.
@@ -92,7 +97,7 @@ test_Alice_1W_Bob_1W_friends(
     // if the proof is genuinely signed and genuinely still valid. Measured with a mock, Bob receives the
     // first 2000 characters instead. Generous wait because this is the largest message the product
     // allows and it crosses the network.
-    await bob.waitForMessage(overhangMessage, 90_000);
+    await bob.waitForMessage(overhangMessage, MESSAGE_DELIVERY_TIMEOUT_MS);
 
     await alice.clickOn(LeftPane.settingsButton);
     await alice.clickOn(Settings.proMenuItem);

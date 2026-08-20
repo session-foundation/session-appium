@@ -1,12 +1,19 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import type { XPath } from '../../../types/testing';
-
 import { tStripped } from '../../../localizer/lib';
-import { COUNTDOWN_START_THRESHOLD, PRO_MAX_CHARS } from '../../../shared/constants';
+import {
+  COUNTDOWN_START_THRESHOLD,
+  MESSAGE_DELIVERY_TIMEOUT_MS,
+  PRO_MAX_CHARS,
+} from '../../../shared/constants';
 import { makeAccountPro } from '../../../shared/pro_grant';
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import { MessageInput, MessageLengthCountdown, SendButton } from '../../locators/conversation';
+import {
+  MessageInput,
+  MessageLengthCountdown,
+  MessageReadMore,
+  SendButton,
+} from '../../locators/conversation';
 import { CTAButtonNegative } from '../../locators/global';
 import { ConversationItem } from '../../locators/home';
 import {
@@ -18,6 +25,7 @@ import {
 } from '../../locators/pro';
 import { UserSettings } from '../../locators/settings';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
+import { runOnlyOnAndroid, sleepFor } from '../../utils';
 import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 import { observeProGrant } from '../../utils/pro_refresh';
@@ -97,7 +105,7 @@ async function proOverhang(platform: SupportedPlatformsType, testInfo: TestInfo)
     // To a deadline from the grant, not a fresh countdown: the time spent reaching Active was already
     // burning the plan.
     const lapsedAt = grantedAt + (PLAN_SECONDS + 2) * 1000;
-    await new Promise(r => setTimeout(r, Math.max(0, lapsedAt - Date.now())));
+    await sleepFor(Math.max(0, lapsedAt - Date.now()));
     await forceStopAndRestart(alice1);
   });
 
@@ -131,23 +139,21 @@ async function proOverhang(platform: SupportedPlatformsType, testInfo: TestInfo)
     // tree — so it has to be expanded before the tail can be read. OPPORTUNISTIC, because whether there
     // is anything to expand is itself the thing under test: a recipient that honoured the proof has
     // 9,800 characters and collapses; one that did not has 2,000 and shows no affordance at all.
-    const readMore = {
-      strategy: 'xpath' as const,
-      selector: `//*[contains(@text,"Read more") or contains(@label,"Read more")]` as XPath,
-    };
-    try {
-      await bob1.waitForTextElementToBePresent({ ...readMore, maxWait: 20_000 });
-      await bob1.clickOnElementAll(readMore);
-    } catch {
-      // Nothing to expand. Either the message is short enough to render whole, or it arrived truncated —
-      // the tail assertion below is what separates those.
-    }
-    await bob1.waitForTextElementToBePresent({
-      strategy: 'xpath',
-      selector:
-        `//*[contains(@text,"${TAIL_MARKER}") or contains(@label,"${TAIL_MARKER}") or contains(@name,"${TAIL_MARKER}")]` as XPath,
-      maxWait: 60_000,
+    // 🔴 Android only, and the deviation is real rather than a workaround. Android puts a collapsed
+    // bubble's remainder out of reach, so the tail has to be expanded before it can be read. iOS carries
+    // the full text in the bubble's accessibility attributes whether it is collapsed or not, AND flattens
+    // the bubble into a single accessibility element — so there is nothing to tap there and nothing to
+    // gain by tapping it. Measured: an iOS id for this was added and compiled in, and still could not be
+    // found in 20s. Attempting it on both platforms and swallowing the failure would spend that 20s every
+    // run and disguise a genuine platform difference as a flaky locator.
+    await runOnlyOnAndroid(platform, async () => {
+      await bob1.waitForTextElementToBePresent({
+        ...new MessageReadMore(bob1).build(),
+        maxWait: 20_000,
+      });
+      await bob1.clickOnElementAll(new MessageReadMore(bob1));
     });
+    await bob1.waitForMessageContaining(TAIL_MARKER, MESSAGE_DELIVERY_TIMEOUT_MS);
   });
 
   await test.step('Verify the plan displays as expired', async () => {
