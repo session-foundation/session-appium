@@ -5,13 +5,13 @@ import { TestSteps } from '../../../types/allure';
 import { iosIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
 import { PlusButton } from '../../locators/home';
-import { MobileTestContext } from '../../utils/capabilities_ios';
 import { newUser } from '../../utils/create_account';
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { MobileTestContext } from '../../utils/pro_context';
 
 // iOS uses app-level time override (customFirstInstallDateTime capability).
 // Android would require system-level time manipulation (`adb root` + `toybox date`), which

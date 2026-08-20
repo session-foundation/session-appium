@@ -82,3 +82,52 @@ export type ProTestHookContext = {
 
 /** Everything a spec can ask of a client's Pro setup: the display mocks plus the timing hooks. */
 export type ProContext = ProMockContext & ProTestHookContext;
+
+/**
+ * The half of the mobile test context only iOS reads.
+ *
+ * Kept beside `ProContext` rather than in `capabilities_ios` because the boundary between the two moves:
+ * a field becomes shared the moment Android starts consuming it, and that should be a one-line move
+ * between the types next to each other, not a cross-module refactor. The `ios` prefix marks which side a
+ * field is currently on, so a mock that has only ever been wired on iOS is legible as such at the call
+ * site — Android takes its Pro enablement and its backend from the AQA build variant instead.
+ */
+export type IOSOnlyContext = {
+  iosCustomInstallTime?: string;
+  iosSessionProEnabled?: string;
+  /** Platform the subscription was originally purchased on. */
+  iosProOriginatingPlatform?: 'android' | 'iOS' | 'useActual';
+  /** Whether the store account matches the one that bought the subscription. */
+  iosProOriginatingAccount?: 'nonOriginatingAccount' | 'originatingAccount' | 'useActual';
+  /** Whether a refund has already been requested. */
+  iosProRefundingStatus?: 'notRefunding' | 'refunding' | 'useActual';
+  /** Build variant, which decides whether billing UI is reachable at all (`ipa` has no billing). */
+  iosProBuildVariant?:
+    | 'apk'
+    | 'appStore'
+    | 'development'
+    | 'fDroid'
+    | 'huawei'
+    | 'ipa'
+    | 'testFlight'
+    | 'useActual';
+  /**
+   * Point the app at a QA Pro backend instead of the compiled-in production one.
+   *
+   * Set BOTH, and set them on EVERY device in a multi-device test: the pubkey is what libSession
+   * verifies other users' proofs against, so a device left on the default reads a QA-signed proof as
+   * invalid, strips the Pro content and stores the sender as non-Pro — which looks like an app bug
+   * rather than a harness gap. `openAppTwoDevices`/`openAppThreeDevices` pass one context to every
+   * device, so this holds as long as no per-device context is introduced.
+   */
+  iosProBackendUrl?: string;
+  /** The backend's **Ed25519** signing key (`signing_pubkey` from its `GET /status`), not the x25519 form. */
+  iosProBackendPubkey?: string;
+};
+
+/**
+ * What both mobile platforms are handed. `openAppOnPlatform` forwards this whole object to
+ * `openAndroidApp` as well as `openiOSApp`; Android reads the `ProContext` half as launch-intent extras
+ * and ignores the rest.
+ */
+export type MobileTestContext = ProContext & IOSOnlyContext;

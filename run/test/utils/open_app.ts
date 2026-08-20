@@ -25,14 +25,10 @@ import {
   getAndroidPoolSize,
   getAndroidUdid,
 } from './capabilities_android';
-import {
-  CapabilitiesIndexType,
-  getIosCapabilities,
-  iOSBundleId,
-  MobileTestContext,
-} from './capabilities_ios';
+import { CapabilitiesIndexType, getIosCapabilities, iOSBundleId } from './capabilities_ios';
 import { registerDevicesForTest } from './device_registry';
 import { androidNeedsQaConfigRelaunch } from './devnet_android';
+import { MobileTestContext } from './pro_context';
 import { forceStopAndRestart, runScriptAndLog } from './utilities';
 
 const APPIUM_PORT = 4728;

@@ -16,9 +16,9 @@ import {
 import type { DeviceWrapper } from '../../types/DeviceWrapper';
 
 import { ConversationItem } from '../locators/home';
-import { MobileTestContext } from '../utils/capabilities_ios';
 import { resolveNetworkTarget } from '../utils/devnet';
 import { openAppMultipleDevices, type SupportedPlatformsType } from '../utils/open_app';
+import { MobileTestContext } from '../utils/pro_context';
 import { restoreAccountNoFallback } from '../utils/restore_account';
 
 type WithAlice = { alice: StateUser };

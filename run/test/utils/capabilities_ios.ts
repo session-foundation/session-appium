@@ -4,7 +4,7 @@ import { W3CXCUITestDriverCaps } from 'appium-xcuitest-driver/build/lib/driver';
 import dotenv from 'dotenv';
 import { existsSync } from 'fs';
 
-import type { ProContext } from './pro_context';
+import type { MobileTestContext } from './pro_context';
 
 import { WDA_DERIVED_DATA_PATH, WDA_PREBUILT_APP_PATH } from '../../../scripts/build_wda';
 import { resolveRunSimulators, type Simulator } from '../../../scripts/ios_shared';
@@ -33,46 +33,6 @@ dotenv.config({ quiet: true });
  * value is silently ignored by the app, which would yield a passing *default-state* test rather than
  * a failure, so the typo has to be caught here.
  */
-/**
- * The test context both mobile platforms receive.
- *
- * `ProContext` is the shared half and is read on iOS AND Android: `openAppOnPlatform` forwards this whole
- * object to `openAndroidApp`, which turns those fields into launch-intent extras. Everything declared
- * below is iOS-only and is dropped on the Android path, which is what the `ios` prefix marks — Android
- * takes its Pro enablement and its backend from the AQA build variant instead of from here.
- */
-export type MobileTestContext = ProContext & {
-  iosCustomInstallTime?: string;
-  iosSessionProEnabled?: string;
-  /** Platform the subscription was originally purchased on. */
-  iosProOriginatingPlatform?: 'android' | 'iOS' | 'useActual';
-  /** Whether the store account matches the one that bought the subscription. */
-  iosProOriginatingAccount?: 'nonOriginatingAccount' | 'originatingAccount' | 'useActual';
-  /** Whether a refund has already been requested. */
-  iosProRefundingStatus?: 'notRefunding' | 'refunding' | 'useActual';
-  /** Build variant, which decides whether billing UI is reachable at all (`ipa` has no billing). */
-  iosProBuildVariant?:
-    | 'apk'
-    | 'appStore'
-    | 'development'
-    | 'fDroid'
-    | 'huawei'
-    | 'ipa'
-    | 'testFlight'
-    | 'useActual';
-  /**
-   * Point the app at a QA Pro backend instead of the compiled-in production one.
-   *
-   * Set BOTH, and set them on EVERY device in a multi-device test: the pubkey is what libSession
-   * verifies other users' proofs against, so a device left on the default reads a QA-signed proof as
-   * invalid, strips the Pro content and stores the sender as non-Pro — which looks like an app bug
-   * rather than a harness gap. `openAppTwoDevices`/`openAppThreeDevices` pass one context to every
-   * device, so this holds as long as no per-device context is introduced.
-   */
-  iosProBackendUrl?: string;
-  /** The backend's **Ed25519** signing key (`signing_pubkey` from its `GET /status`), not the x25519 form. */
-  iosProBackendPubkey?: string;
-};
 
 /**
  * `MobileTestContext` field -> the env key the app reads. The app's `EnvironmentVariable` enum is

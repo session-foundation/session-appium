@@ -18,13 +18,13 @@ import {
   UpdateProAccessRow,
 } from '../../locators/pro';
 import { UserSettings } from '../../locators/settings';
-import { MobileTestContext } from '../../utils/capabilities_ios';
 import { newUser } from '../../utils/create_account';
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { MobileTestContext } from '../../utils/pro_context';
 
 /**
  * Session Pro settings screens, driven by mocked launch arguments — no entitlement and no store. Each
