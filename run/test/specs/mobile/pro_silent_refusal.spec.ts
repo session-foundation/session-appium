@@ -12,7 +12,7 @@ const PLAN_DAYS = 30;
 const ONE_DAY_SECONDS = 24 * 60 * 60;
 
 bothPlatformsIt({
-  title: 'An active plan with no proof is refused without being sold to',
+  title: 'Pinning is blocked with no upgrade prompt when Pro cannot be verified',
   risk: 'high',
   countOfDevicesNeeded: 1,
   testCb: proSilentRefusal,
