@@ -36,12 +36,6 @@ dotenv.config({ quiet: true });
 export type IOSTestContext = ProMockContext & {
   customInstallTime?: string;
   sessionProEnabled?: string;
-  /** Platform the subscription was originally purchased on. */
-  proOriginatingPlatform?: 'android' | 'iOS' | 'useActual';
-  /** Whether the store account matches the one that bought the subscription. */
-  proOriginatingAccount?: 'nonOriginatingAccount' | 'originatingAccount' | 'useActual';
-  /** Whether a refund has already been requested. */
-  proRefundingStatus?: 'notRefunding' | 'refunding' | 'useActual';
   /** Build variant, which decides whether billing UI is reachable at all (`ipa` has no billing). */
   proBuildVariant?:
     | 'apk'
@@ -79,6 +73,8 @@ const IOS_TEST_ENV_KEYS: Record<keyof IOSTestContext, string> = {
   proOriginatingPlatform: 'mockCurrentUserSessionProOriginatingPlatform',
   proOriginatingAccount: 'mockCurrentUserOriginatingAccount',
   proRefundingStatus: 'mockCurrentUserSessionProRefundingStatus',
+  proAutoRenewing: 'mockCurrentUserSessionProAutoRenewing',
+  proQuickRefundWindow: 'mockCurrentUserSessionProQuickRefundWindow',
   proBuildVariant: 'mockCurrentUserSessionProBuildVariant',
   proAccessExpiry: 'mockCurrentUserAccessExpiryTimestamp',
   proProof: 'mockCurrentUserSessionProProof',

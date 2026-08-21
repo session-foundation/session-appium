@@ -6,6 +6,42 @@ import { StrategyExtractionObj } from '../../types/testing';
 import { LocatorsInterface } from './index';
 
 /**
+ * Where each platform keeps a row's visible copy, which decides what an expected-text lookup can match.
+ *
+ * **Android** — `qaTag` is a `testTag` surfaced as `resource-id`; it sets no text. So a row's own id is on
+ * a container with no text of its own, and the copy lives on the child `ActionRowItem` tags it with
+ * (`action-item-title`). An expected-text lookup therefore matches THAT node, not the row.
+ *
+ * **iOS** — an `accessibilityIdentifier` takes over `name`, so the copy is read from `label`. For a
+ * `ListItemCell` the label merges title and subtitle (observed: `"Update Pro Access, Pro access
+ * loading..."`), so a title-only match cannot succeed on a row that has a subtitle.
+ *
+ * The upshot, per locator, is documented on each class. Where a platform cannot match the copy the
+ * lookup falls back to the id alone — which asserts less than the caller may assume, so it is called out.
+ */
+
+/**
+ * The store-flow destination screens, by the id each one carries. Same strings on both platforms.
+ */
+export type ProScreenId =
+  | 'pro-screen-cancel-plan-non-originating'
+  | 'pro-screen-cancel-plan'
+  | 'pro-screen-choose-plan-no-billing'
+  | 'pro-screen-choose-plan-non-originating'
+  | 'pro-screen-choose-plan'
+  | 'pro-screen-plan-confirmation'
+  | 'pro-screen-refund-in-progress'
+  | 'pro-screen-refund-plan-non-originating'
+  | 'pro-screen-refund-plan';
+
+/** The four cells of the Pro stats matrix, in the order the screen lays them out. */
+export type ProStat =
+  | 'badges-sent'
+  | 'groups-upgraded'
+  | 'longer-messages'
+  | 'pinned-conversations';
+
+/**
  * Session Pro settings screens.
  *
  * The ids below are the **same strings on both platforms** — Android named this surface first
@@ -132,6 +168,63 @@ export class ProBadgeSettingToggle extends LocatorsInterface {
 }
 
 /**
+ * The "Cancel Pro Access" action in the manage section.
+ *
+ * Shown only for an auto-renewing subscriber with a confirmed status fetch, so asserting it absent proves
+ * nothing alone — pair it with `ProRequestRefundRow`, which is unconditional in the same state.
+ */
+export class ProCancelPlanRow extends LocatorsInterface {
+  private readonly expectedTitle?: string;
+
+  constructor(device: DeviceWrapper, expectedTitle?: string) {
+    super(device);
+    this.expectedTitle = expectedTitle;
+  }
+
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return this.expectedTitle
+          ? ({ strategy: 'id', selector: 'action-item-title', text: this.expectedTitle } as const)
+          : ({ strategy: 'id', selector: 'pro-settings-cancel-plan' } as const);
+      case 'ios':
+        // The row carries no subtitle, so its label is the title alone.
+        return this.expectedTitle
+          ? ({
+              strategy: 'accessibility id',
+              selector: 'pro-settings-cancel-plan',
+              label: this.expectedTitle,
+            } as const)
+          : ({ strategy: 'accessibility id', selector: 'pro-settings-cancel-plan' } as const);
+    }
+  }
+}
+
+/** The "Pro FAQ" row of the help section. */
+export class ProFaqRow extends LocatorsInterface {
+  private readonly expectedTitle?: string;
+
+  constructor(device: DeviceWrapper, expectedTitle?: string) {
+    super(device);
+    this.expectedTitle = expectedTitle;
+  }
+
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return this.expectedTitle
+          ? ({ strategy: 'id', selector: 'action-item-title', text: this.expectedTitle } as const)
+          : ({ strategy: 'id', selector: 'pro-settings-faq' } as const);
+      case 'ios':
+        // `expectedTitle` is deliberately NOT applied: this row has a subtitle, and iOS merges title and
+        // subtitle into one label, so the title alone can never match. Assert the copy on Android and take
+        // presence from the id here.
+        return { strategy: 'accessibility id', selector: 'pro-settings-faq' } as const;
+    }
+  }
+}
+
+/**
  * One row of the "This message used the following Session Pro features:" list on the message-info
  * screen.
  *
@@ -175,6 +268,42 @@ export class ProManageSectionHeader extends LocatorsInterface {
         return { strategy: 'id', selector: 'pro-settings-manage-header' } as const;
       case 'ios':
         return { strategy: 'accessibility id', selector: 'pro-settings-manage-header' } as const;
+    }
+  }
+}
+
+/**
+ * The "Update Pro Access" row's subtitle for a plan that renews itself — "Pro auto-renewing in {time}".
+ *
+ * The sibling of `ProPlanExpiry`: same element, and the copy is what says which of the two states the
+ * client thinks it is in. Reaching it needs `proAutoRenewing: 'autoRenewing'`, since both clients
+ * otherwise take that flag from a status response a mocked run never receives.
+ */
+export class ProPlanAutoRenewal extends LocatorsInterface {
+  private readonly time: string;
+
+  constructor(device: DeviceWrapper, time: string) {
+    super(device);
+    this.time = time;
+  }
+
+  public build(): StrategyExtractionObj {
+    const text = tStripped('proAutoRenewTime', { time: this.time });
+
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'pro-settings-update-plan-subtitle',
+          text,
+        } as const;
+      case 'ios':
+        // `label`, not `text`, as `ProPlanExpiry`: the identifier owns `name`.
+        return {
+          strategy: 'accessibility id',
+          selector: 'pro-settings-update-plan-subtitle',
+          label: text,
+        } as const;
     }
   }
 }
@@ -226,6 +355,44 @@ export class ProPlanExpiry extends LocatorsInterface {
 }
 
 /**
+ * The "Update Pro Access" row's subtitle while a refund is processing — "Google is processing your refund
+ * request".
+ *
+ * Worth asserting alongside the title because the two halves are built differently: the title is a static
+ * string, this interpolates a provider name resolved by a runtime resource lookup. That lookup is why the
+ * row once read "google_play is processing your refund request" on shrunk Android builds.
+ */
+export class ProRefundProcessingSubtitle extends LocatorsInterface {
+  // Not `platform`, which the base class uses for the device's own platform.
+  private readonly providerName: string;
+
+  constructor(device: DeviceWrapper, providerName: string) {
+    super(device);
+    this.providerName = providerName;
+  }
+
+  public build(): StrategyExtractionObj {
+    const text = tStripped('processingRefundRequest', { platform: this.providerName });
+
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'pro-settings-update-plan-subtitle',
+          text,
+        } as const;
+      case 'ios':
+        // `label`, not `text`, as `ProPlanExpiry`: the identifier owns `name`.
+        return {
+          strategy: 'accessibility id',
+          selector: 'pro-settings-update-plan-subtitle',
+          label: text,
+        } as const;
+    }
+  }
+}
+
+/**
  * The "Renew Pro Access" action, shown on the Pro settings screen once access has expired.
  *
  * Both platforms show this row **or** `UpdateProAccessRow`, never both, so asserting this one is what
@@ -242,6 +409,91 @@ export class ProRenewPlanRow extends LocatorsInterface {
         return { strategy: 'id', selector: 'pro-settings-renew-plan' } as const;
       case 'ios':
         return { strategy: 'accessibility id', selector: 'pro-settings-renew-plan' } as const;
+    }
+  }
+}
+
+/**
+ * The "Request Refund" action in the manage section, offered to an active subscriber who has not already
+ * asked for one. Not the read-only "Refund Requested" row, which is the update-plan row's slot —
+ * see `ProUpdatePlanRowTitle`.
+ */
+export class ProRequestRefundRow extends LocatorsInterface {
+  private readonly expectedTitle?: string;
+
+  constructor(device: DeviceWrapper, expectedTitle?: string) {
+    super(device);
+    this.expectedTitle = expectedTitle;
+  }
+
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return this.expectedTitle
+          ? ({ strategy: 'id', selector: 'action-item-title', text: this.expectedTitle } as const)
+          : ({ strategy: 'id', selector: 'pro-settings-request-refund' } as const);
+      case 'ios':
+        // The row carries no subtitle, so its label is the title alone.
+        return this.expectedTitle
+          ? ({
+              strategy: 'accessibility id',
+              selector: 'pro-settings-request-refund',
+              label: this.expectedTitle,
+            } as const)
+          : ({ strategy: 'accessibility id', selector: 'pro-settings-request-refund' } as const);
+    }
+  }
+}
+
+/**
+ * One of the Pro store-flow destination screens, addressed by the id its content view carries.
+ *
+ * Only one of these is ever on screen, which is what lets `ProScreenDescription` stay generic.
+ */
+export class ProScreen extends LocatorsInterface {
+  private readonly screen: ProScreenId;
+
+  constructor(device: DeviceWrapper, screen: ProScreenId) {
+    super(device);
+    this.screen = screen;
+  }
+
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: this.screen } as const;
+      case 'ios':
+        return { strategy: 'accessibility id', selector: this.screen } as const;
+    }
+  }
+}
+
+/**
+ * The body copy of whichever store-flow screen is showing, paired with the copy it should carry.
+ *
+ * Load-bearing for the refund screens in particular: the originating, different-account, <48h and >48h
+ * variants share a title and — for three of them — a screen id, so the description is the only thing
+ * that tells them apart.
+ */
+export class ProScreenDescription extends LocatorsInterface {
+  private readonly copy: string;
+
+  constructor(device: DeviceWrapper, copy: string) {
+    super(device);
+    this.copy = copy;
+  }
+
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'pro-screen-description', text: this.copy } as const;
+      case 'ios':
+        // `label`, not `text`: the identifier owns `name`.
+        return {
+          strategy: 'accessibility id',
+          selector: 'pro-screen-description',
+          label: this.copy,
+        } as const;
     }
   }
 }
@@ -325,6 +577,42 @@ export class ProSettingsEntryTitle extends LocatorsInterface {
 }
 
 /** Header above the four usage counters, shown only once Pro is active. */
+/**
+ * One cell of the "Your Pro Stats" matrix.
+ *
+ * Matched on the id alone. Each cell's id sits on its *title*, which is the whole "N badges sent"
+ * string, so the value is only readable from the element's label — assert that separately if a test
+ * cares about the number rather than the cell being rendered.
+ */
+export class ProStatCell extends LocatorsInterface {
+  private readonly stat: ProStat;
+  private readonly expectedText?: string;
+
+  constructor(device: DeviceWrapper, stat: ProStat, expectedText?: string) {
+    super(device);
+    this.stat = stat;
+    this.expectedText = expectedText;
+  }
+
+  public build(): StrategyExtractionObj {
+    const selector = `pro-stats-${this.stat}` as const;
+
+    switch (this.platform) {
+      case 'android':
+        // `expectedText` is deliberately NOT applied: the tag sits on the cell's root, and the count text
+        // is an untagged child, so there is nothing here to match it against. Tagging that child would
+        // make this symmetric with iOS.
+        return { strategy: 'id', selector } as const;
+      case 'ios':
+        // The identifier sits on the cell's title, i.e. the whole "N badges sent" string, so the copy is
+        // readable from the label.
+        return this.expectedText
+          ? ({ strategy: 'accessibility id', selector, label: this.expectedText } as const)
+          : ({ strategy: 'accessibility id', selector } as const);
+    }
+  }
+}
+
 export class ProStatsHeader extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -379,6 +667,64 @@ export class ProStatusBanner extends LocatorsInterface {
 }
 
 /** The row that opens the plan-management flow. */
+/**
+ * The "Support" row — the last row of the Pro settings screen in every state, so it is the anchor for
+ * scrolling to the bottom. The manage section sits directly above it, which is what makes a
+ * `verifyElementNotPresent` on a manage row mean the client omitted it rather than that it was off screen.
+ */
+export class ProSupportRow extends LocatorsInterface {
+  private readonly expectedTitle?: string;
+
+  constructor(device: DeviceWrapper, expectedTitle?: string) {
+    super(device);
+    this.expectedTitle = expectedTitle;
+  }
+
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return this.expectedTitle
+          ? ({ strategy: 'id', selector: 'action-item-title', text: this.expectedTitle } as const)
+          : ({ strategy: 'id', selector: 'pro-settings-support' } as const);
+      case 'ios':
+        // `expectedTitle` is deliberately NOT applied: this row has a subtitle, and iOS merges title and
+        // subtitle into one label, so the title alone can never match. Assert the copy on Android and take
+        // presence from the id here.
+        return { strategy: 'accessibility id', selector: 'pro-settings-support' } as const;
+    }
+  }
+}
+
+/**
+ * The "Update Pro Access" row's title, which reads "Refund Requested" while a refund is processing —
+ * both platforms keep one row and swap its title, so the title is what distinguishes the two states.
+ *
+ * Android's title carries the shared `action-item-title`, which every row on the screen has, so it must
+ * never be matched without the text filter. iOS gives it a flat identifier because `ListItemCell` merges
+ * title and subtitle into the row's own label.
+ */
+export class ProUpdatePlanRowTitle extends LocatorsInterface {
+  private readonly copy: string;
+
+  constructor(device: DeviceWrapper, copy: string) {
+    super(device);
+    this.copy = copy;
+  }
+
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'action-item-title', text: this.copy } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'pro-settings-update-plan-title',
+          label: this.copy,
+        } as const;
+    }
+  }
+}
+
 export class UpdateProAccessRow extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
