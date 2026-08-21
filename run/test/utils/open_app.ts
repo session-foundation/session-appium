@@ -28,7 +28,7 @@ import {
 import { CapabilitiesIndexType, getIosCapabilities, iOSBundleId } from './capabilities_ios';
 import { registerDevicesForTest } from './device_registry';
 import { androidNeedsQaConfigRelaunch } from './devnet_android';
-import { MobileTestContext } from './pro_context';
+import { contextForDevice, MobileTestContext, MobileTestContexts } from './pro_context';
 import { forceStopAndRestart, runScriptAndLog } from './utilities';
 
 const APPIUM_PORT = 4728;
@@ -39,11 +39,16 @@ export const openAppMultipleDevices = async (
   platform: SupportedPlatformsType,
   numberOfDevices: number,
   testInfo: TestInfo,
-  testContext?: MobileTestContext
+  testContext?: MobileTestContexts
 ): Promise<DeviceWrapper[]> => {
   // Create an array of promises for each device
   const devicePromises = Array.from({ length: numberOfDevices }, (_, index) =>
-    openAppOnPlatform(platform, index as CapabilitiesIndexType, testInfo, testContext)
+    openAppOnPlatform(
+      platform,
+      index as CapabilitiesIndexType,
+      testInfo,
+      contextForDevice(testContext, index)
+    )
   );
 
   // Use Promise.all to wait for all device apps to open

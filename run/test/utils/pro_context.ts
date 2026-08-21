@@ -131,3 +131,21 @@ export type IOSOnlyContext = {
  * and ignores the rest.
  */
 export type MobileTestContext = ProContext & IOSOnlyContext;
+
+/**
+ * A context per device, or one context for all of them.
+ *
+ * A single context is the common case and stays the common case. An array exists for the fixtures where
+ * the devices must DISAGREE — a sender whose Pro backend key the recipient does not trust, for instance,
+ * which cannot be expressed while every device shares one context. Index matches device order, and a
+ * `undefined` entry leaves that device unconfigured.
+ */
+export type MobileTestContexts = MobileTestContext | Array<MobileTestContext | undefined>;
+
+/** The context for one device, whichever form the caller used. */
+export function contextForDevice(
+  contexts: MobileTestContexts | undefined,
+  index: number
+): MobileTestContext | undefined {
+  return Array.isArray(contexts) ? contexts[index] : contexts;
+}

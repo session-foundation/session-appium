@@ -18,7 +18,7 @@ import type { DeviceWrapper } from '../../types/DeviceWrapper';
 import { ConversationItem } from '../locators/home';
 import { resolveNetworkTarget } from '../utils/devnet';
 import { openAppMultipleDevices, type SupportedPlatformsType } from '../utils/open_app';
-import { MobileTestContext } from '../utils/pro_context';
+import { MobileTestContext, MobileTestContexts } from '../utils/pro_context';
 import { restoreAccountNoFallback } from '../utils/restore_account';
 
 type WithAlice = { alice: StateUser };
@@ -98,7 +98,7 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
   stateToBuildKey: K;
   groupName: K extends WithGroupStateKey ? string : undefined;
   testInfo: TestInfo;
-  testContext?: MobileTestContext;
+  testContext?: MobileTestContexts;
 }) {
   // Resolved BEFORE the Promise.all rather than inside it. As an array element the `await` ran after
   // `openAppMultipleDevices` had already been invoked, so a network-resolution failure (a mismatch, or
@@ -159,7 +159,8 @@ export async function open_Alice1_Bob1_friends({
   focusFriendsConvo,
   testInfo,
   testContext,
-}: WithPlatform & WithFocusFriendsConvo & { testInfo: TestInfo; testContext?: MobileTestContext }) {
+}: WithPlatform &
+  WithFocusFriendsConvo & { testInfo: TestInfo; testContext?: MobileTestContexts }) {
   const stateToBuildKey = '2friends';
   const appsToOpen = 2;
   const result = await openAppsWithState({
@@ -507,7 +508,8 @@ export async function open_Alice2_Bob1_friends({
   focusFriendsConvo,
   testInfo,
   testContext,
-}: WithPlatform & WithFocusFriendsConvo & { testInfo: TestInfo; testContext?: MobileTestContext }) {
+}: WithPlatform &
+  WithFocusFriendsConvo & { testInfo: TestInfo; testContext?: MobileTestContexts }) {
   const prebuiltStateKey = '2friends';
   const appsToOpen = 3;
   const result = await openAppsWithState({
