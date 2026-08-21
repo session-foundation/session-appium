@@ -610,6 +610,43 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     await this.openConversationWith(convoName);
   }
 
+  /**
+   * Open `convoName` and verify the peer's conversation-header avatar is NOT animated.
+   *
+   * The counterpart to `verifySenderAvatarAnimated`, and asserted the opposite way round: that one
+   * retries until it sees more than one colour, so it can stop the moment an animation starts. This has
+   * to prove a NEGATIVE, so it settles first and then requires every sample to match — a still frame
+   * sampled once, or sampled before the picture has loaded, would pass whatever the client decided.
+   *
+   * `settleMs` exists for that second failure: the avatar arrives with a message and takes a moment to
+   * render, and an unloaded element samples as a single flat colour, which is indistinguishable from a
+   * static picture.
+   */
+  public async verifySenderAvatarNotAnimated(
+    convoName: string,
+    { settleMs = 15_000, samples = 6 }: { settleMs?: number; samples?: number } = {}
+  ): Promise<void> {
+    await this.openConversationOnceNamed(convoName);
+    const selector = '[data-testid="conversation-options-avatar"] img';
+    // The element has to be there before its pixels mean anything.
+    await this.page.locator(selector).first().waitFor({ state: 'visible', timeout: 30_000 });
+    await sleepFor(settleMs);
+
+    const colors = new Set<string>();
+    for (let i = 0; i < samples; i++) {
+      colors.add(await this.sampleCenterColor(selector));
+      await sleepFor(250);
+    }
+
+    if (colors.size > 1) {
+      throw new Error(
+        `${convoName}'s display picture is animating for this client (${colors.size} distinct centre ` +
+          `colours across ${samples} samples). The proof carrying that feature could not be verified, ` +
+          `so it should have been refused.`
+      );
+    }
+  }
+
   /** Open `convoName` and verify the peer's conversation-header avatar is animated. */
   public async verifySenderAvatarAnimated(convoName: string): Promise<void> {
     await this.openConversationOnceNamed(convoName);
