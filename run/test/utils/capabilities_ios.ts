@@ -50,8 +50,8 @@ const IOS_TEST_ENV_KEYS: Record<keyof MobileTestContext, string> = {
   iosProBuildVariant: 'mockCurrentUserSessionProBuildVariant',
   proAccessExpiry: 'mockCurrentUserAccessExpiryTimestamp',
   proProof: 'mockCurrentUserSessionProProof',
-  iosProBackendUrl: 'customProBackendUrl',
-  iosProBackendPubkey: 'customProBackendPubkey',
+  proBackendUrl: 'customProBackendUrl',
+  proBackendPubkey: 'customProBackendPubkey',
   forceProRevocationRefresh: 'forceProRevocationRefresh',
 };
 
@@ -69,9 +69,7 @@ export const IOS_PRO_CONTEXT: MobileTestContext = (() => {
   const proBackend = getProBackendOverride();
   return {
     iosSessionProEnabled: 'true',
-    ...(proBackend
-      ? { iosProBackendUrl: proBackend.url, iosProBackendPubkey: proBackend.pubkey }
-      : {}),
+    ...(proBackend ? { proBackendUrl: proBackend.url, proBackendPubkey: proBackend.pubkey } : {}),
   };
 })();
 

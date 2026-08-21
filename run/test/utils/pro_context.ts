@@ -54,6 +54,25 @@ export type ProMockContext = {
    * "may I" true; it does not produce anything another party can verify.
    */
   proProof?: 'none' | 'useActual' | 'valid';
+  /**
+   * Session Pro backend to use instead of the one compiled into libsession, so a QA backend can be
+   * targeted without rebuilding.
+   *
+   * Set BOTH or neither: the pubkey is what libSession verifies proofs against, so a device given the QA
+   * URL but left on the production key reads every QA-signed proof as invalid, strips the Pro content and
+   * stores the sender as non-Pro — which reads as an app bug rather than a config mistake.
+   *
+   * Shared rather than per-platform because both clients consume it: iOS as the `customProBackendUrl` /
+   * `customProBackendPubkey` launch variables, Android as the `sessionProBackendUrl` /
+   * `sessionProBackendPubkey` intent extras.
+   *
+   * Normally supplied for every device by `IOS_PRO_CONTEXT` / the Android extras, from the environment.
+   * Overriding it for ONE device is what lets a spec express a recipient that cannot verify a genuine
+   * proof, which needs `MobileTestContexts` to differ per device.
+   */
+  proBackendUrl?: string;
+  /** The backend's **Ed25519** signing key (`signing_pubkey` from its `GET /status`), not the x25519 form. */
+  proBackendPubkey?: string;
 };
 
 /**
@@ -111,18 +130,6 @@ export type IOSOnlyContext = {
     | 'ipa'
     | 'testFlight'
     | 'useActual';
-  /**
-   * Point the app at a QA Pro backend instead of the compiled-in production one.
-   *
-   * Set BOTH, and set them on EVERY device in a multi-device test: the pubkey is what libSession
-   * verifies other users' proofs against, so a device left on the default reads a QA-signed proof as
-   * invalid, strips the Pro content and stores the sender as non-Pro — which looks like an app bug
-   * rather than a harness gap. `openAppTwoDevices`/`openAppThreeDevices` pass one context to every
-   * device, so this holds as long as no per-device context is introduced.
-   */
-  iosProBackendUrl?: string;
-  /** The backend's **Ed25519** signing key (`signing_pubkey` from its `GET /status`), not the x25519 form. */
-  iosProBackendPubkey?: string;
 };
 
 /**

@@ -68,11 +68,17 @@ export function buildAndroidLaunchExtras(context?: ProContext): string | undefin
 
   // Both or neither: the app rejects a half-supplied pair, because a QA URL paired with the production
   // signing key reads every QA-signed proof as invalid and silently strips Pro content.
-  const proBackend = getProBackendOverride();
-  if (proBackend) {
+  //
+  // The context wins over the environment so ONE device can be pointed at a different signing key while
+  // the rest of the test stays on the QA backend — the fixture behind "a recipient cannot verify a
+  // genuine proof". Each half falls back independently, so overriding only the pubkey keeps the URL.
+  const proBackendEnv = getProBackendOverride();
+  const proBackendUrl = context?.proBackendUrl ?? proBackendEnv?.url;
+  const proBackendPubkey = context?.proBackendPubkey ?? proBackendEnv?.pubkey;
+  if (proBackendUrl && proBackendPubkey) {
     extras.push(
-      `--es sessionProBackendUrl ${proBackend.url}`,
-      `--es sessionProBackendPubkey ${proBackend.pubkey}`
+      `--es sessionProBackendUrl ${proBackendUrl}`,
+      `--es sessionProBackendPubkey ${proBackendPubkey}`
     );
   }
 
