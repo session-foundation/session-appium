@@ -3225,6 +3225,50 @@ export class DeviceWrapper implements IMobileWrapper {
     ).toBeGreaterThan(1);
   }
 
+  /**
+   * Asserts an element's pixels do NOT change over time.
+   *
+   * The counterpart to `verifyElementIsAnimated`, and asserted the opposite way round: that one can stop
+   * the moment it sees a second colour, while a negative has to settle and then require every sample to
+   * match. A picture sampled before it renders is a single flat colour and so indistinguishable from a
+   * static one, which would pass whatever the client decided.
+   *
+   * The placeholder check is kept for the same reason it exists there: "the picture never loaded" is a
+   * different bug from "the picture loaded and is correctly frozen", and only the second one is what a
+   * refusal looks like.
+   */
+  public async verifyElementIsNotAnimated(
+    args: LocatorsInterface | StrategyExtractionObj,
+    { settleMs = 10_000, samples = 6 }: { settleMs?: number; samples?: number } = {}
+  ): Promise<void> {
+    const { locator, description } = this.resolveLocator(args);
+    this.log(`Checking if ${description} is static`);
+
+    const loaded = await this.waitForAvatarToLoad(locator);
+    if (GENERATED_AVATAR_COLORS.has(loaded.toLowerCase())) {
+      throw new Error(
+        `${description} is still the generated avatar placeholder (${loaded}) — the picture never ` +
+          `loaded, so nothing can be said about whether it animates. This is an upload/propagation ` +
+          `problem, not a Pro one.`
+      );
+    }
+
+    await sleepFor(settleMs);
+
+    const colors = new Set<string>();
+    for (let i = 0; i < samples; i++) {
+      colors.add(await this.getElementPixelColor(locator));
+    }
+
+    if (colors.size > 1) {
+      throw new Error(
+        `Expected ${description} to be static but detected ${colors.size} unique colours across ` +
+          `${samples} samples. The proof carrying the animated-display-picture feature could not be ` +
+          `verified, so it should have been refused.`
+      );
+    }
+  }
+
   public async getVersionNumber() {
     // NOTE if this becomes necessary for more tests, consider adding a property/caching to the DeviceWrapper
     await this.clickOnElementAll(new UserSettings(this));

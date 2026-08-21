@@ -25,6 +25,10 @@ const RECIPIENT_BACKEND_KEY: string | undefined = UNTRUSTED_BACKEND_KEY;
  *
  * A real grant, not a mock: `setAnimatedAvatar` is written to libSession config and the display mocks
  * write no config, so a mocked subscriber uploads an animated picture that never renders as one.
+ *
+ * 🔴 The freeze is not instantaneous. Observed on Android: the picture animates for a frame or two and
+ * then stops. So the settle before sampling guards BOTH directions — shortening it would catch those
+ * opening frames and fail a client that is refusing correctly.
  */
 test_Alice_1W_Bob_1W_friends(
   'A recipient does not animate a display picture it cannot verify',
