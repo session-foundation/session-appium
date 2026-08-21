@@ -1,8 +1,19 @@
+import { Conversation } from '../../../desktop/locators';
 import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W_Bob_1W_friends } from '../../../desktop/sessionTest';
+import { sleepFor } from '../../../shared/promise_utils';
 import { MESSAGE_DELIVERY_TIMEOUT_MS } from '../../../shared/constants';
 
-const SENT_WITH_REAL_PROOF = 'Sent with a genuine proof';
+const SENT_WITH_FAKE_PROOF = 'Sent with a fake proof';
+
+/**
+ * The body text says "fake proof" because that is what it is FROM THE RECIPIENT'S SIDE, which is the side
+ * under test. The proof is genuinely minted and genuinely signed; the recipient just trusts a different
+ * key, so it cannot tell this from a forgery — which is the whole point.
+ */
+
+/** How long the badge is given to appear before its absence is called a refusal. See the mobile spec. */
+const BADGE_SETTLE_MS = 15_000;
 
 /**
  * A REAL Ed25519 public key that the Pro backend never signs with.
@@ -41,21 +52,35 @@ test_Alice_1W_Bob_1W_friends(
     await restartApp(bob, { pro: { proBackendPubkey: UNTRUSTED_BACKEND_KEY } });
 
     await alice.openConversationWith(bob.userName);
-    await alice.sendMessage(SENT_WITH_REAL_PROOF);
+    await alice.sendMessage(SENT_WITH_FAKE_PROOF);
 
     // Half the control, travelling with the spec: the message went out WITH a genuine proof. Read from
     // the sender's own copy — the conversation header badge shows the OTHER party's status, so on the
     // sender's device it would assert the recipient's.
-    await alice.assertMessageProFeatures(SENT_WITH_REAL_PROOF, ['proBadge']);
+    await alice.assertMessageProFeatures(SENT_WITH_FAKE_PROOF, ['proBadge']);
 
     // The relaunch above left this window on the conversation LIST, and `waitForMessage` only watches
     // the OPEN conversation — so without this it waits out its timeout on a screen that has no messages
     // on it, while the message itself has arrived and the list even shows the sender as Pro.
     await bob.openConversationWith(alice.userName);
 
-    // The claim. The message must arrive first: `assertNoSenderProBadge` anchors on it, so a badge-less
-    // screen cannot be satisfied by a message that never landed.
-    await bob.waitForMessage(SENT_WITH_REAL_PROOF, MESSAGE_DELIVERY_TIMEOUT_MS);
-    await bob.assertNoSenderProBadge(alice.userName, SENT_WITH_REAL_PROOF);
+    // The message must arrive first, or an absent badge says nothing.
+    await bob.waitForMessage(SENT_WITH_FAKE_PROOF, MESSAGE_DELIVERY_TIMEOUT_MS);
+
+    // The claim, asserted as "never appears" rather than "is not there yet".
+    //
+    // `assertNoSenderProBadge` is deliberately NOT used: it exists for the revocation specs, where the
+    // badge starts present and must vanish, so it returns the first moment it sees no badge — and on
+    // desktop it checks with a bare `isVisible()`, with no grace at all. Here the badge should never
+    // appear, and in the matching-key control it renders a second or two after the message, so looking
+    // once immediately would pass whatever the client decided.
+    await sleepFor(BADGE_SETTLE_MS);
+    await bob
+      .getPage()
+      .locator(
+        `[${Conversation.proBadgeConversationHeader.strategy}="${Conversation.proBadgeConversationHeader.selector}"]`
+      )
+      .first()
+      .waitFor({ state: 'hidden', timeout: 2_000 });
   }
 );
