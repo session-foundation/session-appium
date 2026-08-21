@@ -1,7 +1,7 @@
 import { test, type TestInfo } from '@playwright/test';
 
 import { makeAccountPro } from '../../../shared/pro_grant';
-import { iosIt } from '../../../types/sessionIt';
+import { bothPlatformsIt } from '../../../types/sessionIt';
 import { MessageBody } from '../../locators/conversation';
 import { ConversationItem } from '../../locators/home';
 import { MessageInfoMenuItem, ProBadge } from '../../locators/pro';
@@ -14,20 +14,21 @@ import { observeProGrant } from '../../utils/pro_refresh';
 const SENT_WITH_REAL_PROOF = 'Sent with a genuine proof';
 
 /**
- * A well-formed Ed25519 key the Pro backend never signed with.
+ * A REAL Ed25519 public key that the Pro backend never signs with.
  *
- * Used to make the RECIPIENT unable to verify a proof that is genuinely valid, which is the only way to
- * exercise the verification path without a client that can forge one: the proof is real, the signature is
- * real, and the recipient simply does not trust the signer.
+ * Generated once and pinned so runs are reproducible. It must be a valid curve point, not merely
+ * well-formed hex: a key the clients cannot parse is rejected as "invalid key" rather than treated as a
+ * different signer, and on Desktop that throws in a loop that kills swarm polling — so the recipient
+ * receives nothing at all and the spec fails for a reason that has nothing to do with verification.
  */
-const UNTRUSTED_BACKEND_KEY = '0'.repeat(64);
+const UNTRUSTED_BACKEND_KEY = '19151761ab6c9db89e8380604cf9ebe1a60267ef6d93636b4fcadd7d29f2b571';
 
 // The recipient trusts a key the backend never signed with. Verified as a matched pair: with this left
 // undefined — both devices on the real key — the badge assertion below PASSES (39s), so its absence here
 // is the recipient refusing a signature it cannot verify, not a claim that was never made.
 const RECIPIENT_BACKEND_KEY: string | undefined = UNTRUSTED_BACKEND_KEY;
 
-iosIt({
+bothPlatformsIt({
   title: 'A recipient does not honour a proof it cannot verify',
   risk: 'high',
   countOfDevicesNeeded: 2,
@@ -54,10 +55,9 @@ iosIt({
  * device on the wrong key reads a valid proof as invalid, strips the Pro content, and stores the sender
  * as non-Pro.
  *
- * iOS only for now: the harness wires a per-device Pro backend override on iOS
- * (`iosProBackendUrl`/`iosProBackendPubkey`), while Android takes its backend from the AQA build variant.
- * The app side supports it on both (`QaLaunchConfig`'s `EXTRA_PRO_BACKEND_PUBKEY`), so this is a harness
- * gap rather than a platform deviation.
+ * `proBackendPubkey` is a per-device override of the key the client verifies proofs against: iOS reads it
+ * as the `customProBackendPubkey` launch variable, Android as the `sessionProBackendPubkey` intent extra,
+ * and in both the context wins over the environment so only the recipient's trust changes.
  */
 async function proUnverifiableProof(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { devices, prebuilt } = await open_Alice1_Bob1_friends({
@@ -69,7 +69,7 @@ async function proUnverifiableProof(platform: SupportedPlatformsType, testInfo: 
     testContext: [
       IOS_PRO_CONTEXT,
       RECIPIENT_BACKEND_KEY
-        ? { ...IOS_PRO_CONTEXT, iosProBackendPubkey: RECIPIENT_BACKEND_KEY }
+        ? { ...IOS_PRO_CONTEXT, proBackendPubkey: RECIPIENT_BACKEND_KEY }
         : IOS_PRO_CONTEXT,
     ],
   });
