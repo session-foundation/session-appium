@@ -65,3 +65,18 @@ export const STANDARD_PIN_LIMIT = 5;
  * So do not tune this down against a steady-state measurement; that is the mistake it already caused once.
  */
 export const MESSAGE_DELIVERY_TIMEOUT_MS = 45_000;
+
+/**
+ * A REAL Ed25519 public key that the Pro backend never signs with.
+ *
+ * Generated once and pinned so runs are reproducible. It must be a valid curve point, not merely
+ * well-formed hex: a key the clients cannot parse is rejected as "invalid key" rather than treated as a
+ * different signer, and on Desktop that throws in a loop that kills swarm polling — so the recipient
+ * receives nothing at all and the spec fails for a reason that has nothing to do with verification.
+ *
+ * Shared rather than per-spec because the specs that use it are matched halves of one fixture: the point
+ * is that a recipient given THIS key cannot verify a proof the sender genuinely holds, and two specs
+ * pinning two different keys would be testing two different things while reading as one.
+ */
+export const UNTRUSTED_PRO_BACKEND_KEY =
+  '19151761ab6c9db89e8380604cf9ebe1a60267ef6d93636b4fcadd7d29f2b571';

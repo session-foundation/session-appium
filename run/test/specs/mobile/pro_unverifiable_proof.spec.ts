@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { MESSAGE_DELIVERY_TIMEOUT_MS } from '../../../shared/constants';
+import { MESSAGE_DELIVERY_TIMEOUT_MS, UNTRUSTED_PRO_BACKEND_KEY } from '../../../shared/constants';
 import { makeAccountPro } from '../../../shared/pro_grant';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { MessageBody } from '../../locators/conversation';
@@ -29,20 +29,10 @@ const SENT_WITH_FAKE_PROOF = 'Sent with a fake proof';
  */
 const BADGE_SETTLE_MS = 15_000;
 
-/**
- * A REAL Ed25519 public key that the Pro backend never signs with.
- *
- * Generated once and pinned so runs are reproducible. It must be a valid curve point, not merely
- * well-formed hex: a key the clients cannot parse is rejected as "invalid key" rather than treated as a
- * different signer, and on Desktop that throws in a loop that kills swarm polling — so the recipient
- * receives nothing at all and the spec fails for a reason that has nothing to do with verification.
- */
-const UNTRUSTED_BACKEND_KEY = '19151761ab6c9db89e8380604cf9ebe1a60267ef6d93636b4fcadd7d29f2b571';
-
 // The recipient trusts a key the backend never signed with. Verified as a matched pair: with this left
 // undefined — both devices on the real key — the badge assertion below PASSES (39s), so its absence here
 // is the recipient refusing a signature it cannot verify, not a claim that was never made.
-const RECIPIENT_BACKEND_KEY: string | undefined = UNTRUSTED_BACKEND_KEY;
+const RECIPIENT_BACKEND_KEY: string | undefined = UNTRUSTED_PRO_BACKEND_KEY;
 
 bothPlatformsIt({
   title: 'A recipient does not honour a proof it cannot verify',

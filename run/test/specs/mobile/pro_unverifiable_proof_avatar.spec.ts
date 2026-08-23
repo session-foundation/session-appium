@@ -1,6 +1,6 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import { MESSAGE_DELIVERY_TIMEOUT_MS } from '../../../shared/constants';
+import { MESSAGE_DELIVERY_TIMEOUT_MS, UNTRUSTED_PRO_BACKEND_KEY } from '../../../shared/constants';
 import { makeAccountPro } from '../../../shared/pro_grant';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { CloseSettings } from '../../locators';
@@ -14,13 +14,10 @@ import { observeProGrant } from '../../utils/pro_refresh';
 
 const SENT_WITH_FAKE_PROOF = 'Sent with a fake proof';
 
-/** A REAL Ed25519 public key the Pro backend never signs with. See `pro_unverifiable_proof.spec.ts`. */
-const UNTRUSTED_BACKEND_KEY = '19151761ab6c9db89e8380604cf9ebe1a60267ef6d93636b4fcadd7d29f2b571';
-
 // Verified as a matched pair: with this left undefined — recipient on the real key — the avatar DOES
 // animate for the recipient (Android 41s), so a still frame here is the client refusing a feature whose
 // proof it cannot verify, not a fixture that never produced an animation.
-const RECIPIENT_BACKEND_KEY: string | undefined = UNTRUSTED_BACKEND_KEY;
+const RECIPIENT_BACKEND_KEY: string | undefined = UNTRUSTED_PRO_BACKEND_KEY;
 
 bothPlatformsIt({
   title: 'A recipient does not animate a display picture it cannot verify',

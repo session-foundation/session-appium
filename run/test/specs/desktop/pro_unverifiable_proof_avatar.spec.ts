@@ -2,19 +2,16 @@ import { resolve } from 'path';
 
 import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W_Bob_1W_friends } from '../../../desktop/sessionTest';
-import { MESSAGE_DELIVERY_TIMEOUT_MS } from '../../../shared/constants';
+import { MESSAGE_DELIVERY_TIMEOUT_MS, UNTRUSTED_PRO_BACKEND_KEY } from '../../../shared/constants';
 
 const ANIMATED_AVATAR = resolve(__dirname, '../../media/animated_profile_picture.gif');
 
 const SENT_WITH_FAKE_PROOF = 'Sent with a fake proof';
 
-/** A REAL Ed25519 public key the Pro backend never signs with. See `pro_unverifiable_proof.spec.ts`. */
-const UNTRUSTED_BACKEND_KEY = '19151761ab6c9db89e8380604cf9ebe1a60267ef6d93636b4fcadd7d29f2b571';
-
 // Verified as a matched pair: with this left undefined — recipient on the real key — the avatar DOES
 // animate for the recipient (22s), so a still one here is the client refusing a feature whose proof it
 // cannot verify, not a fixture that never produced an animation.
-const RECIPIENT_BACKEND_KEY: string | undefined = UNTRUSTED_BACKEND_KEY;
+const RECIPIENT_BACKEND_KEY: string | undefined = UNTRUSTED_PRO_BACKEND_KEY;
 
 /**
  * The animated display picture half of "a recipient does not honour a proof it cannot verify".

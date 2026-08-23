@@ -1,8 +1,8 @@
 import { Conversation } from '../../../desktop/locators';
 import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W_Bob_1W_friends } from '../../../desktop/sessionTest';
+import { MESSAGE_DELIVERY_TIMEOUT_MS, UNTRUSTED_PRO_BACKEND_KEY } from '../../../shared/constants';
 import { sleepFor } from '../../../shared/promise_utils';
-import { MESSAGE_DELIVERY_TIMEOUT_MS } from '../../../shared/constants';
 
 const SENT_WITH_FAKE_PROOF = 'Sent with a fake proof';
 
@@ -14,16 +14,6 @@ const SENT_WITH_FAKE_PROOF = 'Sent with a fake proof';
 
 /** How long the badge is given to appear before its absence is called a refusal. See the mobile spec. */
 const BADGE_SETTLE_MS = 15_000;
-
-/**
- * A REAL Ed25519 public key that the Pro backend never signs with.
- *
- * Generated once and pinned so runs are reproducible. It must be a valid curve point, not merely
- * well-formed hex: a key the client cannot parse is rejected as "invalid key" rather than treated as a
- * different signer, and on Desktop that throws in a loop which kills swarm polling — so the recipient
- * then receives nothing at all and the spec fails for a reason unrelated to verification.
- */
-const UNTRUSTED_BACKEND_KEY = '19151761ab6c9db89e8380604cf9ebe1a60267ef6d93636b4fcadd7d29f2b571';
 
 /**
  * The verification path, exercised with a REAL proof and an untrusted signer.
@@ -49,7 +39,7 @@ test_Alice_1W_Bob_1W_friends(
     await alice.enableProBadge();
 
     // Only the recipient's trust changes. Before the send, since verification happens at receipt.
-    await restartApp(bob, { pro: { proBackendPubkey: UNTRUSTED_BACKEND_KEY } });
+    await restartApp(bob, { pro: { proBackendPubkey: UNTRUSTED_PRO_BACKEND_KEY } });
 
     await alice.openConversationWith(bob.userName);
     await alice.sendMessage(SENT_WITH_FAKE_PROOF);
