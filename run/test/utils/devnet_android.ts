@@ -48,6 +48,31 @@ export function buildAndroidLaunchExtras(context?: ProContext): string | undefin
   if (context?.proProof) {
     extras.push(`--es sessionProProof ${context.proProof}`);
   }
+  // Its own extra rather than a `sessionProBackendStatus` value, so it composes with any fixture — the
+  // debug menu's `AUTO_APPLE_REFUNDING` hardwires a provider, duration and renewal date alongside it.
+  if (context?.proRefundingStatus) {
+    extras.push(`--es sessionProRefundingStatus ${context.proRefundingStatus}`);
+  }
+  // Android models renewing and expiring as different shapes rather than a flag, so the extra converts
+  // between them — which is what keeps it composable with any fixture.
+  if (context?.proAutoRenewing) {
+    extras.push(`--es sessionProAutoRenewing ${context.proAutoRenewing}`);
+  }
+  // Android takes a boolean here rather than iOS's open/closed vocabulary, and `useActual` has to stay
+  // distinct from `false` — one clears the override, the other forces the window shut.
+  if (context?.proQuickRefundWindow) {
+    const window =
+      context.proQuickRefundWindow === 'useActual'
+        ? 'useActual'
+        : String(context.proQuickRefundWindow === 'open');
+    extras.push(`--es sessionProQuickRefundWindow ${window}`);
+  }
+  if (context?.proOriginatingAccount) {
+    extras.push(`--es sessionProOriginatingAccount ${context.proOriginatingAccount}`);
+  }
+  if (context?.proOriginatingPlatform) {
+    extras.push(`--es sessionProOriginatingPlatform ${context.proOriginatingPlatform}`);
+  }
 
   // A timing hook rather than a state mock, so it sits apart from the four above: it is used WITH a real
   // grant, to reach behaviour the server's 24h poll cadence otherwise puts out of a test run's reach.

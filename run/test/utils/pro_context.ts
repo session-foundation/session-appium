@@ -55,6 +55,54 @@ export type ProMockContext = {
    */
   proProof?: 'none' | 'useActual' | 'valid';
   /**
+   * Whether the mocked subscription has a refund pending. Both clients withdraw the same controls for it,
+   * so one setup means the same thing on either.
+   *
+   * Only meaningful with `proBackendStatus: 'active'` — the flag lives on the active-plan shape.
+   *
+   * `'notRefunding'` FORCES no refund rather than deferring: the real state is a synced config flag any
+   * of the user's other devices can have set.
+   */
+  proRefundingStatus?: 'notRefunding' | 'refunding' | 'useActual';
+  /**
+   * Whether the mocked plan renews itself.
+   *
+   * The flag the "Pro auto-renewing in {time}" line, the renewal-unsuccessful state and the Cancel Pro
+   * Access action all read — so without it a mocked plan always runs to its end date and none of those
+   * is reachable. Both clients otherwise take it from a `get_pro_status` response a mocked run never
+   * receives.
+   */
+  proAutoRenewing?: 'autoRenewing' | 'notAutoRenewing' | 'useActual';
+  /**
+   * Whether the store's own quick-refund window is still open, which decides between the <48h and >48h
+   * refund screens.
+   *
+   * **Only meaningful alongside `proOriginatingPlatform: 'android'`.** The window is a Google Play
+   * concept: the backend gives a Play payment 48 hours, while an App Store payment gets its whole
+   * subscription duration. On iOS the refund copy switch short-circuits for an Apple-originated plan
+   * before the window is read, so setting this changes nothing there.
+   *
+   * The window is a property of the payment and a mocked fixture has none, so the real value is always
+   * "closed" — the >48h screens are reachable without this, the <48h ones only with it.
+   */
+  proQuickRefundWindow?: 'closed' | 'open' | 'useActual';
+  /**
+   * Whether the store account signed in on this device is the one that bought the subscription.
+   *
+   * `'nonOriginatingAccount'` is what reaches the "you bought this on a different account" screens. On
+   * Android this overrides `hasValidSubscription`, which the refund, cancel and choose-plan screens all
+   * read — the refund screen only started consulting it once it was fixed to check the account as well as
+   * the platform.
+   */
+  proOriginatingAccount?: 'nonOriginatingAccount' | 'originatingAccount' | 'useActual';
+  /**
+   * Which platform the subscription was bought on.
+   *
+   * Android reaches the same fact through the payment provider slug, which is what
+   * `PaymentProviderMetadata.isFromAnotherPlatform` reads, so one setup means the same thing on both.
+   */
+  proOriginatingPlatform?: 'android' | 'iOS' | 'useActual';
+  /**
    * Session Pro backend to use instead of the one compiled into libsession, so a QA backend can be
    * targeted without rebuilding.
    *
@@ -114,13 +162,14 @@ export type ProContext = ProMockContext & ProTestHookContext;
 export type IOSOnlyContext = {
   iosCustomInstallTime?: string;
   iosSessionProEnabled?: string;
-  /** Platform the subscription was originally purchased on. */
-  iosProOriginatingPlatform?: 'android' | 'iOS' | 'useActual';
-  /** Whether the store account matches the one that bought the subscription. */
-  iosProOriginatingAccount?: 'nonOriginatingAccount' | 'originatingAccount' | 'useActual';
-  /** Whether a refund has already been requested. */
-  iosProRefundingStatus?: 'notRefunding' | 'refunding' | 'useActual';
-  /** Build variant, which decides whether billing UI is reachable at all (`ipa` has no billing). */
+  /**
+   * Build variant, which decides whether billing UI is reachable at all (`ipa` has no billing).
+   *
+   * The only mock left in here that Android has an equivalent notion of, and it stays iOS-only because
+   * Android takes its variant from the build rather than a launch value. The refund, originating-account
+   * and originating-platform mocks that used to sit alongside it are now in `ProMockContext`, where both
+   * clients read them.
+   */
   iosProBuildVariant?:
     | 'apk'
     | 'appStore'
@@ -147,7 +196,7 @@ export type MobileTestContext = ProContext & IOSOnlyContext;
  * which cannot be expressed while every device shares one context. Index matches device order, and a
  * `undefined` entry leaves that device unconfigured.
  */
-export type MobileTestContexts = MobileTestContext | Array<MobileTestContext | undefined>;
+export type MobileTestContexts = Array<MobileTestContext | undefined> | MobileTestContext;
 
 /** The context for one device, whichever form the caller used. */
 export function contextForDevice(
