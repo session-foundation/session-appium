@@ -54,4 +54,52 @@ export type ProMockContext = {
    * "may I" true; it does not produce anything another party can verify.
    */
   proProof?: 'none' | 'useActual' | 'valid';
+  /**
+   * Whether the mocked subscription has a refund pending. Both clients withdraw the same controls for it,
+   * so one setup means the same thing on either.
+   *
+   * Only meaningful with `proBackendStatus: 'active'` — the flag lives on the active-plan shape.
+   *
+   * `'notRefunding'` FORCES no refund rather than deferring: the real state is a synced config flag any
+   * of the user's other devices can have set.
+   */
+  proRefundingStatus?: 'notRefunding' | 'refunding' | 'useActual';
+  /**
+   * Whether the mocked plan renews itself.
+   *
+   * The flag the "Pro auto-renewing in {time}" line, the renewal-unsuccessful state and the Cancel Pro
+   * Access action all read — so without it a mocked plan always runs to its end date and none of those
+   * is reachable. Both clients otherwise take it from a `get_pro_status` response a mocked run never
+   * receives.
+   */
+  proAutoRenewing?: 'autoRenewing' | 'notAutoRenewing' | 'useActual';
+  /**
+   * Whether the store's own quick-refund window is still open, which decides between the <48h and >48h
+   * refund screens.
+   *
+   * **Only meaningful alongside `proOriginatingPlatform: 'android'`.** The window is a Google Play
+   * concept: the backend gives a Play payment 48 hours, while an App Store payment gets its whole
+   * subscription duration. On iOS the refund copy switch short-circuits for an Apple-originated plan
+   * before the window is read, so setting this changes nothing there.
+   *
+   * The window is a property of the payment and a mocked fixture has none, so the real value is always
+   * "closed" — the >48h screens are reachable without this, the <48h ones only with it.
+   */
+  proQuickRefundWindow?: 'closed' | 'open' | 'useActual';
+  /**
+   * Whether the store account signed in on this device is the one that bought the subscription.
+   *
+   * `'nonOriginatingAccount'` is what reaches the "you bought this on a different account" screens. On
+   * Android this overrides `hasValidSubscription`, which the refund, cancel and choose-plan screens all
+   * read — the refund screen only started consulting it once it was fixed to check the account as well as
+   * the platform.
+   */
+  proOriginatingAccount?: 'nonOriginatingAccount' | 'originatingAccount' | 'useActual';
+  /**
+   * Which platform the subscription was bought on.
+   *
+   * Android reaches the same fact through the payment provider slug, which is what
+   * `PaymentProviderMetadata.isFromAnotherPlatform` reads, so one setup means the same thing on both.
+   */
+  proOriginatingPlatform?: 'android' | 'iOS' | 'useActual';
 };
