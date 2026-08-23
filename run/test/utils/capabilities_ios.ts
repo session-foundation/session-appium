@@ -25,8 +25,10 @@ dotenv.config({ quiet: true });
  * NOT anything requiring a real cryptographic proof (a Pro badge a peer verifies, long messages the
  * network accepts). Those need a genuine entitlement via `makeAccountPro`.
  *
- * `iosSessionProEnabled` is the master gate: the other `pro*` values are ignored unless it is `'true'`.
- * Every mock also accepts `'useActual'`, meaning "don't mock this one".
+ * There is no longer a master gate to set: iOS deleted the pre-launch Pro-availability flag in
+ * `97bdb22214`, and the mock and override tooling it used to sit behind is now reachable on its own
+ * (still developer-mode only, which a simulator build is). Every mock accepts `'useActual'`, meaning
+ * "don't mock this one".
  *
  * The values are the app's own wire codes rather than prettier synonyms, so the test contract reads
  * the same as what the backend actually sends. Typing them as unions is deliberate — an unrecognised
@@ -41,7 +43,6 @@ dotenv.config({ quiet: true });
  */
 const IOS_TEST_ENV_KEYS: Record<keyof MobileTestContext, string> = {
   iosCustomInstallTime: 'customFirstInstallDateTime',
-  iosSessionProEnabled: 'sessionPro',
   proBackendStatus: 'mockCurrentUserSessionProBackendStatus',
   proLoadingState: 'mockCurrentUserSessionProLoadingState',
   proOriginatingPlatform: 'mockCurrentUserSessionProOriginatingPlatform',
@@ -70,7 +71,6 @@ type AppiumXCUITestCapabilities = Capabilities.AppiumXCUITestCapabilities;
 export const IOS_PRO_CONTEXT: MobileTestContext = (() => {
   const proBackend = getProBackendOverride();
   return {
-    iosSessionProEnabled: 'true',
     ...(proBackend ? { proBackendUrl: proBackend.url, proBackendPubkey: proBackend.pubkey } : {}),
   };
 })();

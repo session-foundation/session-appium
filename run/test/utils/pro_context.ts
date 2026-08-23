@@ -161,7 +161,6 @@ export type ProContext = ProMockContext & ProTestHookContext;
  */
 export type IOSOnlyContext = {
   iosCustomInstallTime?: string;
-  iosSessionProEnabled?: string;
   /**
    * Build variant, which decides whether billing UI is reachable at all (`ipa` has no billing).
    *

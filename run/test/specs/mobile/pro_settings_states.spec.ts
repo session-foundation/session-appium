@@ -49,8 +49,8 @@ import { MobileTestContext } from '../../utils/pro_context';
  *
  * Cross-platform via the shared `ProMockContext` fields: iOS reads them as launch-arg env, Android as
  * intent extras that `QaLaunchConfig` writes to the preferences its debug menu already drives. Only
- * `proBackendStatus` and `proLoadingState` cross over — `iosSessionProEnabled` and `proAccessExpiry` are
- * iOS-specific and are ignored on Android, which reaches the same states through its own fixtures.
+ * `proBackendStatus` and `proLoadingState` cross over — `proAccessExpiry` is iOS-specific and is ignored
+ * on Android, which reaches the same states through its own fixtures.
  */
 
 /**
@@ -128,7 +128,6 @@ async function openSettingsAsNewUser(
 
 async function proSettingsSubscribed(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const device = await openSettingsAsNewUser(platform, testInfo, {
-    iosSessionProEnabled: 'true',
     proBackendStatus: 'active',
     // The plan's state grants nothing; the proof is what every feature on this screen reads.
     proProof: 'valid',
@@ -181,7 +180,6 @@ async function proSettingsSubscribed(platform: SupportedPlatformsType, testInfo:
  */
 async function proSettingsExpired(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const device = await openAppAsNewUser(platform, testInfo, {
-    iosSessionProEnabled: 'true',
     proBackendStatus: 'expired',
     // Load-bearing, and only since the startup fetch gate landed: the CTA arms on a CONFIRMED status,
     // and a client holding no proof and no access expiry is exactly the case the gate declines to
@@ -247,7 +245,6 @@ async function proSettingsExpired(platform: SupportedPlatformsType, testInfo: Te
  */
 async function proStatusChecking(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const device = await openSettingsAsNewUser(platform, testInfo, {
-    iosSessionProEnabled: 'true',
     proBackendStatus: 'never',
     proLoadingState: 'loading',
   });
@@ -268,7 +265,6 @@ async function proStatusChecking(platform: SupportedPlatformsType, testInfo: Tes
 
 async function proStatusError(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const device = await openSettingsAsNewUser(platform, testInfo, {
-    iosSessionProEnabled: 'true',
     proBackendStatus: 'never',
     proLoadingState: 'error',
   });

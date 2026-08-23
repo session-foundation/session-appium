@@ -50,7 +50,6 @@ async function proSilentRefusal(platform: SupportedPlatformsType, testInfo: Test
       platform,
       testInfo,
       testContext: {
-        iosSessionProEnabled: 'true',
         // The plan says active, with time left on it...
         proBackendStatus: 'active',
         proLoadingState: 'success',
