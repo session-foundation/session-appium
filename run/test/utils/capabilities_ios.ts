@@ -181,9 +181,13 @@ function buildCustomFileServerEnv(): Record<string, string> {
   if (!url) {
     return {};
   }
-  const pubkey = (process.env.FILE_SERVER_PUBKEY ?? '').trim();
+  // ED25519, matching Android and Desktop. The `p=` fragment in a download url carries the Ed key on
+  // every client, and libsession derives the X25519 form for onion requests itself — so handing iOS the
+  // X25519 key here produces a url other clients read as an Ed key and reject as an invalid curve point,
+  // which is a download that never resolves rather than a configuration error.
+  const pubkey = (process.env.FILE_SERVER_ED_PUBKEY ?? '').trim();
   if (pubkey && !/^[0-9a-fA-F]{64}$/.test(pubkey)) {
-    throw new Error('FILE_SERVER_PUBKEY must be a 64-character hex string (X25519 pubkey)');
+    throw new Error('FILE_SERVER_ED_PUBKEY must be a 64-character hex string (Ed25519 pubkey)');
   }
   return {
     customFileServerUrl: url,

@@ -22,21 +22,39 @@ import { friends } from '../../utils/cross_platform_state_builder';
 
 const CAPTION = 'Cross-client attachment';
 
-crossPlatformTest({
-  title: 'Attachment renders across clients (Android sends, Desktop receives)',
-  risk: 'high',
-  setup: friends({
-    alice: { android: 1 },
-    bob: { desktop: 1 },
-  }),
-  testCb: async ({ accounts: { alice, bob } }) => {
-    const sender = alice.android[0];
-    const recipient = bob.desktop[0];
+type Pairing = {
+  sender: 'android' | 'desktop' | 'ios';
+  recipient: 'android' | 'desktop' | 'ios';
+};
 
-    await sender.openConversationWith(bob.account.userName);
-    await sendPhoto(sender, CAPTION);
+/**
+ * One test per DIRECTION, not per pairing: the two halves exercise different implementations — one
+ * writes and one reads — so a pairing that works one way tells you nothing about the other.
+ */
+function attachmentPairing({ sender, recipient }: Pairing) {
+  crossPlatformTest({
+    title: `Attachment renders across clients (${sender} sends, ${recipient} receives)`,
+    risk: 'high',
+    setup: friends({
+      alice: { [sender]: 1 },
+      bob: { [recipient]: 1 },
+    }),
+    testCb: async ({ accounts: { alice, bob } }) => {
+      const from = alice[sender][0];
+      const to = bob[recipient][0];
 
-    await recipient.openConversationWith(alice.account.userName);
-    await verifyPhotoRendered(recipient, CAPTION, alice.account.userName);
-  },
-});
+      await from.openConversationWith(bob.account.userName);
+      await sendPhoto(from, CAPTION);
+
+      await to.openConversationWith(alice.account.userName);
+      await verifyPhotoRendered(to, CAPTION, alice.account.userName);
+    },
+  });
+}
+
+attachmentPairing({ sender: 'android', recipient: 'desktop' });
+attachmentPairing({ sender: 'desktop', recipient: 'android' });
+attachmentPairing({ sender: 'ios', recipient: 'desktop' });
+attachmentPairing({ sender: 'desktop', recipient: 'ios' });
+attachmentPairing({ sender: 'ios', recipient: 'android' });
+attachmentPairing({ sender: 'android', recipient: 'ios' });
