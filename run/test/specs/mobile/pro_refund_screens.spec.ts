@@ -351,7 +351,7 @@ async function refundWindowClosed(platform: SupportedPlatformsType, testInfo: Te
   // window, and both the CTA label and the URL flip with it — from the store's own workflow to Session
   // Support.
   await expectProScreenAction(device, tStripped('requestRefund'));
-  await expectActionOpensUrl(device, REFUND_URL_FRAGMENT.sessionSupport);
+  await expectActionOpensUrl(device, REFUND_URL_FRAGMENT.sessionOwnedRefundLink);
 
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);
@@ -412,7 +412,7 @@ async function refundOutsideStoreWindow(platform: SupportedPlatformsType, testIn
   // The pair with the above, on the same screen and the same fixture bar the window: the CTA drops the
   // store's name and the URL becomes Session Support's own page.
   await expectProScreenAction(device, tStripped('requestRefund'));
-  await expectActionOpensUrl(device, REFUND_URL_FRAGMENT.sessionSupport);
+  await expectActionOpensUrl(device, REFUND_URL_FRAGMENT.sessionOwnedRefundLink);
 
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);

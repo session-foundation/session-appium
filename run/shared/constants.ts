@@ -45,8 +45,8 @@ export const STANDARD_PIN_LIMIT = 5;
  * 1. **The clients do not own these URLs.** All three read them from libsession's fixed per-provider
  *    table (`session/pro_backend.cpp`, `provider_urls()`), so the full string can change on a
  *    libsession bump with no client change at all — and a spec pinned to it would then fail against a
- *    correct app. Only `store` vs `support` is the clients' decision, and that is what the fragment
- *    captures.
+ *    correct app. What IS the clients' decision is *which of the provider's urls* a given state opens,
+ *    and that is what the fragment captures.
  * 2. Two of them are third-party support-article ids (`9813244`, `118223`), which carry no meaning a
  *    reader of the spec can check.
  *
@@ -63,10 +63,16 @@ export const REFUND_URL_FRAGMENT = {
    */
   googlePlayRefundWorkflow: 'support.google.com/googleplay/workflow',
   /**
-   * Session Support — the route offered once the store will no longer take the request. Unlike the two
-   * store URLs this one is ours, so it is safe to name in full.
+   * The Session-owned refund link, which is what a state opens instead of the store's own workflow.
+   * Ours rather than a third party's, so it is safe to name in full.
+   *
+   * **Do not read a passing assertion as "Session handles this request rather than the store."** This
+   * is expected to become a *redirect* to the Play store, at which point both routes end up at Google
+   * and only the url the client chose differs. That is fine for the assertion — the specs check the url
+   * the client opens and never follow it, so a redirect landing anywhere cannot break them — but it is
+   * why this is named for the link rather than for who resolves the refund.
    */
-  sessionSupport: 'getsession.org/android-refund',
+  sessionOwnedRefundLink: 'getsession.org/android-refund',
   /**
    * Apple's subscriptions-refund support page. Note the App Store's `refund_platform_url` and
    * `refund_support_url` are the SAME value, so on an App Store plan the URL cannot distinguish the

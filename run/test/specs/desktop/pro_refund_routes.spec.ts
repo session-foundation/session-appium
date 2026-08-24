@@ -154,7 +154,7 @@ test_Alice_1W_no_network(
     );
     // The pair with the case above, and the assertion the window mock exists for: Google Play is the one
     // provider whose two refund URLs differ, so this fragment and that one are the whole difference.
-    await expectRefundOpensUrl(alice, REFUND_URL_FRAGMENT.sessionSupport);
+    await expectRefundOpensUrl(alice, REFUND_URL_FRAGMENT.sessionOwnedRefundLink);
   },
   {
     pro: {
