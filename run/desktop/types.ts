@@ -69,7 +69,20 @@ export type WithPage = { window: Page };
 export type WithMaxWait = { maxWait?: number };
 export type WithRightButton = { rightButton?: boolean };
 
-export type MediaType = 'audio' | 'file' | 'image' | 'video';
+/**
+ * How an attachment is CLASSIFIED for the untrusted-sender prompt, "Click to download {file_type}".
+ *
+ * A coarser grouping than the kind of file being sent, which is why this is no longer `MediaType`: `ClickToTrustSender` derives
+ * it from the first attachment's mime type and can produce exactly three values — `audio` for audio,
+ * `media` for BOTH images and videos, and `file` for everything else:
+ *
+ *     isAudio(mime) ? i18n('audio') : isImageOrVideo(mime) ? i18n('media') : i18n('file')
+ *
+ * `image` and `video` used to be members and were never reachable. They are the dangerous kind of wrong
+ * value: they name real media, so picking one to send a photo reads correctly and then waits out the
+ * timeout against copy the app never renders, which reports as a failed download.
+ */
+export type AttachmentType = 'audio' | 'file' | 'media';
 export type Strategy = ':has-text' | 'class' | 'data-testid';
 export type MessageStatus = 'failed' | 'read' | 'sent';
 
