@@ -95,6 +95,24 @@ export function buildAndroidLaunchExtras(context?: ProMockContext): string | und
     );
   }
 
+  // The local file server, when one is configured. Android had no way to reach an arbitrary file server
+  // until `sessionFileServerUrl` landed: its debug menu offers only a hardcoded list of remote test
+  // servers. Without this Android uploads to production while iOS and Desktop are pointed at the local
+  // one, so a cross-platform attachment never resolves — the upload and the download are looking at
+  // different servers.
+  //
+  // ED25519, unlike iOS's `customFileServerPubkey`, which takes the X25519 form. `FileServer` stores the
+  // Ed25519 key and derives X25519 from it, so the two platforms genuinely need different keys from the
+  // same server — hence two variables rather than one.
+  const fileServerUrl = process.env.FILE_SERVER_URL?.trim();
+  const fileServerEdPubkey = process.env.FILE_SERVER_ED_PUBKEY?.trim();
+  if (fileServerUrl && fileServerEdPubkey) {
+    extras.push(
+      `--es sessionFileServerUrl ${fileServerUrl}`,
+      `--es sessionFileServerPubkey ${fileServerEdPubkey}`
+    );
+  }
+
   return extras.length > 0 ? extras.join(' ') : undefined;
 }
 
