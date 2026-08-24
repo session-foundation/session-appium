@@ -257,7 +257,17 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
    * Pro is **not** active when this returns: the client reconciles it on its next authenticated
    * request, so callers must retry rather than assert immediately.
    */
-  public async subscribeToPro(): Promise<void> {
+  /**
+   * Mint a real Pro grant for this window's account.
+   *
+   * `durationSeconds` overrides the plan's nominal length. A tiny value is how the overhang is reached:
+   * the account lapses within a second or two, while the signed proof stays valid for the whole coverage
+   * window, so the client's next status read sees an expired plan and a live credential together.
+   */
+  public async subscribeToPro(
+    _user?: StateUser,
+    options?: { durationSeconds?: number }
+  ): Promise<void> {
     const account = this.getUser();
     await makeAccountPro({
       user: {
@@ -266,6 +276,9 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
         seedPhrase: account.seedPhrase,
       },
       provider: 'google',
+      ...(options?.durationSeconds === undefined
+        ? {}
+        : { durationSeconds: options.durationSeconds }),
     });
   }
 

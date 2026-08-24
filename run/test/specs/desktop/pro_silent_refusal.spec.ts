@@ -24,7 +24,7 @@ const CONVERSATION_COUNT = 6;
  * and pinned anyway satisfies either assertion alone.
  */
 test_Alice_1W_10contacts(
-  'An active plan with no proof is refused without being sold to',
+  'Pinning is blocked with no upgrade prompt when Pro cannot be verified',
   async ({ alice, contactNames }) => {
     const names = contactNames.slice(0, CONVERSATION_COUNT);
 
