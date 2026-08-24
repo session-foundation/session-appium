@@ -33,3 +33,45 @@ export const COUNTDOWN_START_THRESHOLD = 200;
 
 /** Pinned conversations allowed without Pro. */
 export const STANDARD_PIN_LIMIT = 5;
+
+/**
+ * The refund destinations, as the FRAGMENT of each URL that names the route rather than the whole URL.
+ *
+ * Which URL the "Open URL" confirmation offers is what tells the refund routes apart: the same screen,
+ * with the same title, sends the user either to the store's own refund workflow or to Session Support,
+ * and only the URL says which. So this is the assertion — but a fragment rather than the full string,
+ * for two reasons:
+ *
+ * 1. **The clients do not own these URLs.** All three read them from libsession's fixed per-provider
+ *    table (`session/pro_backend.cpp`, `provider_urls()`), so the full string can change on a
+ *    libsession bump with no client change at all — and a spec pinned to it would then fail against a
+ *    correct app. Only `store` vs `support` is the clients' decision, and that is what the fragment
+ *    captures.
+ * 2. Two of them are third-party support-article ids (`9813244`, `118223`), which carry no meaning a
+ *    reader of the spec can check.
+ *
+ * The fragments are still specific enough to distinguish every route: no two of the three share one.
+ *
+ * Substring matching is the caller's job — the mobile locators' `text`/`label` filters are exact after
+ * normalisation, so the mobile helpers read the element's copy and assert `toContain`, while Desktop's
+ * `:has-text()` selector is already a substring match.
+ */
+export const REFUND_URL_FRAGMENT = {
+  /**
+   * Google Play's own refund workflow — the route offered while the store's 48-hour window is open.
+   * Full value at time of writing: `https://support.google.com/googleplay/workflow/9813244?`.
+   */
+  googlePlayRefundWorkflow: 'support.google.com/googleplay/workflow',
+  /**
+   * Session Support — the route offered once the store will no longer take the request. Unlike the two
+   * store URLs this one is ours, so it is safe to name in full.
+   */
+  sessionSupport: 'getsession.org/android-refund',
+  /**
+   * Apple's subscriptions-refund support page. Note the App Store's `refund_platform_url` and
+   * `refund_support_url` are the SAME value, so on an App Store plan the URL cannot distinguish the
+   * window-open route from the window-closed one — only the copy and the CTA can.
+   * Full value at time of writing: `https://support.apple.com/118223`.
+   */
+  appleRefundSupport: 'support.apple.com/118223',
+} as const;
