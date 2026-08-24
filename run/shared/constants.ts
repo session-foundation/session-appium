@@ -99,4 +99,10 @@ export const REFUND_URL_FRAGMENT = {
    * support form.
    */
   sessionProSupportForm: 'getsession.org/pro-support',
+  /**
+   * Apple's own refund page, which an App Store plan takes while its window is open. Apple's
+   * `refund_platform_url` and `refund_support_url` are the same value, so this fragment says which
+   * STORE the request went to and cannot say anything about the window.
+   */
+  appleRefundSupport: 'support.apple.com/118223',
 } as const;

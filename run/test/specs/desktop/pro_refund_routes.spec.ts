@@ -197,11 +197,10 @@ test_Alice_1W_no_network(
         }),
       },
     });
-    // Apple's `refund_platform_url` and `refund_support_url` are the same page, so this fragment cannot
-    // tell the window-open route from the window-closed one. It is here to prove the button opens the
-    // confirmation at all and points at Apple rather than at Session Support — which the other two
-    // absences above do not cover, because they are about the page, not about where the button goes.
-    await expectRefundOpensUrl(alice, REFUND_URL_FRAGMENT.quickRefund);
+    // Apple's own refund page. The store route reads the ORIGINATING provider's table, so an App Store
+    // plan lands on Apple's page rather than the Play-store link, with no provider check in the client.
+    // Apple's two refund urls are the same value, so this says which store, not which window.
+    await expectRefundOpensUrl(alice, REFUND_URL_FRAGMENT.appleRefundSupport);
   },
   {
     pro: {

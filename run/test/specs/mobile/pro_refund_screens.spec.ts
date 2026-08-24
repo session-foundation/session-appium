@@ -223,9 +223,14 @@ async function refundBoughtElsewhere(platform: SupportedPlatformsType, testInfo:
   // The window is open, so on iOS the CTA takes the store's own refund workflow. On Android the plan is an
   // App Store one, whose two refund URLs are the same value, so the fragment is the same either way — the
   // route there is carried by the copy, not the URL.
-  // One url for both platforms now: the clients pick on the window alone, not on the provider, so a
-  // fixture with the window open lands on the same Session-owned link whichever device runs it.
-  await expectActionOpensUrl(device, REFUND_URL_FRAGMENT.quickRefund);
+  // The window is open on both, but the url differs — because this fixture buys on the OTHER platform,
+  // so the iOS run has a Google Play plan and the Android run an App Store one. Each takes its own
+  // store's page, which is the point: the clients read the ORIGINATING provider's table, so the store
+  // route is per-provider without either of them checking the provider themselves.
+  await expectActionOpensUrl(
+    device,
+    platform === 'ios' ? REFUND_URL_FRAGMENT.quickRefund : REFUND_URL_FRAGMENT.appleRefundSupport
+  );
 
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);
