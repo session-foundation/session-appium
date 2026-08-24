@@ -125,7 +125,7 @@ test_Alice_1W_no_network(
         platform: tStripped('pro_provider_google_play_store'),
       })
     );
-    await expectRefundOpensUrl(alice, REFUND_URL_FRAGMENT.googlePlayRefundWorkflow);
+    await expectRefundOpensUrl(alice, REFUND_URL_FRAGMENT.quickRefund);
   },
   {
     pro: {
@@ -154,7 +154,7 @@ test_Alice_1W_no_network(
     );
     // The pair with the case above, and the assertion the window mock exists for: Google Play is the one
     // provider whose two refund URLs differ, so this fragment and that one are the whole difference.
-    await expectRefundOpensUrl(alice, REFUND_URL_FRAGMENT.sessionOwnedRefundLink);
+    await expectRefundOpensUrl(alice, REFUND_URL_FRAGMENT.sessionProSupportForm);
   },
   {
     pro: {
@@ -201,7 +201,7 @@ test_Alice_1W_no_network(
     // tell the window-open route from the window-closed one. It is here to prove the button opens the
     // confirmation at all and points at Apple rather than at Session Support — which the other two
     // absences above do not cover, because they are about the page, not about where the button goes.
-    await expectRefundOpensUrl(alice, REFUND_URL_FRAGMENT.appleRefundSupport);
+    await expectRefundOpensUrl(alice, REFUND_URL_FRAGMENT.quickRefund);
   },
   {
     pro: {

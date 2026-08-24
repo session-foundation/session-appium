@@ -58,26 +58,13 @@ export const STANDARD_PIN_LIMIT = 5;
  */
 export const REFUND_URL_FRAGMENT = {
   /**
-   * Google Play's own refund workflow — the route offered while the store's 48-hour window is open.
-   * Full value at time of writing: `https://support.google.com/googleplay/workflow/9813244?`.
+   * The route offered while the store's own quick-refund window is open. A Session-owned short link
+   * which redirects to the store, so the CTA beside it names the store while this url does not.
    */
-  googlePlayRefundWorkflow: 'support.google.com/googleplay/workflow',
+  quickRefund: 'getsession.org/android-refund',
   /**
-   * The Session-owned refund link, which is what a state opens instead of the store's own workflow.
-   * Ours rather than a third party's, so it is safe to name in full.
-   *
-   * **Do not read a passing assertion as "Session handles this request rather than the store."** This
-   * is expected to become a *redirect* to the Play store, at which point both routes end up at Google
-   * and only the url the client chose differs. That is fine for the assertion — the specs check the url
-   * the client opens and never follow it, so a redirect landing anywhere cannot break them — but it is
-   * why this is named for the link rather than for who resolves the refund.
+   * The route offered once that window has closed and only Session can action the request — its Pro
+   * support form.
    */
-  sessionOwnedRefundLink: 'getsession.org/android-refund',
-  /**
-   * Apple's subscriptions-refund support page. Note the App Store's `refund_platform_url` and
-   * `refund_support_url` are the SAME value, so on an App Store plan the URL cannot distinguish the
-   * window-open route from the window-closed one — only the copy and the CTA can.
-   * Full value at time of writing: `https://support.apple.com/118223`.
-   */
-  appleRefundSupport: 'support.apple.com/118223',
+  sessionProSupportForm: 'getsession.org/pro-support',
 } as const;
