@@ -105,7 +105,7 @@ export function buildAndroidLaunchExtras(context?: ProMockContext): string | und
   // Ed25519 key and derives X25519 from it, so the two platforms genuinely need different keys from the
   // same server — hence two variables rather than one.
   const fileServerUrl = process.env.FILE_SERVER_URL?.trim();
-  const fileServerEdPubkey = process.env.FILE_SERVER_PUBKEY?.trim();
+  const fileServerEdPubkey = process.env.FILE_SERVER_ED_PUBKEY?.trim();
   if (fileServerUrl && fileServerEdPubkey) {
     extras.push(
       `--es sessionFileServerUrl ${fileServerUrl}`,

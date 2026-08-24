@@ -92,7 +92,7 @@ function mockAvatarPickerFile(fakeAvatarPickerFile?: string) {
  * Without this the client uploads to the PRODUCTION file server over an onion path — minutes per
  * avatar, and a spec that looks like it never clicked Save.
  *
- * `FILE_SERVER_PUBKEY` is the server's **Ed25519** key, which every client now embeds in the download
+ * `FILE_SERVER_ED_PUBKEY` is the server's **Ed25519** key, which every client now embeds in the download
  * url's `p=` fragment and converts to X25519 for onion encryption itself. There used to be a second
  * variable for the X25519 form, because libSession consumed that one raw; it does not any more.
  *
@@ -101,7 +101,7 @@ function mockAvatarPickerFile(fakeAvatarPickerFile?: string) {
  */
 function useLocalFileServer() {
   const url = process.env.FILE_SERVER_URL?.trim();
-  const edPubkey = process.env.FILE_SERVER_PUBKEY?.trim();
+  const edPubkey = process.env.FILE_SERVER_ED_PUBKEY?.trim();
   if (url && edPubkey) {
     process.env.TEST_FILE_SERVER_URL = url;
     process.env.TEST_FILE_SERVER_ED_PK = edPubkey;

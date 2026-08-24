@@ -5,19 +5,15 @@ import { friends } from '../../utils/cross_platform_state_builder';
 /**
  * An attachment sent by one client renders on a client of a different platform.
  *
- * WHY THIS EXISTS. All three clients now write attachments with libSession's stream encryption. Byte-level
- * format agreement is already proven against a canonical libSession vector, on all three, so this is NOT
- * a format test — it is the network leg the vectors cannot reach: that a file written by one
- * implementation is fetched, decrypted and drawn by another.
+ * Byte-level format agreement between the clients is proven elsewhere against a libSession vector, so
+ * this covers the leg those vectors cannot reach: a file written by one implementation, fetched and
+ * drawn by another.
  *
- * WHAT MAKES IT ABLE TO FAIL. It asserts the photo RENDERS, not that a bubble arrived. Two
- * implementations can agree with themselves and disagree with each other, and every symptom of that is
- * invisible to a text assertion: the existing same-platform image specs check the message body only, so
- * they pass against a broken placeholder. See `verifyPhotoRendered`.
+ * It asserts the photo RENDERS rather than that a bubble arrived, which is what makes it able to fail —
+ * the same-platform image specs assert the message body only, so they pass against a broken placeholder.
  *
- * DELIBERATELY FORMAT-AGNOSTIC. Nothing here names a format or a key length, so it passes on builds that
- * predate stream encryption too. That is the point: it is verified green on current builds first, which
- * is what makes a later failure attributable to the change rather than to the spec being new.
+ * Nothing here names a format or a key length, so it passes on builds either side of a format change.
+ * That is what makes a failure attributable to the change rather than to the spec being new.
  */
 
 const CAPTION = 'Cross-client attachment';

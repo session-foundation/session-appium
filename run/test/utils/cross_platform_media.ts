@@ -13,27 +13,21 @@ import { MediaMessage, MessageBody } from '../locators/conversation';
 export const CROSS_CLIENT_PHOTO = resolve(__dirname, '../media', testImage);
 
 /**
- * How large a rendered attachment's own screenshot must be before we call it rendered.
+ * How large a rendered attachment's own screenshot must be before it counts as rendered.
  *
- * The point of these specs is that the BYTES survive the round trip, so the assertion has to be about
- * pixels rather than about an element existing. A failed decrypt still leaves a bubble, a spinner or a
- * broken-image placeholder in the tree — all of which satisfy "the attachment is present" and none of
- * which satisfy this.
+ * A failed decrypt still leaves a bubble, a spinner or a broken-image placeholder, all of which
+ * satisfy "the attachment is present" — so the assertion has to be about pixels.
  *
- * A flat colour would have made the pixel check trivial to state, and is exactly what NOT to send: a
- * solid image's screenshot compresses to almost nothing, so it fails this floor while rendering
- * perfectly. Hence a photo, and hence a floor rather than an expected colour. Desktop's
- * `verifyMediaPreviewLoaded` already uses the same 5 kB reasoning; this mirrors it so the two platforms
- * are judged the same way.
+ * This is why the fixture is a photo: a flat colour compresses below any usable floor while rendering
+ * perfectly.
  */
 const RENDER_FLOOR_BYTES = 5_000;
 
 /**
  * How long an attachment gets to come back off the file server and draw.
  *
- * Generous on purpose: this covers a fetch over onion routing, not a locally-staged preview, and the
- * element does not exist until the download completes. A tight bound here fails as "did not render",
- * which is the one thing these specs must not say when the truth is "not yet".
+ * Covers a fetch over onion routing, and the element does not exist until the download completes. A
+ * tight bound fails as "did not render" when the truth is "not yet".
  */
 const ATTACHMENT_DOWNLOAD_TIMEOUT_MS = 60_000;
 
@@ -71,8 +65,7 @@ export async function sendPhoto(client: IBaseDeviceWrapper, caption: string): Pr
  * Assert the photo `caption` identifies actually RENDERED on this client.
  *
  * An attachment behind an untrusted-sender prompt is never fetched, so it never reaches the decrypt
- * path — hence the sender's name, and hence trusting before asserting on both platforms. A seeded
- * friendship does not pre-trust attachments; the existing Desktop media specs click the same prompt.
+ * path — hence the sender's name. A seeded friendship does not pre-trust attachments.
  */
 export async function verifyPhotoRendered(
   client: IBaseDeviceWrapper,
@@ -83,17 +76,10 @@ export async function verifyPhotoRendered(
     const page = (client as DesktopWrapper).getPage();
     await client.waitForMessage(caption);
 
-    // A seeded friendship does NOT pre-trust attachments: Desktop declines the download until the
-    // prompt is clicked, logging "not downloading attachments yet as this user is not trusted for now",
-    // and the element the assertion below waits for never appears.
-    //
-    // PHOTO_ATTACHMENT_TYPE is `media`, not `image` — see its definition.
     await trustUser(page, PHOTO_ATTACHMENT_TYPE, senderName);
 
-    // Not `verifyMediaPreviewLoaded`: its wait for the attachment element is a hardcoded 5s, which is
-    // enough for a locally-staged send and not enough for one that has to come back off the file server
-    // — measured here, where the element appears only once the download completes. Same criterion as the
-    // mobile branch below, so a photo is judged the same way on all three clients.
+    // Not `verifyMediaPreviewLoaded`: its wait for the attachment element is a hardcoded 5s, which a
+    // fetch off the file server does not fit inside.
     const media = page
       .locator('[data-testid="message-content"]')
       .filter({ hasText: caption })
