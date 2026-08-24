@@ -72,5 +72,12 @@ test_Alice_1W_Bob_1W_friends(
       )
       .first()
       .waitFor({ state: 'hidden', timeout: 2_000 });
-  }
+  },
+  // Present to earn the `@pro` tag, which `taggedName` derives from this context rather than from a
+  // declaration -- so without it the spec runs but `--grep @pro` does not select it, and a Pro pass
+  // reports less coverage than it has while its count still looks plausible.
+  //
+  // Empty because the fixture needs nothing at launch: Alice's entitlement is a real grant made in the
+  // body, and the recipient's untrusted key is applied by its own `restartApp`.
+  { pro: {} }
 );
