@@ -60,8 +60,18 @@ function markedMessage(tag: string): string {
  *
  * Opportunistic per bubble, because whether there is anything to expand is itself information: a copy cut
  * to the standard limit may present no affordance at all.
+ *
+ * ANDROID ONLY, and the gate lives here rather than at the call sites so it cannot be forgotten by a third
+ * one: iOS flattens the bubble into a single accessibility element, so there is no Read more subview to
+ * find and `MessageReadMore` throws on iOS by design. Nothing is lost by skipping it — the full text is in
+ * the bubble's accessibility attributes whether or not the bubble is visually collapsed, which is exactly
+ * what the assertions below read.
  */
 async function expandLongMessages(device: DeviceWrapper): Promise<void> {
+  if (device.isIOS()) {
+    return;
+  }
+
   for (let i = 0; i < 4; i++) {
     const readMore = await device.doesElementExist({
       ...new MessageReadMore(device).build(),
