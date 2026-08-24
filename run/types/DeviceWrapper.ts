@@ -1570,7 +1570,7 @@ export class DeviceWrapper implements IMobileWrapper {
     const { maxWait = 30_000 } = args;
     const skipHealing = 'skipHealing' in args ? (args.skipHealing ?? false) : false;
 
-    const description = describeLocator({ ...locator, text });
+    const description = describeLocator({ ...locator, text, label });
     this.log(`Waiting for element with ${description} to be present`);
 
     // Helper function to find element with or without healing

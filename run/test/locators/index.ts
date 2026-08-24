@@ -568,8 +568,10 @@ export class UsernameInput extends LocatorsInterface {
   }
 }
 
-export function describeLocator(locator: StrategyExtractionObj & { text?: string }): string {
-  const { strategy, selector, text } = locator;
+export function describeLocator(
+  locator: StrategyExtractionObj & { text?: string; label?: string }
+): string {
+  const { strategy, selector, text, label } = locator;
 
   // Trim selector if its too long, show beginning and end
   const maxSelectorLength = 80;
@@ -587,6 +589,18 @@ export function describeLocator(locator: StrategyExtractionObj & { text?: string
       : text
     : undefined;
 
+  const trimmedLabel = label
+    ? label.length > maxTextLength
+      ? `${label.substring(0, maxTextLength / 2)}…${label.substring(label.length - maxTextLength / 2)}`
+      : label
+    : undefined;
+
   const base = `${strategy} "${trimmedSelector}"`;
-  return trimmedText ? `${base} and text "${trimmedText}"` : base;
+  // `text` and `label` are named separately rather than folded into one "copy" word: they read
+  // different attributes (value vs label), so a locator that matches one and not the other is the
+  // normal case on iOS, and a log that blurred them would point at the wrong fix.
+  if (trimmedText) {
+    return `${base} and text "${trimmedText}"`;
+  }
+  return trimmedLabel ? `${base} and label "${trimmedLabel}"` : base;
 }

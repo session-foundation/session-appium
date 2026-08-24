@@ -502,8 +502,17 @@ export class ProScreenAction extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
+        // Two ids, not one: `pro-screen-action` is the clickable Button, whose own `text` is empty
+        // because Compose leaves the copy on a child. Verified from a page-source dump — the node
+        // reports `text=""` with a `TextView text="Request Refund"` inside — so a text filter here
+        // matched nothing. The child now carries `pro-screen-action-label`, which is what a copy
+        // assertion addresses. iOS needs no equivalent: its identifier and label sit on one element.
         return this.expectedCopy
-          ? ({ strategy: 'id', selector: 'pro-screen-action', text: this.expectedCopy } as const)
+          ? ({
+              strategy: 'id',
+              selector: 'pro-screen-action-label',
+              text: this.expectedCopy,
+            } as const)
           : ({ strategy: 'id', selector: 'pro-screen-action' } as const);
       case 'ios':
         // `label`, not `text`: the identifier owns `name`, as everywhere else on these screens.
