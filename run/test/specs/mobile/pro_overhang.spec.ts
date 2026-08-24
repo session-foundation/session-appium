@@ -1,14 +1,21 @@
 import { test, type TestInfo } from '@playwright/test';
 
 import { tStripped } from '../../../localizer/lib';
-import { COUNTDOWN_START_THRESHOLD, PRO_MAX_CHARS } from '../../../shared/constants';
-import { TestSteps } from '../../../types/allure';
+import {
+  COUNTDOWN_START_THRESHOLD,
+  MESSAGE_DELIVERY_TIMEOUT_MS,
+  PRO_MAX_CHARS,
+} from '../../../shared/constants';
+import { makeAccountPro } from '../../../shared/pro_grant';
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import { USERNAME } from '../../../types/testing';
-import { CloseSettings } from '../../locators';
-import { MessageInput, MessageLengthCountdown } from '../../locators/conversation';
+import {
+  MessageInput,
+  MessageLengthCountdown,
+  MessageReadMore,
+  SendButton,
+} from '../../locators/conversation';
 import { CTAButtonNegative } from '../../locators/global';
-import { PlusButton } from '../../locators/home';
+import { ConversationItem } from '../../locators/home';
 import {
   ProManageSectionHeader,
   ProRenewPlanRow,
@@ -17,23 +24,20 @@ import {
   ProStatsHeader,
 } from '../../locators/pro';
 import { UserSettings } from '../../locators/settings';
-import { EnterAccountID, NewMessageOption, NextButton } from '../../locators/start_conversation';
-import { harvestAccountData, newUser } from '../../utils/create_account';
-import {
-  closeApp,
-  openAppOnPlatformSingleDevice,
-  SupportedPlatformsType,
-} from '../../utils/open_app';
+import { open_Alice1_Bob1_friends } from '../../state_builder';
+import { runOnlyOnAndroid, sleepFor } from '../../utils';
+import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
+import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
+import { observeProGrant } from '../../utils/pro_refresh';
+import { forceStopAndRestart } from '../../utils/utilities';
 
 /** Lands the countdown on exactly the threshold, so the value asserted is the limit being applied. */
 const AT_PRO_THRESHOLD = PRO_MAX_CHARS - COUNTDOWN_START_THRESHOLD;
 
-const ONE_DAY_SECONDS = 24 * 60 * 60;
-
 bothPlatformsIt({
   title: 'Pro features survive the plan expiring',
   risk: 'high',
-  countOfDevicesNeeded: 1,
+  countOfDevicesNeeded: 2,
   testCb: proOverhang,
   isPro: true,
   allureSuites: {
@@ -64,88 +68,115 @@ bothPlatformsIt({
  * supplies that.
  */
 async function proOverhang(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, {
-    sessionProEnabled: 'true',
-    // The plan ended yesterday, and the backend has said so...
-    proBackendStatus: 'expired',
-    proLoadingState: 'success',
-    proAccessExpiry: String(Math.floor(Date.now() / 1000) - ONE_DAY_SECONDS),
-    // ...while the credential it was issued under is still good.
-    proProof: 'valid',
+  // Two devices and a seeded contact, because the claim has a receiving half: only a second party
+  // verifies the credential, and that is what a mocked proof could never satisfy.
+  const { devices, prebuilt } = await open_Alice1_Bob1_friends({
+    platform,
+    focusFriendsConvo: true,
+    testInfo,
+    iOSContext: IOS_PRO_CONTEXT,
+  });
+  const { alice1, bob1 } = devices;
+
+  // A REAL grant, seconds long. No mock reaches this state: the expired half has to be a status the
+  // backend CONFIRMED, and the surviving half has to be a credential a recipient will actually accept.
+  const PLAN_SECONDS = 12;
+  const grantedAt = Date.now();
+  await test.step('Grant Pro with a plan that lapses in seconds', async () => {
+    await makeAccountPro({ user: prebuilt.alice, platform, durationSeconds: PLAN_SECONDS });
   });
 
-  // `saveUserData: false` skips the settings visit `newUser` otherwise makes to read the recovery
-  // phrase. That visit happens before any spec code can run, so a fixture which arms an app-open CTA —
-  // as this one does — has the modal sitting over the settings list while it looks for a row.
-  await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    return await newUser(device, USERNAME.ALICE, { saveUserData: false });
+  await test.step('Let the client observe it while the plan is still live', async () => {
+    // Active FIRST: a fetch that finds an already-expired plan leaves the client with no usable
+    // credential, so there would be nothing for the overhang to preserve.
+    await observeProGrant(alice1);
+    // A seconds-long, non-renewing grant is inside the expiring-soon window the moment it lands, so
+    // that CTA arms too — and on mobile the Pro CTAs surface on the HOME screen rather than over the
+    // Pro settings screen, which is where desktop's appear. Cleared here so it is not sitting over the
+    // conversation list when the next step goes looking for a contact.
+    // `observeProGrant` opens Pro settings and closes back out to the home screen, and the CTA fires on
+    // that RETURN — not on launch. A seconds-long, non-renewing grant is inside the expiring window the
+    // moment it lands, so this is deterministic rather than incidental.
+    await alice1.checkCTA('proExpiringSoon');
+    await alice1.clickOnElementAll(new CTAButtonNegative(alice1));
   });
 
-  await test.step('Verify the expiry CTA fires on app open', async () => {
-    // The first half of the display claim, and it has to be handled before anything else regardless:
-    // the modal covers the UI, so a spec that ignored it would fail several steps later on whatever it
-    // happened to be obscuring.
-    await device.checkCTA('proExpired');
-    // Dismissed through its own Cancel button rather than `dismissCTA()`, which falls back to a tap at
-    // (150,150) — that does not dismiss this modal on iOS and the next tap then lands on its scrim.
-    await device.clickOnElementAll(new CTAButtonNegative(device));
+  await test.step('Let the plan lapse, then read the status again', async () => {
+    // To a deadline from the grant, not a fresh countdown: the time spent reaching Active was already
+    // burning the plan.
+    const lapsedAt = grantedAt + (PLAN_SECONDS + 2) * 1000;
+    await sleepFor(Math.max(0, lapsedAt - Date.now()));
+    await forceStopAndRestart(alice1);
   });
 
-  // Both halves run in the SAME launch deliberately: the claim is that one client holds both states at
-  // once, which a relaunch between them would not show.
-  let sessionId = '';
-
-  await test.step('Verify the plan displays as expired', async () => {
-    await device.clickOnElementAll(new UserSettings(device));
-    await device.clickOnElementAll(new ProSettingsEntry(device));
-    await device.waitForTextElementToBePresent(new ProRenewPlanRow(device));
-    // The copy is asserted, not just the row, because the two are chosen by different code. The row
-    // follows the plan's status; the description is picked by a separate switch on that same status,
-    // so a client that fixed one and not the other offers to renew under a heading thanking the user
-    // for subscribing. The expired copy is also the only one of the three that tells someone in this
-    // window what to do about it, which is the whole point of showing an expired plan to a user whose
-    // features still work.
-    await device.waitForTextElementToBePresent(
-      new ProSettingsDescription(device, tStripped('proAccessRenewStart'))
-    );
-    // Asserted absent as well: the subscribed screen renders these, so their presence would mean the
-    // client is showing an active plan rather than an expired one with working features.
-    await device.verifyElementNotPresent({
-      ...new ProStatsHeader(device).build(),
-      maxWait: 1000,
-    });
-    await device.verifyElementNotPresent({
-      ...new ProManageSectionHeader(device).build(),
-      maxWait: 1000,
-    });
-    await device.navigateBack();
-    await device.clickOnElementAll(new CloseSettings(device));
+  await test.step('Clear any Pro CTA raised by the lapse', async () => {
+    // Mobile raises the Pro CTAs on the HOME screen after a relaunch. Deliberately tolerant rather
+    // than asserted: with a real lapse the expired CTA did not arm reliably on iOS, and whether it
+    // does is a question for `pro_expiring_soon_cta` rather than a precondition of this spec. All this
+    // needs is that no modal is left covering the conversation list.
+    await alice1.checkCTA('proExpired');
+    await alice1.clickOnElementAll(new CTAButtonNegative(alice1));
   });
 
-  await test.step('Read the account address', async () => {
-    // Deferred until after the CTA was handled, which is why `newUser` skipped it: the modal sits over
-    // the settings list, and this reads it.
-    ({ sessionId } = await harvestAccountData(device));
-  });
-
-  await test.step('Verify the Pro message limit still applies', async () => {
-    // Note to Self: the limit is the sender's own decision, so no second party is needed to observe
-    // which one is in force.
-    await device.clickOnElementAll(new PlusButton(device));
-    await device.clickOnElementAll(new NewMessageOption(device));
-    await device.inputText(sessionId, new EnterAccountID(device));
-    await device.hideKeyboard();
-    await device.clickOnElementAll(new NextButton(device));
-
+  await test.step('Verify the Pro message limit still applies, and the message lands', async () => {
+    await alice1.clickOnElementAll(new ConversationItem(alice1, prebuilt.bob.userName));
+    // A marker on the TAIL, so the recipient assertion can be a cheap contains rather than a match on
+    // 9,800 characters — and so that what it proves is exactly the right thing: if the proof were
+    // refused the message would arrive truncated to the standard limit, and the tail would be gone.
+    const TAIL_MARKER = 'OVERHANG-TAIL';
+    const overhangMessage = 'x'.repeat(AT_PRO_THRESHOLD - TAIL_MARKER.length) + TAIL_MARKER;
     // At this length the countdown reads 200 under the Pro limit and would have appeared thousands of
     // characters ago under the standard one, so the value names which limit is being applied.
-    await device.inputText('x'.repeat(AT_PRO_THRESHOLD), new MessageInput(device), true);
-    await device.waitForTextElementToBePresent(
-      new MessageLengthCountdown(device, String(COUNTDOWN_START_THRESHOLD))
+    await alice1.inputText(overhangMessage, new MessageInput(alice1), true);
+    await alice1.waitForTextElementToBePresent(
+      new MessageLengthCountdown(alice1, String(COUNTDOWN_START_THRESHOLD))
     );
+    await alice1.clickOnElementAll(new SendButton(alice1));
+    // The half a mocked proof cannot reach: the recipient VERIFIES the credential, so this only passes
+    // if the proof is genuinely signed and still valid. With a mock the message arrives truncated to
+    // the standard limit instead.
+    // A long bubble collapses behind "Read more", and the hidden remainder is not in the accessibility
+    // tree — so it has to be expanded before the tail can be read. OPPORTUNISTIC, because whether there
+    // is anything to expand is itself the thing under test: a recipient that honoured the proof has
+    // 9,800 characters and collapses; one that did not has 2,000 and shows no affordance at all.
+    // 🔴 Android only, and the deviation is real rather than a workaround. Android puts a collapsed
+    // bubble's remainder out of reach, so the tail has to be expanded before it can be read. iOS carries
+    // the full text in the bubble's accessibility attributes whether it is collapsed or not, AND flattens
+    // the bubble into a single accessibility element — so there is nothing to tap there and nothing to
+    // gain by tapping it. Measured: an iOS id for this was added and compiled in, and still could not be
+    // found in 20s. Attempting it on both platforms and swallowing the failure would spend that 20s every
+    // run and disguise a genuine platform difference as a flaky locator.
+    await runOnlyOnAndroid(platform, async () => {
+      await bob1.waitForTextElementToBePresent({
+        ...new MessageReadMore(bob1).build(),
+        maxWait: 20_000,
+      });
+      await bob1.clickOnElementAll(new MessageReadMore(bob1));
+    });
+    await bob1.waitForMessageContaining(TAIL_MARKER, MESSAGE_DELIVERY_TIMEOUT_MS);
   });
 
-  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
-    await closeApp(device);
+  await test.step('Verify the plan displays as expired', async () => {
+    // Back to the home screen first: unlike desktop's always-present left pane, mobile has no route to
+    // settings from inside a conversation.
+    await alice1.navigateBack();
+    await alice1.clickOnElementAll(new UserSettings(alice1));
+    await alice1.clickOnElementAll(new ProSettingsEntry(alice1));
+    await alice1.waitForTextElementToBePresent(new ProRenewPlanRow(alice1));
+    // The copy is asserted, not just the row, because the two are chosen by different code: a client
+    // that fixed one and not the other offers to renew under a heading thanking the user for
+    // subscribing.
+    await alice1.waitForTextElementToBePresent(
+      new ProSettingsDescription(alice1, tStripped('proAccessRenewStart'))
+    );
+    // Gated on an active plan, so their presence would mean the client is showing an active plan
+    // rather than an expired one with working features.
+    await alice1.verifyElementNotPresent({ ...new ProStatsHeader(alice1).build(), maxWait: 1000 });
+    await alice1.verifyElementNotPresent({
+      ...new ProManageSectionHeader(alice1).build(),
+      maxWait: 1000,
+    });
   });
+
+  await closeApp(alice1, bob1);
 }

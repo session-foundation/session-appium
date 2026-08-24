@@ -20,7 +20,7 @@ import { blake2b } from '@noble/hashes/blake2.js';
 import { mnDecode } from '@session-foundation/mnemonic';
 import { isString } from 'lodash';
 
-export type PaymentProvider = 'apple' | 'google';
+export type PaymentProvider = 'apple' | 'google' | 'stf';
 
 /**
  * The account to grant Pro to, kept structural rather than requiring the seeder's full `StateUser`:
@@ -75,13 +75,17 @@ type MakeAccountProParams = {
  * Provider codes as the backend names them. The protocol transmits enums as stable string codes,
  * never integers (pro-wire-protocol.md §1; backend `base.PaymentProvider`).
  *
- * We mint against the store providers rather than the out-of-band one so the resulting account looks
- * like a real purchase. That also keeps us clear of the `rangeproof` → `stf` rename currently
- * landing on the clients: these two names are not changing.
+ * The two store providers make an account look like a real purchase, which is what most specs want.
+ *
+ * `stf` is the Session Technology Foundation's out-of-band grant and is NOT a store — no purchase, no
+ * store account, nothing to manage or refund through a platform. It is the only provider we can grant
+ * that has no store behind it, which makes it the fixture for every "this plan did not come from a
+ * store" branch, and the one that shows what a client does with a provider it cannot route to a store.
  */
 const PROVIDER_CODE: Record<PaymentProvider, string> = {
   google: 'google_play',
   apple: 'app_store',
+  stf: 'stf',
 };
 
 type DevAddPaymentRequest = {

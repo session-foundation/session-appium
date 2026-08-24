@@ -1,5 +1,6 @@
 import type { StateUser, UserNameType } from '@session-foundation/qa-seeder';
 
+import { isAccountId } from '../../shared/constants';
 import { mnemonicToSeedHex, padSeed } from '../../shared/pro_grant';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { CloseSettings } from '../locators';
@@ -125,7 +126,11 @@ export async function harvestAccountData(
   // Get Account ID from User Settings
   const el = await device.waitForTextElementToBePresent(new AccountIDDisplay(device));
   // Harvested from on-screen text, so its `05…` shape is the app's guarantee rather than the compiler's.
-  const sessionId = (await device.getTextFromElement(el)) as `05${string}`;
+  const sessionIdText = await device.getTextFromElement(el);
+  if (!isAccountId(sessionIdText)) {
+    throw new Error(`harvestAccountData: invalid Session ID "${sessionIdText}"`);
+  }
+  const sessionId = sessionIdText;
   await device.clickOnElementAll(new CloseSettings(device));
   return { sessionId, seedPhrase: recoveryPhrase };
 }

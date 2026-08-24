@@ -41,6 +41,7 @@ import {
   testVideoThumbnail,
 } from '../constants/testfiles';
 import { tStripped } from '../localizer/lib';
+import { MESSAGE_DELIVERY_TIMEOUT_MS } from '../shared/constants';
 import { makeAccountPro } from '../shared/pro_grant';
 import {
   AcceptMessageRequestButton,
@@ -2989,19 +2990,6 @@ export class DeviceWrapper implements IMobileWrapper {
   }
 
   /**
-   * Open the 1:1 with `senderName` and assert their Session Pro badge renders here.
-   *
-   * In a 1:1 the badge lives in the conversation **header** only, never beside the message: the author
-   * label that carries it is group-only. So this asserts a badge belonging to the person the open
-   * conversation is *with* — never this device's own user, who is not shown in their own header.
-   *
-   * Rendering it at all means this client verified a real cryptographic proof, which is why the
-   * display-level Pro mocks cannot stand in for a grant here.
-   *
-   * `expectProBadgeFromSender` (pro_badge.ts) is the mobile-only variant that waits for a specific
-   * message first, for specs asserting the badge arrived *with* it rather than eventually.
-   */
-  /**
    * Open a message's info screen and assert it lists exactly the Pro features it was sent with.
    *
    * The sharpest receiver-side Pro assertion available: the features travel *in the message* as a
@@ -3034,6 +3022,54 @@ export class DeviceWrapper implements IMobileWrapper {
       ...new ConversationHeaderProBadge(this).build(),
       maxWait: 60_000,
     });
+  }
+
+  /**
+   * Find a message whose body CONTAINS `substring`, addressed by the message-body accessibility id.
+   *
+   * Exists because `waitForTextElementToBePresent` compares text for exact equality
+   * (`findMatchingTextInElementArray`), and the only substring comparison in this class is inside the
+   * locator-healing path. Without this the only way to assert on part of a long message was an xpath over
+   * `@text`/`@label`/`@name` — a fragile structural locator, where the house rule is an accessibility id
+   * plus, where needed, a comparison added HERE rather than a selector that walks the tree.
+   *
+   * Both `text` and the `label`/`name` attributes are consulted because the two platforms surface a
+   * bubble's content differently, and that is exactly the sort of per-platform detail a spec should not
+   * have to encode.
+   */
+  public async findMessageContaining(substring: string): Promise<AppiumNextElementType | null> {
+    const { strategy, selector } = new MessageBody(this).build();
+    const bodies = await this.findElements(strategy, selector);
+    for (const body of bodies) {
+      const candidates = [
+        await this.getTextFromElement(body).catch(() => ''),
+        await this.getAttribute('label', body.ELEMENT).catch(() => ''),
+        await this.getAttribute('name', body.ELEMENT).catch(() => ''),
+      ];
+      if (candidates.some(value => typeof value === 'string' && value.includes(substring))) {
+        return body;
+      }
+    }
+    return null;
+  }
+
+  /** Poll until a message body contains `substring`, or fail naming what was never found. */
+  public async waitForMessageContaining(
+    substring: string,
+    maxWaitMs = MESSAGE_DELIVERY_TIMEOUT_MS
+  ): Promise<void> {
+    const deadline = Date.now() + maxWaitMs;
+    do {
+      if (await this.findMessageContaining(substring)) {
+        return;
+      }
+      await sleepFor(1_000);
+    } while (Date.now() < deadline);
+
+    throw new Error(
+      `No message body containing "${substring}" appeared within ${maxWaitMs}ms. Either it never ` +
+        `arrived, or it arrived without that part of its text.`
+    );
   }
 
   /**

@@ -1,7 +1,15 @@
-import { Conversation, LeftPane, ProSettings, Settings } from '../../../desktop/locators';
+import type { DesktopWrapper } from '../../../desktop/DesktopWrapper';
+
+import { Conversation, CTA, LeftPane, ProSettings, Settings } from '../../../desktop/locators';
+import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W_Bob_1W_friends } from '../../../desktop/sessionTest';
 import { tStripped } from '../../../localizer/lib';
-import { COUNTDOWN_START_THRESHOLD, PRO_MAX_CHARS } from '../../../shared/constants';
+import {
+  COUNTDOWN_START_THRESHOLD,
+  MESSAGE_DELIVERY_TIMEOUT_MS,
+  PRO_MAX_CHARS,
+} from '../../../shared/constants';
+import { sleepFor } from '../../../shared/promise_utils';
 
 /** Lands the countdown on exactly the threshold, so the value asserted is the limit being applied. */
 const AT_PRO_THRESHOLD = PRO_MAX_CHARS - COUNTDOWN_START_THRESHOLD;
@@ -25,40 +33,83 @@ const AT_PRO_THRESHOLD = PRO_MAX_CHARS - COUNTDOWN_START_THRESHOLD;
  * The composer half runs first so the settings screen can be the last thing opened and nothing has to be
  * navigated back out of.
  */
+/** Clear a Pro CTA if one is up. Not an assertion — this spec is about the state behind the modal. */
+async function dismissAnyProCTA(window: DesktopWrapper, waitMs: number) {
+  const cancel = window
+    .getPage()
+    .locator(`[${CTA.cancelButton.strategy}="${CTA.cancelButton.selector}"]`)
+    .first();
+  await cancel.waitFor({ state: 'visible', timeout: waitMs }).catch(() => undefined);
+  if (await cancel.isVisible().catch(() => false)) {
+    await cancel.click();
+    await cancel.waitFor({ state: 'hidden', timeout: 10_000 }).catch(() => undefined);
+  }
+}
+
 test_Alice_1W_Bob_1W_friends(
   'Pro features survive the plan expiring',
-  async ({ alice }) => {
-    // At this length the countdown reads 200 under the Pro limit and would have appeared thousands of
-    // characters ago under the standard one, so the value names which limit is being applied.
+  async ({ alice, bob }) => {
+    // A REAL grant, one second long. The account lapses before the client can read its status, so the
+    // FIRST fetch already sees the overhang - no waiting for an expiry and no second restart. The
+    // backend keeps certifying proofs for a lapsed account until its coverage runs out (~25h past the
+    // true expiry), and one second in is comfortably inside that; if that over-provision were ever
+    // shortened, this spec is what would notice.
+    // Long enough for a restart and a status fetch to land while the plan is still live — measured at
+    // ~4s — with room for a loaded host. The wait below runs to a deadline measured from the grant, so
+    // raising this does not add to the run twice.
+    const PLAN_SECONDS = 12;
+    const grantedAt = Date.now();
+    await alice.subscribeToPro(undefined, { durationSeconds: PLAN_SECONDS });
+    // Desktop asks the backend for status only at startup, so the grant is invisible until it restarts.
+    await restartApp(alice, { pro: {} });
+    // Cheap opportunistic clear. A short, non-renewing grant CAN arm a Pro CTA, but observed behaviour
+    // is that it arms on entering the Pro settings screen rather than on launch — so this does not wait
+    // around for one, and the real clear is at the settings step below.
+    await dismissAnyProCTA(alice, 2_000);
+    // Active FIRST: the client has to hold a proof before the plan lapses, because a fetch that finds an
+    // already-expired plan does not leave it with a credential to survive on.
+    await alice.waitForProActive();
+    // Then let the plan lapse and read the status again. The proof it is already holding stays valid for
+    // the whole coverage window, so what changes is the plan, not the entitlement.
+    //
+    // To a DEADLINE from the grant rather than a fresh countdown: the time already spent reaching Active
+    // is time the plan was already burning, and sleeping the full length again doubled the run for
+    // nothing.
+    const lapsedAt = grantedAt + (PLAN_SECONDS + 2) * 1000;
+    await sleepFor(Math.max(0, lapsedAt - Date.now()));
+    await restartApp(alice, { pro: {} });
+    await dismissAnyProCTA(alice, 2_000);
+    // The relaunch lands on the conversation list, not in the conversation the fixture had open.
+    await alice.openConversationWith(bob.userName);
+
     const overhangMessage = 'z'.repeat(AT_PRO_THRESHOLD);
     await alice.pasteIntoInput('message-input-text-area', overhangMessage);
+    // At this length the countdown reads 200 under the Pro limit and would have appeared thousands of
+    // characters ago under the standard one, so the value names which limit is being applied.
     await alice.waitForElement({
       locator: Conversation.tooltipCharacterCount,
       options: { text: String(COUNTDOWN_START_THRESHOLD) },
     });
 
-    // Sent, not just composed. The countdown proves which limit the composer applied; only a recipient
-    // proves the entitlement was actually honoured on the wire — a client that allowed the length and
-    // then sent a proof the other end rejected would satisfy the countdown alone. This is the half the
-    // overhang is really about: the plan is over, and the feature still works end to end.
     await alice.sendMessage(overhangMessage);
-    // The sender's own copy first, so a failure says which half broke: composed-but-not-sent is a
-    // different bug from sent-but-not-accepted, and they have different owners.
     await alice.waitForMessage(overhangMessage);
-    // NOT asserted here: that Bob receives it intact. `proProof: 'valid'` is a mock, and a recipient
-    // validates the proof cryptographically — so Bob rejects it and stores the standard limit instead.
-    // Measured: Bob receives exactly the first 2000 characters, in 8.6s, so this is a rejected proof
-    // rather than a slow one. A recipient-side assertion needs a REAL grant, which this state (expired
-    // plan, live proof) cannot currently express.
+    // The half a mocked proof can never reach: a recipient VERIFIES the credential, so this only passes
+    // if the proof is genuinely signed and genuinely still valid. Measured with a mock, Bob receives the
+    // first 2000 characters instead. Generous wait because this is the largest message the product
+    // allows and it crosses the network.
+    await bob.waitForMessage(overhangMessage, MESSAGE_DELIVERY_TIMEOUT_MS);
 
     await alice.clickOn(LeftPane.settingsButton);
     await alice.clickOn(Settings.proMenuItem);
+    // Where it actually arms: entering Pro settings on a short, non-renewing grant raises the
+    // expiring/expired CTA over the screen. Waited for here — and only here — because clearing it is a
+    // precondition for reading the copy, not the subject. `pro_expiring_soon_cta` asserts the CTA.
+    await dismissAnyProCTA(alice, 20_000);
     await alice.waitForElement({ locator: ProSettings.renewPlanButton });
     // The copy is asserted, not just the row, because the two are chosen by different code. The button
     // follows the plan's status; the hero description is picked by a separate switch on that same
     // status, so a client that fixed one and not the other offers to renew under a heading thanking the
-    // user for subscribing. It is also the only one of the three that tells someone in this window what
-    // to do about it, which is the point of showing an expired plan to a user whose features work.
+    // user for subscribing.
     await alice.waitForElement({
       locator: ProSettings.description,
       options: { text: tStripped('proAccessRenewStart') },
@@ -68,11 +119,6 @@ test_Alice_1W_Bob_1W_friends(
     await alice.hasElementPoppedUpThatShouldnt(ProSettings.statsHeader);
     await alice.hasElementPoppedUpThatShouldnt(ProSettings.planExpiry);
   },
-  {
-    // The plan is over and the backend has said so, while the credential it was issued under is still
-    // good. No expiry and no loading state: the expired screen renders from the status alone here, and
-    // adding either would arm a CTA this spec is not about. The mobile spec needs both because its
-    // settings screen and its app-open CTA require a confirmed status.
-    pro: { proBackendStatus: 'expired', proProof: 'valid' },
-  }
+  // Tags the test `@pro`; the state itself comes from the grant above, not from a mock.
+  { pro: {} }
 );
