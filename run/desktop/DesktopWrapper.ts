@@ -558,11 +558,13 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   // --- Receiver-side Session Pro assertions ---
-  // Used when this client observes a PEER's Pro state. `assertSenderProBadge` is on
-  // IBaseDeviceWrapper — mobile satisfies the same signature — so a cross-platform spec can
-  // assert it over every client regardless of platform. The animation checks below are still
-  // desktop-only: mobile's equivalent (verifyElementIsAnimated) takes an Appium locator, so
-  // there is no shared signature to promote yet.
+  // Used when this client observes a PEER's Pro state. `assertSenderProBadge`,
+  // `assertOwnAvatarAnimated` and `assertSenderAvatarAnimated` are all on IBaseDeviceWrapper —
+  // mobile satisfies the same signatures — so a cross-platform spec can assert them over every
+  // client regardless of platform. `verifyElementIsAnimated` itself stays off the interface: it
+  // takes a CSS selector here and an Appium locator on mobile, which is exactly the kind of
+  // platform-shaped signature the interface forbids. The two named wrappers below are what a
+  // cross-platform spec calls instead.
 
   /** Center-pixel hex color of the first element matching `cssSelector` (via screenshot). */
   private async sampleCenterColor(cssSelector: string): Promise<string> {
@@ -587,9 +589,15 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     });
   }
 
-  /** Verify THIS account's own avatar (left pane) is animated — e.g. after it synced here. */
-  public async verifyOwnAvatarAnimated(): Promise<void> {
-    await this.verifyElementIsAnimated('[data-testid="leftpane-primary-avatar"] img');
+  /**
+   * Assert THIS account's own avatar (left pane) renders animated.
+   *
+   * The wait is longer than `verifyElementIsAnimated`'s default because this doubles as the
+   * linked-device assertion: when the picture was set on another client, both it and the Pro proof
+   * that keeps it unfrozen arrive here by config sync rather than being written locally.
+   */
+  public async assertOwnAvatarAnimated(): Promise<void> {
+    await this.verifyElementIsAnimated('[data-testid="leftpane-primary-avatar"] img', 60_000);
   }
 
   /**
@@ -610,10 +618,15 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     await this.openConversationWith(convoName);
   }
 
-  /** Open `convoName` and verify the peer's conversation-header avatar is animated. */
-  public async verifySenderAvatarAnimated(convoName: string): Promise<void> {
+  /**
+   * Open `convoName` and assert the PEER's conversation-header avatar renders animated.
+   *
+   * Same longer wait as the own-avatar case, for the same reason: the peer's picture and the proof
+   * that unfreezes it both arrive over the network, so this is a wait rather than a read.
+   */
+  public async assertSenderAvatarAnimated(convoName: string): Promise<void> {
     await this.openConversationOnceNamed(convoName);
-    await this.verifyElementIsAnimated('[data-testid="conversation-options-avatar"] img');
+    await this.verifyElementIsAnimated('[data-testid="conversation-options-avatar"] img', 60_000);
   }
 
   /**

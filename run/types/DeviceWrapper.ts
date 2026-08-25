@@ -46,6 +46,7 @@ import { makeAccountPro } from '../shared/pro_grant';
 import {
   AcceptMessageRequestButton,
   AttachmentsButton,
+  ConversationSettings,
   DocumentsFolderButton,
   GIFButton,
   ImagesFolderButton,
@@ -3022,6 +3023,47 @@ export class DeviceWrapper implements IMobileWrapper {
       ...new ConversationHeaderProBadge(this).build(),
       maxWait: 60_000,
     });
+  }
+
+  /**
+   * Assert this account's OWN display picture renders animated (see `IBaseDeviceWrapper`).
+   *
+   * The settings avatar is the only place mobile draws the local user's picture large enough to
+   * sample, so this navigates there rather than reading whatever is on screen, and closes settings
+   * behind itself — it ends on the home screen whichever screen it started on.
+   *
+   * Callable from the home screen or from settings — an upload leaves the app inside settings, and a
+   * blind tap on the user-settings button from there opens the avatar modal instead, which fails
+   * several steps later on a missing element. The probe is the Privacy row: settings-only, near the
+   * top of the list (so it needs no scroll) and addressed by id on both platforms.
+   */
+  public async assertOwnAvatarAnimated(): Promise<void> {
+    const alreadyInSettings = await this.doesElementExist({
+      ...new PrivacyMenuItem(this).build(),
+      maxWait: 5_000,
+    });
+    if (!alreadyInSettings) {
+      await this.clickOnElementAll(new UserSettings(this));
+    }
+    await this.verifyElementIsAnimated(new UserAvatar(this));
+    await this.clickOnElementAll(new CloseSettings(this));
+  }
+
+  /**
+   * Assert the PEER's display picture renders animated in `convoName`'s header (see
+   * `IBaseDeviceWrapper`).
+   *
+   * Written in terms of the generic `verifyElementIsAnimated` so the conversation-header locator
+   * stays on this side of the interface — a cross-platform spec must not have to name it.
+   *
+   * Note this is a bounded read, not an open-ended wait: `verifyElementIsAnimated` waits out the
+   * generated-avatar placeholder for 10s (and says so by name if the picture never arrived), then
+   * samples. A caller waiting on a peer's profile to propagate should wait for one of their messages
+   * first, which is what makes the picture ride along.
+   */
+  public async assertSenderAvatarAnimated(convoName: string): Promise<void> {
+    await this.openConversationWith(convoName);
+    await this.verifyElementIsAnimated(new ConversationSettings(this));
   }
 
   /**

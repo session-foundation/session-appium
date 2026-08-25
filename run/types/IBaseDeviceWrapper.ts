@@ -32,6 +32,28 @@ export interface IBaseDeviceWrapper {
   // Profile
   changeDisplayName(name: string): Promise<void>;
   assertDisplayName(name: string): Promise<void>;
+  /**
+   * Assert the LOCAL user's own display picture renders here as an ANIMATED image.
+   *
+   * Own-side. Two things have to be true for it to pass: the picture reached this client (by config
+   * sync, when it was set on a different client), and this client believes the account is entitled to
+   * animate it — an animated display picture is Pro-gated, and a client that does not hold a valid
+   * proof renders the first frame instead of failing loudly.
+   *
+   * Mobile navigates to settings for this — the settings avatar is the only place it draws the local
+   * user's picture large enough to sample — and closes settings behind itself, so a mobile client
+   * ends on the home screen whichever screen it started on.
+   */
+  assertOwnAvatarAnimated(): Promise<void>;
+  /**
+   * Open the 1:1 with `convoName` and assert THAT PERSON's display picture renders here as ANIMATED.
+   *
+   * Receiver-side, and the stronger of the two: the picture belongs to the person the conversation is
+   * *with*, so passing means this client both fetched their avatar and verified their Pro proof. The
+   * display-level Pro mocks write no config and produce no proof, so only a real grant on the sender
+   * satisfies this.
+   */
+  assertSenderAvatarAnimated(convoName: string): Promise<void>;
 
   // Messaging
   sendMessage(message: string): Promise<number>;

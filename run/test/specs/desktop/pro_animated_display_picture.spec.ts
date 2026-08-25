@@ -38,7 +38,7 @@ test_Alice_1W(
 
     await alice.uploadProfilePicture();
     await alice.hasElementPoppedUpThatShouldnt(CTA.heading);
-    await alice.verifyOwnAvatarAnimated();
+    await alice.assertOwnAvatarAnimated();
   },
   { pro: {}, fakeAvatarPickerFile: ANIMATED_AVATAR }
 );
