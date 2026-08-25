@@ -41,7 +41,7 @@ import {
   testVideoThumbnail,
 } from '../constants/testfiles';
 import { tStripped } from '../localizer/lib';
-import { MESSAGE_DELIVERY_TIMEOUT_MS } from '../shared/constants';
+import { GENERATED_AVATAR_COLORS, MESSAGE_DELIVERY_TIMEOUT_MS } from '../shared/constants';
 import { makeAccountPro } from '../shared/pro_grant';
 import {
   AcceptMessageRequestButton,
@@ -52,6 +52,7 @@ import {
   ImagesFolderButton,
   MessageBody,
   MessageInput,
+  MessageReadMore,
   NewVoiceMessageButton,
   OutgoingMessageStatusSent,
   ScrollToBottomButton,
@@ -127,25 +128,6 @@ type PollResult<T = undefined> = {
   data?: T;
   error?: string;
 };
-
-/**
- * The generated-avatar palette, lowercase, from `avatarBgColors` in the Android client
- * (`app/src/main/res/values/colors.xml`, selected by `sha512(address) % 7` in `AvatarUtils`).
- *
- * Used to tell "no picture is loaded" apart from "a picture is loaded but static". Because the colour
- * is derived from the account address, a placeholder shows a different one of these on every run —
- * which reads as an unstable failure rather than a consistent one, and cost several hours of chasing
- * a phantom regression before anyone recognised the palette.
- */
-const GENERATED_AVATAR_COLORS = new Set([
-  '31f196',
-  '57c9fa',
-  'c993ff',
-  'ff95ef',
-  'ff9c8e',
-  'fcb159',
-  'fad657',
-]);
 
 export class DeviceWrapper implements IMobileWrapper {
   private readonly device: AndroidUiautomator2Driver | XCUITestDriver;
@@ -3175,6 +3157,40 @@ export class DeviceWrapper implements IMobileWrapper {
    *
    * Returns the last colour seen so the caller can say what it was still showing when it gave up.
    */
+  /**
+   * Expand every collapsed message bubble in the open conversation, so an assertion on a long
+   * message's full text sees all of it.
+   *
+   * Best-effort per bubble: a message short enough not to collapse offers no affordance, and the
+   * affordance can vanish mid-click as the bubble re-renders.
+   *
+   * A no-op on iOS, gated here rather than per caller: iOS flattens the bubble into one accessibility
+   * element, so `MessageReadMore` throws there and the full text is exposed either way.
+   */
+  public async expandLongMessages(): Promise<void> {
+    if (this.isIOS()) {
+      return;
+    }
+
+    for (let i = 0; i < 4; i++) {
+      const readMore = await this.doesElementExist({
+        ...new MessageReadMore(this).build(),
+        maxWait: 5_000,
+      });
+      if (!readMore) {
+        return;
+      }
+      try {
+        await this.clickOnElementAll(new MessageReadMore(this));
+      } catch {
+        // The affordance vanished between the check and the click — the bubble re-renders as it expands,
+        // so this races by construction. Best-effort is the contract: what matters is that no collapsed
+        // bubble is left hiding the tail, and the assertions that follow say whether one was.
+        return;
+      }
+    }
+  }
+
   private async waitForAvatarToLoad(
     locator: StrategyExtractionObj,
     maxWait = 10_000

@@ -15,6 +15,7 @@ import type {
 } from './types';
 
 import { tStripped } from '../localizer/lib';
+import { GENERATED_AVATAR_COLORS } from '../shared/constants';
 import { makeAccountPro } from '../shared/pro_grant';
 import { sleepFor } from '../shared/promise_utils';
 import { parseDataImage } from '../test/utils/check_colour';
@@ -58,6 +59,7 @@ import {
   rightClickOnWithText,
   scrollToBottomIfNecessary,
   waitForElement,
+  waitForElementHidden,
   waitForLoadingAnimationToFinish,
   waitForMatchingPlaceholder,
   waitForMatchingText,
@@ -638,6 +640,17 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
       await sleepFor(250);
     }
 
+    // A placeholder is a solid colour, so it satisfies "not animating" — without this a picture that
+    // never arrived passes. After the samples, so one still propagating gets the settle window.
+    const [sampled] = [...colors];
+    if (colors.size === 1 && GENERATED_AVATAR_COLORS.has(sampled.toLowerCase())) {
+      throw new Error(
+        `${convoName}'s display picture is still the generated placeholder ` +
+          `(${sampled}) — it never loaded, so nothing can be said about whether it animates. ` +
+          `An upload or propagation problem, not a Pro one.`
+      );
+    }
+
     if (colors.size > 1) {
       throw new Error(
         `${convoName}'s display picture is animating for this client (${colors.size} distinct centre ` +
@@ -831,6 +844,13 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     args: Omit<Parameters<typeof waitForElement>[0], 'window'>
   ): Promise<void> {
     await waitForElement({ window: this.page, ...args });
+  }
+
+  /** Assert an element is gone. See `waitForElementHidden`; `hidden` also covers never-attached. */
+  public async waitForElementHidden(
+    args: Omit<Parameters<typeof waitForElementHidden>[0], 'window'>
+  ): Promise<void> {
+    await waitForElementHidden({ window: this.page, ...args });
   }
 
   public async checkModalStrings(

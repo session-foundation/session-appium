@@ -80,3 +80,22 @@ export const MESSAGE_DELIVERY_TIMEOUT_MS = 45_000;
  */
 export const UNTRUSTED_PRO_BACKEND_KEY =
   '19151761ab6c9db89e8380604cf9ebe1a60267ef6d93636b4fcadd7d29f2b571';
+
+/**
+ * The generated-avatar palette, lowercase, from `avatarBgColors` in the Android client
+ * (`app/src/main/res/values/colors.xml`, selected by `sha512(address) % 7` in `AvatarUtils`).
+ *
+ * Used to tell "no picture is loaded" apart from "a picture is loaded but static". Because the colour
+ * is derived from the account address, a placeholder shows a different one of these on every run —
+ * which reads as an unstable failure rather than a consistent one, and cost several hours of chasing
+ * a phantom regression before anyone recognised the palette.
+ */
+export const GENERATED_AVATAR_COLORS = new Set([
+  '31f196',
+  '57c9fa',
+  'c993ff',
+  'ff95ef',
+  'ff9c8e',
+  'fcb159',
+  'fad657',
+]);
