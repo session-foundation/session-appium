@@ -13,6 +13,7 @@ import {
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { activeProContext, MobileTestContext } from '../../utils/pro_context';
 import {
   expectActionOpensNoUrl,
   expectActionOpensUrl,
