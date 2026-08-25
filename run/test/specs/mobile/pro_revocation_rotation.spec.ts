@@ -100,7 +100,7 @@ async function proRevocationRotation(platform: SupportedPlatformsType, testInfo:
     // Bob has to poll to learn of the rotation; the relaunch is what forces it, and on iOS it also
     // rebuilds the view the badge is drawn from.
     await forceStopAndRestart(bob1);
-    await bob1.assertNoSenderProBadge(prebuilt.alice.userName, SENT_ON_OLD_PROOF);
+    await bob1.assertNoConversationHeaderProBadge(prebuilt.alice.userName, SENT_ON_OLD_PROOF);
   });
 
   await test.step('The replacement proof is honoured in its place', async () => {

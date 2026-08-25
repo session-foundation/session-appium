@@ -49,7 +49,7 @@ test_Alice_1W_Bob_1W_friends(
 
     // The control, and the half a mock cannot reach: Bob has verified a real signature against the
     // backend's key. Measured against a display-level fixture, no badge appears here at all.
-    await bob.assertSenderProBadge(alice.userName);
+    await bob.assertConversationHeaderProBadge(alice.userName);
 
     await revokeAccountPro({
       user: alice.getUser(),
@@ -61,7 +61,7 @@ test_Alice_1W_Bob_1W_friends(
     // that poll, and on iOS it also forces the view rebuild the badge needs; keeping the same shape on
     // all three clients is why it is a restart here rather than a wait.
     await restartApp(bob, DESKTOP_PRO_CONTEXT);
-    await bob.assertNoSenderProBadge(alice.userName, message);
+    await bob.assertNoConversationHeaderProBadge(alice.userName, message);
   },
   DESKTOP_PRO_CONTEXT
 );

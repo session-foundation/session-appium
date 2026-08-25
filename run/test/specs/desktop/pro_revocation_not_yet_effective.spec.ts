@@ -47,7 +47,7 @@ test_Alice_1W_Bob_1W_friends(
     // Waited on before the badge: the badge follows the sender's profile, which rides along with the
     // message, so asserting the badge first races the delivery.
     await bob.waitForMessage(SENT_BEFORE_REVOCATION, MESSAGE_DELIVERY_TIMEOUT_MS);
-    await bob.assertSenderProBadge(alice.userName);
+    await bob.assertConversationHeaderProBadge(alice.userName);
 
     const { effective_ts } = await revokeAccountPro({
       user: alice.getUser(),
@@ -59,7 +59,7 @@ test_Alice_1W_Bob_1W_friends(
     // The relaunch is what makes Bob poll, so afterwards he holds the entry with its instant still ahead.
     await restartApp(bob, DESKTOP_PRO_CONTEXT);
     await sleepFor(REVOCATION_POLL_SETTLE_MS);
-    await bob.assertSenderProBadge(alice.userName);
+    await bob.assertConversationHeaderProBadge(alice.userName);
 
     // Fails loudly as a timing shortfall rather than quietly weakening the claim: past the instant, the
     // assertion above proved nothing about a PENDING revocation.
@@ -74,7 +74,7 @@ test_Alice_1W_Bob_1W_friends(
     // To a DEADLINE rather than a fresh countdown: proving the first half already burned part of the delay.
     await sleepFor(Math.max(0, effectiveAtMs - Date.now()));
     await restartApp(bob, DESKTOP_PRO_CONTEXT);
-    await bob.assertNoSenderProBadge(alice.userName, SENT_BEFORE_REVOCATION);
+    await bob.assertNoConversationHeaderProBadge(alice.userName, SENT_BEFORE_REVOCATION);
   },
   DESKTOP_PRO_CONTEXT
 );

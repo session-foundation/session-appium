@@ -73,7 +73,7 @@ test_group_Alice_1W_Bob_1W_Charlie_1W(
     await alice.sendMessage(MESSAGE_BEFORE);
     for (const recipient of recipients) {
       await recipient.waitForMessage(MESSAGE_BEFORE, MESSAGE_DELIVERY_TIMEOUT_MS);
-      await recipient.assertNoAuthorProBadge(MESSAGE_BEFORE);
+      await recipient.assertNoMessageAuthorProBadge(MESSAGE_BEFORE);
     }
 
     await alice.subscribeToPro();
@@ -90,7 +90,7 @@ test_group_Alice_1W_Bob_1W_Charlie_1W(
     await alice.sendMessage(MESSAGE_AFTER);
     for (const recipient of recipients) {
       await recipient.waitForMessage(MESSAGE_AFTER, MESSAGE_DELIVERY_TIMEOUT_MS);
-      await recipient.assertAuthorProBadge(MESSAGE_AFTER);
+      await recipient.assertMessageAuthorProBadge(MESSAGE_AFTER);
     }
   },
   // Tags the test `@pro`; the state itself comes from the grant above, not from a mock.

@@ -54,7 +54,7 @@ test_Alice_1W_Bob_1W_friends(
     await bob.openConversationWith(alice.userName);
     await bob.waitForMessage(SENT_WITH_FAKE_PROOF, MESSAGE_DELIVERY_TIMEOUT_MS);
 
-    await bob.verifySenderAvatarNotAnimated(alice.userName);
+    await bob.verifyConversationHeaderAvatarNotAnimated(alice.userName);
   },
   { pro: {}, fakeAvatarPickerFile: ANIMATED_AVATAR }
 );

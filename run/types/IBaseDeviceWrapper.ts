@@ -49,7 +49,7 @@ export interface IBaseDeviceWrapper {
    * assertion about this device's own user. Rendering it means this client verified a real proof —
    * the display-level Pro mocks produce none, so only a real grant satisfies it.
    */
-  assertSenderProBadge(senderName: string): Promise<void>;
+  assertConversationHeaderProBadge(senderName: string): Promise<void>;
   /**
    * Open the 1:1 with `senderName` and assert their Session Pro badge is **not** rendered here.
    *
@@ -67,7 +67,7 @@ export interface IBaseDeviceWrapper {
    * Polls rather than reads once: the badge goes away when the client learns of a revocation, which is
    * an asynchronous fetch, so the interesting outcome is "stops rendering within", not "is absent now".
    */
-  assertNoSenderProBadge(senderName: string, anchorMessage?: string): Promise<void>;
+  assertNoConversationHeaderProBadge(senderName: string, anchorMessage?: string): Promise<void>;
   /**
    * Open `message`'s info screen and assert it lists the Pro features the message was sent with.
    *

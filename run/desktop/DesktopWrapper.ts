@@ -560,7 +560,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   // --- Receiver-side Session Pro assertions ---
-  // Used when this client observes a PEER's Pro state. `assertSenderProBadge` is on
+  // Used when this client observes a PEER's Pro state. `assertConversationHeaderProBadge` is on
   // IBaseDeviceWrapper — mobile satisfies the same signature — so a cross-platform spec can
   // assert it over every client regardless of platform. The animation checks below are still
   // desktop-only: mobile's equivalent (verifyElementIsAnimated) takes an Appium locator, so
@@ -615,7 +615,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   /**
    * Open `convoName` and verify the peer's conversation-header avatar is NOT animated.
    *
-   * The counterpart to `verifySenderAvatarAnimated`, and asserted the opposite way round: that one
+   * The counterpart to `verifyConversationHeaderAvatarAnimated`, and asserted the opposite way round: that one
    * retries until it sees more than one colour, so it can stop the moment an animation starts. This has
    * to prove a NEGATIVE, so it settles first and then requires every sample to match — a still frame
    * sampled once, or sampled before the picture has loaded, would pass whatever the client decided.
@@ -624,7 +624,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
    * render, and an unloaded element samples as a single flat colour, which is indistinguishable from a
    * static picture.
    */
-  public async verifySenderAvatarNotAnimated(
+  public async verifyConversationHeaderAvatarNotAnimated(
     convoName: string,
     { settleMs = 15_000, samples = 6 }: { settleMs?: number; samples?: number } = {}
   ): Promise<void> {
@@ -661,7 +661,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /** Open `convoName` and verify the peer's conversation-header avatar is animated. */
-  public async verifySenderAvatarAnimated(convoName: string): Promise<void> {
+  public async verifyConversationHeaderAvatarAnimated(convoName: string): Promise<void> {
     await this.openConversationOnceNamed(convoName);
     await this.verifyElementIsAnimated('[data-testid="conversation-options-avatar"] img');
   }
@@ -705,24 +705,29 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /** Open `convoName` and assert the peer's Session Pro badge shows in the header (polls). */
-  public async assertSenderProBadge(convoName: string): Promise<void> {
+  public async assertConversationHeaderProBadge(convoName: string): Promise<void> {
     await this.openConversationOnceNamed(convoName);
-    await doWhileWithMax(60_000, 1_000, `assertSenderProBadge ${convoName}`, async () => {
-      try {
-        await waitForElement({
-          window: this.page,
-          locator: Conversation.proBadgeConversationHeader,
-          options: { maxWaitMs: 2_000 },
-        });
-        return true;
-      } catch (_e) {
-        return false;
+    await doWhileWithMax(
+      60_000,
+      1_000,
+      `assertConversationHeaderProBadge ${convoName}`,
+      async () => {
+        try {
+          await waitForElement({
+            window: this.page,
+            locator: Conversation.proBadgeConversationHeader,
+            options: { maxWaitMs: 2_000 },
+          });
+          return true;
+        } catch (_e) {
+          return false;
+        }
       }
-    });
+    );
   }
 
   /**
-   * The receiver-side counterpart of `assertSenderProBadge`: the sender's badge is gone from here.
+   * The receiver-side counterpart of `assertConversationHeaderProBadge`: the sender's badge is gone from here.
    *
    * Both conditions are checked at the SAME instant, and that is the design. The conversation's name
    * being on screen proves this window is rendering the right conversation, so the absence asserted is
@@ -732,7 +737,10 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
    * Polled because the badge disappears when the revocation job's sweep reaches this conversation, and
    * that dispatch is debounced (500ms, maxWait 1000ms) on top of the fetch.
    */
-  public async assertNoSenderProBadge(convoName: string, anchorMessage?: string): Promise<void> {
+  public async assertNoConversationHeaderProBadge(
+    convoName: string,
+    anchorMessage?: string
+  ): Promise<void> {
     await this.openConversationOnceNamed(convoName);
 
     // A message in this conversation is a stronger anchor than the header: it cannot be satisfied by the
@@ -793,15 +801,14 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   /**
    * Assert the sender's Session Pro badge is rendered on `message`'s author label in the open group.
    *
-   * A different element from `assertSenderProBadge`, which reads the conversation HEADER: the author
-   * label is group-only (`MessageAuthorText` returns null unless the thread is a group), so neither
-   * assertion covers the other's surface and a build that lost the badge here would still satisfy the
-   * header one.
+   * A different element from `assertConversationHeaderProBadge`: the author label is group-only
+   * (`MessageAuthorText` returns null unless the thread is a group), so neither assertion covers the
+   * other's surface and a build that lost the badge here would still satisfy the header one.
    *
    * Polled rather than read once: this depends on the recipient having received the message, verified
    * the proof it carries and re-rendered off the updated contact record.
    */
-  public async assertAuthorProBadge(message: string, maxWaitMs = 60_000): Promise<void> {
+  public async assertMessageAuthorProBadge(message: string, maxWaitMs = 60_000): Promise<void> {
     await this.groupAuthorLabel(message)
       .getByTestId(Conversation.proBadgeAuthorName.selector)
       .waitFor({ state: 'visible', timeout: maxWaitMs });
@@ -815,7 +822,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
    * badge is not a later arrival: both come out of one `ContactName` render driven by the sender's
    * stored contact record, so the absence can be read immediately rather than waited out.
    */
-  public async assertNoAuthorProBadge(message: string, maxWaitMs = 60_000): Promise<void> {
+  public async assertNoMessageAuthorProBadge(message: string, maxWaitMs = 60_000): Promise<void> {
     const label = this.groupAuthorLabel(message);
     await label.waitFor({ state: 'visible', timeout: maxWaitMs });
     const badges = await label.getByTestId(Conversation.proBadgeAuthorName.selector).count();

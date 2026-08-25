@@ -39,7 +39,7 @@ test_Alice_1W_Bob_1W_friends(
     await bob.waitForMessage(SENT_ON_OLD_PROOF, MESSAGE_DELIVERY_TIMEOUT_MS);
 
     // The control: an absence later means nothing unless the badge was there first.
-    await bob.assertSenderProBadge(alice.userName);
+    await bob.assertConversationHeaderProBadge(alice.userName);
 
     // `revokePayments: false` is the whole difference from the refund spec. The helper refuses to continue
     // if the backend allocated no replacement, so a rotation that quietly behaved like a refund fails here
@@ -58,14 +58,14 @@ test_Alice_1W_Bob_1W_friends(
 
     // Bob has to poll to learn of the rotation, and the relaunch is what forces it.
     await restartApp(bob, DESKTOP_PRO_CONTEXT);
-    await bob.assertNoSenderProBadge(alice.userName, SENT_ON_OLD_PROOF);
+    await bob.assertNoConversationHeaderProBadge(alice.userName, SENT_ON_OLD_PROOF);
 
     // Alice re-armed above, so this carries the new generation's proof — which is also how Bob comes to
     // hold it, since a proof travels with the message rather than arriving on its own.
     await alice.openConversationWith(bob.userName);
     await alice.sendMessage(SENT_ON_NEW_PROOF);
     await bob.waitForMessage(SENT_ON_NEW_PROOF, MESSAGE_DELIVERY_TIMEOUT_MS);
-    await bob.assertSenderProBadge(alice.userName);
+    await bob.assertConversationHeaderProBadge(alice.userName);
   },
   DESKTOP_PRO_CONTEXT
 );
