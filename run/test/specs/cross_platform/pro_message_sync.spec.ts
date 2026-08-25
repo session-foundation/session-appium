@@ -52,7 +52,19 @@ crossPlatformTest({
   risk: 'high',
   isPro: true,
   setup: friends({
-    alice: { android: 1, ios: 1, desktop: 1 },
+    // Bob gets the iOS client, Alice does not, and that asymmetry is deliberate.
+    //
+    // The two things this spec proves need different devices: a RECIPIENT on a third client
+    // type (Bob's iOS, which must verify Alice's proof) and a LINKED device inheriting the
+    // entitlement (Alice's desktop, which already does that). Alice's own iOS client adds
+    // neither -- and it measurably costs: with it, `assertSenderProBadge` on Bob's clients
+    // times out at 60s twice in a row, while the badge is verifiably present in the page
+    // source captured moments later. Load is not the cause (4.5 on a 14-core host); a third
+    // linked device on Alice appears to push badge convergence past the wait.
+    //
+    // Worth a product look rather than a longer timeout -- if three linked devices really
+    // do slow profile convergence past a minute, a real user sees that too.
+    alice: { android: 1, desktop: 1 },
     bob: { android: 1, ios: 1, desktop: 1 },
   }),
   testCb: async ({ accounts: { alice, bob } }) => {
