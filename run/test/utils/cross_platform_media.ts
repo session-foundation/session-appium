@@ -7,7 +7,8 @@ import type { IBaseDeviceWrapper } from '../../types/IBaseDeviceWrapper';
 
 import { testImage } from '../../constants/testfiles';
 import { sendMedia, trustUser } from '../../desktop/send_media';
-import { MediaMessage, MessageBody } from '../locators/conversation';
+import { sleepFor } from '../../shared/promise_utils';
+import { MediaInvalid, MediaMessage, MediaRetry, MessageBody } from '../locators/conversation';
 
 /** The photo every cross-client format check sends. A real JPEG, deliberately: see [RENDER_FLOOR_BYTES]. */
 export const CROSS_CLIENT_PHOTO = resolve(__dirname, '../media', testImage);
@@ -30,6 +31,9 @@ const RENDER_FLOOR_BYTES = 5_000;
  * tight bound fails as "did not render" when the truth is "not yet".
  */
 const ATTACHMENT_DOWNLOAD_TIMEOUT_MS = 60_000;
+
+/** How long between samples when waiting for a media bubble to stop changing. */
+const MEDIA_SETTLE_SAMPLE_MS = 2000;
 
 /** What the download prompt calls a photo. See [AttachmentType] for why it is not `image`. */
 const PHOTO_ATTACHMENT_TYPE: AttachmentType = 'media';
@@ -99,7 +103,76 @@ export async function verifyPhotoRendered(
   await client.trustAttachments(senderName);
   await client.waitForTextElementToBePresent(new MessageBody(client, caption));
 
+  await waitForMediaToSettle(client, caption);
+
+  // A file that arrived but could not be turned into an image. On iOS this is the state an attachment
+  // whose bytes will not decode lands in, and a byte floor alone passes on it because the placeholder is
+  // bubble-sized — so this is what makes the render assertion able to fail.
+  await assertMediaStateAbsent(client, new MediaInvalid(client), caption, 'could not be decoded');
+  await assertMediaStateAbsent(client, new MediaRetry(client), caption, 'failed to download');
+
   const element = await client.waitForTextElementToBePresent(new MediaMessage(client));
   const base64 = await client.getElementScreenshot(element.ELEMENT);
   assertRendered(Buffer.from(base64, 'base64').length, caption);
+}
+
+/**
+ * Wait until the bubble stops changing, so what follows is asked of a finished state.
+ *
+ * The bubble's identifier is the same while downloading as when loaded, and its placeholder is the full
+ * size of the eventual image — so neither presence nor size distinguishes them. What does is motion: a
+ * spinner differs between samples and a drawn photo does not.
+ *
+ * Returning on the first stable pair rather than polling for a fixed period keeps a loaded attachment
+ * fast, and the bound is the download timeout because that is the same wait.
+ */
+async function waitForMediaToSettle(client: DeviceWrapper, caption: string): Promise<void> {
+  const deadline = Date.now() + ATTACHMENT_DOWNLOAD_TIMEOUT_MS;
+  let previous = -1;
+  let lastError = 'none';
+
+  while (Date.now() < deadline) {
+    // Re-found every sample rather than held across them. The bubble is rebuilt when its image arrives,
+    // which is precisely the moment being waited for, so a reference captured beforehand goes stale
+    // exactly when it matters — and a stale reference throws, which would read as a product failure.
+    const size = await sampleMediaSize(client).catch((e: Error) => {
+      lastError = e.message.split('\n')[0];
+      return -2;
+    });
+
+    if (size >= 0 && size === previous) {
+      return;
+    }
+    previous = size;
+    await sleepFor(MEDIA_SETTLE_SAMPLE_MS);
+  }
+
+  throw new Error(
+    `The attachment for "${caption}" never stopped changing within ${ATTACHMENT_DOWNLOAD_TIMEOUT_MS}ms, ` +
+      `so it is still loading and anything asserted after this would be asserted about a spinner. ` +
+      `Last sampling error: ${lastError}.`
+  );
+}
+
+/** One screenshot of the media bubble, measured by its compressed size. */
+async function sampleMediaSize(client: DeviceWrapper): Promise<number> {
+  const element = await client.waitForTextElementToBePresent(new MediaMessage(client));
+  const shot = await client.getElementScreenshot(element.ELEMENT);
+  return Buffer.from(shot, 'base64').length;
+}
+
+/** Fail with the state's own meaning rather than "an element was present". */
+async function assertMediaStateAbsent(
+  client: DeviceWrapper,
+  locator: MediaInvalid | MediaRetry,
+  caption: string,
+  meaning: string
+): Promise<void> {
+  const found = await client.doesElementExist({ ...locator.build(), maxWait: 1000 });
+  if (found) {
+    throw new Error(
+      `The attachment for "${caption}" ${meaning}. The bubble is present and the right size, so a ` +
+        `render check alone would have passed — this is the placeholder, not the photo.`
+    );
+  }
 }
