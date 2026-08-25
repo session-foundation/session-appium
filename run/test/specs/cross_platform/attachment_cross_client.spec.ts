@@ -19,8 +19,8 @@ import { friends } from '../../utils/cross_platform_state_builder';
 const CAPTION = 'Cross-client attachment';
 
 type Pairing = {
-  sender: 'android' | 'desktop' | 'ios';
-  recipient: 'android' | 'desktop' | 'ios';
+  sender: ClientPlatform;
+  recipient: ClientPlatform;
 };
 
 /**
