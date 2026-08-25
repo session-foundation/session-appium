@@ -73,8 +73,7 @@ const openAppOnPlatform = async (
   console.info('starting capabilitiesIndex', capabilitiesIndex, platform);
   return platform === 'ios'
     ? openiOSApp(capabilitiesIndex, testInfo, testContext)
-    : // Only the shared Pro mock fields cross over; the rest of MobileTestContext is iOS-specific.
-      openAndroidApp(capabilitiesIndex, testInfo, testContext);
+    : openAndroidApp(capabilitiesIndex, testInfo, testContext);
 };
 
 export const openAppOnPlatformSingleDevice = async (

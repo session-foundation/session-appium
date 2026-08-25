@@ -26,8 +26,8 @@ import {
 import { UserSettings } from '../../locators/settings';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
 import { runOnlyOnAndroid, sleepFor } from '../../utils';
-import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
+import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 import { observeProGrant } from '../../utils/pro_refresh';
 import { forceStopAndRestart } from '../../utils/utilities';
 
@@ -74,7 +74,7 @@ async function proOverhang(platform: SupportedPlatformsType, testInfo: TestInfo)
     platform,
     focusFriendsConvo: true,
     testInfo,
-    testContext: IOS_PRO_CONTEXT,
+    testContext: PRO_BACKEND_CONTEXT,
   });
   const { alice1, bob1 } = devices;
 

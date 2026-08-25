@@ -1,3 +1,5 @@
+import { getProBackendOverride } from './pro_backend';
+
 /**
  * The mocked Pro state a spec asks for, in the vocabulary **both** platforms accept.
  *
@@ -42,9 +44,9 @@ export type ProMockContext = {
    * no proof behind it is the state in which a client offers the Pro character limit and every
    * recipient silently truncates what it sends.
    *
-   * So a fixture that wants an ordinary Pro user sets BOTH. They were one lever until 2026-08-14, when
-   * the clients split Pro into an access value and a display value; a combined lever alongside two
-   * separate ones would have left three knobs describing two facts.
+   * So a fixture that wants an ordinary Pro user sets BOTH. The clients model access and display as
+   * separate values, and a combined lever alongside two separate ones would leave three knobs describing
+   * two facts.
    *
    * `'none'` denies access **even on a device holding a real, valid proof** — it overrides rather than
    * falling back, since a mock a real proof could silently outvote would be useless on the devices most
@@ -114,7 +116,7 @@ export type ProMockContext = {
    * `customProBackendPubkey` launch variables, Android as the `sessionProBackendUrl` /
    * `sessionProBackendPubkey` intent extras.
    *
-   * Normally supplied for every device by `IOS_PRO_CONTEXT` / the Android extras, from the environment.
+   * Normally supplied for every device by `PRO_BACKEND_CONTEXT` / the Android extras, from the environment.
    * Overriding it for ONE device is what lets a spec express a recipient that cannot verify a genuine
    * proof, which needs `MobileTestContexts` to differ per device.
    */
@@ -164,10 +166,8 @@ export type IOSOnlyContext = {
   /**
    * Build variant, which decides whether billing UI is reachable at all (`ipa` has no billing).
    *
-   * The only mock left in here that Android has an equivalent notion of, and it stays iOS-only because
-   * Android takes its variant from the build rather than a launch value. The refund, originating-account
-   * and originating-platform mocks that used to sit alongside it are now in `ProMockContext`, where both
-   * clients read them.
+   * Android has the same notion but takes its variant from the build rather than a launch value, so this
+   * one stays on the iOS side.
    */
   iosProBuildVariant?:
     | 'apk'
@@ -203,4 +203,53 @@ export function contextForDevice(
   index: number
 ): MobileTestContext | undefined {
   return Array.isArray(contexts) ? contexts[index] : contexts;
+}
+
+/**
+ * Pro enabled, talking to the QA Pro backend when one is configured.
+ *
+ * The override belongs here rather than in individual specs because it must be on **every** device in a
+ * test: the pubkey is what libSession verifies other users' proofs against, so a device left on the
+ * default reads a QA-signed proof as invalid, strips the Pro content and stores the sender as non-Pro —
+ * which looks like an app bug rather than a harness gap.
+ */
+export const PRO_BACKEND_CONTEXT: MobileTestContext = (() => {
+  const proBackend = getProBackendOverride();
+  return {
+    ...(proBackend ? { proBackendUrl: proBackend.url, proBackendPubkey: proBackend.pubkey } : {}),
+  };
+})();
+
+/**
+ * Whole days of remaining Pro access granted by `activeProContext`.
+ *
+ * The app ceilings the remaining interval into day/hour/minute units, so an expiry exactly N days out
+ * renders as `N days` for the whole first day — deterministic however long onboarding took.
+ */
+export const PRO_ACCESS_DAYS = 30;
+
+/**
+ * A current user who **is** a Pro subscriber, with no backend, no entitlement and no store involved.
+ *
+ * Use this for anything asserting how the UI *renders* Pro state. Only reach for `makeAccountPro`
+ * when the assertion depends on something a real cryptographic proof produces — another device
+ * verifying a badge, network-enforced limits, proof rotation — because a real grant costs a mint, an
+ * app restart, and a race against the client's status-refresh cache.
+ *
+ * `proAccessExpiry` is not optional in practice: each mock defaults to "use the actual value", so an
+ * `active` status on an account that never subscribed inherits a **zero** expiry and the app renders
+ * an expiring-soon screen over the UI, which then fails later steps on missing elements.
+ *
+ * `proProof` is not optional either, and for a sharper reason: `proBackendStatus` says what state the
+ * plan is in and **grants nothing**. Every feature — the character limit, the badge, the animated
+ * avatar, the pinned limit — reads the proof, so a status-only fixture renders a subscriber whose
+ * features are all switched off. Anything that means "this user is Pro" has to say both halves.
+ */
+export function activeProContext(days: number = PRO_ACCESS_DAYS): MobileTestContext {
+  return {
+    ...PRO_BACKEND_CONTEXT,
+    proBackendStatus: 'active',
+    proProof: 'valid',
+    proAccessExpiry: String(Math.floor(Date.now() / 1000) + days * 24 * 60 * 60),
+  };
 }

@@ -10,36 +10,19 @@ import { WDA_DERIVED_DATA_PATH, WDA_PREBUILT_APP_PATH } from '../../../scripts/b
 import { resolveRunSimulators, type Simulator } from '../../../scripts/ios_shared';
 import { IntRange } from '../../types/RangeType';
 import { getResolvedDevnetSeedNode, getServiceNetwork } from './network_target';
-import { getProBackendOverride } from './pro_backend';
 
 dotenv.config({ quiet: true });
 
 /**
- * Per-test overrides injected into the app's launch-arg env
- * (`DeveloperSettingsViewModel.processUnitTestEnvVariablesIfNeeded` in Session_iOS, compiled only
- * under `#if targetEnvironment(simulator)`).
+ * `MobileTestContext` field -> the env key the app reads.
  *
- * The `pro*` fields simulate what the backend reports, letting a test reach the Pro screens without
- * a purchase, a second device, or a reachable backend. They are DISPLAY-LEVEL by design — the iOS
- * source says the mocks are "only reflected in the UI" — so they cover screens, copy and CTAs, but
- * NOT anything requiring a real cryptographic proof (a Pro badge a peer verifies, long messages the
- * network accepts). Those need a genuine entitlement via `makeAccountPro`.
+ * How the mocks reach the app on iOS: launch-arg env variables read by
+ * `DeveloperSettingsViewModel.processUnitTestEnvVariablesIfNeeded`, compiled only under
+ * `#if targetEnvironment(simulator)`. The vocabulary itself is shared — see `pro_context.ts`.
  *
- * There is no longer a master gate to set: iOS deleted the pre-launch Pro-availability flag in
- * `97bdb22214`, and the mock and override tooling it used to sit behind is now reachable on its own
- * (still developer-mode only, which a simulator build is). Every mock accepts `'useActual'`, meaning
- * "don't mock this one".
- *
- * The values are the app's own wire codes rather than prettier synonyms, so the test contract reads
- * the same as what the backend actually sends. Typing them as unions is deliberate — an unrecognised
- * value is silently ignored by the app, which would yield a passing *default-state* test rather than
- * a failure, so the typo has to be caught here.
- */
-
-/**
- * `MobileTestContext` field -> the env key the app reads. The app's `EnvironmentVariable` enum is
- * `String`-backed with no explicit raw values, so each key is that case's name verbatim; the two
- * pre-existing entries are here too rather than staying as one-off assignments.
+ * Exhaustive over the context type, so a field added there is a compile error until it is wired up here
+ * rather than a mock that silently does nothing. The app's `EnvironmentVariable` enum is `String`-backed
+ * with no explicit raw values, so each key is that case's name verbatim.
  */
 const IOS_TEST_ENV_KEYS: Record<keyof MobileTestContext, string> = {
   iosCustomInstallTime: 'customFirstInstallDateTime',
@@ -59,56 +42,6 @@ const IOS_TEST_ENV_KEYS: Record<keyof MobileTestContext, string> = {
 };
 
 type AppiumXCUITestCapabilities = Capabilities.AppiumXCUITestCapabilities;
-
-/**
- * Pro enabled, talking to the QA Pro backend when one is configured.
- *
- * The override belongs here rather than in individual specs because it must be on **every** device in a
- * test: the pubkey is what libSession verifies other users' proofs against, so a device left on the
- * default reads a QA-signed proof as invalid, strips the Pro content and stores the sender as non-Pro —
- * which looks like an app bug rather than a harness gap.
- */
-export const IOS_PRO_CONTEXT: MobileTestContext = (() => {
-  const proBackend = getProBackendOverride();
-  return {
-    ...(proBackend ? { proBackendUrl: proBackend.url, proBackendPubkey: proBackend.pubkey } : {}),
-  };
-})();
-
-/**
- * Whole days of remaining Pro access granted by `iosActiveProContext`.
- *
- * The app ceilings the remaining interval into day/hour/minute units, so an expiry exactly N days out
- * renders as `N days` for the whole first day — deterministic however long onboarding took.
- */
-export const IOS_PRO_ACCESS_DAYS = 30;
-
-/**
- * A current user who **is** a Pro subscriber, with no backend, no entitlement and no store involved.
- *
- * Use this for anything asserting how the UI *renders* Pro state. Only reach for `makeAccountPro`
- * when the assertion depends on something a real cryptographic proof produces — another device
- * verifying a badge, network-enforced limits, proof rotation — because a real grant costs a mint, an
- * app restart, and a race against the client's status-refresh cache.
- *
- * `proAccessExpiry` is not optional in practice: each mock defaults to "use the actual value", so an
- * `active` status on an account that never subscribed inherits a **zero** expiry and the app renders
- * an expiring-soon screen over the UI, which then fails later steps on missing elements.
- *
- * `proProof` is not optional either, and for a sharper reason: `proBackendStatus` says what state the
- * plan is in and **grants nothing**. Every feature — the character limit, the badge, the animated
- * avatar, the pinned limit — reads the proof, so a status-only fixture renders a subscriber whose
- * features are all switched off. The two were one lever until 2026-08-14; anything that means "this
- * user is Pro" now has to say both halves.
- */
-export function iosActiveProContext(days: number = IOS_PRO_ACCESS_DAYS): MobileTestContext {
-  return {
-    ...IOS_PRO_CONTEXT,
-    proBackendStatus: 'active',
-    proProof: 'valid',
-    proAccessExpiry: String(Math.floor(Date.now() / 1000) + days * 24 * 60 * 60),
-  };
-}
 
 // --- Service network selection (mainnet / testnet / devnet) ---
 //
@@ -181,7 +114,7 @@ function getAppEnvOverrides(): Record<string, string> {
 export const iOSBundleId = 'com.loki-project.loki-messenger';
 
 // Resolved lazily (NOT at module load) for the same reason as `getAppEnvOverrides` above: this module
-// is imported on Android- and Desktop-only runs too — `cross_platform_state` pulls in IOS_PRO_CONTEXT
+// is imported on Android- and Desktop-only runs too — `cross_platform_state` pulls in PRO_BACKEND_CONTEXT
 // — and throwing at import time would make those runs impossible without a full iOS setup. Every throw
 // below now fires only when an iOS capability is actually built.
 let iosAppFullPathCache: string | undefined;

@@ -14,13 +14,13 @@ import {
   UserSettings,
 } from '../../locators/settings';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
-import { IOS_PRO_CONTEXT, iosActiveProContext } from '../../utils/capabilities_ios';
 import { newUser } from '../../utils/create_account';
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { activeProContext, PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 import { observeProGrant } from '../../utils/pro_refresh';
 import { runOnlyOnAndroid } from '../../utils/run_on';
 import { verifyPageScreenshot } from '../../utils/verify_screenshots';
@@ -73,7 +73,7 @@ bothPlatformsIt({
 
 async function nonProAnimatedDP(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, IOS_PRO_CONTEXT);
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, PRO_BACKEND_CONTEXT);
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
     return { device };
   });
@@ -98,11 +98,7 @@ async function nonProAnimatedDP(platform: SupportedPlatformsType, testInfo: Test
  */
 async function proActivatedCTA(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device, alice } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(
-      platform,
-      testInfo,
-      iosActiveProContext()
-    );
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, activeProContext());
     // The recovery phrase is only needed to derive the Pro master key for a real grant, and reading it
     // costs a trip through settings — so only pay for it on the platform that mints.
     const alice = await newUser(device, USERNAME.ALICE, {
@@ -132,7 +128,7 @@ async function proActivatedCTA(platform: SupportedPlatformsType, testInfo: TestI
 
 async function proAnimatedDP(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device, alice } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, IOS_PRO_CONTEXT);
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, PRO_BACKEND_CONTEXT);
     const alice = await newUser(device, USERNAME.ALICE);
     return { device, alice };
   });
@@ -155,7 +151,7 @@ async function proAnimatedDPShows(platform: SupportedPlatformsType, testInfo: Te
       platform,
       focusFriendsConvo: false,
       testInfo,
-      testContext: IOS_PRO_CONTEXT,
+      testContext: PRO_BACKEND_CONTEXT,
     });
   });
   const { alice1, bob1 } = devices;
