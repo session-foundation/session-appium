@@ -6,13 +6,13 @@ import { USERNAME } from '../../../types/testing';
 import { MessageInput, MessageLengthCountdown } from '../../locators/conversation';
 import { PlusButton } from '../../locators/home';
 import { EnterAccountID, NewMessageOption, NextButton } from '../../locators/start_conversation';
-import { iosActiveProContext } from '../../utils/capabilities_ios';
 import { newUser } from '../../utils/create_account';
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { activeProContext } from '../../utils/pro_context';
 
 /**
  * Comfortably past the standard cap of 2000, comfortably under the Pro one of 10000 — so the countdown
@@ -51,10 +51,10 @@ bothPlatformsIt({
  */
 async function proNoProofMessageLimit(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, {
-    ...iosActiveProContext(),
+    ...activeProContext(),
     proLoadingState: 'success',
     // Overrides the shared context's `valid`, and the override IS the subject: this fixture is a plan
-    // that reads active with nothing to prove it. Spread order matters — `iosActiveProContext` means
+    // that reads active with nothing to prove it. Spread order matters — `activeProContext` means
     // "an ordinary Pro user" and so grants both halves, where this spec needs exactly one.
     proProof: 'none',
   });

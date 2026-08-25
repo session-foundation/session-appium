@@ -160,7 +160,10 @@ export function crossPlatformTest<Names extends AccountName>({
       const state = await openAppsWithStateCrossPlatform({
         stateToBuildKey: setup.stateKey,
         groupName: setup.groupName,
+        // Spread rather than picked field by field: a picked list silently drops anything added to
+        // `PerUserPlatforms` later, which reads as the new field simply not working.
         perUser: setup.accounts.map(a => ({
+          ...a.platforms,
           android: a.platforms.android ?? 0,
           ios: a.platforms.ios ?? 0,
           desktop: a.platforms.desktop ?? 0,

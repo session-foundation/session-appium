@@ -1,3 +1,5 @@
+import { getProBackendOverride } from './pro_backend';
+
 /**
  * The mocked Pro state a spec asks for, in the vocabulary **both** platforms accept.
  *
@@ -42,9 +44,9 @@ export type ProMockContext = {
    * no proof behind it is the state in which a client offers the Pro character limit and every
    * recipient silently truncates what it sends.
    *
-   * So a fixture that wants an ordinary Pro user sets BOTH. They were one lever until 2026-08-14, when
-   * the clients split Pro into an access value and a display value; a combined lever alongside two
-   * separate ones would have left three knobs describing two facts.
+   * So a fixture that wants an ordinary Pro user sets BOTH. The clients model access and display as
+   * separate values, and a combined lever alongside two separate ones would leave three knobs describing
+   * two facts.
    *
    * `'none'` denies access **even on a device holding a real, valid proof** — it overrides rather than
    * falling back, since a mock a real proof could silently outvote would be useless on the devices most
@@ -102,4 +104,152 @@ export type ProMockContext = {
    * `PaymentProviderMetadata.isFromAnotherPlatform` reads, so one setup means the same thing on both.
    */
   proOriginatingPlatform?: 'android' | 'iOS' | 'useActual';
+  /**
+   * Session Pro backend to use instead of the one compiled into libsession, so a QA backend can be
+   * targeted without rebuilding.
+   *
+   * Set BOTH or neither: the pubkey is what libSession verifies proofs against, so a device given the QA
+   * URL but left on the production key reads every QA-signed proof as invalid, strips the Pro content and
+   * stores the sender as non-Pro — which reads as an app bug rather than a config mistake.
+   *
+   * Shared rather than per-platform because both clients consume it: iOS as the `customProBackendUrl` /
+   * `customProBackendPubkey` launch variables, Android as the `sessionProBackendUrl` /
+   * `sessionProBackendPubkey` intent extras.
+   *
+   * Normally supplied for every device by `PRO_BACKEND_CONTEXT` / the Android extras, from the environment.
+   * Overriding it for ONE device is what lets a spec express a recipient that cannot verify a genuine
+   * proof, which needs `MobileTestContexts` to differ per device.
+   */
+  proBackendUrl?: string;
+  /** The backend's **Ed25519** signing key (`signing_pubkey` from its `GET /status`), not the x25519 form. */
+  proBackendPubkey?: string;
 };
+
+/**
+ * Test hooks that change a client's Pro **timing**, as opposed to mocking its Pro state.
+ *
+ * Deliberately not part of `ProMockContext`: everything there convinces one client it is in a state it
+ * is not in, and produces nothing another party can verify. These do the opposite — they are used
+ * alongside a REAL grant, and exist so a spec can observe behaviour the production schedule puts a day
+ * out of reach.
+ */
+export type ProTestHookContext = {
+  /**
+   * Poll the Pro revocation list at launch instead of waiting out the server's cadence.
+   *
+   * Required by every revocation spec, not a convenience. Our QA backend serves `retry_in: 86400` —
+   * the production cadence, and inside libSession's `[60s, 48h]` clamp, so nothing shortens it — which
+   * puts a client's second poll a day after its first. Without this, no client learns of a revocation
+   * within a test run, and a spec asserting enforcement passes only because nothing was ever enforced.
+   *
+   * The clients implement it by moving their own persisted "next poll" instant into the past, so the
+   * production gate then decides to poll unmodified. That matters for what a spec proves: the path
+   * exercised is the real one, not a test-only fetch that could pass while the real path is broken.
+   */
+  forceProRevocationRefresh?: boolean;
+};
+
+/** Everything a spec can ask of a client's Pro setup: the display mocks plus the timing hooks. */
+export type ProContext = ProMockContext & ProTestHookContext;
+
+/**
+ * The half of the mobile test context only iOS reads.
+ *
+ * Kept beside `ProContext` rather than in `capabilities_ios` because the boundary between the two moves:
+ * a field becomes shared the moment Android starts consuming it, and that should be a one-line move
+ * between the types next to each other, not a cross-module refactor. The `ios` prefix marks which side a
+ * field is currently on, so a mock that has only ever been wired on iOS is legible as such at the call
+ * site — Android takes its Pro enablement and its backend from the AQA build variant instead.
+ */
+export type IOSOnlyContext = {
+  iosCustomInstallTime?: string;
+  /**
+   * Build variant, which decides whether billing UI is reachable at all (`ipa` has no billing).
+   *
+   * Android has the same notion but takes its variant from the build rather than a launch value, so this
+   * one stays on the iOS side.
+   */
+  iosProBuildVariant?:
+    | 'apk'
+    | 'appStore'
+    | 'development'
+    | 'fDroid'
+    | 'huawei'
+    | 'ipa'
+    | 'testFlight'
+    | 'useActual';
+};
+
+/**
+ * What both mobile platforms are handed. `openAppOnPlatform` forwards this whole object to
+ * `openAndroidApp` as well as `openiOSApp`; Android reads the `ProContext` half as launch-intent extras
+ * and ignores the rest.
+ */
+export type MobileTestContext = ProContext & IOSOnlyContext;
+
+/**
+ * A context per device, or one context for all of them.
+ *
+ * A single context is the common case and stays the common case. An array exists for the fixtures where
+ * the devices must DISAGREE — a sender whose Pro backend key the recipient does not trust, for instance,
+ * which cannot be expressed while every device shares one context. Index matches device order, and a
+ * `undefined` entry leaves that device unconfigured.
+ */
+export type MobileTestContexts = Array<MobileTestContext | undefined> | MobileTestContext;
+
+/** The context for one device, whichever form the caller used. */
+export function contextForDevice(
+  contexts: MobileTestContexts | undefined,
+  index: number
+): MobileTestContext | undefined {
+  return Array.isArray(contexts) ? contexts[index] : contexts;
+}
+
+/**
+ * Pro enabled, talking to the QA Pro backend when one is configured.
+ *
+ * The override belongs here rather than in individual specs because it must be on **every** device in a
+ * test: the pubkey is what libSession verifies other users' proofs against, so a device left on the
+ * default reads a QA-signed proof as invalid, strips the Pro content and stores the sender as non-Pro —
+ * which looks like an app bug rather than a harness gap.
+ */
+export const PRO_BACKEND_CONTEXT: MobileTestContext = (() => {
+  const proBackend = getProBackendOverride();
+  return {
+    ...(proBackend ? { proBackendUrl: proBackend.url, proBackendPubkey: proBackend.pubkey } : {}),
+  };
+})();
+
+/**
+ * Whole days of remaining Pro access granted by `activeProContext`.
+ *
+ * The app ceilings the remaining interval into day/hour/minute units, so an expiry exactly N days out
+ * renders as `N days` for the whole first day — deterministic however long onboarding took.
+ */
+export const PRO_ACCESS_DAYS = 30;
+
+/**
+ * A current user who **is** a Pro subscriber, with no backend, no entitlement and no store involved.
+ *
+ * Use this for anything asserting how the UI *renders* Pro state. Only reach for `makeAccountPro`
+ * when the assertion depends on something a real cryptographic proof produces — another device
+ * verifying a badge, network-enforced limits, proof rotation — because a real grant costs a mint, an
+ * app restart, and a race against the client's status-refresh cache.
+ *
+ * `proAccessExpiry` is not optional in practice: each mock defaults to "use the actual value", so an
+ * `active` status on an account that never subscribed inherits a **zero** expiry and the app renders
+ * an expiring-soon screen over the UI, which then fails later steps on missing elements.
+ *
+ * `proProof` is not optional either, and for a sharper reason: `proBackendStatus` says what state the
+ * plan is in and **grants nothing**. Every feature — the character limit, the badge, the animated
+ * avatar, the pinned limit — reads the proof, so a status-only fixture renders a subscriber whose
+ * features are all switched off. Anything that means "this user is Pro" has to say both halves.
+ */
+export function activeProContext(days: number = PRO_ACCESS_DAYS): MobileTestContext {
+  return {
+    ...PRO_BACKEND_CONTEXT,
+    proBackendStatus: 'active',
+    proProof: 'valid',
+    proAccessExpiry: String(Math.floor(Date.now() / 1000) + days * 24 * 60 * 60),
+  };
+}

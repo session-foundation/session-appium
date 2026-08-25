@@ -8,9 +8,9 @@ import { USERNAME } from '../../../types/testing';
 import { MessageInput, MessageLengthCountdown } from '../../locators/conversation';
 import { PlusButton } from '../../locators/home';
 import { EnterAccountID, NewMessageOption, NextButton } from '../../locators/start_conversation';
-import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { newUser } from '../../utils/create_account';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from '../../utils/open_app';
+import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 import { observeProGrant } from '../../utils/pro_refresh';
 
 /** How far short of the limit to stop, so the countdown is on screen to be read. */
@@ -43,7 +43,7 @@ bothPlatformsIt({
  * so a countdown reading against the Pro cap can only come from a status the client actually holds.
  */
 async function proRestoreDiscovery(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const { device1, device2 } = await openAppTwoDevices(platform, testInfo, IOS_PRO_CONTEXT);
+  const { device1, device2 } = await openAppTwoDevices(platform, testInfo, PRO_BACKEND_CONTEXT);
 
   const alice = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     return await newUser(device1, USERNAME.ALICE);

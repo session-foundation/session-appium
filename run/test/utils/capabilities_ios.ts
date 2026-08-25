@@ -4,70 +4,28 @@ import { W3CXCUITestDriverCaps } from 'appium-xcuitest-driver/build/lib/driver';
 import dotenv from 'dotenv';
 import { existsSync } from 'fs';
 
-import type { ProMockContext } from './pro_context';
+import type { MobileTestContext } from './pro_context';
 
 import { WDA_DERIVED_DATA_PATH, WDA_PREBUILT_APP_PATH } from '../../../scripts/build_wda';
 import { resolveRunSimulators, type Simulator } from '../../../scripts/ios_shared';
 import { IntRange } from '../../types/RangeType';
 import { getResolvedDevnetSeedNode, getServiceNetwork } from './network_target';
-import { getProBackendOverride } from './pro_backend';
 
 dotenv.config({ quiet: true });
 
 /**
- * Per-test overrides injected into the app's launch-arg env
- * (`DeveloperSettingsViewModel.processUnitTestEnvVariablesIfNeeded` in Session_iOS, compiled only
- * under `#if targetEnvironment(simulator)`).
+ * `MobileTestContext` field -> the env key the app reads.
  *
- * The `pro*` fields simulate what the backend reports, letting a test reach the Pro screens without
- * a purchase, a second device, or a reachable backend. They are DISPLAY-LEVEL by design — the iOS
- * source says the mocks are "only reflected in the UI" — so they cover screens, copy and CTAs, but
- * NOT anything requiring a real cryptographic proof (a Pro badge a peer verifies, long messages the
- * network accepts). Those need a genuine entitlement via `makeAccountPro`.
+ * How the mocks reach the app on iOS: launch-arg env variables read by
+ * `DeveloperSettingsViewModel.processUnitTestEnvVariablesIfNeeded`, compiled only under
+ * `#if targetEnvironment(simulator)`. The vocabulary itself is shared — see `pro_context.ts`.
  *
- * `sessionProEnabled` is the master gate: the other `pro*` values are ignored unless it is `'true'`.
- * Every mock also accepts `'useActual'`, meaning "don't mock this one".
- *
- * The values are the app's own wire codes rather than prettier synonyms, so the test contract reads
- * the same as what the backend actually sends. Typing them as unions is deliberate — an unrecognised
- * value is silently ignored by the app, which would yield a passing *default-state* test rather than
- * a failure, so the typo has to be caught here.
+ * Exhaustive over the context type, so a field added there is a compile error until it is wired up here
+ * rather than a mock that silently does nothing. The app's `EnvironmentVariable` enum is `String`-backed
+ * with no explicit raw values, so each key is that case's name verbatim.
  */
-export type IOSTestContext = ProMockContext & {
-  customInstallTime?: string;
-  sessionProEnabled?: string;
-  /** Build variant, which decides whether billing UI is reachable at all (`ipa` has no billing). */
-  proBuildVariant?:
-    | 'apk'
-    | 'appStore'
-    | 'development'
-    | 'fDroid'
-    | 'huawei'
-    | 'ipa'
-    | 'testFlight'
-    | 'useActual';
-  /**
-   * Point the app at a QA Pro backend instead of the compiled-in production one.
-   *
-   * Set BOTH, and set them on EVERY device in a multi-device test: the pubkey is what libSession
-   * verifies other users' proofs against, so a device left on the default reads a QA-signed proof as
-   * invalid, strips the Pro content and stores the sender as non-Pro — which looks like an app bug
-   * rather than a harness gap. `openAppTwoDevices`/`openAppThreeDevices` pass one context to every
-   * device, so this holds as long as no per-device context is introduced.
-   */
-  proBackendUrl?: string;
-  /** The backend's **Ed25519** signing key (`signing_pubkey` from its `GET /status`), not the x25519 form. */
-  proBackendPubkey?: string;
-};
-
-/**
- * `IOSTestContext` field -> the env key the app reads. The app's `EnvironmentVariable` enum is
- * `String`-backed with no explicit raw values, so each key is that case's name verbatim; the two
- * pre-existing entries are here too rather than staying as one-off assignments.
- */
-const IOS_TEST_ENV_KEYS: Record<keyof IOSTestContext, string> = {
-  customInstallTime: 'customFirstInstallDateTime',
-  sessionProEnabled: 'sessionPro',
+const IOS_TEST_ENV_KEYS: Record<keyof MobileTestContext, string> = {
+  iosCustomInstallTime: 'customFirstInstallDateTime',
   proBackendStatus: 'mockCurrentUserSessionProBackendStatus',
   proLoadingState: 'mockCurrentUserSessionProLoadingState',
   proOriginatingPlatform: 'mockCurrentUserSessionProOriginatingPlatform',
@@ -75,65 +33,15 @@ const IOS_TEST_ENV_KEYS: Record<keyof IOSTestContext, string> = {
   proRefundingStatus: 'mockCurrentUserSessionProRefundingStatus',
   proAutoRenewing: 'mockCurrentUserSessionProAutoRenewing',
   proQuickRefundWindow: 'mockCurrentUserSessionProQuickRefundWindow',
-  proBuildVariant: 'mockCurrentUserSessionProBuildVariant',
+  iosProBuildVariant: 'mockCurrentUserSessionProBuildVariant',
   proAccessExpiry: 'mockCurrentUserAccessExpiryTimestamp',
   proProof: 'mockCurrentUserSessionProProof',
   proBackendUrl: 'customProBackendUrl',
   proBackendPubkey: 'customProBackendPubkey',
+  forceProRevocationRefresh: 'forceProRevocationRefresh',
 };
 
 type AppiumXCUITestCapabilities = Capabilities.AppiumXCUITestCapabilities;
-
-/**
- * Pro enabled, talking to the QA Pro backend when one is configured.
- *
- * The override belongs here rather than in individual specs because it must be on **every** device in a
- * test: the pubkey is what libSession verifies other users' proofs against, so a device left on the
- * default reads a QA-signed proof as invalid, strips the Pro content and stores the sender as non-Pro —
- * which looks like an app bug rather than a harness gap.
- */
-export const IOS_PRO_CONTEXT: IOSTestContext = (() => {
-  const proBackend = getProBackendOverride();
-  return {
-    sessionProEnabled: 'true',
-    ...(proBackend ? { proBackendUrl: proBackend.url, proBackendPubkey: proBackend.pubkey } : {}),
-  };
-})();
-
-/**
- * Whole days of remaining Pro access granted by `iosActiveProContext`.
- *
- * The app ceilings the remaining interval into day/hour/minute units, so an expiry exactly N days out
- * renders as `N days` for the whole first day — deterministic however long onboarding took.
- */
-export const IOS_PRO_ACCESS_DAYS = 30;
-
-/**
- * A current user who **is** a Pro subscriber, with no backend, no entitlement and no store involved.
- *
- * Use this for anything asserting how the UI *renders* Pro state. Only reach for `makeAccountPro`
- * when the assertion depends on something a real cryptographic proof produces — another device
- * verifying a badge, network-enforced limits, proof rotation — because a real grant costs a mint, an
- * app restart, and a race against the client's status-refresh cache.
- *
- * `proAccessExpiry` is not optional in practice: each mock defaults to "use the actual value", so an
- * `active` status on an account that never subscribed inherits a **zero** expiry and the app renders
- * an expiring-soon screen over the UI, which then fails later steps on missing elements.
- *
- * `proProof` is not optional either, and for a sharper reason: `proBackendStatus` says what state the
- * plan is in and **grants nothing**. Every feature — the character limit, the badge, the animated
- * avatar, the pinned limit — reads the proof, so a status-only fixture renders a subscriber whose
- * features are all switched off. The two were one lever until 2026-08-14; anything that means "this
- * user is Pro" now has to say both halves.
- */
-export function iosActiveProContext(days: number = IOS_PRO_ACCESS_DAYS): IOSTestContext {
-  return {
-    ...IOS_PRO_CONTEXT,
-    proBackendStatus: 'active',
-    proProof: 'valid',
-    proAccessExpiry: String(Math.floor(Date.now() / 1000) + days * 24 * 60 * 60),
-  };
-}
 
 // --- Service network selection (mainnet / testnet / devnet) ---
 //
@@ -170,7 +78,7 @@ function buildServiceNetworkEnv(): Record<string, string> {
 /**
  * Optional custom file server (e.g. a local Sesh-Net-Docker file server). When `FILE_SERVER_URL`
  * is set, the app is pointed at it via `customFileServerUrl` (+ `customFileServerPubkey`), which
- * speeds up media tests. `FILE_SERVER_PUBKEY` is the file server's **X25519** pubkey: LibSession-Util
+ * speeds up media tests. `FILE_SERVER_ED_PUBKEY` is the file server's **Ed25519** pubkey: LibSession-Util
  * consumes it directly as `x25519_pubkey::from_hex(...)` (its built-in default `da21…` is an X25519
  * key) — it does NOT convert from ed25519, and the app passes this value to libsession raw. If
  * omitted the app falls back to its default file server pubkey. Independent of the network target —
@@ -181,9 +89,13 @@ function buildCustomFileServerEnv(): Record<string, string> {
   if (!url) {
     return {};
   }
-  const pubkey = (process.env.FILE_SERVER_PUBKEY ?? '').trim();
+  // ED25519, matching Android and Desktop. The `p=` fragment in a download url carries the Ed key on
+  // every client, and libsession derives the X25519 form for onion requests itself — so handing iOS the
+  // X25519 key here produces a url other clients read as an Ed key and reject as an invalid curve point,
+  // which is a download that never resolves rather than a configuration error.
+  const pubkey = (process.env.FILE_SERVER_ED_PUBKEY ?? '').trim();
   if (pubkey && !/^[0-9a-fA-F]{64}$/.test(pubkey)) {
-    throw new Error('FILE_SERVER_PUBKEY must be a 64-character hex string (X25519 pubkey)');
+    throw new Error('FILE_SERVER_ED_PUBKEY must be a 64-character hex string (Ed25519 pubkey)');
   }
   return {
     customFileServerUrl: url,
@@ -206,7 +118,7 @@ function getAppEnvOverrides(): Record<string, string> {
 export const iOSBundleId = 'com.loki-project.loki-messenger';
 
 // Resolved lazily (NOT at module load) for the same reason as `getAppEnvOverrides` above: this module
-// is imported on Android- and Desktop-only runs too — `cross_platform_state` pulls in IOS_PRO_CONTEXT
+// is imported on Android- and Desktop-only runs too — `cross_platform_state` pulls in PRO_BACKEND_CONTEXT
 // — and throwing at import time would make those runs impossible without a full iOS setup. Every throw
 // below now fires only when an iOS capability is actually built.
 let iosAppFullPathCache: string | undefined;
@@ -342,7 +254,7 @@ export function capabilityIsValid(
 
 export function getIosCapabilities(
   capabilitiesIndex: CapabilitiesIndexType,
-  customCaps?: IOSTestContext
+  customCaps?: MobileTestContext
 ): W3CXCUITestDriverCaps {
   const capabilities = getCapabilities();
   if (capabilitiesIndex >= capabilities.length) {
@@ -363,9 +275,12 @@ export function getIosCapabilities(
   // the app on its real value — the same thing an explicit 'useActual' asks for.
   const customEnv: Record<string, string> = {};
   for (const [field, envKey] of Object.entries(IOS_TEST_ENV_KEYS)) {
-    const value = customCaps?.[field as keyof IOSTestContext];
+    const value = customCaps?.[field as keyof MobileTestContext];
     if (value) {
-      customEnv[envKey] = value;
+      // The launch-arg env is string-valued, so a boolean hook arrives here as `true` and has to be
+      // spelled out. `'true'` rather than `'1'` because the app parses the two consistently and the
+      // string form is what reads correctly in a device log.
+      customEnv[envKey] = value === true ? 'true' : value;
     }
   }
 

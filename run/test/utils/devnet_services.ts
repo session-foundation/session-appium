@@ -193,7 +193,7 @@ async function discoverSogs(host: string): Promise<Array<string>> {
  * of an onion request, so nothing this side of the snodes can tell a right key from a wrong one, and
  * a wrong one surfaces as uploads failing with `Failed to decrypt onion request` mid-run.
  *
- * So the key has to be stated rather than assumed: with `FILE_SERVER_PUBKEY` unset we report the
+ * So the key has to be stated rather than assumed: with `FILE_SERVER_ED_PUBKEY` unset we report the
  * server we found and leave the suite on the production file server, which works. Guessing would
  * trade a slower run for a broken one.
  */
@@ -221,10 +221,10 @@ async function discoverFileServer(host: string): Promise<Array<string>> {
     ];
   }
 
-  const pubkey = envValue('FILE_SERVER_PUBKEY');
+  const pubkey = envValue('FILE_SERVER_ED_PUBKEY');
   if (!pubkey) {
     return [
-      `${label} reachable at ${url}, but FILE_SERVER_PUBKEY is unset`,
+      `${label} reachable at ${url}, but FILE_SERVER_ED_PUBKEY is unset`,
       `               Set it to the server's X25519 pubkey (\`docker compose logs fileserver |`,
       `               grep -i pubkey\`) to use it. It cannot be checked from here — a wrong key`,
       `               fails at onion-decrypt time, mid-run — so it is not guessed.`,
@@ -233,13 +233,13 @@ async function discoverFileServer(host: string): Promise<Array<string>> {
   }
   if (!HEX64.test(pubkey)) {
     return [
-      `${label} FILE_SERVER_PUBKEY is not a 64-character hex string ("${pubkey}") — skipping`,
+      `${label} FILE_SERVER_ED_PUBKEY is not a 64-character hex string ("${pubkey}") — skipping`,
       `               -> media tests will use the production file server`,
     ];
   }
 
   process.env.FILE_SERVER_URL = url;
-  return [`${label} ${url} — using FILE_SERVER_PUBKEY ${pubkey.slice(0, 8)}…`];
+  return [`${label} ${url} — using FILE_SERVER_ED_PUBKEY ${pubkey.slice(0, 8)}…`];
 }
 
 /**
