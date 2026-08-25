@@ -474,6 +474,28 @@ export class LongPressUnBan extends LocatorsInterface {
   }
 }
 
+/**
+ * The state an iOS media bubble reaches when its bytes could not be turned into an image.
+ *
+ * `MediaView` sets this identifier for `configure(forError: .invalid)`, which is the branch a file that
+ * arrived but would not decode lands in. Asserting its ABSENCE is what makes a render check able to
+ * fail: the placeholder is bubble-sized, so a screenshot-size floor passes on it.
+ *
+ * iOS only today — Android's media bubble carries one identifier for every state.
+ */
+export class MediaInvalid extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Media invalid',
+        } as const;
+    }
+  }
+}
+
 export class MediaMessage extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -487,6 +509,19 @@ export class MediaMessage extends LocatorsInterface {
   }
 }
 
+/** The iOS media bubble's failed-download state — see [MediaInvalid], which it sits beside. */
+export class MediaRetry extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Media retry',
+        } as const;
+    }
+  }
+}
 export class MessageBody extends LocatorsInterface {
   public text: string | undefined;
   constructor(device: DeviceWrapper, text?: string) {
@@ -505,7 +540,6 @@ export class MessageBody extends LocatorsInterface {
     }
   }
 }
-
 export class MessageInput extends LocatorsInterface {
   public build() {
     return {
@@ -514,6 +548,7 @@ export class MessageInput extends LocatorsInterface {
     } as const;
   }
 }
+
 /**
  * The remaining-characters countdown in the composer.
  *
@@ -550,6 +585,7 @@ export class MessageLengthCountdown extends LocatorsInterface {
     }
   }
 }
+
 export class MessageLengthOkayButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {

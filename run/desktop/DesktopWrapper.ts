@@ -5,10 +5,10 @@ import type { StateUser, UserNameType } from '@session-foundation/qa-seeder';
 
 import type { IBaseDeviceWrapper } from '../types/IBaseDeviceWrapper';
 import type {
+  AttachmentType,
   DataTestId,
   DisappearOptions,
   Group,
-  MediaType,
   MessageStatus,
   ModalId,
   StrategyExtractionObj,
@@ -1017,8 +1017,8 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     await sendLinkPreview(this.page, link);
   }
 
-  public async trustUser(mediaType: MediaType, userName: string): Promise<void> {
-    await trustUser(this.page, mediaType, userName);
+  public async trustUser(attachmentType: AttachmentType, userName: string): Promise<void> {
+    await trustUser(this.page, attachmentType, userName);
   }
 
   // --- Communities / groups ---
