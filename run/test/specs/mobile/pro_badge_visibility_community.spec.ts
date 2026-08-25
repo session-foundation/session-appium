@@ -67,6 +67,15 @@ bothPlatformsIt({
  * has to be taken before the grant rather than by comparing two messages afterwards — once Alice's
  * profile carries the badge, her earlier message renders it too.
  *
+ * Which makes the step order load-bearing in a way that is worth stating, because getting it wrong
+ * fails silently. Both clients drop an incoming profile whose `lastUpdateSeconds` has not advanced past
+ * the copy they hold (Android `ProfileUpdateHandler.shouldUpdateProfile`, iOS `UpdateStatus.init`), and
+ * the control message has already given Bob a copy of Alice's. The proof would then arrive, verify, and
+ * be discarded one layer above — looking exactly like a badge that failed to render. What saves it is
+ * that libSession stamps the profile on both writes this test makes: `UserProfile::set_pro_badge` and
+ * `set_pro_config` each set `data["t"]/["T"] = ts_now()` (`src/config/user_profile.cpp`). So the grant
+ * and `enableProBadge` must both land **between** the control and the second message, as below.
+ *
  * ### Why the unscoped locator is safe here, and what makes it so
  *
  * Mobile tags the badge **structurally** (`pro-badge-icon`, on every badge in the app) rather than per
