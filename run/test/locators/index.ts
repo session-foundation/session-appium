@@ -1,5 +1,10 @@
 import { ANDROID_XPATHS, IOS_XPATHS } from '../../constants';
 import { tStripped } from '../../localizer/lib';
+import {
+  ellipsizeForLog,
+  MAX_SELECTOR_LOG_LENGTH,
+  MAX_TEXT_LOG_LENGTH,
+} from '../../shared/log_text';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { StrategyExtractionObj } from '../../types/testing';
 import { getAppDisplayName } from '../utils/devnet';
@@ -573,27 +578,9 @@ export function describeLocator(
 ): string {
   const { strategy, selector, text, label } = locator;
 
-  // Trim selector if its too long, show beginning and end
-  const maxSelectorLength = 80;
-  const halfLength = Math.floor(maxSelectorLength / 2);
-  const trimmedSelector =
-    selector.length > maxSelectorLength
-      ? `${selector.substring(0, halfLength)}…${selector.substring(selector.length - halfLength)}`
-      : selector;
-
-  // Trim text if too long, show beginning and end
-  const maxTextLength = 100;
-  const trimmedText = text
-    ? text.length > maxTextLength
-      ? `${text.substring(0, maxTextLength / 2)}…${text.substring(text.length - maxTextLength / 2)}`
-      : text
-    : undefined;
-
-  const trimmedLabel = label
-    ? label.length > maxTextLength
-      ? `${label.substring(0, maxTextLength / 2)}…${label.substring(label.length - maxTextLength / 2)}`
-      : label
-    : undefined;
+  const trimmedSelector = ellipsizeForLog(selector, MAX_SELECTOR_LOG_LENGTH);
+  const trimmedText = text ? ellipsizeForLog(text, MAX_TEXT_LOG_LENGTH) : undefined;
+  const trimmedLabel = label ? ellipsizeForLog(label, MAX_TEXT_LOG_LENGTH) : undefined;
 
   const base = `${strategy} "${trimmedSelector}"`;
   // `text` and `label` are named separately rather than folded into one "copy" word: they read

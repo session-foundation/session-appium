@@ -5,6 +5,11 @@
 
 import { ElementHandle, expect, Page } from '@playwright/test';
 
+import {
+  ellipsizeForLog,
+  MAX_SELECTOR_LOG_LENGTH,
+  MAX_TEXT_LOG_LENGTH,
+} from '../shared/log_text';
 import { sleepFor } from '../shared/promise_utils';
 import { Conversation, CTA, HomeScreen } from './locators';
 import { sendMessage } from './message';
@@ -74,14 +79,18 @@ export async function waitForElement({
 
   const start = Date.now();
   if (options?.shouldLog) {
-    console.log(`waitForElement: ${builtSelector} for maxMs ${options?.maxWaitMs}`);
+    console.log(
+      `waitForElement: ${ellipsizeForLog(builtSelector, MAX_SELECTOR_LOG_LENGTH)} for maxMs ${options?.maxWaitMs}`
+    );
   }
 
   const el = await window.waitForSelector(builtSelector, {
     timeout: options?.maxWaitMs,
   });
   if (options?.shouldLog) {
-    console.log(`waitForElement: got ${builtSelector} after ${Date.now() - start}ms`);
+    console.log(
+      `waitForElement: got ${ellipsizeForLog(builtSelector, MAX_SELECTOR_LOG_LENGTH)} after ${Date.now() - start}ms`
+    );
   }
 
   return el;
@@ -97,12 +106,15 @@ export async function waitForTextMessage(
     text
   );
 
-  console.info('waitForTextMessage: builtSelector:', builtSelector);
+  console.info(
+    'waitForTextMessage: builtSelector:',
+    ellipsizeForLog(builtSelector, MAX_SELECTOR_LOG_LENGTH)
+  );
   const windows = Array.isArray(window) ? window : [window];
   const el = await Promise.all(
     windows.map(w => w.waitForSelector(builtSelector, { timeout: maxWait }))
   );
-  console.info(`Text message found. Text: "${text}"`);
+  console.info(`Text message found. Text: "${ellipsizeForLog(text, MAX_TEXT_LOG_LENGTH)}"`);
   return el[0];
 }
 
@@ -126,7 +138,9 @@ export async function waitForMatchingText(
   maxWait: number
 ) {
   const builtSelector = `css=:has-text("${text}")`;
-  console.info(`waitForMatchingText: ${text} for maxWait: ${maxWait}ms`);
+  console.info(
+    `waitForMatchingText: ${ellipsizeForLog(text, MAX_TEXT_LOG_LENGTH)} for maxWait: ${maxWait}ms`
+  );
   const start = Date.now();
 
   const windows = Array.isArray(window) ? window : [window];
@@ -134,7 +148,9 @@ export async function waitForMatchingText(
     windows.map(w => w.waitForSelector(builtSelector, { timeout: maxWait }))
   );
 
-  console.info(`waitForMatchingText: found "${text}" in ${Date.now() - start}ms`);
+  console.info(
+    `waitForMatchingText: found "${ellipsizeForLog(text, MAX_TEXT_LOG_LENGTH)}" in ${Date.now() - start}ms`
+  );
   return found[0];
 }
 
@@ -460,7 +476,7 @@ export async function clickOnMatchingText(
   rightButton = false,
   timeoutMs?: number
 ) {
-  console.info(`clickOnMatchingText: "${text}"`);
+  console.info(`clickOnMatchingText: "${ellipsizeForLog(text, MAX_TEXT_LOG_LENGTH)}"`);
   return window.click(
     `"${text}"`,
     rightButton ? { button: 'right', timeout: timeoutMs } : { timeout: timeoutMs }
@@ -487,7 +503,9 @@ export function getMessageTextContentNow() {
 }
 
 export async function pasteIntoInput(window: Page, dataTestId: DataTestId, text: string) {
-  console.info(`pasteIntoInput testId: ${dataTestId} : "${text}"`);
+  console.info(
+    `pasteIntoInput testId: ${dataTestId} : "${ellipsizeForLog(text, MAX_TEXT_LOG_LENGTH)}"`
+  );
   const builtSelector = `css=[data-testid="${dataTestId}"]`;
   // the new input made with onboarding element needs a click to reveal the input in the DOM
   // Convert DataTestId to locator object for clickOn
@@ -504,9 +522,9 @@ export async function doesTextIncludeString(window: Page, dataTestId: DataTestId
 
   const builtSelector = el.includes(text);
   if (builtSelector) {
-    console.info('Text found:', text);
+    console.info('Text found:', ellipsizeForLog(text, MAX_TEXT_LOG_LENGTH));
   } else {
-    throw new Error(`Text not found: "${text}"`);
+    throw new Error(`Text not found: "${ellipsizeForLog(text, MAX_TEXT_LOG_LENGTH)}"`);
   }
 }
 
