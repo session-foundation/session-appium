@@ -1,63 +1,16 @@
 import { test, type TestInfo } from '@playwright/test';
 
-import type { DeviceWrapper } from '../../../types/DeviceWrapper';
-
 import { MESSAGE_DELIVERY_TIMEOUT_MS, STANDARD_MAX_CHARS } from '../../../shared/constants';
 import { makeAccountPro, revokeAccountPro } from '../../../shared/pro_grant';
 import { early, late, LATE_AT, markedMessage } from '../../../shared/pro_revocation';
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import { MessageInput, MessageReadMore, SendButton } from '../../locators/conversation';
+import { MessageInput, SendButton } from '../../locators/conversation';
 import { ConversationItem } from '../../locators/home';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 import { observeProGrant } from '../../utils/pro_refresh';
 import { forceStopAndRestart } from '../../utils/utilities';
-
-/**
- * Expand every collapsed bubble, and it is MANDATORY rather than tidiness.
- *
- * A collapsed bubble shows only its leading portion, which can be indistinguishable from what a recipient
- * that refused the proof would have stored. So an un-expanded conversation cannot tell the two apart: the
- * control would fail even when the proof was honoured, and the truncation assertion would pass even when it
- * was not. Both directions wrong, from the same cause.
- *
- * The platforms collapse by different rules — Android by line count (`MAX_COLLAPSED_LINE_COUNT = 25`), not
- * by characters — so an assertion phrased as "collapsed means exactly `STANDARD_MAX_CHARS`" would be
- * testing something Android does not do. Assert on the EXPANDED text and the difference stops mattering.
- *
- * Opportunistic per bubble, because whether there is anything to expand is itself information: a copy cut
- * to the standard limit may present no affordance at all.
- *
- * ANDROID ONLY, and the gate lives here rather than at the call sites so it cannot be forgotten by a third
- * one: iOS flattens the bubble into a single accessibility element, so there is no Read more subview to
- * find and `MessageReadMore` throws on iOS by design. Nothing is lost by skipping it — the full text is in
- * the bubble's accessibility attributes whether or not the bubble is visually collapsed, which is exactly
- * what the assertions below read.
- */
-async function expandLongMessages(device: DeviceWrapper): Promise<void> {
-  if (device.isIOS()) {
-    return;
-  }
-
-  for (let i = 0; i < 4; i++) {
-    const readMore = await device.doesElementExist({
-      ...new MessageReadMore(device).build(),
-      maxWait: 5_000,
-    });
-    if (!readMore) {
-      return;
-    }
-    try {
-      await device.clickOnElementAll(new MessageReadMore(device));
-    } catch {
-      // The affordance vanished between the check and the click — the bubble re-renders as it expands,
-      // so this races by construction. Best-effort is the contract: what matters is that no collapsed
-      // bubble is left hiding the tail, and the assertions that follow say whether one was.
-      return;
-    }
-  }
-}
 
 bothPlatformsIt({
   title: 'A revoked proof does not buy the Pro message limit at the recipient',
@@ -117,7 +70,9 @@ async function proRevocationMessageLimit(platform: SupportedPlatformsType, testI
 
   await test.step('The control: the recipient keeps all of it', async () => {
     await bob1.clickOnElementAll(new ConversationItem(bob1, prebuilt.alice.userName));
-    await expandLongMessages(bob1);
+    // Mandatory: a collapsed copy is indistinguishable from a truncated one, which fails the control
+    // and passes the truncation assertion regardless of what the recipient actually stored.
+    await bob1.expandLongMessages();
     await bob1.waitForMessageContaining(late('HONOURED'), MESSAGE_DELIVERY_TIMEOUT_MS);
   });
 
@@ -150,7 +105,7 @@ async function proRevocationMessageLimit(platform: SupportedPlatformsType, testI
     // of the viewport entirely. Measured: the matcher saw exactly one body, the expanded first message,
     // and reported the second as never having arrived.
     await bob1.scrollToBottom();
-    await expandLongMessages(bob1);
+    await bob1.expandLongMessages();
     // `EARLY` first: it proves the message arrived, so the absence of `LATE` can only mean it was cut.
     await bob1.waitForMessageContaining(early('REFUSED'), MESSAGE_DELIVERY_TIMEOUT_MS);
     const kept = await bob1.findMessageContaining(late('REFUSED'));

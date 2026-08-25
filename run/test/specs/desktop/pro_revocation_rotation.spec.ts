@@ -50,9 +50,10 @@ test_Alice_1W_Bob_1W_friends(
       effectiveInSeconds: 0,
     });
 
-    // The restart is what makes Alice poll and notice her own proof is revoked; the Pro screen visit then
-    // asks for the replacement and asserts the plan is still active, which is the sender-side claim.
+    // Alice only drops a revoked proof at her next poll, which the relaunch forces.
     await restartApp(alice, DESKTOP_PRO_CONTEXT);
+    // An assertion, not a readiness wait: a rotation leaves the subscription intact, so going non-Pro
+    // here would mean it behaved like a refund.
     await alice.waitForProActive();
 
     // Bob has to poll to learn of the rotation, and the relaunch is what forces it.

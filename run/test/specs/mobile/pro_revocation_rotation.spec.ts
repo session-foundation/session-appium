@@ -90,9 +90,9 @@ async function proRevocationRotation(platform: SupportedPlatformsType, testInfo:
     // continue if the backend allocated no replacement, so a rotation that quietly behaved like a refund
     // fails here rather than misleading everything downstream.
     await revokeAccountPro({ user: prebuilt.alice, revokePayments: false, effectiveInSeconds: 0 });
-    // Asserts the plan is still active AND re-arms Alice on the replacement, which are the same route:
-    // the stats header renders only for an active plan, and nothing but this visit asks for a proof the
-    // client does not yet know it needs.
+    // An assertion as much as a step: a rotation leaves the subscription intact, so going non-Pro
+    // here would mean it behaved like a refund. Alice only drops a revoked proof at her next poll,
+    // and only this visit asks for the replacement — `observeProGrant` does both.
     await observeProGrant(alice1);
   });
 
