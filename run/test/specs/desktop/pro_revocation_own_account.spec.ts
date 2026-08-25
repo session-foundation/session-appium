@@ -40,13 +40,10 @@ test_Alice_1W_10contacts(
     await alice.pasteIntoInput('message-input-text-area', 'x'.repeat(OVER_STANDARD_CHARS));
     // The countdown appears only within 200 of the limit, so at this length it is absent under the Pro
     // limit and shown under the standard one. `hidden` also covers never-attached.
-    await alice
-      .getPage()
-      .locator(
-        `[${Conversation.tooltipCharacterCount.strategy}="${Conversation.tooltipCharacterCount.selector}"]`
-      )
-      .first()
-      .waitFor({ state: 'hidden', timeout: 5_000 });
+    await alice.waitForElementHidden({
+      locator: Conversation.tooltipCharacterCount,
+      options: { maxWaitMs: 5_000 },
+    });
 
     // `revokePayments` is what makes this a refund rather than the rotation the recipient-facing specs
     // use: it strips the entitlement as well as rotating the generation, so the client is left holding a

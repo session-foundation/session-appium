@@ -55,13 +55,10 @@ test_Alice_1W_Bob_1W_friends(
     // appear, and in the matching-key control it renders a second or two after the message, so looking
     // once immediately would pass whatever the client decided.
     await sleepFor(BADGE_SETTLE_MS);
-    await bob
-      .getPage()
-      .locator(
-        `[${Conversation.proBadgeConversationHeader.strategy}="${Conversation.proBadgeConversationHeader.selector}"]`
-      )
-      .first()
-      .waitFor({ state: 'hidden', timeout: 2_000 });
+    await bob.waitForElementHidden({
+      locator: Conversation.proBadgeConversationHeader,
+      options: { maxWaitMs: 2_000 },
+    });
   },
   // Present to earn the `@pro` tag, which `taggedName` derives from this context rather than from a
   // declaration -- so without it the spec runs but `--grep @pro` does not select it, and a Pro pass
