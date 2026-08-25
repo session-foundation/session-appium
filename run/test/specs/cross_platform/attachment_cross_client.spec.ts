@@ -1,3 +1,5 @@
+import type { ClientPlatform } from '../../../types/target';
+
 import { crossPlatformTest } from '../../utils/cross_platform';
 import { sendPhoto, verifyPhotoRendered } from '../../utils/cross_platform_media';
 import { friends } from '../../utils/cross_platform_state_builder';
@@ -18,16 +20,17 @@ import { friends } from '../../utils/cross_platform_state_builder';
 
 const CAPTION = 'Cross-client attachment';
 
-type Pairing = {
+type Pairings = {
   sender: ClientPlatform;
-  recipient: ClientPlatform;
+  /** Every platform this sender is checked against; one test is declared per entry. */
+  recipients: ClientPlatform[];
 };
 
 /**
  * One test per DIRECTION, not per pairing: the two halves exercise different implementations — one
  * writes and one reads — so a pairing that works one way tells you nothing about the other.
  */
-function attachmentPairing({ sender, recipient }: Pairing) {
+function attachmentPairing(sender: ClientPlatform, recipient: ClientPlatform) {
   crossPlatformTest({
     title: `Attachment renders across clients (${sender} sends, ${recipient} receives)`,
     risk: 'high',
@@ -48,9 +51,13 @@ function attachmentPairing({ sender, recipient }: Pairing) {
   });
 }
 
-attachmentPairing({ sender: 'android', recipient: 'desktop' });
-attachmentPairing({ sender: 'desktop', recipient: 'android' });
-attachmentPairing({ sender: 'ios', recipient: 'desktop' });
-attachmentPairing({ sender: 'desktop', recipient: 'ios' });
-attachmentPairing({ sender: 'ios', recipient: 'android' });
-attachmentPairing({ sender: 'android', recipient: 'ios' });
+/** Declared per sender, because what a sender is checked against is the readable unit. */
+function attachmentPairings({ sender, recipients }: Pairings) {
+  for (const recipient of recipients) {
+    attachmentPairing(sender, recipient);
+  }
+}
+
+attachmentPairings({ sender: 'android', recipients: ['desktop', 'ios'] });
+attachmentPairings({ sender: 'desktop', recipients: ['android', 'ios'] });
+attachmentPairings({ sender: 'ios', recipients: ['android', 'desktop'] });
