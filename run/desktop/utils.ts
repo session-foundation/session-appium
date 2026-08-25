@@ -5,11 +5,7 @@
 
 import { ElementHandle, expect, Page } from '@playwright/test';
 
-import {
-  ellipsizeForLog,
-  MAX_SELECTOR_LOG_LENGTH,
-  MAX_TEXT_LOG_LENGTH,
-} from '../shared/log_text';
+import { ellipsizeForLog, MAX_SELECTOR_LOG_LENGTH, MAX_TEXT_LOG_LENGTH } from '../shared/log_text';
 import { sleepFor } from '../shared/promise_utils';
 import { Conversation, CTA, HomeScreen } from './locators';
 import { sendMessage } from './message';
