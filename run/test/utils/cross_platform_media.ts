@@ -10,7 +10,18 @@ import { sendMedia, trustUser } from '../../desktop/send_media';
 import { sleepFor } from '../../shared/promise_utils';
 import { MediaInvalid, MediaMessage, MediaRetry, MessageBody } from '../locators/conversation';
 
-/** The photo every cross-client format check sends. A real JPEG, deliberately: see [RENDER_FLOOR_BYTES]. */
+/**
+ * The photo every cross-client format check sends — the SAME bytes from all three clients, which is what
+ * makes the comparison mean anything.
+ *
+ * Lives in the mobile fixture directory rather than desktop's `sample_files/` because mobile does not
+ * take a path: `sendImage` selects from the simulator's preloaded library by matching this exact file, so
+ * pointing desktop elsewhere would have the two platforms sending different images. It is LFS-tracked —
+ * a checkout without `git lfs pull` gets a pointer file.
+ *
+ * Despite the extension it is a PNG. That matters only in that it is a real photograph rather than a flat
+ * colour, which is what [RENDER_FLOOR_BYTES] depends on.
+ */
 export const CROSS_CLIENT_PHOTO = resolve(__dirname, '../media', testImage);
 
 /**
