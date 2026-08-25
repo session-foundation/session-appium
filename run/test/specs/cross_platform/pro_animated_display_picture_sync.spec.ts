@@ -1,8 +1,8 @@
 import { test } from '@playwright/test';
 
 import { crossPlatformTest } from '../../utils/cross_platform';
-import { restartClient } from '../../utils/cross_platform_actions';
 import { friends } from '../../utils/cross_platform_state_builder';
+import { observeProGrant } from '../../utils/pro_refresh';
 
 /**
  * Cross-platform animated display picture: a Pro user sets one on ONE client type, and a DIFFERENT
@@ -91,8 +91,16 @@ crossPlatformTest({
       // Mints a payment through the backend's dev route and binds it to the Pro master key derived
       // from Alice's recovery phrase, so it grants the account under test rather than a lookalike.
       await aliceAndroid.subscribeToPro(alice.account);
-      // Pro status is read once, at startup, on every client — the grant is invisible until then.
-      await restartClient(aliceAndroid, { pro: true });
+      // A restart is NOT enough, and this failed exactly that way before: the upload hit the
+      // non-Pro upsell CTA, which then covered the screen and the next step died looking for
+      // "User settings". Each client gates its cold-launch `get_pro_status` on already knowing
+      // it has access, so an account that has never seen a grant is never fetched for and stays
+      // non-Pro however many times it relaunches. Opening Pro settings fetches regardless, which
+      // is what `observeProGrant` does — and it restarts first, so it subsumes the restart.
+      //
+      // Only the SUBSCRIBER may do this. Alice's desktop must not: a linked device opening that
+      // screen fires its own `get_pro_status` and races the proof the subscriber just minted.
+      await observeProGrant(aliceAndroid);
     });
 
     await test.step(`${aliceName} sets an animated display picture on Android`, async () => {
