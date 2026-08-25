@@ -89,6 +89,9 @@ export class Conversation extends Locator {
   static readonly linkPreviewTitle = this.testId('msg-link-preview-title');
   static readonly mentionsContainer = this.testId('mentions-container'); // This is also the locator for emojis
   static readonly mentionsItem = this.testId('mentions-container-row'); // This is also the locator for emojis
+  // The author label above an incoming GROUP message (`MessageAuthorText` -> `ContactName`). Absent
+  // from a 1-to-1, and absent on any message that is not the first of its sender's run.
+  static readonly messageAuthorName = this.testId('module-message__author__profile-name');
   static readonly messageContent = this.testId('message-content');
   static readonly messageInput = this.testId('message-input-text-area');
 
@@ -96,6 +99,10 @@ export class Conversation extends Locator {
     'message-request-response-message'
   );
   static readonly microphoneButton = this.testId('microphone-button');
+  // Session Pro badge rendered inside a `ContactName`. Used here for the group message author label —
+  // but `ContactName` also renders every left-pane row, so this must always be scoped to the surface
+  // under test rather than matched page-wide.
+  static readonly proBadgeAuthorName = this.testId('pro-badge-contact-name');
   // Session Pro badge shown next to the peer's name in the conversation header.
   static readonly proBadgeConversationHeader = this.testId('pro-badge-conversation-header');
 

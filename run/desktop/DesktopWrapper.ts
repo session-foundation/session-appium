@@ -671,6 +671,59 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     });
   }
 
+  /**
+   * The author label above `message` in the currently open group, scoped to that one message.
+   *
+   * Scoping is not tidiness. `pro-badge-contact-name` is `ContactName`'s badge and `ContactName`
+   * renders every left-pane row too, so the moment a sender is Pro the same test id also matches their
+   * 1:1 row in the conversation list — a page-wide match would go green without the group surface
+   * having rendered anything at all.
+   */
+  private groupAuthorLabel(message: string) {
+    return this.page
+      .getByTestId(Conversation.messageContent.selector)
+      .filter({ hasText: message })
+      .getByTestId(Conversation.messageAuthorName.selector);
+  }
+
+  /**
+   * Assert the sender's Session Pro badge is rendered on `message`'s author label in the open group.
+   *
+   * A different element from `assertSenderProBadge`, which reads the conversation HEADER: the author
+   * label is group-only (`MessageAuthorText` returns null unless the thread is a group), so neither
+   * assertion covers the other's surface and a build that lost the badge here would still satisfy the
+   * header one.
+   *
+   * Polled rather than read once: this depends on the recipient having received the message, verified
+   * the proof it carries and re-rendered off the updated contact record.
+   */
+  public async assertAuthorProBadge(message: string, maxWaitMs = 60_000): Promise<void> {
+    await this.groupAuthorLabel(message)
+      .getByTestId(Conversation.proBadgeAuthorName.selector)
+      .waitFor({ state: 'visible', timeout: maxWaitMs });
+  }
+
+  /**
+   * Assert `message`'s author label IS rendered in the open group and carries NO Pro badge.
+   *
+   * Waiting for the label is the half that makes this a control rather than a tautology — an absent
+   * badge inside a label that was never rendered says nothing about the badge. Once the label is up the
+   * badge is not a later arrival: both come out of one `ContactName` render driven by the sender's
+   * stored contact record, so the absence can be read immediately rather than waited out.
+   */
+  public async assertNoAuthorProBadge(message: string, maxWaitMs = 60_000): Promise<void> {
+    const label = this.groupAuthorLabel(message);
+    await label.waitFor({ state: 'visible', timeout: maxWaitMs });
+    const badges = await label.getByTestId(Conversation.proBadgeAuthorName.selector).count();
+    if (badges !== 0) {
+      throw new Error(
+        `Expected no Pro badge on the author label of "${message}", found ${badges}. The sender is ` +
+          `not a subscriber at this point, so a badge here means it is rendered off something other ` +
+          `than a verified proof.`
+      );
+    }
+  }
+
   // --- High-level desktop verbs ---
   // These are desktop-only (not on IBaseDeviceWrapper); they delegate to the ported
   // Page-based helpers, passing this client's page/account implicitly.
