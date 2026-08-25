@@ -2,7 +2,7 @@ import { W3CUiautomator2DriverCaps } from 'appium-uiautomator2-driver/build/lib/
 import dotenv from 'dotenv';
 import { isString } from 'lodash';
 
-import type { ProMockContext } from './pro_context';
+import type { ProContext } from './pro_context';
 
 import { getAndroidApk } from './binaries';
 import { buildAndroidLaunchExtras } from './devnet_android';
@@ -83,7 +83,7 @@ export function androidCapabilityIsValid(capabilitiesIndex: number): boolean {
 
 export function getAndroidCapabilities(
   capabilitiesIndex: number,
-  context?: ProMockContext
+  context?: ProContext
 ): W3CUiautomator2DriverCaps {
   const allCaps = getAllCaps();
   if (!androidCapabilityIsValid(capabilitiesIndex)) {

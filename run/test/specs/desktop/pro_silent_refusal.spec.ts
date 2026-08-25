@@ -1,5 +1,5 @@
 import { CTA } from '../../../desktop/locators';
-import { pinConversation, pinIconFor } from '../../../desktop/pin';
+import { pinConversation, pinConversationConfirmed, pinIconFor } from '../../../desktop/pin';
 import { test_Alice_1W_10contacts } from '../../../desktop/sessionTest';
 import { STANDARD_PIN_LIMIT } from '../../../shared/constants';
 
@@ -30,7 +30,7 @@ test_Alice_1W_10contacts(
 
     // The standard limit applies, because the limit is ACCESS.
     for (const name of names.slice(0, STANDARD_PIN_LIMIT)) {
-      await pinConversation(alice, name);
+      await pinConversationConfirmed(alice, name);
       await pinIconFor(alice, name).waitFor({ state: 'visible' });
     }
 

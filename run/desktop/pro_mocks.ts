@@ -1,13 +1,13 @@
-import type { ProMockContext } from '../test/utils/pro_context';
+import type { ProContext } from '../test/utils/pro_context';
 
 /**
- * Desktop's half of the shared Pro mock vocabulary, extending `ProMockContext` as `IOSTestContext`
+ * Desktop's half of the shared Pro mock vocabulary, extending `ProMockContext` as `MobileTestContext`
  * does so the two shared fields mean the same thing in a Desktop spec as in a `bothPlatformsIt` one.
  *
  * Display-level only: these produce no proof, so they cover screens, copy and CTAs and never
  * anything another party has to verify. See `makeAccountPro` for that.
  */
-export type DesktopProContext = ProMockContext & {
+export type DesktopProContext = ProContext & {
   /**
    * Remaining access, as one of libsession's ISO8601 duration slugs. Named rather than numeric: the
    * app's enum renumbers whenever a case is inserted.
@@ -47,6 +47,7 @@ const PRO_ENV_KEYS = [
   'SESSION_PRO_BACKEND_LOADING',
   'SESSION_PRO_BACKEND_ERROR',
   'SESSION_PRO_BACKEND_SUCCESS',
+  'SESSION_FORCE_PRO_REVOCATION_REFRESH',
 ] as const;
 
 /**
@@ -115,6 +116,12 @@ export function applyProMocks(context?: DesktopProContext) {
   // mocked values instead, and suppresses the startup fetch so a genuine answer cannot overwrite it.
   if (context.proLoadingState === 'success') {
     process.env.SESSION_PRO_BACKEND_SUCCESS = '1';
+  }
+  // A timing hook, not a mock — see `ProTestHookContext`. Listed among the keys above so it is cleared
+  // between tests like the rest: left set, it would keep forcing a poll for every later test in the
+  // worker, which is harmless until one of them asserts that a revocation has NOT been seen yet.
+  if (context.forceProRevocationRefresh) {
+    process.env.SESSION_FORCE_PRO_REVOCATION_REFRESH = 'true';
   }
 
   console.info(

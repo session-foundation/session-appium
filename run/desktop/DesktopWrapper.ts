@@ -15,6 +15,7 @@ import type {
 } from './types';
 
 import { tStripped } from '../localizer/lib';
+import { GENERATED_AVATAR_COLORS } from '../shared/constants';
 import { makeAccountPro } from '../shared/pro_grant';
 import { sleepFor } from '../shared/promise_utils';
 import { parseDataImage } from '../test/utils/check_colour';
@@ -58,6 +59,7 @@ import {
   rightClickOnWithText,
   scrollToBottomIfNecessary,
   waitForElement,
+  waitForElementHidden,
   waitForLoadingAnimationToFinish,
   waitForMatchingPlaceholder,
   waitForMatchingText,
@@ -610,6 +612,54 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     await this.openConversationWith(convoName);
   }
 
+  /**
+   * Open `convoName` and verify the peer's conversation-header avatar is NOT animated.
+   *
+   * The counterpart to `verifySenderAvatarAnimated`, and asserted the opposite way round: that one
+   * retries until it sees more than one colour, so it can stop the moment an animation starts. This has
+   * to prove a NEGATIVE, so it settles first and then requires every sample to match — a still frame
+   * sampled once, or sampled before the picture has loaded, would pass whatever the client decided.
+   *
+   * `settleMs` exists for that second failure: the avatar arrives with a message and takes a moment to
+   * render, and an unloaded element samples as a single flat colour, which is indistinguishable from a
+   * static picture.
+   */
+  public async verifySenderAvatarNotAnimated(
+    convoName: string,
+    { settleMs = 15_000, samples = 6 }: { settleMs?: number; samples?: number } = {}
+  ): Promise<void> {
+    await this.openConversationOnceNamed(convoName);
+    const selector = '[data-testid="conversation-options-avatar"] img';
+    // The element has to be there before its pixels mean anything.
+    await this.page.locator(selector).first().waitFor({ state: 'visible', timeout: 30_000 });
+    await sleepFor(settleMs);
+
+    const colors = new Set<string>();
+    for (let i = 0; i < samples; i++) {
+      colors.add(await this.sampleCenterColor(selector));
+      await sleepFor(250);
+    }
+
+    // A placeholder is a solid colour, so it satisfies "not animating" — without this a picture that
+    // never arrived passes. After the samples, so one still propagating gets the settle window.
+    const [sampled] = [...colors];
+    if (colors.size === 1 && GENERATED_AVATAR_COLORS.has(sampled.toLowerCase())) {
+      throw new Error(
+        `${convoName}'s display picture is still the generated placeholder ` +
+          `(${sampled}) — it never loaded, so nothing can be said about whether it animates. ` +
+          `An upload or propagation problem, not a Pro one.`
+      );
+    }
+
+    if (colors.size > 1) {
+      throw new Error(
+        `${convoName}'s display picture is animating for this client (${colors.size} distinct centre ` +
+          `colours across ${samples} samples). The proof carrying that feature could not be verified, ` +
+          `so it should have been refused.`
+      );
+    }
+  }
+
   /** Open `convoName` and verify the peer's conversation-header avatar is animated. */
   public async verifySenderAvatarAnimated(convoName: string): Promise<void> {
     await this.openConversationOnceNamed(convoName);
@@ -669,6 +719,60 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
         return false;
       }
     });
+  }
+
+  /**
+   * The receiver-side counterpart of `assertSenderProBadge`: the sender's badge is gone from here.
+   *
+   * Both conditions are checked at the SAME instant, and that is the design. The conversation's name
+   * being on screen proves this window is rendering the right conversation, so the absence asserted is
+   * the badge's and not the screen's — otherwise a window that failed to open satisfies this, and would
+   * go on satisfying it if the client stopped honouring revocations entirely.
+   *
+   * Polled because the badge disappears when the revocation job's sweep reaches this conversation, and
+   * that dispatch is debounced (500ms, maxWait 1000ms) on top of the fetch.
+   */
+  public async assertNoSenderProBadge(convoName: string, anchorMessage?: string): Promise<void> {
+    await this.openConversationOnceNamed(convoName);
+
+    // A message in this conversation is a stronger anchor than the header: it cannot be satisfied by the
+    // wrong conversation, and unlike a header name it does not change when the badge appears.
+    const header = anchorMessage
+      ? this.page.locator(`[data-testid=message-content]:has-text("${anchorMessage}")`).first()
+      : this.page
+          .locator(
+            `[${Conversation.conversationHeader.strategy}="${Conversation.conversationHeader.selector}"]`
+          )
+          .first();
+    const badge = this.page
+      .locator(
+        `[${Conversation.proBadgeConversationHeader.strategy}="${Conversation.proBadgeConversationHeader.selector}"]`
+      )
+      .first();
+
+    let headerSeen = false;
+    let cleared = false;
+    const deadline = Date.now() + 60_000;
+    do {
+      if (await header.isVisible().catch(() => false)) {
+        headerSeen = true;
+        cleared = !(await badge.isVisible().catch(() => false));
+      }
+      if (!cleared) {
+        await sleepFor(1_000);
+      }
+    } while (!cleared && Date.now() < deadline);
+
+    if (!cleared) {
+      throw new Error(
+        headerSeen
+          ? `${convoName}'s Pro badge is still rendered on the conversation header. The proof was ` +
+              `revoked, so this client is still honouring a credential it should have rejected — or it ` +
+              `never fetched the revocation list (see SESSION_FORCE_PRO_REVOCATION_REFRESH).`
+          : `${convoName}'s conversation header never rendered, so nothing can be said about the ` +
+              `badge. This is a navigation problem, not a Pro one.`
+      );
+    }
   }
 
   // --- High-level desktop verbs ---
@@ -740,6 +844,13 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     args: Omit<Parameters<typeof waitForElement>[0], 'window'>
   ): Promise<void> {
     await waitForElement({ window: this.page, ...args });
+  }
+
+  /** Assert an element is gone. See `waitForElementHidden`; `hidden` also covers never-attached. */
+  public async waitForElementHidden(
+    args: Omit<Parameters<typeof waitForElementHidden>[0], 'window'>
+  ): Promise<void> {
+    await waitForElementHidden({ window: this.page, ...args });
   }
 
   public async checkModalStrings(

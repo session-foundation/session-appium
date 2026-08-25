@@ -1,6 +1,5 @@
-import type { DesktopWrapper } from '../../../desktop/DesktopWrapper';
-
-import { Conversation, CTA, LeftPane, ProSettings, Settings } from '../../../desktop/locators';
+import { Conversation, LeftPane, ProSettings, Settings } from '../../../desktop/locators';
+import { dismissAnyProCTA } from '../../../desktop/pro_cta';
 import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W_Bob_1W_friends } from '../../../desktop/sessionTest';
 import { tStripped } from '../../../localizer/lib';
@@ -33,19 +32,6 @@ const AT_PRO_THRESHOLD = PRO_MAX_CHARS - COUNTDOWN_START_THRESHOLD;
  * The composer half runs first so the settings screen can be the last thing opened and nothing has to be
  * navigated back out of.
  */
-/** Clear a Pro CTA if one is up. Not an assertion — this spec is about the state behind the modal. */
-async function dismissAnyProCTA(window: DesktopWrapper, waitMs: number) {
-  const cancel = window
-    .getPage()
-    .locator(`[${CTA.cancelButton.strategy}="${CTA.cancelButton.selector}"]`)
-    .first();
-  await cancel.waitFor({ state: 'visible', timeout: waitMs }).catch(() => undefined);
-  if (await cancel.isVisible().catch(() => false)) {
-    await cancel.click();
-    await cancel.waitFor({ state: 'hidden', timeout: 10_000 }).catch(() => undefined);
-  }
-}
-
 test_Alice_1W_Bob_1W_friends(
   'Pro features survive the plan expiring',
   async ({ alice, bob }) => {

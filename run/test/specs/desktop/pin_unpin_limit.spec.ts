@@ -1,5 +1,5 @@
 import { CTA } from '../../../desktop/locators';
-import { pinConversation, pinIconFor } from '../../../desktop/pin';
+import { pinConversation, pinConversationConfirmed, pinIconFor } from '../../../desktop/pin';
 import { test_Alice_1W_10contacts } from '../../../desktop/sessionTest';
 import { STANDARD_PIN_LIMIT } from '../../../shared/constants';
 
@@ -24,7 +24,7 @@ test_Alice_1W_10contacts(
     const names = contactNames;
 
     for (const name of names.slice(0, STANDARD_PIN_LIMIT)) {
-      await pinConversation(alice, name);
+      await pinConversationConfirmed(alice, name);
       await pinIconFor(alice, name).waitFor({ state: 'visible' });
     }
 
@@ -46,7 +46,7 @@ test_Alice_1W_10contacts(
     const names = contactNames.slice(0, CONVERSATION_COUNT);
 
     for (const name of names) {
-      await pinConversation(alice, name);
+      await pinConversationConfirmed(alice, name);
       await pinIconFor(alice, name).waitFor({ state: 'visible' });
     }
 

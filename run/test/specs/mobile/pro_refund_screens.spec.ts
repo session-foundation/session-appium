@@ -6,13 +6,14 @@ import { androidIt, bothPlatformsIt, iosIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
 import { ProSettingsEntry } from '../../locators/pro';
 import { UserSettings } from '../../locators/settings';
-import { iosActiveProContext, IOSTestContext } from '../../utils/capabilities_ios';
 import { newUser } from '../../utils/create_account';
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { activeProContext } from '../../utils/pro_context';
+import { MobileTestContext } from '../../utils/pro_context';
 import { expectRefundScreen } from '../../utils/pro_settings';
 
 /**
@@ -31,9 +32,9 @@ import { expectRefundScreen } from '../../utils/pro_settings';
  */
 
 /** Every fixture starts from a renewing subscriber whose status fetch has confirmed. */
-function refundFixture(overrides: IOSTestContext): IOSTestContext {
+function refundFixture(overrides: MobileTestContext): MobileTestContext {
   return {
-    ...iosActiveProContext(),
+    ...activeProContext(),
     proAutoRenewing: 'autoRenewing',
     // The refund row is only offered once a fetch has confirmed on iOS.
     proLoadingState: 'success',
@@ -141,7 +142,7 @@ androidIt({
 async function openProSettings(
   platform: SupportedPlatformsType,
   testInfo: TestInfo,
-  iosContext: IOSTestContext
+  iosContext: MobileTestContext
 ) {
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, iosContext);

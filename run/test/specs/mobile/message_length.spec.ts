@@ -26,13 +26,13 @@ import { PlusButton } from '../../locators/home';
 import { ConversationItem } from '../../locators/home';
 import { EnterAccountID, NewMessageOption, NextButton } from '../../locators/start_conversation';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
-import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { newUser } from '../../utils/create_account';
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 import { observeProGrant } from '../../utils/pro_refresh';
 
 const messageLengthTestCases = [
@@ -116,7 +116,7 @@ for (const testCase of messageLengthTestCases) {
             platform,
             focusFriendsConvo: true,
             testInfo,
-            iOSContext: IOS_PRO_CONTEXT,
+            testContext: PRO_BACKEND_CONTEXT,
           });
         });
         device = devices.alice1;
@@ -128,7 +128,7 @@ for (const testCase of messageLengthTestCases) {
           const { device: only } = await openAppOnPlatformSingleDevice(
             platform,
             testInfo,
-            IOS_PRO_CONTEXT
+            PRO_BACKEND_CONTEXT
           );
           const user = await newUser(only, USERNAME.ALICE);
           return { only, user };

@@ -1,4 +1,4 @@
-import type { ProMockContext } from './pro_context';
+import type { ProContext } from './pro_context';
 
 import { getDevnetSeedUrl, getServiceNetwork } from './network_target';
 import { getProBackendOverride } from './pro_backend';
@@ -22,7 +22,7 @@ import { getProBackendOverride } from './pro_backend';
  * token as a new flag, so a value must contain **no spaces and no leading hyphen**. URLs, hex keys and
  * enum names are fine; a display string would not be.
  */
-export function buildAndroidLaunchExtras(context?: ProMockContext): string | undefined {
+export function buildAndroidLaunchExtras(context?: ProContext): string | undefined {
   const extras: string[] = [];
 
   // The mocked Pro state, for specs asserting how Pro screens *render*. Named for the state being
@@ -74,6 +74,12 @@ export function buildAndroidLaunchExtras(context?: ProMockContext): string | und
     extras.push(`--es sessionProOriginatingPlatform ${context.proOriginatingPlatform}`);
   }
 
+  // A timing hook rather than a state mock, so it sits apart from the four above: it is used WITH a real
+  // grant, to reach behaviour the server's 24h poll cadence otherwise puts out of a test run's reach.
+  if (context?.forceProRevocationRefresh) {
+    extras.push('--es sessionForceProRevocationRefresh true');
+  }
+
   if ((process.env.NETWORK_TARGET ?? '').trim()) {
     const network = getServiceNetwork();
     extras.push(`--es sessionServiceNetwork ${network}`);
@@ -87,11 +93,17 @@ export function buildAndroidLaunchExtras(context?: ProMockContext): string | und
 
   // Both or neither: the app rejects a half-supplied pair, because a QA URL paired with the production
   // signing key reads every QA-signed proof as invalid and silently strips Pro content.
-  const proBackend = getProBackendOverride();
-  if (proBackend) {
+  //
+  // The context wins over the environment so ONE device can be pointed at a different signing key while
+  // the rest of the test stays on the QA backend — the fixture behind "a recipient cannot verify a
+  // genuine proof". Each half falls back independently, so overriding only the pubkey keeps the URL.
+  const proBackendEnv = getProBackendOverride();
+  const proBackendUrl = context?.proBackendUrl ?? proBackendEnv?.url;
+  const proBackendPubkey = context?.proBackendPubkey ?? proBackendEnv?.pubkey;
+  if (proBackendUrl && proBackendPubkey) {
     extras.push(
-      `--es sessionProBackendUrl ${proBackend.url}`,
-      `--es sessionProBackendPubkey ${proBackend.pubkey}`
+      `--es sessionProBackendUrl ${proBackendUrl}`,
+      `--es sessionProBackendPubkey ${proBackendPubkey}`
     );
   }
 
@@ -122,6 +134,6 @@ export function buildAndroidLaunchExtras(context?: ProMockContext): string | und
  * `QaLaunchConfig` persists the extras rather than applying them to the running process, so they only
  * take effect on the next launch.
  */
-export function androidNeedsQaConfigRelaunch(context?: ProMockContext): boolean {
+export function androidNeedsQaConfigRelaunch(context?: ProContext): boolean {
   return buildAndroidLaunchExtras(context) !== undefined;
 }
