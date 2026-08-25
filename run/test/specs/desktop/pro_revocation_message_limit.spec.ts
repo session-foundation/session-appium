@@ -1,56 +1,14 @@
 import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W_Bob_1W_friends } from '../../../desktop/sessionTest';
-import {
-  COUNTDOWN_START_THRESHOLD,
-  MESSAGE_DELIVERY_TIMEOUT_MS,
-  PRO_MAX_CHARS,
-  STANDARD_MAX_CHARS,
-} from '../../../shared/constants';
+import { MESSAGE_DELIVERY_TIMEOUT_MS, STANDARD_MAX_CHARS } from '../../../shared/constants';
 import { revokeAccountPro } from '../../../shared/pro_grant';
-
-const PRO_CONTEXT = { pro: { forceProRevocationRefresh: true } } as const;
-
-const EARLY_AT = 500;
-const LATE_AT = STANDARD_MAX_CHARS + 500;
-/** Matches `pro_overhang`: the largest length the composer accepts without sitting on the boundary. */
-const TOTAL = PRO_MAX_CHARS - COUNTDOWN_START_THRESHOLD;
-
-const early = (tag: string) => `EARLY-${tag}`;
-const late = (tag: string) => `LATE-${tag}`;
-
-/**
- * Two markers per message, placed so that each end's copy is identified by which of them survives.
- *
- * `EARLY` sits inside the standard limit, so it is present in every outcome — including a copy that
- * arrived truncated. It is the anchor: without it, "the tail is missing" is equally well explained by the
- * message never arriving, and the assertion would pass before the behaviour under test happened.
- *
- * `LATE` sits past the standard limit and inside the Pro one, so it survives only if the recipient
- * honoured the proof.
- *
- * The positions are checked rather than trusted, because getting them wrong fails in the flattering
- * direction: a message that never contained its `EARLY` marker fails as a 90-second wait on the
- * recipient, which reads as a delivery problem. That is exactly how the first version of this failed.
- */
-function markedMessage(tag: string): string {
-  const head = 'a'.repeat(EARLY_AT) + early(tag);
-  const withLate = head + 'b'.repeat(LATE_AT - head.length) + late(tag);
-  const message = withLate + 'c'.repeat(TOTAL - withLate.length);
-
-  const earlyEnd = message.indexOf(early(tag)) + early(tag).length;
-  const lateStart = message.indexOf(late(tag));
-  if (
-    message.length !== TOTAL ||
-    earlyEnd > STANDARD_MAX_CHARS ||
-    lateStart <= STANDARD_MAX_CHARS
-  ) {
-    throw new Error(
-      `markedMessage(${tag}): ${message.length} chars, EARLY ends ${earlyEnd}, LATE starts ${lateStart} ` +
-        `— the markers must straddle the standard limit of ${STANDARD_MAX_CHARS} or neither assertion means anything.`
-    );
-  }
-  return message;
-}
+import {
+  DESKTOP_PRO_CONTEXT,
+  early,
+  late,
+  LATE_AT,
+  markedMessage,
+} from '../../../shared/pro_revocation';
 
 /**
  * A revoked proof does not buy the Pro message limit at the recipient.
@@ -100,7 +58,7 @@ test_Alice_1W_Bob_1W_friends(
 
     // Bob learns of it BEFORE the next message exists. The relaunch is what forces the poll — the backend
     // serves a 24h cadence, so waiting it out is not an option.
-    await restartApp(bob, PRO_CONTEXT);
+    await restartApp(bob, DESKTOP_PRO_CONTEXT);
     // A relaunch lands on the conversation list, and `message-content` only exists inside an open
     // conversation — so without this every message assertion below waits forever on an element that
     // cannot render, and reports it as a delivery failure.
@@ -132,5 +90,5 @@ test_Alice_1W_Bob_1W_friends(
       );
     }
   },
-  PRO_CONTEXT
+  DESKTOP_PRO_CONTEXT
 );

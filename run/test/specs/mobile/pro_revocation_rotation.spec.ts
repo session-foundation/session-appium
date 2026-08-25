@@ -2,19 +2,17 @@ import { test, type TestInfo } from '@playwright/test';
 
 import { MESSAGE_DELIVERY_TIMEOUT_MS } from '../../../shared/constants';
 import { makeAccountPro, revokeAccountPro } from '../../../shared/pro_grant';
+import { SENT_ON_NEW_PROOF, SENT_ON_OLD_PROOF } from '../../../shared/pro_revocation';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { MessageBody } from '../../locators/conversation';
 import { ConversationItem } from '../../locators/home';
 import { ConversationHeaderProBadge } from '../../locators/pro';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
-import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 import { enableProBadge, expectProBadgeFromSender } from '../../utils/pro_badge';
+import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 import { observeProGrant } from '../../utils/pro_refresh';
 import { forceStopAndRestart } from '../../utils/utilities';
-
-const SENT_ON_OLD_PROOF = 'Sent on the proof that was rotated away';
-const SENT_ON_NEW_PROOF = 'Sent on the replacement proof';
 
 bothPlatformsIt({
   title: 'A rotation keeps the subscription and swaps which proof is honoured',
@@ -63,7 +61,7 @@ async function proRevocationRotation(platform: SupportedPlatformsType, testInfo:
     focusFriendsConvo: false,
     testInfo,
     testContext: {
-      ...IOS_PRO_CONTEXT,
+      ...PRO_BACKEND_CONTEXT,
       // The rotation reaches Bob only through the revocation list, and the backend's own cadence puts
       // his second poll a day out.
       forceProRevocationRefresh: true,

@@ -3,10 +3,9 @@ import { resolve } from 'path';
 import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W_Bob_1W_friends } from '../../../desktop/sessionTest';
 import { MESSAGE_DELIVERY_TIMEOUT_MS, UNTRUSTED_PRO_BACKEND_KEY } from '../../../shared/constants';
+import { SENT_WITH_FAKE_PROOF } from '../../../shared/pro_revocation';
 
 const ANIMATED_AVATAR = resolve(__dirname, '../../media/animated_profile_picture.gif');
-
-const SENT_WITH_FAKE_PROOF = 'Sent with a fake proof';
 
 // Verified as a matched pair: with this left undefined — recipient on the real key — the avatar DOES
 // animate for the recipient (22s), so a still one here is the client refusing a feature whose proof it

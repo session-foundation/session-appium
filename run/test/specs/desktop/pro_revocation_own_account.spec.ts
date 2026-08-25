@@ -3,13 +3,7 @@ import { dismissAnyProCTA } from '../../../desktop/pro_cta';
 import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W_10contacts } from '../../../desktop/sessionTest';
 import { revokeAccountPro } from '../../../shared/pro_grant';
-
-/**
- * Past the standard cap of 2000 and under the Pro one of 10000, so the countdown is shown under one
- * limit and absent under the other. The same length reads both verdicts, which is what makes the pair
- * comparable — and it is the length the mobile half uses, so the two platforms assert the same thing.
- */
-const OVER_STANDARD = 3000;
+import { OVER_STANDARD_CHARS } from '../../../shared/pro_revocation';
 
 /**
  * The matched pair to the overhang spec, and the only case where a client has to police its OWN
@@ -43,7 +37,7 @@ test_Alice_1W_10contacts(
     // The control the whole spec rests on. "The composer applies the standard limit" is satisfied
     // perfectly by a grant that never worked, so the Pro limit has to be observed first.
     await alice.openConversationWith(contact);
-    await alice.pasteIntoInput('message-input-text-area', 'x'.repeat(OVER_STANDARD));
+    await alice.pasteIntoInput('message-input-text-area', 'x'.repeat(OVER_STANDARD_CHARS));
     // The countdown appears only within 200 of the limit, so at this length it is absent under the Pro
     // limit and shown under the standard one. `hidden` also covers never-attached.
     await alice
@@ -65,7 +59,7 @@ test_Alice_1W_10contacts(
     // The claim: the client applies the standard limit to itself, because the proof it holds has been
     // revoked.
     await alice.openConversationWith(contact);
-    await alice.pasteIntoInput('message-input-text-area', 'x'.repeat(OVER_STANDARD));
+    await alice.pasteIntoInput('message-input-text-area', 'x'.repeat(OVER_STANDARD_CHARS));
     await alice.waitForElement({ locator: Conversation.tooltipCharacterCount });
   },
   // A precondition, not a convenience. The backend serves the production cadence — `retry_in: 86400`,

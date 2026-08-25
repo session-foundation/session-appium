@@ -2,17 +2,16 @@ import { test, type TestInfo } from '@playwright/test';
 
 import { MESSAGE_DELIVERY_TIMEOUT_MS, UNTRUSTED_PRO_BACKEND_KEY } from '../../../shared/constants';
 import { makeAccountPro } from '../../../shared/pro_grant';
+import { SENT_WITH_FAKE_PROOF } from '../../../shared/pro_revocation';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { CloseSettings } from '../../locators';
 import { ConversationSettings, MessageBody } from '../../locators/conversation';
 import { ConversationItem } from '../../locators/home';
 import { UserAvatar } from '../../locators/settings';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
-import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
+import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 import { observeProGrant } from '../../utils/pro_refresh';
-
-const SENT_WITH_FAKE_PROOF = 'Sent with a fake proof';
 
 // Verified as a matched pair: with this left undefined — recipient on the real key — the avatar DOES
 // animate for the recipient (Android 41s), so a still frame here is the client refusing a feature whose
@@ -59,10 +58,10 @@ async function proUnverifiableProofAvatar(platform: SupportedPlatformsType, test
     focusFriendsConvo: false,
     testInfo,
     testContext: [
-      IOS_PRO_CONTEXT,
+      PRO_BACKEND_CONTEXT,
       RECIPIENT_BACKEND_KEY
-        ? { ...IOS_PRO_CONTEXT, proBackendPubkey: RECIPIENT_BACKEND_KEY }
-        : IOS_PRO_CONTEXT,
+        ? { ...PRO_BACKEND_CONTEXT, proBackendPubkey: RECIPIENT_BACKEND_KEY }
+        : PRO_BACKEND_CONTEXT,
     ],
   });
   const { alice1, bob1 } = devices;

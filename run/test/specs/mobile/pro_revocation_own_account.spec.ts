@@ -1,6 +1,7 @@
 import { test, type TestInfo } from '@playwright/test';
 
 import { makeAccountPro, revokeAccountPro } from '../../../shared/pro_grant';
+import { OVER_STANDARD_CHARS } from '../../../shared/pro_revocation';
 import { TestSteps } from '../../../types/allure';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { bothPlatformsIt } from '../../../types/sessionIt';
@@ -9,17 +10,10 @@ import { CTAButtonNegative } from '../../locators/global';
 import { PlusButton } from '../../locators/home';
 import { EnterAccountID, NewMessageOption, NextButton } from '../../locators/start_conversation';
 import { open_Alice1 } from '../../state_builder';
-import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
+import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 import { observeProGrant } from '../../utils/pro_refresh';
 import { forceStopAndRestart } from '../../utils/utilities';
-
-/**
- * Comfortably past the standard cap of 2000 and comfortably under the Pro one of 10000, so the countdown
- * is shown under the limit this spec expects to find after the refund and absent under the one it
- * expects before it. The same length reads both verdicts, which is what makes the pair comparable.
- */
-const OVER_STANDARD = 3000;
 
 bothPlatformsIt({
   title: 'A refund revokes Pro from the account itself, not just its plan',
@@ -54,7 +48,7 @@ bothPlatformsIt({
  * that merely lapsed, so nothing on the Pro settings screen separates the two cases.
  *
  * A real grant, not a mock. The mocks are display-level, so there would be no proof for a revocation to
- * invalidate and the spec would assert the mock's own behaviour. `IOS_PRO_CONTEXT` deliberately supplies
+ * invalidate and the spec would assert the mock's own behaviour. `PRO_BACKEND_CONTEXT` deliberately supplies
  * only the backend and its pubkey — no mocked status, no mocked proof.
  *
  * One device throughout. The limit is the sender's own decision, so unlike the recipient-facing
@@ -67,7 +61,7 @@ async function proRevocationOwnAccount(platform: SupportedPlatformsType, testInf
     platform,
     testInfo,
     testContext: {
-      ...IOS_PRO_CONTEXT,
+      ...PRO_BACKEND_CONTEXT,
       // A precondition, not a convenience. The backend serves the production cadence — `retry_in: 86400`,
       // inside libSession's [60s, 48h] clamp — so a client's second revocation poll is a day after its
       // first. Without this the client never learns of the refund inside the run and the final assertion
@@ -89,7 +83,7 @@ async function proRevocationOwnAccount(platform: SupportedPlatformsType, testInf
   // rather than a contact, since the limit is the sender's own decision.
   await test.step('Verify the composer applies the Pro limit while the proof is good', async () => {
     await openNoteToSelfComposer(device, alice.sessionId);
-    await device.inputText('x'.repeat(OVER_STANDARD), new MessageInput(device), true);
+    await device.inputText('x'.repeat(OVER_STANDARD_CHARS), new MessageInput(device), true);
     // Absence is the assertion. The countdown appears only within 200 of the limit, so at this length
     // it is absent under the Pro limit and shown under the standard one.
     await device.verifyElementNotPresent({
@@ -124,7 +118,7 @@ async function proRevocationOwnAccount(platform: SupportedPlatformsType, testInf
     await openNoteToSelfComposer(device, alice.sessionId);
     // The composer is empty: nothing is sent here, so neither the conversation nor its draft survives
     // the restart. iOS clears a field through the "Select All" menu, which an empty field cannot raise.
-    await device.inputText('x'.repeat(OVER_STANDARD), new MessageInput(device), true);
+    await device.inputText('x'.repeat(OVER_STANDARD_CHARS), new MessageInput(device), true);
     // The claim: the client is applying the standard limit to itself, because the proof it holds has
     // been revoked. Its presence, not its value — the remainder is four figures here and each client
     // abbreviates it differently, so a literal would assert the formatter rather than the limit.

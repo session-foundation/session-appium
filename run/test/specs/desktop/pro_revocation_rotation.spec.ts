@@ -2,11 +2,11 @@ import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W_Bob_1W_friends } from '../../../desktop/sessionTest';
 import { MESSAGE_DELIVERY_TIMEOUT_MS } from '../../../shared/constants';
 import { revokeAccountPro } from '../../../shared/pro_grant';
-
-const PRO_CONTEXT = { pro: { forceProRevocationRefresh: true } } as const;
-
-const SENT_ON_OLD_PROOF = 'Sent on the proof that was rotated away';
-const SENT_ON_NEW_PROOF = 'Sent on the replacement proof';
+import {
+  DESKTOP_PRO_CONTEXT,
+  SENT_ON_NEW_PROOF,
+  SENT_ON_OLD_PROOF,
+} from '../../../shared/pro_revocation';
 
 /**
  * Rotation end to end, and the counterpart to the refund spec.
@@ -52,11 +52,11 @@ test_Alice_1W_Bob_1W_friends(
 
     // The restart is what makes Alice poll and notice her own proof is revoked; the Pro screen visit then
     // asks for the replacement and asserts the plan is still active, which is the sender-side claim.
-    await restartApp(alice, PRO_CONTEXT);
+    await restartApp(alice, DESKTOP_PRO_CONTEXT);
     await alice.waitForProActive();
 
     // Bob has to poll to learn of the rotation, and the relaunch is what forces it.
-    await restartApp(bob, PRO_CONTEXT);
+    await restartApp(bob, DESKTOP_PRO_CONTEXT);
     await bob.assertNoSenderProBadge(alice.userName, SENT_ON_OLD_PROOF);
 
     // Alice re-armed above, so this carries the new generation's proof — which is also how Bob comes to
@@ -66,5 +66,5 @@ test_Alice_1W_Bob_1W_friends(
     await bob.waitForMessage(SENT_ON_NEW_PROOF, MESSAGE_DELIVERY_TIMEOUT_MS);
     await bob.assertSenderProBadge(alice.userName);
   },
-  PRO_CONTEXT
+  DESKTOP_PRO_CONTEXT
 );

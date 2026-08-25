@@ -2,18 +2,8 @@ import { Conversation } from '../../../desktop/locators';
 import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W_Bob_1W_friends } from '../../../desktop/sessionTest';
 import { MESSAGE_DELIVERY_TIMEOUT_MS, UNTRUSTED_PRO_BACKEND_KEY } from '../../../shared/constants';
+import { BADGE_SETTLE_MS, SENT_WITH_FAKE_PROOF } from '../../../shared/pro_revocation';
 import { sleepFor } from '../../../shared/promise_utils';
-
-const SENT_WITH_FAKE_PROOF = 'Sent with a fake proof';
-
-/**
- * The body text says "fake proof" because that is what it is FROM THE RECIPIENT'S SIDE, which is the side
- * under test. The proof is genuinely minted and genuinely signed; the recipient just trusts a different
- * key, so it cannot tell this from a forgery — which is the whole point.
- */
-
-/** How long the badge is given to appear before its absence is called a refusal. See the mobile spec. */
-const BADGE_SETTLE_MS = 15_000;
 
 /**
  * The verification path, exercised with a REAL proof and an untrusted signer.

@@ -2,49 +2,17 @@ import { test, type TestInfo } from '@playwright/test';
 
 import type { DeviceWrapper } from '../../../types/DeviceWrapper';
 
-import {
-  COUNTDOWN_START_THRESHOLD,
-  MESSAGE_DELIVERY_TIMEOUT_MS,
-  PRO_MAX_CHARS,
-  STANDARD_MAX_CHARS,
-} from '../../../shared/constants';
+import { MESSAGE_DELIVERY_TIMEOUT_MS, STANDARD_MAX_CHARS } from '../../../shared/constants';
 import { makeAccountPro, revokeAccountPro } from '../../../shared/pro_grant';
+import { early, late, LATE_AT, markedMessage } from '../../../shared/pro_revocation';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { MessageInput, MessageReadMore, SendButton } from '../../locators/conversation';
 import { ConversationItem } from '../../locators/home';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
-import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
+import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 import { observeProGrant } from '../../utils/pro_refresh';
 import { forceStopAndRestart } from '../../utils/utilities';
-
-const EARLY_AT = 500;
-const LATE_AT = STANDARD_MAX_CHARS + 500;
-const TOTAL = PRO_MAX_CHARS - COUNTDOWN_START_THRESHOLD;
-
-const early = (tag: string) => `EARLY-${tag}`;
-const late = (tag: string) => `LATE-${tag}`;
-
-/** See the desktop spec: the markers straddle the standard limit, and that is checked, not trusted. */
-function markedMessage(tag: string): string {
-  const head = 'a'.repeat(EARLY_AT) + early(tag);
-  const withLate = head + 'b'.repeat(LATE_AT - head.length) + late(tag);
-  const message = withLate + 'c'.repeat(TOTAL - withLate.length);
-
-  const earlyEnd = message.indexOf(early(tag)) + early(tag).length;
-  const lateStart = message.indexOf(late(tag));
-  if (
-    message.length !== TOTAL ||
-    earlyEnd > STANDARD_MAX_CHARS ||
-    lateStart <= STANDARD_MAX_CHARS
-  ) {
-    throw new Error(
-      `markedMessage(${tag}): ${message.length} chars, EARLY ends ${earlyEnd}, LATE starts ${lateStart} ` +
-        `— the markers must straddle the standard limit of ${STANDARD_MAX_CHARS}.`
-    );
-  }
-  return message;
-}
 
 /**
  * Expand every collapsed bubble, and it is MANDATORY rather than tidiness.
@@ -131,7 +99,7 @@ async function proRevocationMessageLimit(platform: SupportedPlatformsType, testI
     // Not focused: every step here starts from the conversation list, and a relaunch returns there anyway.
     focusFriendsConvo: false,
     testInfo,
-    testContext: { ...IOS_PRO_CONTEXT, forceProRevocationRefresh: true },
+    testContext: { ...PRO_BACKEND_CONTEXT, forceProRevocationRefresh: true },
   });
   const { alice1, bob1 } = devices;
 

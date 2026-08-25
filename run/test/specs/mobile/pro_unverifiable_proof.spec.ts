@@ -2,32 +2,16 @@ import { test, type TestInfo } from '@playwright/test';
 
 import { MESSAGE_DELIVERY_TIMEOUT_MS, UNTRUSTED_PRO_BACKEND_KEY } from '../../../shared/constants';
 import { makeAccountPro } from '../../../shared/pro_grant';
+import { BADGE_SETTLE_MS, SENT_WITH_FAKE_PROOF } from '../../../shared/pro_revocation';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { MessageBody } from '../../locators/conversation';
 import { ConversationItem } from '../../locators/home';
 import { ConversationHeaderProBadge, MessageInfoMenuItem, ProBadge } from '../../locators/pro';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
-import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 import { enableProBadge } from '../../utils/pro_badge';
+import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 import { observeProGrant } from '../../utils/pro_refresh';
-
-const SENT_WITH_FAKE_PROOF = 'Sent with a fake proof';
-
-/**
- * The body text says "fake proof" because that is what it is FROM THE RECIPIENT'S SIDE, which is the side
- * under test: the proof is genuinely minted and genuinely signed, and the recipient simply trusts a
- * different key, so it cannot tell this from a forgery.
- */
-
-/**
- * How long the badge is given to appear before its absence is called a refusal.
- *
- * In the matching-key control the badge renders ~2s after the message, so this is ~7x that. It has to be
- * a settle-then-check rather than a poll-until-absent: the badge should never appear here, and any
- * assertion that returns on first sight of "no badge" passes before it would have rendered.
- */
-const BADGE_SETTLE_MS = 15_000;
 
 // The recipient trusts a key the backend never signed with. Verified as a matched pair: with this left
 // undefined — both devices on the real key — the badge assertion below PASSES (39s), so its absence here
@@ -73,10 +57,10 @@ async function proUnverifiableProof(platform: SupportedPlatformsType, testInfo: 
     // Per device: the sender keeps the real backend key so its proof is genuine, and only the recipient's
     // trust is changed. One shared context cannot express this.
     testContext: [
-      IOS_PRO_CONTEXT,
+      PRO_BACKEND_CONTEXT,
       RECIPIENT_BACKEND_KEY
-        ? { ...IOS_PRO_CONTEXT, proBackendPubkey: RECIPIENT_BACKEND_KEY }
-        : IOS_PRO_CONTEXT,
+        ? { ...PRO_BACKEND_CONTEXT, proBackendPubkey: RECIPIENT_BACKEND_KEY }
+        : PRO_BACKEND_CONTEXT,
     ],
   });
   const { alice1, bob1 } = devices;

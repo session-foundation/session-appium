@@ -2,27 +2,13 @@ import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W_Bob_1W_friends } from '../../../desktop/sessionTest';
 import { MESSAGE_DELIVERY_TIMEOUT_MS } from '../../../shared/constants';
 import { revokeAccountPro } from '../../../shared/pro_grant';
+import {
+  DESKTOP_PRO_CONTEXT,
+  REVOCATION_EFFECTIVE_IN_SECONDS,
+  REVOCATION_POLL_SETTLE_MS,
+  SENT_BEFORE_REVOCATION,
+} from '../../../shared/pro_revocation';
 import { sleepFor } from '../../../shared/promise_utils';
-
-const PRO_CONTEXT = { pro: { forceProRevocationRefresh: true } } as const;
-
-const SENT_WHILE_VALID = 'Sent before the revocation was issued';
-
-/**
- * How far ahead the revocation is dated. Has to outlast Bob's relaunch, poll settle and badge assertion,
- * which measured ~10s across the three clients; the rest is headroom for a loaded host. Undershooting is
- * caught by the guard below rather than silently weakening the claim.
- */
-const EFFECTIVE_IN_SECONDS = 20;
-
-/**
- * Time allowed for the forced revocation poll to land after Bob's relaunch.
- *
- * A bounded wait rather than an observed event, because nothing in the UI reveals that the list arrived.
- * It is what makes the first half mean anything: without it "still honoured" is equally satisfied by a
- * client that has not yet looked.
- */
-const REVOCATION_POLL_SETTLE_MS = 5000;
 
 /**
  * The delay in a revocation is a guarantee, not slack.
@@ -57,21 +43,21 @@ test_Alice_1W_Bob_1W_friends(
     await alice.enableProBadge();
 
     await alice.openConversationWith(bob.userName);
-    await alice.sendMessage(SENT_WHILE_VALID);
+    await alice.sendMessage(SENT_BEFORE_REVOCATION);
     // Waited on before the badge: the badge follows the sender's profile, which rides along with the
     // message, so asserting the badge first races the delivery.
-    await bob.waitForMessage(SENT_WHILE_VALID, MESSAGE_DELIVERY_TIMEOUT_MS);
+    await bob.waitForMessage(SENT_BEFORE_REVOCATION, MESSAGE_DELIVERY_TIMEOUT_MS);
     await bob.assertSenderProBadge(alice.userName);
 
     const { effective_ts } = await revokeAccountPro({
       user: alice.getUser(),
       revokePayments: false,
-      effectiveInSeconds: EFFECTIVE_IN_SECONDS,
+      effectiveInSeconds: REVOCATION_EFFECTIVE_IN_SECONDS,
     });
     const effectiveAtMs = effective_ts * 1000;
 
     // The relaunch is what makes Bob poll, so afterwards he holds the entry with its instant still ahead.
-    await restartApp(bob, PRO_CONTEXT);
+    await restartApp(bob, DESKTOP_PRO_CONTEXT);
     await sleepFor(REVOCATION_POLL_SETTLE_MS);
     await bob.assertSenderProBadge(alice.userName);
 
@@ -80,15 +66,15 @@ test_Alice_1W_Bob_1W_friends(
     if (Date.now() >= effectiveAtMs) {
       throw new Error(
         `The revocation became effective before the badge could be asserted, so nothing was verified ` +
-          `about a pending revocation. Raise EFFECTIVE_IN_SECONDS above ${EFFECTIVE_IN_SECONDS}s for ` +
+          `about a pending revocation. Raise REVOCATION_EFFECTIVE_IN_SECONDS above ${REVOCATION_EFFECTIVE_IN_SECONDS}s for ` +
           `this host.`
       );
     }
 
     // To a DEADLINE rather than a fresh countdown: proving the first half already burned part of the delay.
     await sleepFor(Math.max(0, effectiveAtMs - Date.now()));
-    await restartApp(bob, PRO_CONTEXT);
-    await bob.assertNoSenderProBadge(alice.userName, SENT_WHILE_VALID);
+    await restartApp(bob, DESKTOP_PRO_CONTEXT);
+    await bob.assertNoSenderProBadge(alice.userName, SENT_BEFORE_REVOCATION);
   },
-  PRO_CONTEXT
+  DESKTOP_PRO_CONTEXT
 );

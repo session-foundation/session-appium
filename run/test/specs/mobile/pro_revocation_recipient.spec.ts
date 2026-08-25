@@ -4,9 +4,9 @@ import { makeAccountPro, revokeAccountPro } from '../../../shared/pro_grant';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { ConversationItem } from '../../locators/home';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
-import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 import { enableProBadge, expectProBadgeFromSender } from '../../utils/pro_badge';
+import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 import { observeProGrant } from '../../utils/pro_refresh';
 import { forceStopAndRestart } from '../../utils/utilities';
 
@@ -64,7 +64,7 @@ async function proRevocationRecipient(platform: SupportedPlatformsType, testInfo
     // "Conversation list item", which reads as the contact not having synced.
     focusFriendsConvo: false,
     testInfo,
-    testContext: { ...IOS_PRO_CONTEXT, forceProRevocationRefresh: true },
+    testContext: { ...PRO_BACKEND_CONTEXT, forceProRevocationRefresh: true },
   });
   const { alice1, bob1 } = devices;
 

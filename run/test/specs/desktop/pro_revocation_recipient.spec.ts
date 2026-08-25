@@ -2,16 +2,7 @@ import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W_Bob_1W_friends } from '../../../desktop/sessionTest';
 import { MESSAGE_DELIVERY_TIMEOUT_MS } from '../../../shared/constants';
 import { revokeAccountPro } from '../../../shared/pro_grant';
-
-/**
- * Forcing the revocation poll is the whole reason this spec can run.
- *
- * The backend serves the production cadence — `retry_in: 86400`, and inside libSession's [60s, 48h] clamp,
- * so nothing shortens it — which puts a client's second poll a day after its first. Without the flag Bob
- * never learns of the revocation inside the run, and the assertion below would pass on a client that had
- * simply not looked.
- */
-const PRO_CONTEXT = { pro: { forceProRevocationRefresh: true } } as const;
+import { DESKTOP_PRO_CONTEXT } from '../../../shared/pro_revocation';
 
 /**
  * The only spec in which a SECOND party decides whether a Pro credential is good.
@@ -69,8 +60,8 @@ test_Alice_1W_Bob_1W_friends(
     // Bob has to POLL to learn of it — the revocation is not pushed to him. The relaunch is what forces
     // that poll, and on iOS it also forces the view rebuild the badge needs; keeping the same shape on
     // all three clients is why it is a restart here rather than a wait.
-    await restartApp(bob, PRO_CONTEXT);
+    await restartApp(bob, DESKTOP_PRO_CONTEXT);
     await bob.assertNoSenderProBadge(alice.userName, message);
   },
-  PRO_CONTEXT
+  DESKTOP_PRO_CONTEXT
 );
