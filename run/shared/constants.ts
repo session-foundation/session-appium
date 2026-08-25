@@ -90,10 +90,23 @@ export const MESSAGE_DELIVERY_TIMEOUT_MS = 45_000;
  */
 export const REFUND_URL_FRAGMENT = {
   /**
-   * The route offered while the store's own quick-refund window is open. A Session-owned short link
-   * which redirects to the store, so the CTA beside it names the store while this url does not.
+   * GOOGLE PLAY's quick-refund route, offered while that store's own refund window is open. A
+   * Session-owned short link which redirects into the Play store, so the CTA beside it names the
+   * store while this url does not.
+   *
+   * Two preconditions, BOTH required — this is not "the quick-refund url":
+   *
+   * 1. the plan's ORIGINATING provider is `google_play`, and
+   * 2. that provider's quick-refund window is still open.
+   *
+   * An App Store plan in an open window takes {@link appleRefundSupport} instead, which is why this
+   * one is named for its provider. The clients do not branch on the provider to achieve that: they
+   * open `providerData.refundSupportUrl` from libsession's table for the ORIGINATING provider, and
+   * the table already holds this short link under `google_play` and Apple's page under `app_store`.
+   * Adding a provider check on top of the window would send an Apple plan to Session's form instead
+   * of Apple's own page.
    */
-  quickRefund: 'getsession.org/android-refund',
+  googlePlayQuickRefund: 'getsession.org/android-refund',
   /**
    * The route offered once that window has closed and only Session can action the request — its Pro
    * support form.

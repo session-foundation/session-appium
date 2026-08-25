@@ -125,7 +125,7 @@ test_Alice_1W_no_network(
         platform: tStripped('pro_provider_google_play_store'),
       })
     );
-    await expectRefundOpensUrl(alice, REFUND_URL_FRAGMENT.quickRefund);
+    await expectRefundOpensUrl(alice, REFUND_URL_FRAGMENT.googlePlayQuickRefund);
   },
   {
     pro: {
