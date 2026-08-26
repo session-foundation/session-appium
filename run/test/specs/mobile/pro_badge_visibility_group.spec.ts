@@ -7,9 +7,9 @@ import { MessageBody } from '../../locators/conversation';
 import { ConversationItem } from '../../locators/home';
 import { ProBadge } from '../../locators/pro';
 import { open_Alice1_Bob1_Charlie1_friends_group } from '../../state_builder';
-import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 import { enableProBadge } from '../../utils/pro_badge';
+import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 import { observeProGrant } from '../../utils/pro_refresh';
 
 const GROUP_NAME = 'Pro badge group';
@@ -56,7 +56,7 @@ async function proBadgeVisibleInGroup(platform: SupportedPlatformsType, testInfo
       groupName: GROUP_NAME,
       focusGroupConvo: true,
       testInfo,
-      iOSContext: IOS_PRO_CONTEXT,
+      testContext: PRO_BACKEND_CONTEXT,
     });
   });
   const { alice1, bob1, charlie1 } = devices;
