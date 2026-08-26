@@ -93,7 +93,7 @@ crossPlatformTest({
         // Bob's devices: the message AND Alice's badge. Rendering the badge means this client
         // verified her proof against the QA backend's signing key, which is the end-to-end check.
         ...bob.clients.map(async client => {
-          await client.assertSenderProBadge(aliceName);
+          await client.assertConversationHeaderProBadge(aliceName);
           await client.waitForMessage(PRO_MESSAGE);
         }),
       ]);

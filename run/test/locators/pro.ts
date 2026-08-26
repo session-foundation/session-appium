@@ -469,6 +469,65 @@ export class ProScreen extends LocatorsInterface {
 }
 
 /**
+ * The primary action button of whichever store-flow screen is showing, optionally paired with the copy it
+ * should carry.
+ *
+ * Worth the pairing rather than presence alone, because on the refund screens the **label is the branch**:
+ * inside the store's own refund window the button leaves for the store (`openPlatformWebsite` on Android
+ * and Desktop, `openPlatformStoreWebsite` on iOS), and once that window has closed it becomes a plain
+ * `requestRefund`. So the label and the URL the button opens are two independent readings of the same
+ * decision, and a screen that changed one without the other is exactly the bug worth catching.
+ *
+ * Note the three clients do **not** agree on that key or on what it interpolates — iOS uses
+ * `openPlatformStoreWebsite` with `platform_store`, Android and Desktop `openPlatformWebsite` with
+ * `platform`, and they disagree again on whether that reads as the store or the platform for a Google Play
+ * plan. So the copy has to be supplied per platform by the caller; there is no one string for it.
+ *
+ * `expectedCopy` is applied on both platforms. On iOS the identifier sits on the SwiftUI `Button`, whose
+ * accessibility label stays its `Text`, so `label` carries it. On Android the tag sits on a Material 3
+ * `Button`, which merges its descendants' semantics, so the tagged node carries the child `Text` as its
+ * own `text` — unlike `CTAButtonPositive`, where the copy is only on an untagged child. **That last claim
+ * is reasoned from the client source and not yet observed on a device**: the APK on the QA box predates
+ * these screens' tags. If it turns out the merged node has no text, the fix is a `qaTag` on the button's
+ * `Text` in the client, not a child selector here.
+ */
+export class ProScreenAction extends LocatorsInterface {
+  private readonly expectedCopy?: string;
+
+  constructor(device: DeviceWrapper, expectedCopy?: string) {
+    super(device);
+    this.expectedCopy = expectedCopy;
+  }
+
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        // Two ids, not one: `pro-screen-action` is the clickable Button, whose own `text` is empty
+        // because Compose leaves the copy on a child. Verified from a page-source dump — the node
+        // reports `text=""` with a `TextView text="Request Refund"` inside — so a text filter here
+        // matched nothing. The child now carries `pro-screen-action-label`, which is what a copy
+        // assertion addresses. iOS needs no equivalent: its identifier and label sit on one element.
+        return this.expectedCopy
+          ? ({
+              strategy: 'id',
+              selector: 'pro-screen-action-label',
+              text: this.expectedCopy,
+            } as const)
+          : ({ strategy: 'id', selector: 'pro-screen-action' } as const);
+      case 'ios':
+        // `label`, not `text`: the identifier owns `name`, as everywhere else on these screens.
+        return this.expectedCopy
+          ? ({
+              strategy: 'accessibility id',
+              selector: 'pro-screen-action',
+              label: this.expectedCopy,
+            } as const)
+          : ({ strategy: 'accessibility id', selector: 'pro-screen-action' } as const);
+    }
+  }
+}
+
+/**
  * The body copy of whichever store-flow screen is showing, paired with the copy it should carry.
  *
  * Load-bearing for the refund screens in particular: the originating, different-account, <48h and >48h

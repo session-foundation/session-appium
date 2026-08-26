@@ -1,7 +1,12 @@
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 import { tStripped } from '../../localizer/lib';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
+import {
+  OpenURLDialog,
+  OpenURLDialogConfirmButton,
+  OpenURLDialogDescription,
+} from '../locators/global';
 import {
   ProBadgeSettingRow,
   ProCancelPlanRow,
@@ -9,6 +14,7 @@ import {
   ProFeaturesHeader,
   ProRequestRefundRow,
   ProScreen,
+  ProScreenAction,
   ProScreenDescription,
   type ProScreenId,
   type ProStat,
@@ -229,5 +235,97 @@ export async function expectRefundScreen(
         maxWait: PRESENT_MAX_WAIT,
       }),
     ]);
+  });
+}
+
+/**
+ * The primary action of whichever store-flow screen is showing, asserted present with its copy.
+ *
+ * On the refund screens this is the cheapest reading of which route the client chose: the same screen
+ * labels the button `Open {store} Website` while the store's own refund window is open and `Request
+ * Refund` once it has closed. The caller supplies the copy because the three clients do not agree on the
+ * localizer key behind it — see `ProScreenAction`.
+ */
+export async function expectProScreenAction(
+  device: DeviceWrapper,
+  expectedCopy: string
+): Promise<void> {
+  await test.step('Verify the screen action', async () => {
+    await device.waitForTextElementToBePresent({
+      ...new ProScreenAction(device, expectedCopy).build(),
+      maxWait: PRESENT_MAX_WAIT,
+    });
+  });
+}
+
+/**
+ * Read the copy of the "Open URL" dialog's body — the one element carrying the URL about to be opened.
+ *
+ * Per-platform, for the reason spelled out on `OpenURLDialogDescription`: Android exposes the rendered
+ * body as the node's `text`, while on iOS the accessibility identifier takes over `name` and the copy is
+ * only reachable on `label`.
+ *
+ * App-wide rather than Pro-specific, like the locators it uses. It lives here because the Pro refund
+ * specs are its only caller today; move it out the first time a link or donations spec wants it.
+ */
+async function readOpenUrlDialogCopy(device: DeviceWrapper): Promise<string> {
+  const element = await device.waitForTextElementToBePresent({
+    ...new OpenURLDialogDescription(device).build(),
+    maxWait: PRESENT_MAX_WAIT,
+  });
+
+  if (device.isIOS()) {
+    return (await device.getAttribute('label', element.ELEMENT)) ?? '';
+  }
+  return device.getTextFromElement(element);
+}
+
+/**
+ * Tap the store-flow screen's primary action and assert the "Open URL" confirmation it raises offers a URL
+ * naming `urlFragment`.
+ *
+ * Both halves matter. That the confirmation appears at all is a real claim — iOS's *originating* refund
+ * screen deliberately does not raise it, going to StoreKit's native refund sheet instead — and the URL
+ * inside it is the only thing that says where the button would actually have sent the user. The copy on the
+ * screen says which route it *describes*; this says which route it *takes*.
+ *
+ * A fragment rather than the whole URL, and read-then-`toContain` rather than a locator text filter:
+ * see `REFUND_URL_FRAGMENT` for both.
+ */
+export async function expectActionOpensUrl(
+  device: DeviceWrapper,
+  urlFragment: string
+): Promise<void> {
+  await test.step(`Verify the screen action opens a URL naming ${urlFragment}`, async () => {
+    await device.clickOnElementAll(new ProScreenAction(device));
+    await Promise.all([
+      device.waitForTextElementToBePresent({
+        ...new OpenURLDialog(device).build(),
+        maxWait: PRESENT_MAX_WAIT,
+      }),
+      device.waitForTextElementToBePresent({
+        ...new OpenURLDialogConfirmButton(device).build(),
+        maxWait: PRESENT_MAX_WAIT,
+      }),
+    ]);
+    const copy = await readOpenUrlDialogCopy(device);
+    expect(copy).toContain(urlFragment);
+  });
+}
+
+/**
+ * Tap the store-flow screen's primary action and assert it raises **no** "Open URL" confirmation.
+ *
+ * The counterpart to `expectActionOpensUrl`, and the only way to state the iOS originating-refund branch:
+ * there the button calls StoreKit's own refund sheet rather than opening a URL, so the assertion is the
+ * absence. Bounded short on purpose — a dialog that is going to appear appears immediately.
+ */
+export async function expectActionOpensNoUrl(device: DeviceWrapper): Promise<void> {
+  await test.step('Verify the screen action raises no Open URL confirmation', async () => {
+    await device.clickOnElementAll(new ProScreenAction(device));
+    await device.verifyElementNotPresent({
+      ...new OpenURLDialog(device).build(),
+      maxWait: ABSENT_MAX_WAIT,
+    });
   });
 }

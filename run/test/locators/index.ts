@@ -1,5 +1,10 @@
 import { ANDROID_XPATHS, IOS_XPATHS } from '../../constants';
 import { tStripped } from '../../localizer/lib';
+import {
+  ellipsizeForLog,
+  MAX_SELECTOR_LOG_LENGTH,
+  MAX_TEXT_LOG_LENGTH,
+} from '../../shared/log_text';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { StrategyExtractionObj } from '../../types/testing';
 import { getAppDisplayName } from '../utils/devnet';
@@ -568,25 +573,21 @@ export class UsernameInput extends LocatorsInterface {
   }
 }
 
-export function describeLocator(locator: StrategyExtractionObj & { text?: string }): string {
-  const { strategy, selector, text } = locator;
+export function describeLocator(
+  locator: StrategyExtractionObj & { text?: string; label?: string }
+): string {
+  const { strategy, selector, text, label } = locator;
 
-  // Trim selector if its too long, show beginning and end
-  const maxSelectorLength = 80;
-  const halfLength = Math.floor(maxSelectorLength / 2);
-  const trimmedSelector =
-    selector.length > maxSelectorLength
-      ? `${selector.substring(0, halfLength)}…${selector.substring(selector.length - halfLength)}`
-      : selector;
-
-  // Trim text if too long, show beginning and end
-  const maxTextLength = 100;
-  const trimmedText = text
-    ? text.length > maxTextLength
-      ? `${text.substring(0, maxTextLength / 2)}…${text.substring(text.length - maxTextLength / 2)}`
-      : text
-    : undefined;
+  const trimmedSelector = ellipsizeForLog(selector, MAX_SELECTOR_LOG_LENGTH);
+  const trimmedText = text ? ellipsizeForLog(text, MAX_TEXT_LOG_LENGTH) : undefined;
+  const trimmedLabel = label ? ellipsizeForLog(label, MAX_TEXT_LOG_LENGTH) : undefined;
 
   const base = `${strategy} "${trimmedSelector}"`;
-  return trimmedText ? `${base} and text "${trimmedText}"` : base;
+  // `text` and `label` are named separately rather than folded into one "copy" word: they read
+  // different attributes (value vs label), so a locator that matches one and not the other is the
+  // normal case on iOS, and a log that blurred them would point at the wrong fix.
+  if (trimmedText) {
+    return `${base} and text "${trimmedText}"`;
+  }
+  return trimmedLabel ? `${base} and label "${trimmedLabel}"` : base;
 }

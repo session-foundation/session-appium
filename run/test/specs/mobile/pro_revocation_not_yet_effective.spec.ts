@@ -114,7 +114,7 @@ async function proRevocationNotYetEffective(platform: SupportedPlatformsType, te
     // Restarted for the same reason as in the recipient spec: on iOS the badge needs the view rebuilt,
     // and a cached entry becoming effective does not on its own redraw what is already on screen.
     await forceStopAndRestart(bob1);
-    await bob1.assertNoSenderProBadge(prebuilt.alice.userName, SENT_BEFORE_REVOCATION);
+    await bob1.assertNoConversationHeaderProBadge(prebuilt.alice.userName, SENT_BEFORE_REVOCATION);
   });
 
   await closeApp(alice1, bob1);

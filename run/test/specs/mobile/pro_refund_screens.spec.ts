@@ -1,6 +1,7 @@
 import { test, type TestInfo } from '@playwright/test';
 
 import { tStripped } from '../../../localizer/lib';
+import { REFUND_URL_FRAGMENT } from '../../../shared/constants';
 import { TestSteps } from '../../../types/allure';
 import { androidIt, bothPlatformsIt, iosIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
@@ -12,9 +13,13 @@ import {
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
-import { activeProContext } from '../../utils/pro_context';
-import { MobileTestContext } from '../../utils/pro_context';
-import { expectRefundScreen } from '../../utils/pro_settings';
+import { activeProContext, MobileTestContext } from '../../utils/pro_context';
+import {
+  expectActionOpensNoUrl,
+  expectActionOpensUrl,
+  expectProScreenAction,
+  expectRefundScreen,
+} from '../../utils/pro_settings';
 
 /**
  * Which refund screen each state opens.
@@ -29,6 +34,18 @@ import { expectRefundScreen } from '../../utils/pro_settings';
  *
  * A subscriber must be able to reach the refund action at all, which is why every fixture here is active,
  * renewing and holding a proof.
+ *
+ * Each case then reads the screen's decision twice more, which is the point of the "Open URL" dialog tags:
+ *
+ * - the CTA's **label**, which the design specifies changes with the store's own refund window — `Open
+ *   {store} Website` while it is open, `Request Refund` once it has closed;
+ * - the **URL** the CTA actually opens, read out of the confirmation dialog it raises. This is the only
+ *   assertion that distinguishes a screen that *describes* the store route from one that *takes* it, and
+ *   the two really can disagree — see `refundDifferentAccount`, where on Android they do.
+ *
+ * Every URL assertion is a fragment, for the reasons on `REFUND_URL_FRAGMENT`. Two cases deliberately have
+ * none: `refundOriginatingAccount`, where iOS raises no dialog at all (StoreKit's own refund sheet), and
+ * the Android half of `refundDifferentAccount`.
  */
 
 /** Every fixture starts from a renewing subscriber whose status fetch has confirmed. */
@@ -188,6 +205,32 @@ async function refundBoughtElsewhere(platform: SupportedPlatformsType, testInfo:
     })
   );
 
+  // The two clients still use different localizer keys - iOS `openPlatformStoreWebsite`/`platform_store`,
+  // Android `openPlatformWebsite`/`platform` - but they now agree on the RULE the designs state: an
+  // Apple plan reads "Apple", our own store reads "Google Play Store", never "Google". Same rendered
+  // words, two keys, so the copy is still supplied per platform.
+  await expectProScreenAction(
+    device,
+    platform === 'ios'
+      ? tStripped('openPlatformStoreWebsite', {
+          platform_store: tStripped('pro_provider_google_play_store'),
+        })
+      : tStripped('openPlatformWebsite', {
+          platform: tStripped('pro_provider_app_store_platform'),
+        })
+  );
+
+  // The window is open on both, but the url differs — because this fixture buys on the OTHER platform,
+  // so the iOS run has a Google Play plan and the Android run an App Store one. Each takes its own
+  // store's page, which is the point: the clients read the ORIGINATING provider's table, so the store
+  // route is per-provider without either of them checking the provider themselves.
+  await expectActionOpensUrl(
+    device,
+    platform === 'ios'
+      ? REFUND_URL_FRAGMENT.googlePlayQuickRefund
+      : REFUND_URL_FRAGMENT.appleRefundSupport
+  );
+
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);
   });
@@ -213,6 +256,16 @@ async function refundOriginatingAccount(platform: SupportedPlatformsType, testIn
     })
   );
 
+  // Unconditionally `requestRefund`: this is the one refund screen whose CTA does NOT follow the store
+  // window, because the action it performs is not a link.
+  await expectProScreenAction(device, tStripped('requestRefund'));
+
+  // The assertion that says *why*. On its own originating account iOS asks StoreKit for the refund
+  // (`viewModel.requestRefund(scene:)`) rather than sending the user to a website, so this is the only
+  // refund screen on either platform that raises no "Open URL" confirmation. Stated as an absence because
+  // that is the whole difference between this screen and the two below it.
+  await expectActionOpensNoUrl(device);
+
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);
   });
@@ -229,6 +282,11 @@ async function refundDifferentAccount(platform: SupportedPlatformsType, testInfo
       // would be testing the platform branch instead.
       proOriginatingPlatform: onIOS ? 'iOS' : 'android',
       proOriginatingAccount: 'nonOriginatingAccount',
+      // Pinned rather than inherited: leaving it unset does NOT mean the same thing on both platforms.
+      // iOS and Desktop fall back to the payment, which a mocked plan does not have, so the window reads
+      // closed — but every Android debug fixture builds itself with the window OPEN, so an unset override
+      // leaves it open there. Stating it is the only way this case means one thing on both.
+      proQuickRefundWindow: 'closed',
     })
   );
 
@@ -239,11 +297,16 @@ async function refundDifferentAccount(platform: SupportedPlatformsType, testInfo
       ? tStripped('refundNonOriginatorApple', {
           platform_account: tStripped('pro_provider_app_store_account'),
         })
-      : tStripped('proPlanPlatformRefund', {
+      : tStripped('proPlanPlatformRefundLong', {
           platform_store: tStripped('pro_provider_google_play_store'),
-          platform_account: tStripped('pro_provider_google_play_account'),
         })
   );
+
+  // The window is pinned closed in the fixture above. Both clients now branch here, so both label it the
+  // same: past the window the store will not take the request and only Session can.
+  await expectProScreenAction(device, tStripped('requestRefund'));
+
+  await expectActionOpensUrl(device, REFUND_URL_FRAGMENT.sessionProSupportForm);
 
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);
@@ -274,6 +337,12 @@ async function refundWindowClosed(platform: SupportedPlatformsType, testInfo: Te
     })
   );
 
+  // The window mock earning its keep: same screen and same fixture as `refundBoughtElsewhere` but for the
+  // window, and both the CTA label and the URL flip with it — from the store's own workflow to Session
+  // Support.
+  await expectProScreenAction(device, tStripped('requestRefund'));
+  await expectActionOpensUrl(device, REFUND_URL_FRAGMENT.sessionProSupportForm);
+
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);
   });
@@ -294,10 +363,21 @@ async function refundWithinStoreWindow(platform: SupportedPlatformsType, testInf
   await expectRefundScreen(
     device,
     'pro-screen-refund-plan',
+    // NOT the store name, unlike the CTA below: this body copy comes from a different key whose
+    // `{platform}` slot the client still fills with the raw platform name ("Google"). Whether it should
+    // follow the CTA's rule is a copy question, not something to change silently from a spec.
     tStripped('proRefundRequestStorePolicies', {
       platform: tStripped('pro_provider_google_play_platform'),
     })
   );
+
+  // The cleanest reading of the store route anywhere in this file: Google Play's two refund URLs differ, so
+  // the fragment alone proves the CTA goes to the store's own workflow rather than to Session Support.
+  await expectProScreenAction(
+    device,
+    tStripped('openPlatformWebsite', { platform: tStripped('pro_provider_google_play_store') })
+  );
+  await expectActionOpensUrl(device, REFUND_URL_FRAGMENT.googlePlayQuickRefund);
 
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);
@@ -321,6 +401,11 @@ async function refundOutsideStoreWindow(platform: SupportedPlatformsType, testIn
     'pro-screen-refund-plan',
     tStripped('proRefundRequestSessionSupport')
   );
+
+  // The pair with the above, on the same screen and the same fixture bar the window: the CTA drops the
+  // store's name and the URL becomes Session Support's own page.
+  await expectProScreenAction(device, tStripped('requestRefund'));
+  await expectActionOpensUrl(device, REFUND_URL_FRAGMENT.sessionProSupportForm);
 
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);

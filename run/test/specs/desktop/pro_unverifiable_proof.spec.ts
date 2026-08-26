@@ -49,7 +49,7 @@ test_Alice_1W_Bob_1W_friends(
 
     // The claim, asserted as "never appears" rather than "is not there yet".
     //
-    // `assertNoSenderProBadge` is deliberately NOT used: it exists for the revocation specs, where the
+    // `assertNoConversationHeaderProBadge` is deliberately NOT used: it exists for the revocation specs, where the
     // badge starts present and must vanish, so it returns the first moment it sees no badge — and on
     // desktop it checks with a bare `isVisible()`, with no grace at all. Here the badge should never
     // appear, and in the matching-key control it renders a second or two after the message, so looking

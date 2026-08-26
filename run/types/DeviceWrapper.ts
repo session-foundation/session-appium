@@ -34,6 +34,7 @@ import {
 } from '../../run/test/locators';
 import {
   animatedProfilePicture,
+  mediaFolder,
   profilePicture,
   testFile,
   testImage,
@@ -1136,7 +1137,7 @@ export class DeviceWrapper implements IMobileWrapper {
     );
 
     // Load the reference image buffer from disk once
-    const referencePath = path.join('run', 'test', 'media', referenceImageName);
+    const referencePath = path.join(mediaFolder, referenceImageName);
     await fs.access(referencePath).catch(() => {
       throw new Error(`Reference image not found: ${referencePath}`);
     });
@@ -1554,7 +1555,7 @@ export class DeviceWrapper implements IMobileWrapper {
     const { maxWait = 30_000 } = args;
     const skipHealing = 'skipHealing' in args ? (args.skipHealing ?? false) : false;
 
-    const description = describeLocator({ ...locator, text });
+    const description = describeLocator({ ...locator, text, label });
     this.log(`Waiting for element with ${description} to be present`);
 
     // Helper function to find element with or without healing
@@ -2030,7 +2031,7 @@ export class DeviceWrapper implements IMobileWrapper {
       | 'test_image.jpg'
       | 'test_video.mp4'
   ) {
-    const filePath = path.join('run', 'test', 'media', mediaFileName);
+    const filePath = path.join(mediaFolder, mediaFileName);
     await fs.access(filePath).catch(() => {
       throw new Error(`Media file not found: ${filePath}`);
     });
@@ -2997,7 +2998,7 @@ export class DeviceWrapper implements IMobileWrapper {
     await this.navigateBack();
   }
 
-  public async assertSenderProBadge(senderName: string): Promise<void> {
+  public async assertConversationHeaderProBadge(senderName: string): Promise<void> {
     await this.openConversationWith(senderName);
     // The badge follows the sender's profile rather than the message, so it can land after the text
     // does. Waited on generously rather than read once, or this fails on ordering.
@@ -3056,7 +3057,7 @@ export class DeviceWrapper implements IMobileWrapper {
   }
 
   /**
-   * The receiver-side counterpart of `assertSenderProBadge`: the sender's badge is gone from here.
+   * The receiver-side counterpart of `assertConversationHeaderProBadge`: the sender's badge is gone from here.
    *
    * Both conditions are checked at the SAME instant, and that is the whole design. The header name
    * proves this client is rendering the right conversation, so the absence being asserted is the badge's
@@ -3067,7 +3068,10 @@ export class DeviceWrapper implements IMobileWrapper {
    * message distinguishes the two ways this can end, since they have different owners: a header that
    * never rendered is a navigation problem, a badge that never went is the product.
    */
-  public async assertNoSenderProBadge(senderName: string, anchorMessage?: string): Promise<void> {
+  public async assertNoConversationHeaderProBadge(
+    senderName: string,
+    anchorMessage?: string
+  ): Promise<void> {
     await this.openConversationWith(senderName);
 
     let headerSeen = false;

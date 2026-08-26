@@ -47,6 +47,8 @@ const PRO_ENV_KEYS = [
   'SESSION_PRO_BACKEND_LOADING',
   'SESSION_PRO_BACKEND_ERROR',
   'SESSION_PRO_BACKEND_SUCCESS',
+  'SESSION_PRO_PAYMENT_PROVIDER',
+  'SESSION_PRO_PLATFORM_REFUND_WINDOW',
   'SESSION_FORCE_PRO_REVOCATION_REFRESH',
 ] as const;
 
@@ -122,6 +124,24 @@ export function applyProMocks(context?: DesktopProContext) {
   // worker, which is harmless until one of them asserts that a revocation has NOT been seen yet.
   if (context.forceProRevocationRefresh) {
     process.env.SESSION_FORCE_PRO_REVOCATION_REFRESH = 'true';
+  }
+
+  // support. So every non-originating screen is silently the fallback one until a spec says otherwise.
+  if (context.proOriginatingPlatform) {
+    process.env.SESSION_PRO_PAYMENT_PROVIDER =
+      context.proOriginatingPlatform === 'android'
+        ? 'google_play'
+        : context.proOriginatingPlatform === 'iOS'
+          ? 'app_store'
+          : 'useactual';
+  }
+  // A straight pass-through now that the app takes a tri-state: `useActual` defers to the payment's own
+  // `platformRefundExpiryTsMs`, which for a mocked fixture (it has no payment) is the same answer as
+  // `closed`. This used to invert, because the app's flag was a boolean whose *absence* forced the
+  // window open.
+  if (context.proQuickRefundWindow) {
+    process.env.SESSION_PRO_PLATFORM_REFUND_WINDOW =
+      context.proQuickRefundWindow === 'useActual' ? 'useactual' : context.proQuickRefundWindow;
   }
 
   console.info(

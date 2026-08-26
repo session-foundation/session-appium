@@ -1,11 +1,12 @@
 import { resolve } from 'path';
 
+import { animatedProfilePicture, mediaFolder } from '../../../constants/testfiles';
 import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W_Bob_1W_friends } from '../../../desktop/sessionTest';
 import { MESSAGE_DELIVERY_TIMEOUT_MS, UNTRUSTED_PRO_BACKEND_KEY } from '../../../shared/constants';
 import { SENT_WITH_FAKE_PROOF } from '../../../shared/pro_revocation';
 
-const ANIMATED_AVATAR = resolve(__dirname, '../../media/animated_profile_picture.gif');
+const ANIMATED_AVATAR = resolve(mediaFolder, animatedProfilePicture);
 
 // Verified as a matched pair: with this left undefined — recipient on the real key — the avatar DOES
 // animate for the recipient (22s), so a still one here is the client refusing a feature whose proof it
@@ -54,7 +55,7 @@ test_Alice_1W_Bob_1W_friends(
     await bob.openConversationWith(alice.userName);
     await bob.waitForMessage(SENT_WITH_FAKE_PROOF, MESSAGE_DELIVERY_TIMEOUT_MS);
 
-    await bob.verifySenderAvatarNotAnimated(alice.userName);
+    await bob.verifyConversationHeaderAvatarNotAnimated(alice.userName);
   },
   { pro: {}, fakeAvatarPickerFile: ANIMATED_AVATAR }
 );

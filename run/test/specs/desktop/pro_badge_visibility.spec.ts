@@ -27,7 +27,7 @@ test_Alice_1W_Bob_1W(
     await alice.sendMessage(MESSAGE);
 
     await bob.waitForMessage(MESSAGE);
-    await bob.assertSenderProBadge(alice.userName);
+    await bob.assertConversationHeaderProBadge(alice.userName);
   },
   { pro: {} }
 );

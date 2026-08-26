@@ -99,3 +99,57 @@ export const GENERATED_AVATAR_COLORS = new Set([
   'fcb159',
   'fad657',
 ]);
+
+/**
+ * The refund destinations, as the FRAGMENT of each URL that names the route rather than the whole URL.
+ *
+ * Which URL the "Open URL" confirmation offers is what tells the refund routes apart: the same screen,
+ * with the same title, sends the user either to the store's own refund workflow or to Session Support,
+ * and only the URL says which. So this is the assertion — but a fragment rather than the full string,
+ * for two reasons:
+ *
+ * 1. **The clients do not own these URLs.** All three read them from libsession's fixed per-provider
+ *    table (`session/pro_backend.cpp`, `provider_urls()`), so the full string can change on a
+ *    libsession bump with no client change at all — and a spec pinned to it would then fail against a
+ *    correct app. What IS the clients' decision is *which of the provider's urls* a given state opens,
+ *    and that is what the fragment captures.
+ * 2. Two of them are third-party support-article ids (`9813244`, `118223`), which carry no meaning a
+ *    reader of the spec can check.
+ *
+ * The fragments are still specific enough to distinguish every route: no two of the three share one.
+ *
+ * Substring matching is the caller's job — the mobile locators' `text`/`label` filters are exact after
+ * normalisation, so the mobile helpers read the element's copy and assert `toContain`, while Desktop's
+ * `:has-text()` selector is already a substring match.
+ */
+export const REFUND_URL_FRAGMENT = {
+  /**
+   * GOOGLE PLAY's quick-refund route, offered while that store's own refund window is open. A
+   * Session-owned short link which redirects into the Play store, so the CTA beside it names the
+   * store while this url does not.
+   *
+   * Two preconditions, BOTH required — this is not "the quick-refund url":
+   *
+   * 1. the plan's ORIGINATING provider is `google_play`, and
+   * 2. that provider's quick-refund window is still open.
+   *
+   * An App Store plan in an open window takes {@link appleRefundSupport} instead, which is why this
+   * one is named for its provider. The clients do not branch on the provider to achieve that: they
+   * open `providerData.refundSupportUrl` from libsession's table for the ORIGINATING provider, and
+   * the table already holds this short link under `google_play` and Apple's page under `app_store`.
+   * Adding a provider check on top of the window would send an Apple plan to Session's form instead
+   * of Apple's own page.
+   */
+  googlePlayQuickRefund: 'getsession.org/android-refund',
+  /**
+   * The route offered once that window has closed and only Session can action the request — its Pro
+   * support form.
+   */
+  sessionProSupportForm: 'getsession.org/pro-support',
+  /**
+   * Apple's own refund page, which an App Store plan takes while its window is open. Apple's
+   * `refund_platform_url` and `refund_support_url` are the same value, so this fragment says which
+   * STORE the request went to and cannot say anything about the window.
+   */
+  appleRefundSupport: 'support.apple.com/118223',
+} as const;

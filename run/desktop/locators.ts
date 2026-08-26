@@ -89,6 +89,9 @@ export class Conversation extends Locator {
   static readonly linkPreviewTitle = this.testId('msg-link-preview-title');
   static readonly mentionsContainer = this.testId('mentions-container'); // This is also the locator for emojis
   static readonly mentionsItem = this.testId('mentions-container-row'); // This is also the locator for emojis
+  // The author label above an incoming GROUP message (`MessageAuthorText` -> `ContactName`). Absent
+  // from a 1-to-1, and absent on any message that is not the first of its sender's run.
+  static readonly messageAuthorName = this.testId('module-message__author__profile-name');
   static readonly messageContent = this.testId('message-content');
   static readonly messageInput = this.testId('message-input-text-area');
 
@@ -96,6 +99,10 @@ export class Conversation extends Locator {
     'message-request-response-message'
   );
   static readonly microphoneButton = this.testId('microphone-button');
+  // Session Pro badge rendered inside a `ContactName`. Used here for the group message author label —
+  // but `ContactName` also renders every left-pane row, so this must always be scoped to the surface
+  // under test rather than matched page-wide.
+  static readonly proBadgeAuthorName = this.testId('pro-badge-contact-name');
   // Session Pro badge shown next to the peer's name in the conversation header.
   static readonly proBadgeConversationHeader = this.testId('pro-badge-conversation-header');
 
@@ -210,8 +217,27 @@ export class ProSettings extends Locator {
   /** Renders only while access is active; the expired screen shows `renewPlanButton` instead. */
   static readonly planExpiry = this.testId('update-access-settings-sub-text');
   static readonly renewPlanButton = this.testId('renew-pro-button');
+  static readonly requestRefundRow = this.testId('request-refund-button');
   static readonly statsHeader = this.testId('pro-settings-stats-header');
   static readonly statusBanner = this.testId('pro-settings-status-banner');
+}
+
+/**
+ * The non-originating Pro pages, reached from the rows in `ProSettings`. Desktop can never be the
+ * platform a plan was bought on, so every one of these pages is the non-originating flow.
+ *
+ * The three `refund*` ids name the route the app offered, and are the only way to tell the refund
+ * screens apart: the hero is `pro-settings-description` carrying the same string in all three, and
+ * `platformButton` is one id shared by every page here, so both are silent about which one rendered.
+ */
+export class ProNonOriginating extends Locator {
+  static readonly platformButton = this.testId('pro-open-platform-website-button');
+  /** Bought on the App Store: refund through the store account, on the device or the website. */
+  static readonly refundPlatformAccount = this.testId('pro-screen-refund-platform-account');
+  /** No store route left — the window has closed, or the plan came from neither store. */
+  static readonly refundSessionSupport = this.testId('pro-screen-refund-session-support');
+  /** Bought on Google Play with its refund window still open: refund under the store's own policies. */
+  static readonly refundStorePolicies = this.testId('pro-screen-refund-store-policies');
 }
 
 export class CTA extends Locator {
@@ -237,6 +263,19 @@ export class Global extends Locator {
   static readonly loadingSpinner = this.testId('loading-spinner');
   static readonly modalBackButton = this.testId('modal-back-button');
   static readonly modalCloseButton = this.testId('modal-close-button');
+  /**
+   * The body of whichever modal is on top — including the "Open URL" confirmation, whose body carries the
+   * URL about to be opened.
+   *
+   * **Generic on purpose, because Desktop has nothing better.** The mobile clients now tag that dialog's
+   * body `open-url-description` and its root `open-url-dialog`; `OpenUrlModal.tsx` has neither, so a
+   * desktop spec reaching for the URL has to go through the shared modal-body id and rely on nothing else
+   * on screen carrying it. That holds for the Pro refund pages (they use `pro-settings-description` and
+   * their own per-route ids, never `ModalDescription`), but it is a weaker claim than the mobile locator's
+   * and it is the reason Desktop is only *partly* aligned with the mobile tags. Pair it with
+   * `openUrlButton` so the assertion at least names the dialog it means.
+   */
+  static readonly modalDescription = this.testId('modal-description');
   static readonly openUrlButton = this.testId('open-url-confirm-button');
   static readonly toast = this.testId('session-toast');
 }
