@@ -86,6 +86,7 @@ import { LoadingAnimation } from '../test/locators/onboarding';
 import {
   ConversationHeaderProBadge,
   MessageInfoMenuItem,
+  ProBadge,
   ProFeatureRow,
 } from '../test/locators/pro';
 import {
@@ -3040,6 +3041,39 @@ export class DeviceWrapper implements IMobileWrapper {
    * top so it needs no scroll, addressed by id on both platforms); the conversation probe is the
    * message input, the same signal `openConversationWith` uses.
    */
+  /**
+   * Wait until THIS client shows its own Pro badge on the settings root.
+   *
+   * Deliberately never opens the Pro settings page: that fires `get_pro_status` on mount, which turns
+   * a linked device into a second client minting against the same account and races the proof the
+   * subscribing client just obtained. The settings-root badge is fetch-free on both platforms — driven
+   * by `uiState.proDataState` on Android and `state.proState.status` on iOS.
+   *
+   * Matches the shared `pro-badge-icon`, which is safe HERE only because the settings root draws no
+   * other badge; the rest are inside dialogs. Do not reuse this locator on a screen that does.
+   */
+  public async waitForOwnProBadge(maxWaitMs = 60_000): Promise<void> {
+    const alreadyInSettings = await this.doesElementExist({
+      ...new PrivacyMenuItem(this).build(),
+      maxWait: 5_000,
+    });
+    if (!alreadyInSettings) {
+      const insideConversation = await this.doesElementExist({
+        ...new MessageInput(this).build(),
+        maxWait: 2_000,
+      });
+      if (insideConversation) {
+        await this.navigateBack();
+      }
+      await this.clickOnElementAll(new UserSettings(this));
+    }
+    await this.waitForTextElementToBePresent({
+      ...new ProBadge(this).build(),
+      maxWait: maxWaitMs,
+    });
+    await this.clickOnElementAll(new CloseSettings(this));
+  }
+
   public async assertSettingsAvatarAnimated(): Promise<void> {
     const alreadyInSettings = await this.doesElementExist({
       ...new PrivacyMenuItem(this).build(),

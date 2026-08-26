@@ -13,10 +13,8 @@ import { observeProGrant } from '../../utils/pro_refresh';
  * A Pro user sets an animated display picture on one client type; every other client must render it
  * animated rather than as a still frame. Runs three times, once per uploading client type.
  *
- * Alice holds all three client types (linked observers, which learn the picture by config sync); Bob
- * holds one, rotated across the three registrations so each type is also exercised as the network-side
- * receiver. Bob is not given three of his own — six clients at once is where this hardware starts
- * failing on propagation timeouts.
+ * Both accounts hold all three client types. Alice's two non-uploading clients learn the picture by
+ * config sync; all three of Bob's learn it over the network and must verify her proof independently.
  *
  * Traps:
  * - A Pro MOCK cannot satisfy this. Mocks are per-device and write no config and no proof, so every
@@ -45,16 +43,23 @@ const LABEL: Record<ClientType, string> = {
  */
 const ANIMATED_AVATAR = resolve(mediaFolder, animatedProfilePicture);
 
-/** Alice holds every client type in every variant — one of them uploads, the rest observe. */
-const ALICE_ON_EVERY_PLATFORM = { android: 1, desktop: 1, ios: 1 } as const;
+/**
+ * Both accounts hold every client type in every variant: one of Alice's uploads, her other two
+ * observe by config sync, and all three of Bob's observe over the network.
+ *
+ * Six clients with three linked devices on each side. A sibling spec timed out at 60s on badge
+ * convergence in that shape once, at 4.5 of 14 cores — so if these fail on a wait rather than on
+ * pixels, suspect convergence, not the host, and look at the product rather than the timeout.
+ */
+const ON_EVERY_PLATFORM = { android: 1, desktop: 1, ios: 1 } as const;
 
 crossPlatformTest({
   title: 'Animated display picture set on Android shows animated on every other client',
   risk: 'high',
   isPro: true,
   setup: friends({
-    alice: ALICE_ON_EVERY_PLATFORM,
-    bob: { desktop: 1 },
+    alice: ON_EVERY_PLATFORM,
+    bob: ON_EVERY_PLATFORM,
   }),
   testCb: async ({ accounts: { alice, bob } }) => {
     await animatedPictureReachesEveryClient({ alice, bob, uploadOn: 'android' });
@@ -66,8 +71,8 @@ crossPlatformTest({
   risk: 'high',
   isPro: true,
   setup: friends({
-    alice: ALICE_ON_EVERY_PLATFORM,
-    bob: { android: 1 },
+    alice: ON_EVERY_PLATFORM,
+    bob: ON_EVERY_PLATFORM,
   }),
   testCb: async ({ accounts: { alice, bob } }) => {
     await animatedPictureReachesEveryClient({ alice, bob, uploadOn: 'ios' });
@@ -79,8 +84,8 @@ crossPlatformTest({
   risk: 'high',
   isPro: true,
   setup: friends({
-    alice: ALICE_ON_EVERY_PLATFORM,
-    bob: { ios: 1 },
+    alice: ON_EVERY_PLATFORM,
+    bob: ON_EVERY_PLATFORM,
   }),
   // Only this variant needs it, and only Alice's window uses it — but it is a process env var read
   // at launch, so every desktop window in this test gets it. A window that never opens the picker is
@@ -158,7 +163,6 @@ async function animatedPictureReachesEveryClient({
   // Everything of Alice's that did NOT perform the change. Reference identity, not platform names:
   // `clients` holds the very same wrapper instances the per-platform arrays do.
   const linkedObservers = alice.clients.filter(client => client !== uploader);
-  const [bobClient] = bob.clients;
 
   // Short and asserted in full: mobile's matcher compares the WHOLE element text
   // (`findMatchingTextInElementArray` normalises then `===`), so there is no room for a prefix here.
@@ -200,12 +204,17 @@ async function animatedPictureReachesEveryClient({
     });
   }
 
-  const bobWhere = bobClient.getDeviceIdentity();
-  await test.step(`${bobWhere} renders ${aliceName}'s picture animated`, async () => {
-    // The end-to-end case: a different client type, a different account, and a Pro proof that had
-    // to be verified here before this avatar was allowed to move.
-    await bobClient.openConversationWith(aliceName);
-    await bobClient.waitForMessage(message);
-    await bobClient.assertConversationHeaderAvatarAnimated(aliceName);
-  });
+  // Every one of Bob's clients, not just one: each verifies Alice's proof independently, so three
+  // client types here are three separate implementations of that check. Sequential for the same
+  // reason as the loop above — the sampler names an element, not a client.
+  for (const observer of bob.clients) {
+    const where = observer.getDeviceIdentity();
+    await test.step(`${where} renders ${aliceName}'s picture animated`, async () => {
+      // The end-to-end case: a different account, over the network, with a Pro proof that had to be
+      // verified here before this avatar was allowed to move.
+      await observer.openConversationWith(aliceName);
+      await observer.waitForMessage(message);
+      await observer.assertConversationHeaderAvatarAnimated(aliceName);
+    });
+  }
 }

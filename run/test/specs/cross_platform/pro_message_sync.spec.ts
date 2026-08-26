@@ -52,19 +52,11 @@ crossPlatformTest({
   risk: 'high',
   isPro: true,
   setup: friends({
-    // Bob gets the iOS client, Alice does not, and that asymmetry is deliberate.
-    //
-    // The two things this spec proves need different devices: a RECIPIENT on a third client
-    // type (Bob's iOS, which must verify Alice's proof) and a LINKED device inheriting the
-    // entitlement (Alice's desktop, which already does that). Alice's own iOS client adds
-    // neither -- and it measurably costs: with it, `assertSenderProBadge` on Bob's clients
-    // times out at 60s twice in a row, while the badge is verifiably present in the page
-    // source captured moments later. Load is not the cause (4.5 on a 14-core host); a third
-    // linked device on Alice appears to push badge convergence past the wait.
-    //
-    // Worth a product look rather than a longer timeout -- if three linked devices really
-    // do slow profile convergence past a minute, a real user sees that too.
-    alice: { android: 1, desktop: 1 },
+    // Six clients. An earlier three-linked-device run timed out at 60s on Bob's badge assertions
+    // twice, with the badge verifiably present in the page source moments later and host load at
+    // 4.5 of 14 cores — if that returns it is convergence, not CPU, and wants a product look rather
+    // than a longer wait.
+    alice: { android: 1, ios: 1, desktop: 1 },
     bob: { android: 1, ios: 1, desktop: 1 },
   }),
   testCb: async ({ accounts: { alice, bob } }) => {
@@ -72,6 +64,7 @@ crossPlatformTest({
     const bobName = bob.account.userName;
     const [aliceAndroid] = alice.android;
     const [aliceDesktop] = alice.desktop;
+    const [aliceIos] = alice.ios;
 
     await test.step(`${aliceName} subscribes to Pro on her Android client`, async () => {
       // Mints a payment through the backend's dev route and binds it to the Pro master key derived
@@ -86,22 +79,19 @@ crossPlatformTest({
     // check — the toggle is guarded on a proof existing, so it cannot be set on a non-Pro account.
     await enableProBadge(aliceAndroid, 'android');
 
-    await test.step(`Pro synced to ${aliceName}'s linked desktop`, async () => {
-      // The Desktop client never subscribed and is deliberately NOT restarted: it inherits both the
-      // entitlement and the badge flag through config sync.
+    await test.step(`Pro synced to ${aliceName}'s linked devices`, async () => {
+      // Neither linked client subscribed and neither is restarted: both inherit the entitlement and
+      // the badge flag through config sync.
       //
-      // Waited on BEFORE sending, not asserted after: the badge is a per-user profile flag, so a
-      // message composed here before it arrives goes out without the PRO_BADGE feature. Every badge
-      // assertion below would then fail on receivers that are behaving correctly — and it would fail
-      // intermittently, on sync timing.
+      // Waited on BEFORE the send, not asserted after. The badge is a per-user profile flag, so a
+      // message composed before it arrives goes out without PRO_BADGE and every badge assertion below
+      // then fails on receivers that are behaving correctly — intermittently, on sync timing.
       //
-      // This wait must not reach the Pro settings page. Opening it fires `get_pro_status` on mount, so
-      // a poll loop there turns this linked device into a second client minting against Alice's
-      // account, racing the proof the subscribing client just obtained. Only the subscriber (her
-      // Android, via `enableProBadge` above) goes near that screen — neither of her linked devices,
-      // Desktop nor iOS, is ever sent there, which is also why her iOS client has no wait of its own:
-      // the fetch-free "own Pro badge" check `waitForOwnProBadge` performs exists on Desktop only.
-      await aliceDesktop.waitForOwnProBadge();
+      // Neither wait may reach the Pro settings page: opening it fires `get_pro_status` on mount,
+      // which makes a linked device a second client minting against Alice's account and races the
+      // proof her Android just obtained. Both `waitForOwnProBadge` implementations read the
+      // settings-ROOT badge instead, which is fetch-free.
+      await Promise.all([aliceDesktop.waitForOwnProBadge(), aliceIos.waitForOwnProBadge()]);
       // The send is the entitlement assertion: >2000 chars is Pro-gated, so a non-Pro client is
       // blocked by the upgrade CTA. It retries until the proof lands rather than asserting at once.
       await aliceDesktop.sendLongProMessage(bobName, PRO_MESSAGE);

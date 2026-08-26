@@ -102,5 +102,13 @@ export interface IBaseDeviceWrapper {
    * messages" upgrade CTA). A successful send proves this device has Pro active.
    * Used to verify Pro has synced to a linked device without forcing an app restart.
    */
+  /**
+   * Wait until this client shows its OWN Pro badge on the settings root.
+   *
+   * Never opens the Pro settings page: that fires `get_pro_status` on mount, so a linked device
+   * polling there becomes a second client minting against the same account. The settings-root badge
+   * is fetch-free on all three platforms.
+   */
+  waitForOwnProBadge(maxWaitMs?: number): Promise<void>;
   sendLongProMessage(convoName: string, message: string): Promise<void>;
 }
