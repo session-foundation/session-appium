@@ -2025,6 +2025,7 @@ export class DeviceWrapper implements IMobileWrapper {
 
   public async pushMediaToDevice(
     mediaFileName:
+      | 'animated_profile_picture_as_png.png'
       | 'animated_profile_picture.gif'
       | 'profile_picture.jpg'
       | 'test_file.pdf'
@@ -2328,8 +2329,23 @@ export class DeviceWrapper implements IMobileWrapper {
     return sentTimestamp;
   }
 
-  public async uploadProfilePicture(animated: boolean = false) {
-    let uploadPicture: 'animated_profile_picture.gif' | 'profile_picture.jpg';
+  /**
+   * Pick a display picture from the device's photo library and save it.
+   *
+   * `animated` drives the PICKER, not the file: it selects which label the picker is expected to show
+   * (`GIF` against an image) and whether a crop step follows. `fileOverride` names the file to pick,
+   * which is normally implied by `animated` and is separated from it only for the format-bypass spec —
+   * there the file IS animated and the picker is expected to present it as an ordinary image, and the
+   * whole question is whether the app agrees with the picker or with the bytes.
+   */
+  public async uploadProfilePicture(
+    animated: boolean = false,
+    fileOverride?: 'animated_profile_picture_as_png.png'
+  ) {
+    let uploadPicture:
+      | 'animated_profile_picture_as_png.png'
+      | 'animated_profile_picture.gif'
+      | 'profile_picture.jpg';
     let dpLocator: LocatorsInterface;
     if (animated) {
       uploadPicture = animatedProfilePicture;
@@ -2337,6 +2353,9 @@ export class DeviceWrapper implements IMobileWrapper {
     } else {
       uploadPicture = profilePicture;
       dpLocator = new ImageName(this);
+    }
+    if (fileOverride) {
+      uploadPicture = fileOverride;
     }
 
     await this.clickOnElementAll(new UserSettings(this));
