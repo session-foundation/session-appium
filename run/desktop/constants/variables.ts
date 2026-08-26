@@ -25,25 +25,25 @@ type MediaFixture = {
 export const mediaArray: Array<MediaFixture> = [
   {
     mediaType: 'image',
-    path: 'sample_files/test-image.png',
+    path: 'sample_files/test_image.jpg',
     attachmentType: 'media',
     shouldCheckMediaPreview: true,
   },
   {
     mediaType: 'video',
-    path: 'sample_files/test-video.mp4',
+    path: 'sample_files/test_video.mp4',
     attachmentType: 'media',
     shouldCheckMediaPreview: true,
   },
   {
     mediaType: 'gif',
-    path: 'sample_files/test-gif.gif',
+    path: 'sample_files/test_gif.gif',
     attachmentType: 'media',
     shouldCheckMediaPreview: true,
   },
   {
     mediaType: 'document',
-    path: 'sample_files/test-file.pdf',
+    path: 'sample_files/test_file.pdf',
     attachmentType: 'file',
     shouldCheckMediaPreview: false,
   },

@@ -34,6 +34,7 @@ import {
 } from '../../run/test/locators';
 import {
   animatedProfilePicture,
+  mediaFolder,
   profilePicture,
   testFile,
   testImage,
@@ -1136,7 +1137,7 @@ export class DeviceWrapper implements IMobileWrapper {
     );
 
     // Load the reference image buffer from disk once
-    const referencePath = path.join('run', 'test', 'media', referenceImageName);
+    const referencePath = path.join(mediaFolder, referenceImageName);
     await fs.access(referencePath).catch(() => {
       throw new Error(`Reference image not found: ${referencePath}`);
     });
@@ -2030,7 +2031,7 @@ export class DeviceWrapper implements IMobileWrapper {
       | 'test_image.jpg'
       | 'test_video.mp4'
   ) {
-    const filePath = path.join('run', 'test', 'media', mediaFileName);
+    const filePath = path.join(mediaFolder, mediaFileName);
     await fs.access(filePath).catch(() => {
       throw new Error(`Media file not found: ${filePath}`);
     });
