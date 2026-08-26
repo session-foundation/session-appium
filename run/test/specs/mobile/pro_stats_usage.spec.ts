@@ -9,9 +9,9 @@ import { iosIt } from '../../../types/sessionIt';
 import { MessageInput, OutgoingMessageStatusSent, SendButton } from '../../locators/conversation';
 import { ConversationItem } from '../../locators/home';
 import { open_Alice1_with_contacts } from '../../state_builder';
-import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 import { enableProBadge } from '../../utils/pro_badge';
+import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 import { observeProGrant } from '../../utils/pro_refresh';
 import { readProStats } from '../../utils/pro_settings';
 
@@ -115,7 +115,11 @@ async function proStatsCountRealUsage(platform: SupportedPlatformsType, testInfo
   // would add a simulator without adding a claim. The seeded contacts give the conversations to send in
   // and the one to pin.
   const { device, alice, contactNames } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
-    return await open_Alice1_with_contacts({ platform, testInfo, iOSContext: IOS_PRO_CONTEXT });
+    return await open_Alice1_with_contacts({
+      platform,
+      testInfo,
+      testContext: PRO_BACKEND_CONTEXT,
+    });
   });
 
   // Two different conversations, so each send is the only outgoing message in its thread — see
