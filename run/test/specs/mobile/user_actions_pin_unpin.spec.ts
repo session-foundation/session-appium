@@ -10,9 +10,9 @@ import { bothPlatformsIt } from '../../../types/sessionIt';
 import { CTAButtonNegative } from '../../locators/global';
 import { ConversationPinnedIcon, PlusButton } from '../../locators/home';
 import { open_Alice1_with_contacts } from '../../state_builder';
-import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { assertPinOrder, getConversationOrder } from '../../utils/conversation_order';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
+import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 import { observeProGrant } from '../../utils/pro_refresh';
 
 bothPlatformsIt({
@@ -101,7 +101,11 @@ async function nonProPinnedLimit(platform: SupportedPlatformsType, testInfo: Tes
   // Seeded contacts rather than joined communities: this needs a conversation list longer than the
   // limit, and joining six communities was the slowest part of the run.
   const { device, contactNames } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    return await open_Alice1_with_contacts({ platform, testInfo, iOSContext: IOS_PRO_CONTEXT });
+    return await open_Alice1_with_contacts({
+      platform,
+      testInfo,
+      testContext: PRO_BACKEND_CONTEXT,
+    });
   });
   let beforeOrder: string[] = [];
   await test.step('Capture conversation order before pinning', async () => {
@@ -143,7 +147,11 @@ async function proPinnedLimit(platform: SupportedPlatformsType, testInfo: TestIn
   // Seeded contacts rather than joined communities. The grant still has to be real: the pinned limit
   // is an ACCESS question, so it reads the proof rather than the plan's state.
   const { device, alice, contactNames } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    return await open_Alice1_with_contacts({ platform, testInfo, iOSContext: IOS_PRO_CONTEXT });
+    return await open_Alice1_with_contacts({
+      platform,
+      testInfo,
+      testContext: PRO_BACKEND_CONTEXT,
+    });
   });
   await makeAccountPro({ user: alice, platform });
   await observeProGrant(device);

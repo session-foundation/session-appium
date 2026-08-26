@@ -34,6 +34,7 @@ import {
 } from '../../run/test/locators';
 import {
   animatedProfilePicture,
+  mediaFolder,
   profilePicture,
   testFile,
   testImage,
@@ -41,17 +42,19 @@ import {
   testVideoThumbnail,
 } from '../constants/testfiles';
 import { tStripped } from '../localizer/lib';
-import { MESSAGE_DELIVERY_TIMEOUT_MS } from '../shared/constants';
+import { GENERATED_AVATAR_COLORS, MESSAGE_DELIVERY_TIMEOUT_MS } from '../shared/constants';
 import { makeAccountPro } from '../shared/pro_grant';
 import {
   AcceptMessageRequestButton,
   AttachmentsButton,
+  ConversationHeaderName,
   ConversationSettings,
   DocumentsFolderButton,
   GIFButton,
   ImagesFolderButton,
   MessageBody,
   MessageInput,
+  MessageReadMore,
   NewVoiceMessageButton,
   OutgoingMessageStatusSent,
   ScrollToBottomButton,
@@ -127,25 +130,6 @@ type PollResult<T = undefined> = {
   data?: T;
   error?: string;
 };
-
-/**
- * The generated-avatar palette, lowercase, from `avatarBgColors` in the Android client
- * (`app/src/main/res/values/colors.xml`, selected by `sha512(address) % 7` in `AvatarUtils`).
- *
- * Used to tell "no picture is loaded" apart from "a picture is loaded but static". Because the colour
- * is derived from the account address, a placeholder shows a different one of these on every run —
- * which reads as an unstable failure rather than a consistent one, and cost several hours of chasing
- * a phantom regression before anyone recognised the palette.
- */
-const GENERATED_AVATAR_COLORS = new Set([
-  '31f196',
-  '57c9fa',
-  'c993ff',
-  'ff95ef',
-  'ff9c8e',
-  'fcb159',
-  'fad657',
-]);
 
 export class DeviceWrapper implements IMobileWrapper {
   private readonly device: AndroidUiautomator2Driver | XCUITestDriver;
@@ -1154,7 +1138,7 @@ export class DeviceWrapper implements IMobileWrapper {
     );
 
     // Load the reference image buffer from disk once
-    const referencePath = path.join('run', 'test', 'media', referenceImageName);
+    const referencePath = path.join(mediaFolder, referenceImageName);
     await fs.access(referencePath).catch(() => {
       throw new Error(`Reference image not found: ${referencePath}`);
     });
@@ -2048,7 +2032,7 @@ export class DeviceWrapper implements IMobileWrapper {
       | 'test_image.jpg'
       | 'test_video.mp4'
   ) {
-    const filePath = path.join('run', 'test', 'media', mediaFileName);
+    const filePath = path.join(mediaFolder, mediaFileName);
     await fs.access(filePath).catch(() => {
       throw new Error(`Media file not found: ${filePath}`);
     });
@@ -3015,7 +2999,7 @@ export class DeviceWrapper implements IMobileWrapper {
     await this.navigateBack();
   }
 
-  public async assertSenderProBadge(senderName: string): Promise<void> {
+  public async assertConversationHeaderProBadge(senderName: string): Promise<void> {
     await this.openConversationWith(senderName);
     // The badge follows the sender's profile rather than the message, so it can land after the text
     // does. Waited on generously rather than read once, or this fails on ordering.
@@ -3115,6 +3099,58 @@ export class DeviceWrapper implements IMobileWrapper {
   }
 
   /**
+   * The receiver-side counterpart of `assertConversationHeaderProBadge`: the sender's badge is gone from here.
+   *
+   * Both conditions are checked at the SAME instant, and that is the whole design. The header name
+   * proves this client is rendering the right conversation, so the absence being asserted is the badge's
+   * and not the screen's — otherwise a conversation that failed to open satisfies this, and would go on
+   * satisfying it if the client stopped honouring revocations entirely.
+   *
+   * Polled because the badge disappears when the revocation list arrives, which is a fetch. The failure
+   * message distinguishes the two ways this can end, since they have different owners: a header that
+   * never rendered is a navigation problem, a badge that never went is the product.
+   */
+  public async assertNoConversationHeaderProBadge(
+    senderName: string,
+    anchorMessage?: string
+  ): Promise<void> {
+    await this.openConversationWith(senderName);
+
+    let headerSeen = false;
+    let cleared = false;
+    const deadline = Date.now() + 60_000;
+    do {
+      const header = await this.doesElementExist(
+        anchorMessage
+          ? { ...new MessageBody(this, anchorMessage).build(), maxWait: 2_000 }
+          : { ...new ConversationHeaderName(this, senderName).build(), maxWait: 2_000 }
+      );
+      if (header) {
+        headerSeen = true;
+        const badge = await this.doesElementExist({
+          ...new ConversationHeaderProBadge(this).build(),
+          maxWait: 2_000,
+        });
+        cleared = !badge;
+      }
+      if (!cleared) {
+        await sleepFor(1_000);
+      }
+    } while (!cleared && Date.now() < deadline);
+
+    if (!cleared) {
+      throw new Error(
+        headerSeen
+          ? `${senderName}'s Pro badge is still rendered on the conversation header. The proof was ` +
+              `revoked, so this client is still honouring a credential it should have rejected — or it ` +
+              `never fetched the revocation list (see forceProRevocationRefresh).`
+          : `${senderName}'s conversation header never rendered their name, so nothing can be said ` +
+              `about the badge. This is a navigation or profile-propagation problem, not a Pro one.`
+      );
+    }
+  }
+
+  /**
    * Open `convoName` and send a >2000-char message, retrying until it is accepted.
    * The text is typed once; each attempt clicks send and, if the "longer messages"
    * CTA blocks it (Pro not active yet on this device), dismisses the CTA and retries
@@ -3167,6 +3203,40 @@ export class DeviceWrapper implements IMobileWrapper {
    *
    * Returns the last colour seen so the caller can say what it was still showing when it gave up.
    */
+  /**
+   * Expand every collapsed message bubble in the open conversation, so an assertion on a long
+   * message's full text sees all of it.
+   *
+   * Best-effort per bubble: a message short enough not to collapse offers no affordance, and the
+   * affordance can vanish mid-click as the bubble re-renders.
+   *
+   * A no-op on iOS, gated here rather than per caller: iOS flattens the bubble into one accessibility
+   * element, so `MessageReadMore` throws there and the full text is exposed either way.
+   */
+  public async expandLongMessages(): Promise<void> {
+    if (this.isIOS()) {
+      return;
+    }
+
+    for (let i = 0; i < 4; i++) {
+      const readMore = await this.doesElementExist({
+        ...new MessageReadMore(this).build(),
+        maxWait: 5_000,
+      });
+      if (!readMore) {
+        return;
+      }
+      try {
+        await this.clickOnElementAll(new MessageReadMore(this));
+      } catch {
+        // The affordance vanished between the check and the click — the bubble re-renders as it expands,
+        // so this races by construction. Best-effort is the contract: what matters is that no collapsed
+        // bubble is left hiding the tail, and the assertions that follow say whether one was.
+        return;
+      }
+    }
+  }
+
   private async waitForAvatarToLoad(
     locator: StrategyExtractionObj,
     maxWait = 10_000
@@ -3215,6 +3285,50 @@ export class DeviceWrapper implements IMobileWrapper {
         `image is loaded but static — on an animated avatar that means Pro was false when it was ` +
         `composed (freezeFrameForUser), not that the upload failed.`
     ).toBeGreaterThan(1);
+  }
+
+  /**
+   * Asserts an element's pixels do NOT change over time.
+   *
+   * The counterpart to `verifyElementIsAnimated`, and asserted the opposite way round: that one can stop
+   * the moment it sees a second colour, while a negative has to settle and then require every sample to
+   * match. A picture sampled before it renders is a single flat colour and so indistinguishable from a
+   * static one, which would pass whatever the client decided.
+   *
+   * The placeholder check is kept for the same reason it exists there: "the picture never loaded" is a
+   * different bug from "the picture loaded and is correctly frozen", and only the second one is what a
+   * refusal looks like.
+   */
+  public async verifyElementIsNotAnimated(
+    args: LocatorsInterface | StrategyExtractionObj,
+    { settleMs = 10_000, samples = 6 }: { settleMs?: number; samples?: number } = {}
+  ): Promise<void> {
+    const { locator, description } = this.resolveLocator(args);
+    this.log(`Checking if ${description} is static`);
+
+    const loaded = await this.waitForAvatarToLoad(locator);
+    if (GENERATED_AVATAR_COLORS.has(loaded.toLowerCase())) {
+      throw new Error(
+        `${description} is still the generated avatar placeholder (${loaded}) — the picture never ` +
+          `loaded, so nothing can be said about whether it animates. This is an upload/propagation ` +
+          `problem, not a Pro one.`
+      );
+    }
+
+    await sleepFor(settleMs);
+
+    const colors = new Set<string>();
+    for (let i = 0; i < samples; i++) {
+      colors.add(await this.getElementPixelColor(locator));
+    }
+
+    if (colors.size > 1) {
+      throw new Error(
+        `Expected ${description} to be static but detected ${colors.size} unique colours across ` +
+          `${samples} samples. The proof carrying the animated-display-picture feature could not be ` +
+          `verified, so it should have been refused.`
+      );
+    }
   }
 
   public async getVersionNumber() {

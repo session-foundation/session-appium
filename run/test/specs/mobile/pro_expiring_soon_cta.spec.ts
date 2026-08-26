@@ -6,13 +6,13 @@ import { USERNAME } from '../../../types/testing';
 import { CTAButtonNegative } from '../../locators/global';
 import { ProSettingsEntry, ProStatsHeader } from '../../locators/pro';
 import { UserSettings } from '../../locators/settings';
-import { iosActiveProContext } from '../../utils/capabilities_ios';
 import { newUser } from '../../utils/create_account';
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { activeProContext } from '../../utils/pro_context';
 
 /**
  * The warning a subscriber gets as their access approaches its end — the one thing standing between
@@ -51,7 +51,7 @@ bothPlatformsIt({
 async function proExpiringSoonCTA(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, {
-      ...iosActiveProContext(EXPIRING_SOON_DAYS),
+      ...activeProContext(EXPIRING_SOON_DAYS),
       proLoadingState: 'success',
     });
     await newUser(device, USERNAME.ALICE, { saveUserData: false });

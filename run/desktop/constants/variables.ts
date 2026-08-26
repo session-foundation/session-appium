@@ -1,11 +1,11 @@
 // Only the types import path was rewritten to the desktop `../types`.
 
 import {
+  AttachmentType,
   DisappearActions,
   DisappearGroupType,
   DisappearType,
   DMTimeOption,
-  MediaType,
 } from '../types';
 
 export { longText } from '../../shared/constants';
@@ -13,35 +13,44 @@ export const screenshotFolder = 'screenshots';
 export { testLink } from '../../shared/constants';
 export const testLinkTitle = 'Session | Send Messages, Not Metadata. | Private Messenger';
 
-export const mediaArray = [
+/** One row per media fixture the Desktop specs send. */
+type MediaFixture = {
+  mediaType: string;
+  path: string;
+  /** What the download prompt calls it — see [AttachmentType]. Not the same as `mediaType`. */
+  attachmentType: AttachmentType;
+  shouldCheckMediaPreview: boolean;
+};
+
+export const mediaArray: Array<MediaFixture> = [
   {
     mediaType: 'image',
-    path: 'sample_files/test-image.png',
-    attachmentType: 'media' as MediaType,
+    path: 'sample_files/test_image.jpg',
+    attachmentType: 'media',
     shouldCheckMediaPreview: true,
   },
   {
     mediaType: 'video',
-    path: 'sample_files/test-video.mp4',
-    attachmentType: 'media' as MediaType,
+    path: 'sample_files/test_video.mp4',
+    attachmentType: 'media',
     shouldCheckMediaPreview: true,
   },
   {
     mediaType: 'gif',
-    path: 'sample_files/test-gif.gif',
-    attachmentType: 'media' as MediaType,
+    path: 'sample_files/test_gif.gif',
+    attachmentType: 'media',
     shouldCheckMediaPreview: true,
   },
   {
     mediaType: 'document',
-    path: 'sample_files/test-file.pdf',
-    attachmentType: 'file' as MediaType,
+    path: 'sample_files/test_file.pdf',
+    attachmentType: 'file',
     shouldCheckMediaPreview: false,
   },
   {
     mediaType: 'voice',
     path: '',
-    attachmentType: 'audio' as MediaType,
+    attachmentType: 'audio',
     shouldCheckMediaPreview: false,
   },
 ];

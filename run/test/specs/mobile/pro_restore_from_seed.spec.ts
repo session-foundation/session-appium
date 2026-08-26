@@ -6,9 +6,9 @@ import { bothPlatformsIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
 import { ProSettingsEntry, ProStatsHeader } from '../../locators/pro';
 import { UserSettings } from '../../locators/settings';
-import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { newUser } from '../../utils/create_account';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from '../../utils/open_app';
+import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 import { observeProGrant } from '../../utils/pro_refresh';
 
 bothPlatformsIt({
@@ -37,7 +37,7 @@ bothPlatformsIt({
  * from the first, only the phrase, which is exactly what a user has after losing their phone.
  */
 async function proSurvivesRestore(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const { device1, device2 } = await openAppTwoDevices(platform, testInfo, IOS_PRO_CONTEXT);
+  const { device1, device2 } = await openAppTwoDevices(platform, testInfo, PRO_BACKEND_CONTEXT);
 
   const alice = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     return await newUser(device1, USERNAME.ALICE);

@@ -5,6 +5,7 @@ import * as path from 'path';
 import type { Simulator } from '../run/test/utils/capabilities_ios';
 import type { DeviceWrapper } from '../run/types/DeviceWrapper';
 
+import { mediaFolder } from '../run/constants/testfiles';
 import { copyFileToSimulator } from '../run/test/utils/copy_file_to_simulator';
 import {
   bootSimulator,
@@ -70,7 +71,7 @@ export function resolveDeviceConfig(overrides?: { runtime?: string; deviceType?:
   return { deviceType, runtime: runtime.identifier, name };
 }
 
-const MEDIA_ROOT = path.join('run', 'test', 'media');
+const MEDIA_ROOT = mediaFolder;
 const MEDIA_FILES = {
   images: ['profile_picture.jpg', 'test_image.jpg', 'animated_profile_picture.gif'],
   videos: ['test_video.mp4'],

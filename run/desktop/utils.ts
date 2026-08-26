@@ -238,6 +238,26 @@ export async function waitForLoadingAnimationToFinish(
   console.info('Loading animation has finished');
 }
 
+/**
+ * The absence counterpart to `waitForElement`. `hidden` covers never-attached, so it also suits an
+ * element that should never have rendered.
+ */
+export async function waitForElementHidden({
+  window,
+  locator,
+  options,
+}: {
+  window: Page;
+  locator: StrategyExtractionObj;
+  options?: { maxWaitMs?: number; text?: string };
+}) {
+  const builtSelector = buildSelectorEscapeText(locator, options?.text);
+  await window.waitForSelector(builtSelector, {
+    timeout: options?.maxWaitMs ?? 5_000,
+    state: 'hidden',
+  });
+}
+
 export async function doWhileWithMax(
   maxWaitMs: number,
   waitBetweenMs: number,

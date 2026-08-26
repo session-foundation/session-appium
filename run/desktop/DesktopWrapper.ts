@@ -5,16 +5,17 @@ import type { StateUser, UserNameType } from '@session-foundation/qa-seeder';
 
 import type { IBaseDeviceWrapper } from '../types/IBaseDeviceWrapper';
 import type {
+  AttachmentType,
   DataTestId,
   DisappearOptions,
   Group,
-  MediaType,
   MessageStatus,
   ModalId,
   StrategyExtractionObj,
 } from './types';
 
 import { tStripped } from '../localizer/lib';
+import { GENERATED_AVATAR_COLORS } from '../shared/constants';
 import { makeAccountPro } from '../shared/pro_grant';
 import { sleepFor } from '../shared/promise_utils';
 import { parseDataImage } from '../test/utils/check_colour';
@@ -58,6 +59,7 @@ import {
   rightClickOnWithText,
   scrollToBottomIfNecessary,
   waitForElement,
+  waitForElementHidden,
   waitForLoadingAnimationToFinish,
   waitForMatchingPlaceholder,
   waitForMatchingText,
@@ -558,7 +560,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   // --- Receiver-side Session Pro assertions ---
-  // Used when this client observes a PEER's Pro state. `assertSenderProBadge`,
+  // Used when this client observes a PEER's Pro state. `assertConversationHeaderProBadge`,
   // `assertOwnAvatarAnimated` and `assertSenderAvatarAnimated` are all on IBaseDeviceWrapper —
   // mobile satisfies the same signatures — so a cross-platform spec can assert them over every
   // client regardless of platform. `verifyElementIsAnimated` itself stays off the interface: it
@@ -619,6 +621,54 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /**
+   * Open `convoName` and verify the peer's conversation-header avatar is NOT animated.
+   *
+   * The counterpart to `assertSenderAvatarAnimated`, and asserted the opposite way round: that one
+   * retries until it sees more than one colour, so it can stop the moment an animation starts. This has
+   * to prove a NEGATIVE, so it settles first and then requires every sample to match — a still frame
+   * sampled once, or sampled before the picture has loaded, would pass whatever the client decided.
+   *
+   * `settleMs` exists for that second failure: the avatar arrives with a message and takes a moment to
+   * render, and an unloaded element samples as a single flat colour, which is indistinguishable from a
+   * static picture.
+   */
+  public async verifyConversationHeaderAvatarNotAnimated(
+    convoName: string,
+    { settleMs = 15_000, samples = 6 }: { settleMs?: number; samples?: number } = {}
+  ): Promise<void> {
+    await this.openConversationOnceNamed(convoName);
+    const selector = '[data-testid="conversation-options-avatar"] img';
+    // The element has to be there before its pixels mean anything.
+    await this.page.locator(selector).first().waitFor({ state: 'visible', timeout: 30_000 });
+    await sleepFor(settleMs);
+
+    const colors = new Set<string>();
+    for (let i = 0; i < samples; i++) {
+      colors.add(await this.sampleCenterColor(selector));
+      await sleepFor(250);
+    }
+
+    // A placeholder is a solid colour, so it satisfies "not animating" — without this a picture that
+    // never arrived passes. After the samples, so one still propagating gets the settle window.
+    const [sampled] = [...colors];
+    if (colors.size === 1 && GENERATED_AVATAR_COLORS.has(sampled.toLowerCase())) {
+      throw new Error(
+        `${convoName}'s display picture is still the generated placeholder ` +
+          `(${sampled}) — it never loaded, so nothing can be said about whether it animates. ` +
+          `An upload or propagation problem, not a Pro one.`
+      );
+    }
+
+    if (colors.size > 1) {
+      throw new Error(
+        `${convoName}'s display picture is animating for this client (${colors.size} distinct centre ` +
+          `colours across ${samples} samples). The proof carrying that feature could not be verified, ` +
+          `so it should have been refused.`
+      );
+    }
+  }
+
+  /**
    * Open `convoName` and assert the PEER's conversation-header avatar renders animated.
    *
    * Same longer wait as the own-avatar case, for the same reason: the peer's picture and the proof
@@ -668,20 +718,134 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /** Open `convoName` and assert the peer's Session Pro badge shows in the header (polls). */
-  public async assertSenderProBadge(convoName: string): Promise<void> {
+  public async assertConversationHeaderProBadge(convoName: string): Promise<void> {
     await this.openConversationOnceNamed(convoName);
-    await doWhileWithMax(60_000, 1_000, `assertSenderProBadge ${convoName}`, async () => {
-      try {
-        await waitForElement({
-          window: this.page,
-          locator: Conversation.proBadgeConversationHeader,
-          options: { maxWaitMs: 2_000 },
-        });
-        return true;
-      } catch (_e) {
-        return false;
+    await doWhileWithMax(
+      60_000,
+      1_000,
+      `assertConversationHeaderProBadge ${convoName}`,
+      async () => {
+        try {
+          await waitForElement({
+            window: this.page,
+            locator: Conversation.proBadgeConversationHeader,
+            options: { maxWaitMs: 2_000 },
+          });
+          return true;
+        } catch (_e) {
+          return false;
+        }
       }
-    });
+    );
+  }
+
+  /**
+   * The receiver-side counterpart of `assertConversationHeaderProBadge`: the sender's badge is gone from here.
+   *
+   * Both conditions are checked at the SAME instant, and that is the design. The conversation's name
+   * being on screen proves this window is rendering the right conversation, so the absence asserted is
+   * the badge's and not the screen's — otherwise a window that failed to open satisfies this, and would
+   * go on satisfying it if the client stopped honouring revocations entirely.
+   *
+   * Polled because the badge disappears when the revocation job's sweep reaches this conversation, and
+   * that dispatch is debounced (500ms, maxWait 1000ms) on top of the fetch.
+   */
+  public async assertNoConversationHeaderProBadge(
+    convoName: string,
+    anchorMessage?: string
+  ): Promise<void> {
+    await this.openConversationOnceNamed(convoName);
+
+    // A message in this conversation is a stronger anchor than the header: it cannot be satisfied by the
+    // wrong conversation, and unlike a header name it does not change when the badge appears.
+    const header = anchorMessage
+      ? this.page.locator(`[data-testid=message-content]:has-text("${anchorMessage}")`).first()
+      : this.page
+          .locator(
+            `[${Conversation.conversationHeader.strategy}="${Conversation.conversationHeader.selector}"]`
+          )
+          .first();
+    const badge = this.page
+      .locator(
+        `[${Conversation.proBadgeConversationHeader.strategy}="${Conversation.proBadgeConversationHeader.selector}"]`
+      )
+      .first();
+
+    let headerSeen = false;
+    let cleared = false;
+    const deadline = Date.now() + 60_000;
+    do {
+      if (await header.isVisible().catch(() => false)) {
+        headerSeen = true;
+        cleared = !(await badge.isVisible().catch(() => false));
+      }
+      if (!cleared) {
+        await sleepFor(1_000);
+      }
+    } while (!cleared && Date.now() < deadline);
+
+    if (!cleared) {
+      throw new Error(
+        headerSeen
+          ? `${convoName}'s Pro badge is still rendered on the conversation header. The proof was ` +
+              `revoked, so this client is still honouring a credential it should have rejected — or it ` +
+              `never fetched the revocation list (see SESSION_FORCE_PRO_REVOCATION_REFRESH).`
+          : `${convoName}'s conversation header never rendered, so nothing can be said about the ` +
+              `badge. This is a navigation problem, not a Pro one.`
+      );
+    }
+  }
+
+  /**
+   * The author label above `message` in the currently open group, scoped to that one message.
+   *
+   * Scoping is not tidiness. `pro-badge-contact-name` is `ContactName`'s badge and `ContactName`
+   * renders every left-pane row too, so the moment a sender is Pro the same test id also matches their
+   * 1:1 row in the conversation list — a page-wide match would go green without the group surface
+   * having rendered anything at all.
+   */
+  private groupAuthorLabel(message: string) {
+    return this.page
+      .getByTestId(Conversation.messageContent.selector)
+      .filter({ hasText: message })
+      .getByTestId(Conversation.messageAuthorName.selector);
+  }
+
+  /**
+   * Assert the sender's Session Pro badge is rendered on `message`'s author label in the open group.
+   *
+   * A different element from `assertConversationHeaderProBadge`: the author label is group-only
+   * (`MessageAuthorText` returns null unless the thread is a group), so neither assertion covers the
+   * other's surface and a build that lost the badge here would still satisfy the header one.
+   *
+   * Polled rather than read once: this depends on the recipient having received the message, verified
+   * the proof it carries and re-rendered off the updated contact record.
+   */
+  public async assertMessageAuthorProBadge(message: string, maxWaitMs = 60_000): Promise<void> {
+    await this.groupAuthorLabel(message)
+      .getByTestId(Conversation.proBadgeAuthorName.selector)
+      .waitFor({ state: 'visible', timeout: maxWaitMs });
+  }
+
+  /**
+   * Assert `message`'s author label IS rendered in the open group and carries NO Pro badge.
+   *
+   * Waiting for the label is the half that makes this a control rather than a tautology — an absent
+   * badge inside a label that was never rendered says nothing about the badge. Once the label is up the
+   * badge is not a later arrival: both come out of one `ContactName` render driven by the sender's
+   * stored contact record, so the absence can be read immediately rather than waited out.
+   */
+  public async assertNoMessageAuthorProBadge(message: string, maxWaitMs = 60_000): Promise<void> {
+    const label = this.groupAuthorLabel(message);
+    await label.waitFor({ state: 'visible', timeout: maxWaitMs });
+    const badges = await label.getByTestId(Conversation.proBadgeAuthorName.selector).count();
+    if (badges !== 0) {
+      throw new Error(
+        `Expected no Pro badge on the author label of "${message}", found ${badges}. The sender is ` +
+          `not a subscriber at this point, so a badge here means it is rendered off something other ` +
+          `than a verified proof.`
+      );
+    }
   }
 
   // --- High-level desktop verbs ---
@@ -753,6 +917,13 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     args: Omit<Parameters<typeof waitForElement>[0], 'window'>
   ): Promise<void> {
     await waitForElement({ window: this.page, ...args });
+  }
+
+  /** Assert an element is gone. See `waitForElementHidden`; `hidden` also covers never-attached. */
+  public async waitForElementHidden(
+    args: Omit<Parameters<typeof waitForElementHidden>[0], 'window'>
+  ): Promise<void> {
+    await waitForElementHidden({ window: this.page, ...args });
   }
 
   public async checkModalStrings(
@@ -939,8 +1110,8 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     await sendLinkPreview(this.page, link);
   }
 
-  public async trustUser(mediaType: MediaType, userName: string): Promise<void> {
-    await trustUser(this.page, mediaType, userName);
+  public async trustUser(attachmentType: AttachmentType, userName: string): Promise<void> {
+    await trustUser(this.page, attachmentType, userName);
   }
 
   // --- Communities / groups ---

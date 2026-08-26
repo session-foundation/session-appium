@@ -11,17 +11,14 @@ import {
   ProUpdatePlanRowTitle,
 } from '../../locators/pro';
 import { UserSettings } from '../../locators/settings';
-import {
-  IOS_PRO_ACCESS_DAYS,
-  iosActiveProContext,
-  IOSTestContext,
-} from '../../utils/capabilities_ios';
 import { newUser } from '../../utils/create_account';
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { activeProContext, PRO_ACCESS_DAYS } from '../../utils/pro_context';
+import { MobileTestContext } from '../../utils/pro_context';
 import {
   expectManageActionsOffered,
   expectManageActionsWithdrawn,
@@ -92,7 +89,7 @@ function refundProviderToken(platform: SupportedPlatformsType) {
 async function openProSettings(
   platform: SupportedPlatformsType,
   testInfo: TestInfo,
-  iosContext: IOSTestContext
+  iosContext: MobileTestContext
 ) {
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, iosContext);
@@ -110,7 +107,7 @@ async function openProSettings(
 
 async function proSettingsRefundPending(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const device = await openProSettings(platform, testInfo, {
-    ...iosActiveProContext(),
+    ...activeProContext(),
     proRefundingStatus: 'refunding',
     // Both load-bearing for the cancel assertion in `expectManageActionsWithdrawn`: a plan that never
     // renewed has no cancel action to withdraw, and iOS additionally gates that row on a confirmed
@@ -144,7 +141,7 @@ async function proSettingsRefundPending(platform: SupportedPlatformsType, testIn
 
 async function proSettingsNoRefundPending(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const device = await openProSettings(platform, testInfo, {
-    ...iosActiveProContext(),
+    ...activeProContext(),
     proRefundingStatus: 'notRefunding',
     proAutoRenewing: 'autoRenewing',
     // Load-bearing for the expiry line below: until a status fetch confirms, the subtitle reads
@@ -162,7 +159,7 @@ async function proSettingsNoRefundPending(platform: SupportedPlatformsType, test
     // the processing notice in the refunding case. Read from the same constant the fixture sets its
     // expiry from, so the assertion and the fixture cannot drift apart.
     await device.waitForTextElementToBePresent(
-      new ProPlanAutoRenewal(device, `${IOS_PRO_ACCESS_DAYS} days`)
+      new ProPlanAutoRenewal(device, `${PRO_ACCESS_DAYS} days`)
     );
   });
 

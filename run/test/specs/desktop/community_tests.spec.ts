@@ -18,7 +18,7 @@ test_Alice_2W('Join community and sync', async ({ alice, alice2 }) => {
 });
 
 test_Alice_1W_Bob_1W('Send image to community', async ({ alice, bob }) => {
-  const mediaPath = 'sample_files/test-image.png';
+  const mediaPath = 'sample_files/test_image.jpg';
   const testImageMessage = `Image message + ${Date.now()} + desktop`;
   const testReply = `${bob.userName} replying to image from ${alice.userName}`;
   await Promise.all([alice.joinCommunity(), bob.joinCommunity()]);
