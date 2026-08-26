@@ -1,6 +1,7 @@
 import { test } from '@playwright/test';
 import { resolve } from 'path';
 
+import type { ClientPlatform } from '../../../types/target';
 import type { AccountClients } from '../../utils/cross_platform';
 
 import { animatedProfilePicture, mediaFolder } from '../../../constants/testfiles';
@@ -25,10 +26,8 @@ import { observeProGrant } from '../../utils/pro_refresh';
  *   so without that a frozen avatar and a client that received nothing look identical.
  */
 
-/** The three client types, as the spec's own vocabulary for "who performs the change". */
-type ClientType = 'android' | 'desktop' | 'ios';
 
-const LABEL: Record<ClientType, string> = {
+const LABEL: Record<ClientPlatform, string> = {
   android: 'Android',
   desktop: 'Desktop',
   ios: 'iOS',
@@ -102,7 +101,7 @@ crossPlatformTest({
  * Two shapes, because "which client knows it is Pro" is not the same question as "which account is
  * Pro", and only the uploader's belief gates the upload.
  */
-async function makeUploaderPro(alice: AccountClients, uploadOn: ClientType): Promise<void> {
+async function makeUploaderPro(alice: AccountClients, uploadOn: ClientPlatform): Promise<void> {
   const aliceName = alice.account.userName;
 
   if (uploadOn !== 'desktop') {
@@ -155,7 +154,7 @@ async function animatedPictureReachesEveryClient({
 }: {
   alice: AccountClients;
   bob: AccountClients;
-  uploadOn: ClientType;
+  uploadOn: ClientPlatform;
 }): Promise<void> {
   const aliceName = alice.account.userName;
   const bobName = bob.account.userName;
