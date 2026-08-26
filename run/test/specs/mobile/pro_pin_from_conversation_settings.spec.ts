@@ -68,8 +68,7 @@ async function pinLimitFromConversationSettings(
 
   await test.step('The settings route pins', async () => {
     await pinFromConversationSettings(device, firstViaSettings);
-    await device.navigateBack();
-    await device.waitForTextElementToBePresent(new PlusButton(device));
+    await returnToConversationList(device);
   });
 
   await test.step(TestSteps.USER_ACTIONS.PIN_CONVERSATIONS(restViaList.length), async () => {
@@ -93,14 +92,31 @@ async function pinLimitFromConversationSettings(
   await test.step('Assert the over-limit conversation was NOT pinned', async () => {
     // The CTA appearing is not the same as the pin being refused: a route that showed the CTA and
     // pinned anyway satisfies a CTA-only assertion.
-    await device.navigateBack();
-    await device.waitForTextElementToBePresent(new PlusButton(device));
+    await returnToConversationList(device);
     assertPinOrder(beforeOrder, toPin, await getConversationOrder(device));
   });
 
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);
   });
+}
+
+/**
+ * Walk back until the conversation list is on screen.
+ *
+ * The settings screen sits two levels deep — list, conversation, settings — but how far one `back` goes
+ * is not the same in both directions: tapping the pin row can dismiss the settings screen itself, so a
+ * fixed number of them lands on the conversation on one path and the list on the other. Measured, not
+ * assumed: a single `back` after pinning left the app in `ConversationVC`.
+ */
+async function returnToConversationList(device: DeviceWrapper) {
+  for (let i = 0; i < 3; i++) {
+    if (await device.doesElementExist({ ...new PlusButton(device).build(), maxWait: 1000 })) {
+      return;
+    }
+    await device.navigateBack();
+  }
+  await device.waitForTextElementToBePresent(new PlusButton(device));
 }
 
 /** Open `name`, open its settings, and tap the pin row. Leaves the settings screen open. */
