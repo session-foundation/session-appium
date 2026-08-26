@@ -98,10 +98,14 @@ async function leaveProSettings(device: DeviceWrapper): Promise<void> {
  *
  * Leaves the app on the home screen. Expects settings to be open already.
  */
-export async function assertProFromSettingsRow(device: DeviceWrapper): Promise<void> {
+export async function assertProFromSettingsRow(
+  device: DeviceWrapper,
+  maxWait?: number
+): Promise<void> {
   await device.waitForTextElementToBePresent({
     ...new ProSettingsEntryTitle(device).build(),
     text: tStripped('sessionProBeta'),
+    ...(maxWait === undefined ? {} : { maxWait }),
   });
   await device.clickOnElementAll(new CloseSettings(device));
 }

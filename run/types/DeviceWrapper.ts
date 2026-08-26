@@ -86,7 +86,6 @@ import { LoadingAnimation } from '../test/locators/onboarding';
 import {
   ConversationHeaderProBadge,
   MessageInfoMenuItem,
-  ProBadge,
   ProFeatureRow,
 } from '../test/locators/pro';
 import {
@@ -105,6 +104,7 @@ import { androidAppPackage } from '../test/utils/capabilities_android';
 import { parseDataImage } from '../test/utils/check_colour';
 import { isSameColor } from '../test/utils/check_colour';
 import { proFeatureTestId, type ProMessageFeature } from '../test/utils/pro_message_features';
+import { assertProFromSettingsRow } from '../test/utils/pro_refresh';
 import { restoreAccountNoFallback } from '../test/utils/restore_account';
 import {
   isDeviceAndroid,
@@ -3042,15 +3042,14 @@ export class DeviceWrapper implements IMobileWrapper {
    * message input, the same signal `openConversationWith` uses.
    */
   /**
-   * Wait until THIS client shows its own Pro badge on the settings root.
+   * Wait until this client believes it is Pro, without provoking a fetch.
    *
-   * Deliberately never opens the Pro settings page: that fires `get_pro_status` on mount, which turns
-   * a linked device into a second client minting against the same account and races the proof the
-   * subscribing client just obtained. The settings-root badge is fetch-free on both platforms — driven
-   * by `uiState.proDataState` on Android and `state.proState.status` on iOS.
+   * Reads the Pro row's TITLE, not the badge beside the username. Both come off the same
+   * `proDataState`, but the title distinguishes Active from Expired where the badge is merely
+   * `!is NeverSubscribed` — so a lapsed subscriber satisfies the badge and not this.
    *
-   * Matches the shared `pro-badge-icon`, which is safe HERE only because the settings root draws no
-   * other badge; the rest are inside dialogs. Do not reuse this locator on a screen that does.
+   * Never opens the Pro settings page: that fires `get_pro_status` on mount, which turns a linked
+   * device into a second client minting against the same account and races the subscriber's proof.
    */
   public async waitForOwnProBadge(maxWaitMs = 60_000): Promise<void> {
     const alreadyInSettings = await this.doesElementExist({
@@ -3067,11 +3066,7 @@ export class DeviceWrapper implements IMobileWrapper {
       }
       await this.clickOnElementAll(new UserSettings(this));
     }
-    await this.waitForTextElementToBePresent({
-      ...new ProBadge(this).build(),
-      maxWait: maxWaitMs,
-    });
-    await this.clickOnElementAll(new CloseSettings(this));
+    await assertProFromSettingsRow(this, maxWaitMs);
   }
 
   public async assertSettingsAvatarAnimated(): Promise<void> {
