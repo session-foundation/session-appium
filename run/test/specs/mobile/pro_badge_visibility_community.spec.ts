@@ -8,11 +8,11 @@ import { MessageBody } from '../../locators/conversation';
 import { ConversationItem } from '../../locators/home';
 import { ProBadge } from '../../locators/pro';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
-import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { joinCommunity } from '../../utils/community';
 import { perTestRoomsEnabled } from '../../utils/community_rooms';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 import { enableProBadge } from '../../utils/pro_badge';
+import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 import { observeProGrant } from '../../utils/pro_refresh';
 
 bothPlatformsIt({
@@ -123,7 +123,7 @@ async function proBadgeVisibleInCommunity(platform: SupportedPlatformsType, test
       platform,
       focusFriendsConvo: false,
       testInfo,
-      iOSContext: IOS_PRO_CONTEXT,
+      testContext: PRO_BACKEND_CONTEXT,
     });
   });
   const { alice1, bob1 } = devices;
