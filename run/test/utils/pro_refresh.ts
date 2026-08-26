@@ -44,13 +44,45 @@ export async function observeProGrant(device: DeviceWrapper): Promise<void> {
       ...new ProStatsHeader(device).build(),
       skipHealing: true,
     });
-    await device.navigateBack();
+    await leaveProSettings(device);
     // Back on the parent list, assert the row agrees. It reads the fetched STATUS where the stats
     // header above reads the active plan, and the two can disagree — a client can hold a good proof,
     // apply the Pro message cap, and still offer to sell you Pro here. Free to check: the row is on
     // screen anyway on the way out.
     await assertProFromSettingsRow(device);
   });
+}
+
+/**
+ * Leave the Pro settings screen, and CONFIRM we left.
+ *
+ * `navigateBack` clicks and assumes. That tap is lost if the screen rebuilds underneath it, which the
+ * Pro settings screen does when the plan's status changes — so a spec whose grant lapses around this
+ * moment stays on the Pro screen while the next step hunts for an element that only exists on the
+ * parent list. Observed on iOS in the overhang spec: a full 30s wait for `pro-menu-item-title` against
+ * a page that could never contain it, reported as a Pro failure rather than a navigation one.
+ *
+ * Retried rather than waited out, because the failure is a dropped tap: more patience does not help,
+ * only another tap does. The parent row's presence is the proof of arrival — its TEXT is deliberately
+ * not checked here, since that is the assertion the caller then makes.
+ */
+async function leaveProSettings(device: DeviceWrapper): Promise<void> {
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    await device.navigateBack();
+
+    const onParentList = await device.doesElementExist({
+      ...new ProSettingsEntryTitle(device).build(),
+      maxWait: 5_000,
+    });
+    if (onParentList) {
+      return;
+    }
+  }
+
+  throw new Error(
+    'Still on the Pro settings screen after 3 back taps: the parent settings list never appeared. ' +
+      'The tap is being dropped, most likely by the screen rebuilding on a Pro status change.'
+  );
 }
 
 /**

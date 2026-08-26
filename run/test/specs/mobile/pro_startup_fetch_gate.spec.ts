@@ -7,13 +7,13 @@ import { USERNAME } from '../../../types/testing';
 import { CTAButtonNegative, CTAHeading } from '../../locators/global';
 import { ProSettingsEntry, ProStatsHeader } from '../../locators/pro';
 import { UserSettings } from '../../locators/settings';
-import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { newUser } from '../../utils/create_account';
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 import { forceStopAndRestart } from '../../utils/utilities';
 
 bothPlatformsIt({
@@ -43,7 +43,7 @@ bothPlatformsIt({
  * purchase would have written — so the launch after it is a returning subscriber's, and must warn.
  */
 async function proStartupFetchGate(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, IOS_PRO_CONTEXT);
+  const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, PRO_BACKEND_CONTEXT);
 
   const alice = await test.step(TestSteps.SETUP.NEW_USER, async () => {
     return await newUser(device, USERNAME.ALICE);

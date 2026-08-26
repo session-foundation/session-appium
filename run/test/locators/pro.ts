@@ -50,7 +50,7 @@ export type ProStat =
  * `pro-settings-show-badge` and `pro-settings-show-badge-toggle`; the headers, the plan-expiry line
  * and the status banner are new on both sides.
  *
- * These states are reached by mocking (see `IOSTestContext`), which Android cannot inject yet, so the
+ * These states are reached by mocking (see `MobileTestContext`), which Android cannot inject yet, so the
  * specs using them are `iosIt` for now. The Android selectors are still written out rather than
  * stubbed: they are real ids, not guesses, and the specs become `bothPlatformsIt` with no locator
  * change once Android has env injection.
@@ -322,7 +322,7 @@ export class ProPlanAutoRenewal extends LocatorsInterface {
  * `time` is the rendered duration, not the raw timestamp. The app ceilings the remaining interval
  * into day/hour/minute units, so an expiry set N whole days out always renders as `N days` for any
  * test that reaches this screen within a day of setting it — which is what makes an exact match safe
- * despite the quantisation warning on `IOSTestContext.proAccessExpiry`.
+ * despite the quantisation warning on `MobileTestContext.proAccessExpiry`.
  */
 export class ProPlanExpiry extends LocatorsInterface {
   private readonly time: string;

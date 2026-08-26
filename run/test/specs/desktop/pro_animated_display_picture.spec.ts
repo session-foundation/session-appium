@@ -1,5 +1,6 @@
 import { resolve } from 'path';
 
+import { animatedProfilePicture, mediaFolder } from '../../../constants/testfiles';
 import { CTA } from '../../../desktop/locators';
 import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W, test_Alice_1W_Bob_1W } from '../../../desktop/sessionTest';
@@ -16,7 +17,7 @@ import { test_Alice_1W, test_Alice_1W_Bob_1W } from '../../../desktop/sessionTes
  * animated picture that never renders as one.
  */
 
-const ANIMATED_AVATAR = resolve(__dirname, '../../media/animated_profile_picture.gif');
+const ANIMATED_AVATAR = resolve(mediaFolder, animatedProfilePicture);
 
 test_Alice_1W(
   'Upload animated profile picture (non Pro)',

@@ -106,11 +106,40 @@ type DevAddPaymentResult = {
   redeemed: boolean;
 };
 
-type DevAddPaymentResponse = {
+/** The envelope every `/dev/*` route answers with, success or refusal. */
+type DevResponse<TResult> = {
   status: string;
-  result?: DevAddPaymentResult;
+  result?: TResult;
   error?: string;
   error_code?: string;
+};
+
+type DevRevokeRequest = {
+  master_pkey: string;
+  /**
+   * Seconds from now until peers should begin rejecting proofs carrying the revoked tag. 0 is
+   * already-effective, which is what a spec asserting enforcement needs; a positive value lands inside
+   * the grace window, for one asserting a revoked-but-not-yet-effective proof is still honoured.
+   *
+   * Production cannot produce either: it stamps `revoked_at` from its own clock and the served list
+   * adds a fixed 26 hours, so this is the whole reason the route exists.
+   */
+  effective_in_seconds?: number;
+  /**
+   * True (the default) models a REFUND — the payments go too, so the entitlement is gone and the
+   * account stops being Pro. False revokes only the generation, leaving a still-paid account entitled
+   * and rolling it onto a new one: its old proof dies while it remains Pro.
+   */
+  revoke_payments?: boolean;
+};
+
+type DevRevokeResult = {
+  revoked_generation_id: number;
+  /** When peers should begin rejecting the revoked tag, in unix seconds. */
+  effective_ts: number;
+  /** False is the refund outcome: no usable payment remained, so nothing was rolled onto. */
+  new_generation_allocated: boolean;
+  payments_revoked: boolean;
 };
 
 /**
@@ -231,12 +260,23 @@ function devProBackendUrl(): string {
   return url;
 }
 
-async function devAddPayment(
+/** A refusal the backend answered with, as opposed to a failure to reach it. Not retried. */
+class DevRouteRefusal extends Error {}
+
+/**
+ * POST to one of the backend's `/dev/*` routes, with the retry and the failure message they share.
+ *
+ * Generic in the request and result because the two routes we use differ only in their payloads: a
+ * 200 carrying `status: "fail"` is how both report a refusal, so neither can be read from the status
+ * line alone.
+ */
+async function devPost<TRequest, TResult>(
   backendUrl: string,
-  request: DevAddPaymentRequest,
+  route: string,
+  request: TRequest,
   { maxAttempts = 3, timeout = 10_000 } = {}
-): Promise<DevAddPaymentResult> {
-  const url = `${backendUrl}/dev/add_payment`;
+): Promise<TResult> {
+  const url = `${backendUrl}${route}`;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
@@ -251,27 +291,32 @@ async function devAddPayment(
       });
 
       clearTimeout(timeoutId);
-      const data = (await response.json()) as DevAddPaymentResponse;
+      const data = (await response.json()) as DevResponse<TResult>;
 
       if (!response.ok || data.status !== 'ok' || !data.result) {
         // The backend answers 200 with status "fail" and its reason in `error`/`error_code`, so the
         // HTTP code alone says nothing. Fall back to the raw body rather than the status line.
         const reason =
           data.error || `HTTP ${response.status}, body: ${JSON.stringify(data).slice(0, 300)}`;
-        throw new Error(reason);
+        // An answered refusal is the backend's verdict on the request, not a hiccup — retrying it
+        // cannot change the outcome, and doing so buries the reason under two spurious attempts.
+        throw new DevRouteRefusal(reason);
       }
 
       return data.result;
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'Unknown error';
+      if (error instanceof DevRouteRefusal) {
+        throw new Error(`POST ${route} was refused: ${msg}`);
+      }
       if (attempt === maxAttempts) {
         throw new Error(
-          `dev/add_payment failed after ${maxAttempts} attempts: ${msg}\n` +
+          `POST ${route} failed after ${maxAttempts} attempts: ${msg}\n` +
             `Is a QA Pro backend running at ${backendUrl}? The Sesh-Net-Docker \`pro-backend\` ` +
             `container publishes one on :8090; production has no /dev routes.`
         );
       }
-      console.log(`dev/add_payment attempt ${attempt}/${maxAttempts} failed: ${msg}, retrying...`);
+      console.log(`POST ${route} attempt ${attempt}/${maxAttempts} failed: ${msg}, retrying...`);
     }
   }
 
@@ -319,6 +364,35 @@ function assertNotSharedAdminAccount(seedHex: string, userName: string): void {
   );
 }
 
+/**
+ * The account's Pro master public key, hex, with the two guards that make a wrong key visible.
+ *
+ * Derived from the recovery phrase, so a grant — or a revocation — binds to the account the test just
+ * created without the app having to tell us anything. Shared by the mint and the revoke precisely so
+ * that a revocation cannot address a different key than the grant did; the backend's lookups are bare
+ * `WHERE master_pkey = ?`, so a mismatch reads as "never subscribed" rather than as an error.
+ */
+function masterPkeyHexOf(user: ProAccountUnderTest, caller: string): string {
+  const seedHex = mnemonicToSeedHex(seedWordsOf(user));
+
+  // Fail here rather than three screens later. `sessionId` is absent when a spec opted out of reading
+  // it, in which case there is nothing to check against.
+  if (user.sessionId && user.sessionId.startsWith('05')) {
+    const derived = accountIdFromSeed(seedHex);
+    if (derived !== user.sessionId) {
+      throw new Error(
+        `${caller}: the recovery phrase does not belong to ${user.userName}. Derived ${derived} but ` +
+          `the account under test is ${user.sessionId}. The request would silently address a ` +
+          `different account, and the client would then report "never" as if nothing had happened.`
+      );
+    }
+  }
+
+  assertNotSharedAdminAccount(seedHex, user.userName);
+
+  return Buffer.from(deriveProMasterKey(seedHex).publicKey).toString('hex');
+}
+
 export async function makeAccountPro(
   params: MakeAccountProParams
 ): Promise<DevAddPaymentResult | null> {
@@ -331,29 +405,9 @@ export async function makeAccountPro(
     dryRun = false,
   } = params;
   const provider: PaymentProvider = providerParam ?? (platform === 'ios' ? 'apple' : 'google');
-  // The master Pro key is derived from the account's recovery phrase, so the grant binds to the
-  // account the test just created without the app having to tell us anything.
-  const seedHex = mnemonicToSeedHex(seedWordsOf(user));
-
-  // Fail at the mint rather than three screens later. `accountID` is 'not_needed' when a spec opted out
-  // of reading it, in which case there is nothing to check against.
-  if (user.sessionId && user.sessionId.startsWith('05')) {
-    const derived = accountIdFromSeed(seedHex);
-    if (derived !== user.sessionId) {
-      throw new Error(
-        `makeAccountPro: the recovery phrase does not belong to ${user.userName}. Derived ${derived} ` +
-          `but the account under test is ${user.sessionId}. Minting would silently grant Pro to a ` +
-          `different account, and the client would then report "never" as if nothing was purchased.`
-      );
-    }
-  }
-
-  assertNotSharedAdminAccount(seedHex, user.userName);
-
-  const masterKey = deriveProMasterKey(seedHex);
 
   const request: DevAddPaymentRequest = {
-    master_pkey: Buffer.from(masterKey.publicKey).toString('hex'),
+    master_pkey: masterPkeyHexOf(user, 'makeAccountPro'),
     provider: PROVIDER_CODE[provider],
     plan,
     ...(durationSeconds === undefined ? {} : { duration: durationSeconds }),
@@ -367,7 +421,11 @@ export async function makeAccountPro(
     return null;
   }
 
-  const result = await devAddPayment(backendUrl, request);
+  const result = await devPost<DevAddPaymentRequest, DevAddPaymentResult>(
+    backendUrl,
+    '/dev/add_payment',
+    request
+  );
 
   // A backend that ignored `duration` returns the plan's full length instead — 30 days where a spec
   // asked for two — and the only symptom is whatever that spec expected of a near expiry quietly not
@@ -400,6 +458,72 @@ export async function makeAccountPro(
           : 'unclaimed'
       }`
   );
+
+  return result;
+}
+
+export type RevokeAccountProParams = {
+  user: ProAccountUnderTest;
+  /** See `DevRevokeRequest.effective_in_seconds`. Defaults to 0 — already effective. */
+  effectiveInSeconds?: number;
+  /** See `DevRevokeRequest.revoke_payments`. Defaults to true — a refund. */
+  revokePayments?: boolean;
+};
+
+/**
+ * Revoke the account's current Pro generation, so peers holding the revocation list stop honouring any
+ * proof it issued.
+ *
+ * There is no client-side route to this and no production one either: a real revocation's effective
+ * instant is `revoked_at + 26 hours`, deliberately, so that a sender cannot be rejected before it could
+ * have polled and learnt of it. `/dev/revoke` backdates the stored instant to place that effective
+ * moment where a spec asks for it, which is the only way a test can observe enforcement rather than
+ * wait a day for it.
+ *
+ * Two independent behaviours, chosen by `revokePayments`:
+ *   - **true (refund)** — the entitlement goes too, so the account stops being Pro and no fresh
+ *     generation is issued. What a chargeback looks like.
+ *   - **false (rotation)** — the account stays paid and rolls onto a new generation, so its old proof
+ *     is dead while it remains Pro. What a recipient must reject without the sender losing anything.
+ *
+ * The call does not make the revocation *visible* to anyone: each client caches the list on its own
+ * schedule, so a spec still has to get the recipient to poll before asserting.
+ */
+export async function revokeAccountPro(params: RevokeAccountProParams): Promise<DevRevokeResult> {
+  const { user, effectiveInSeconds = 0, revokePayments = true } = params;
+
+  const request: DevRevokeRequest = {
+    master_pkey: masterPkeyHexOf(user, 'revokeAccountPro'),
+    effective_in_seconds: effectiveInSeconds,
+    revoke_payments: revokePayments,
+  };
+
+  const backendUrl = devProBackendUrl();
+  const result = await devPost<DevRevokeRequest, DevRevokeResult>(
+    backendUrl,
+    '/dev/revoke',
+    request
+  );
+
+  // `new_generation_allocated` is the one field that distinguishes the two behaviours after the fact,
+  // and a spec asking for a rotation that silently got a refund would be asserting the wrong thing —
+  // the account would have stopped being Pro rather than kept a dead proof.
+  console.log(
+    `Revoked generation ${result.revoked_generation_id} for ${user.userName} ` +
+      `(master_pkey ${request.master_pkey}), effective ` +
+      `${new Date(result.effective_ts * 1000).toISOString()}, ` +
+      `payments_revoked=${result.payments_revoked}, ` +
+      `rolled onto a new generation=${result.new_generation_allocated}`
+  );
+
+  if (!revokePayments && !result.new_generation_allocated) {
+    throw new Error(
+      `revokeAccountPro: asked to revoke only the generation for ${user.userName}, but the backend ` +
+        `allocated no replacement — so the account is no longer entitled. It had no live payment to ` +
+        `roll onto, which means this behaves as a refund and there is no surviving Pro state for a ` +
+        `dead-proof assertion to sit on.`
+    );
+  }
 
   return result;
 }
@@ -457,25 +581,60 @@ if (require.main === module) {
     process.exit(0);
   }
 
-  if (args.length < 2) {
+  // Revoking by hand is worth a mode of its own: it is the only way to watch a client react to a
+  // revocation live, on a device a spec is not driving.
+  if (args.includes('--revoke')) {
+    const rest = args.filter(a => a !== '--revoke' && a !== '--keep-payments');
+    const effectiveIndex = rest.indexOf('--effective-in');
+    const effectiveInSeconds =
+      effectiveIndex === -1 ? 0 : Number.parseInt(rest[effectiveIndex + 1] ?? '', 10);
+
+    if (Number.isNaN(effectiveInSeconds)) {
+      console.error('--effective-in takes a number of seconds');
+      process.exit(1);
+    }
+
+    const mnemonicArg = rest.find(
+      (_arg, i) => i !== effectiveIndex && (effectiveIndex === -1 || i !== effectiveIndex + 1)
+    );
+    if (!mnemonicArg) {
+      console.error(
+        'Usage: npx ts-node run/shared/pro_grant.ts <mnemonic> --revoke [--keep-payments] ' +
+          '[--effective-in <seconds>]'
+      );
+      process.exit(1);
+    }
+
+    revokeAccountPro({
+      user: { userName: 'CLI', seedPhrase: mnemonicArg },
+      revokePayments: !args.includes('--keep-payments'),
+      effectiveInSeconds,
+    })
+      .then(() => process.exit(0))
+      .catch(err => {
+        console.error('Error:', err.message);
+        process.exit(1);
+      });
+  } else if (args.length < 2) {
     console.error('Usage: npx ts-node run/shared/pro_grant.ts <mnemonic> <platform> [--dry-run]');
     console.error('Example: npx ts-node run/shared/pro_grant.ts "word1 word2 ..." android');
     console.error('         npx ts-node run/shared/pro_grant.ts "word1 word2 ..." ios --dry-run');
+    console.error('         npx ts-node run/shared/pro_grant.ts "word1 word2 ..." --revoke');
     process.exit(1);
+  } else {
+    const dryRun = args.includes('--dry-run');
+    const filteredArgs = args.filter(a => a !== '--dry-run');
+    const [mnemonic, platform] = filteredArgs;
+
+    makeAccountPro({
+      user: { userName: '', sessionId: '', seedPhrase: mnemonic },
+      platform: platform as 'android' | 'ios',
+      dryRun,
+    })
+      .then(() => process.exit(0))
+      .catch(err => {
+        console.error('Error:', err.message);
+        process.exit(1);
+      });
   }
-
-  const dryRun = args.includes('--dry-run');
-  const filteredArgs = args.filter(a => a !== '--dry-run');
-  const [mnemonic, platform] = filteredArgs;
-
-  makeAccountPro({
-    user: { userName: '', sessionId: '', seedPhrase: mnemonic },
-    platform: platform as 'android' | 'ios',
-    dryRun,
-  })
-    .then(() => process.exit(0))
-    .catch(err => {
-      console.error('Error:', err.message);
-      process.exit(1);
-    });
 }
