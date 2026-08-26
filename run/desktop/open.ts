@@ -92,10 +92,12 @@ function mockAvatarPickerFile(fakeAvatarPickerFile?: string) {
  * Without this the client uploads to the PRODUCTION file server over an onion path — minutes per
  * avatar, and a spec that looks like it never clicked Save.
  *
- * Two keys, and they are not interchangeable: `FILE_SERVER_PUBKEY` is the X25519 key the mobile
- * clients need for onion encryption, while Desktop needs the **Ed25519** one, which it embeds in the
- * returned URL so the download leg can re-derive X25519 from it. Both are 64 hex characters, so
- * passing the wrong one fails no format check and breaks downloads rather than uploads.
+ * `FILE_SERVER_ED_PUBKEY` is the server's **Ed25519** key, which every client now embeds in the download
+ * url's `p=` fragment and converts to X25519 for onion encryption itself. There used to be a second
+ * variable for the X25519 form, because libSession consumed that one raw; it does not any more.
+ *
+ * Both forms are 64 hex characters, so passing the wrong one fails no format check — it breaks
+ * downloads on the OTHER client, far from the mistake.
  */
 function useLocalFileServer() {
   const url = process.env.FILE_SERVER_URL?.trim();
@@ -156,6 +158,15 @@ const openElectronAppOnly = async (
         // Optional: control log level
         ELECTRON_LOG_LEVEL: 'verbose', // 'verbose', 'info', 'warn', 'error'
         ...(useXvfb && { WAYLAND_DISPLAY: '' }),
+        // Per-WINDOW Pro backend signing key, overriding the run-wide environment.
+        //
+        // The key is what libSession verifies proofs against, so pointing ONE window at a key the
+        // backend never signed with is how a spec expresses a recipient that cannot verify a genuine
+        // proof. Env rather than a launch arg because that is where the app already reads it from, and
+        // each window is launched with its own env — so this needs no app change.
+        ...(context?.pro?.proBackendPubkey
+          ? { TEST_PRO_BACKEND_ED_PK: context.pro.proBackendPubkey }
+          : {}),
       },
     });
     console.info(`  Electron app launched in ${Date.now() - start}ms`);

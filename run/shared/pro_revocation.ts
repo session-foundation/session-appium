@@ -1,0 +1,102 @@
+// Fixture values shared by the revocation and unverifiable-proof specs, which come in mobile/desktop
+// pairs asserting the same behaviour. Declared once because a pair that disagrees still passes twice:
+// each half proves its own client consistent with itself, so drift here is invisible until the two
+// results are compared by hand.
+
+import { COUNTDOWN_START_THRESHOLD, PRO_MAX_CHARS, STANDARD_MAX_CHARS } from './constants';
+
+/**
+ * Restart options that make a desktop client poll for revocations at test speed. Forcing the poll is what
+ * lets these specs run at all.
+ *
+ * The backend serves the production cadence — `retry_in: 86400`, and inside libSession's [60s, 48h] clamp,
+ * so nothing shortens it — which puts a client's second poll a day after its first. Without the flag the
+ * recipient never learns of the revocation inside the run, and every absence asserted afterwards would be
+ * satisfied by a client that had simply not looked.
+ */
+export const DESKTOP_PRO_CONTEXT = { pro: { forceProRevocationRefresh: true } } as const;
+
+/** Body of the message sent before a revocation is issued, so both halves identify the same copy. */
+export const SENT_BEFORE_REVOCATION = 'Sent before the revocation was issued';
+
+/** Bodies straddling a proof rotation: which one keeps its Pro treatment is the assertion. */
+export const SENT_ON_OLD_PROOF = 'Sent on the proof that was rotated away';
+export const SENT_ON_NEW_PROOF = 'Sent on the replacement proof';
+
+/**
+ * Body of the message carrying a real proof the recipient cannot verify.
+ *
+ * "Fake" describes it from the RECIPIENT'S side, which is the side under test: the proof is genuinely
+ * minted and genuinely signed, and the recipient simply trusts a different key, so it cannot tell this
+ * from a forgery.
+ */
+export const SENT_WITH_FAKE_PROOF = 'Sent with a fake proof';
+
+/** How far past the standard limit a message goes to prove which limit is being applied. */
+export const OVER_STANDARD_CHARS = 3000;
+
+/**
+ * How far ahead a revocation is dated when the test needs it pending rather than effective.
+ *
+ * Long enough to send and receive a message inside the window, short enough that the same test can then
+ * wait it out.
+ */
+export const REVOCATION_EFFECTIVE_IN_SECONDS = 20;
+
+/** How long a client is given to poll and act on a revocation once it has taken effect. */
+export const REVOCATION_POLL_SETTLE_MS = 5000;
+
+/**
+ * How long the badge is given to appear before its absence is called a refusal.
+ *
+ * A settle-then-check rather than a poll-until-absent: the badge should never appear, and any assertion
+ * returning on first sight of "no badge" passes before it would have rendered. The matching-key control
+ * renders it ~2s after the message, so this is ~7x that.
+ */
+export const BADGE_SETTLE_MS = 15_000;
+
+const EARLY_AT = 500;
+
+/** Where the `LATE` marker sits, which the specs quote when reporting a limit that was wrongly honoured. */
+export const LATE_AT = STANDARD_MAX_CHARS + 500;
+
+/** The largest length the composer accepts without sitting on the boundary. Matches `pro_overhang`. */
+export const MARKED_MESSAGE_LENGTH = PRO_MAX_CHARS - COUNTDOWN_START_THRESHOLD;
+
+export const early = (tag: string) => `EARLY-${tag}`;
+export const late = (tag: string) => `LATE-${tag}`;
+
+/**
+ * A Pro-length message carrying two markers, placed so each end's copy is identified by which survives.
+ *
+ * `EARLY` sits inside the standard limit, so it is present in every outcome — including a copy that
+ * arrived truncated. It is the anchor: without it, "the tail is missing" is equally well explained by the
+ * message never arriving, and the assertion would pass before the behaviour under test happened.
+ *
+ * `LATE` sits past the standard limit and inside the Pro one, so it survives only if the recipient
+ * honoured the proof.
+ *
+ * The positions are checked rather than trusted, because getting them wrong fails in the flattering
+ * direction: a message that never contained its `EARLY` marker fails as a long wait on the recipient,
+ * which reads as a delivery problem.
+ */
+export function markedMessage(tag: string): string {
+  const head = 'a'.repeat(EARLY_AT) + early(tag);
+  const withLate = head + 'b'.repeat(LATE_AT - head.length) + late(tag);
+  const message = withLate + 'c'.repeat(MARKED_MESSAGE_LENGTH - withLate.length);
+
+  const earlyEnd = message.indexOf(early(tag)) + early(tag).length;
+  const lateStart = message.indexOf(late(tag));
+  if (
+    message.length !== MARKED_MESSAGE_LENGTH ||
+    earlyEnd > STANDARD_MAX_CHARS ||
+    lateStart <= STANDARD_MAX_CHARS
+  ) {
+    throw new Error(
+      `markedMessage(${tag}): ${message.length} chars, EARLY ends ${earlyEnd}, LATE starts ${lateStart} ` +
+        `— the markers must straddle the standard limit of ${STANDARD_MAX_CHARS}.`
+    );
+  }
+
+  return message;
+}

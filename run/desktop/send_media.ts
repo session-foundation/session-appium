@@ -5,7 +5,7 @@ import { sleepFor } from '../shared/promise_utils';
 import { testLinkTitle } from './constants/variables';
 import { Conversation, Global, Settings } from './locators';
 import { waitForMessageStatus } from './message';
-import { MediaType } from './types';
+import { AttachmentType } from './types';
 import {
   checkModalStrings,
   clickOn,
@@ -149,11 +149,11 @@ export const sendLinkPreview = async (window: Page, testLink: string) => {
   await waitForMessageStatus(window, testLink, 'sent');
 };
 
-export const trustUser = async (window: Page, mediaType: MediaType, userName: string) => {
+export const trustUser = async (window: Page, attachmentType: AttachmentType, userName: string) => {
   await clickOnMatchingText(
     window,
     tStripped('attachmentsClickToDownload', {
-      file_type: tStripped(mediaType).toLowerCase(),
+      file_type: tStripped(attachmentType).toLowerCase(),
     })
   );
   await checkModalStrings(

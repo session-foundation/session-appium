@@ -121,7 +121,7 @@ crossPlatformTest({
         // verified her proof against the QA backend's signing key, which is the end-to-end check —
         // performed here by three separate implementations of that verification.
         ...bob.clients.map(async client => {
-          await client.assertSenderProBadge(aliceName);
+          await client.assertConversationHeaderProBadge(aliceName);
           await client.waitForMessage(PRO_MESSAGE);
         }),
       ]);

@@ -49,8 +49,7 @@ async function proSilentRefusal(platform: SupportedPlatformsType, testInfo: Test
     return await open_Alice1_with_contacts({
       platform,
       testInfo,
-      iOSContext: {
-        sessionProEnabled: 'true',
+      testContext: {
         // The plan says active, with time left on it...
         proBackendStatus: 'active',
         proLoadingState: 'success',
