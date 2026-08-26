@@ -22,9 +22,9 @@ import {
 } from '../../desktop/open';
 import { getDevicesPerTestCount } from './binaries';
 import { getAndroidPoolSize } from './capabilities_android';
-import { IOS_PRO_CONTEXT } from './capabilities_ios';
 import { resolveNetworkTarget } from './devnet';
 import { closeApp, openAppMultipleDevices } from './open_app';
+import { PRO_BACKEND_CONTEXT } from './pro_context';
 
 /**
  * How many clients of each platform a single account should have. Defined here (the leaf) and
@@ -172,7 +172,7 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
   const [androidSettled, iosSettled, desktopSettled] = await Promise.allSettled([
     totalAndroid > 0 ? openAppMultipleDevices('android', totalAndroid, testInfo) : [],
     totalIos > 0
-      ? openAppMultipleDevices('ios', totalIos, testInfo, isPro ? IOS_PRO_CONTEXT : undefined)
+      ? openAppMultipleDevices('ios', totalIos, testInfo, isPro ? PRO_BACKEND_CONTEXT : undefined)
       : [],
     totalDesktop > 0
       ? // `{ pro: {} }` rather than nothing: `applyProMocks` clears every Pro variable it owns on each

@@ -54,7 +54,7 @@ Exported functions follow the pattern `open_Alice1_Bob1_friends()`, `open_Alice1
 
 The `User` type is local. The seeder's `StateUser` type (`sessionId`, `seedPhrase`) is mapped at this boundary and never leaks into test code.
 
-### iOS Capabilities & Test Context (`run/test/utils/capabilities_ios.ts`)
+### Mobile Capabilities & Test Context (`run/test/utils/capabilities_ios.ts`, `run/test/utils/pro_context.ts`)
 
 Every iOS session launches with a set of process arguments baked into the shared capabilities:
 
@@ -62,18 +62,36 @@ Every iOS session launches with a set of process arguments baked into the shared
 - `animationsEnabled: false` — disables UI animations for test stability
 - `communityPollLimit: 3` — caps community polling frequency
 
-Per-test overrides are passed via `IOSTestContext`:
+Per-test overrides are passed via `MobileTestContext` (declared in `pro_context.ts`, not in the iOS
+capabilities module, because most of it is not iOS-only). It is composed of three parts:
 
 ```typescript
-type IOSTestContext = {
-  customInstallTime?: string; // fake first-install timestamp ("time travel")
-  sessionProEnabled?: string; // enables Session Pro features
-};
+type MobileTestContext = ProContext & IOSOnlyContext; // ProContext = ProMockContext & ProTestHookContext
 ```
 
-`customInstallTime` injects a `customFirstInstallDateTime` env var into the app process, letting CTA tests simulate the app having been installed days in the past without waiting. `IOSTestContext` threads through the state builder functions and `openApp*` utilities — pass it at the call site to apply it for that test.
+- **`ProMockContext`** — display mocks, read by BOTH platforms. Each one convinces a single client it is
+  in a Pro state it is not actually in; none of them produces anything another party can verify.
+- **`ProTestHookContext`** — timing hooks, also read by both. These are used _alongside a real grant_,
+  and exist so a spec can reach behaviour the production schedule puts a day out of reach
+  (`forceProRevocationRefresh` is the current one).
+- **`IOSOnlyContext`** — the iOS-only remainder, `ios`-prefixed precisely so a spec cannot silently set
+  an iOS-only value and believe it applied on Android: `iosCustomInstallTime`, `iosSessionProEnabled`,
+  and the iOS refund/originating mocks.
 
-Android handles these behaviours via build flags in the `qa` binary rather than runtime capability overrides, so no equivalent mechanism exists on that side.
+`iosCustomInstallTime` injects a `customFirstInstallDateTime` env var into the app process, letting CTA
+tests simulate the app having been installed days in the past without waiting. The context threads
+through the state builder functions and `openApp*` utilities — pass it at the call site to apply it for
+that test.
+
+**Android reads the shared halves too.** `openAppOnPlatform` forwards the whole object to
+`openAndroidApp` as well as `openiOSApp`; Android applies the `ProContext` half as launch-intent extras
+(consumed by `QaLaunchConfig` in QA builds) and ignores the `IOSOnlyContext` half. Because those extras
+are _persisted rather than applied live_, `openAndroidApp` relaunches once before handing the device to
+the spec.
+
+For the fixtures where devices must DISAGREE — a sender whose Pro backend key the recipient does not
+trust, say — `MobileTestContexts` accepts an array indexed by device order instead of one shared object,
+and `contextForDevice` resolves whichever form the caller used.
 
 ### Test Wrappers (`run/types/sessionIt.ts`)
 

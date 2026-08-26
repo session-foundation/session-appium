@@ -67,6 +67,40 @@ export const STANDARD_PIN_LIMIT = 5;
 export const MESSAGE_DELIVERY_TIMEOUT_MS = 45_000;
 
 /**
+ * A REAL Ed25519 public key that the Pro backend never signs with.
+ *
+ * Generated once and pinned so runs are reproducible. It must be a valid curve point, not merely
+ * well-formed hex: a key the clients cannot parse is rejected as "invalid key" rather than treated as a
+ * different signer, and on Desktop that throws in a loop that kills swarm polling — so the recipient
+ * receives nothing at all and the spec fails for a reason that has nothing to do with verification.
+ *
+ * Shared rather than per-spec because the specs that use it are matched halves of one fixture: the point
+ * is that a recipient given THIS key cannot verify a proof the sender genuinely holds, and two specs
+ * pinning two different keys would be testing two different things while reading as one.
+ */
+export const UNTRUSTED_PRO_BACKEND_KEY =
+  '19151761ab6c9db89e8380604cf9ebe1a60267ef6d93636b4fcadd7d29f2b571';
+
+/**
+ * The generated-avatar palette, lowercase, from `avatarBgColors` in the Android client
+ * (`app/src/main/res/values/colors.xml`, selected by `sha512(address) % 7` in `AvatarUtils`).
+ *
+ * Used to tell "no picture is loaded" apart from "a picture is loaded but static". Because the colour
+ * is derived from the account address, a placeholder shows a different one of these on every run —
+ * which reads as an unstable failure rather than a consistent one, and cost several hours of chasing
+ * a phantom regression before anyone recognised the palette.
+ */
+export const GENERATED_AVATAR_COLORS = new Set([
+  '31f196',
+  '57c9fa',
+  'c993ff',
+  'ff95ef',
+  'ff9c8e',
+  'fcb159',
+  'fad657',
+]);
+
+/**
  * The refund destinations, as the FRAGMENT of each URL that names the route rather than the whole URL.
  *
  * Which URL the "Open URL" confirmation offers is what tells the refund routes apart: the same screen,

@@ -5,9 +5,9 @@ import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { ConversationItem } from '../../locators/home';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
-import { IOS_PRO_CONTEXT } from '../../utils/capabilities_ios';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 import { enableProBadge, expectProBadgeFromSender } from '../../utils/pro_badge';
+import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 import { observeProGrant } from '../../utils/pro_refresh';
 
 const MESSAGE = 'Checking my badge shows for you';
@@ -32,7 +32,7 @@ bothPlatformsIt({
  * believe she is Pro but produce no proof for Bob's client to verify. Bob rendering the badge is
  * therefore the real test of the end-to-end grant.
  *
- * Both devices must be pointed at the same QA backend, which `IOS_PRO_CONTEXT` handles: the pubkey is
+ * Both devices must be pointed at the same QA backend, which `PRO_BACKEND_CONTEXT` handles: the pubkey is
  * what libSession verifies proofs against, so a Bob left on the production key reads Alice's QA-signed
  * proof as invalid, silently strips the Pro content and stores her as non-Pro — a failure that looks
  * like a product bug rather than a misconfigured test.
@@ -43,7 +43,7 @@ async function proBadgeVisibleToOthers(platform: SupportedPlatformsType, testInf
       platform,
       focusFriendsConvo: false,
       testInfo,
-      iOSContext: IOS_PRO_CONTEXT,
+      testContext: PRO_BACKEND_CONTEXT,
     });
   });
   const { alice1, bob1 } = devices;
