@@ -78,11 +78,9 @@ function buildServiceNetworkEnv(): Record<string, string> {
 /**
  * Optional custom file server (e.g. a local Sesh-Net-Docker file server). When `FILE_SERVER_URL`
  * is set, the app is pointed at it via `customFileServerUrl` (+ `customFileServerPubkey`), which
- * speeds up media tests. `FILE_SERVER_ED_PUBKEY` is the file server's **Ed25519** pubkey: LibSession-Util
- * consumes it directly as `x25519_pubkey::from_hex(...)` (its built-in default `da21…` is an X25519
- * key) — it does NOT convert from ed25519, and the app passes this value to libsession raw. If
- * omitted the app falls back to its default file server pubkey. Independent of the network target —
- * but only really useful alongside a devnet.
+ * speeds up media tests. `FILE_SERVER_ED_PUBKEY` is the file server's **Ed25519** pubkey; see the
+ * note on the pubkey below for why the X25519 form is wrong here. If omitted the app falls back to
+ * its default file server pubkey.
  */
 function buildCustomFileServerEnv(): Record<string, string> {
   const url = (process.env.FILE_SERVER_URL ?? '').trim();
