@@ -18,11 +18,11 @@ import { perTestRoomsEnabled } from '../../utils/community_rooms';
  *   the recipient to verify, which is the whole claim.
  * - The badge comes from the sender's PROFILE, not the message. So the control has to be taken before
  *   the grant — afterwards, Alice's earlier message renders a badge too.
- * - Whether Alice and Bob are already contacts changes the outcome, and that is what the two
- *   registrations below separate. Desktop stores a community sender's Pro details against
- *   `getCachedNakedKeyFromBlindedNoServerPubkey(...) ?? blinded` (`ts/receiver/opengroup.ts:111`) while
- *   the author label reads the blinded id (`:97`), so a sender the recipient already knows has the
- *   details written where the label never looks.
+ * - Registered twice, for strangers and for existing contacts. Desktop stores a community sender's
+ *   Pro details against `getCachedNakedKeyFromBlindedNoServerPubkey(...) ?? blinded`
+ *   (`ts/receiver/opengroup.ts:111`) while the author label reads the blinded id (`:97`), so a
+ *   CACHED naked key would put the details where the label never looks. Both variants pass, because
+ *   being contacts does not populate that cache — only an actual blinded-id resolution does.
  *
  * Skips without a per-test room. Not for attribution — this assertion is scoped to one message's
  * author label — but so both halves of the claim run under the same conditions: the mobile half
@@ -84,11 +84,7 @@ test_Alice_1W_Bob_1W(
   { communityRooms: 1, pro: {} }
 );
 
-/**
- * EXPECTED TO FAIL on Desktop — see the contact trap above. It asserts the correct behaviour rather
- * than the current one on purpose: inverting it would document the bug as intended. Android passes
- * the sender address through unmodified, so the mobile counterpart should pass.
- */
+/** Guards the cached-naked-key path described above. Passes today; see that note for why. */
 test_Alice_1W_Bob_1W_friends(
   'Pro badge shows on a community message author from a known contact',
   async ({ alice, bob }) => communityAuthorProBadge(alice, bob),

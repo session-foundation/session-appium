@@ -345,6 +345,19 @@ function seededTest(
     resetTrackedElectronPids();
     const pages: Page[] = [];
 
+    // Same allocation `sessionTestGeneric` does. Without it a seeded fixture silently ignores
+    // `communityRooms` and the test fails inside `getCommunities()` with no rooms allocated.
+    if (context?.communityRooms && perTestRoomsEnabled()) {
+      try {
+        await allocateCommunityRooms(context.communityRooms);
+      } catch (allocationError) {
+        // Outside the try below, so its `finally` is not reached — release here or a partly
+        // completed allocation leaks rooms until the gc TTL.
+        await releaseCommunityRooms();
+        throw allocationError;
+      }
+    }
+
     try {
       await body(pages, testInfo);
     } finally {
@@ -355,6 +368,7 @@ function seededTest(
       } catch (e) {
         console.error(`forceCloseAllWindows of ${testName} failed with: `, e);
       }
+      await releaseCommunityRooms();
     }
   });
 }
