@@ -158,26 +158,10 @@ FILE_SERVER_URL=http://192.168.1.114:8000
 FILE_SERVER_ED_PUBKEY=<Ed25519 pubkey>
 ```
 
-**Use the Ed25519 key**, which is what the harness passes and what Android and Desktop already write
-into a download url's `p=` fragment. `FILE_SERVER_PUBKEY` (the X25519 form) is gone — no code reads
-it.
-
-> **This needs libsession ≥ 1.9.0, which is not released yet.** Up to and including **1.8.0** —
-> what every client currently pins — libSession used the configured pubkey _raw_ as the X25519 onion
-> key rather than deriving it, so handing it the Ed form encrypts to the wrong key. The file server
-> answers `400` and logs:
->
-> ```
-> WARNING Failed to decrypt onion request (tried 1 pubkeys)
-> ```
->
-> which surfaces in the app as **"Failed to update profile"** on upload, and as an avatar stuck on
-> the generated placeholder on download. libsession-util `39c05a8f` ("treat the file server pubkey
-> as Ed25519, as the other clients do") fixes it; `2aea9edf` in the same range is also needed if your
-> file server is on a **non-default port**, since generated download urls dropped it.
->
-> Until that releases, iOS needs a **locally built libsession** — see the `libsession-local` skill.
-> Desktop is unaffected in practice.
+**Use the Ed25519 key.** There used to be a second variable for the X25519 form, because libSession
+consumed that one raw; it does not any more. Every client embeds the Ed key in a download url's `p=`
+fragment and converts to X25519 for onion encryption itself, so `FILE_SERVER_PUBKEY` is gone — no
+code reads it.
 
 On a devnet run the address is also discovered — the harness probes `:8000` on the devnet's
 advertised IP and sets `FILE_SERVER_URL` itself (`run/test/utils/devnet_services.ts`) — but Desktop

@@ -110,15 +110,10 @@ Only a subset matters per platform (all read in `run/test/utils/binaries.ts` /
   back 401), so it cannot take per-test community rooms down with it. `FILE_SERVER_ED_PUBKEY` has no
   such check — the key only matters inside the onion request — so it is never guessed: set it, or the
   production file server is used. The file server needs exactly two values, `FILE_SERVER_URL` and
-  `FILE_SERVER_ED_PUBKEY` (the **Ed25519** key); the X25519 `FILE_SERVER_PUBKEY` is gone. Desktop
-  routes at a local file server only when both are set, so state the URL even though a devnet run
-  discovers it. `*_HOST`/`*_PORT` vars override each address.
-- **iOS cannot reach a local file server on libsession 1.8.0**, which is what every client currently
-  pins. It uses the configured pubkey raw as the X25519 onion key instead of deriving it, so the Ed
-  form encrypts to the wrong key: the server answers 400 and logs `Failed to decrypt onion request`,
-  the app says "Failed to update profile" on upload, and a receiving avatar stays on the generated
-  placeholder. Fixed by libsession `39c05a8f` (with `2aea9edf` for a non-default port), unreleased —
-  so iOS media against a local file server needs a locally built libsession until 1.9.0 ships.
+  `FILE_SERVER_ED_PUBKEY` (the **Ed25519** key); the X25519 `FILE_SERVER_PUBKEY` is gone, since every
+  client now converts the Ed form itself. Desktop routes at a local file server only when both are
+  set, so state the URL even though a devnet run discovers it. `*_HOST`/`*_PORT` vars override each
+  address.
 - **The Pro backend is the exception**: with `TEST_PRO_BACKEND` set there is no fallback, because
   session-desktop throws inside `SwarmPolling.pollOnceForKey` when it can't reach a dev backend —
   killing every poll cycle, so messages send but never arrive, with a symptom nowhere near Pro. Set
