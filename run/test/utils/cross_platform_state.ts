@@ -18,6 +18,7 @@ import {
   getLaunchedInstances,
   multisAvailable,
   openApps,
+  type TestContext,
   waitFirstWindow,
 } from '../../desktop/open';
 import { getDevicesPerTestCount } from './binaries';
@@ -116,12 +117,15 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
   perUser,
   testInfo,
   isPro = false,
+  fakeAvatarPickerFile,
 }: {
   stateToBuildKey: K;
   groupName: K extends WithGroupStateKey ? string : undefined;
   perUser: PerUserPlatforms[];
   testInfo: TestInfo;
   isPro?: boolean;
+  /** Absolute path handed to every desktop window's test-integration avatar picker. */
+  fakeAvatarPickerFile?: string;
 }): Promise<{
   prebuilt: PrebuiltState[K];
   users: UserClients[];
@@ -160,6 +164,20 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
     );
   }
 
+  // `{ pro: {} }` rather than nothing when this run is Pro: `applyProMocks` clears every Pro variable
+  // it owns on each launch and restores only the value `SESSION_PRO` held at module load, so passing
+  // no context *unsets* the flag this test just set — leaving Desktop with no Pro surfaces at all, on
+  // a run that asked for them. An empty context asks for "Pro on, nothing mocked", which is what a
+  // real grant needs.
+  //
+  // The picker file is given to EVERY desktop window, not just the one that will upload: it is a
+  // process env var read at launch, there is no per-window channel for it, and a window that never
+  // opens the picker is unaffected by it.
+  const desktopContext: TestContext | undefined =
+    isPro || fakeAvatarPickerFile
+      ? { ...(isPro ? { pro: {} } : {}), ...(fakeAvatarPickerFile ? { fakeAvatarPickerFile } : {}) }
+      : undefined;
+
   // Open each platform once, then slice per user (preserves Appium capability-index order).
   // The three platforms open CONCURRENTLY — a mixed test would otherwise pay the sum of three slow
   // openers. Windows within the desktop group still open sequentially: `openApps` does that
@@ -175,12 +193,7 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
       ? openAppMultipleDevices('ios', totalIos, testInfo, isPro ? PRO_BACKEND_CONTEXT : undefined)
       : [],
     totalDesktop > 0
-      ? // `{ pro: {} }` rather than nothing: `applyProMocks` clears every Pro variable it owns on each
-        // launch and restores only the value `SESSION_PRO` held at module load, so passing no context
-        // *unsets* the flag this test just set — leaving Desktop with no Pro surfaces at all, on a run
-        // that asked for them. An empty context asks for "Pro on, nothing mocked", which is what a
-        // real grant needs.
-        openApps(totalDesktop, isPro ? { pro: {} } : undefined).then(apps =>
+      ? openApps(totalDesktop, desktopContext).then(apps =>
           Promise.all(apps.map(app => waitFirstWindow(app)))
         )
       : [],

@@ -389,6 +389,20 @@ export function buildSelectorEscapeText(locator: StrategyExtractionObj, text?: s
 }
 
 /**
+ * CSS selector for a DESCENDANT of the element `locator` addresses — e.g. the `<img>` an avatar
+ * renders inside the container that carries the test id.
+ *
+ * Exists so a selector that has to reach past a test id is still written in terms of the shared
+ * locator constant. The hand-written `'[data-testid="…"] img'` strings this replaces duplicated an id
+ * that already had a name in `locators.ts`, so renaming one there left them pointing at nothing —
+ * and silently, since a selector that matches no element fails as "not animated" rather than as a
+ * bad selector.
+ */
+export function buildDescendantSelector(locator: StrategyExtractionObj, descendant: string) {
+  return `${buildSelectorEscapeText(locator)} ${descendant}`;
+}
+
+/**
  * Clicks on an element that contains specific text
  * @param window - Playwright page instance
  * @param locator - Element locator with strategy and selector

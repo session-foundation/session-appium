@@ -42,12 +42,17 @@ import {
   testVideoThumbnail,
 } from '../constants/testfiles';
 import { tStripped } from '../localizer/lib';
-import { GENERATED_AVATAR_COLORS, MESSAGE_DELIVERY_TIMEOUT_MS } from '../shared/constants';
+import {
+  AVATAR_SYNC_MAX_WAIT_MS,
+  GENERATED_AVATAR_COLORS,
+  MESSAGE_DELIVERY_TIMEOUT_MS,
+} from '../shared/constants';
 import { makeAccountPro } from '../shared/pro_grant';
 import {
   AcceptMessageRequestButton,
   AttachmentsButton,
   ConversationHeaderName,
+  ConversationSettings,
   DocumentsFolderButton,
   GIFButton,
   ImagesFolderButton,
@@ -3009,6 +3014,73 @@ export class DeviceWrapper implements IMobileWrapper {
   }
 
   /**
+   * Set this account's display picture to the suite's animated GIF (see `IBaseDeviceWrapper`).
+   *
+   * Mobile's uploader takes the animated-vs-still choice as an argument, so this is a rename rather
+   * than new behaviour — it exists to give the two platforms one signature, since desktop's uploader
+   * cannot take that argument at all.
+   */
+  public async setAnimatedDisplayPicture(): Promise<void> {
+    await this.uploadProfilePicture(true);
+  }
+
+  /**
+   * Assert this account's OWN display picture renders animated (see `IBaseDeviceWrapper`).
+   *
+   * The settings avatar is the only place mobile draws the local user's picture large enough to
+   * sample, so this navigates there rather than reading whatever is on screen, and closes settings
+   * behind itself — it ends on the home screen whichever screen it started on.
+   *
+   * Callable from anywhere the app can reach settings in one step, because the callers genuinely are
+   * in three different places: the client that just uploaded is left INSIDE settings, a linked device
+   * that waited for a message is INSIDE a conversation, and a fresh one is on the home screen. Both
+   * wrong starts fail late and misleadingly — a blind tap on the user-settings button from settings
+   * opens the avatar modal instead, and from a conversation there is no such button at all — so each
+   * is probed for rather than assumed. The settings probe is the Privacy row (settings-only, near the
+   * top so it needs no scroll, addressed by id on both platforms); the conversation probe is the
+   * message input, the same signal `openConversationWith` uses.
+   */
+  public async assertOwnAvatarAnimated(): Promise<void> {
+    const alreadyInSettings = await this.doesElementExist({
+      ...new PrivacyMenuItem(this).build(),
+      maxWait: 5_000,
+    });
+    if (!alreadyInSettings) {
+      const insideConversation = await this.doesElementExist({
+        ...new MessageInput(this).build(),
+        maxWait: 2_000,
+      });
+      if (insideConversation) {
+        await this.navigateBack();
+      }
+      await this.clickOnElementAll(new UserSettings(this));
+    }
+    await this.verifyElementIsAnimated(new UserAvatar(this), {
+      maxWaitMs: AVATAR_SYNC_MAX_WAIT_MS,
+    });
+    await this.clickOnElementAll(new CloseSettings(this));
+  }
+
+  /**
+   * Assert the avatar in `convoName`'s conversation header renders animated (see
+   * `IBaseDeviceWrapper`).
+   *
+   * Written in terms of the generic `verifyElementIsAnimated` so the conversation-header locator
+   * stays on this side of the interface — a cross-platform spec must not have to name it.
+   *
+   * The long wait, because everything this reads has to reach the client over the network first — the
+   * picture, and the sender's Pro proof deciding whether it may animate. Still bounded, and a caller
+   * should wait for one of the peer's messages before calling this, since that is what makes the
+   * profile ride along in the first place.
+   */
+  public async assertConversationHeaderAvatarAnimated(convoName: string): Promise<void> {
+    await this.openConversationWith(convoName);
+    await this.verifyElementIsAnimated(new ConversationSettings(this), {
+      maxWaitMs: AVATAR_SYNC_MAX_WAIT_MS,
+    });
+  }
+
+  /**
    * Find a message whose body CONTAINS `substring`, addressed by the message-body accessibility id.
    *
    * Exists because `waitForTextElementToBePresent` compares text for exact equality
@@ -3212,37 +3284,57 @@ export class DeviceWrapper implements IMobileWrapper {
   /**
    * Asserts an element's pixels change over time.
    *
-   * For avatars the placeholder is checked first and reported separately, because "the picture never
-   * loaded" and "the picture loaded but is frozen" are different bugs with different owners and used
-   * to produce the identical failure. A frozen animated avatar means Pro was false at compose time
-   * (`freezeFrameForUser`); a placeholder means the upload never reached the view at all.
+   * Retried as a whole rather than sampled once, because a client that did not set the picture itself
+   * passes through BOTH failing states on the way to the passing one: first the generated placeholder
+   * (nothing has arrived), then the image's own first frame (the picture arrived but the Pro proof
+   * that unfreezes it has not yet). Sampling once catches whichever state the client happens to be in
+   * and reports it as a product failure — and the frozen one especially, since a frozen avatar is
+   * exactly what a real Pro bug looks like.
+   *
+   * `maxWaitMs` bounds that retry, so raising it costs nothing when the picture is already animating.
+   * The default suits a client that set the picture itself and is reading back its own work; anything
+   * waiting on config sync or on the network wants `AVATAR_SYNC_MAX_WAIT_MS`, which is what the two
+   * named wrappers below pass.
+   *
+   * The two failing states are still told apart in the message once the deadline passes, because they
+   * are different bugs with different owners: a placeholder means the upload never reached this view
+   * at all, while a first frame means Pro was false when the avatar was composed
+   * (`freezeFrameForUser`).
    */
   public async verifyElementIsAnimated(
-    args: LocatorsInterface | StrategyExtractionObj
+    args: LocatorsInterface | StrategyExtractionObj,
+    { maxWaitMs = 10_000 }: { maxWaitMs?: number } = {}
   ): Promise<void> {
     const { locator, description } = this.resolveLocator(args);
     this.log(`Checking if ${description} is animated`);
 
-    const loaded = await this.waitForAvatarToLoad(locator);
-    if (GENERATED_AVATAR_COLORS.has(loaded.toLowerCase())) {
+    const SAMPLE_SIZE = 3;
+    const deadline = Date.now() + maxWaitMs;
+    let colors: Set<string>;
+    do {
+      colors = new Set<string>();
+      for (let i = 0; i < SAMPLE_SIZE; i++) {
+        colors.add(await this.getElementPixelColor(locator));
+      }
+      if (colors.size > 1) {
+        return;
+      }
+      await sleepFor(500);
+    } while (Date.now() < deadline);
+
+    const [sampled] = [...colors];
+    if (GENERATED_AVATAR_COLORS.has(sampled.toLowerCase())) {
       throw new Error(
-        `${description} is still the generated avatar placeholder (${loaded}) — the picture never ` +
+        `${description} is still the generated avatar placeholder (${sampled}) — the picture never ` +
           `loaded, so there is nothing to animate. This is an upload/propagation problem, not an ` +
           `animation one; a frozen animated avatar would show the image's own first frame instead.`
       );
     }
-
-    const SAMPLE_SIZE = 3;
-    const colors = new Set<string>();
-    for (let i = 0; i < SAMPLE_SIZE; i++) {
-      colors.add(await this.getElementPixelColor(locator));
-    }
-    verify(
-      colors.size,
-      `Expected ${description} to be animated but detected 1 unique color: ${[...colors][0]}. The ` +
-        `image is loaded but static — on an animated avatar that means Pro was false when it was ` +
-        `composed (freezeFrameForUser), not that the upload failed.`
-    ).toBeGreaterThan(1);
+    throw new Error(
+      `Expected ${description} to be animated but detected 1 unique color: ${sampled}. The image is ` +
+        `loaded but static — on an animated avatar that means Pro was false when it was composed ` +
+        `(freezeFrameForUser), not that the upload failed.`
+    );
   }
 
   /**

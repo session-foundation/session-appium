@@ -15,7 +15,7 @@ import type {
 } from './types';
 
 import { tStripped } from '../localizer/lib';
-import { GENERATED_AVATAR_COLORS } from '../shared/constants';
+import { AVATAR_SYNC_MAX_WAIT_MS, GENERATED_AVATAR_COLORS } from '../shared/constants';
 import { makeAccountPro } from '../shared/pro_grant';
 import { sleepFor } from '../shared/promise_utils';
 import { parseDataImage } from '../test/utils/check_colour';
@@ -44,6 +44,7 @@ import { sendLinkPreview, sendMedia, sendVoiceMessage, trustUser } from './send_
 import { sendNewMessage } from './send_message';
 import { setDisappearingMessages } from './set_disappearing_messages';
 import {
+  buildDescendantSelector,
   checkCTAStrings,
   checkModalStrings,
   checkPathLight,
@@ -318,6 +319,26 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /**
+   * Set this account's display picture to the suite's animated GIF (see `IBaseDeviceWrapper`).
+   *
+   * Desktop cannot be told WHICH image at call time — under test integration the picker never opens a
+   * dialog and hands back whatever `fakeAvatarPickerFile` named when this window was launched. So the
+   * animated-ness of this upload was decided by the test's launch context, and a window opened
+   * without it would upload a generated solid-colour JPEG here and fail an animation assertion much
+   * further on, as "not animated". That is worth a loud error instead.
+   */
+  public async setAnimatedDisplayPicture(): Promise<void> {
+    if (!process.env.SESSION_FAKE_AVATAR_PICKER_FILE) {
+      throw new Error(
+        'This desktop window was launched with no `fakeAvatarPickerFile`, so its avatar picker can ' +
+          'only return a generated solid-colour JPEG — nothing animated is selectable. Pass the ' +
+          'animated file in the test context that opens the window.'
+      );
+    }
+    await this.uploadProfilePicture();
+  }
+
+  /**
    * Set this account's display picture from whatever the test-integration picker is configured to
    * return (`fakeAvatarPickerFile`), leaving the app back on the home screen.
    *
@@ -560,11 +581,13 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   // --- Receiver-side Session Pro assertions ---
-  // Used when this client observes a PEER's Pro state. `assertConversationHeaderProBadge` is on
-  // IBaseDeviceWrapper — mobile satisfies the same signature — so a cross-platform spec can
-  // assert it over every client regardless of platform. The animation checks below are still
-  // desktop-only: mobile's equivalent (verifyElementIsAnimated) takes an Appium locator, so
-  // there is no shared signature to promote yet.
+  // Used when this client observes a PEER's Pro state. `assertConversationHeaderProBadge`,
+  // `assertOwnAvatarAnimated` and `assertConversationHeaderAvatarAnimated` are all on
+  // IBaseDeviceWrapper — mobile satisfies the same signatures — so a cross-platform spec can assert
+  // them over every client regardless of platform. `verifyElementIsAnimated` itself stays off the
+  // interface: it takes a CSS selector here and an Appium locator on mobile, which is exactly the
+  // kind of platform-shaped signature the interface forbids. The named wrappers below, each pinned
+  // to the surface it reads, are what a cross-platform spec calls instead.
 
   /** Center-pixel hex color of the first element matching `cssSelector` (via screenshot). */
   private async sampleCenterColor(cssSelector: string): Promise<string> {
@@ -589,9 +612,18 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     });
   }
 
-  /** Verify THIS account's own avatar (left pane) is animated — e.g. after it synced here. */
-  public async verifyOwnAvatarAnimated(): Promise<void> {
-    await this.verifyElementIsAnimated('[data-testid="leftpane-primary-avatar"] img');
+  /**
+   * Assert THIS account's own avatar (left pane) renders animated.
+   *
+   * The wait is longer than `verifyElementIsAnimated`'s default because this doubles as the
+   * linked-device assertion: when the picture was set on another client, both it and the Pro proof
+   * that keeps it unfrozen arrive here by config sync rather than being written locally.
+   */
+  public async assertOwnAvatarAnimated(): Promise<void> {
+    await this.verifyElementIsAnimated(
+      buildDescendantSelector(LeftPane.profileButton, 'img'),
+      AVATAR_SYNC_MAX_WAIT_MS
+    );
   }
 
   /**
@@ -615,10 +647,11 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   /**
    * Open `convoName` and verify the peer's conversation-header avatar is NOT animated.
    *
-   * The counterpart to `verifyConversationHeaderAvatarAnimated`, and asserted the opposite way round: that one
-   * retries until it sees more than one colour, so it can stop the moment an animation starts. This has
-   * to prove a NEGATIVE, so it settles first and then requires every sample to match — a still frame
-   * sampled once, or sampled before the picture has loaded, would pass whatever the client decided.
+   * The counterpart to `assertConversationHeaderAvatarAnimated`, reading the same surface and asserted
+   * the opposite way round: that one retries until it sees more than one colour, so it can stop the
+   * moment an animation starts. This has to prove a NEGATIVE, so it settles first and then requires
+   * every sample to match — a still frame sampled once, or sampled before the picture has loaded,
+   * would pass whatever the client decided.
    *
    * `settleMs` exists for that second failure: the avatar arrives with a message and takes a moment to
    * render, and an unloaded element samples as a single flat colour, which is indistinguishable from a
@@ -629,7 +662,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     { settleMs = 15_000, samples = 6 }: { settleMs?: number; samples?: number } = {}
   ): Promise<void> {
     await this.openConversationOnceNamed(convoName);
-    const selector = '[data-testid="conversation-options-avatar"] img';
+    const selector = buildDescendantSelector(Conversation.conversationSettingsIcon, 'img');
     // The element has to be there before its pixels mean anything.
     await this.page.locator(selector).first().waitFor({ state: 'visible', timeout: 30_000 });
     await sleepFor(settleMs);
@@ -660,10 +693,21 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     }
   }
 
-  /** Open `convoName` and verify the peer's conversation-header avatar is animated. */
-  public async verifyConversationHeaderAvatarAnimated(convoName: string): Promise<void> {
+  /**
+   * Open `convoName` and assert the avatar in its conversation header renders animated.
+   *
+   * The exact negative of `verifyConversationHeaderAvatarNotAnimated` above, reading the same surface.
+   *
+   * Same longer wait as the own-avatar case, for the same reason: in a 1:1 this header draws the
+   * OTHER person, so both their picture and the proof that unfreezes it arrive over the network —
+   * making this a wait rather than a read.
+   */
+  public async assertConversationHeaderAvatarAnimated(convoName: string): Promise<void> {
     await this.openConversationOnceNamed(convoName);
-    await this.verifyElementIsAnimated('[data-testid="conversation-options-avatar"] img');
+    await this.verifyElementIsAnimated(
+      buildDescendantSelector(Conversation.conversationSettingsIcon, 'img'),
+      AVATAR_SYNC_MAX_WAIT_MS
+    );
   }
 
   /**
