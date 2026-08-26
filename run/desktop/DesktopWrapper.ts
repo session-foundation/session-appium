@@ -582,7 +582,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
 
   // --- Receiver-side Session Pro assertions ---
   // Used when this client observes a PEER's Pro state. `assertConversationHeaderProBadge`,
-  // `assertOwnAvatarAnimated` and `assertConversationHeaderAvatarAnimated` are all on
+  // `assertSettingsAvatarAnimated` and `assertConversationHeaderAvatarAnimated` are all on
   // IBaseDeviceWrapper — mobile satisfies the same signatures — so a cross-platform spec can assert
   // them over every client regardless of platform. `verifyElementIsAnimated` itself stays off the
   // interface: it takes a CSS selector here and an Appium locator on mobile, which is exactly the
@@ -613,17 +613,28 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /**
-   * Assert THIS account's own avatar (left pane) renders animated.
+   * Open settings and assert THIS account's own avatar renders animated there.
+   *
+   * The settings avatar rather than the left-pane button, so both platforms read the SAME surface --
+   * mobile has no left pane, and an assertion whose element differs per platform cannot honestly sit
+   * on `IBaseDeviceWrapper` under one name.
    *
    * The wait is longer than `verifyElementIsAnimated`'s default because this doubles as the
    * linked-device assertion: when the picture was set on another client, both it and the Pro proof
    * that keeps it unfrozen arrive here by config sync rather than being written locally.
    */
-  public async assertOwnAvatarAnimated(): Promise<void> {
-    await this.verifyElementIsAnimated(
-      buildDescendantSelector(LeftPane.profileButton, 'img'),
-      AVATAR_SYNC_MAX_WAIT_MS
-    );
+  public async assertSettingsAvatarAnimated(): Promise<void> {
+    await clickOn(this.page, LeftPane.settingsButton);
+    try {
+      await this.verifyElementIsAnimated(
+        buildDescendantSelector(Settings.profilePicture, 'img'),
+        AVATAR_SYNC_MAX_WAIT_MS
+      );
+    } finally {
+      // Left open, the dialog swallows the next click on anything behind it -- the same reason
+      // `waitForOwnProBadge` closes between attempts.
+      await this.closeOpenModals().catch(() => undefined);
+    }
   }
 
   /**

@@ -7,13 +7,39 @@ import { bothPlatformsIt } from '../../../types/sessionIt';
 import { MessageBody } from '../../locators/conversation';
 import { ConversationItem } from '../../locators/home';
 import { ProBadge } from '../../locators/pro';
-import { open_Alice1_Bob1_friends } from '../../state_builder';
+import { open_Alice1_Bob1_friends, open_Alice1_bob1_notfriends } from '../../state_builder';
 import { joinCommunity } from '../../utils/community';
 import { perTestRoomsEnabled } from '../../utils/community_rooms';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 import { enableProBadge } from '../../utils/pro_badge';
 import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 import { observeProGrant } from '../../utils/pro_refresh';
+
+/**
+ * The same claim between two accounts that ARE already contacts.
+ *
+ * Separated because the interesting variable is whether the recipient has already resolved the
+ * sender's blinded community id to their real one. Android passes the sender address through
+ * unmodified (`VisibleMessageHandler.kt`), so this is expected to pass here — while the Desktop
+ * counterpart of this test is expected to FAIL, because Desktop writes the sender's Pro details to
+ * the naked id whenever it knows it and the author label still reads the blinded one. If this ever
+ * fails on a mobile client too, that client has adopted Desktop's bug.
+ */
+bothPlatformsIt({
+  title: 'Pro badge shows in a community from a known contact',
+  risk: 'high',
+  countOfDevicesNeeded: 2,
+  communityRooms: 1,
+  testCb: (platform: SupportedPlatformsType, testInfo: TestInfo) =>
+    proBadgeVisibleInCommunity(platform, testInfo, { asContacts: true }),
+  isPro: true,
+  allureSuites: {
+    parent: 'Session Pro',
+  },
+  allureDescription:
+    'The community Pro badge for a sender the recipient already has as a contact — the case where ' +
+    'the blinded sender id has a known real id behind it, which is where the clients diverge.',
+});
 
 bothPlatformsIt({
   title: 'Pro badge shows in a community',
@@ -102,7 +128,11 @@ bothPlatformsIt({
  * Scope this — with a client-side `badgeQaTag`, not a traversal — if a fixture ever makes a second
  * member Pro.
  */
-async function proBadgeVisibleInCommunity(platform: SupportedPlatformsType, testInfo: TestInfo) {
+async function proBadgeVisibleInCommunity(
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo,
+  { asContacts }: { asContacts: boolean } = { asContacts: false }
+) {
   if (!perTestRoomsEnabled()) {
     test.skip(
       true,
@@ -119,12 +149,18 @@ async function proBadgeVisibleInCommunity(platform: SupportedPlatformsType, test
   const messageAfter = `Sending this one as a subscriber - ${signature}`;
 
   const { devices, prebuilt } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
-    return await open_Alice1_Bob1_friends({
-      platform,
-      focusFriendsConvo: false,
-      testInfo,
-      testContext: PRO_BACKEND_CONTEXT,
-    });
+    return asContacts
+      ? await open_Alice1_Bob1_friends({
+          platform,
+          focusFriendsConvo: false,
+          testInfo,
+          testContext: PRO_BACKEND_CONTEXT,
+        })
+      : await open_Alice1_bob1_notfriends({
+          platform,
+          testInfo,
+          testContext: PRO_BACKEND_CONTEXT,
+        });
   });
   const { alice1, bob1 } = devices;
   const { alice } = prebuilt;

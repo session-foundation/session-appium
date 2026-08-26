@@ -56,11 +56,12 @@ export interface IBaseDeviceWrapper {
    * animate it — an animated display picture is Pro-gated, and a client that does not hold a valid
    * proof renders the first frame instead of failing loudly.
    *
-   * Mobile navigates to settings for this — the settings avatar is the only place it draws the local
-   * user's picture large enough to sample — and closes settings behind itself, so a mobile client
-   * ends on the home screen whichever screen it started on.
+   * BOTH platforms navigate to settings for this and close it behind themselves, so a client ends on
+   * the screen it started from. Named for that surface rather than for whose picture it is: mobile has
+   * no left pane, so the settings avatar is the only element both platforms can offer under one
+   * signature.
    */
-  assertOwnAvatarAnimated(): Promise<void>;
+  assertSettingsAvatarAnimated(): Promise<void>;
   /**
    * Open the 1:1 with `convoName` and assert the avatar in its CONVERSATION HEADER renders ANIMATED.
    *

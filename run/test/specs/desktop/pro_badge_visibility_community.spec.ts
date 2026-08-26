@@ -1,7 +1,12 @@
+import { test } from '@playwright/test';
+
+import type { DesktopWrapper } from '../../../desktop/DesktopWrapper';
+
 import { getCommunities } from '../../../constants/community';
 import { breakTheRun } from '../../../desktop/message';
-import { test_Alice_1W_Bob_1W } from '../../../desktop/sessionTest';
+import { test_Alice_1W_Bob_1W, test_Alice_1W_Bob_1W_friends } from '../../../desktop/sessionTest';
 import { MESSAGE_DELIVERY_TIMEOUT_MS } from '../../../shared/constants';
+import { perTestRoomsEnabled } from '../../utils/community_rooms';
 
 /**
  * Same-platform: two Desktop windows, no mobile client involved. The community counterpart of
@@ -47,61 +52,102 @@ import { MESSAGE_DELIVERY_TIMEOUT_MS } from '../../../shared/constants';
  * unseeded `test_Alice_1W_Bob_1W`, where the two accounts have never exchanged anything: swapping in
  * the `_friends` fixture would make the assertion fail for a reason that has nothing to do with Pro.
  *
- * ### Why this needs no per-test room, where the mobile spec does
+ * ### Why this requires a per-test room, as the mobile spec does
  *
- * Mobile tags the badge structurally (`pro-badge-icon`, on every badge in the app), so its locator can
- * only prove "a badge is on screen" and the mobile spec has to run in a room it created for the claim
- * to be attributable to Alice. Desktop's assertion is scoped to one message's author label, so a badge
- * it finds is Alice's by construction and a shared room proves the same thing. `communityRooms: 1` is
- * still declared because an isolated room is the suite's default when a local SOGS is available; with
- * no local SOGS the run falls back to the shared community and this spec keeps its meaning.
+ * Not for attribution: unlike mobile — whose `pro-badge-icon` is structural and matches any badge on
+ * screen — this assertion is scoped to one message's author label, so a badge it finds is Alice's by
+ * construction and a shared room would prove the same thing.
+ *
+ * It skips anyway, to hold BOTH halves of one claim to the same conditions. The mobile half already
+ * cannot run without a local SOGS, so letting the Desktop half fall back to the shared production
+ * community means a green pair that was never actually compared: two different rooms, two different
+ * sets of other posters, and real test traffic posted to a community other people use. The stack that
+ * serves the local SOGS is the same one the real Pro grant already requires.
  *
  * What would fail this: dropping the badge from the author label in a community, or accepting Alice's
  * proof off a community message without verifying it, fails the final step. Rendering the badge for
  * every author regardless of proof — the failure mode an assertion with no control cannot see — fails
  * the control instead.
  */
+/**
+ * The claim, run against two different starting states.
+ *
+ * Parameterised because the interesting variable is whether the recipient has ALREADY resolved the
+ * sender's blinded id to their real one — see the contact note above. Everything else is identical,
+ * so any difference in outcome is attributable to that and nothing else.
+ */
+async function communityAuthorProBadge(alice: DesktopWrapper, bob: DesktopWrapper) {
+  if (!perTestRoomsEnabled()) {
+    test.skip(
+      true,
+      'Needs a community room this test created, for parity with the mobile half of this claim — ' +
+        'see the note above. Set COMMUNITY_LINK and SOGS_ADMIN_SEED to a local SOGS, the same stack ' +
+        'this spec already needs for the Pro backend.'
+    );
+  }
+
+  const community = getCommunities().testCommunity;
+  // Unique per run: against the shared community two runs would otherwise post the same text, and
+  // the assertions scope by message body, so a second match is a strict-mode failure rather than a
+  // wrong answer.
+  const signature = `${Date.now()}`;
+  const messageBefore = `Sending this one before I subscribe - ${signature}`;
+  const messageAfter = `Sending this one as a subscriber - ${signature}`;
+  const bobBreaker = `Bob speaking up so Alice starts a new run - ${signature}`;
+
+  await Promise.all(
+    [alice, bob].map(window => window.joinCommunityByLink(community.link, community.name))
+  );
+  await Promise.all([alice, bob].map(window => window.scrollToBottomIfNecessary()));
+
+  // The control, and the reason the last step means anything: the same locator on the same screen,
+  // before Alice has anything to show. It asserts her author label is rendered AND carries no badge,
+  // so it cannot be satisfied by a label that is simply missing. Alice's message is the first of her
+  // run here without any help — the room's previous message is somebody else's.
+  await alice.sendMessage(messageBefore);
+  await bob.waitForMessage(messageBefore, MESSAGE_DELIVERY_TIMEOUT_MS);
+  await bob.assertNoMessageAuthorProBadge(messageBefore);
+
+  await alice.subscribeToPro();
+  // A restart does not surface a grant this client has never seen — the cold-launch fetch is gated on
+  // already knowing there is access. Opening Pro settings fetches regardless, which is what this does.
+  await alice.waitForProActive();
+  // Being Pro and advertising it are separate: the badge bit rides in Alice's profile, so without this
+  // her proof arrives with nothing asking Bob to draw anything.
+  await alice.enableProBadge();
+  // The Pro settings navigation left Alice on the home screen, not in the community.
+  await alice.openConversationWith(community.name);
+  await alice.scrollToBottomIfNecessary();
+
+  await breakTheRun(bob, [alice], bobBreaker);
+  await alice.sendMessage(messageAfter);
+  await bob.waitForMessage(messageAfter, MESSAGE_DELIVERY_TIMEOUT_MS);
+  await bob.assertMessageAuthorProBadge(messageAfter);
+}
+
 test_Alice_1W_Bob_1W(
   'Pro badge shows on a community message author',
-  async ({ alice, bob }) => {
-    const community = getCommunities().testCommunity;
-    // Unique per run: against the shared community two runs would otherwise post the same text, and
-    // the assertions scope by message body, so a second match is a strict-mode failure rather than a
-    // wrong answer.
-    const signature = `${Date.now()}`;
-    const messageBefore = `Sending this one before I subscribe - ${signature}`;
-    const messageAfter = `Sending this one as a subscriber - ${signature}`;
-    const bobBreaker = `Bob speaking up so Alice starts a new run - ${signature}`;
-
-    await Promise.all(
-      [alice, bob].map(window => window.joinCommunityByLink(community.link, community.name))
-    );
-    await Promise.all([alice, bob].map(window => window.scrollToBottomIfNecessary()));
-
-    // The control, and the reason the last step means anything: the same locator on the same screen,
-    // before Alice has anything to show. It asserts her author label is rendered AND carries no badge,
-    // so it cannot be satisfied by a label that is simply missing. Alice's message is the first of her
-    // run here without any help — the room's previous message is somebody else's.
-    await alice.sendMessage(messageBefore);
-    await bob.waitForMessage(messageBefore, MESSAGE_DELIVERY_TIMEOUT_MS);
-    await bob.assertNoMessageAuthorProBadge(messageBefore);
-
-    await alice.subscribeToPro();
-    // A restart does not surface a grant this client has never seen — the cold-launch fetch is gated on
-    // already knowing there is access. Opening Pro settings fetches regardless, which is what this does.
-    await alice.waitForProActive();
-    // Being Pro and advertising it are separate: the badge bit rides in Alice's profile, so without this
-    // her proof arrives with nothing asking Bob to draw anything.
-    await alice.enableProBadge();
-    // The Pro settings navigation left Alice on the home screen, not in the community.
-    await alice.openConversationWith(community.name);
-    await alice.scrollToBottomIfNecessary();
-
-    await breakTheRun(bob, [alice], bobBreaker);
-    await alice.sendMessage(messageAfter);
-    await bob.waitForMessage(messageAfter, MESSAGE_DELIVERY_TIMEOUT_MS);
-    await bob.assertMessageAuthorProBadge(messageAfter);
-  },
+  async ({ alice, bob }) => communityAuthorProBadge(alice, bob),
   // `pro` tags the test `@pro`; the state itself comes from the grant above, not from a mock.
+  { communityRooms: 1, pro: {} }
+);
+
+/**
+ * The same claim between two accounts that ARE already contacts.
+ *
+ * Expected to FAIL on Desktop today, and that is the point: it pins the divergence described above.
+ * Desktop writes a community sender's Pro details to
+ * `getCachedNakedKeyFromBlindedNoServerPubkey(...) ?? blinded` — the naked id whenever the recipient
+ * already knows it — while the message's author label still reads the blinded one, so the badge has
+ * nowhere to render from. Android passes the sender address through unmodified
+ * (`VisibleMessageHandler.kt`), so the mobile counterpart of this test is expected to pass.
+ *
+ * Asserting the correct behaviour rather than the current one is deliberate. Skipping it, or
+ * inverting it to expect no badge, would document the bug as intended and outlive everyone’s memory
+ * of why.
+ */
+test_Alice_1W_Bob_1W_friends(
+  'Pro badge shows on a community message author from a known contact',
+  async ({ alice, bob }) => communityAuthorProBadge(alice, bob),
   { communityRooms: 1, pro: {} }
 );

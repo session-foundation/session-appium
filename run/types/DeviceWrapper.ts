@@ -3040,7 +3040,7 @@ export class DeviceWrapper implements IMobileWrapper {
    * top so it needs no scroll, addressed by id on both platforms); the conversation probe is the
    * message input, the same signal `openConversationWith` uses.
    */
-  public async assertOwnAvatarAnimated(): Promise<void> {
+  public async assertSettingsAvatarAnimated(): Promise<void> {
     const alreadyInSettings = await this.doesElementExist({
       ...new PrivacyMenuItem(this).build(),
       maxWait: 5_000,

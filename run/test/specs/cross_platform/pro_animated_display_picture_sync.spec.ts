@@ -27,7 +27,7 @@ import { observeProGrant } from '../../utils/pro_refresh';
  * TWO kinds of observer on the other side of it:
  *
  *   - Alice's own LINKED devices on the two remaining platforms, which never saw the upload and
- *     learn both the picture and the entitlement through config sync (`assertOwnAvatarAnimated`);
+ *     learn both the picture and the entitlement through config sync (`assertSettingsAvatarAnimated`);
  *   - BOB, on a client type different from the uploader's, who learns the picture over the network
  *     from a peer and must verify Alice's Pro proof before he is allowed to animate it — read off
  *     his conversation header, which in a 1:1 always draws the other person
@@ -59,7 +59,7 @@ import { observeProGrant } from '../../utils/pro_refresh';
  *
  * ## What makes this able to fail
  *
- * `assertOwnAvatarAnimated` and `assertConversationHeaderAvatarAnimated` both sample one pixel
+ * `assertSettingsAvatarAnimated` and `assertConversationHeaderAvatarAnimated` both sample one pixel
  * repeatedly and require more than one distinct colour, so a still frame and a never-loaded avatar
  * are each a single colour and each fail — the assertion is not satisfied by the picture being there.
  * On mobile the two are told apart by name (the generated-avatar palette is recognised and reported
@@ -220,7 +220,7 @@ async function animatedPictureReachesEveryClient({
     await uploader.setAnimatedDisplayPicture();
     // Source-side control. Passing here means the upload really produced an animation on the client
     // that performed it, so a failure further down is about the OTHER clients.
-    await uploader.assertOwnAvatarAnimated();
+    await uploader.assertSettingsAvatarAnimated();
   });
 
   await test.step(`${aliceName} messages ${bobName} from ${LABEL[uploadOn]}`, async () => {
@@ -246,7 +246,7 @@ async function animatedPictureReachesEveryClient({
       // both have to arrive by config sync for this to pass.
       await observer.openConversationWith(bobName);
       await observer.waitForMessage(message);
-      await observer.assertOwnAvatarAnimated();
+      await observer.assertSettingsAvatarAnimated();
     });
   }
 
