@@ -1,6 +1,9 @@
 import { Page } from '@playwright/test';
 
+import type { DesktopWrapper } from './DesktopWrapper';
+
 import { tStripped } from '../localizer/lib';
+import { MESSAGE_DELIVERY_TIMEOUT_MS } from '../shared/constants';
 import { sleepFor } from '../shared/promise_utils';
 import { Global } from './locators';
 import { MessageStatus } from './types';
@@ -18,6 +21,31 @@ import {
 } from './utils';
 
 export type MessageDeleteType = 'device_only' | 'for_all_my_devices' | 'for_everyone';
+
+/**
+ * Send `message` from `sender` and wait for every window in `others` to have it.
+ *
+ * A run-breaker, not a conversational step. Desktop collapses consecutive messages from one sender
+ * into a run and renders the author label on the FIRST of that run only — `MessageAuthorText` is
+ * gated on `firstMessageOfSeries`, which is decided purely by comparing the previous message's
+ * sender, with no time window (`ts/state/selectors/conversations.ts`). So two messages from the same
+ * person back to back produce exactly ONE author label, and any spec asserting on the label of the
+ * second needs somebody else to speak in between.
+ *
+ * The wait is what makes it a break rather than a race: the sender's next message has to be ordered
+ * after this one for the clients to draw them in that order, and every other window already holding
+ * this one is what guarantees it.
+ */
+export async function breakTheRun(
+  sender: DesktopWrapper,
+  others: Array<DesktopWrapper>,
+  message: string
+) {
+  await sender.sendMessage(message);
+  await Promise.all(
+    others.map(other => other.waitForMessage(message, MESSAGE_DELIVERY_TIMEOUT_MS))
+  );
+}
 
 export const waitForMessageStatus = async (
   window: Page,

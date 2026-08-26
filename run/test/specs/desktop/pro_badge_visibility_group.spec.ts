@@ -1,5 +1,4 @@
-import type { DesktopWrapper } from '../../../desktop/DesktopWrapper';
-
+import { breakTheRun } from '../../../desktop/message';
 import { test_group_Alice_1W_Bob_1W_Charlie_1W } from '../../../desktop/sessionTest';
 import { MESSAGE_DELIVERY_TIMEOUT_MS } from '../../../shared/constants';
 
@@ -7,41 +6,28 @@ const MESSAGE_BEFORE = 'Sending this one before I subscribe';
 const MESSAGE_AFTER = 'Sending this one as a subscriber';
 
 /**
- * Bob's two messages are structural, not conversational.
+ * Bob's two messages are structural, not conversational: they break Alice's run so her messages carry
+ * an author label at all (see `breakTheRun`).
  *
- * Desktop collapses consecutive messages from one sender into a run and renders the author label on
- * the FIRST of the run only — `MessageAuthorText` is gated on `firstMessageOfSeries`, which is decided
- * purely by comparing the previous message's sender, with no time window
- * (`ts/state/selectors/conversations.ts`). The seeded group already opens with a warm-up message from
- * Alice, so with nothing of Bob's in between, neither of Alice's messages below would carry an author
- * label at all and the element this spec is about would never be rendered — in either direction.
+ * The seeded group already opens with a warm-up message from Alice, so with nothing of Bob's in
+ * between, neither of Alice's messages below would carry an author label and the element this spec is
+ * about would never be rendered — in either direction.
  */
 const BOB_BREAKER_ONE = 'Bob speaking up so Alice starts a new run';
 const BOB_BREAKER_TWO = 'Bob speaking up again so Alice starts another run';
-
-/**
- * Send `message` from `sender` and wait for every other window to have it.
- *
- * The wait is what makes it a run-breaker rather than a race: Alice's next message has to carry a
- * later timestamp than Bob's for the clients to order them that way, and only that ordering puts Bob's
- * message between the two of hers.
- */
-async function breakTheRun(sender: DesktopWrapper, others: Array<DesktopWrapper>, message: string) {
-  await sender.sendMessage(message);
-  await Promise.all(
-    others.map(other => other.waitForMessage(message, MESSAGE_DELIVERY_TIMEOUT_MS))
-  );
-}
 
 /**
  * Same-platform: three Desktop windows, no mobile client involved. The group counterpart of
  * `pro_badge_visibility.spec.ts`.
  *
  * It asserts a different element for a real reason. A 1-to-1 renders the peer's badge in the
- * conversation HEADER and never beside a message, because the author label that carries it is
- * group-only — `MessageAuthorText` returns null unless the thread is a group. So neither spec covers
- * the other's surface, and a build that lost the badge from the group author label would still satisfy
- * the header assertion in the 1-to-1 spec.
+ * conversation HEADER and never beside a message, because the author label that carries it never
+ * renders in a private thread — `MessageAuthorText` returns null unless
+ * `useSelectedIsGroupOrCommunity`. So neither spec covers the other's surface, and a build that lost
+ * the badge from the author label would still satisfy the header assertion in the 1-to-1 spec.
+ *
+ * That selector admits communities as well as groups, and the two are different receive paths, so the
+ * community half is its own spec: `pro_badge_visibility_community.spec.ts`.
  *
  * A REAL grant, not `DesktopProContext`. The mocks are display-level and per-device: they convince
  * Alice's own client that she is Pro and produce no proof for anyone else to verify. What Bob and
