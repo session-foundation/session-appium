@@ -33,46 +33,25 @@ export interface IBaseDeviceWrapper {
   changeDisplayName(name: string): Promise<void>;
   assertDisplayName(name: string): Promise<void>;
   /**
-   * Set this account's display picture to the suite's ANIMATED image.
+   * Set this account's display picture to the suite's animated image.
    *
-   * Platform-neutral on purpose, because which client performs the change is the variable a
-   * cross-platform spec varies — but the two sides pick the file very differently, and only the name
-   * hides that. Mobile picks it in the app's own picker (pushed to the device, or preloaded into the
-   * simulator image); desktop has no picker to drive under test integration and returns whatever
-   * `fakeAvatarPickerFile` named at LAUNCH, so a desktop client can only satisfy this if the test
-   * opened it with that context.
-   *
-   * Pro-gated: a non-Pro account gets the upsell CTA instead of an upload, and neither implementation
-   * treats that as an error — the same-platform specs assert that case deliberately. A caller that
-   * wants the picture SET must therefore make the account Pro first and then assert the picture, not
-   * assume this succeeded.
+   * Desktop can only satisfy this if the window was LAUNCHED with `fakeAvatarPickerFile` — it has no
+   * picker to drive. Pro-gated, and a non-Pro account silently gets the upsell CTA instead of an
+   * upload, so make the account Pro first and assert the picture rather than assuming this worked.
    */
   setAnimatedDisplayPicture(): Promise<void>;
   /**
-   * Assert the LOCAL user's own display picture renders here as an ANIMATED image.
+   * Assert the local user's own display picture renders animated, on the settings page.
    *
-   * Own-side. Two things have to be true for it to pass: the picture reached this client (by config
-   * sync, when it was set on a different client), and this client believes the account is entitled to
-   * animate it — an animated display picture is Pro-gated, and a client that does not hold a valid
-   * proof renders the first frame instead of failing loudly.
-   *
-   * BOTH platforms navigate to settings for this and close it behind themselves, so a client ends on
-   * the screen it started from. Named for that surface rather than for whose picture it is: mobile has
-   * no left pane, so the settings avatar is the only element both platforms can offer under one
-   * signature.
+   * A client without a valid proof renders the first frame rather than failing, so this is a Pro
+   * assertion as much as a sync one. Both platforms open settings and close it behind themselves.
    */
   assertSettingsAvatarAnimated(): Promise<void>;
   /**
-   * Open the 1:1 with `convoName` and assert the avatar in its CONVERSATION HEADER renders ANIMATED.
+   * Open the 1:1 with `convoName` and assert the header avatar renders animated.
    *
-   * Named for the surface, and the surface decides whose picture this is: a 1:1 header always draws
-   * the person the conversation is *with*, never the local user — which makes this the stronger of
-   * the two assertions. Passing means this client both fetched that person's avatar and verified
-   * their Pro proof. The display-level Pro mocks write no config and produce no proof, so only a real
-   * grant on the other side satisfies it.
-   *
-   * The exact negative of `verifyConversationHeaderAvatarNotAnimated` (desktop-only), which reads the
-   * same surface and is asserted the opposite way round.
+   * A 1:1 header always draws the peer, never the local user, so this needs a real grant on the other
+   * side — the display-level Pro mocks produce no proof. Negative: `verifyConversationHeaderAvatarNotAnimated`.
    */
   assertConversationHeaderAvatarAnimated(convoName: string): Promise<void>;
 
@@ -88,9 +67,7 @@ export interface IBaseDeviceWrapper {
   /**
    * Open the 1:1 with `senderName` and assert their Session Pro badge renders here.
    *
-   * Receiver-side: the badge belongs to the person the conversation is *with*, so this is never an
-   * assertion about this device's own user. Rendering it means this client verified a real proof —
-   * the display-level Pro mocks produce none, so only a real grant satisfies it.
+   * Receiver-side, so it needs a real grant: the display-level Pro mocks produce no proof.
    */
   assertConversationHeaderProBadge(senderName: string): Promise<void>;
   /**

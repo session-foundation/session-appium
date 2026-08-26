@@ -9,73 +9,26 @@ import { MESSAGE_DELIVERY_TIMEOUT_MS } from '../../../shared/constants';
 import { perTestRoomsEnabled } from '../../utils/community_rooms';
 
 /**
- * Same-platform: two Desktop windows, no mobile client involved. The community counterpart of
- * `pro_badge_visibility_group.spec.ts`, and the Desktop counterpart of the mobile
- * `pro_badge_visibility_community` spec.
+ * Two Desktop windows: a Pro subscriber posts to a community and the other member renders her badge
+ * on the message author label. Distinct from the group spec because a community message arrives
+ * through SOGS from a BLINDED sender, so the proof is verified and stored on a different path.
  *
- * It is a distinct claim rather than a re-run of the group one. A community message reaches the
- * recipient through SOGS, from a BLINDED sender, so the sender's own account key is not on the message
- * at all. Everything the group spec relies on — the sender's profile arriving over the swarm, the
- * proof being checked against a contact record keyed by their Account ID — is a different mechanism
- * here, and the badge is the visible end of it.
+ * Traps:
+ * - Needs a REAL grant. The Pro mocks are display-level and per-device, so they produce no proof for
+ *   the recipient to verify, which is the whole claim.
+ * - The badge comes from the sender's PROFILE, not the message. So the control has to be taken before
+ *   the grant — afterwards, Alice's earlier message renders a badge too.
+ * - Whether Alice and Bob are already contacts changes the outcome, and that is what the two
+ *   registrations below separate. Desktop stores a community sender's Pro details against
+ *   `getCachedNakedKeyFromBlindedNoServerPubkey(...) ?? blinded` (`ts/receiver/opengroup.ts:111`) while
+ *   the author label reads the blinded id (`:97`), so a sender the recipient already knows has the
+ *   details written where the label never looks.
  *
- * A community message can carry a verifiable proof, which is the first thing to establish since the
- * spec is worthless otherwise. Desktop decodes community payloads through a dedicated entry point that
- * takes the Pro backend key — `MultiEncryptWrapperActions.decryptForCommunity(…, proBackendPubkeyHex)`
- * in `ts/session/apis/open_group_api/sogsv3/sogsApiV3.ts` — and keeps the result only if the signature
- * verified (`BaseDecodedEnvelope`'s `validPro`). Blinding is not an obstacle because the proof is
- * signed by the BACKEND over a rotating Pro key rather than bound to the sender's Account ID, so there
- * is nothing in it for SOGS's blinding to invalidate.
- *
- * Desktop then writes the decoded features onto the sender's own conversation record —
- * `ts/receiver/opengroup.ts` builds a private profile change carrying `bitsetProFeatures`,
- * `proExpiryTsMs` and `proRevocationTagB64` — and that record is keyed by the BLINDED id for a sender
- * we have never resolved. `Conversation.showProBadgeFor` reads exactly it, and admits a blinded
- * acquaintance as a first-class holder of Pro details, so the author label has something to render.
- *
- * A REAL grant, not `DesktopProContext`, for the same reason as the group spec: the mocks are
- * display-level and per-device, so they persuade Alice's own client that she is Pro and produce no
- * proof for anyone else to verify. The whole claim here is that Bob verified one — over a transport
- * where he cannot even see who Alice is.
- *
- * The badge is driven by the SENDER'S PROFILE, not by the message it arrives with, so the control has
- * to be taken before the grant rather than by comparing two messages afterwards: once Alice's record
- * on Bob carries the proof, her earlier message renders the badge too.
- *
- * ### Alice and Bob must NOT be contacts, and this is load-bearing
- *
- * Desktop rewrites a community message's sender from the blinded id to the real one only when the
- * sender is US (`sogsApiV3.ts`), but writes the sender's profile to
- * `getCachedNakedKeyFromBlindedNoServerPubkey(...) ?? blinded` — the real id whenever we already know
- * it. For a recipient who has resolved the sender before, the Pro details therefore land on the naked
- * record while the author label still reads the blinded one, and no badge appears. So this uses the
- * unseeded `test_Alice_1W_Bob_1W`, where the two accounts have never exchanged anything: swapping in
- * the `_friends` fixture would make the assertion fail for a reason that has nothing to do with Pro.
- *
- * ### Why this requires a per-test room, as the mobile spec does
- *
- * Not for attribution: unlike mobile — whose `pro-badge-icon` is structural and matches any badge on
- * screen — this assertion is scoped to one message's author label, so a badge it finds is Alice's by
- * construction and a shared room would prove the same thing.
- *
- * It skips anyway, to hold BOTH halves of one claim to the same conditions. The mobile half already
- * cannot run without a local SOGS, so letting the Desktop half fall back to the shared production
- * community means a green pair that was never actually compared: two different rooms, two different
- * sets of other posters, and real test traffic posted to a community other people use. The stack that
- * serves the local SOGS is the same one the real Pro grant already requires.
- *
- * What would fail this: dropping the badge from the author label in a community, or accepting Alice's
- * proof off a community message without verifying it, fails the final step. Rendering the badge for
- * every author regardless of proof — the failure mode an assertion with no control cannot see — fails
- * the control instead.
+ * Skips without a per-test room. Not for attribution — this assertion is scoped to one message's
+ * author label — but so both halves of the claim run under the same conditions: the mobile half
+ * cannot run without a local SOGS, and the alternative posts real test traffic to a shared community.
  */
-/**
- * The claim, run against two different starting states.
- *
- * Parameterised because the interesting variable is whether the recipient has ALREADY resolved the
- * sender's blinded id to their real one — see the contact note above. Everything else is identical,
- * so any difference in outcome is attributable to that and nothing else.
- */
+
 async function communityAuthorProBadge(alice: DesktopWrapper, bob: DesktopWrapper) {
   if (!perTestRoomsEnabled()) {
     test.skip(
@@ -128,23 +81,13 @@ async function communityAuthorProBadge(alice: DesktopWrapper, bob: DesktopWrappe
 test_Alice_1W_Bob_1W(
   'Pro badge shows on a community message author',
   async ({ alice, bob }) => communityAuthorProBadge(alice, bob),
-  // `pro` tags the test `@pro`; the state itself comes from the grant above, not from a mock.
   { communityRooms: 1, pro: {} }
 );
 
 /**
- * The same claim between two accounts that ARE already contacts.
- *
- * Expected to FAIL on Desktop today, and that is the point: it pins the divergence described above.
- * Desktop writes a community sender's Pro details to
- * `getCachedNakedKeyFromBlindedNoServerPubkey(...) ?? blinded` — the naked id whenever the recipient
- * already knows it — while the message's author label still reads the blinded one, so the badge has
- * nowhere to render from. Android passes the sender address through unmodified
- * (`VisibleMessageHandler.kt`), so the mobile counterpart of this test is expected to pass.
- *
- * Asserting the correct behaviour rather than the current one is deliberate. Skipping it, or
- * inverting it to expect no badge, would document the bug as intended and outlive everyone’s memory
- * of why.
+ * EXPECTED TO FAIL on Desktop — see the contact trap above. It asserts the correct behaviour rather
+ * than the current one on purpose: inverting it would document the bug as intended. Android passes
+ * the sender address through unmodified, so the mobile counterpart should pass.
  */
 test_Alice_1W_Bob_1W_friends(
   'Pro badge shows on a community message author from a known contact',

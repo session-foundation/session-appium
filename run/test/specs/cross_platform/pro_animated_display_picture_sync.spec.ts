@@ -10,71 +10,21 @@ import { enableProBadge } from '../../utils/pro_badge';
 import { observeProGrant } from '../../utils/pro_refresh';
 
 /**
- * Cross-platform animated display picture: a Pro user sets one on ONE client type, and every OTHER
- * client renders it as an animation rather than a still frame.
+ * A Pro user sets an animated display picture on one client type; every other client must render it
+ * animated rather than as a still frame. Runs three times, once per uploading client type.
  *
- * This is the cross-platform counterpart to coverage that already exists same-platform on all three
- * clients — `specs/desktop/pro_animated_display_picture.spec.ts` and
- * `specs/mobile/user_actions_animated_profile_picture.spec.ts`. Those prove a client can upload one
- * and that a peer of the SAME client type animates it. Neither can fail when two clients disagree
- * about the wire format, the config field or the Pro gate, which is the interesting case: the
- * picture is written to libSession config by the sender and re-decided by the receiver, so
- * "animated" is a property each client computes for itself.
+ * Alice holds all three client types (linked observers, which learn the picture by config sync); Bob
+ * holds one, rotated across the three registrations so each type is also exercised as the network-side
+ * receiver. Bob is not given three of his own — six clients at once is where this hardware starts
+ * failing on propagation timeouts.
  *
- * ## Three variants, because the uploader is the variable
- *
- * The same body runs three times, once per client type performing the change, and each run puts
- * TWO kinds of observer on the other side of it:
- *
- *   - Alice's own LINKED devices on the two remaining platforms, which never saw the upload and
- *     learn both the picture and the entitlement through config sync (`assertSettingsAvatarAnimated`);
- *   - BOB, on a client type different from the uploader's, who learns the picture over the network
- *     from a peer and must verify Alice's Pro proof before he is allowed to animate it — read off
- *     his conversation header, which in a 1:1 always draws the other person
- *     (`assertConversationHeaderAvatarAnimated`).
- *
- * So Alice holds all three client types in every variant, and Bob holds exactly one — rotated so
- * that across the three registrations every client type is exercised as the peer receiver too. Bob
- * is deliberately not given three of his own: his second and third clients would re-assert the
- * receiver path the other variants already cover, at the price of standing up six clients at once,
- * which is measurably where this hardware starts failing on propagation timeouts rather than on CPU.
- *
- * The desktop variant used to be impossible, and it is worth knowing why it is not any more: desktop
- * has no file dialog to drive under test integration, so the image its picker returns is fixed at
- * LAUNCH by `fakeAvatarPickerFile` — which the cross-platform opener did not thread through. It now
- * does, which is the only reason a desktop client here can pick an animated file at all.
- *
- * ## Real grant, not a mock
- *
- * This needs a REAL Pro grant on Alice, on both counts a mock would have to cover:
- *
- *   - the upload itself is Pro-gated — a non-Pro account picking an animated image gets the upsell
- *     CTA instead of an upload (that is the `(non Pro)` case in the same-platform specs); and,
- *     decisively,
- *   - the OBSERVING clients each decide for themselves whether the account may animate. The display
- *     mocks are per-device and write no config and no proof, so a mocked subscriber uploads a
- *     picture that every other client renders as its first frame — `freezeFrameForUser` on mobile,
- *     the equivalent on desktop. A mock convinces the client it is set on and nobody else, and here
- *     three OTHER clients are the assertion.
- *
- * ## What makes this able to fail
- *
- * `assertSettingsAvatarAnimated` and `assertConversationHeaderAvatarAnimated` both sample one pixel
- * repeatedly and require more than one distinct colour, so a still frame and a never-loaded avatar
- * are each a single colour and each fail — the assertion is not satisfied by the picture being there.
- * On mobile the two are told apart by name (the generated-avatar palette is recognised and reported
- * as "never loaded" rather than "not animated", because an upload that never propagated is a
- * different bug, with a different owner, from a picture the receiver refused to animate); desktop
- * reports one failure for both.
- *
- * Two controls sit either side of that:
- *
- *   - the uploader asserts its OWN avatar animated immediately after the upload. If that fails, the
- *     upload never produced an animation and nothing downstream is worth reading.
- *   - every observer waits for Alice's MESSAGE before looking at her avatar. A profile rides along
- *     with messages, so the message arriving is what makes "the avatar is still a placeholder" mean
- *     something. Without it a frozen avatar and a client that received nothing at all are
- *     indistinguishable.
+ * Traps:
+ * - A Pro MOCK cannot satisfy this. Mocks are per-device and write no config and no proof, so every
+ *   observer renders the picture as its first frame. It needs a real grant.
+ * - Desktop's picker is fixed at LAUNCH by `fakeAvatarPickerFile`; a desktop uploader only works
+ *   because the cross-platform opener now threads it through.
+ * - Observers wait for Alice's MESSAGE before reading her avatar. Profiles ride along with messages,
+ *   so without that a frozen avatar and a client that received nothing look identical.
  */
 
 /** The three client types, as the spec's own vocabulary for "who performs the change". */

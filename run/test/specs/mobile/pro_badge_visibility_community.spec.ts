@@ -58,75 +58,18 @@ bothPlatformsIt({
 });
 
 /**
- * The community counterpart of `pro_badge_visibility_group`, and it is a distinct claim rather than a
- * re-run of that one: a community message reaches the recipient through **SOGS**, from a **blinded**
- * sender, so the sender's own account key is not on the message at all. Everything the group spec
- * relies on — the sender's profile arriving over the swarm, the proof being checked against the key in
- * the sender's Account ID — is a different mechanism here, and the badge is the visible end of it.
+ * A Pro subscriber posts to a community and another member renders her badge beside the author name.
+ * Distinct from the group spec: a community message arrives through SOGS from a BLINDED sender, so
+ * the proof is verified and stored on a different path.
  *
- * **A community message can carry a verifiable proof**, which is the first thing to establish since the
- * spec is worthless otherwise. libSession decodes community payloads through a dedicated entry point
- * that takes the Pro backend key and returns the verified Pro block with the plaintext — Android
- * `SessionProtocol.decodeForCommunity(payload, timestampMs, proBackendPubKey)` in `MessageParser.kt`,
- * iOS `session_protocol_decoded_community_message`'s `.pro` in `DecodedMessage.swift`. Blinding is not
- * an obstacle because the proof is signed by the **backend** over a rotating Pro key rather than bound
- * to the sender's Account ID, so there is nothing in it for SOGS's blinding to invalidate. Both clients
- * then write the decoded features onto the sender under their **blinded** address (Android
- * `ProfileUpdateHandler.handleProfileUpdate(..., fromCommunity)`; iOS the shared visible-message
- * handler), which is what the badge reads.
- *
- * Both clients render the surface, too. Android's author label is `ProBadgeText(..., showBadge =
- * message.recipient.shouldShowProBadge)` in `VisibleMessageView.kt`, in the same `Row` that appends the
- * blinded id for community senders; iOS's is `SessionLabelWithProBadge` in `VisibleMessageCell.swift`,
- * whose `isProBadgeHidden` reads `cellViewModel.profile.proFeatures`, next to the `threadVariant ==
- * .community` branch that appends the truncated author id. So a community author badge is a state both
- * clients can be in, not a hypothetical.
- *
- * Like the group and 1-to-1 specs this needs a **real grant** rather than the launch-arg mocks. The
- * mocks are display-level and per-device: they persuade Alice's own client that she is Pro but produce
- * no proof for anyone else to verify, and the whole claim here is that Bob verified one — over a
- * transport where he cannot even see who Alice is. Android could not be mocked into this state even if
- * that were acceptable: `resolveProStatus`'s `forceOtherUsersAsPro` branch is guarded on
- * `Address.Standard`, so it never reaches a blinded community sender.
- *
- * The badge is driven by the **sender's profile**, not by the message it arrives with, so the control
- * has to be taken before the grant rather than by comparing two messages afterwards — once Alice's
- * profile carries the badge, her earlier message renders it too.
- *
- * Which makes the step order load-bearing in a way that is worth stating, because getting it wrong
- * fails silently. Both clients drop an incoming profile whose `lastUpdateSeconds` has not advanced past
- * the copy they hold (Android `ProfileUpdateHandler.shouldUpdateProfile`, iOS `UpdateStatus.init`), and
- * the control message has already given Bob a copy of Alice's. The proof would then arrive, verify, and
- * be discarded one layer above — looking exactly like a badge that failed to render. What saves it is
- * that libSession stamps the profile on both writes this test makes: `UserProfile::set_pro_badge` and
- * `set_pro_config` each set `data["t"]/["T"] = ts_now()` (`src/config/user_profile.cpp`). So the grant
- * and `enableProBadge` must both land **between** the control and the second message, as below.
- *
- * ### Why the unscoped locator is safe here, and what makes it so
- *
- * Mobile tags the badge **structurally** (`pro-badge-icon`, on every badge in the app) rather than per
- * surface, so `ProBadge` cannot say *which* badge it matched — an unscoped match proves only "a badge
- * is on screen". Nor can it be scoped by traversal: Android's `ProBadgeText` takes a `badgeQaTag`
- * override precisely so a surface that needs its own id gets one at the call site (the conversation
- * header does), and deliberately rejects reaching the shared id from a parent. The message-author call
- * site passes no override, so there is nothing narrower to wait for on either platform.
- *
- * The group spec answers this by pointing at its fixture: closed membership, and Alice the only member
- * granted. **A community has no such membership**, which is exactly why this spec cannot simply repeat
- * that argument — on the shared remote community anyone posting could be Pro, and a badge on Bob's
- * screen would prove nothing about Alice.
- *
- * So the argument is *made to hold* instead of assumed: this test runs only in a room **it created**
- * (`communityRooms: 1` against a local SOGS), whose only posters are the room's seed identity and the
- * two seeded accounts. Alice is then the only member who can be Pro, and the group spec's reasoning
- * applies unchanged. When per-test rooms are off the run falls back to the shared remote community,
- * where that is untrue, so the test skips rather than asserting something it cannot attribute.
- *
- * That costs nothing in practice: a real grant already needs the Sesh-Net-Docker stack for
- * `TEST_PRO_BACKEND_URL`, and that same stack is what serves the local SOGS.
- *
- * Scope this — with a client-side `badgeQaTag`, not a traversal — if a fixture ever makes a second
- * member Pro.
+ * Traps:
+ * - Needs a REAL grant. The Pro mocks are display-level and per-device and produce no proof for the
+ *   recipient to verify, which is the whole claim.
+ * - The badge comes from the sender's PROFILE, not the message, so the control has to be taken before
+ *   the grant — afterwards her earlier message renders a badge too.
+ * - `ProBadge` is the shared `pro-badge-icon` and matches ANY badge on screen, so this is only
+ *   attributable to Alice in a room nobody else posts to. Hence the per-test-room skip below. A
+ *   client-side `message-author-pro-badge` tag would remove that constraint.
  */
 async function proBadgeVisibleInCommunity(
   platform: SupportedPlatformsType,
