@@ -33,6 +33,22 @@ export interface IBaseDeviceWrapper {
   changeDisplayName(name: string): Promise<void>;
   assertDisplayName(name: string): Promise<void>;
   /**
+   * Set this account's display picture to the suite's ANIMATED image.
+   *
+   * Platform-neutral on purpose, because which client performs the change is the variable a
+   * cross-platform spec varies — but the two sides pick the file very differently, and only the name
+   * hides that. Mobile picks it in the app's own picker (pushed to the device, or preloaded into the
+   * simulator image); desktop has no picker to drive under test integration and returns whatever
+   * `fakeAvatarPickerFile` named at LAUNCH, so a desktop client can only satisfy this if the test
+   * opened it with that context.
+   *
+   * Pro-gated: a non-Pro account gets the upsell CTA instead of an upload, and neither implementation
+   * treats that as an error — the same-platform specs assert that case deliberately. A caller that
+   * wants the picture SET must therefore make the account Pro first and then assert the picture, not
+   * assume this succeeded.
+   */
+  setAnimatedDisplayPicture(): Promise<void>;
+  /**
    * Assert the LOCAL user's own display picture renders here as an ANIMATED image.
    *
    * Own-side. Two things have to be true for it to pass: the picture reached this client (by config
@@ -46,14 +62,18 @@ export interface IBaseDeviceWrapper {
    */
   assertOwnAvatarAnimated(): Promise<void>;
   /**
-   * Open the 1:1 with `convoName` and assert THAT PERSON's display picture renders here as ANIMATED.
+   * Open the 1:1 with `convoName` and assert the avatar in its CONVERSATION HEADER renders ANIMATED.
    *
-   * Receiver-side, and the stronger of the two: the picture belongs to the person the conversation is
-   * *with*, so passing means this client both fetched their avatar and verified their Pro proof. The
-   * display-level Pro mocks write no config and produce no proof, so only a real grant on the sender
-   * satisfies this.
+   * Named for the surface, and the surface decides whose picture this is: a 1:1 header always draws
+   * the person the conversation is *with*, never the local user — which makes this the stronger of
+   * the two assertions. Passing means this client both fetched that person's avatar and verified
+   * their Pro proof. The display-level Pro mocks write no config and produce no proof, so only a real
+   * grant on the other side satisfies it.
+   *
+   * The exact negative of `verifyConversationHeaderAvatarNotAnimated` (desktop-only), which reads the
+   * same surface and is asserted the opposite way round.
    */
-  assertSenderAvatarAnimated(convoName: string): Promise<void>;
+  assertConversationHeaderAvatarAnimated(convoName: string): Promise<void>;
 
   // Messaging
   sendMessage(message: string): Promise<number>;

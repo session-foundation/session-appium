@@ -1,9 +1,10 @@
 import { resolve } from 'path';
 
 import { animatedProfilePicture, mediaFolder } from '../../../constants/testfiles';
-import { CTA } from '../../../desktop/locators';
+import { Conversation, CTA } from '../../../desktop/locators';
 import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W, test_Alice_1W_Bob_1W } from '../../../desktop/sessionTest';
+import { buildDescendantSelector } from '../../../desktop/utils';
 
 /**
  * Animated display pictures, either side of the Pro boundary.
@@ -64,7 +65,9 @@ test_Alice_1W_Bob_1W(
     // Alice can still be labelled with her account ID at this point, so opening by name is a step
     // that can only fail.
     await bob.waitForMessage('Howdy');
-    await bob.verifyElementIsAnimated('[data-testid="conversation-options-avatar"] img');
+    await bob.verifyElementIsAnimated(
+      buildDescendantSelector(Conversation.conversationSettingsIcon, 'img')
+    );
   },
   { pro: {}, fakeAvatarPickerFile: ANIMATED_AVATAR }
 );
