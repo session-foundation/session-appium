@@ -26,7 +26,7 @@ import {
   scrollToBottomLookingForMessage,
 } from './conversation';
 import { createContact } from './create_contact';
-import { joinCommunity, joinOrOpenCommunity } from './join_community';
+import { joinCommunity, joinCommunityByLink, joinOrOpenCommunity } from './join_community';
 import { leaveGroup } from './leave_group';
 import { Conversation, CTA, HomeScreen, LeftPane, ProSettings, Settings } from './locators';
 import {
@@ -784,14 +784,15 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /**
-   * The author label above `message` in the currently open group, scoped to that one message.
+   * The author label above `message` in the currently open conversation, scoped to that one message.
    *
    * Scoping is not tidiness. `pro-badge-contact-name` is `ContactName`'s badge and `ContactName`
    * renders every left-pane row too, so the moment a sender is Pro the same test id also matches their
-   * 1:1 row in the conversation list — a page-wide match would go green without the group surface
-   * having rendered anything at all.
+   * 1:1 row in the conversation list — a page-wide match would go green without the message surface
+   * having rendered anything at all. In a community it is scoped for a second reason: every Pro
+   * author in the room carries the same badge, so an unscoped match says nothing about who.
    */
-  private groupAuthorLabel(message: string) {
+  private messageAuthorLabel(message: string) {
     return this.page
       .getByTestId(Conversation.messageContent.selector)
       .filter({ hasText: message })
@@ -799,23 +800,25 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /**
-   * Assert the sender's Session Pro badge is rendered on `message`'s author label in the open group.
+   * Assert the sender's Session Pro badge is rendered on `message`'s author label.
    *
-   * A different element from `assertConversationHeaderProBadge`: the author label is group-only
-   * (`MessageAuthorText` returns null unless the thread is a group), so neither assertion covers the
-   * other's surface and a build that lost the badge here would still satisfy the header one.
+   * A different element from `assertConversationHeaderProBadge`: the author label never renders in a
+   * 1:1 (`MessageAuthorText` bails unless `useSelectedIsGroupOrCommunity`), so neither assertion
+   * covers the other's surface and a build that lost the badge here would still satisfy the header
+   * one. That selector is the inclusive one, so this reads the same element in a group and in a
+   * community.
    *
    * Polled rather than read once: this depends on the recipient having received the message, verified
    * the proof it carries and re-rendered off the updated contact record.
    */
   public async assertMessageAuthorProBadge(message: string, maxWaitMs = 60_000): Promise<void> {
-    await this.groupAuthorLabel(message)
+    await this.messageAuthorLabel(message)
       .getByTestId(Conversation.proBadgeAuthorName.selector)
       .waitFor({ state: 'visible', timeout: maxWaitMs });
   }
 
   /**
-   * Assert `message`'s author label IS rendered in the open group and carries NO Pro badge.
+   * Assert `message`'s author label IS rendered in the open conversation and carries NO Pro badge.
    *
    * Waiting for the label is the half that makes this a control rather than a tautology — an absent
    * badge inside a label that was never rendered says nothing about the badge. Once the label is up the
@@ -823,7 +826,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
    * stored contact record, so the absence can be read immediately rather than waited out.
    */
   public async assertNoMessageAuthorProBadge(message: string, maxWaitMs = 60_000): Promise<void> {
-    const label = this.groupAuthorLabel(message);
+    const label = this.messageAuthorLabel(message);
     await label.waitFor({ state: 'visible', timeout: maxWaitMs });
     const badges = await label.getByTestId(Conversation.proBadgeAuthorName.selector).count();
     if (badges !== 0) {
@@ -1105,6 +1108,16 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
 
   public async joinCommunity(): Promise<void> {
     await joinCommunity(this.page);
+  }
+
+  /**
+   * Join the community at `link` and wait for its row in the conversation list.
+   *
+   * The counterpart of `joinCommunity` for a room the test allocated itself (`communityRooms`),
+   * whose link only exists at runtime — `joinCommunity` hardcodes the shared one.
+   */
+  public async joinCommunityByLink(link: string, name: string): Promise<void> {
+    await joinCommunityByLink(this.page, link, name);
   }
 
   public async joinOrOpenCommunity(): Promise<void> {
