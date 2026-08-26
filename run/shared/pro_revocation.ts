@@ -3,8 +3,6 @@
 // each half proves its own client consistent with itself, so drift here is invisible until the two
 // results are compared by hand.
 
-import { COUNTDOWN_START_THRESHOLD, PRO_MAX_CHARS, STANDARD_MAX_CHARS } from './constants';
-
 /**
  * Restart options that make a desktop client poll for revocations at test speed. Forcing the poll is what
  * lets these specs run at all.
@@ -32,15 +30,6 @@ export const SENT_ON_NEW_PROOF = 'Sent on the replacement proof';
  */
 export const SENT_WITH_FAKE_PROOF = 'Sent with a fake proof';
 
-/** How far past the standard limit a message goes to prove which limit is being applied. */
-export const OVER_STANDARD_CHARS = 3000;
-
-/**
- * How far ahead a revocation is dated when the test needs it pending rather than effective.
- *
- * Long enough to send and receive a message inside the window, short enough that the same test can then
- * wait it out.
- */
 export const REVOCATION_EFFECTIVE_IN_SECONDS = 20;
 
 /** How long a client is given to poll and act on a revocation once it has taken effect. */
@@ -54,49 +43,3 @@ export const REVOCATION_POLL_SETTLE_MS = 5000;
  * renders it ~2s after the message, so this is ~7x that.
  */
 export const BADGE_SETTLE_MS = 15_000;
-
-const EARLY_AT = 500;
-
-/** Where the `LATE` marker sits, which the specs quote when reporting a limit that was wrongly honoured. */
-export const LATE_AT = STANDARD_MAX_CHARS + 500;
-
-/** The largest length the composer accepts without sitting on the boundary. Matches `pro_overhang`. */
-export const MARKED_MESSAGE_LENGTH = PRO_MAX_CHARS - COUNTDOWN_START_THRESHOLD;
-
-export const early = (tag: string) => `EARLY-${tag}`;
-export const late = (tag: string) => `LATE-${tag}`;
-
-/**
- * A Pro-length message carrying two markers, placed so each end's copy is identified by which survives.
- *
- * `EARLY` sits inside the standard limit, so it is present in every outcome — including a copy that
- * arrived truncated. It is the anchor: without it, "the tail is missing" is equally well explained by the
- * message never arriving, and the assertion would pass before the behaviour under test happened.
- *
- * `LATE` sits past the standard limit and inside the Pro one, so it survives only if the recipient
- * honoured the proof.
- *
- * The positions are checked rather than trusted, because getting them wrong fails in the flattering
- * direction: a message that never contained its `EARLY` marker fails as a long wait on the recipient,
- * which reads as a delivery problem.
- */
-export function markedMessage(tag: string): string {
-  const head = 'a'.repeat(EARLY_AT) + early(tag);
-  const withLate = head + 'b'.repeat(LATE_AT - head.length) + late(tag);
-  const message = withLate + 'c'.repeat(MARKED_MESSAGE_LENGTH - withLate.length);
-
-  const earlyEnd = message.indexOf(early(tag)) + early(tag).length;
-  const lateStart = message.indexOf(late(tag));
-  if (
-    message.length !== MARKED_MESSAGE_LENGTH ||
-    earlyEnd > STANDARD_MAX_CHARS ||
-    lateStart <= STANDARD_MAX_CHARS
-  ) {
-    throw new Error(
-      `markedMessage(${tag}): ${message.length} chars, EARLY ends ${earlyEnd}, LATE starts ${lateStart} ` +
-        `— the markers must straddle the standard limit of ${STANDARD_MAX_CHARS}.`
-    );
-  }
-
-  return message;
-}

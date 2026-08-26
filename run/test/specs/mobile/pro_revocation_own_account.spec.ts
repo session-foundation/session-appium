@@ -1,7 +1,7 @@
 import { test, type TestInfo } from '@playwright/test';
 
+import { OVER_STANDARD_CHARS } from '../../../shared/message';
 import { makeAccountPro, revokeAccountPro } from '../../../shared/pro_grant';
-import { OVER_STANDARD_CHARS } from '../../../shared/pro_revocation';
 import { TestSteps } from '../../../types/allure';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { bothPlatformsIt } from '../../../types/sessionIt';

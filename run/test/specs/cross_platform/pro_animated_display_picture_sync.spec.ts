@@ -26,7 +26,6 @@ import { observeProGrant } from '../../utils/pro_refresh';
  *   so without that a frozen avatar and a client that received nothing look identical.
  */
 
-
 const LABEL: Record<ClientPlatform, string> = {
   android: 'Android',
   desktop: 'Desktop',

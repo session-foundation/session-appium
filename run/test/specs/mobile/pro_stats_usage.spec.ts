@@ -2,10 +2,10 @@ import { expect, test, type TestInfo } from '@playwright/test';
 
 import type { DeviceWrapper } from '../../../types/DeviceWrapper';
 
-import { STANDARD_MAX_CHARS } from '../../../shared/constants';
+import { messageOfLength, OVER_STANDARD_CHARS } from '../../../shared/message';
 import { makeAccountPro } from '../../../shared/pro_grant';
 import { TestSteps } from '../../../types/allure';
-import { iosIt } from '../../../types/sessionIt';
+import { bothPlatformsIt } from '../../../types/sessionIt';
 import { MessageInput, OutgoingMessageStatusSent, SendButton } from '../../locators/conversation';
 import { ConversationItem } from '../../locators/home';
 import { open_Alice1_with_contacts } from '../../state_builder';
@@ -16,65 +16,23 @@ import { observeProGrant } from '../../utils/pro_refresh';
 import { readProStats } from '../../utils/pro_settings';
 
 /**
- * The "Your Pro Stats" matrix, checked against usage the test itself produces.
+ * The "Your Pro Stats" matrix, checked against usage the test itself produces. Sibling specs assert the
+ * matrix renders and reads zero; neither would catch four hard-coded zeroes or two cells wired to the
+ * same counter.
  *
- * `pro_settings_states` already asserts the matrix is *there* per subscription state, and
- * `expectProStatsMatrix` asserts it reads zero on a fixture that has done nothing. Neither says the
- * numbers follow anything: a client that rendered four hard-coded zeroes, or wired every cell to the same
- * counter, satisfies both. This is the part that can only be shown by doing something and looking again.
+ * Traps:
+ * - Needs a REAL grant. Both send counters only move for a message that carried a Pro feature on the
+ *   wire, and both clients gate that on holding a proof — a display-level mock stamps no feature bits,
+ *   so the counters never move and the spec fails against a healthy app.
+ * - Asserts DELTAS, not absolutes. The clients disagree on the absolute semantics: Android recounts
+ *   outgoing rows (so deleting a message decrements), iOS and Desktop bump a monotonic counter (so a
+ *   resend counts twice). "+1 per qualifying action" is the only part all three agree on.
+ * - Every reading is a fresh visit to the screen — see `readProStats`.
  *
- * ## What breaks it
- *
- * Wiring any of the three cells to a constant, to the wrong feature bit, or to a counter the qualifying
- * action does not touch — including swapping the badges and longer-messages cells, which read adjacent
- * counters of the same shape — makes a post-action reading differ from `baseline + 1` and fails this.
- *
- * ## Why a real grant, not the launch-arg mocks
- *
- * Two of the three counters only move for a message that actually carried a Pro feature on the wire, and
- * both clients gate that on holding a **proof**, not on the plan's displayed state:
- * `ProStatusManager.addProFeatures` returns early unless `currentUserProProofForAccess() != null`
- * (Android), and `SessionProManager.attachProInfoIfNeeded` requires `currentUserProofIsValid`
- * (iOS). A display-level `proProof: 'valid'` makes the client's own UI behave as Pro but produces no
- * proof, so the feature bits are never stamped and these counters never move — the spec would fail
- * against a perfectly healthy app. Hence `makeAccountPro` plus `observeProGrant`.
- *
- * ## Why the deltas, and not the absolute numbers
- *
- * Because the absolute semantics are **not the same on all three clients**, and nothing specifies which
- * is right. Both send counters agree on "one qualifying send, one more", and diverge immediately after:
- *
- * | | Android | iOS | Desktop |
- * |---|---|---|---|
- * | badges sent / longer messages | live `COUNT(*)` over outgoing message rows carrying the feature bit (`MmsSmsDatabase`) | monotonic counter bumped in `handleSuccessfulMessageSend` | monotonic counter bumped in `models/message.ts` |
- * | deleting the message | decrements | no effect | no effect |
- * | a resend of a failed message | one row, so no change | counts again | counts again |
- *
- * So "how many badges have I sent" has no agreed answer, and an absolute assertion would pin the product
- * to whichever client the fixture happened to run on. `+1 for one qualifying action` is the part all three
- * do agree on, and it is checkable without knowing the rest. **The rest remains unspecified** — see the
- * PR for the list.
- *
- * `pinned-conversations` is the odd one out and the only one that is genuinely specified: all three read
- * a live count of threads currently pinned (Android over the libSession user configs, iOS and Desktop over
- * their local mirror of `pinnedPriority`), it needs no proof, and because the priority is config-backed it
- * is the one stat that really is the same on a user's other devices — which the header's own tooltip,
- * "Pro stats reflect usage on this device and may appear differently on linked devices", gets wrong.
- *
- * ## iOS-only, and what would make it `bothPlatformsIt`
- *
- * Android tags the cell but not the number. `ProStatItem` applies the `qaTag` to its root `Row`
- * (`session-android/app/src/main/java/org/thoughtcrime/securesms/preferences/prosettings/ProSettingsHomeScreen.kt`),
- * and `qaTag` is `semantics { testTagsAsResourceId = true }.testTag(…)` with no `mergeDescendants`, so
- * that node carries a `resource-id` and no text while the count sits on an untagged child `Text`. No `id`
- * or `accessibility id` reaches it, and the remaining strategies are not an option, so the Android half
- * would assert only that four cells exist — coverage that cannot fail. Tag that `Text` (the shape
- * `pro-screen-action-label` already uses for the same problem on the store-flow button) and this becomes
- * `bothPlatformsIt` with no change here beyond the platform guard in `readProStat`.
- *
- * Desktop is out for a stronger reason: it declares no `pro-stats-*` id at all.
+ * `pinned-conversations` is the exception: a live count of currently-pinned threads on all three, needs
+ * no proof, and being config-backed it really is the same across a user's devices.
  */
-iosIt({
+bothPlatformsIt({
   title: 'Pro stats count real usage',
   risk: 'medium',
   countOfDevicesNeeded: 1,
@@ -87,7 +45,6 @@ iosIt({
 });
 
 /** One past the standard limit — the shortest message that carries the increased-length feature. */
-const OVER_STANDARD_LENGTH = STANDARD_MAX_CHARS + 1;
 
 /**
  * Send `body` in the conversation the device is already showing and wait for the sent tick.
@@ -136,9 +93,9 @@ async function proStatsCountRealUsage(platform: SupportedPlatformsType, testInfo
   // claim is the delta, and a fixture that arrived with a pinned conversation should not fail this.
   const baseline = await readProStats(device);
 
-  await test.step(`Send a ${OVER_STANDARD_LENGTH}-character message`, async () => {
+  await test.step(`Send a ${OVER_STANDARD_CHARS}-character message`, async () => {
     await device.clickOnElementAll(new ConversationItem(device, longMessageRecipient));
-    await sendAndConfirm(device, 'x'.repeat(OVER_STANDARD_LENGTH));
+    await sendAndConfirm(device, messageOfLength(OVER_STANDARD_CHARS));
     await device.navigateBack();
   });
 

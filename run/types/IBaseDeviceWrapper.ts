@@ -1,6 +1,7 @@
 import type { StateUser } from '@session-foundation/qa-seeder';
 
 import type { ProMessageFeature } from '../test/utils/pro_message_features';
+import type { ProStatCounts } from '../test/utils/pro_settings';
 
 /**
  * High-level, platform-NEUTRAL capabilities that a Session client of ANY
@@ -109,6 +110,13 @@ export interface IBaseDeviceWrapper {
    * polling there becomes a second client minting against the same account. The settings-root badge
    * is fetch-free on all three platforms.
    */
+  /**
+   * Read every movable Pro stat, starting and finishing on the home screen.
+   *
+   * A fresh visit per reading on every platform: the counters are queried when the screen opens, so a
+   * helper that held it open would read the baseline twice and pass whatever the action did.
+   */
+  readProStats(): Promise<ProStatCounts>;
   waitForOwnProBadge(maxWaitMs?: number): Promise<void>;
   sendLongProMessage(convoName: string, message: string): Promise<void>;
 }

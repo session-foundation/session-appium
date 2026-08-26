@@ -22,6 +22,7 @@ import {
   type ProStat,
   ProStatCell,
   ProStatsHeader,
+  ProStatValue,
   ProSupportRow,
 } from '../locators/pro';
 import { UserSettings } from '../locators/settings';
@@ -124,7 +125,7 @@ function normaliseCopy(value: string): string {
  *   would happily return 1.
  * - **copy drift is caught at the point of reading**, not three assertions later as a confusing delta.
  */
-function parseProStatCount(stat: ProStat, copy: string): number {
+export function parseProStatCount(stat: ProStat, copy: string): number {
   const normalised = normaliseCopy(copy);
   const leadingDigits = /^(\d+)\b/.exec(normalised);
   if (!leadingDigits) {
@@ -161,19 +162,41 @@ function parseProStatCount(stat: ProStat, copy: string): number {
  * `clickable`, and `clickable` merges descendants — which is an accident, not a design.
  */
 async function readProStat(device: DeviceWrapper, stat: ProStat): Promise<number> {
-  if (!device.isIOS()) {
-    throw new Error(
-      `readProStat is iOS-only: on Android the "pro-stats-${stat}" tag sits on ProStatItem's Row and the ` +
-        `count is on an untagged child Text (ProSettingsHomeScreen.kt), so no id or accessibility id ` +
-        `reaches it. Tag that Text in the client before calling this on Android.`
-    );
+  if (device.isIOS()) {
+    const element = await device.waitForTextElementToBePresent({
+      ...new ProStatCell(device, stat).build(),
+      maxWait: PRESENT_MAX_WAIT,
+    });
+    const copy = (await device.getAttribute('label', element.ELEMENT)) ?? '';
+    return parseProStatCount(stat, copy);
   }
-  const element = await device.waitForTextElementToBePresent({
-    ...new ProStatCell(device, stat).build(),
+
+  // Android tags every cell's count with the same `pro-stats-value`, so the id alone cannot say which
+  // stat a match belongs to. Read them all and let `parseProStatCount` decide: it rebuilds the expected
+  // copy from the number it parsed, so only the cell whose wording matches `stat` survives.
+  // `skipHealing` because a miss here means the APK predates the tag, and healing's fuzzy id match
+  // resolves to a neighbouring `pro-*` element with no text -- which reads as "the cell rendered
+  // nothing" rather than "this build has no such tag".
+  await device.waitForTextElementToBePresent({
+    ...new ProStatValue(device).build(),
     maxWait: PRESENT_MAX_WAIT,
+    skipHealing: true,
   });
-  const copy = (await device.getAttribute('label', element.ELEMENT)) ?? '';
-  return parseProStatCount(stat, copy);
+  const values = await device.findElements('id', 'pro-stats-value');
+  const copies: string[] = [];
+  for (const element of values) {
+    const copy = (await device.getTextFromElement(element)) ?? '';
+    copies.push(copy);
+    try {
+      return parseProStatCount(stat, copy);
+    } catch {
+      // Another stat's cell. Keep looking; if none match, the throw below names what was on screen.
+    }
+  }
+  throw new Error(
+    `No Pro stat cell rendered the copy for "${stat}". Read ${values.length} value(s): ` +
+      `${JSON.stringify(copies)}.`
+  );
 }
 
 /**

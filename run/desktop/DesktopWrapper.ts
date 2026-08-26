@@ -3,6 +3,8 @@
 import type { Page } from '@playwright/test';
 import type { StateUser, UserNameType } from '@session-foundation/qa-seeder';
 
+import { test } from '@playwright/test';
+
 import type { IBaseDeviceWrapper } from '../types/IBaseDeviceWrapper';
 import type {
   AttachmentType,
@@ -20,6 +22,12 @@ import { makeAccountPro } from '../shared/pro_grant';
 import { sleepFor } from '../shared/promise_utils';
 import { parseDataImage } from '../test/utils/check_colour';
 import { proFeatureTestId, type ProMessageFeature } from '../test/utils/pro_message_features';
+import {
+  MOVABLE_PRO_STATS,
+  type MovableProStat,
+  parseProStatCount,
+  type ProStatCounts,
+} from '../test/utils/pro_settings';
 import { ctaConfigs, type CTAType } from '../types/cta';
 import {
   openConversationWith as desktopOpenConversationWith,
@@ -896,6 +904,60 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   // --- High-level desktop verbs ---
   // These are desktop-only (not on IBaseDeviceWrapper); they delegate to the ported
   // Page-based helpers, passing this client's page/account implicitly.
+
+  /**
+   * Read every movable Pro stat, starting and finishing on the home screen.
+   *
+   * A fresh visit per reading, matching mobile: the counters are queried when the screen mounts, so a
+   * helper that held it open would read the baseline twice and pass whatever the action did.
+   */
+  /**
+   * Pin `convoName` from its row's context menu, and wait for the pinned icon.
+   *
+   * Waits on the icon rather than returning after the click: the item is a TOGGLE, so a caller that
+   * assumed success would silently unpin on a second call.
+   */
+  public async pinConversation(convoName: string): Promise<void> {
+    await this.rightClickOnWithText(HomeScreen.conversationItemName, convoName);
+    await clickOn(this.page, HomeScreen.pinMenuItem);
+    await waitForElement({
+      window: this.page,
+      locator: HomeScreen.pinnedConversationIcon,
+      options: { maxWaitMs: 10_000 },
+    });
+  }
+
+  public async readProStats(): Promise<ProStatCounts> {
+    return await test.step('Read the Pro stats', async () => {
+      await clickOn(this.page, LeftPane.settingsButton);
+      await clickOn(this.page, Settings.proMenuItem, { maxWait: 60_000 });
+      await waitForElement({
+        window: this.page,
+        locator: ProSettings.statsHeader,
+        options: { maxWaitMs: 60_000 },
+      });
+
+      const cells: Record<MovableProStat, StrategyExtractionObj> = {
+        'longer-messages': ProSettings.statLongerMessages,
+        'pinned-conversations': ProSettings.statPinnedConversations,
+        'badges-sent': ProSettings.statBadgesSent,
+      };
+
+      const counts = {} as ProStatCounts;
+      for (const stat of MOVABLE_PRO_STATS) {
+        const el = await waitForElement({
+          window: this.page,
+          locator: cells[stat],
+          options: { maxWaitMs: 10_000 },
+        });
+        counts[stat] = parseProStatCount(stat, (await el?.textContent()) ?? '');
+      }
+      this.log(`Pro stats: ${JSON.stringify(counts)}`);
+
+      await this.closeOpenModals().catch(() => undefined);
+      return counts;
+    });
+  }
 
   /** Onboard a fresh account in this window and remember it as this client's account. */
   public async onboard(userName: UserNameType, awaitOnionPath = true): Promise<StateUser> {

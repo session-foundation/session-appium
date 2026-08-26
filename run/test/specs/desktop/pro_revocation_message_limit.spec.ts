@@ -1,14 +1,9 @@
 import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W_Bob_1W_friends } from '../../../desktop/sessionTest';
 import { MESSAGE_DELIVERY_TIMEOUT_MS, STANDARD_MAX_CHARS } from '../../../shared/constants';
+import { early, late, LATE_AT, markedMessage } from '../../../shared/message';
 import { revokeAccountPro } from '../../../shared/pro_grant';
-import {
-  DESKTOP_PRO_CONTEXT,
-  early,
-  late,
-  LATE_AT,
-  markedMessage,
-} from '../../../shared/pro_revocation';
+import { DESKTOP_PRO_CONTEXT } from '../../../shared/pro_revocation';
 
 /**
  * A revoked proof does not buy the Pro message limit at the recipient.

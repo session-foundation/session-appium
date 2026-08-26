@@ -658,9 +658,9 @@ export class ProStatCell extends LocatorsInterface {
 
     switch (this.platform) {
       case 'android':
-        // `expectedText` is deliberately NOT applied: the tag sits on the cell's root, and the count text
-        // is an untagged child, so there is nothing here to match it against. Tagging that child would
-        // make this symmetric with iOS.
+        // The cell's root, which carries the id and no text -- Compose's testTag sets a resource-id, not
+        // a description. The count lives on a child tagged `pro-stats-value`; read it with
+        // `ProStatValue`, which every cell shares, and tell them apart by their copy.
         return { strategy: 'id', selector } as const;
       case 'ios':
         // The identifier sits on the cell's title, i.e. the whole "N badges sent" string, so the copy is
@@ -721,6 +721,26 @@ export class ProStatusBanner extends LocatorsInterface {
           selector: 'pro-settings-status-banner',
           label: this.expectedText,
         } as const;
+    }
+  }
+}
+
+/**
+ * The count inside a Pro stat cell, on Android only.
+ *
+ * One id for all four cells (`ProStatItem` tags its own `Text`), so a match says "a stat count" and not
+ * which. Callers read every match and identify each by its copy, which `parseProStatCount` validates by
+ * rebuilding the expected string -- so a wrong pairing throws rather than returning another stat's number.
+ *
+ * iOS needs none of this: its identifier sits on the whole "N badges sent" string.
+ */
+export class ProStatValue extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'pro-stats-value' } as const;
+      case 'ios':
+        throw new Error('ProStatValue is Android-only; on iOS read the label off ProStatCell.');
     }
   }
 }

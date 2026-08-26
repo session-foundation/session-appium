@@ -105,6 +105,7 @@ import { parseDataImage } from '../test/utils/check_colour';
 import { isSameColor } from '../test/utils/check_colour';
 import { proFeatureTestId, type ProMessageFeature } from '../test/utils/pro_message_features';
 import { assertProFromSettingsRow } from '../test/utils/pro_refresh';
+import { type ProStatCounts, readProStats } from '../test/utils/pro_settings';
 import { restoreAccountNoFallback } from '../test/utils/restore_account';
 import {
   isDeviceAndroid,
@@ -3051,6 +3052,11 @@ export class DeviceWrapper implements IMobileWrapper {
    * Never opens the Pro settings page: that fires `get_pro_status` on mount, which turns a linked
    * device into a second client minting against the same account and races the subscriber's proof.
    */
+  /** Read every movable Pro stat (see `IBaseDeviceWrapper`). */
+  public async readProStats(): Promise<ProStatCounts> {
+    return await readProStats(this);
+  }
+
   public async waitForOwnProBadge(maxWaitMs = 60_000): Promise<void> {
     const alreadyInSettings = await this.doesElementExist({
       ...new PrivacyMenuItem(this).build(),

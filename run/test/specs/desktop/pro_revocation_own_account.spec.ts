@@ -2,8 +2,8 @@ import { Conversation } from '../../../desktop/locators';
 import { dismissAnyProCTA } from '../../../desktop/pro_cta';
 import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W_10contacts } from '../../../desktop/sessionTest';
+import { OVER_STANDARD_CHARS } from '../../../shared/message';
 import { revokeAccountPro } from '../../../shared/pro_grant';
-import { OVER_STANDARD_CHARS } from '../../../shared/pro_revocation';
 
 /**
  * The matched pair to the overhang spec, and the only case where a client has to police its OWN
