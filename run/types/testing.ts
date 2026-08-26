@@ -652,6 +652,7 @@ export type Id =
   | 'open-url-dialog'
   | 'Open'
   | 'Open URL'
+  | 'pin-conversation-menu-option'
   | 'preferences-dialog-option-enable'
   | 'preferences-option-blocked-contacts'
   | 'preferences-option-lock-app-toggle'

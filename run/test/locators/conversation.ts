@@ -762,8 +762,10 @@ export class PinConversationSettingsOption extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
+        // `id`, not `accessibility id`: the qaTag reaches the view as a resource id here rather than a
+        // content description. Measured — the first run passed only because the harness healed it.
         return {
-          strategy: 'accessibility id',
+          strategy: 'id',
           selector: 'pin-conversation-menu-option',
         } as const;
       case 'ios':
