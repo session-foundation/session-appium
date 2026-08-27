@@ -75,11 +75,9 @@ async function pinConversation(platform: SupportedPlatformsType, testInfo: TestI
     const afterOrder = await getConversationOrder(device);
     assertPinOrder(beforeOrder, [toPin], afterOrder);
   });
-  if (platform === 'android') {
-    await test.step('Assert pin icon is visible on pinned conversation', async () => {
-      await device.waitForTextElementToBePresent(new ConversationPinnedIcon(device, toPin));
-    });
-  }
+  await test.step('Assert pin icon is visible on pinned conversation', async () => {
+    await device.waitForTextElementToBePresent(new ConversationPinnedIcon(device, toPin));
+  });
   await test.step(`Unpin "${toPin}"`, async () => {
     await device.unpinConversation(toPin);
   });
@@ -87,11 +85,9 @@ async function pinConversation(platform: SupportedPlatformsType, testInfo: TestI
     const afterUnpinOrder = await getConversationOrder(device);
     assertPinOrder(beforeOrder, [], afterUnpinOrder);
   });
-  if (platform === 'android') {
-    await test.step('Assert pin icon is gone after unpinning', async () => {
-      await device.waitForElementToBeGone(new ConversationPinnedIcon(device, toPin));
-    });
-  }
+  await test.step('Assert pin icon is gone after unpinning', async () => {
+    await device.waitForElementToBeGone(new ConversationPinnedIcon(device, toPin));
+  });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);
   });
@@ -119,9 +115,7 @@ async function nonProPinnedLimit(platform: SupportedPlatformsType, testInfo: Tes
       await device.pinConversation(name);
       await device.waitForTextElementToBePresent(new PlusButton(device));
       await device.verifyNoCTAShows();
-      await device
-        .onAndroid()
-        .waitForTextElementToBePresent(new ConversationPinnedIcon(device, name));
+      await device.waitForTextElementToBePresent(new ConversationPinnedIcon(device, name));
     }
   });
   await test.step('Assert the allowed pins took effect', async () => {
@@ -164,17 +158,14 @@ async function proPinnedLimit(platform: SupportedPlatformsType, testInfo: TestIn
   await test.step(TestSteps.USER_ACTIONS.PIN_CONVERSATIONS(OVER_STANDARD_PIN_LIMIT), async () => {
     for (const name of toPin) {
       await device.pinConversation(name);
-      await device
-        .onAndroid()
-        .waitForTextElementToBePresent(new ConversationPinnedIcon(device, name));
+      await device.waitForTextElementToBePresent(new ConversationPinnedIcon(device, name));
       await device.waitForTextElementToBePresent(new PlusButton(device));
     }
     await device.verifyNoCTAShows();
   });
   await test.step('Assert every pin took effect', async () => {
-    // Asserted on the order rather than the pin icon alone: the icon is Android-only, so without
-    // this the iOS half of the spec proves nothing beyond "no CTA appeared" — which is also true if
-    // pinning silently did nothing.
+    // Asserted on the order as well as the pin icon: a marker on a row that did not move would satisfy
+    // the icon check alone.
     assertPinOrder(beforeOrder, toPin, await getConversationOrder(device));
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

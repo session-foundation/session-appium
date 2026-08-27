@@ -83,9 +83,7 @@ async function proSilentRefusal(platform: SupportedPlatformsType, testInfo: Test
       await device.pinConversation(name);
       await device.waitForTextElementToBePresent(new PlusButton(device));
       await device.verifyNoCTAShows();
-      await device
-        .onAndroid()
-        .waitForTextElementToBePresent(new ConversationPinnedIcon(device, name));
+      await device.waitForTextElementToBePresent(new ConversationPinnedIcon(device, name));
     }
   });
 
