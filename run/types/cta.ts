@@ -6,6 +6,7 @@ export type CTAType =
   | 'donate'
   | 'longerMessages'
   | 'pinnedConversations'
+  | 'pinnedConversationsRenew'
   | 'proExpired'
   | 'proExpiringSoon';
 
@@ -75,6 +76,28 @@ export const ctaConfigs: Record<CTAType, CTAConfig> = {
       tStripped('proFeatureListLongerMessages'),
       tStripped('proFeatureListPinnedConversations'),
       tStripped('proFeatureListAnimatedDisplayPicture'),
+    ],
+  },
+  /**
+   * The pinned-conversation CTA a LAPSED subscriber sees, as distinct from the one a standard user sees.
+   *
+   * The clients pick this body from two axes — whether the user is over the standard limit, and whether
+   * they previously subscribed — so "the pinned conversations CTA" is four different pieces of copy, not
+   * one. This is over-the-limit + previously-subscribed: the only cell reachable by letting a real
+   * subscription end, and the one `pinnedConversations` below would silently mismatch.
+   *
+   * Note the body takes no `limit`: the standard-user copy names the number it is offering to raise,
+   * and this one has nothing to name because the user already has more than it.
+   */
+  pinnedConversationsRenew: {
+    heading: tStripped('renew'),
+    body: tStripped('proRenewPinMoreConversations'),
+    negativeButton: tStripped('cancel'),
+    positiveButton: tStripped('theContinue'),
+    features: [
+      tStripped('proFeatureListPinnedConversations'),
+      tStripped('proFeatureListLongerMessages'),
+      tStripped('proFeatureListLoadsMore'),
     ],
   },
   pinnedConversations: {

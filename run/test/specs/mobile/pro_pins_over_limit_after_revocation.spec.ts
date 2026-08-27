@@ -133,7 +133,7 @@ async function pinsOverLimitAfterRevocation(platform: SupportedPlatformsType, te
 
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Pinned Conversations CTA'), async () => {
     await device.pinConversation(overLimit);
-    await device.checkCTA('pinnedConversations');
+    await device.checkCTA('pinnedConversationsRenew');
     await device.clickOnElementAll(new CTAButtonNegative(device));
   });
 
