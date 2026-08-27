@@ -37,7 +37,7 @@ test_Alice_1W_Bob_1W_friends(
     await alice.uploadProfilePicture();
     // Sender-side control: the picture really is animated here, so a still one at the recipient is the
     // recipient's decision rather than a fixture that never produced an animation.
-    await alice.verifyOwnAvatarAnimated();
+    await alice.assertSettingsAvatarAnimated();
 
     // Only the recipient's trust changes, and before the message: verification happens at receipt.
     await restartApp(bob, {

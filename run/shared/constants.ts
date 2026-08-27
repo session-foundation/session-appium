@@ -101,6 +101,22 @@ export const GENERATED_AVATAR_COLORS = new Set([
 ]);
 
 /**
+ * How long an avatar assertion waits for a display picture that has to ARRIVE before it can be read.
+ *
+ * Applies to any client that did not set the picture itself: a linked device learns it through config
+ * sync, a peer learns it from a message's profile. Both are network round trips that also carry the Pro
+ * proof deciding whether the picture may animate at all, so a client can hold the picture and still
+ * render its first frame until the entitlement lands.
+ *
+ * Shared by mobile and desktop so the two do not drift — they had 10s and 60s for the same wait, and
+ * the mobile number was the one that had never been asked to observe a cross-client sync.
+ *
+ * This only bounds waiting for a placeholder to be replaced, so it costs nothing when the picture is
+ * already rendered — the sampling that decides animated-vs-frozen happens after it either way.
+ */
+export const AVATAR_SYNC_MAX_WAIT_MS = 60_000;
+
+/**
  * The refund destinations, as the FRAGMENT of each URL that names the route rather than the whole URL.
  *
  * Which URL the "Open URL" confirmation offers is what tells the refund routes apart: the same screen,

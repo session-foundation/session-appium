@@ -94,6 +94,16 @@ type CrossPlatformTestArgs<Names extends AccountName> = {
   testCb: (clients: CrossPlatformClients<Names>, testInfo: TestInfo) => Promise<void>;
   shouldSkip?: boolean;
   isPro?: boolean;
+  /**
+   * Absolute path to the image every desktop window's avatar picker should return.
+   *
+   * Desktop is the one platform that cannot choose a display picture at call time: under test
+   * integration its picker never opens a dialog and yields whatever this named at LAUNCH, defaulting
+   * to a generated solid-colour JPEG. So a cross-platform test in which a desktop client sets a
+   * particular picture has to declare it here — there is nothing `setAnimatedDisplayPicture` can do
+   * about it afterwards.
+   */
+  fakeAvatarPickerFile?: string;
 };
 
 /**
@@ -125,6 +135,7 @@ export function crossPlatformTest<Names extends AccountName>({
   testCb,
   shouldSkip = false,
   isPro = false,
+  fakeAvatarPickerFile,
 }: CrossPlatformTestArgs<Names>) {
   const proTag = isPro ? ' @pro' : '';
   const testName = `${title} @cross-platform @${risk ?? 'default'}-risk${proTag}`;
@@ -170,6 +181,7 @@ export function crossPlatformTest<Names extends AccountName>({
         })),
         testInfo,
         isPro,
+        fakeAvatarPickerFile,
       });
 
       // Feed the shared teardown arrays so the finally block cleans up every client.

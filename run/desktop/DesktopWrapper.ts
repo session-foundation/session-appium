@@ -3,6 +3,8 @@
 import type { Page } from '@playwright/test';
 import type { StateUser, UserNameType } from '@session-foundation/qa-seeder';
 
+import { test } from '@playwright/test';
+
 import type { IBaseDeviceWrapper } from '../types/IBaseDeviceWrapper';
 import type {
   AttachmentType,
@@ -15,18 +17,24 @@ import type {
 } from './types';
 
 import { tStripped } from '../localizer/lib';
-import { GENERATED_AVATAR_COLORS } from '../shared/constants';
+import { AVATAR_SYNC_MAX_WAIT_MS, GENERATED_AVATAR_COLORS } from '../shared/constants';
 import { makeAccountPro } from '../shared/pro_grant';
 import { sleepFor } from '../shared/promise_utils';
 import { parseDataImage } from '../test/utils/check_colour';
 import { proFeatureTestId, type ProMessageFeature } from '../test/utils/pro_message_features';
+import {
+  MOVABLE_PRO_STATS,
+  type MovableProStat,
+  parseProStatCount,
+  type ProStatCounts,
+} from '../test/utils/pro_settings';
 import { ctaConfigs, type CTAType } from '../types/cta';
 import {
   openConversationWith as desktopOpenConversationWith,
   scrollToBottomLookingForMessage,
 } from './conversation';
 import { createContact } from './create_contact';
-import { joinCommunity, joinOrOpenCommunity } from './join_community';
+import { joinCommunity, joinCommunityByLink, joinOrOpenCommunity } from './join_community';
 import { leaveGroup } from './leave_group';
 import { Conversation, CTA, HomeScreen, LeftPane, ProSettings, Settings } from './locators';
 import {
@@ -44,6 +52,7 @@ import { sendLinkPreview, sendMedia, sendVoiceMessage, trustUser } from './send_
 import { sendNewMessage } from './send_message';
 import { setDisappearingMessages } from './set_disappearing_messages';
 import {
+  buildDescendantSelector,
   checkCTAStrings,
   checkModalStrings,
   checkPathLight,
@@ -318,6 +327,26 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /**
+   * Set this account's display picture to the suite's animated GIF (see `IBaseDeviceWrapper`).
+   *
+   * Desktop cannot be told WHICH image at call time — under test integration the picker never opens a
+   * dialog and hands back whatever `fakeAvatarPickerFile` named when this window was launched. So the
+   * animated-ness of this upload was decided by the test's launch context, and a window opened
+   * without it would upload a generated solid-colour JPEG here and fail an animation assertion much
+   * further on, as "not animated". That is worth a loud error instead.
+   */
+  public async setAnimatedDisplayPicture(): Promise<void> {
+    if (!process.env.SESSION_FAKE_AVATAR_PICKER_FILE) {
+      throw new Error(
+        'This desktop window was launched with no `fakeAvatarPickerFile`, so its avatar picker can ' +
+          'only return a generated solid-colour JPEG — nothing animated is selectable. Pass the ' +
+          'animated file in the test context that opens the window.'
+      );
+    }
+    await this.uploadProfilePicture();
+  }
+
+  /**
    * Set this account's display picture from whatever the test-integration picker is configured to
    * return (`fakeAvatarPickerFile`), leaving the app back on the home screen.
    *
@@ -560,11 +589,13 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   // --- Receiver-side Session Pro assertions ---
-  // Used when this client observes a PEER's Pro state. `assertConversationHeaderProBadge` is on
-  // IBaseDeviceWrapper — mobile satisfies the same signature — so a cross-platform spec can
-  // assert it over every client regardless of platform. The animation checks below are still
-  // desktop-only: mobile's equivalent (verifyElementIsAnimated) takes an Appium locator, so
-  // there is no shared signature to promote yet.
+  // Used when this client observes a PEER's Pro state. `assertConversationHeaderProBadge`,
+  // `assertSettingsAvatarAnimated` and `assertConversationHeaderAvatarAnimated` are all on
+  // IBaseDeviceWrapper — mobile satisfies the same signatures — so a cross-platform spec can assert
+  // them over every client regardless of platform. `verifyElementIsAnimated` itself stays off the
+  // interface: it takes a CSS selector here and an Appium locator on mobile, which is exactly the
+  // kind of platform-shaped signature the interface forbids. The named wrappers below, each pinned
+  // to the surface it reads, are what a cross-platform spec calls instead.
 
   /** Center-pixel hex color of the first element matching `cssSelector` (via screenshot). */
   private async sampleCenterColor(cssSelector: string): Promise<string> {
@@ -589,9 +620,29 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     });
   }
 
-  /** Verify THIS account's own avatar (left pane) is animated — e.g. after it synced here. */
-  public async verifyOwnAvatarAnimated(): Promise<void> {
-    await this.verifyElementIsAnimated('[data-testid="leftpane-primary-avatar"] img');
+  /**
+   * Open settings and assert THIS account's own avatar renders animated there.
+   *
+   * The settings avatar rather than the left-pane button, so both platforms read the SAME surface --
+   * mobile has no left pane, and an assertion whose element differs per platform cannot honestly sit
+   * on `IBaseDeviceWrapper` under one name.
+   *
+   * The wait is longer than `verifyElementIsAnimated`'s default because this doubles as the
+   * linked-device assertion: when the picture was set on another client, both it and the Pro proof
+   * that keeps it unfrozen arrive here by config sync rather than being written locally.
+   */
+  public async assertSettingsAvatarAnimated(): Promise<void> {
+    await clickOn(this.page, LeftPane.settingsButton);
+    try {
+      await this.verifyElementIsAnimated(
+        buildDescendantSelector(Settings.profilePicture, 'img'),
+        AVATAR_SYNC_MAX_WAIT_MS
+      );
+    } finally {
+      // Left open, the dialog swallows the next click on anything behind it -- the same reason
+      // `waitForOwnProBadge` closes between attempts.
+      await this.closeOpenModals().catch(() => undefined);
+    }
   }
 
   /**
@@ -615,10 +666,11 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   /**
    * Open `convoName` and verify the peer's conversation-header avatar is NOT animated.
    *
-   * The counterpart to `verifyConversationHeaderAvatarAnimated`, and asserted the opposite way round: that one
-   * retries until it sees more than one colour, so it can stop the moment an animation starts. This has
-   * to prove a NEGATIVE, so it settles first and then requires every sample to match — a still frame
-   * sampled once, or sampled before the picture has loaded, would pass whatever the client decided.
+   * The counterpart to `assertConversationHeaderAvatarAnimated`, reading the same surface and asserted
+   * the opposite way round: that one retries until it sees more than one colour, so it can stop the
+   * moment an animation starts. This has to prove a NEGATIVE, so it settles first and then requires
+   * every sample to match — a still frame sampled once, or sampled before the picture has loaded,
+   * would pass whatever the client decided.
    *
    * `settleMs` exists for that second failure: the avatar arrives with a message and takes a moment to
    * render, and an unloaded element samples as a single flat colour, which is indistinguishable from a
@@ -629,7 +681,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     { settleMs = 15_000, samples = 6 }: { settleMs?: number; samples?: number } = {}
   ): Promise<void> {
     await this.openConversationOnceNamed(convoName);
-    const selector = '[data-testid="conversation-options-avatar"] img';
+    const selector = buildDescendantSelector(Conversation.conversationSettingsIcon, 'img');
     // The element has to be there before its pixels mean anything.
     await this.page.locator(selector).first().waitFor({ state: 'visible', timeout: 30_000 });
     await sleepFor(settleMs);
@@ -660,10 +712,21 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
     }
   }
 
-  /** Open `convoName` and verify the peer's conversation-header avatar is animated. */
-  public async verifyConversationHeaderAvatarAnimated(convoName: string): Promise<void> {
+  /**
+   * Open `convoName` and assert the avatar in its conversation header renders animated.
+   *
+   * The exact negative of `verifyConversationHeaderAvatarNotAnimated` above, reading the same surface.
+   *
+   * Same longer wait as the own-avatar case, for the same reason: in a 1:1 this header draws the
+   * OTHER person, so both their picture and the proof that unfreezes it arrive over the network —
+   * making this a wait rather than a read.
+   */
+  public async assertConversationHeaderAvatarAnimated(convoName: string): Promise<void> {
     await this.openConversationOnceNamed(convoName);
-    await this.verifyElementIsAnimated('[data-testid="conversation-options-avatar"] img');
+    await this.verifyElementIsAnimated(
+      buildDescendantSelector(Conversation.conversationSettingsIcon, 'img'),
+      AVATAR_SYNC_MAX_WAIT_MS
+    );
   }
 
   /**
@@ -784,14 +847,15 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /**
-   * The author label above `message` in the currently open group, scoped to that one message.
+   * The author label above `message` in the currently open conversation, scoped to that one message.
    *
    * Scoping is not tidiness. `pro-badge-contact-name` is `ContactName`'s badge and `ContactName`
    * renders every left-pane row too, so the moment a sender is Pro the same test id also matches their
-   * 1:1 row in the conversation list — a page-wide match would go green without the group surface
-   * having rendered anything at all.
+   * 1:1 row in the conversation list — a page-wide match would go green without the message surface
+   * having rendered anything at all. In a community it is scoped for a second reason: every Pro
+   * author in the room carries the same badge, so an unscoped match says nothing about who.
    */
-  private groupAuthorLabel(message: string) {
+  private messageAuthorLabel(message: string) {
     return this.page
       .getByTestId(Conversation.messageContent.selector)
       .filter({ hasText: message })
@@ -799,23 +863,25 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /**
-   * Assert the sender's Session Pro badge is rendered on `message`'s author label in the open group.
+   * Assert the sender's Session Pro badge is rendered on `message`'s author label.
    *
-   * A different element from `assertConversationHeaderProBadge`: the author label is group-only
-   * (`MessageAuthorText` returns null unless the thread is a group), so neither assertion covers the
-   * other's surface and a build that lost the badge here would still satisfy the header one.
+   * A different element from `assertConversationHeaderProBadge`: the author label never renders in a
+   * 1:1 (`MessageAuthorText` bails unless `useSelectedIsGroupOrCommunity`), so neither assertion
+   * covers the other's surface and a build that lost the badge here would still satisfy the header
+   * one. That selector is the inclusive one, so this reads the same element in a group and in a
+   * community.
    *
    * Polled rather than read once: this depends on the recipient having received the message, verified
    * the proof it carries and re-rendered off the updated contact record.
    */
   public async assertMessageAuthorProBadge(message: string, maxWaitMs = 60_000): Promise<void> {
-    await this.groupAuthorLabel(message)
+    await this.messageAuthorLabel(message)
       .getByTestId(Conversation.proBadgeAuthorName.selector)
       .waitFor({ state: 'visible', timeout: maxWaitMs });
   }
 
   /**
-   * Assert `message`'s author label IS rendered in the open group and carries NO Pro badge.
+   * Assert `message`'s author label IS rendered in the open conversation and carries NO Pro badge.
    *
    * Waiting for the label is the half that makes this a control rather than a tautology — an absent
    * badge inside a label that was never rendered says nothing about the badge. Once the label is up the
@@ -823,7 +889,7 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
    * stored contact record, so the absence can be read immediately rather than waited out.
    */
   public async assertNoMessageAuthorProBadge(message: string, maxWaitMs = 60_000): Promise<void> {
-    const label = this.groupAuthorLabel(message);
+    const label = this.messageAuthorLabel(message);
     await label.waitFor({ state: 'visible', timeout: maxWaitMs });
     const badges = await label.getByTestId(Conversation.proBadgeAuthorName.selector).count();
     if (badges !== 0) {
@@ -838,6 +904,60 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   // --- High-level desktop verbs ---
   // These are desktop-only (not on IBaseDeviceWrapper); they delegate to the ported
   // Page-based helpers, passing this client's page/account implicitly.
+
+  /**
+   * Read every movable Pro stat, starting and finishing on the home screen.
+   *
+   * A fresh visit per reading, matching mobile: the counters are queried when the screen mounts, so a
+   * helper that held it open would read the baseline twice and pass whatever the action did.
+   */
+  /**
+   * Pin `convoName` from its row's context menu, and wait for the pinned icon.
+   *
+   * Waits on the icon rather than returning after the click: the item is a TOGGLE, so a caller that
+   * assumed success would silently unpin on a second call.
+   */
+  public async pinConversation(convoName: string): Promise<void> {
+    await this.rightClickOnWithText(HomeScreen.conversationItemName, convoName);
+    await clickOn(this.page, HomeScreen.pinMenuItem);
+    await waitForElement({
+      window: this.page,
+      locator: HomeScreen.pinnedConversationIcon,
+      options: { maxWaitMs: 10_000 },
+    });
+  }
+
+  public async readProStats(): Promise<ProStatCounts> {
+    return await test.step('Read the Pro stats', async () => {
+      await clickOn(this.page, LeftPane.settingsButton);
+      await clickOn(this.page, Settings.proMenuItem, { maxWait: 60_000 });
+      await waitForElement({
+        window: this.page,
+        locator: ProSettings.statsHeader,
+        options: { maxWaitMs: 60_000 },
+      });
+
+      const cells: Record<MovableProStat, StrategyExtractionObj> = {
+        'longer-messages': ProSettings.statLongerMessages,
+        'pinned-conversations': ProSettings.statPinnedConversations,
+        'badges-sent': ProSettings.statBadgesSent,
+      };
+
+      const counts = {} as ProStatCounts;
+      for (const stat of MOVABLE_PRO_STATS) {
+        const el = await waitForElement({
+          window: this.page,
+          locator: cells[stat],
+          options: { maxWaitMs: 10_000 },
+        });
+        counts[stat] = parseProStatCount(stat, (await el?.textContent()) ?? '');
+      }
+      this.log(`Pro stats: ${JSON.stringify(counts)}`);
+
+      await this.closeOpenModals().catch(() => undefined);
+      return counts;
+    });
+  }
 
   /** Onboard a fresh account in this window and remember it as this client's account. */
   public async onboard(userName: UserNameType, awaitOnionPath = true): Promise<StateUser> {
@@ -1105,6 +1225,16 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
 
   public async joinCommunity(): Promise<void> {
     await joinCommunity(this.page);
+  }
+
+  /**
+   * Join the community at `link` and wait for its row in the conversation list.
+   *
+   * The counterpart of `joinCommunity` for a room the test allocated itself (`communityRooms`),
+   * whose link only exists at runtime — `joinCommunity` hardcodes the shared one.
+   */
+  public async joinCommunityByLink(link: string, name: string): Promise<void> {
+    await joinCommunityByLink(this.page, link, name);
   }
 
   public async joinOrOpenCommunity(): Promise<void> {

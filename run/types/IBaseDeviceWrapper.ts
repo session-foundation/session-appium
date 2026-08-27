@@ -1,6 +1,7 @@
 import type { StateUser } from '@session-foundation/qa-seeder';
 
 import type { ProMessageFeature } from '../test/utils/pro_message_features';
+import type { ProStatCounts } from '../test/utils/pro_settings';
 
 /**
  * High-level, platform-NEUTRAL capabilities that a Session client of ANY
@@ -32,6 +33,28 @@ export interface IBaseDeviceWrapper {
   // Profile
   changeDisplayName(name: string): Promise<void>;
   assertDisplayName(name: string): Promise<void>;
+  /**
+   * Set this account's display picture to the suite's animated image.
+   *
+   * Desktop can only satisfy this if the window was LAUNCHED with `fakeAvatarPickerFile` — it has no
+   * picker to drive. Pro-gated, and a non-Pro account silently gets the upsell CTA instead of an
+   * upload, so make the account Pro first and assert the picture rather than assuming this worked.
+   */
+  setAnimatedDisplayPicture(): Promise<void>;
+  /**
+   * Assert the local user's own display picture renders animated, on the settings page.
+   *
+   * A client without a valid proof renders the first frame rather than failing, so this is a Pro
+   * assertion as much as a sync one. Both platforms open settings and close it behind themselves.
+   */
+  assertSettingsAvatarAnimated(): Promise<void>;
+  /**
+   * Open the 1:1 with `convoName` and assert the header avatar renders animated.
+   *
+   * A 1:1 header always draws the peer, never the local user, so this needs a real grant on the other
+   * side — the display-level Pro mocks produce no proof. Negative: `verifyConversationHeaderAvatarNotAnimated`.
+   */
+  assertConversationHeaderAvatarAnimated(convoName: string): Promise<void>;
 
   // Messaging
   sendMessage(message: string): Promise<number>;
@@ -45,9 +68,7 @@ export interface IBaseDeviceWrapper {
   /**
    * Open the 1:1 with `senderName` and assert their Session Pro badge renders here.
    *
-   * Receiver-side: the badge belongs to the person the conversation is *with*, so this is never an
-   * assertion about this device's own user. Rendering it means this client verified a real proof —
-   * the display-level Pro mocks produce none, so only a real grant satisfies it.
+   * Receiver-side, so it needs a real grant: the display-level Pro mocks produce no proof.
    */
   assertConversationHeaderProBadge(senderName: string): Promise<void>;
   /**
@@ -82,5 +103,20 @@ export interface IBaseDeviceWrapper {
    * messages" upgrade CTA). A successful send proves this device has Pro active.
    * Used to verify Pro has synced to a linked device without forcing an app restart.
    */
+  /**
+   * Wait until this client shows its OWN Pro badge on the settings root.
+   *
+   * Never opens the Pro settings page: that fires `get_pro_status` on mount, so a linked device
+   * polling there becomes a second client minting against the same account. The settings-root badge
+   * is fetch-free on all three platforms.
+   */
+  /**
+   * Read every movable Pro stat, starting and finishing on the home screen.
+   *
+   * A fresh visit per reading on every platform: the counters are queried when the screen opens, so a
+   * helper that held it open would read the baseline twice and pass whatever the action did.
+   */
+  readProStats(): Promise<ProStatCounts>;
+  waitForOwnProBadge(maxWaitMs?: number): Promise<void>;
   sendLongProMessage(convoName: string, message: string): Promise<void>;
 }

@@ -11,14 +11,27 @@ import { enableProBadge } from '../../utils/pro_badge';
  * Cross-platform Session Pro: subscribe on one client, use Pro from a linked one, and have every
  * other client render the result.
  *
- * Alice and Bob are seeded as friends, each with an Android and a Desktop client. Alice subscribes
- * from Android against the QA Pro backend; her Desktop client — which never subscribed and is never
- * restarted — then sends a message only a Pro account can send, and all four clients are checked.
+ * Alice and Bob are seeded as friends, each with an Android, an iOS and a Desktop client. Alice
+ * subscribes from Android against the QA Pro backend; her Desktop client — which never subscribed
+ * and is never restarted — then sends a message only a Pro account can send, and all six clients
+ * are checked.
+ *
+ * All three client types at once is the point rather than a bigger number of devices: the proof is
+ * minted by one implementation and read back by the other two, so a verification regression on any
+ * single client fails here even though every pairwise spec still passes. Alice's iOS client is a
+ * second *linked* device alongside Desktop, and Bob's iOS client is a third independent verifier of
+ * her proof.
  *
  * This is one of the few Pro assertions that needs a real grant rather than the launch-arg mocks:
  * the mocks are display-level and per-device, so they convince one client and produce no proof for
  * anyone else to verify. Every step below turns on something only a real proof can do — a linked
  * device inheriting the entitlement, and a peer verifying the badge.
+ *
+ * Cost: the most expensive spec in the suite — 2 iOS simulators, 2 Android emulators and 2 Electron
+ * windows held simultaneously. `assertPoolsCanFit` refuses the run before the (slow) seeding step if
+ * the machine has fewer, so this needs `DEVICES_PER_TEST_COUNT >= 2` (locally the default is 4) and
+ * at least 2 emulators in the Android udid pool. Desktop is uncapped — each window gets its own
+ * `NODE_APP_INSTANCE`.
  */
 
 // Over the standard 2000-char cap, which is the Pro gate: a non-Pro account's send is blocked by the
@@ -39,14 +52,19 @@ crossPlatformTest({
   risk: 'high',
   isPro: true,
   setup: friends({
-    alice: { android: 1, desktop: 1 },
-    bob: { android: 1, desktop: 1 },
+    // Six clients. An earlier three-linked-device run timed out at 60s on Bob's badge assertions
+    // twice, with the badge verifiably present in the page source moments later and host load at
+    // 4.5 of 14 cores — if that returns it is convergence, not CPU, and wants a product look rather
+    // than a longer wait.
+    alice: { android: 1, ios: 1, desktop: 1 },
+    bob: { android: 1, ios: 1, desktop: 1 },
   }),
   testCb: async ({ accounts: { alice, bob } }) => {
     const aliceName = alice.account.userName;
     const bobName = bob.account.userName;
     const [aliceAndroid] = alice.android;
     const [aliceDesktop] = alice.desktop;
+    const [aliceIos] = alice.ios;
 
     await test.step(`${aliceName} subscribes to Pro on her Android client`, async () => {
       // Mints a payment through the backend's dev route and binds it to the Pro master key derived
@@ -61,27 +79,26 @@ crossPlatformTest({
     // check — the toggle is guarded on a proof existing, so it cannot be set on a non-Pro account.
     await enableProBadge(aliceAndroid, 'android');
 
-    await test.step(`Pro synced to ${aliceName}'s linked desktop`, async () => {
-      // The Desktop client never subscribed and is deliberately NOT restarted: it inherits both the
-      // entitlement and the badge flag through config sync.
+    await test.step(`Pro synced to ${aliceName}'s linked devices`, async () => {
+      // Neither linked client subscribed and neither is restarted: both inherit the entitlement and
+      // the badge flag through config sync.
       //
-      // Waited on BEFORE sending, not asserted after: the badge is a per-user profile flag, so a
-      // message composed here before it arrives goes out without the PRO_BADGE feature. Every badge
-      // assertion below would then fail on receivers that are behaving correctly — and it would fail
-      // intermittently, on sync timing.
+      // Waited on BEFORE the send, not asserted after. The badge is a per-user profile flag, so a
+      // message composed before it arrives goes out without PRO_BADGE and every badge assertion below
+      // then fails on receivers that are behaving correctly — intermittently, on sync timing.
       //
-      // This wait must not reach the Pro settings page. Opening it fires `get_pro_status` on mount, so
-      // a poll loop there turns this linked device into a second client minting against Alice's
-      // account, racing the proof the subscribing client just obtained. Only the subscriber (her
-      // Android, via `enableProBadge` above) goes near that screen.
-      await aliceDesktop.waitForOwnProBadge();
+      // Neither wait may reach the Pro settings page: opening it fires `get_pro_status` on mount,
+      // which makes a linked device a second client minting against Alice's account and races the
+      // proof her Android just obtained. Both `waitForOwnProBadge` implementations read the
+      // settings-ROOT badge instead, which is fetch-free.
+      await Promise.all([aliceDesktop.waitForOwnProBadge(), aliceIos.waitForOwnProBadge()]);
       // The send is the entitlement assertion: >2000 chars is Pro-gated, so a non-Pro client is
       // blocked by the upgrade CTA. It retries until the proof lands rather than asserting at once.
       await aliceDesktop.sendLongProMessage(bobName, PRO_MESSAGE);
     });
 
     await test.step('Verify the Pro message on every client', async () => {
-      // Every client is an independent session/window, so all four are checked at once.
+      // Every client is an independent session/window, so all six are checked at once.
       await Promise.all([
         // Alice's own devices: the Pro message converged across her linked clients. No badge to
         // assert here — her clients show BOB in the header, and a 1:1 header carries the badge of
@@ -91,7 +108,8 @@ crossPlatformTest({
           await client.waitForMessage(PRO_MESSAGE);
         }),
         // Bob's devices: the message AND Alice's badge. Rendering the badge means this client
-        // verified her proof against the QA backend's signing key, which is the end-to-end check.
+        // verified her proof against the QA backend's signing key, which is the end-to-end check —
+        // performed here by three separate implementations of that verification.
         ...bob.clients.map(async client => {
           await client.assertConversationHeaderProBadge(aliceName);
           await client.waitForMessage(PRO_MESSAGE);
@@ -101,8 +119,8 @@ crossPlatformTest({
 
     await test.step('Verify the message records both Pro features on every client', async () => {
       // The strongest form of the check: not "the sender is Pro" but "this message was sent with
-      // exactly these Pro features". Asserted on ALL FOUR clients — Alice's two because the record
-      // has to survive linked-device sync, Bob's two because that is where it was verified from a
+      // exactly these Pro features". Asserted on ALL SIX clients — Alice's three because the record
+      // has to survive linked-device sync, Bob's three because that is where it was verified from a
       // proof rather than from local knowledge.
       await Promise.all(
         [...alice.clients, ...bob.clients].map(client =>

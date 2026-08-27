@@ -148,24 +148,30 @@ directly as an x25519 key (`x25519_pubkey::from_hex`, no ed25519 conversion), so
 
 ```bash
 docker compose logs fileserver | grep -i pubkey
-#   File server Ed25519 pubkey: 23bc…
-#   which is X25519 pubkey:     51bd…       <- use this one
+#   File server Ed25519 pubkey: 23bc…       <- use this one
 ```
 
-Then add **just the pubkey** to `.env`:
+Then add these two, and only these two, to `.env`:
 
 ```bash
-FILE_SERVER_PUBKEY=<X25519 pubkey>
+FILE_SERVER_URL=http://192.168.1.114:8000
+FILE_SERVER_ED_PUBKEY=<Ed25519 pubkey>
 ```
 
-The address is discovered: on a devnet run the harness probes `:8000` on the devnet's advertised IP
-and sets `FILE_SERVER_URL` itself (`run/test/utils/devnet_services.ts`). Override with
-`FILE_SERVER_URL`, or with `FILE_SERVER_HOST`/`FILE_SERVER_PORT` if the file server is not on the
-devnet's host.
+**Use the Ed25519 key.** There used to be a second variable for the X25519 form, because libSession
+consumed that one raw; it does not any more. Every client embeds the Ed key in a download url's `p=`
+fragment and converts to X25519 for onion encryption itself, so `FILE_SERVER_PUBKEY` is gone — no
+code reads it.
+
+On a devnet run the address is also discovered — the harness probes `:8000` on the devnet's
+advertised IP and sets `FILE_SERVER_URL` itself (`run/test/utils/devnet_services.ts`) — but Desktop
+only routes at a local file server when **both** variables are set, so state the URL anyway.
+`FILE_SERVER_HOST`/`FILE_SERVER_PORT` override the discovered address if the file server is not on
+the devnet's host.
 
 Notes:
 
-- **The pubkey is the one thing you must state.** It is used to encrypt the _inside_ of the onion
+- **The pubkey is the one thing that cannot be discovered.** It encrypts the _inside_ of the onion
   request, so nothing on this side of the snodes can tell a right key from a wrong one — a wrong one
   surfaces as an upload failing partway through a run. Rather than guess it, discovery reports the
   server it found and leaves the suite on the production file server until you set the key.
@@ -173,16 +179,14 @@ Notes:
   `FILE_SERVER_URL` must be reachable **from the snodes** (i.e. the OrbStack VM) — the devnet
   `LISTEN_IP:8000` satisfies that (and macOS too), which is why the advertised devnet IP is what
   discovery uses rather than the address you reach it on.
-- Leave `FILE_SERVER_PUBKEY` unset to keep using the production file server.
+- Leave `FILE_SERVER_ED_PUBKEY` unset to keep using the production file server.
 - **Troubleshooting** — if the file server logs `Failed to decrypt onion request (tried 1 pubkeys)`
   (media uploads fail): the request is reaching the server but the client encrypted to a key the
-  server can't match. Check, in order: (1) the value is the **X25519** pubkey (LibSession-Util uses
-  it directly as the x25519 key — the ed25519 will not work), not the ed25519; (2) the app actually
-  picked it up — Developer Settings ▸ File Server in the sim should show your `customFileServerPubkey`;
-  (3) a clean app state (uninstall/recreate sims) so a previously-cached custom file server isn't
-  stale. Note: the app's own `FileServer.edPublicKey`/`x25519PublicKey` Swift helpers treat this
-  field as ed25519, which conflicts with libsession consuming it as x25519 — a Session_iOS
-  inconsistency worth raising if the two paths ever both matter.
+  server can't match. Check, in order: (1) the value is the **Ed25519** pubkey, not the X25519 one —
+  both are 64 hex characters, so the wrong one passes every format check and breaks downloads on the
+  OTHER client, far from the mistake; (2) the app actually picked it up — Developer Settings ▸ File
+  Server in the sim should show it; (3) a clean app state (uninstall/recreate sims) so a
+  previously-cached custom file server isn't stale.
 
 ## 4c. (Optional) local community / SOGS
 
@@ -355,9 +359,10 @@ AQA for devnet, plain QA for mainnet.)
 The local SOGS and file server are discovered on CI too, from the devnet CI is pointed at. Its keys
 and ports need not match a local stack's, and the two behave differently when they don't: a wrong
 `SOGS_PUBKEY` is **detected** (the signed check fails, so the run stays on the remote community),
-while a wrong `FILE_SERVER_PUBKEY` cannot be, which is why that one is never assumed. To use either on
-CI, set the matching repo variable — `SOGS_PUBKEY`, `FILE_SERVER_PUBKEY`, and `SOGS_HOST`/`SOGS_PORT`
-or `FILE_SERVER_HOST`/`FILE_SERVER_PORT` if they are not on the devnet's own host.
+while a wrong `FILE_SERVER_ED_PUBKEY` cannot be, which is why that one is never assumed. To use either
+on CI, set the matching repo variable — `SOGS_PUBKEY`, `FILE_SERVER_ED_PUBKEY`, and
+`SOGS_HOST`/`SOGS_PORT` or `FILE_SERVER_HOST`/`FILE_SERVER_PORT` if they are not on the devnet's own
+host.
 
 > **The runner needs a network path to the seed node's oxend RPC port** — not just to its storage
 > ports. oxend binds that RPC to a **single** address, the one chosen as `LISTEN_IP`, whereas the
@@ -373,7 +378,7 @@ or `FILE_SERVER_HOST`/`FILE_SERVER_PORT` if they are not on the devnet's own hos
 - **The file server and the community/SOGS are both optional** — see
   [4b](#4b-optional-local-file-server) and [4c](#4c-optional-local-community--sogs). They come up
   with the devnet either way; you only route the app at them by setting `FILE_SERVER_URL`
-  (+ `FILE_SERVER_PUBKEY`) / `COMMUNITY_LINK` (+ `COMMUNITY_NAME`/`COMMUNITY_ROOM`). Leave those
+  (+ `FILE_SERVER_ED_PUBKEY`) / `COMMUNITY_LINK` (+ `COMMUNITY_NAME`/`COMMUNITY_ROOM`). Leave those
   unset to use the production file server / remote community.
 - **Ignore `docker-compose.yml.wip`** at the Sesh-Net-Docker root — it's a separate, half-finished
   Postgres+fileserver stack. Use the **parent `docker-compose.yml`** at the repo root (step 2),

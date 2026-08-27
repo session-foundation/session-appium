@@ -59,6 +59,8 @@ export class HomeScreen extends Locator {
   static readonly conversationItemName = this.testId('module-conversation__user__profile-name');
   static readonly messageRequestBanner = this.testId('message-request-banner');
   static readonly pinnedConversationIcon = this.testId('conversation-item-pinned');
+  /** The pin/unpin item in a conversation row's context menu (session-desktop #1997). */
+  static readonly pinMenuItem = this.testId('pin-conversation-menu-item');
   static readonly plusButton = this.testId('new-conversation-button');
   static readonly revealRecoveryPhraseButton = this.testId('reveal-recovery-phrase');
   static readonly setNicknameButton = this.testId('set-nickname-confirm-button');
@@ -219,6 +221,10 @@ export class ProSettings extends Locator {
   static readonly renewPlanButton = this.testId('renew-pro-button');
   static readonly requestRefundRow = this.testId('request-refund-button');
   static readonly statsHeader = this.testId('pro-settings-stats-header');
+  /** One per movable stat; each carries the whole "N badges sent" string. */
+  static readonly statLongerMessages = this.testId('pro-stats-longer-messages');
+  static readonly statPinnedConversations = this.testId('pro-stats-pinned-conversations');
+  static readonly statBadgesSent = this.testId('pro-stats-badges-sent');
   static readonly statusBanner = this.testId('pro-settings-status-banner');
 }
 

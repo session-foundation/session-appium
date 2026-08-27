@@ -5,6 +5,7 @@ import type { IBaseDeviceWrapper } from '../../types/IBaseDeviceWrapper';
 import { DesktopWrapper } from '../../desktop/DesktopWrapper';
 import { restartApp } from '../../desktop/restart';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
+import { MessageInput } from '../locators/conversation';
 import { forceStopAndRestart } from './utilities';
 
 /**
@@ -49,4 +50,24 @@ export async function restartClient(
         `there is no way to relaunch it.`
     );
   });
+}
+
+/**
+ * Put a client back on the conversation list.
+ *
+ * Mobile-only in effect, and load-bearing before anything that starts from the home screen: sending
+ * leaves the mobile clients inside the thread, and the user-settings button a Pro stats reading opens
+ * from does not exist there. Desktop's left pane never goes away, so this is a no-op for it.
+ */
+export async function returnToConversationList(client: IBaseDeviceWrapper): Promise<void> {
+  if (!(client instanceof DeviceWrapper)) {
+    return;
+  }
+  const insideConversation = await client.doesElementExist({
+    ...new MessageInput(client).build(),
+    maxWait: 2_000,
+  });
+  if (insideConversation) {
+    await client.navigateBack();
+  }
 }

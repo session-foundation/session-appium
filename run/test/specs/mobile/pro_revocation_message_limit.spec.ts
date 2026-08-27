@@ -1,8 +1,8 @@
 import { test, type TestInfo } from '@playwright/test';
 
 import { MESSAGE_DELIVERY_TIMEOUT_MS, STANDARD_MAX_CHARS } from '../../../shared/constants';
+import { early, late, LATE_AT, markedMessage } from '../../../shared/message';
 import { makeAccountPro, revokeAccountPro } from '../../../shared/pro_grant';
-import { early, late, LATE_AT, markedMessage } from '../../../shared/pro_revocation';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { MessageInput, SendButton } from '../../locators/conversation';
 import { ConversationItem } from '../../locators/home';

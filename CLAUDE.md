@@ -107,9 +107,13 @@ Only a subset matters per platform (all read in `run/test/utils/binaries.ts` /
   app needs, since it reaches all three through the snodes. SOGS and the file server are optimisations:
   anything unreachable is reported and skipped, leaving the run on the remote community / production
   file server. The SOGS link is *verified* before use (one signed request — a wrong `SOGS_PUBKEY` comes
-  back 401), so it cannot take per-test community rooms down with it. `FILE_SERVER_PUBKEY` has no such
-  check — the key only matters inside the onion request — so it is never guessed: set it, or the
-  production file server is used. `*_HOST`/`*_PORT` vars override each address.
+  back 401), so it cannot take per-test community rooms down with it. `FILE_SERVER_ED_PUBKEY` has no
+  such check — the key only matters inside the onion request — so it is never guessed: set it, or the
+  production file server is used. The file server needs exactly two values, `FILE_SERVER_URL` and
+  `FILE_SERVER_ED_PUBKEY` (the **Ed25519** key); the X25519 `FILE_SERVER_PUBKEY` is gone, since every
+  client now converts the Ed form itself. Desktop routes at a local file server only when both are
+  set, so state the URL even though a devnet run discovers it. `*_HOST`/`*_PORT` vars override each
+  address.
 - **The Pro backend is the exception**: with `TEST_PRO_BACKEND` set there is no fallback, because
   session-desktop throws inside `SwarmPolling.pollOnceForKey` when it can't reach a dev backend —
   killing every poll cycle, so messages send but never arrive, with a symptom nowhere near Pro. Set

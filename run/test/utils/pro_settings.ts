@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 
 import { tStripped } from '../../localizer/lib';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
+import { CloseSettings } from '../locators';
 import {
   OpenURLDialog,
   OpenURLDialogConfirmButton,
@@ -17,11 +18,14 @@ import {
   ProScreenAction,
   ProScreenDescription,
   type ProScreenId,
+  ProSettingsEntry,
   type ProStat,
   ProStatCell,
   ProStatsHeader,
+  ProStatValue,
   ProSupportRow,
 } from '../locators/pro';
+import { UserSettings } from '../locators/settings';
 
 /**
  * Waits, chosen so a genuine miss fails fast rather than burning the 60s default.
@@ -35,23 +39,201 @@ const PRESENT_MAX_WAIT = 10_000;
 const ABSENT_MAX_WAIT = 1_000;
 
 /**
+ * The copy a stat cell carries for a given count.
+ *
+ * A switch rather than a token lookup table because `tStripped` resolves its argument type from the
+ * token, and a union of four tokens resolves to a union of four argument shapes that no single call
+ * satisfies.
+ *
+ * Both platforms pass the number twice — once as the plural quantity and once as the substituted
+ * `{total}` — so the singular form is only produced at exactly one. That is what makes an expected-copy
+ * comparison at count 1 a real check rather than a spelling of the number: a client that hard-coded the
+ * plural form renders "1 Pro Badges Sent" and fails.
+ *
+ * Only correct below 1000. Both platforms abbreviate above that (Android's `NumberUtil` renders `1.3k`;
+ * iOS keeps `Int.description`, which is a divergence of its own), and the quantity is still chosen from
+ * the raw number. Nothing here goes near that range, and `parseProStatCount` refuses a reading it cannot
+ * reproduce rather than guessing.
+ */
+export function proStatCopy(stat: ProStat, total: number): string {
+  const args = { count: total, total: String(total) };
+  switch (stat) {
+    case 'badges-sent':
+      return tStripped('proBadgesSent', args);
+    case 'groups-upgraded':
+      return tStripped('proGroupsUpgraded', args);
+    case 'longer-messages':
+      return tStripped('proLongerMessagesSent', args);
+    case 'pinned-conversations':
+      return tStripped('proPinnedConversations', args);
+  }
+}
+
+/**
  * Each stat cell with the copy it should carry on a fixture that has never used a Pro feature.
  *
  * Zero rather than a wildcard because the count is the point: a client that rendered the matrix but wired
  * the wrong counter would still satisfy a presence-only assertion.
  */
-const PRO_STATS: ReadonlyArray<{ stat: ProStat; expected: string }> = [
-  {
-    stat: 'longer-messages',
-    expected: tStripped('proLongerMessagesSent', { count: 0, total: '0' }),
-  },
-  {
-    stat: 'pinned-conversations',
-    expected: tStripped('proPinnedConversations', { count: 0, total: '0' }),
-  },
-  { stat: 'badges-sent', expected: tStripped('proBadgesSent', { count: 0, total: '0' }) },
-  { stat: 'groups-upgraded', expected: tStripped('proGroupsUpgraded', { count: 0, total: '0' }) },
-];
+const PRO_STATS: ReadonlyArray<{ stat: ProStat; expected: string }> = (
+  ['longer-messages', 'pinned-conversations', 'badges-sent', 'groups-upgraded'] as const
+).map(stat => ({ stat, expected: proStatCopy(stat, 0) }));
+
+/**
+ * The three cells a test can actually move.
+ *
+ * `groups-upgraded` is excluded because **no client has a data source for it**: Android hard-codes
+ * `groupsUpdated = 0` (`ProSettingsViewModel.kt`), iOS reads a `groupsUpgradedCounter` that has no write
+ * site anywhere in the repo, and Desktop assigns the literal `0`. All three render it permanently
+ * disabled behind a "coming soon" tooltip. Asserting a delta on it could only ever assert that an
+ * unimplemented feature stayed unimplemented.
+ */
+export const MOVABLE_PRO_STATS = [
+  'badges-sent',
+  'longer-messages',
+  'pinned-conversations',
+] as const;
+
+export type MovableProStat = (typeof MOVABLE_PRO_STATS)[number];
+
+/** A reading of every stat a test can move, taken in one visit to the Pro settings screen. */
+export type ProStatCounts = Record<MovableProStat, number>;
+
+/**
+ * Matches the normalisation `findMatchingLabelInElementArray` applies, so a reading compares equal to a
+ * localizer string on exactly the same terms a locator's own text filter would.
+ */
+function normaliseCopy(value: string): string {
+  return value
+    .replace(/[\u200e\u200f\u202a-\u202e]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+}
+
+/**
+ * The number a stat cell is showing, from the copy it rendered.
+ *
+ * Self-checking on purpose: having parsed a leading integer it rebuilds the whole expected string from
+ * it and refuses anything that does not match. That is what makes the reading trustworthy rather than a
+ * regex that happens to find a digit —
+ *
+ * - **the loading state has no digits at all.** Both platforms substitute `""` for `{total}` while the
+ *   stats are still resolving, so the cell reads a bare "Pro Badges Sent". A permissive parser would
+ *   read that as a missing number; this throws.
+ * - **an abbreviated count is not a count.** Android renders 1300 as "1.3k", where a leading-digit match
+ *   would happily return 1.
+ * - **copy drift is caught at the point of reading**, not three assertions later as a confusing delta.
+ */
+export function parseProStatCount(stat: ProStat, copy: string): number {
+  const normalised = normaliseCopy(copy);
+  const leadingDigits = /^(\d+)\b/.exec(normalised);
+  if (!leadingDigits) {
+    throw new Error(
+      `Pro stat "${stat}" rendered no count: "${copy}". Both platforms drop the number while the ` +
+        `stats are loading, so this usually means the reading was taken before the screen settled.`
+    );
+  }
+  const count = Number(leadingDigits[1]);
+  const expected = proStatCopy(stat, count);
+  if (normaliseCopy(expected) !== normalised) {
+    throw new Error(
+      `Pro stat "${stat}" rendered "${copy}", which is not the copy for ${count} ("${expected}"). ` +
+        `Either the count is abbreviated (so this reading would be wrong) or the copy has changed.`
+    );
+  }
+  return count;
+}
+
+/**
+ * Read one stat cell's count off the Pro settings screen, which must already be open.
+ *
+ * **iOS only, and it throws rather than guessing on Android.** The count is only readable where the id
+ * and the copy sit on the same element: on iOS the identifier is on the cell's title — the whole
+ * "N Badges Sent" string — so the number survives on `label` once the identifier has taken over `name`.
+ * On Android `qaTag` is `semantics { … }.testTag(…)` with no `mergeDescendants`, so the tagged `Row` is a
+ * bare node with a `resource-id` and no text of its own, and the number lives on an untagged child
+ * `Text`. There is no `id`/`accessibility id` that reaches it, and the other locator strategies are not
+ * an option — so this refuses the platform instead of silently reading an empty string.
+ *
+ * The fix is one line in the client, not here: give the count `Text` in `ProStatItem` its own `qaTag`
+ * (the shape `pro-screen-action-label` already uses for exactly this problem), or merge the row's
+ * semantics. `pro-stats-groups-upgraded` is readable today only because its tooltip makes the row
+ * `clickable`, and `clickable` merges descendants — which is an accident, not a design.
+ */
+async function readProStat(device: DeviceWrapper, stat: ProStat): Promise<number> {
+  if (device.isIOS()) {
+    const element = await device.waitForTextElementToBePresent({
+      ...new ProStatCell(device, stat).build(),
+      maxWait: PRESENT_MAX_WAIT,
+    });
+    const copy = (await device.getAttribute('label', element.ELEMENT)) ?? '';
+    return parseProStatCount(stat, copy);
+  }
+
+  // Android tags every cell's count with the same `pro-stats-value`, so the id alone cannot say which
+  // stat a match belongs to. Read them all and let `parseProStatCount` decide: it rebuilds the expected
+  // copy from the number it parsed, so only the cell whose wording matches `stat` survives.
+  // `skipHealing` because a miss here means the APK predates the tag, and healing's fuzzy id match
+  // resolves to a neighbouring `pro-*` element with no text -- which reads as "the cell rendered
+  // nothing" rather than "this build has no such tag".
+  await device.waitForTextElementToBePresent({
+    ...new ProStatValue(device).build(),
+    maxWait: PRESENT_MAX_WAIT,
+    skipHealing: true,
+  });
+  const values = await device.findElements('id', 'pro-stats-value');
+  const copies: string[] = [];
+  for (const element of values) {
+    const copy = (await device.getTextFromElement(element)) ?? '';
+    copies.push(copy);
+    try {
+      return parseProStatCount(stat, copy);
+    } catch {
+      // Another stat's cell. Keep looking; if none match, the throw below names what was on screen.
+    }
+  }
+  throw new Error(
+    `No Pro stat cell rendered the copy for "${stat}". Read ${values.length} value(s): ` +
+      `${JSON.stringify(copies)}.`
+  );
+}
+
+/**
+ * Take a reading of every movable stat, starting and finishing on the home screen.
+ *
+ * **Every reading is a fresh visit, and that is load-bearing on iOS.** The two send counters are written
+ * under an `ObservableKey` with the `.keyValue` generic while the settings view model observes the same
+ * name under `.setting`, so nothing wakes the observer and the numbers are frozen for as long as the
+ * screen stays open. They are correct on entry — `SessionProSettingsViewModel` queries them in its
+ * initial state — so re-entering is what makes a second reading mean anything. A helper that held the
+ * screen open across the action under test would read the baseline twice and pass regardless.
+ *
+ * Waits on the stats header first, `skipHealing` as `observeProGrant` does: healing falls back to a fuzzy
+ * id match that resolves to a neighbouring `pro-settings-*` element on the non-Pro version of this
+ * screen, which would turn "the account is not Pro" into a reading of the wrong element.
+ */
+export async function readProStats(device: DeviceWrapper): Promise<ProStatCounts> {
+  return await test.step('Read the Pro stats', async () => {
+    await device.clickOnElementAll(new UserSettings(device));
+    await device.clickOnElementAll(new ProSettingsEntry(device));
+    await device.waitForTextElementToBePresent({
+      ...new ProStatsHeader(device).build(),
+      maxWait: PRESENT_MAX_WAIT,
+      skipHealing: true,
+    });
+
+    const counts = {} as ProStatCounts;
+    for (const stat of MOVABLE_PRO_STATS) {
+      counts[stat] = await readProStat(device, stat);
+    }
+    device.log(`Pro stats: ${JSON.stringify(counts)}`);
+
+    await device.navigateBack();
+    await device.clickOnElementAll(new CloseSettings(device));
+    return counts;
+  });
+}
 
 /**
  * Scroll to the bottom of the Pro settings screen.
