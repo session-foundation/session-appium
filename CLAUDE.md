@@ -327,6 +327,28 @@ an existing spec (e.g. `run/test/specs/app_disguise_icons.spec.ts`).
   - The `text` filter is an **exact** match after normalisation (`findMatchingTextInElementArray`),
     not a substring one — asserting a prefix of a long message fails against a body that is present
     and correct.
+- **Address by id, then assert the copy.** An id says the client rendered the right *control*; only the
+  copy says it rendered the right *words* in it, and the two fail independently — a control keeps its
+  identifier through a copy change, so an id-only lookup stays green against a wrong, empty or swapped
+  string. On a destructive or irreversible flow that is the difference between pressing Cancel and
+  pressing Clear. So a spec that acts on a labelled control should check both.
+
+  Where the copy lives is per-platform, and it is not a preference:
+
+  - **iOS** puts it on `label`. An accessibility identifier becomes the element's `name` and displaces
+    the display text, so `label` is the only place left (`findMatchingLabelInElementArray`).
+  - **Desktop** takes `text` in `waitForElement`'s options — `:has-text()`, already a substring match.
+  - **Android** Compose *controls* report no text of their own: the label is a child node, so the node
+    addressed by id has nothing to compare. Only text-bearing nodes (a dialog body, a heading) can be
+    checked in place. `expectControlCopy` (`run/test/utils/element_copy.ts`) does the platform split and
+    skips loudly rather than passing quietly.
+
+  Two things that look like a check and are not. A copy spanning a `<br/>` can never match either filter
+  — `tStripped` collapses the break to a space that is in no client's DOM — so read the element and
+  assert `toContain` a run of it (`localizedRuns`, `run/shared/localized_runs.ts`). And where an Android
+  id is *derived from* the display string — `AlertDialog` falls back to a button's own text when the call
+  site gives it no `qaTag` — the id lookup already covers the copy, but say so, because that is a
+  property of the call site and not of the locator.
 - `runOnlyOnIOS` / `runOnlyOnAndroid` (`run/test/utils/run_on.ts`) gate
   platform-specific steps inside a shared spec.
 - Lint/format: `pnpm lint` (prettier + eslint). `pnpm tsc` for typecheck.

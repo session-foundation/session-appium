@@ -17,6 +17,7 @@ import {
   UserSettings,
 } from '../../locators/settings';
 import { newUser } from '../../utils/create_account';
+import { expectControlCopy } from '../../utils/element_copy';
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
@@ -42,8 +43,13 @@ const ABSENT_MAX_WAIT = 1_000;
  *
  * **There is no standard-account control on the device branch, and there cannot be.** Both clients
  * delete immediately from the first Clear press when a standard account has device-only selected -
- * Android calls `clearDataDeviceOnly()`, iOS calls `clearLocalAccount()` - with no confirmation to
- * assert. The control below therefore uses the network branch, which does confirm for everyone.
+ * Android's `SettingsViewModel.clearData` calls `clearDataDeviceOnly()` and iOS's `clearDeviceOnly()`
+ * calls `clearLocalAccount()`, both without going through a confirmed state. Confirmed on Android by
+ * running that case once: the app came back on the onboarding screen. So there is no confirmation to
+ * assert, and the control below uses the network branch, which does confirm for everyone.
+ *
+ * Desktop is the odd one out - its `askingConfirmation` gate applies to every account - which is why
+ * the desktop spec carries both controls and this one carries a single control.
  */
 
 bothPlatformsIt({
@@ -160,9 +166,16 @@ async function openClearDataDialog(
   return device;
 }
 
-/** Cancel out of the confirmation and assert the dialog is gone, having deleted nothing. */
+/**
+ * Cancel out of the confirmation and assert the dialog is gone, having deleted nothing.
+ *
+ * The button is asserted by id AND copy before being pressed - see `expectControlCopy`. On a destructive flow
+ * that matters more than usual: an id-only lookup would keep passing if the two actions ever swapped
+ * their labels, and this spec would then be pressing Clear while believing it pressed Cancel.
+ */
 async function cancelClearData(device: DeviceWrapper): Promise<void> {
   await test.step('Cancel without deleting anything', async () => {
+    await expectControlCopy(device, new ClearDataCancelButton(device).build(), tStripped('cancel'));
     await device.clickOnElementAll(new ClearDataCancelButton(device));
     await device.verifyElementNotPresent({
       ...new ModalHeading(device).build(),
@@ -172,12 +185,22 @@ async function cancelClearData(device: DeviceWrapper): Promise<void> {
   });
 }
 
+/**
+ * Assert the destructive action carries the copy it should, then press it.
+ *
+ * Same reasoning as `cancelClearData`: the id alone would not notice this button being relabelled.
+ */
+async function pressClear(device: DeviceWrapper): Promise<void> {
+  await expectControlCopy(device, new ClearDataConfirmButton(device).build(), tStripped('clear'));
+  await device.clickOnElementAll(new ClearDataConfirmButton(device));
+}
+
 async function proClearDataDevice(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const device = await openClearDataDialog(platform, testInfo, true);
 
   await test.step('Verify the Pro transfer warning', async () => {
     // Device-only is preselected on both platforms, so no radio is touched here.
-    await device.clickOnElementAll(new ClearDataConfirmButton(device));
+    await pressClear(device);
     // Both runs, because neither alone identifies this case: the warning is word-for-word identical in
     // the network token, and the opening question says nothing about Pro.
     await expectDialogBodyContains(device, localizedRun('proClearAllDataDevice', 0));
@@ -199,8 +222,13 @@ async function proClearDataNetwork(platform: SupportedPlatformsType, testInfo: T
   const device = await openClearDataDialog(platform, testInfo, true);
 
   await test.step('Verify the Pro transfer warning on the network branch', async () => {
+    await expectControlCopy(
+      device,
+      new ClearDeviceAndNetworkRadio(device).build(),
+      tStripped('clearDeviceAndNetwork')
+    );
     await device.clickOnElementAll(new ClearDeviceAndNetworkRadio(device));
-    await device.clickOnElementAll(new ClearDataConfirmButton(device));
+    await pressClear(device);
     // The opening run here is word-for-word `clearDeviceAndNetworkConfirm` - the standard copy - so it
     // says which branch and nothing about Pro. The warning is what says Pro.
     await expectDialogBodyContains(device, localizedRun('proClearAllDataNetwork', 0));
@@ -217,8 +245,13 @@ async function standardClearDataNetwork(platform: SupportedPlatformsType, testIn
   const device = await openClearDataDialog(platform, testInfo, false);
 
   await test.step('Verify the standard confirmation says nothing about Pro', async () => {
+    await expectControlCopy(
+      device,
+      new ClearDeviceAndNetworkRadio(device).build(),
+      tStripped('clearDeviceAndNetwork')
+    );
     await device.clickOnElementAll(new ClearDeviceAndNetworkRadio(device));
-    await device.clickOnElementAll(new ClearDataConfirmButton(device));
+    await pressClear(device);
     const body = await readDialogBody(device);
     expect(body).toContain(tStripped('clearDeviceAndNetworkConfirm'));
     // The absence is the assertion this test exists for: it is what makes the two Pro cases about Pro

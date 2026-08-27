@@ -1,4 +1,5 @@
 import type { DesktopWrapper } from '../../../desktop/DesktopWrapper';
+import type { StrategyExtractionObj } from '../../../desktop/types';
 
 import { Global, LeftPane, Settings } from '../../../desktop/locators';
 import { test_Alice_1W_no_network } from '../../../desktop/sessionTest';
@@ -21,8 +22,9 @@ import { localizedRun } from '../../../shared/localized_runs';
  * sentence is word-for-word `clearDeviceAndNetworkConfirm`, the standard copy, so on its own it cannot
  * say the account was Pro. Only the pair pins one cell of the grid.
  *
- * Desktop only carries all four: iOS tags nothing in this flow, and Android's radios have no `qaTag`,
- * so mobile reaches only the device branch (`mobile/pro_clear_data_warning.spec.ts`).
+ * Desktop is the only platform carrying all four. Mobile has the two Pro cases and one control, but
+ * cannot have a standard-account DEVICE case: both mobile clients delete straight from the first
+ * Clear press on that branch, with no confirmation to read (`mobile/pro_clear_data_warning.spec.ts`).
  *
  * Display mocks throughout - the copy is chosen from `useCurrentUserHasPro()`, which a mocked status
  * and proof satisfy, and nothing here needs a proof another party would verify.
@@ -43,6 +45,25 @@ const PRO_ACCOUNT = {
 /** No `pro` block at all: a standard account, which is the other half of every assertion below. */
 const STANDARD_ACCOUNT = undefined;
 
+/**
+ * Assert a control carries the copy it should, then press it.
+ *
+ * By id AND copy: the id says the client rendered the right control, the copy says it rendered the
+ * right words in it, and the two fail independently. On a destructive flow that matters more than
+ * usual - an id-only lookup would keep passing if the two actions ever swapped their labels.
+ */
+async function pressWithCopy(
+  alice: DesktopWrapper,
+  locator: StrategyExtractionObj,
+  copy: string
+): Promise<void> {
+  await alice.waitForElement({
+    locator,
+    options: { maxWaitMs: PRESENT_MAX_WAIT, text: copy },
+  });
+  await alice.clickOn(locator);
+}
+
 async function openClearDataModal(alice: DesktopWrapper): Promise<void> {
   await alice.clickOn(LeftPane.settingsButton);
   await alice.clickOn(Settings.clearDataMenuItem);
@@ -60,14 +81,14 @@ async function openClearDataModal(alice: DesktopWrapper): Promise<void> {
  * The cancel is not tidying up: it is the assertion that this test never took the destructive action.
  */
 async function expectConfirmationCopy(alice: DesktopWrapper, runs: Array<string>): Promise<void> {
-  await alice.clickOn(Global.confirmButton);
+  await pressWithCopy(alice, Global.confirmButton, tStripped('clear'));
   for (const run of runs) {
     await alice.waitForElement({
       locator: Global.modalDescription,
       options: { maxWaitMs: PRESENT_MAX_WAIT, text: run },
     });
   }
-  await alice.clickOn(Global.cancelButton);
+  await pressWithCopy(alice, Global.cancelButton, tStripped('cancel'));
   await alice.hasElementPoppedUpThatShouldnt(Global.modalDescription);
 }
 
@@ -88,7 +109,11 @@ test_Alice_1W_no_network(
   'Clear data warns a Pro subscriber (network)',
   async ({ alice }) => {
     await openClearDataModal(alice);
-    await alice.clickOn(Settings.clearDeviceAndNetworkRadial);
+    await pressWithCopy(
+      alice,
+      Settings.clearDeviceAndNetworkRadial,
+      tStripped('clearDeviceAndNetwork')
+    );
     await expectConfirmationCopy(alice, [
       localizedRun('proClearAllDataNetwork', 0),
       PRO_TRANSFER_WARNING,
@@ -106,7 +131,7 @@ test_Alice_1W_no_network(
   'Clear data confirmation for a standard account (device)',
   async ({ alice }) => {
     await openClearDataModal(alice);
-    await alice.clickOn(Global.confirmButton);
+    await pressWithCopy(alice, Global.confirmButton, tStripped('clear'));
     await alice.waitForElement({
       locator: Global.modalDescription,
       options: { maxWaitMs: PRESENT_MAX_WAIT, text: tStripped('clearDeviceDescription') },
@@ -120,8 +145,12 @@ test_Alice_1W_no_network(
   'Clear data confirmation for a standard account (network)',
   async ({ alice }) => {
     await openClearDataModal(alice);
-    await alice.clickOn(Settings.clearDeviceAndNetworkRadial);
-    await alice.clickOn(Global.confirmButton);
+    await pressWithCopy(
+      alice,
+      Settings.clearDeviceAndNetworkRadial,
+      tStripped('clearDeviceAndNetwork')
+    );
+    await pressWithCopy(alice, Global.confirmButton, tStripped('clear'));
     await alice.waitForElement({
       locator: Global.modalDescription,
       options: { maxWaitMs: PRESENT_MAX_WAIT, text: tStripped('clearDeviceAndNetworkConfirm') },
@@ -134,5 +163,5 @@ test_Alice_1W_no_network(
 /** Assert the transfer warning is not on the confirmation, then cancel out of it. */
 async function expectProWarningAbsent(alice: DesktopWrapper): Promise<void> {
   await alice.hasElementPoppedUpThatShouldnt(Global.modalDescription, PRO_TRANSFER_WARNING);
-  await alice.clickOn(Global.cancelButton);
+  await pressWithCopy(alice, Global.cancelButton, tStripped('cancel'));
 }
