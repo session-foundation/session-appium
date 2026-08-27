@@ -371,7 +371,7 @@ cannot hit.
 - **Simulator-only app + instrumentation.** The `.app` must be a simulator build. The iOS
   app's launch-arg instrumentation (the `appium:processArguments.env` keys —
   `animationsEnabled`, `debugDisappearingMessageDurations`, `communityPollLimit`,
-  `sessionPro`, `customFirstInstallDateTime`) is consumed by
+  `customFirstInstallDateTime`) is consumed by
   `DeveloperSettingsViewModel.processUnitTestEnvVariablesIfNeeded` in Session_iOS, which is
   compiled under `#if targetEnvironment(simulator)` — it does **not** exist on device
   builds.

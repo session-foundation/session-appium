@@ -151,9 +151,8 @@ export function crossPlatformTest<Names extends AccountName>({
   test(testName, async ({}, testInfo) => {
     console.info(`\n\n==========> Running "${testName}"\n\n`);
 
-    // Enable Session Pro (dev backend) before launching desktop windows.
+    // Point the desktop windows at the dev Pro backend before they launch.
     if (isPro) {
-      process.env.SESSION_PRO = '1';
       process.env.TEST_PRO_BACKEND = '1';
     }
     // Desktop lifecycle is owned here: reset pids before opening any window.

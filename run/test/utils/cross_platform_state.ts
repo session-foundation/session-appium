@@ -164,11 +164,9 @@ export async function openAppsWithStateCrossPlatform<K extends PrebuiltStateKey>
     );
   }
 
-  // `{ pro: {} }` rather than nothing when this run is Pro: `applyProMocks` clears every Pro variable
-  // it owns on each launch and restores only the value `SESSION_PRO` held at module load, so passing
-  // no context *unsets* the flag this test just set — leaving Desktop with no Pro surfaces at all, on
-  // a run that asked for them. An empty context asks for "Pro on, nothing mocked", which is what a
-  // real grant needs.
+  // `{ pro: {} }` rather than nothing when this run is Pro: an empty context asks for "nothing
+  // mocked", which is what a real grant needs — the status has to come from the backend rather than
+  // from a fixture that would answer in its place.
   //
   // The picker file is given to EVERY desktop window, not just the one that will upload: it is a
   // process env var read at launch, there is no per-window channel for it, and a window that never
