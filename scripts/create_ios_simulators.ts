@@ -1,11 +1,20 @@
 import { execSync } from 'child_process';
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'fs';
 import * as path from 'path';
 
 import type { Simulator } from '../run/test/utils/capabilities_ios';
 import type { DeviceWrapper } from '../run/types/DeviceWrapper';
 
-import { mediaFolder } from '../run/constants/testfiles';
+import {
+  animatedProfilePicture,
+  animatedProfilePictureAsPng,
+  mediaFolder,
+  profilePicture,
+  testFile,
+  testImage,
+  testVideo,
+  testVideoThumbnail,
+} from '../run/constants/testfiles';
 import { copyFileToSimulator } from '../run/test/utils/copy_file_to_simulator';
 import {
   bootSimulator,
@@ -72,11 +81,58 @@ export function resolveDeviceConfig(overrides?: { runtime?: string; deviceType?:
 }
 
 const MEDIA_ROOT = mediaFolder;
+
+/**
+ * What gets baked into the template simulator's photo library and Files app.
+ *
+ * Named from `testfiles.ts` rather than spelled out, so a fixture cannot be renamed there and go on
+ * being requested here under its old name.
+ */
 const MEDIA_FILES = {
-  images: ['profile_picture.jpg', 'test_image.jpg', 'animated_profile_picture.gif'],
-  videos: ['test_video.mp4'],
-  pdfs: ['test_file.pdf'],
+  images: [profilePicture, testImage, animatedProfilePicture, animatedProfilePictureAsPng],
+  videos: [testVideo],
+  pdfs: [testFile],
 };
+
+/**
+ * Fixtures in [MEDIA_ROOT] that are deliberately NOT preloaded, and why.
+ *
+ * Anything here is exempted from [warnAboutUnpreloadedFixtures]; anything not here and not in
+ * [MEDIA_FILES] gets a warning, which is the point of both.
+ */
+const NOT_PRELOADED: Record<string, string> = {
+  [testVideoThumbnail]: 'read from disk as a reference image; never picked on the device',
+  'test_gif.gif': 'used by desktop, which takes a path rather than the photo library',
+};
+
+/**
+ * Warn about any fixture that exists on disk but will not be on the simulator.
+ *
+ * iOS is the only platform that cannot reach a file at test time: Android pushes one when it needs it
+ * and desktop is handed a path, while iOS matches against a library baked in at simulator creation. So
+ * a fixture added to `sample_files/` and used from an iOS spec fails at the point of *use*, as a photo
+ * picker that never finds it — 20s of nothing, nowhere near the cause.
+ *
+ * A warning rather than a throw: an unpreloaded fixture is a problem for whichever spec wants it, not a
+ * reason to refuse to build simulators for all the others. Directory-driven so a new file is caught
+ * without anyone remembering to register it.
+ */
+function warnAboutUnpreloadedFixtures(): void {
+  const preloaded = new Set([...MEDIA_FILES.images, ...MEDIA_FILES.videos, ...MEDIA_FILES.pdfs]);
+  const missing = readdirSync(MEDIA_ROOT)
+    .filter(name => !name.startsWith('.'))
+    .filter(name => !preloaded.has(name) && !(name in NOT_PRELOADED));
+
+  if (!missing.length) {
+    return;
+  }
+  console.warn(
+    `\n⚠️  ${missing.length} file(s) in ${MEDIA_ROOT}/ will NOT be on these simulators:\n` +
+      missing.map(name => `      - ${name}`).join('\n') +
+      `\n   An iOS spec that asks for one of these will fail in its photo picker rather than here.\n` +
+      `   Add it to MEDIA_FILES, or to NOT_PRELOADED with the reason it does not belong there.\n`
+  );
+}
 
 function createSimulator(name: string, deviceType: string, runtime: string): string {
   const output = execSync(`xcrun simctl create "${name}" "${deviceType}" "${runtime}"`, {
@@ -104,6 +160,8 @@ function waitForBoot(udid: string): boolean {
 }
 
 function preloadMedia(udid: string): void {
+  warnAboutUnpreloadedFixtures();
+
   // Add images and videos
   const mediaFiles = [...MEDIA_FILES.images, ...MEDIA_FILES.videos];
   for (const filename of mediaFiles) {
