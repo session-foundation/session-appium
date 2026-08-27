@@ -103,22 +103,37 @@ async function pinnedAboveLimitFromConfig(platform: SupportedPlatformsType, test
     }
   });
 
-  // The first row that is NOT pinned, i.e. the seventh pin attempt.
-  const seventh = contactNames[SEEDED_PIN_COUNT];
+  /**
+   * The LAST conversation, not the first unpinned one - and the difference is the whole assertion.
+   *
+   * The seeded pins are contacts 1..6, so the first unpinned row is already in position 7. Pinning it
+   * would move it to the end of the pinned block, which IS position 7: the order comes out identical
+   * whether the client honoured the pin or refused it, and `assertPinOrder` cannot tell them apart.
+   * The check reads as a guard and is vacuous.
+   *
+   * Pinning the last row instead moves it from tenth to seventh if it is allowed, so the order says
+   * which happened.
+   */
+  const pinTarget = contactNames[contactNames.length - 1];
 
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Pinned Conversations CTA'), async () => {
-    // Six is already past the limit, so this only holds if the client compares the pinned COUNT against
-    // the limit rather than watching for the moment it is reached. An `=== STANDARD_PIN_LIMIT` check
-    // passes every existing pin spec — they all arrive at the limit one pin at a time — and lets this
-    // attempt through.
-    await device.pinConversation(seventh);
+    await device.pinConversation(pinTarget);
+
+    // FAILS ON iOS TODAY, and the failure is the point. Android refuses the seventh pin and raises this
+    // CTA; iOS does neither - it PINS it, leaving a standard account holding seven against a limit of
+    // five. Verified: the order assertion below reports Kevin moved from tenth to seventh.
+    //
+    // Asserted on both platforms deliberately. Gating it to Android would hide a real defect behind a
+    // green run, and the two symptoms have one cause rather than being separate gaps.
     await device.checkCTA('pinnedConversationsOverLimit');
     await device.clickOnElementAll(new CTAButtonNegative(device));
   });
 
-  await test.step('Assert the seventh was NOT pinned', async () => {
+  await test.step('Assert the seventh pin was refused', async () => {
     // The CTA appearing is not the same as the pin being refused: an app that showed the CTA and pinned
-    // anyway satisfies a CTA-only assertion.
+    // anyway satisfies a CTA-only assertion. This is also the iOS half's whole claim, since the CTA
+    // check above is Android-only - so it has to be able to fail, which is why `pinTarget` is the last
+    // row rather than the first unpinned one.
     assertPinOrder(contactNames, pinnedNames, await getConversationOrder(device));
   });
 
@@ -141,7 +156,7 @@ async function pinnedAboveLimitFromConfig(platform: SupportedPlatformsType, test
     // Five pinned is AT the limit, not under it, so a standard account may not add a sixth — the same
     // refusal `user_actions_pin_unpin` asserts from below. Together with the step above this says the
     // over-limit state can only drain: unpinning is allowed, re-pinning is not.
-    await device.pinConversation(seventh);
+    await device.pinConversation(pinTarget);
     await device.checkCTA('pinnedConversations');
     await device.clickOnElementAll(new CTAButtonNegative(device));
     assertPinOrder(contactNames, remainingPinned, await getConversationOrder(device));
