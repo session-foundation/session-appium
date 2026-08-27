@@ -60,8 +60,8 @@ async function overProLimitMessage(platform: SupportedPlatformsType, testInfo: T
   });
 
   await test.step('Seed a message one character past the Pro limit', async () => {
-    // Sent with Alice's app already up, so her poll is seconds behind the mint: the QA backend can be
-    // running a compressed clock, and a proof that dies first is read as no proof at all.
+    // Sent with Alice's app already up, so her poll is seconds behind the mint. A proof that dies
+    // before the message is parsed is read as no proof at all.
     await sendOverProLimitMessage({ from: bob, to: alice, network, tag: TAG });
   });
 

@@ -31,8 +31,8 @@ const TAG = 'OVERPRO';
 test_Alice_1W_Bob_0W_friends(
   `A ${OVER_PRO_LIMIT_CHARS}-character message from a Pro sender`,
   async ({ alice, bob, network }) => {
-    // Sent with Alice's window already up, so her poll is seconds behind the mint: the QA backend can
-    // be running a compressed clock, and a proof that dies first is read as no proof at all.
+    // Sent with Alice's window already up, so her poll is seconds behind the mint. A proof that dies
+    // before the message is parsed is read as no proof at all.
     await sendOverProLimitMessage({ from: bob, to: alice.getUser(), network, tag: TAG });
 
     await alice.waitForElement({

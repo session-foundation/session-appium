@@ -126,16 +126,11 @@ Only a subset matters per platform (all read in `run/test/utils/binaries.ts` /
     `vouchers.tsv` is mounted), so a rebuild invalidates `TEST_PRO_BACKEND_ED_PK`. A stale key is not a
     connection error: the client reads every proof as invalid and *silently strips Pro content*, which
     looks like an app bug. Re-read it from the logs after any recreate.
-  - **The local backend runs on a compressed clock**, so proofs live **~300s instead of ~30 days**
-    (`PROVIDER_TESTING_PROOF_EXPIRY_SHAPE`: 290s clamp, 10s "day", 1s renewal lead). The backend does
-    read `SESH_PRO_BACKEND_PROVIDER_TESTING_ENV`, but the compose stack never sets it —
-    `pro-backend/docker/entrypoint.sh` writes `provider_testing_env = true` straight into `config.ini`
-    instead, unconditionally. So `docker inspect` shows nothing and reads as "not in testing mode",
-    which is the opposite of the truth: check the `config.ini` or the startup log, not the container
-    env. The clients' `PRO_RENEWAL_LEAD` is a hardcoded 60 minutes and does not compress, so a renewal
-    target is permanently in the past. All three clients now absorb that with a 60s floor
-    (`lastProofRequestAt`) — Android's landed last and hot-looped until it did. Assume this before
-    diagnosing any Pro expiry, renewal or timing behaviour locally.
+  - **Proofs live a real ~30 days.** The backend no longer runs the compressed clock it once did, so
+    do not plan a spec around a proof lapsing inside a run — nothing expires on its own any more, and a
+    test that waits for one waits forever. Seeder actions take a `durationSeconds` for that instead
+    (`grantProPayment`, `fetchProProof`, `sendProMessage`), which is the only way to get a short-lived
+    entitlement now. Read the expiry the seeder returns rather than assuming either shape.
 
   `pnpm test-pro-keys` pins the Pro master-key derivation to libsession's committed vectors, with no
   device and no backend — the cheapest first check when a grant appears not to take.

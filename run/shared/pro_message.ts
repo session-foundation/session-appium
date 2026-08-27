@@ -14,10 +14,9 @@ import { devProBackendUrl } from './pro_grant';
  * recipient's side:
  *
  *   - a body the seeder shortened, which would leave the recipient with nothing over the limit to cut;
- *   - a proof that is already dead. The QA backend can run a compressed clock, in which case a proof
- *     lives minutes rather than ~30 days. A recipient that polls after it expires reads the sender as
- *     non-Pro and truncates at the STANDARD limit, which is a different spec's outcome, so the logged
- *     remaining life is worth reading when this spec fails. Send with the recipient's app already up.
+ *   - a proof that is already dead, which a `durationSeconds` on the send would produce. A recipient
+ *     polling after it expires reads the sender as non-Pro and truncates at the STANDARD limit, which
+ *     is a different spec's outcome — so the logged remaining life is worth reading when this fails.
  */
 export async function sendOverProLimitMessage({
   from,

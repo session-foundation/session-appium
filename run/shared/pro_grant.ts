@@ -50,8 +50,8 @@ export function seedWordsOf(user: ProAccountUnderTest): string {
  * An entitlement short enough to sit inside every client's expiry-warning window, which is seven days
  * on all three — far enough from the boundary that a slow run cannot cross it.
  *
- * Stated rather than inherited from a plan: the QA backend's compressed clock shortens *proof* expiry,
- * not the account entitlement, so a nominal `1M` plan really does land 30 days out.
+ * Stated rather than inherited from a plan: a nominal `1M` really does land 30 days out, well past
+ * every warning window.
  */
 export const EXPIRING_SOON_ENTITLEMENT_SECONDS = 2 * 24 * 60 * 60;
 
