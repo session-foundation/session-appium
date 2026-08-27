@@ -174,6 +174,7 @@ export class DeleteContactConfirmButton extends LocatorsInterface {
     }
   }
 }
+
 export class DeleteContactMenuItem extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -190,7 +191,6 @@ export class DeleteContactMenuItem extends LocatorsInterface {
     }
   }
 }
-
 export class DeleteConversationMenuItem extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -207,6 +207,7 @@ export class DeleteConversationMenuItem extends LocatorsInterface {
     }
   }
 }
+
 export class DeleteConversationModalConfirm extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -223,7 +224,6 @@ export class DeleteConversationModalConfirm extends LocatorsInterface {
     }
   }
 }
-
 export class DeletedMessage extends LocatorsInterface {
   public build() {
     return {
@@ -232,6 +232,7 @@ export class DeletedMessage extends LocatorsInterface {
     } as const;
   }
 }
+
 export class DocumentMessage extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -244,7 +245,6 @@ export class DocumentMessage extends LocatorsInterface {
     }
   }
 }
-
 export class DocumentsFolderButton extends LocatorsInterface {
   public build() {
     return {
@@ -411,6 +411,7 @@ export class HideNoteToSelfMenuOption extends LocatorsInterface {
     }
   }
 }
+
 export class ImagesFolderButton extends LocatorsInterface {
   public build() {
     return {
@@ -419,7 +420,6 @@ export class ImagesFolderButton extends LocatorsInterface {
     } as const;
   }
 }
-
 export class LongPressBanAndDelete extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -522,6 +522,7 @@ export class MediaRetry extends LocatorsInterface {
     }
   }
 }
+
 export class MessageBody extends LocatorsInterface {
   public text: string | undefined;
   constructor(device: DeviceWrapper, text?: string) {
@@ -548,7 +549,6 @@ export class MessageInput extends LocatorsInterface {
     } as const;
   }
 }
-
 /**
  * The remaining-characters countdown in the composer.
  *
@@ -745,6 +745,33 @@ export class OutgoingMessageStatusSent extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: `Message sent status: Sent`,
+        } as const;
+    }
+  }
+}
+
+/**
+ * The pin/unpin row inside a conversation's settings screen.
+ *
+ * A different control from the home screen's swipe (iOS) / long-press (Android) action, and a different
+ * implementation behind it: `ThreadSettingsViewModel.toggleConversationPinnedStatus` counts the pinned
+ * conversations and raises the CTA itself rather than sharing the list's code. Two call sites for one
+ * rule is why this locator exists — a limit fixed at one of them can still be missing at the other.
+ */
+export class PinConversationSettingsOption extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        // `id`, not `accessibility id`: the qaTag reaches the view as a resource id here rather than a
+        // content description. Measured — the first run passed only because the harness healed it.
+        return {
+          strategy: 'id',
+          selector: 'pin-conversation-menu-option',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Pin Conversation',
         } as const;
     }
   }
