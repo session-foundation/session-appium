@@ -5,13 +5,15 @@ import type { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { tStripped } from '../../../localizer/lib';
 import { localizedRun } from '../../../shared/localized_runs';
 import { TestSteps } from '../../../types/allure';
-import { androidIt } from '../../../types/sessionIt';
+import { bothPlatformsIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
 import { ModalDescription, ModalHeading } from '../../locators/global';
 import {
   ClearDataCancelButton,
   ClearDataConfirmButton,
+  ClearDataDialogDescription,
   ClearDataMenuItem,
+  ClearDeviceAndNetworkRadio,
   UserSettings,
 } from '../../locators/settings';
 import { newUser } from '../../utils/create_account';
@@ -20,35 +22,35 @@ import {
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
-import { activeProContext } from '../../utils/pro_context';
+import { activeProContext, PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 
 const PRESENT_MAX_WAIT = 10_000;
 const ABSENT_MAX_WAIT = 1_000;
 
 /**
- * The warning a Pro subscriber gets before wiping their account: Pro does not transfer, so save the
- * recovery password first.
+ * The warning before wiping an account: Pro does not transfer, so save the recovery password.
  *
- * It is a **second-stage** dialog. Opening "Clear Data" shows the generic copy and the two radios;
- * pressing Clear re-renders the same dialog with `proClearAllDataDevice` in place of the generic body,
- * and only a further press deletes anything. So this reads the copy and cancels - the destructive
- * action is never taken.
+ * A **two-stage** dialog on both platforms. Opening Clear Data shows the generic copy and the two
+ * radios; pressing Clear re-renders with the confirmation copy, and only a further press deletes
+ * anything. Every case here reads the copy and cancels - the destructive action is never taken.
  *
- * **Android only, and only the device branch.** Two separate gaps, both on the clients:
+ * The two stages are built differently, and it matters for the locators. Android swaps the one
+ * dialog's `ClearDataState`, so both stages are the same element. iOS presents a `ConfirmationModal`
+ * OVER `NukeDataModal` rather than replacing it, so both are in the accessibility tree at once - which
+ * is why the first stage has its own ids there (`ClearDataDialogDescription`,
+ * `ClearDataConfirmButton`) and only the confirmation answers to `ModalDescription`.
  *
- * - iOS carries no test identifier anywhere in this flow - not on the settings row, the `NukeDataModal`,
- *   its radios, its buttons, nor the `ConfirmationModal` holding the copy.
- * - Android's two radios are `RadioOption`s built with no `qaTag`, so the network branch cannot be
- *   selected. Device-only is the default selection, which is the only reason this half is reachable.
- *
- * Desktop covers all four cells (`desktop/pro_clear_data_warning.spec.ts`) because its modal is fully
- * tagged.
+ * **There is no standard-account control on the device branch, and there cannot be.** Both clients
+ * delete immediately from the first Clear press when a standard account has device-only selected -
+ * Android calls `clearDataDeviceOnly()`, iOS calls `clearLocalAccount()` - with no confirmation to
+ * assert. The control below therefore uses the network branch, which does confirm for everyone.
  */
-androidIt({
+
+bothPlatformsIt({
   title: 'Clear data warns a Pro subscriber (device)',
   risk: 'medium',
   countOfDevicesNeeded: 1,
-  testCb: proClearDataDeviceWarning,
+  testCb: proClearDataDevice,
   isPro: true,
   allureSuites: { parent: 'Session Pro' },
   allureDescription:
@@ -56,19 +58,52 @@ androidIt({
     'recovery password first.',
 });
 
+bothPlatformsIt({
+  title: 'Clear data warns a Pro subscriber (network)',
+  risk: 'medium',
+  countOfDevicesNeeded: 1,
+  testCb: proClearDataNetwork,
+  isPro: true,
+  allureSuites: { parent: 'Session Pro' },
+  allureDescription:
+    'The same warning on the network branch, which additionally says the data cannot be restored.',
+});
+
+bothPlatformsIt({
+  title: 'Clear data confirmation for a standard account (network)',
+  risk: 'medium',
+  countOfDevicesNeeded: 1,
+  testCb: standardClearDataNetwork,
+  isPro: true,
+  allureSuites: { parent: 'Session Pro' },
+  allureDescription:
+    'The control: a standard account gets the ordinary confirmation and no mention of Pro.',
+});
+
 /**
- * Read the dialog body and assert it contains `run`.
+ * Read the dialog body.
  *
- * Read-then-`toContain` rather than a locator `text` filter, for the same reason the refund specs read
- * the Open URL dialog: the mobile filter is an EXACT match after normalisation. The copy here spans a
- * `<br/><br/>`, so no single run of it is ever the whole element text - see `localizedRuns`.
+ * Per-platform for the reason `readOpenUrlDialogCopy` gives: the identifier takes over an iOS element's
+ * `name`, so its copy is only reachable on `label`, while Android exposes it as `text`.
  */
-async function expectDialogBodyContains(device: DeviceWrapper, run: string): Promise<void> {
+async function readDialogBody(device: DeviceWrapper): Promise<string> {
   const element = await device.waitForTextElementToBePresent({
     ...new ModalDescription(device).build(),
     maxWait: PRESENT_MAX_WAIT,
   });
-  expect(await device.getTextFromElement(element)).toContain(run);
+  if (device.isIOS()) {
+    return (await device.getAttribute('label', element.ELEMENT)) ?? '';
+  }
+  return device.getTextFromElement(element);
+}
+
+/**
+ * Read-then-`toContain` rather than a locator `text` filter, because the mobile filter is an EXACT
+ * match after normalisation and this copy spans a `<br/><br/>` - so no run of it is ever the whole
+ * element text. See `localizedRuns`.
+ */
+async function expectDialogBodyContains(device: DeviceWrapper, run: string): Promise<void> {
+  expect(await readDialogBody(device)).toContain(run);
 }
 
 /**
@@ -94,9 +129,17 @@ async function scrollToClearDataRow(device: DeviceWrapper): Promise<void> {
   });
 }
 
-async function proClearDataDeviceWarning(platform: SupportedPlatformsType, testInfo: TestInfo) {
+async function openClearDataDialog(
+  platform: SupportedPlatformsType,
+  testInfo: TestInfo,
+  isPro: boolean
+): Promise<DeviceWrapper> {
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, activeProContext());
+    const { device } = await openAppOnPlatformSingleDevice(
+      platform,
+      testInfo,
+      isPro ? activeProContext() : PRO_BACKEND_CONTEXT
+    );
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
     return { device };
   });
@@ -105,35 +148,20 @@ async function proClearDataDeviceWarning(platform: SupportedPlatformsType, testI
     await device.clickOnElementAll(new UserSettings(device));
     await scrollToClearDataRow(device);
     await device.clickOnElementAll(new ClearDataMenuItem(device));
-    // The generic body, which every account sees and which the Pro copy replaces. Asserted so the step
-    // below is a change of copy rather than the first thing that happened to render. This token has no
-    // break in it, so it can be matched whole.
+    // The generic first-stage copy, so the assertion after Clear is a CHANGE of copy rather than
+    // whatever happened to render first. This token has no break in it, so it matches whole.
     await device.waitForTextElementToBePresent({
-      ...new ModalDescription(device).build(),
+      ...new ClearDataDialogDescription(device).build(),
       text: tStripped('clearDataAllDescription'),
       maxWait: PRESENT_MAX_WAIT,
     });
   });
 
-  await test.step('Verify the Pro transfer warning', async () => {
-    // Safe to press only because this account is Pro. A standard account with device-only selected has
-    // no second confirmation - `SettingsViewModel` calls `clearDataDeviceOnly()` straight from here - so
-    // the same tap would wipe the app. That is why there is no standard-account control on Android.
-    await device.clickOnElementAll(new ClearDataConfirmButton(device));
-    // Both runs. The warning alone is shared word-for-word with the network token, so it cannot say
-    // which branch rendered; the opening question alone appears on no other token here but says nothing
-    // about Pro.
-    await expectDialogBodyContains(device, localizedRun('proClearAllDataDevice', 0));
-    await expectDialogBodyContains(device, localizedRun('proClearAllDataDevice', 1));
-    // The title is unchanged across both stages, so this says the dialog is still the clear-data one
-    // rather than something else having taken over the screen.
-    await device.waitForTextElementToBePresent({
-      ...new ModalHeading(device).build(),
-      text: tStripped('clearDataAll'),
-      maxWait: PRESENT_MAX_WAIT,
-    });
-  });
+  return device;
+}
 
+/** Cancel out of the confirmation and assert the dialog is gone, having deleted nothing. */
+async function cancelClearData(device: DeviceWrapper): Promise<void> {
   await test.step('Cancel without deleting anything', async () => {
     await device.clickOnElementAll(new ClearDataCancelButton(device));
     await device.verifyElementNotPresent({
@@ -142,7 +170,63 @@ async function proClearDataDeviceWarning(platform: SupportedPlatformsType, testI
       maxWait: PRESENT_MAX_WAIT,
     });
   });
+}
 
+async function proClearDataDevice(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const device = await openClearDataDialog(platform, testInfo, true);
+
+  await test.step('Verify the Pro transfer warning', async () => {
+    // Device-only is preselected on both platforms, so no radio is touched here.
+    await device.clickOnElementAll(new ClearDataConfirmButton(device));
+    // Both runs, because neither alone identifies this case: the warning is word-for-word identical in
+    // the network token, and the opening question says nothing about Pro.
+    await expectDialogBodyContains(device, localizedRun('proClearAllDataDevice', 0));
+    await expectDialogBodyContains(device, localizedRun('proClearAllDataDevice', 1));
+    await device.waitForTextElementToBePresent({
+      ...new ModalHeading(device).build(),
+      text: tStripped('clearDataAll'),
+      maxWait: PRESENT_MAX_WAIT,
+    });
+  });
+
+  await cancelClearData(device);
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(device);
+  });
+}
+
+async function proClearDataNetwork(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const device = await openClearDataDialog(platform, testInfo, true);
+
+  await test.step('Verify the Pro transfer warning on the network branch', async () => {
+    await device.clickOnElementAll(new ClearDeviceAndNetworkRadio(device));
+    await device.clickOnElementAll(new ClearDataConfirmButton(device));
+    // The opening run here is word-for-word `clearDeviceAndNetworkConfirm` - the standard copy - so it
+    // says which branch and nothing about Pro. The warning is what says Pro.
+    await expectDialogBodyContains(device, localizedRun('proClearAllDataNetwork', 0));
+    await expectDialogBodyContains(device, localizedRun('proClearAllDataNetwork', 1));
+  });
+
+  await cancelClearData(device);
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(device);
+  });
+}
+
+async function standardClearDataNetwork(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const device = await openClearDataDialog(platform, testInfo, false);
+
+  await test.step('Verify the standard confirmation says nothing about Pro', async () => {
+    await device.clickOnElementAll(new ClearDeviceAndNetworkRadio(device));
+    await device.clickOnElementAll(new ClearDataConfirmButton(device));
+    const body = await readDialogBody(device);
+    expect(body).toContain(tStripped('clearDeviceAndNetworkConfirm'));
+    // The absence is the assertion this test exists for: it is what makes the two Pro cases about Pro
+    // rather than about the confirmation stage existing at all.
+    expect(body).not.toContain(localizedRun('proClearAllDataNetwork', 1));
+  });
+
+  await cancelClearData(device);
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);
   });

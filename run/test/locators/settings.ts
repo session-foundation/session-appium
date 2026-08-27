@@ -78,22 +78,23 @@ export class ClearDataCancelButton extends LocatorsInterface {
       case 'android':
         return { strategy: 'id', selector: 'Cancel' } as const;
       case 'ios':
-        throw new Error(
-          'ClearDataCancelButton is Android-only: the iOS modal carries no identifiers.'
-        );
+        return { strategy: 'accessibility id', selector: 'Cancel' } as const;
     }
   }
 }
 
 /**
- * The clear-data dialog's destructive action.
+ * The destructive action on the **first** stage - the one that raises the confirmation.
  *
- * The id is the English display string because `AlertDialog` falls back to a button's own text when the
- * call site gives it no `qaTag` (`it.qaTag ?: it.text.string()`), and `SettingsScreen` gives it none. So
- * this is a real id rather than a text match, but it is one that would move with the locale.
+ * The two stages are one dialog on Android, whose text swaps, but two stacked modals on iOS: the
+ * confirmation is presented OVER `NukeDataModal` rather than replacing it, so both are in the tree at
+ * once. That is why iOS needs a distinct id here and Android does not.
  *
- * Pressing this on a **standard** account with "device only" selected deletes immediately - there is no
- * second confirmation on that branch. Only press it where a confirmation is expected.
+ * Android's is the English display string, because `AlertDialog` falls back to a button's own text when
+ * the call site gives it no `qaTag`. A real id rather than a text match, but one that moves with locale.
+ *
+ * Pressing this on a **standard** account with "device only" selected deletes immediately on both
+ * platforms - there is no second confirmation on that branch. Only press it where one is expected.
  */
 export class ClearDataConfirmButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
@@ -101,29 +102,69 @@ export class ClearDataConfirmButton extends LocatorsInterface {
       case 'android':
         return { strategy: 'id', selector: 'Clear' } as const;
       case 'ios':
-        throw new Error(
-          'ClearDataConfirmButton is Android-only: the iOS modal carries no identifiers.'
-        );
+        return { strategy: 'accessibility id', selector: 'clear-data-confirm-button' } as const;
     }
   }
 }
 
 /**
- * The "Clear Data" row at the bottom of the user settings list.
+ * The body of the **first** stage, carrying the generic copy every account sees.
  *
- * Android only. The iOS row is a `SessionListScreenContent.ListItemInfo` built with no
- * `accessibility:`, so it carries no identifier at all - and neither does anything inside the
- * `NukeDataModal` it opens.
+ * Separate from `ModalDescription` for the stacking reason on {@link ClearDataConfirmButton}: on iOS
+ * that id belongs to the confirmation presented on top, and asserting it before pressing Clear would
+ * read the wrong modal.
  */
+export class ClearDataDialogDescription extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'Modal description' } as const;
+      case 'ios':
+        return { strategy: 'accessibility id', selector: 'clear-data-description' } as const;
+    }
+  }
+}
+
+/** The "Clear Data" row at the bottom of the user settings list. */
 export class ClearDataMenuItem extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
         return { strategy: 'id', selector: 'Clear data' } as const;
       case 'ios':
-        throw new Error(
-          'ClearDataMenuItem is Android-only: the iOS settings row carries no identifier.'
-        );
+        return { strategy: 'accessibility id', selector: 'Clear data' } as const;
+    }
+  }
+}
+
+/**
+ * The "device only" / "device and network" radios on the first stage of the clear-data dialog.
+ *
+ * Device-only is preselected on both platforms, so only the network one is ever tapped - but both are
+ * here because a spec asserting which branch it took should be able to name either.
+ */
+export class ClearDeviceAndNetworkRadio extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'clear-device-and-network-radio' } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'clear-device-and-network-radio',
+        } as const;
+    }
+  }
+}
+
+/** The preselected branch — see {@link ClearDeviceAndNetworkRadio}. */
+export class ClearDeviceOnlyRadio extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'clear-device-only-radio' } as const;
+      case 'ios':
+        return { strategy: 'accessibility id', selector: 'clear-device-only-radio' } as const;
     }
   }
 }
