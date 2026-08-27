@@ -39,7 +39,6 @@ export type DesktopProContext = ProContext & {
  * set leaks into every later test in the same worker and reads as a product bug there.
  */
 const PRO_ENV_KEYS = [
-  'SESSION_PRO',
   'SESSION_PRO_CURRENT_STATUS',
   'SESSION_PRO_MOCK_PROOF',
   'SESSION_PRO_ACCESS_EXPIRY',
@@ -53,13 +52,6 @@ const PRO_ENV_KEYS = [
 ] as const;
 
 /**
- * `SESSION_PRO` as the run was configured, captured before any test overrides it. Alone among these
- * keys it predates per-test mocking — specs still read it to decide whether Pro is on offer at all,
- * so clearing it between tests would silently flip their assertions.
- */
-const AMBIENT_SESSION_PRO = process.env.SESSION_PRO;
-
-/**
  * Translate a spec's requested Pro state into the launch environment, clearing anything not asked for.
  *
  * The app reads most of these with `!isEmpty(...)`, so `'0'` still enables them — absence is the only
@@ -68,15 +60,8 @@ const AMBIENT_SESSION_PRO = process.env.SESSION_PRO;
 export function applyProMocks(context?: DesktopProContext) {
   PRO_ENV_KEYS.forEach(key => delete process.env[key]);
   if (!context) {
-    if (AMBIENT_SESSION_PRO !== undefined) {
-      process.env.SESSION_PRO = AMBIENT_SESSION_PRO;
-    }
     return;
   }
-
-  // `proAvailable` gates every Pro surface ahead of any status check, so a status mock alone renders
-  // nothing. Implied rather than per-spec because forgetting it gives an empty screen, not an error.
-  process.env.SESSION_PRO = '1';
 
   if (context.proBackendStatus) {
     process.env.SESSION_PRO_CURRENT_STATUS =

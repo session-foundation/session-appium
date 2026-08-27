@@ -318,7 +318,7 @@ messageLengthTestCases.forEach(testCase => {
       } else {
         // A subscriber over the Pro limit has nothing to upgrade to, so they get the plain modal
         // rather than the upsell CTA.
-        if (!testCase.pro && process.env.SESSION_PRO) {
+        if (!testCase.pro) {
           console.log('Session Pro detected, checking CTA');
           // Upgrade to pro
           await alice.checkCTAStrings(
@@ -362,9 +362,7 @@ messageLengthTestCases.forEach(testCase => {
         console.log(`Message didn't send as expected`);
       }
     },
-    // The Pro cases need `SESSION_PRO` for the surfaces to exist at all, but mock no status — the
-    // grant above is the real thing. The non-Pro cases take Pro availability from the run's own
-    // config, which is what decides between the upsell CTA and the plain modal.
+    // The Pro cases mock no status — the grant above is the real thing.
     testCase.pro ? { pro: {} } : undefined
   );
 });
