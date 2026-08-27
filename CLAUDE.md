@@ -343,12 +343,24 @@ an existing spec (e.g. `run/test/specs/app_disguise_icons.spec.ts`).
     checked in place. `expectControlCopy` (`run/test/utils/element_copy.ts`) does the platform split and
     skips loudly rather than passing quietly.
 
-  Two things that look like a check and are not. A copy spanning a `<br/>` can never match either filter
-  — `tStripped` collapses the break to a space that is in no client's DOM — so read the element and
-  assert `toContain` a run of it (`localizedRuns`, `run/shared/localized_runs.ts`). And where an Android
-  id is *derived from* the display string — `AlertDialog` falls back to a button's own text when the call
-  site gives it no `qaTag` — the id lookup already covers the copy, but say so, because that is a
-  property of the call site and not of the locator.
+  Two things that look like a check and are not. On **mobile**, a copy spanning a `<br/>` can never
+  match either filter — `tStripped` collapses the break to a space, while `<br>` is an element and
+  contributes no character to the rendered text — so read the element and assert `toContain` a run of it
+  (`localizedRuns`, `run/shared/localized_runs.ts`). And where an Android id is *derived from* the
+  display string — `AlertDialog` falls back to a button's own text when the call site gives it no
+  `qaTag` — the id lookup already covers the copy, but say so, because that is a property of the call
+  site and not of the locator.
+- **Desktop already has the primitives for both halves — use them rather than hand-rolling.**
+  `clickOnWithText(locator, text)` is the id-plus-copy click. `checkModalStrings(heading, description,
+  modalId)` asserts a modal's title and body together, scoped to `[data-modal-id="…"]` so another modal
+  carrying the same generic `modal-description` slot cannot satisfy it. Reach for a bare
+  `waitForElement` on `modal-description` only when there is no modal id to scope to.
+
+  `checkModalStrings` also makes the `<br/>` problem **a mobile-only one**: it reads `innerText`, where
+  a break renders as a newline, then collapses whitespace — landing on exactly what `tStripped` produces
+  for the same token. So a Desktop spec asserts whole tokens, and importing `localizedRuns` there is
+  carrying a workaround for another platform's constraint. Verified against `proClearAllDataDevice`,
+  which spans two breaks.
 - `runOnlyOnIOS` / `runOnlyOnAndroid` (`run/test/utils/run_on.ts`) gate
   platform-specific steps inside a shared spec.
 - Lint/format: `pnpm lint` (prettier + eslint). `pnpm tsc` for typecheck.
