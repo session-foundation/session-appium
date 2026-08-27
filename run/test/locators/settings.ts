@@ -71,6 +71,113 @@ export class ClassicLightThemeOption extends LocatorsInterface {
   }
 }
 
+/** The clear-data dialog's cancel action, tagged the same way as {@link ClearDataConfirmButton}. */
+export class ClearDataCancelButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'Cancel' } as const;
+      case 'ios':
+        return { strategy: 'accessibility id', selector: 'Cancel' } as const;
+    }
+  }
+}
+
+/**
+ * The destructive action on the **first** stage - the one that raises the confirmation.
+ *
+ * The two stages are one dialog on Android, whose text swaps, but two stacked modals on iOS: the
+ * confirmation is presented OVER `NukeDataModal` rather than replacing it, so both are in the tree at
+ * once. That is why iOS needs a distinct id here and Android does not.
+ *
+ * Android's is the English display string, because `AlertDialog` falls back to a button's own text when
+ * the call site gives it no `qaTag`. A real id rather than a text match, but one that moves with locale.
+ *
+ * Pressing this on a **standard** account with "device only" selected deletes immediately on both
+ * platforms - there is no second confirmation on that branch. Only press it where one is expected.
+ */
+export class ClearDataConfirmButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'Clear' } as const;
+      case 'ios':
+        return { strategy: 'accessibility id', selector: 'clear-data-confirm-button' } as const;
+    }
+  }
+}
+
+/**
+ * The body of the **first** stage, carrying the generic copy every account sees.
+ *
+ * Separate from `ModalDescription` for the stacking reason on {@link ClearDataConfirmButton}: on iOS
+ * that id belongs to the confirmation presented on top, and asserting it before pressing Clear would
+ * read the wrong modal.
+ */
+export class ClearDataDialogDescription extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'Modal description' } as const;
+      case 'ios':
+        return { strategy: 'accessibility id', selector: 'clear-data-description' } as const;
+    }
+  }
+}
+
+/**
+ * The "Clear Data" row at the bottom of the user settings list.
+ *
+ * The id is a hand-written tag on both platforms, NOT derived from the display string, so a lookup
+ * says nothing about the copy - pair it with `expectControlCopy` and `sessionClearData`.
+ */
+export class ClearDataMenuItem extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'Clear data' } as const;
+      case 'ios':
+        return { strategy: 'accessibility id', selector: 'Clear data' } as const;
+    }
+  }
+}
+
+/**
+ * The "device only" / "device and network" radios on the first stage of the clear-data dialog.
+ *
+ * Device-only is preselected on both platforms, so only the network one is ever tapped. The other is
+ * still worth naming: which branches the dialog offers is part of what the screen promises, and
+ * nothing else reads the preselected one.
+ *
+ * Slug ids on both platforms, so neither carries its copy - `expectControlCopy` with `clearDeviceOnly`
+ * / `clearDeviceAndNetwork`. That check only bites on iOS; the Android label is a child node.
+ */
+export class ClearDeviceAndNetworkRadio extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'clear-device-and-network-radio' } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'clear-device-and-network-radio',
+        } as const;
+    }
+  }
+}
+
+/** The preselected branch — see {@link ClearDeviceAndNetworkRadio}. */
+export class ClearDeviceOnlyRadio extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'clear-device-only-radio' } as const;
+      case 'ios':
+        return { strategy: 'accessibility id', selector: 'clear-device-only-radio' } as const;
+    }
+  }
+}
+
 export class CloseAppButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -154,7 +261,6 @@ export class HideRecoveryPasswordButton extends LocatorsInterface {
     }
   }
 }
-
 export class LockAppOption extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -200,6 +306,7 @@ export class NotificationsMenuItem extends LocatorsInterface {
     }
   }
 }
+
 export class PathMenuItem extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -267,7 +374,6 @@ export class RecoveryPasswordMenuItem extends LocatorsInterface {
     }
   }
 }
-
 export class RecoveryPhraseContainer extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -284,7 +390,6 @@ export class RecoveryPhraseContainer extends LocatorsInterface {
     }
   }
 }
-
 export class RevealRecoveryPhraseButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -334,6 +439,7 @@ export class SaveProfilePictureButton extends LocatorsInterface {
     }
   }
 }
+
 export class SelectAppIcon extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -368,6 +474,7 @@ export class SettingsModalsEnableButton extends LocatorsInterface {
     }
   }
 }
+
 export class UserAvatar extends LocatorsInterface {
   public build() {
     switch (this.platform) {
