@@ -311,12 +311,20 @@ export class UnpinConversationOption extends LocatorsInterface {
  *
  * Hidden rather than absent when the user is not Pro, and on Android a `gone` view is not in the
  * hierarchy at all — so a "not found" here means "no badge", which is a state and not a broken locator.
+ *
+ * Android's id is package-qualified because it is an **XML view id** (`activity_home.xml`), which Appium
+ * addresses as `<package>:id/<name>`. The bare form is for Compose `testTag`s — both appear in this
+ * directory and they are not interchangeable: the bare form here resolves only through locator healing,
+ * which the runner fails the test for rather than quietly accepting.
  */
 export class HomeHeaderProBadge extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
-        return { strategy: 'id', selector: 'sessionHeaderProBadge' } as const;
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/sessionHeaderProBadge',
+        } as const;
       case 'ios':
         return { strategy: 'accessibility id', selector: 'home-header-pro-badge' } as const;
     }
