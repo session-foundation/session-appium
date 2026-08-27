@@ -15,9 +15,10 @@ import { tStripped } from '../../../localizer/lib';
  * Both branches, because the app picks the copy from `deleteMode` crossed with
  * `useCurrentUserHasPro()` and each cell has its own token.
  *
- * **Pro accounts only**, matching the mobile spec. The standard-account copy is a different claim, and
- * Desktop's standard device case is already covered by `clearDataOnWindow` in
- * `linked_device_group.spec.ts`. See the mobile spec for what leaving it out costs.
+ * The standard-account case is the control: without it nothing separates "shows the Pro copy to Pro
+ * users" from "shows the Pro copy to everyone". Only the device branch, matching the mobile spec -
+ * that is the one the mobile clients just changed, and the same `useCurrentUserHasPro()` drives both
+ * branches, so a second control would pin nothing new.
  *
  * Display mocks throughout - the copy is chosen from `useCurrentUserHasPro()`, which a mocked status
  * and proof satisfy, and nothing here needs a proof another party would verify.
@@ -87,4 +88,20 @@ test_Alice_1W_no_network(
     await expectConfirmationCopy(alice, tStripped('proClearAllDataNetwork'));
   },
   PRO_ACCOUNT
+);
+
+/**
+ * The control, and the thing that keeps the two above honest: without it nothing separates "shows the
+ * Pro copy to Pro users" from "shows the Pro copy to everyone".
+ *
+ * No `pro` block at all, so `useCurrentUserHasPro()` is false. Desktop has always confirmed here for
+ * every account - it is the mobile clients that just changed to match, which is why the mobile spec
+ * carries the same case.
+ */
+test_Alice_1W_no_network(
+  'Clear data confirmation for a standard account (device)',
+  async ({ alice }) => {
+    await openClearDataModal(alice);
+    await expectConfirmationCopy(alice, tStripped('clearDeviceDescription'));
+  }
 );

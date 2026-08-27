@@ -24,7 +24,7 @@ import {
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
-import { activeProContext } from '../../utils/pro_context';
+import { activeProContext, PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 
 const PRESENT_MAX_WAIT = 10_000;
 const ABSENT_MAX_WAIT = 1_000;
@@ -127,10 +127,15 @@ async function scrollToClearDataRow(device: DeviceWrapper): Promise<void> {
 
 async function openClearDataDialog(
   platform: SupportedPlatformsType,
-  testInfo: TestInfo
+  testInfo: TestInfo,
+  isPro = true
 ): Promise<DeviceWrapper> {
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, activeProContext());
+    const { device } = await openAppOnPlatformSingleDevice(
+      platform,
+      testInfo,
+      isPro ? activeProContext() : PRO_BACKEND_CONTEXT
+    );
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
     return { device };
   });
@@ -233,6 +238,45 @@ async function proClearDataNetwork(platform: SupportedPlatformsType, testInfo: T
     // says which branch and nothing about Pro. The warning is what says Pro.
     await expectDialogBodyContains(device, localizedRun('proClearAllDataNetwork', 0));
     await expectDialogBodyContains(device, localizedRun('proClearAllDataNetwork', 1));
+  });
+
+  await cancelClearData(device);
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(device);
+  });
+}
+
+/**
+ * The control, and the thing that keeps the two above honest: without it nothing separates "shows the
+ * Pro copy to Pro users" from "shows the Pro copy to everyone".
+ *
+ * Device branch specifically, because that is the one the clients just changed. A standard account
+ * pressing Clear here used to have its data deleted on that press - Android's
+ * `SettingsViewModel.clearData` fell through to `clearDataDeviceOnly()`, iOS's `clearDeviceOnly()` to
+ * `clearLocalAccount()` - so this case could not exist. It confirms for every account now, and this is
+ * what stops that regressing back to a one-tap wipe.
+ */
+bothPlatformsIt({
+  title: 'Clear data confirmation for a standard account (device)',
+  risk: 'high',
+  countOfDevicesNeeded: 1,
+  testCb: standardClearDataDevice,
+  isPro: true,
+  allureSuites: { parent: 'Session Pro' },
+  allureDescription:
+    'A standard account clearing its device is asked to confirm, and told nothing about Pro.',
+});
+
+async function standardClearDataDevice(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const device = await openClearDataDialog(platform, testInfo, false);
+
+  await test.step('Verify the standard confirmation says nothing about Pro', async () => {
+    await pressClear(device);
+    const body = await readDialogBody(device);
+    expect(body).toContain(tStripped('clearDeviceDescription'));
+    // Reaching this line at all is the enforcement: before the client change the press above deleted
+    // the account, and the dialog this reads would not have been on screen.
+    expect(body).not.toContain(localizedRun('proClearAllDataDevice', 1));
   });
 
   await cancelClearData(device);
