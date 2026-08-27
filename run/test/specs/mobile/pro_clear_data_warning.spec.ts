@@ -24,7 +24,7 @@ import {
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
-import { activeProContext, PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
+import { activeProContext } from '../../utils/pro_context';
 
 const PRESENT_MAX_WAIT = 10_000;
 const ABSENT_MAX_WAIT = 1_000;
@@ -42,15 +42,15 @@ const ABSENT_MAX_WAIT = 1_000;
  * is why the first stage has its own ids there (`ClearDataDialogDescription`,
  * `ClearDataConfirmButton`) and only the confirmation answers to `ModalDescription`.
  *
- * **There is no standard-account control on the device branch, and there cannot be.** Both clients
- * delete immediately from the first Clear press when a standard account has device-only selected -
- * Android's `SettingsViewModel.clearData` calls `clearDataDeviceOnly()` and iOS's `clearDeviceOnly()`
- * calls `clearLocalAccount()`, both without going through a confirmed state. Confirmed on Android by
- * running that case once: the app came back on the onboarding screen. So there is no confirmation to
- * assert, and the control below uses the network branch, which does confirm for everyone.
+ * **Pro accounts only.** The standard-account copy is a different claim on a screen whose behaviour is
+ * changing: both mobile clients used to delete straight from the first Clear press on the device
+ * branch, and now confirm for every account as Desktop always has. A control written against the old
+ * behaviour would have been a test of something being removed. Desktop's standard device case is
+ * already covered incidentally by `clearDataOnWindow` in `linked_device_group.spec.ts`.
  *
- * Desktop is the odd one out - its `askingConfirmation` gate applies to every account - which is why
- * the desktop spec carries both controls and this one carries a single control.
+ * The cost of leaving it out, so it is a decision rather than an oversight: nothing here separates
+ * "shows the Pro copy to Pro users" from "shows the Pro copy to everyone". Worth a control once the
+ * mobile behaviour has settled.
  */
 
 bothPlatformsIt({
@@ -74,17 +74,6 @@ bothPlatformsIt({
   allureSuites: { parent: 'Session Pro' },
   allureDescription:
     'The same warning on the network branch, which additionally says the data cannot be restored.',
-});
-
-bothPlatformsIt({
-  title: 'Clear data confirmation for a standard account (network)',
-  risk: 'medium',
-  countOfDevicesNeeded: 1,
-  testCb: standardClearDataNetwork,
-  isPro: true,
-  allureSuites: { parent: 'Session Pro' },
-  allureDescription:
-    'The control: a standard account gets the ordinary confirmation and no mention of Pro.',
 });
 
 /**
@@ -138,15 +127,10 @@ async function scrollToClearDataRow(device: DeviceWrapper): Promise<void> {
 
 async function openClearDataDialog(
   platform: SupportedPlatformsType,
-  testInfo: TestInfo,
-  isPro: boolean
+  testInfo: TestInfo
 ): Promise<DeviceWrapper> {
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(
-      platform,
-      testInfo,
-      isPro ? activeProContext() : PRO_BACKEND_CONTEXT
-    );
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, activeProContext());
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
     return { device };
   });
@@ -216,7 +200,7 @@ async function pressClear(device: DeviceWrapper): Promise<void> {
 }
 
 async function proClearDataDevice(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const device = await openClearDataDialog(platform, testInfo, true);
+  const device = await openClearDataDialog(platform, testInfo);
 
   await test.step('Verify the Pro transfer warning', async () => {
     // Device-only is preselected on both platforms, so no radio is touched here.
@@ -239,7 +223,7 @@ async function proClearDataDevice(platform: SupportedPlatformsType, testInfo: Te
 }
 
 async function proClearDataNetwork(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const device = await openClearDataDialog(platform, testInfo, true);
+  const device = await openClearDataDialog(platform, testInfo);
 
   await test.step('Verify the Pro transfer warning on the network branch', async () => {
     // Copy already asserted for both radios in `openClearDataDialog`.
@@ -249,26 +233,6 @@ async function proClearDataNetwork(platform: SupportedPlatformsType, testInfo: T
     // says which branch and nothing about Pro. The warning is what says Pro.
     await expectDialogBodyContains(device, localizedRun('proClearAllDataNetwork', 0));
     await expectDialogBodyContains(device, localizedRun('proClearAllDataNetwork', 1));
-  });
-
-  await cancelClearData(device);
-  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
-    await closeApp(device);
-  });
-}
-
-async function standardClearDataNetwork(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const device = await openClearDataDialog(platform, testInfo, false);
-
-  await test.step('Verify the standard confirmation says nothing about Pro', async () => {
-    // Copy already asserted for both radios in `openClearDataDialog`.
-    await device.clickOnElementAll(new ClearDeviceAndNetworkRadio(device));
-    await pressClear(device);
-    const body = await readDialogBody(device);
-    expect(body).toContain(tStripped('clearDeviceAndNetworkConfirm'));
-    // The absence is the assertion this test exists for: it is what makes the two Pro cases about Pro
-    // rather than about the confirmation stage existing at all.
-    expect(body).not.toContain(localizedRun('proClearAllDataNetwork', 1));
   });
 
   await cancelClearData(device);
