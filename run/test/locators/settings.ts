@@ -71,6 +71,63 @@ export class ClassicLightThemeOption extends LocatorsInterface {
   }
 }
 
+/** The clear-data dialog's cancel action, tagged the same way as {@link ClearDataConfirmButton}. */
+export class ClearDataCancelButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'Cancel' } as const;
+      case 'ios':
+        throw new Error(
+          'ClearDataCancelButton is Android-only: the iOS modal carries no identifiers.'
+        );
+    }
+  }
+}
+
+/**
+ * The clear-data dialog's destructive action.
+ *
+ * The id is the English display string because `AlertDialog` falls back to a button's own text when the
+ * call site gives it no `qaTag` (`it.qaTag ?: it.text.string()`), and `SettingsScreen` gives it none. So
+ * this is a real id rather than a text match, but it is one that would move with the locale.
+ *
+ * Pressing this on a **standard** account with "device only" selected deletes immediately - there is no
+ * second confirmation on that branch. Only press it where a confirmation is expected.
+ */
+export class ClearDataConfirmButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'Clear' } as const;
+      case 'ios':
+        throw new Error(
+          'ClearDataConfirmButton is Android-only: the iOS modal carries no identifiers.'
+        );
+    }
+  }
+}
+
+/**
+ * The "Clear Data" row at the bottom of the user settings list.
+ *
+ * Android only. The iOS row is a `SessionListScreenContent.ListItemInfo` built with no
+ * `accessibility:`, so it carries no identifier at all - and neither does anything inside the
+ * `NukeDataModal` it opens.
+ */
+export class ClearDataMenuItem extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'Clear data' } as const;
+      case 'ios':
+        throw new Error(
+          'ClearDataMenuItem is Android-only: the iOS settings row carries no identifier.'
+        );
+    }
+  }
+}
+
 export class CloseAppButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -154,7 +211,6 @@ export class HideRecoveryPasswordButton extends LocatorsInterface {
     }
   }
 }
-
 export class LockAppOption extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -200,6 +256,7 @@ export class NotificationsMenuItem extends LocatorsInterface {
     }
   }
 }
+
 export class PathMenuItem extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -267,7 +324,6 @@ export class RecoveryPasswordMenuItem extends LocatorsInterface {
     }
   }
 }
-
 export class RecoveryPhraseContainer extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -284,7 +340,6 @@ export class RecoveryPhraseContainer extends LocatorsInterface {
     }
   }
 }
-
 export class RevealRecoveryPhraseButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -334,6 +389,7 @@ export class SaveProfilePictureButton extends LocatorsInterface {
     }
   }
 }
+
 export class SelectAppIcon extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -368,6 +424,7 @@ export class SettingsModalsEnableButton extends LocatorsInterface {
     }
   }
 }
+
 export class UserAvatar extends LocatorsInterface {
   public build() {
     switch (this.platform) {
