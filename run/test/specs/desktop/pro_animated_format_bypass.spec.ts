@@ -10,8 +10,10 @@ import { SENT_WITH_FAKE_PROOF } from '../../../shared/pro_revocation';
 /**
  * Whether the animated-display-picture gate reads the file's contents or its name.
  *
- * The fixture is [animatedProfilePictureAsPng]: the same animated GIF the other Pro avatar specs use,
- * byte for byte, renamed to `.png`. A client that decides "is this animated?" from the extension sees a
+ * The fixture is [animatedProfilePictureAsPng]: an animated GIF renamed to `.png`. It is the colour
+ * inverse of the GIF the other Pro avatar specs use, so the two are unmistakable in a screenshot and
+ * score -1 against each other under the picker's template matcher rather than being interchangeable.
+ * A client that decides "is this animated?" from the extension sees a
  * still image and lets a standard user upload it — and the picture then animates for everyone, because
  * what recipients render is the file, not the sender's claim about it.
  *
