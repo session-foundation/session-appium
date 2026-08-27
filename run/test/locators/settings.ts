@@ -125,7 +125,12 @@ export class ClearDataDialogDescription extends LocatorsInterface {
   }
 }
 
-/** The "Clear Data" row at the bottom of the user settings list. */
+/**
+ * The "Clear Data" row at the bottom of the user settings list.
+ *
+ * The id is a hand-written tag on both platforms, NOT derived from the display string, so a lookup
+ * says nothing about the copy - pair it with `expectControlCopy` and `sessionClearData`.
+ */
 export class ClearDataMenuItem extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -140,8 +145,12 @@ export class ClearDataMenuItem extends LocatorsInterface {
 /**
  * The "device only" / "device and network" radios on the first stage of the clear-data dialog.
  *
- * Device-only is preselected on both platforms, so only the network one is ever tapped - but both are
- * here because a spec asserting which branch it took should be able to name either.
+ * Device-only is preselected on both platforms, so only the network one is ever tapped. The other is
+ * still worth naming: which branches the dialog offers is part of what the screen promises, and
+ * nothing else reads the preselected one.
+ *
+ * Slug ids on both platforms, so neither carries its copy - `expectControlCopy` with `clearDeviceOnly`
+ * / `clearDeviceAndNetwork`. That check only bites on iOS; the Android label is a child node.
  */
 export class ClearDeviceAndNetworkRadio extends LocatorsInterface {
   public build(): StrategyExtractionObj {

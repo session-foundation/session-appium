@@ -14,6 +14,7 @@ import {
   ClearDataDialogDescription,
   ClearDataMenuItem,
   ClearDeviceAndNetworkRadio,
+  ClearDeviceOnlyRadio,
   UserSettings,
 } from '../../locators/settings';
 import { newUser } from '../../utils/create_account';
@@ -153,6 +154,13 @@ async function openClearDataDialog(
   await test.step('Open the clear-data dialog', async () => {
     await device.clickOnElementAll(new UserSettings(device));
     await scrollToClearDataRow(device);
+    // The row's id is a hand-written tag rather than its display string, so unlike the dialog buttons
+    // the lookup says nothing about the copy - which is the case the rule exists for.
+    await expectControlCopy(
+      device,
+      new ClearDataMenuItem(device).build(),
+      tStripped('sessionClearData')
+    );
     await device.clickOnElementAll(new ClearDataMenuItem(device));
     // The generic first-stage copy, so the assertion after Clear is a CHANGE of copy rather than
     // whatever happened to render first. This token has no break in it, so it matches whole.
@@ -161,6 +169,18 @@ async function openClearDataDialog(
       text: tStripped('clearDataAllDescription'),
       maxWait: PRESENT_MAX_WAIT,
     });
+    // Both radios, not just the one a case goes on to tap: which branch the dialog offers is part of
+    // what this screen promises, and the preselected one is never pressed so nothing else reads it.
+    await expectControlCopy(
+      device,
+      new ClearDeviceOnlyRadio(device).build(),
+      tStripped('clearDeviceOnly')
+    );
+    await expectControlCopy(
+      device,
+      new ClearDeviceAndNetworkRadio(device).build(),
+      tStripped('clearDeviceAndNetwork')
+    );
   });
 
   return device;
@@ -222,11 +242,7 @@ async function proClearDataNetwork(platform: SupportedPlatformsType, testInfo: T
   const device = await openClearDataDialog(platform, testInfo, true);
 
   await test.step('Verify the Pro transfer warning on the network branch', async () => {
-    await expectControlCopy(
-      device,
-      new ClearDeviceAndNetworkRadio(device).build(),
-      tStripped('clearDeviceAndNetwork')
-    );
+    // Copy already asserted for both radios in `openClearDataDialog`.
     await device.clickOnElementAll(new ClearDeviceAndNetworkRadio(device));
     await pressClear(device);
     // The opening run here is word-for-word `clearDeviceAndNetworkConfirm` - the standard copy - so it
@@ -245,11 +261,7 @@ async function standardClearDataNetwork(platform: SupportedPlatformsType, testIn
   const device = await openClearDataDialog(platform, testInfo, false);
 
   await test.step('Verify the standard confirmation says nothing about Pro', async () => {
-    await expectControlCopy(
-      device,
-      new ClearDeviceAndNetworkRadio(device).build(),
-      tStripped('clearDeviceAndNetwork')
-    );
+    // Copy already asserted for both radios in `openClearDataDialog`.
     await device.clickOnElementAll(new ClearDeviceAndNetworkRadio(device));
     await pressClear(device);
     const body = await readDialogBody(device);
