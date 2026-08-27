@@ -15,19 +15,15 @@ import { tStripped } from '../../../localizer/lib';
  * Both branches, because the app picks the copy from `deleteMode` crossed with
  * `useCurrentUserHasPro()` and each cell has its own token.
  *
- * The standard-account case is the control: without it nothing separates "shows the Pro copy to Pro
- * users" from "shows the Pro copy to everyone". Only the device branch, matching the mobile spec -
- * that is the one the mobile clients just changed, and the same `useCurrentUserHasPro()` drives both
- * branches, so a second control would pin nothing new.
+ * All four cells of that grid, and each carries its OWN token - so the two standard cases are not just
+ * controls for the Pro ones, they are the only thing asserting their own copy.
  *
  * Display mocks throughout - the copy is chosen from `useCurrentUserHasPro()`, which a mocked status
  * and proof satisfy, and nothing here needs a proof another party would verify.
  *
- * **Unlike the mobile spec, this asserts whole tokens rather than runs of them.** `checkModalStrings`
- * reads `innerText`, where a `<br/>` renders as a newline, and then collapses whitespace - which lands
- * on exactly what `tStripped` produces for the same token. The `<br/>`-spanning problem that forces
- * `localizedRuns` on mobile does not exist here, so importing it would be carrying a workaround for
- * another platform's constraint.
+ * Whole tokens, not fragments. `checkModalStrings` reads `innerText`, where a `<br/>` renders as a
+ * newline, and then collapses whitespace - landing on exactly what `tStripped` produces. The mobile
+ * spec normalises its own read for the same reason.
  */
 
 const PRO_ACCOUNT = {
@@ -103,5 +99,22 @@ test_Alice_1W_no_network(
   async ({ alice }) => {
     await openClearDataModal(alice);
     await expectConfirmationCopy(alice, tStripped('clearDeviceDescription'));
+  }
+);
+
+/**
+ * The fourth cell. Each of the four carries its OWN token, so this is the only thing asserting the
+ * copy that warns a standard account its messages cannot be restored - `delete_account.spec.ts` walks
+ * this branch but never reads the confirmation.
+ */
+test_Alice_1W_no_network(
+  'Clear data confirmation for a standard account (network)',
+  async ({ alice }) => {
+    await openClearDataModal(alice);
+    await alice.clickOnWithText(
+      Settings.clearDeviceAndNetworkRadial,
+      tStripped('clearDeviceAndNetwork')
+    );
+    await expectConfirmationCopy(alice, tStripped('clearDeviceAndNetworkConfirm'));
   }
 );

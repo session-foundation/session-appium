@@ -3,7 +3,6 @@ import { expect, test, type TestInfo } from '@playwright/test';
 import type { DeviceWrapper } from '../../../types/DeviceWrapper';
 
 import { tStripped } from '../../../localizer/lib';
-import { localizedRun } from '../../../shared/localized_runs';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
@@ -87,16 +86,18 @@ async function readDialogBody(device: DeviceWrapper): Promise<string> {
     ...new ModalDescription(device).build(),
     maxWait: PRESENT_MAX_WAIT,
   });
-  if (device.isIOS()) {
-    return (await device.getAttribute('label', element.ELEMENT)) ?? '';
-  }
-  return device.getTextFromElement(element);
+  const raw = device.isIOS()
+    ? ((await device.getAttribute('label', element.ELEMENT)) ?? '')
+    : await device.getTextFromElement(element);
+  // Collapsed so a `<br/>` compares equal to the single space `tStripped` puts in its place. The same
+  // normalisation the harness applies inside its own matchers, and the reason a whole token can be
+  // asserted here rather than a run of one.
+  return raw.replace(/\s+/g, ' ').trim();
 }
 
 /**
- * Read-then-`toContain` rather than a locator `text` filter, because the mobile filter is an EXACT
- * match after normalisation and this copy spans a `<br/><br/>` - so no run of it is ever the whole
- * element text. See `localizedRuns`.
+ * Read-then-`toContain` rather than a locator `text` filter: the mobile filter is an EXACT match, and
+ * this asserts one token inside a body that also carries the heading-adjacent copy.
  */
 async function expectDialogBodyContains(device: DeviceWrapper, run: string): Promise<void> {
   expect(await readDialogBody(device)).toContain(run);
@@ -212,8 +213,7 @@ async function proClearDataDevice(platform: SupportedPlatformsType, testInfo: Te
     await pressClear(device);
     // Both runs, because neither alone identifies this case: the warning is word-for-word identical in
     // the network token, and the opening question says nothing about Pro.
-    await expectDialogBodyContains(device, localizedRun('proClearAllDataDevice', 0));
-    await expectDialogBodyContains(device, localizedRun('proClearAllDataDevice', 1));
+    await expectDialogBodyContains(device, tStripped('proClearAllDataDevice'));
     await device.waitForTextElementToBePresent({
       ...new ModalHeading(device).build(),
       text: tStripped('clearDataAll'),
@@ -236,8 +236,7 @@ async function proClearDataNetwork(platform: SupportedPlatformsType, testInfo: T
     await pressClear(device);
     // The opening run here is word-for-word `clearDeviceAndNetworkConfirm` - the standard copy - so it
     // says which branch and nothing about Pro. The warning is what says Pro.
-    await expectDialogBodyContains(device, localizedRun('proClearAllDataNetwork', 0));
-    await expectDialogBodyContains(device, localizedRun('proClearAllDataNetwork', 1));
+    await expectDialogBodyContains(device, tStripped('proClearAllDataNetwork'));
   });
 
   await cancelClearData(device);
@@ -276,7 +275,40 @@ async function standardClearDataDevice(platform: SupportedPlatformsType, testInf
     expect(body).toContain(tStripped('clearDeviceDescription'));
     // Reaching this line at all is the enforcement: before the client change the press above deleted
     // the account, and the dialog this reads would not have been on screen.
-    expect(body).not.toContain(localizedRun('proClearAllDataDevice', 1));
+    expect(body).not.toContain(tStripped('proClearAllDataDevice'));
+  });
+
+  await cancelClearData(device);
+  await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
+    await closeApp(device);
+  });
+}
+
+/**
+ * The fourth cell. Each of the four carries its OWN token, so this is the only thing asserting the
+ * copy that warns a standard account its messages cannot be restored.
+ */
+bothPlatformsIt({
+  title: 'Clear data confirmation for a standard account (network)',
+  risk: 'medium',
+  countOfDevicesNeeded: 1,
+  testCb: standardClearDataNetwork,
+  isPro: true,
+  allureSuites: { parent: 'Session Pro' },
+  allureDescription:
+    'A standard account clearing the network is warned its data cannot be restored, and told nothing ' +
+    'about Pro.',
+});
+
+async function standardClearDataNetwork(platform: SupportedPlatformsType, testInfo: TestInfo) {
+  const device = await openClearDataDialog(platform, testInfo, false);
+
+  await test.step('Verify the standard network confirmation says nothing about Pro', async () => {
+    await device.clickOnElementAll(new ClearDeviceAndNetworkRadio(device));
+    await pressClear(device);
+    const body = await readDialogBody(device);
+    expect(body).toContain(tStripped('clearDeviceAndNetworkConfirm'));
+    expect(body).not.toContain(tStripped('proClearAllDataNetwork'));
   });
 
   await cancelClearData(device);
