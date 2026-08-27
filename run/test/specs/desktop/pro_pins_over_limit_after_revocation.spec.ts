@@ -10,10 +10,8 @@ import { DESKTOP_PRO_CONTEXT } from '../../../shared/pro_revocation';
 /**
  * One past the standard limit, pinned while Pro — the state this spec is about keeping.
  *
- * One rather than two, so the fixture needs seven conversations in the list rather than eight.
- * `pin_unpin_limit` pins at most six here and is the only desktop spec proven against this fixture;
- * going beyond that found nothing to right-click, which surfaces as a missing "Pin" menu item rather
- * than as a missing row.
+ * One is enough: the claim turns on holding *more* than a standard user may, and every pin beyond the
+ * first over the limit costs a right-click without changing what is asserted.
  */
 const PINS_WHILE_PRO = STANDARD_PIN_LIMIT + 1;
 
