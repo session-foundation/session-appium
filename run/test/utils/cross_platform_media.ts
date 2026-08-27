@@ -5,7 +5,7 @@ import type { AttachmentType } from '../../desktop/types';
 import type { DeviceWrapper } from '../../types/DeviceWrapper';
 import type { IBaseDeviceWrapper } from '../../types/IBaseDeviceWrapper';
 
-import { testImage } from '../../constants/testfiles';
+import { mediaFolder, testImage } from '../../constants/testfiles';
 import { sendMedia, trustUser } from '../../desktop/send_media';
 import { sleepFor } from '../../shared/promise_utils';
 import { MediaInvalid, MediaMessage, MediaRetry, MessageBody } from '../locators/conversation';
@@ -14,15 +14,15 @@ import { MediaInvalid, MediaMessage, MediaRetry, MessageBody } from '../locators
  * The photo every cross-client format check sends — the SAME bytes from all three clients, which is what
  * makes the comparison mean anything.
  *
- * Lives in the mobile fixture directory rather than desktop's `sample_files/` because mobile does not
- * take a path: `sendImage` selects from the simulator's preloaded library by matching this exact file, so
- * pointing desktop elsewhere would have the two platforms sending different images. It is LFS-tracked —
- * a checkout without `git lfs pull` gets a pointer file.
+ * Mobile does not take a path: `sendImage` picks from the simulator's preloaded library by matching this
+ * file, so desktop has to send the one that was preloaded or the two platforms compare different images.
+ * The shared [mediaFolder] is what keeps them the same, and it resolves against the repo root because
+ * that is the test cwd. It is LFS-tracked — a checkout without `git lfs pull` gets a pointer file.
  *
  * Despite the extension it is a PNG. That matters only in that it is a real photograph rather than a flat
  * colour, which is what [RENDER_FLOOR_BYTES] depends on.
  */
-export const CROSS_CLIENT_PHOTO = resolve(__dirname, '../media', testImage);
+export const CROSS_CLIENT_PHOTO = resolve(mediaFolder, testImage);
 
 /**
  * How large a rendered attachment's own screenshot must be before it counts as rendered.
