@@ -46,7 +46,8 @@ test_Alice_1W_Bob_1W_friends(
     const PLAN_SECONDS = 12;
     const grantedAt = Date.now();
     await alice.subscribeToPro(undefined, { durationSeconds: PLAN_SECONDS });
-    // Desktop asks the backend for status only at startup, so the grant is invisible until it restarts.
+    // An out-of-band grant is never pushed to a client: it is only ever learned by fetching status.
+    // Desktop has no startup gate on that fetch, unlike iOS and Android, so a relaunch discovers one.
     await restartApp(alice, { pro: {} });
     // Cheap opportunistic clear. A short, non-renewing grant CAN arm a Pro CTA, but observed behaviour
     // is that it arms on entering the Pro settings screen rather than on launch — so this does not wait

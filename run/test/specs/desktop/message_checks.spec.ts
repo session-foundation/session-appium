@@ -264,8 +264,9 @@ messageLengthTestCases.forEach(testCase => {
         // A real grant, not a display mock: over-standard-length messages carry Pro features the
         // recipient validates, so without a proof the message is composed and simply never arrives.
         await alice.subscribeToPro();
-        // Desktop asks the backend for status only at startup, so the grant is invisible until the
-        // app comes back up — the same restart the mobile specs do.
+        // An out-of-band grant is never pushed to a client: it is only ever learned by fetching
+        // status. Desktop has no startup gate on that fetch (`ts/state/startup.ts`), unlike iOS and
+        // Android, so a relaunch is enough to discover one.
         await restartApp(alice, { pro: {} });
         await alice.waitForProActive();
         // The restart came back to the home screen, so the conversation createContactWith left open
