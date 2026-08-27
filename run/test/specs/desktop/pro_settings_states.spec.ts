@@ -1,5 +1,4 @@
 import { LeftPane, ProSettings, Settings } from '../../../desktop/locators';
-import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W } from '../../../desktop/sessionTest';
 import { tStripped } from '../../../localizer/lib';
 
@@ -124,8 +123,6 @@ test_Alice_1W(
   'Pro Activated CTA',
   async ({ alice }) => {
     await alice.subscribeToPro();
-    // Desktop asks the backend for status only at startup, so the grant is invisible until restart.
-    await restartApp(alice, { pro: {} });
     await alice.waitForProActive();
 
     await alice.openAnimatedDisplayPictureCTA();

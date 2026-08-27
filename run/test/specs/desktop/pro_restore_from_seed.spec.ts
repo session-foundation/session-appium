@@ -1,5 +1,4 @@
 import { LeftPane, ProSettings, Settings } from '../../../desktop/locators';
-import { restartApp } from '../../../desktop/restart';
 import { sessionTestTwoWindows } from '../../../desktop/sessionTest';
 
 /**
@@ -19,8 +18,6 @@ sessionTestTwoWindows(
     const account = await alice.onboard('Alice');
 
     await alice.subscribeToPro();
-    // Desktop asks the backend for status only at startup, so the grant is invisible until restart.
-    await restartApp(alice, { pro: {} });
     await alice.waitForProActive();
 
     // The account is seconds old, so its profile may not have reached the network yet and the

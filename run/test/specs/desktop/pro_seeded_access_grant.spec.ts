@@ -1,5 +1,4 @@
 import { LeftPane, ProSettings, Settings } from '../../../desktop/locators';
-import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W_pro_access } from '../../../desktop/sessionTest';
 import { makeAccountPro } from '../../../shared/pro_grant';
 
@@ -22,9 +21,6 @@ test_Alice_1W_pro_access(
     // gate fires at startup.
     // No platform: desktop has none to derive a provider from, so the provider is given directly.
     await makeAccountPro({ user: account, provider: 'google' });
-
-    // Desktop asks the backend for status only at startup, so the grant is invisible until it restarts.
-    await restartApp(alice, { pro: {} });
 
     await alice.clickOn(LeftPane.settingsButton);
     await alice.clickOn(Settings.proMenuItem, { maxWait: 60_000 });

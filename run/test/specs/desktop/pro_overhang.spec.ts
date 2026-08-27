@@ -46,8 +46,6 @@ test_Alice_1W_Bob_1W_friends(
     const PLAN_SECONDS = 12;
     const grantedAt = Date.now();
     await alice.subscribeToPro(undefined, { durationSeconds: PLAN_SECONDS });
-    // Desktop asks the backend for status only at startup, so the grant is invisible until it restarts.
-    await restartApp(alice, { pro: {} });
     // Cheap opportunistic clear. A short, non-renewing grant CAN arm a Pro CTA, but observed behaviour
     // is that it arms on entering the Pro settings screen rather than on launch — so this does not wait
     // around for one, and the real clear is at the settings step below.
