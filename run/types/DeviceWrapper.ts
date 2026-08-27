@@ -898,12 +898,26 @@ export class DeviceWrapper implements IMobileWrapper {
     await this.onIOS().swipeLeft('Conversation list item', name);
     await this.onAndroid().longPressConversation(name);
     await this.clickOnElementAll(new PinConversationOption(this));
+    await this.waitForConversationListInteractive();
   }
 
   public async unpinConversation(name: string) {
     await this.onIOS().swipeLeft('Conversation list item', name);
     await this.onAndroid().longPressConversation(name);
     await this.clickOnElementAll(new UnpinConversationOption(this));
+    await this.waitForConversationListInteractive();
+  }
+
+  /**
+   * Wait until the conversation list can be interacted with again.
+   *
+   * Clicking a swipe action or context-menu item returns before that menu has closed, so whatever touches
+   * the list next — the following pin, a swipe, a tap on a row — can land on the closing overlay and
+   * either hit the wrong element or be swallowed. The plus button is unrelated to pinning; it is used
+   * because it is only reachable once nothing is covering the list.
+   */
+  private async waitForConversationListInteractive(): Promise<void> {
+    await this.waitForTextElementToBePresent(new PlusButton(this));
   }
 
   public async pressAndHold(accessibilityId: AccessibilityId) {

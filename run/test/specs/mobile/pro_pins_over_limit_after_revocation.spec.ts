@@ -7,7 +7,7 @@ import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { MessageInput, MessageLengthCountdown } from '../../locators/conversation';
 import { CTAButtonNegative } from '../../locators/global';
-import { ConversationItem, PlusButton } from '../../locators/home';
+import { ConversationItem } from '../../locators/home';
 import { open_Alice1_with_contacts } from '../../state_builder';
 import { assertPinOrder, getConversationOrder } from '../../utils/conversation_order';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
@@ -94,7 +94,6 @@ async function pinsOverLimitAfterRevocation(platform: SupportedPlatformsType, te
   await test.step(TestSteps.USER_ACTIONS.PIN_CONVERSATIONS(pinned.length), async () => {
     for (const name of pinned) {
       await device.pinConversation(name);
-      await device.waitForTextElementToBePresent(new PlusButton(device));
     }
   });
 

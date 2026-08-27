@@ -78,7 +78,6 @@ async function pinLimitFromConversationSettings(
   await test.step(TestSteps.USER_ACTIONS.PIN_CONVERSATIONS(restViaList.length), async () => {
     for (const name of restViaList) {
       await device.pinConversation(name);
-      await device.waitForTextElementToBePresent(new PlusButton(device));
     }
   });
 

@@ -8,7 +8,7 @@ import { makeAccountPro } from '../../../shared/pro_grant';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { CTAButtonNegative } from '../../locators/global';
-import { ConversationPinnedIcon, PlusButton } from '../../locators/home';
+import { ConversationPinnedIcon } from '../../locators/home';
 import { open_Alice1_with_contacts } from '../../state_builder';
 import { assertPinOrder, getConversationOrder } from '../../utils/conversation_order';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
@@ -123,7 +123,6 @@ async function nonProPinnedLimit(platform: SupportedPlatformsType, testInfo: Tes
   await test.step(TestSteps.USER_ACTIONS.PIN_CONVERSATIONS(STANDARD_PIN_LIMIT), async () => {
     for (const name of toPin) {
       await device.pinConversation(name);
-      await device.waitForTextElementToBePresent(new PlusButton(device));
       await device.verifyNoCTAShows();
       await device
         .onAndroid()
@@ -186,7 +185,6 @@ async function proPinnedLimit(platform: SupportedPlatformsType, testInfo: TestIn
       await device
         .onAndroid()
         .waitForTextElementToBePresent(new ConversationPinnedIcon(device, name));
-      await device.waitForTextElementToBePresent(new PlusButton(device));
     }
     await device.verifyNoCTAShows();
   });
