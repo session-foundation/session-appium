@@ -4,7 +4,6 @@ import { STANDARD_PIN_LIMIT } from '../../../shared/constants';
 import { OVER_STANDARD_CHARS } from '../../../shared/message';
 import { makeAccountPro, revokeAccountPro } from '../../../shared/pro_grant';
 import { TestSteps } from '../../../types/allure';
-import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { MessageInput, MessageLengthCountdown } from '../../locators/conversation';
 import { CTAButtonNegative } from '../../locators/global';
@@ -111,7 +110,10 @@ async function pinsOverLimitAfterRevocation(platform: SupportedPlatformsType, te
     await revokeAccountPro({ user: alice, revokePayments: true });
     // Forces the poll. Also rebuilds the composer, which on iOS is what re-reads the limit.
     await forceStopAndRestart(device);
-    await dismissAnyCTA(device);
+    // Losing Pro raises the expiry CTA off the status just fetched, so whether it is up races the poll
+    // and it cannot be asserted. Left up it swallows the next swipe, and it would also satisfy a later
+    // check for "a CTA is showing" — so the pin CTA could pass without ever being raised.
+    await device.dismissAnyProCTA();
   });
 
   await test.step('Assert the client has lost Pro ACCESS', async () => {
@@ -146,22 +148,4 @@ async function pinsOverLimitAfterRevocation(platform: SupportedPlatformsType, te
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);
   });
-}
-
-/**
- * Clear a Pro CTA if one is showing.
- *
- * Losing Pro raises the expiry CTA of its own accord, off the status the client has just fetched, so
- * whether it is up races the poll and it cannot be asserted. An open CTA swallows the next swipe, and it
- * satisfies a check for "a CTA is showing" — so a pin-CTA assertion made underneath one can pass without
- * the pin CTA ever being raised.
- */
-async function dismissAnyCTA(device: DeviceWrapper) {
-  const showing = await device.doesElementExist({
-    ...new CTAButtonNegative(device).build(),
-    maxWait: 5000,
-  });
-  if (showing) {
-    await device.clickOnElementAll(new CTAButtonNegative(device));
-  }
 }

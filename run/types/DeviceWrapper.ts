@@ -2889,6 +2889,29 @@ export class DeviceWrapper implements IMobileWrapper {
     }
   }
 
+  /**
+   * Clear a Pro CTA if one is up, and report whether there was one.
+   *
+   * Never an assertion. A CTA raised off a status fetch is up or not depending on whether that fetch has
+   * landed, so its presence races the test — but left up it swallows the interactions behind it and the
+   * failure surfaces far from the cause.
+   *
+   * Dismissed through the CTA's own negative button rather than {@link dismissCTA}, whose default is a
+   * tap at (150,150): that tap does not close these modals on iOS, and the next tap then lands on the
+   * scrim, so navigation silently does nothing. Mirrors `dismissAnyProCTA` on desktop.
+   */
+  public async dismissAnyProCTA(maxWait: number = 5_000): Promise<boolean> {
+    const showing = await this.doesElementExist({
+      ...new CTAButtonNegative(this).build(),
+      maxWait,
+    });
+    if (!showing) {
+      return false;
+    }
+    await this.clickOnElementAll(new CTAButtonNegative(this));
+    return true;
+  }
+
   /** === Session Pro === */
 
   /**

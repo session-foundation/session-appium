@@ -3,11 +3,9 @@ import { test, type TestInfo } from '@playwright/test';
 import { OVER_STANDARD_CHARS } from '../../../shared/message';
 import { makeAccountPro, revokeAccountPro } from '../../../shared/pro_grant';
 import { TestSteps } from '../../../types/allure';
-import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { CloseSettings } from '../../locators';
 import { MessageInput, MessageLengthCountdown } from '../../locators/conversation';
-import { CTAButtonNegative } from '../../locators/global';
 import { ConversationItem } from '../../locators/home';
 import { UserAvatar, UserSettings } from '../../locators/settings';
 import { open_Alice1_with_contacts } from '../../state_builder';
@@ -89,7 +87,9 @@ async function ownAnimatedAvatarAfterRevocation(
     // left holding a proof that is both revoked and unrenewable.
     await revokeAccountPro({ user: alice, revokePayments: true });
     await forceStopAndRestart(device);
-    await dismissAnyCTA(device);
+    // Losing Pro raises the expiry CTA off the status just fetched, so whether it is up races the poll
+    // and it cannot be asserted; left up it swallows the taps that follow.
+    await device.dismissAnyProCTA();
   });
 
   await test.step('Assert the client has lost Pro ACCESS', async () => {
@@ -117,21 +117,4 @@ async function ownAnimatedAvatarAfterRevocation(
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(device);
   });
-}
-
-/**
- * Clear a Pro CTA if one is showing.
- *
- * Losing Pro raises the expiry CTA of its own accord, off the status the client has just fetched — so
- * whether it is up races the poll and it cannot be asserted. Left up it swallows the taps that follow and
- * surfaces several steps from the cause.
- */
-async function dismissAnyCTA(device: DeviceWrapper) {
-  const showing = await device.doesElementExist({
-    ...new CTAButtonNegative(device).build(),
-    maxWait: 5000,
-  });
-  if (showing) {
-    await device.clickOnElementAll(new CTAButtonNegative(device));
-  }
 }
