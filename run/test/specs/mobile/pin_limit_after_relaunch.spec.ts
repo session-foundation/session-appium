@@ -11,22 +11,31 @@ import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 import { forceStopAndRestart } from '../../utils/utilities';
 
 /**
- * PROBE — not for merging.
+ * The pinned-conversation limit across a relaunch.
  *
- * Measures whether a STANDARD (never Pro) user can exceed the pinned-conversation limit by relaunching
- * between attempts. No Pro, no backend, no revocation: if this reproduces, the limit is bypassable by
- * anyone who reopens the app.
+ * Every other pin spec pins and asserts inside one session, where the count is live because each pin
+ * updates it. This one restarts in between, which is the case where a client rebuilding that count from
+ * scratch reads zero and lets a standard user past the limit — repeatably, so the boundary can be
+ * crossed by anyone who reopens the app.
+ *
+ * No Pro, no backend, no revocation: the limit applies to a standard account, and involving Pro would
+ * only add ways for the spec to fail for reasons other than the one it is about.
+ *
+ * The in-session refusal is asserted first. Without it the relaunch assertion proves nothing — a client
+ * that refused every pin, or that never pinned at all, would satisfy it.
  */
 bothPlatformsIt({
-  title: 'PROBE pin limit after relaunch',
-  risk: 'low',
+  title: 'The pinned conversation limit holds across a relaunch',
+  risk: 'high',
   countOfDevicesNeeded: 1,
-  testCb: probe,
+  testCb: pinLimitAfterRelaunch,
   allureSuites: { parent: 'Session Pro' },
-  allureDescription: 'Probe.',
+  allureDescription:
+    'A standard user is refused a sixth pinned conversation, and is still refused after restarting the ' +
+    'app.',
 });
 
-async function probe(platform: SupportedPlatformsType, testInfo: TestInfo) {
+async function pinLimitAfterRelaunch(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device, contactNames } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
     return await open_Alice1_with_contacts({ platform, testInfo });
   });
@@ -44,17 +53,18 @@ async function probe(platform: SupportedPlatformsType, testInfo: TestInfo) {
     assertPinOrder(beforeOrder, toPin, await getConversationOrder(device));
   });
 
-  await test.step('CONTROL: the 6th is refused in the same session', async () => {
+  await test.step('The 6th is refused in the same session', async () => {
     await device.pinConversation(sixth);
     await device.checkCTA('pinnedConversations');
     await device.clickOnElementAll(new CTAButtonNegative(device));
     assertPinOrder(beforeOrder, toPin, await getConversationOrder(device));
   });
 
-  await test.step('CLAIM: after a relaunch the 6th is refused too', async () => {
+  await test.step('The 6th is refused after a relaunch too', async () => {
     await forceStopAndRestart(device);
     await device.pinConversation(sixth);
-    // If the count is seeded at 0 and never recomputed, this pin is allowed and no CTA appears.
+    // A client that rebuilds the pinned count only when a pin changes reads zero here, allows the pin,
+    // and raises no CTA — the limit silently not applying rather than applying wrongly.
     await device.checkCTA('pinnedConversations');
     await device.clickOnElementAll(new CTAButtonNegative(device));
     assertPinOrder(beforeOrder, toPin, await getConversationOrder(device));
