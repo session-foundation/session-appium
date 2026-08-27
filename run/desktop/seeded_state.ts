@@ -17,6 +17,7 @@ import type { Page } from '@playwright/test';
 
 import {
   buildStateForTest,
+  type BuildStateOptions,
   type PrebuiltStateKey,
   type StateGroup,
   type StateUser,
@@ -48,18 +49,25 @@ export type SeededUser = {
  *
  * `extraWindows` are opened but left untouched at the onboarding screen — for the rare test that
  * needs an account the seeder cannot express (a 4th user, an externally-owned seed).
+ *
+ * `stateOptions` is the seeder's per-user knobs (Pro access, pinned conversations), addressed by a
+ * user's index in the state's user list. They compose with every state key rather than each
+ * combination needing a key of its own, which is why they are threaded through here instead of being
+ * chosen by `stateKey`.
  */
 export async function openSeededWindows<K extends PrebuiltStateKey>({
   stateKey,
   groupName,
   windowsPerUser,
   extraWindows = 0,
+  stateOptions,
   context,
 }: {
   stateKey: K;
   groupName: K extends WithGroupStateKey ? string : undefined;
   windowsPerUser: number[];
   extraWindows?: number;
+  stateOptions?: BuildStateOptions;
   context?: TestContext;
 }): Promise<{
   users: SeededUser[];
@@ -83,7 +91,7 @@ export async function openSeededWindows<K extends PrebuiltStateKey>({
     openApps(totalWindows, context).then(apps =>
       Promise.all(apps.map(app => waitFirstWindow(app)))
     ),
-    buildStateForTest(stateKey, groupName, network),
+    buildStateForTest(stateKey, groupName, network, stateOptions),
   ]);
 
   const seedUsers = (prebuilt as { users: StateUser[] }).users;

@@ -468,6 +468,12 @@ function sessionTestSeededContacts(
  *
  * The callback gets the seeded account as well as the window, because the point of this state is to
  * grant Pro to that same account on the backend before the client ever looks.
+ *
+ * The expiry is an OPTION on the plain one-user state rather than a state key of its own, because
+ * Pro-ness belongs to a user and not to the shape of the account graph — a key can only ever say "the
+ * single user in a one-user state", and folding it into the key set doubles that set for every
+ * combination someone wants next. Empty per-user terms are the seeder's defaults: 30 days out and
+ * auto-renewing, which is exactly what the retired `1userWithProAccess` key granted.
  */
 function sessionTestSeededProAccess(
   testName: string,
@@ -481,9 +487,10 @@ function sessionTestSeededProAccess(
     testName,
     async (pages, testInfo) => {
       const opened = await openSeededWindows({
-        stateKey: '1userWithProAccess',
+        stateKey: '1user',
         groupName: undefined,
         windowsPerUser: [1],
+        stateOptions: { pro: { 0: {} } },
         context,
       });
       pages.push(...opened.pages);
