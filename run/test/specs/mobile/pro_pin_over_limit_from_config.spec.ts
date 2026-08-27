@@ -112,7 +112,7 @@ async function pinnedAboveLimitFromConfig(platform: SupportedPlatformsType, test
     // passes every existing pin spec — they all arrive at the limit one pin at a time — and lets this
     // attempt through.
     await device.pinConversation(seventh);
-    await device.checkCTA('pinnedConversations');
+    await device.checkCTA('pinnedConversationsOverLimit');
     await device.clickOnElementAll(new CTAButtonNegative(device));
   });
 
