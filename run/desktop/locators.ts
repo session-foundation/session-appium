@@ -263,6 +263,18 @@ export class Global extends Locator {
   static readonly confirmButton = this.testId('session-confirm-ok-button');
   static readonly contactItem = this.testId('module-contact-name__profile-name');
   static readonly contextMenuItem = this.testId('context-menu-item');
+  /**
+   * The pin/unpin row of a conversation's context menu.
+   *
+   * `MenuItem` renders `dataTestId || 'context-menu-item'`, so a row carrying its own id is **not** in
+   * the generic set. A locator matching the generic id therefore cannot reach this row, while every row
+   * without an id of its own stays reachable — an absence that reads as "the item is gone" rather than
+   * "the item is addressed differently". The same holds for any row given an id later.
+   *
+   * One id serves both states — `isPinned` decides only the label — so do not match on text either:
+   * `has-text` is a substring, and "Pin" matches "Unpin".
+   */
+  static readonly pinConversationMenuItem = this.testId('pin-conversation-menu-item');
   static readonly continueButton = this.testId('continue-button');
   static readonly copyUrlButton = this.testId('copy-url-button');
   static readonly errorMessage = this.testId('error-message');
