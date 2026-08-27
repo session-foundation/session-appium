@@ -62,9 +62,13 @@ async function pinLimitFromConversationSettings(
     beforeOrder = await getConversationOrder(device);
   });
 
-  const toPin = contactNames.slice(0, STANDARD_PIN_LIMIT);
+  // Deliberately NOT the first N. `assertPinOrder` expects the pinned names hoisted to the top of the
+  // order they already had, so pinning a PREFIX of an already-ordered list expects the list unchanged —
+  // and the assertion then passes whether or not anything was pinned. Skipping the first contact is
+  // what makes the expected order differ from the starting one, and the assertion able to fail.
+  const toPin = contactNames.slice(1, STANDARD_PIN_LIMIT + 1);
   const [firstViaSettings, ...restViaList] = toPin;
-  const overLimit = contactNames[STANDARD_PIN_LIMIT];
+  const overLimit = contactNames[STANDARD_PIN_LIMIT + 1];
 
   await test.step('The settings route pins', async () => {
     await pinFromConversationSettings(device, firstViaSettings);
