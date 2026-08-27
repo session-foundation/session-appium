@@ -263,6 +263,19 @@ export class Global extends Locator {
   static readonly confirmButton = this.testId('session-confirm-ok-button');
   static readonly contactItem = this.testId('module-contact-name__profile-name');
   static readonly contextMenuItem = this.testId('context-menu-item');
+  /**
+   * The pin/unpin row of a conversation's context menu.
+   *
+   * Addressed by its own id rather than through `contextMenuItem`, because `MenuItem` renders
+   * `dataTestId || 'context-menu-item'` — so giving this row a specific id **removed** it from the
+   * generic set. Locators matching the generic id stopped finding it while every row without an id of
+   * its own kept working, which reads as "the item is gone" rather than "the item was renamed". Any
+   * future `qa: give X a test id` commit does the same to anything still relying on the fallback.
+   *
+   * One id serves both states — `isPinned` decides only the label — so do not match on text either:
+   * `has-text` is a substring, and "Pin" matches "Unpin".
+   */
+  static readonly pinConversationMenuItem = this.testId('pin-conversation-menu-item');
   static readonly continueButton = this.testId('continue-button');
   static readonly copyUrlButton = this.testId('copy-url-button');
   static readonly errorMessage = this.testId('error-message');

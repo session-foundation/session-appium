@@ -1,7 +1,6 @@
 import type { DesktopWrapper } from './DesktopWrapper';
 
 import { getCommunities } from '../constants/community';
-import { tStripped } from '../localizer/lib';
 import { joinCommunityByLink } from './join_community';
 import { Global, HomeScreen } from './locators';
 
@@ -47,7 +46,7 @@ export async function pinConversation(window: DesktopWrapper, conversationName: 
   // by the closing menu and no new menu opens. Resolves immediately when no menu is up.
   await menuItems.first().waitFor({ state: 'detached' });
   await window.rightClickOnWithText(HomeScreen.conversationItemName, conversationName);
-  await window.clickOnWithText(Global.contextMenuItem, tStripped('pin'));
+  await window.clickOn(Global.pinConversationMenuItem);
 }
 
 /**
