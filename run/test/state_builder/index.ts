@@ -8,6 +8,8 @@ import type { TestInfo } from '@playwright/test';
 
 import {
   buildStateForTest,
+  type BuildStateOptions,
+  type PinSeedOptions,
   type PrebuiltStateKey,
   type StateUser,
   type WithGroupStateKey,
@@ -91,12 +93,19 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
   platform,
   groupName,
   stateToBuildKey,
+  stateOptions,
   testInfo,
   testContext,
 }: WithPlatform & {
   appsToOpen: A;
   stateToBuildKey: K;
   groupName: K extends WithGroupStateKey ? string : undefined;
+  /**
+   * The seeder's per-user knobs (Pro access, pinned conversations), addressed by a user's index in the
+   * state's user list. They compose with every state key, so they are threaded through rather than
+   * selected by `stateToBuildKey`.
+   */
+  stateOptions?: BuildStateOptions;
   testInfo: TestInfo;
   testContext?: MobileTestContexts;
 }) {
@@ -108,7 +117,7 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
 
   const [devices, prebuilt] = await Promise.all([
     openAppMultipleDevices(platform, appsToOpen, testInfo, testContext),
-    buildStateForTest(stateToBuildKey, groupName, network),
+    buildStateForTest(stateToBuildKey, groupName, network, stateOptions),
   ]);
 
   return { devices, prebuilt };
@@ -122,13 +131,26 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
  * only Alice gets a device — which is the saving, since community joins are the slowest setup here.
  *
  * Returns the contact names in seeded order so a spec can pin or reorder them without caring which
- * they are.
+ * they are. That order is also the order the conversation list takes with nothing pinned: the seeder
+ * staggers each contact's `created` one second apart, descending, and a client derives the
+ * conversation's `active_at` from it.
+ *
+ * `pins` starts the run with those conversations ALREADY pinned in Alice's config, as indices into
+ * the state's user list — so `1` is `contactNames[0]`. This bypasses the client, which is the only way
+ * to reach more pins than the client itself allows: it silently refuses the sixth, yet config carrying
+ * more arrives in production from a linked device or a restore. Their names come back as
+ * `pinnedNames` so a spec never has to translate an index into a conversation row.
  */
 export async function open_Alice1_with_contacts({
   platform,
   testInfo,
   testContext,
-}: WithPlatform & { testInfo: TestInfo; testContext?: MobileTestContext }) {
+  pins,
+}: WithPlatform & {
+  testInfo: TestInfo;
+  testContext?: MobileTestContext;
+  pins?: PinSeedOptions;
+}) {
   const stateToBuildKey = '1userWith10Contacts';
   const appsToOpen = 1;
   const result = await openAppsWithState({
@@ -136,6 +158,7 @@ export async function open_Alice1_with_contacts({
     appsToOpen,
     stateToBuildKey,
     groupName: undefined,
+    stateOptions: pins ? { pins } : undefined,
     testInfo,
     testContext,
   });
@@ -146,11 +169,15 @@ export async function open_Alice1_with_contacts({
 
   const alice = result.prebuilt.users[0];
   const contactNames = result.prebuilt.users.slice(1).map(u => u.userName);
+  // Resolved against the same user list the seeder pinned in, so a name here cannot disagree with what
+  // was written. An out-of-range index has already thrown inside the seeder by this point.
+  const pinnedNames = (pins ?? []).map(index => result.prebuilt.users[index].userName);
 
   return {
     device: result.devices[0],
     alice,
     contactNames,
+    pinnedNames,
   };
 }
 
