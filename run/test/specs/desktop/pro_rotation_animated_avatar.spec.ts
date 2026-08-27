@@ -40,14 +40,14 @@ test_Alice_1W_Bob_1W_friends(
     await alice.uploadProfilePicture();
     // Sender-side control: the fixture really does animate, so a still frame later is a decision rather
     // than a picture that never moved.
-    await alice.verifyOwnAvatarAnimated();
+    await alice.assertSettingsAvatarAnimated();
 
     await alice.openConversationWith(bob.userName);
     await alice.sendMessage(SENT_ON_OLD_PROOF);
     await bob.waitForMessage(SENT_ON_OLD_PROOF, MESSAGE_DELIVERY_TIMEOUT_MS);
     // The positive control, and the reason the freeze below means anything: without it, a spec asserting
     // a still frame passes against a picture that never animated for this recipient at all.
-    await bob.verifyConversationHeaderAvatarAnimated(alice.userName);
+    await bob.assertConversationHeaderAvatarAnimated(alice.userName);
 
     // `revokePayments: false` is a rotation rather than a refund. The helper refuses to continue if the
     // backend allocated no replacement, so a rotation behaving like a refund fails here.
@@ -72,7 +72,7 @@ test_Alice_1W_Bob_1W_friends(
     await alice.openConversationWith(bob.userName);
     await alice.sendMessage(SENT_ON_NEW_PROOF);
     await bob.waitForMessage(SENT_ON_NEW_PROOF, MESSAGE_DELIVERY_TIMEOUT_MS);
-    await bob.verifyConversationHeaderAvatarAnimated(alice.userName);
+    await bob.assertConversationHeaderAvatarAnimated(alice.userName);
   },
   { ...DESKTOP_PRO_CONTEXT, fakeAvatarPickerFile: ANIMATED_AVATAR }
 );

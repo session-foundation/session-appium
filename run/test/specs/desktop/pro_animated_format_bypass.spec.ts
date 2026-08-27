@@ -52,7 +52,7 @@ test_Alice_1W(
     await alice.hasElementPoppedUpThatShouldnt(CTA.heading);
     // The control for the case above: the bytes really do animate, so a standard user being stopped is
     // the gate working rather than the file being unremarkable.
-    await alice.verifyOwnAvatarAnimated();
+    await alice.assertSettingsAvatarAnimated();
   },
   { pro: {}, fakeAvatarPickerFile: MASQUERADING_AVATAR }
 );
@@ -88,7 +88,7 @@ test_Alice_1W_Bob_1W_friends(
 
     await alice.uploadProfilePicture();
     // Sender-side control: the bytes really do animate for someone entitled to them.
-    await alice.verifyOwnAvatarAnimated();
+    await alice.assertSettingsAvatarAnimated();
 
     // Only the recipient's trust changes, and before the message: verification happens at receipt.
     await restartApp(bob, { pro: { proBackendPubkey: UNTRUSTED_PRO_BACKEND_KEY } });
