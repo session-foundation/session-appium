@@ -481,10 +481,13 @@ function sessionTestSeededProAccess(
     testName,
     async (pages, testInfo) => {
       const opened = await openSeededWindows({
-        stateKey: '1userWithProAccess',
+        stateKey: '1user',
         groupName: undefined,
         windowsPerUser: [1],
         context,
+        // Was its own state key until qa-seeder 0.4, which made Pro an option that composes with any
+        // state rather than a key of its own.
+        stateOptions: { pro: { 0: {} } },
       });
       pages.push(...opened.pages);
       await testCallback(

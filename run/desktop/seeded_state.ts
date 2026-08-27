@@ -17,6 +17,7 @@ import type { Page } from '@playwright/test';
 
 import {
   buildStateForTest,
+  type BuildStateOptions,
   type PrebuiltStateKey,
   type StateGroup,
   type StateUser,
@@ -55,12 +56,15 @@ export async function openSeededWindows<K extends PrebuiltStateKey>({
   windowsPerUser,
   extraWindows = 0,
   context,
+  stateOptions,
 }: {
   stateKey: K;
   groupName: K extends WithGroupStateKey ? string : undefined;
   windowsPerUser: number[];
   extraWindows?: number;
   context?: TestContext;
+  /// Seeded Pro access and pins, addressed by index into the state's user list.
+  stateOptions?: BuildStateOptions;
 }): Promise<{
   users: SeededUser[];
   /** Windows with no account on them, in the order requested. */
@@ -83,7 +87,7 @@ export async function openSeededWindows<K extends PrebuiltStateKey>({
     openApps(totalWindows, context).then(apps =>
       Promise.all(apps.map(app => waitFirstWindow(app)))
     ),
-    buildStateForTest(stateKey, groupName, network),
+    buildStateForTest(stateKey, groupName, network, stateOptions),
   ]);
 
   const seedUsers = (prebuilt as { users: StateUser[] }).users;

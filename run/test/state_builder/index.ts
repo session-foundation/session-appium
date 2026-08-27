@@ -8,6 +8,7 @@ import type { TestInfo } from '@playwright/test';
 
 import {
   buildStateForTest,
+  type BuildStateOptions,
   type PrebuiltStateKey,
   type StateUser,
   type WithGroupStateKey,
@@ -15,6 +16,7 @@ import {
 
 import type { DeviceWrapper } from '../../types/DeviceWrapper';
 
+import { makeAccountPro } from '../../shared/pro_grant';
 import { ConversationItem } from '../locators/home';
 import { resolveNetworkTarget } from '../utils/devnet';
 import { openAppMultipleDevices, type SupportedPlatformsType } from '../utils/open_app';
@@ -29,6 +31,14 @@ type WithDracula = { dracula: StateUser };
 type WithFocusFriendsConvo = { focusFriendsConvo: boolean };
 type WithFocusGroupConvo = { focusGroupConvo: boolean };
 type WithPlatform = { platform: SupportedPlatformsType };
+type WithTestInfo = { testInfo: TestInfo };
+type WithTestContext = { testContext?: MobileTestContext };
+/// The per-device form, for builders that open more than one app - a spec whose devices must DISAGREE
+/// passes an array. See `MobileTestContexts`.
+type WithTestContexts = { testContext?: MobileTestContexts };
+/// Seeded Pro access and pins, addressed by index into the state's user list. Composes with every
+/// state, which is why a Pro fixture needs no state key of its own.
+type WithStateOptions = { stateOptions?: BuildStateOptions };
 
 export type AppCountPerTest = 1 | 2 | 3 | 4;
 
@@ -93,13 +103,14 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
   stateToBuildKey,
   testInfo,
   testContext,
+  stateOptions,
 }: WithPlatform & {
   appsToOpen: A;
   stateToBuildKey: K;
   groupName: K extends WithGroupStateKey ? string : undefined;
-  testInfo: TestInfo;
-  testContext?: MobileTestContexts;
-}) {
+} & WithTestInfo &
+  WithTestContexts &
+  WithStateOptions) {
   // Resolved BEFORE the Promise.all rather than inside it. As an array element the `await` ran after
   // `openAppMultipleDevices` had already been invoked, so a network-resolution failure (a mismatch, or
   // an unusable devnet) left devices opening with nothing awaiting them — leaked Appium sessions plus
@@ -108,7 +119,7 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
 
   const [devices, prebuilt] = await Promise.all([
     openAppMultipleDevices(platform, appsToOpen, testInfo, testContext),
-    buildStateForTest(stateToBuildKey, groupName, network),
+    buildStateForTest(stateToBuildKey, groupName, network, stateOptions),
   ]);
 
   return { devices, prebuilt };
@@ -128,7 +139,8 @@ export async function open_Alice1_with_contacts({
   platform,
   testInfo,
   testContext,
-}: WithPlatform & { testInfo: TestInfo; testContext?: MobileTestContext }) {
+  stateOptions,
+}: WithPlatform & {} & WithTestInfo & WithTestContext & WithStateOptions) {
   const stateToBuildKey = '1userWith10Contacts';
   const appsToOpen = 1;
   const result = await openAppsWithState({
@@ -138,8 +150,10 @@ export async function open_Alice1_with_contacts({
     groupName: undefined,
     testInfo,
     testContext,
+    stateOptions,
   });
   result.devices[0].setDeviceIdentity('alice1');
+  await grantProToSeededUsers(result.prebuilt.users, platform, stateOptions?.pro);
   // Only Alice's phrase: the contacts never get a device, so linking them would open ten apps to
   // populate one list.
   await linkDevices([result.devices[0]], [result.prebuilt.users[0].seedPhrase]);
@@ -159,8 +173,8 @@ export async function open_Alice1_Bob1_friends({
   focusFriendsConvo,
   testInfo,
   testContext,
-}: WithPlatform &
-  WithFocusFriendsConvo & { testInfo: TestInfo; testContext?: MobileTestContexts }) {
+  stateOptions,
+}: WithPlatform & WithFocusFriendsConvo & {} & WithTestInfo & WithTestContexts & WithStateOptions) {
   const stateToBuildKey = '2friends';
   const appsToOpen = 2;
   const result = await openAppsWithState({
@@ -170,10 +184,12 @@ export async function open_Alice1_Bob1_friends({
     groupName: undefined,
     testInfo,
     testContext,
+    stateOptions,
   });
   result.devices[0].setDeviceIdentity('alice1');
   result.devices[1].setDeviceIdentity('bob1');
   const seedPhrases = result.prebuilt.users.map(m => m.seedPhrase);
+  await grantProToSeededUsers(result.prebuilt.users, platform, stateOptions?.pro);
   await linkDevices(result.devices, seedPhrases);
 
   const alice = result.prebuilt.users[0];
@@ -212,9 +228,8 @@ export async function open_Alice1_Bob1_Charlie1_friends_group({
 }: WithPlatform &
   WithFocusGroupConvo & {
     groupName: string;
-    testInfo: TestInfo;
-    testContext?: MobileTestContext;
-  }) {
+  } & WithTestInfo &
+  WithTestContext) {
   const stateToBuildKey = '3friendsInGroup';
   const appsToOpen = 3;
   const result = await openAppsWithState({
@@ -273,9 +288,8 @@ export async function open_Alice2_Bob1_Charlie1_friends_group({
 }: WithPlatform &
   WithFocusGroupConvo & {
     groupName: string;
-    testInfo: TestInfo;
-    testContext?: MobileTestContext;
-  }) {
+  } & WithTestInfo &
+  WithTestContext) {
   const stateToBuildKey = '3friendsInGroup';
   const appsToOpen = 4;
   const result = await openAppsWithState({
@@ -339,9 +353,8 @@ export async function open_Alice1_Bob1_Charlie1_Unknown1({
 }: WithPlatform &
   WithFocusGroupConvo & {
     groupName: string;
-    testInfo: TestInfo;
-    testContext?: MobileTestContext;
-  }) {
+  } & WithTestInfo &
+  WithTestContext) {
   const stateToBuildKey = '3friendsInGroup';
   const appsToOpen = 4;
   const result = await openAppsWithState({
@@ -406,7 +419,8 @@ export async function open_Alice1({
   platform,
   testInfo,
   testContext,
-}: WithPlatform & { testInfo: TestInfo; testContext?: MobileTestContext }) {
+  stateOptions,
+}: WithPlatform & {} & WithTestInfo & WithTestContext & WithStateOptions) {
   const result = await openAppsWithState({
     platform,
     appsToOpen: 1,
@@ -414,19 +428,62 @@ export async function open_Alice1({
     groupName: undefined,
     testInfo,
     testContext,
+    stateOptions,
   });
   result.devices[0].setDeviceIdentity('alice1');
   const alice = result.prebuilt.users[0];
+  await grantProToSeededUsers(result.prebuilt.users, platform, stateOptions?.pro);
   await linkDevices([result.devices[0]], [alice.seedPhrase]);
 
   return { device: result.devices[0], alice };
 }
 
+/**
+ * Make the named seeded users Pro before any device has seen the account.
+ *
+ * Two halves that each need the other. The seeded state writes an access expiry into config
+ * (`stateOptions.pro`); this mints the entitlement the backend signs. A grant with no seeded expiry
+ * stays invisible, because the cold-launch gate reads the expiry FROM CONFIG to decide whether to ask
+ * `get_pro_status` at all — and a seeded expiry is not itself an entitlement, since no config write
+ * can forge a proof.
+ *
+ * **Both have to land before `linkDevices`.** The restore is the client's first sight of the account,
+ * so the gated fetch fires as it completes; a grant arriving after that answers `never`, and both
+ * clients then floor the next attempt at 60s from that ATTEMPT. Getting the order right is what lets a
+ * spec skip `observeProGrant` — the client learns it is Pro on its own rather than being walked into
+ * Pro settings to provoke a fetch.
+ *
+ * Still `makeAccountPro` rather than the seeder's own `fetchProProof`: that one verifies the proof
+ * against the key the instance actually signs with, which is worth having, but this keeps the guards
+ * against granting to the shared moderation account and against a phrase that does not derive the
+ * account under test.
+ */
+async function grantProToSeededUsers(
+  users: Array<StateUser>,
+  platform: SupportedPlatformsType,
+  pro: BuildStateOptions['pro']
+) {
+  await Promise.all(
+    Object.keys(pro ?? {}).map(index => {
+      const user = users[Number(index)];
+      if (!user) {
+        throw new Error(
+          `grantProToSeededUsers: pro options name user ${index} but the state has ${users.length}`
+        );
+      }
+      return makeAccountPro({ user, platform });
+    })
+  );
+}
+
+/** Seed Alice's Pro access, which is what makes the client's own startup fetch eligible. */
+export const ALICE_IS_PRO: BuildStateOptions = { pro: { 0: {} } };
+
 export async function open_Alice2({
   platform,
   testInfo,
   testContext,
-}: WithPlatform & { testInfo: TestInfo; testContext?: MobileTestContext }) {
+}: WithPlatform & WithTestInfo & WithTestContext) {
   const prebuiltStateKey = '1user';
   const appsToOpen = 2;
   const result = await openAppsWithState({
@@ -468,7 +525,7 @@ export async function open_Alice1_bob1_notfriends({
   platform,
   testInfo,
   testContext,
-}: WithPlatform & { testInfo: TestInfo; testContext?: MobileTestContext }) {
+}: WithPlatform & WithTestInfo & WithTestContext) {
   const appsToOpen = 2;
   const result = await openAppsWithState({
     platform,
@@ -508,8 +565,7 @@ export async function open_Alice2_Bob1_friends({
   focusFriendsConvo,
   testInfo,
   testContext,
-}: WithPlatform &
-  WithFocusFriendsConvo & { testInfo: TestInfo; testContext?: MobileTestContexts }) {
+}: WithPlatform & WithFocusFriendsConvo & WithTestInfo & WithTestContexts) {
   const prebuiltStateKey = '2friends';
   const appsToOpen = 3;
   const result = await openAppsWithState({
