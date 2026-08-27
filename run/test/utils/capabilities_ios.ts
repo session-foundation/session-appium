@@ -78,19 +78,23 @@ function buildServiceNetworkEnv(): Record<string, string> {
 /**
  * Optional custom file server (e.g. a local Sesh-Net-Docker file server). When `FILE_SERVER_URL`
  * is set, the app is pointed at it via `customFileServerUrl` (+ `customFileServerPubkey`), which
- * speeds up media tests. `FILE_SERVER_ED_PUBKEY` is the file server's **Ed25519** pubkey; see the
- * note on the pubkey below for why the X25519 form is wrong here. If omitted the app falls back to
- * its default file server pubkey.
+ * speeds up media tests. If the pubkey is omitted the app falls back to its own default file server
+ * key. Independent of the network target — but only really useful alongside a devnet.
+ *
+ * `FILE_SERVER_ED_PUBKEY` is the server's **Ed25519** key, the same value every platform is given.
+ * iOS stores it as the Ed key and derives the X25519 form when it needs one
+ * (`FileServer.defaultEdPublicKey` / `x25519PublicKey(for:)` in SessionNetworkingKit), so it is passed
+ * through unconverted.
  */
 function buildCustomFileServerEnv(): Record<string, string> {
   const url = (process.env.FILE_SERVER_URL ?? '').trim();
   if (!url) {
     return {};
   }
-  // ED25519, matching Android and Desktop. The `p=` fragment in a download url carries the Ed key on
-  // every client, and libsession derives the X25519 form for onion requests itself — so handing iOS the
-  // X25519 key here produces a url other clients read as an Ed key and reject as an invalid curve point,
-  // which is a download that never resolves rather than a configuration error.
+  // Handing iOS the X25519 form instead is not a configuration error that reports itself: the `p=`
+  // fragment of a download url carries whatever key it was given, other clients read that fragment as
+  // an Ed key, and an X25519 value there is rejected as an invalid curve point — so the symptom is a
+  // download that never resolves, on the other side of the transfer.
   const pubkey = (process.env.FILE_SERVER_ED_PUBKEY ?? '').trim();
   if (pubkey && !/^[0-9a-fA-F]{64}$/.test(pubkey)) {
     throw new Error('FILE_SERVER_ED_PUBKEY must be a 64-character hex string (Ed25519 pubkey)');
