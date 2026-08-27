@@ -14,7 +14,6 @@ import {
   Global,
   HomeScreen,
 } from '../../../desktop/locators';
-import { restartApp } from '../../../desktop/restart';
 import {
   test_Alice_1W,
   test_Alice_1W_Bob_1W_friends,
@@ -264,14 +263,7 @@ messageLengthTestCases.forEach(testCase => {
         // A real grant, not a display mock: over-standard-length messages carry Pro features the
         // recipient validates, so without a proof the message is composed and simply never arrives.
         await alice.subscribeToPro();
-        // An out-of-band grant is never pushed to a client: it is only ever learned by fetching
-        // status. Desktop has no startup gate on that fetch (`ts/state/startup.ts`), unlike iOS and
-        // Android, so a relaunch is enough to discover one.
-        await restartApp(alice, { pro: {} });
         await alice.waitForProActive();
-        // The restart came back to the home screen, so the conversation createContactWith left open
-        // has to be reopened before anything can be typed.
-        await alice.openConversationWith(bob.userName);
       }
 
       const expectedCount =

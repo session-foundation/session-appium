@@ -1,5 +1,4 @@
 import { LeftPane, ProSettings, Settings } from '../../../desktop/locators';
-import { restartApp } from '../../../desktop/restart';
 import { test_Alice_1W } from '../../../desktop/sessionTest';
 import { tStripped } from '../../../localizer/lib';
 
@@ -124,10 +123,6 @@ test_Alice_1W(
   'Pro Activated CTA',
   async ({ alice }) => {
     await alice.subscribeToPro();
-    // An out-of-band grant is never pushed to a client: it is only ever learned by fetching
-    // status. Desktop has no startup gate on that fetch, unlike iOS and Android, so a
-    // relaunch discovers one.
-    await restartApp(alice, { pro: {} });
     await alice.waitForProActive();
 
     await alice.openAnimatedDisplayPictureCTA();

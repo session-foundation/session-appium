@@ -1,5 +1,4 @@
 import { LeftPane, ProSettings, Settings } from '../../../desktop/locators';
-import { restartApp } from '../../../desktop/restart';
 import { sessionTestTwoWindows } from '../../../desktop/sessionTest';
 
 /**
@@ -19,10 +18,6 @@ sessionTestTwoWindows(
     const account = await alice.onboard('Alice');
 
     await alice.subscribeToPro();
-    // An out-of-band grant is never pushed to a client: it is only ever learned by fetching
-    // status. Desktop has no startup gate on that fetch, unlike iOS and Android, so a
-    // relaunch discovers one.
-    await restartApp(alice, { pro: {} });
     await alice.waitForProActive();
 
     // The account is seconds old, so its profile may not have reached the network yet and the
