@@ -122,7 +122,10 @@ async function openAppsWithState<A extends 1 | 2 | 3 | 4, K extends PrebuiltStat
     buildStateForTest(stateToBuildKey, groupName, network, stateOptions),
   ]);
 
-  return { devices, prebuilt };
+  // The network comes back out because a spec that seeds something ITSELF (a message the seeder sends
+  // on behalf of an account with no device) needs the same one, and resolving it a second time would
+  // re-probe the devnet.
+  return { devices, prebuilt, network };
 }
 
 /**
@@ -180,6 +183,39 @@ export async function open_Alice1_with_contacts({
     contactNames,
     pinnedNames,
   };
+}
+
+/**
+ * Alice on one device, with Bob seeded as a mutual contact and no device of his own.
+ *
+ * For a spec whose other party is the SEEDER rather than a client — a message no client will compose,
+ * for one. `open_Alice1_Bob1_friends` would open an app for Bob that the spec never drives, and a
+ * device is the scarcest thing a run has.
+ *
+ * Bob's full `StateUser` comes back, seed included, so the seeder can act as him.
+ */
+export async function open_Alice1_Bob0_friends({
+  platform,
+  testInfo,
+  testContext,
+  stateOptions,
+}: WithPlatform & WithTestInfo & WithTestContext & WithStateOptions) {
+  const result = await openAppsWithState({
+    platform,
+    appsToOpen: 1,
+    stateToBuildKey: '2friends',
+    groupName: undefined,
+    testInfo,
+    testContext,
+    stateOptions,
+  });
+  result.devices[0].setDeviceIdentity('alice1');
+  const alice = result.prebuilt.users[0];
+  const bob = result.prebuilt.users[1];
+  await grantProToSeededUsers(result.prebuilt.users, platform, stateOptions?.pro);
+  await linkDevices([result.devices[0]], [alice.seedPhrase]);
+
+  return { device: result.devices[0], alice, bob, network: result.network };
 }
 
 export async function open_Alice1_Bob1_friends({

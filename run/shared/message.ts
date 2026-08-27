@@ -22,6 +22,15 @@ const EARLY_AT = 500;
 export const early = (tag: string) => `EARLY-${tag}`;
 export const late = (tag: string) => `LATE-${tag}`;
 
+/** One character past the largest body the product allows anyone to send. */
+export const OVER_PRO_LIMIT_CHARS = PRO_MAX_CHARS + 1;
+
+/** Marker whose LAST character sits at exactly `PRO_MAX_CHARS`, so a copy cut there still holds it. */
+export const boundary = (tag: string) => `BOUNDARY-${tag}`;
+
+/** `boundary` plus the one character past the limit — the only thing telling 10,000 from 10,001 apart. */
+export const overflow = (tag: string) => `${boundary(tag)}Z`;
+
 /** A body of exactly `length` characters, filled with a single repeated character. */
 export function messageOfLength(length: number, fill: string = 'x'): string {
   return fill.repeat(length);
@@ -62,6 +71,55 @@ export function markedMessage(tag: string): string {
     throw new Error(
       `markedMessage(${tag}): ${message.length} chars, EARLY ends ${earlyEnd}, LATE starts ${lateStart} ` +
         `— the markers must straddle the standard limit of ${STANDARD_MAX_CHARS}.`
+    );
+  }
+
+  return message;
+}
+
+/**
+ * A body of exactly `OVER_PRO_LIMIT_CHARS`, marked so a recipient's copy can be pinned to an exact
+ * length without reading its text.
+ *
+ * Four probes, and each rules out one outcome:
+ *   - `early` ends inside the standard limit, so it is present in every copy that arrived at all.
+ *   - `late` starts past it, so its absence is a copy cut at the standard limit — a proof that did not
+ *     verify.
+ *   - `boundary` ENDS at exactly `PRO_MAX_CHARS`, so its absence is a copy cut short of the Pro limit.
+ *   - `overflow` is `boundary` plus the 10,001st character, so its presence is a copy that was not cut.
+ *
+ * `boundary` present and `overflow` absent means the body ends at exactly `PRO_MAX_CHARS` — there is
+ * one character between the two outcomes, which no marker can straddle and only this pair can pin.
+ *
+ * Substring probes rather than a length read because the length is not readable on either platform: a
+ * desktop bubble carries its "Read more" label inside the same element as the text, and a mobile
+ * bubble's accessibility value is the platform's rendering of the body rather than the body.
+ *
+ * **Plain ASCII, deliberately.** All three clients truncate by CODE POINT — except iOS, which counts
+ * UTF-16 units, so a non-BMP body lands at 10,000 on Android/Desktop and 5,000 on iOS. ASCII is where
+ * the three agree, so one expectation holds everywhere; a spec that wants that divergence must ask for
+ * it explicitly and expect different numbers per platform.
+ */
+export function overProLimitMessage(tag: string): string {
+  const head = 'a'.repeat(EARLY_AT) + early(tag);
+  const withLate = head + 'b'.repeat(LATE_AT - head.length) + late(tag);
+  const filled = withLate + 'c'.repeat(PRO_MAX_CHARS - boundary(tag).length - withLate.length);
+  const message = filled + overflow(tag);
+
+  const earlyEnd = message.indexOf(early(tag)) + early(tag).length;
+  const lateStart = message.indexOf(late(tag));
+  const boundaryEnd = message.indexOf(boundary(tag)) + boundary(tag).length;
+  if (
+    message.length !== OVER_PRO_LIMIT_CHARS ||
+    earlyEnd > STANDARD_MAX_CHARS ||
+    lateStart <= STANDARD_MAX_CHARS ||
+    boundaryEnd !== PRO_MAX_CHARS
+  ) {
+    throw new Error(
+      `overProLimitMessage(${tag}): ${message.length} chars, EARLY ends ${earlyEnd}, LATE starts ` +
+        `${lateStart}, BOUNDARY ends ${boundaryEnd} — it must be ${OVER_PRO_LIMIT_CHARS} long, the ` +
+        `first two markers must straddle ${STANDARD_MAX_CHARS}, and BOUNDARY must end at exactly ` +
+        `${PRO_MAX_CHARS}.`
     );
   }
 

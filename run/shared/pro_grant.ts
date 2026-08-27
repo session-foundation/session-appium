@@ -248,7 +248,7 @@ function deriveProMasterKey(seedHex: string): {
  * does not exist by design, so a fallback would turn a missing local backend into a confusing 404
  * against a live service.
  */
-function devProBackendUrl(): string {
+export function devProBackendUrl(): string {
   const url = (process.env.TEST_PRO_BACKEND_URL ?? '').trim();
   if (!url) {
     throw new Error(

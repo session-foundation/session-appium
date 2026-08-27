@@ -18,6 +18,7 @@ import type { Page } from '@playwright/test';
 import {
   buildStateForTest,
   type BuildStateOptions,
+  type NetworkArg,
   type PrebuiltStateKey,
   type StateGroup,
   type StateUser,
@@ -77,6 +78,12 @@ export async function openSeededWindows<K extends PrebuiltStateKey>({
   /** Every window opened, for the caller's `forceCloseAllWindows` teardown. */
   pages: Page[];
   group?: StateGroup;
+  /**
+   * The network the state was seeded onto. Returned because a test that seeds something ITSELF — a
+   * message the seeder sends on behalf of an account with no window — must use the same one, and
+   * resolving it a second time would re-probe the devnet.
+   */
+  network: NetworkArg;
 }> {
   // Resolved before anything is opened or seeded: on a mismatch (or an unusable devnet) the seeder
   // would otherwise write the accounts onto one network while the app polls another, and the test
@@ -144,5 +151,5 @@ export async function openSeededWindows<K extends PrebuiltStateKey>({
 
   const group = 'group' in prebuilt ? prebuilt.group : undefined;
 
-  return { users, extras, pages, group };
+  return { users, extras, pages, group, network };
 }
