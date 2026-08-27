@@ -113,9 +113,10 @@ export function buildAndroidLaunchExtras(context?: ProContext): string | undefin
   // one, so a cross-platform attachment never resolves — the upload and the download are looking at
   // different servers.
   //
-  // ED25519, unlike iOS's `customFileServerPubkey`, which takes the X25519 form. `FileServer` stores the
-  // Ed25519 key and derives X25519 from it, so the two platforms genuinely need different keys from the
-  // same server — hence two variables rather than one.
+  // The key is the server's ED25519 one, which is what all three clients take: each stores the Ed key
+  // and derives the X25519 form itself for onion requests. Hence a single `FILE_SERVER_ED_PUBKEY` —
+  // this used to say iOS needed the X25519 form and therefore its own variable, which stopped being
+  // true once iOS moved to deriving it (`FileServer.x25519PublicKey(for:)`).
   const fileServerUrl = process.env.FILE_SERVER_URL?.trim();
   const fileServerEdPubkey = process.env.FILE_SERVER_ED_PUBKEY?.trim();
   if (fileServerUrl && fileServerEdPubkey) {
