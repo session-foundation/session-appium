@@ -43,3 +43,22 @@ export async function expectControlCopy(
     });
   });
 }
+
+/**
+ * The copy filter for a **text-bearing** element - a dialog body, a heading, a row title.
+ *
+ * Spread alongside the locator so the lookup asserts the id and the copy in one wait. Both filters are
+ * EXACT after a normalisation that collapses whitespace (`findMatchingTextInElementArray`,
+ * `findMatchingLabelInElementArray`), which is what makes copy spanning a `<br/>` comparable to the
+ * single space `tStripped` puts in its place. Do not hand-roll that read: the matchers already do it.
+ *
+ * The platform split is the same one {@link expectControlCopy} explains - an iOS identifier displaces
+ * the display text onto `label`. The difference is that this works on **both** platforms, because a
+ * text-bearing node carries its own copy on Android where a Compose control does not.
+ */
+export function withCopy(
+  device: DeviceWrapper,
+  copy: string
+): { label: string } | { text: string } {
+  return device.isIOS() ? { label: copy } : { text: copy };
+}

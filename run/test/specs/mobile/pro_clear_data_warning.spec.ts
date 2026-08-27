@@ -1,4 +1,4 @@
-import { expect, test, type TestInfo } from '@playwright/test';
+import { test, type TestInfo } from '@playwright/test';
 
 import type { DeviceWrapper } from '../../../types/DeviceWrapper';
 
@@ -17,7 +17,7 @@ import {
   UserSettings,
 } from '../../locators/settings';
 import { newUser } from '../../utils/create_account';
-import { expectControlCopy } from '../../utils/element_copy';
+import { expectControlCopy, withCopy } from '../../utils/element_copy';
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
@@ -76,31 +76,18 @@ bothPlatformsIt({
 });
 
 /**
- * Read the dialog body.
+ * Assert the confirmation body carries exactly `copy`.
  *
- * Per-platform for the reason `readOpenUrlDialogCopy` gives: the identifier takes over an iOS element's
- * `name`, so its copy is only reachable on `label`, while Android exposes it as `text`.
+ * The locator's own filter does the work - see `withCopy`. It is EXACT after a normalisation that
+ * collapses whitespace, which is what lets a token spanning a `<br/><br/>` be asserted whole, and what
+ * makes asserting the standard copy here enough to say the Pro copy is absent.
  */
-async function readDialogBody(device: DeviceWrapper): Promise<string> {
-  const element = await device.waitForTextElementToBePresent({
+async function expectConfirmationCopy(device: DeviceWrapper, copy: string): Promise<void> {
+  await device.waitForTextElementToBePresent({
     ...new ModalDescription(device).build(),
+    ...withCopy(device, copy),
     maxWait: PRESENT_MAX_WAIT,
   });
-  const raw = device.isIOS()
-    ? ((await device.getAttribute('label', element.ELEMENT)) ?? '')
-    : await device.getTextFromElement(element);
-  // Collapsed so a `<br/>` compares equal to the single space `tStripped` puts in its place. The same
-  // normalisation the harness applies inside its own matchers, and the reason a whole token can be
-  // asserted here rather than a run of one.
-  return raw.replace(/\s+/g, ' ').trim();
-}
-
-/**
- * Read-then-`toContain` rather than a locator `text` filter: the mobile filter is an EXACT match, and
- * this asserts one token inside a body that also carries the heading-adjacent copy.
- */
-async function expectDialogBodyContains(device: DeviceWrapper, run: string): Promise<void> {
-  expect(await readDialogBody(device)).toContain(run);
 }
 
 /**
@@ -187,10 +174,13 @@ async function cancelClearData(device: DeviceWrapper): Promise<void> {
   await test.step('Cancel without deleting anything', async () => {
     await expectControlCopy(device, new ClearDataCancelButton(device).build(), tStripped('cancel'));
     await device.clickOnElementAll(new ClearDataCancelButton(device));
+    // ABSENT_MAX_WAIT, and the difference is not cosmetic: `verifyElementNotPresent` sleeps its
+    // `maxWait` UNCONDITIONALLY before looking, so this is a flat cost paid by every case rather than
+    // a bound that a fast dismiss escapes. At PRESENT_MAX_WAIT it was ten seconds per test.
     await device.verifyElementNotPresent({
       ...new ModalHeading(device).build(),
       text: tStripped('clearDataAll'),
-      maxWait: PRESENT_MAX_WAIT,
+      maxWait: ABSENT_MAX_WAIT,
     });
   });
 }
@@ -213,7 +203,7 @@ async function proClearDataDevice(platform: SupportedPlatformsType, testInfo: Te
     await pressClear(device);
     // Both runs, because neither alone identifies this case: the warning is word-for-word identical in
     // the network token, and the opening question says nothing about Pro.
-    await expectDialogBodyContains(device, tStripped('proClearAllDataDevice'));
+    await expectConfirmationCopy(device, tStripped('proClearAllDataDevice'));
     await device.waitForTextElementToBePresent({
       ...new ModalHeading(device).build(),
       text: tStripped('clearDataAll'),
@@ -236,7 +226,7 @@ async function proClearDataNetwork(platform: SupportedPlatformsType, testInfo: T
     await pressClear(device);
     // The opening run here is word-for-word `clearDeviceAndNetworkConfirm` - the standard copy - so it
     // says which branch and nothing about Pro. The warning is what says Pro.
-    await expectDialogBodyContains(device, tStripped('proClearAllDataNetwork'));
+    await expectConfirmationCopy(device, tStripped('proClearAllDataNetwork'));
   });
 
   await cancelClearData(device);
@@ -271,11 +261,10 @@ async function standardClearDataDevice(platform: SupportedPlatformsType, testInf
 
   await test.step('Verify the standard confirmation says nothing about Pro', async () => {
     await pressClear(device);
-    const body = await readDialogBody(device);
-    expect(body).toContain(tStripped('clearDeviceDescription'));
-    // Reaching this line at all is the enforcement: before the client change the press above deleted
-    // the account, and the dialog this reads would not have been on screen.
-    expect(body).not.toContain(tStripped('proClearAllDataDevice'));
+    // Reaching this at all is the enforcement: before the client change the press above deleted the
+    // account, and this dialog would not have been on screen. The match is exact, so asserting the
+    // standard copy is also what says the Pro warning is not here.
+    await expectConfirmationCopy(device, tStripped('clearDeviceDescription'));
   });
 
   await cancelClearData(device);
@@ -306,9 +295,7 @@ async function standardClearDataNetwork(platform: SupportedPlatformsType, testIn
   await test.step('Verify the standard network confirmation says nothing about Pro', async () => {
     await device.clickOnElementAll(new ClearDeviceAndNetworkRadio(device));
     await pressClear(device);
-    const body = await readDialogBody(device);
-    expect(body).toContain(tStripped('clearDeviceAndNetworkConfirm'));
-    expect(body).not.toContain(tStripped('proClearAllDataNetwork'));
+    await expectConfirmationCopy(device, tStripped('clearDeviceAndNetworkConfirm'));
   });
 
   await cancelClearData(device);
