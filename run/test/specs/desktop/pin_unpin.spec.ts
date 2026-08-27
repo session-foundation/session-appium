@@ -9,8 +9,8 @@ import { tStripped } from '../../../localizer/lib';
 
 /**
  * One id serves both directions — the row is a toggle and `isPinned` decides only its label. Neither
- * matches on text: the row left the generic `context-menu-item` set when it was given its own id, and
- * matching the label was unsafe anyway, since `has-text` is a substring and "Pin" matches "Unpin".
+ * matches on text, because `has-text` is a case-insensitive substring: "Pin" also matches "Unpin", so a
+ * text match cannot distinguish the two states it would be selecting between.
  */
 async function pinConversation(window: DesktopWrapper, conversationName: string) {
   await window.rightClickOnWithText(HomeScreen.conversationItemName, conversationName);
