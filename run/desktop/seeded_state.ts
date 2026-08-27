@@ -49,6 +49,11 @@ export type SeededUser = {
  *
  * `extraWindows` are opened but left untouched at the onboarding screen — for the rare test that
  * needs an account the seeder cannot express (a 4th user, an externally-owned seed).
+ *
+ * `stateOptions` is the seeder's per-user knobs (Pro access, pinned conversations), addressed by a
+ * user's index in the state's user list. They compose with every state key rather than each
+ * combination needing a key of its own, which is why they are threaded through here instead of being
+ * chosen by `stateKey`.
  */
 export async function openSeededWindows<K extends PrebuiltStateKey>({
   stateKey,
