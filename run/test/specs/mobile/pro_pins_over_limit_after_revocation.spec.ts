@@ -47,8 +47,8 @@ bothPlatformsIt({
  * **The gate reads ACCESS, not display status**, which is why the setup is shaped as it is.
  * `UIContextualAction+Utilities` and `ThreadSettingsViewModel` both test `!currentUserHasProAccess`, and
  * access outlives the plan: a lapsed subscriber holding a still-valid proof keeps every Pro feature until
- * that proof dies. A spec that only ends the plan is therefore testing the overhang (`pro_overhang`), not
- * this — measured, and it allowed an eighth pin exactly as it should have.
+ * that proof dies. A spec that only ends the plan is therefore testing the overhang (`pro_overhang`),
+ * where a further pin is correctly allowed.
  *
  * **This is the revoked cell, not the grandfathered one.** The clients pick the CTA body from two axes —
  * over the limit, and previously subscribed — so "over the limit" describes two states with different
@@ -151,10 +151,10 @@ async function pinsOverLimitAfterRevocation(platform: SupportedPlatformsType, te
 /**
  * Clear a Pro CTA if one is showing.
  *
- * Losing Pro raises the expiry CTA of its own accord, off the status the client has just fetched — so
- * whether it is up races the poll and it cannot be asserted. Left up it swallows the next swipe, which
- * surfaces as a missing "Pin" action several steps from the cause. Worse, it would satisfy a later check
- * for "a CTA is showing", so the pin CTA could pass without ever being raised.
+ * Losing Pro raises the expiry CTA of its own accord, off the status the client has just fetched, so
+ * whether it is up races the poll and it cannot be asserted. An open CTA swallows the next swipe, and it
+ * satisfies a check for "a CTA is showing" — so a pin-CTA assertion made underneath one can pass without
+ * the pin CTA ever being raised.
  */
 async function dismissAnyCTA(device: DeviceWrapper) {
   const showing = await device.doesElementExist({
