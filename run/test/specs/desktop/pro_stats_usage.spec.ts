@@ -26,6 +26,9 @@ test_Alice_1W_10contacts(
     // Read rather than assumed to be zero: the claim is the delta, and a fixture that arrived with a
     // pinned conversation should not fail this.
     const baseline = await alice.readProStats();
+    expect(baseline['badges-sent']).toEqual(0);
+    expect(baseline['longer-messages']).toEqual(0);
+    expect(baseline['pinned-conversations']).toEqual(0);
 
     await alice.openConversationWith(longMessageRecipient);
     await alice.sendMessage(messageOfLength(OVER_STANDARD_CHARS));
