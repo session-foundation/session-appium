@@ -89,7 +89,7 @@ async function ownAnimatedAvatarAfterRevocation(
     await forceStopAndRestart(device);
     // Losing Pro raises the expiry CTA off the status just fetched, so whether it is up races the poll
     // and it cannot be asserted; left up it swallows the taps that follow.
-    await device.dismissAnyProCTA();
+    await device.dismissCTA('negativeButton', 5_000);
   });
 
   await test.step('Assert the client has lost Pro ACCESS', async () => {

@@ -10,6 +10,17 @@ export type CTAType =
   | 'proExpired'
   | 'proExpiringSoon';
 
+/**
+ * How a CTA is closed.
+ *
+ * `closeButton` is the dialog's "X", exposed only by its content description ("Close" on Android,
+ * "Close button" on iOS) and the only way out of a CTA with no negative button, such as the donation
+ * appeal. `negativeButton` is the CTA's own Cancel. `scrim` taps outside the dialog at (150,150) and
+ * does not close every CTA: the Pro modals ignore it on iOS, and the next tap then lands on the scrim
+ * rather than the control it aimed at, so the failure surfaces somewhere unrelated.
+ */
+export type CTADismissal = 'closeButton' | 'negativeButton' | 'scrim';
+
 export type CTAConfig = {
   heading: string;
   /**

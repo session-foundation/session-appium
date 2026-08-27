@@ -1,4 +1,4 @@
-import type { CTAType } from './cta';
+import type { CTADismissal, CTAType } from './cta';
 import type { IBaseDeviceWrapper } from './IBaseDeviceWrapper';
 
 /**
@@ -24,7 +24,7 @@ export interface IMobileWrapper extends IBaseDeviceWrapper {
   // CTA / modal (Appium-shaped; desktop uses a different mechanism)
   checkCTA(type: CTAType): Promise<void>;
   verifyNoCTAShows(): Promise<void>;
-  dismissCTA(): Promise<void>;
+  dismissCTA(via?: CTADismissal, maxWait?: number): Promise<boolean>;
   checkModalStrings(expectedHeading: string, expectedDescription: string): Promise<void>;
 
   // Session Pro (mobile-only for now — desktop has no "Pro Activated" surface yet)

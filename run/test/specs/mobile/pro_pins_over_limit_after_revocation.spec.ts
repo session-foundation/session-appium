@@ -113,7 +113,7 @@ async function pinsOverLimitAfterRevocation(platform: SupportedPlatformsType, te
     // Losing Pro raises the expiry CTA off the status just fetched, so whether it is up races the poll
     // and it cannot be asserted. Left up it swallows the next swipe, and it would also satisfy a later
     // check for "a CTA is showing" — so the pin CTA could pass without ever being raised.
-    await device.dismissAnyProCTA();
+    await device.dismissCTA('negativeButton', 5_000);
   });
 
   await test.step('Assert the client has lost Pro ACCESS', async () => {

@@ -113,7 +113,7 @@ import {
   runScriptAndLog,
   runScriptOrThrow,
 } from '../test/utils/utilities';
-import { CTAConfig, ctaConfigs, CTAType } from './cta';
+import { CTAConfig, ctaConfigs, CTADismissal, CTAType } from './cta';
 import {
   AccessibilityId,
   Coordinates,
@@ -2860,55 +2860,41 @@ export class DeviceWrapper implements IMobileWrapper {
   }
 
   /**
-   * Dismiss any CTA if it shows.
-   *
-   * @param useCloseButton - when true, dismiss via the dialog's close ("X") button; when
-   * false (default) dismiss by tapping outside the dialog at (150,150), the original
-   * behaviour. Some dialogs (e.g. the "New Hope for Session" donation appeal) have no
-   * negative button and do NOT dismiss on a scrim/coordinate tap — pass `true` for those.
-   * The X is exposed only by its content description ("Close" on Android, "Close button"
-   * on iOS).
-   */
-  public async dismissCTA(useCloseButton: boolean = false): Promise<void> {
-    const hasCTAAppeared = await this.doesElementExist({
-      ...new CTAHeading(this).build(),
-      maxWait: 3_000,
-    });
-    this.log(`hasCTAAppeared: ${hasCTAAppeared ? 'true' : 'false'}`);
-    if (!hasCTAAppeared) {
-      return;
-    }
-    this.log('Dismissing CTA');
-    if (useCloseButton) {
-      await this.clickOnElementAll({
-        strategy: 'accessibility id',
-        selector: this.isIOS() ? 'Close button' : 'Close',
-      });
-    } else {
-      await this.clickOnCoordinates(150, 150);
-    }
-  }
-
-  /**
-   * Clear a Pro CTA if one is up, and report whether there was one.
+   * Close a CTA if one is showing, and report whether there was one.
    *
    * Never an assertion. A CTA raised off a status fetch is up or not depending on whether that fetch has
    * landed, so its presence races the test — but left up it swallows the interactions behind it and the
-   * failure surfaces far from the cause.
+   * failure surfaces far from the cause. Callers that have just asserted a specific CTA can ignore the
+   * return.
    *
-   * Dismissed through the CTA's own negative button rather than {@link dismissCTA}, whose default is a
-   * tap at (150,150): that tap does not close these modals on iOS, and the next tap then lands on the
-   * scrim, so navigation silently does nothing. Mirrors `dismissAnyProCTA` on desktop.
+   * `via` selects the mechanism and the trade-offs between them are on {@link CTADismissal}. The default
+   * scrim tap closes the CTAs raised by an ordinary action; the Pro modals need `negativeButton`, and a
+   * CTA with no negative button needs `closeButton`.
    */
-  public async dismissAnyProCTA(maxWait: number = 5_000): Promise<boolean> {
-    const showing = await this.doesElementExist({
-      ...new CTAButtonNegative(this).build(),
+  public async dismissCTA(via: CTADismissal = 'scrim', maxWait: number = 3_000): Promise<boolean> {
+    const hasCTAAppeared = await this.doesElementExist({
+      ...new CTAHeading(this).build(),
       maxWait,
     });
-    if (!showing) {
+    this.log(`hasCTAAppeared: ${hasCTAAppeared ? 'true' : 'false'}`);
+    if (!hasCTAAppeared) {
       return false;
     }
-    await this.clickOnElementAll(new CTAButtonNegative(this));
+    this.log(`Dismissing CTA via ${via}`);
+    switch (via) {
+      case 'closeButton':
+        await this.clickOnElementAll({
+          strategy: 'accessibility id',
+          selector: this.isIOS() ? 'Close button' : 'Close',
+        });
+        break;
+      case 'negativeButton':
+        await this.clickOnElementAll(new CTAButtonNegative(this));
+        break;
+      case 'scrim':
+        await this.clickOnCoordinates(150, 150);
+        break;
+    }
     return true;
   }
 
