@@ -301,3 +301,24 @@ export class UnpinConversationOption extends LocatorsInterface {
     }
   }
 }
+
+/**
+ * The Session Pro badge beside the wordmark in the home screen's header.
+ *
+ * Scoped rather than using the generic `pro-badge-icon`, because the same widget class renders in
+ * several roles and an unscoped match would find whichever happened to be on screen. iOS names it
+ * through `SessionProBadge.AccessibilityIdentifier`; Android carries it as a view id.
+ *
+ * Hidden rather than absent when the user is not Pro, and on Android a `gone` view is not in the
+ * hierarchy at all — so a "not found" here means "no badge", which is a state and not a broken locator.
+ */
+export class HomeHeaderProBadge extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'sessionHeaderProBadge' } as const;
+      case 'ios':
+        return { strategy: 'accessibility id', selector: 'home-header-pro-badge' } as const;
+    }
+  }
+}
