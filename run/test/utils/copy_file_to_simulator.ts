@@ -2,10 +2,10 @@ import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 
+import { mediaFolder } from '../../constants/testfiles';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 
 const TARGET_GROUP_ID = 'group.com.apple.FileProvider.LocalStorage';
-const MEDIA_ROOT = path.join('run', 'test', 'media');
 
 /**
  * Utility for copying a file from the local 'media' directory to the current iOS simulator's
@@ -44,7 +44,7 @@ function getSimulatorDownloadsPath(
  * Copies a file from the 'media' directory to the simulator's "Downloads" folder on disk if not already present.
  */
 export function copyFileToSimulator(device: DeviceWrapper, fileName: string): void {
-  const sourcePath = path.join(MEDIA_ROOT, fileName);
+  const sourcePath = path.join(mediaFolder, fileName);
 
   const groupContainerPath = getFilesAppGroupContainerPath(device.udid);
   const { downloadsPath, destinationPath } = getSimulatorDownloadsPath(
