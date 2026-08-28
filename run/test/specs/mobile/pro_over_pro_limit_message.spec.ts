@@ -12,6 +12,7 @@ import { ConversationItem } from '../../locators/home';
 import { open_Alice1_Bob0_friends } from '../../state_builder';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
+import { sleepFor } from '../../utils';
 
 const TAG = 'OVERPRO';
 
@@ -99,6 +100,8 @@ async function overProLimitMessage(platform: SupportedPlatformsType, testInfo: T
       );
     }
   });
+
+  await sleepFor(10000)
 
   await closeApp(device);
 }

@@ -402,7 +402,7 @@ export type AccessibilityId =
   | 'pin-conversation-menu-option'
   | 'Pin'
   | 'Pin Conversation'
-  | 'Pinned icon'
+  | `Pinned icon: ${string}`
   | 'Please enter a shorter group name'
   | 'pro-badge-icon'
   | 'pro-menu-item-title'
