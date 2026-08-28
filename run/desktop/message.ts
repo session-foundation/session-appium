@@ -54,14 +54,19 @@ export async function breakTheRun(
  * a tight bound reports it quickly. `read` needs a receipt to reach the recipient, be acted on, and travel
  * back, so it is bounded by the network rather than by this client.
  *
- * Measured: a `read` receipt on devnet took 31s, against a shared 20s ceiling whose comment
- * ("a gif on mainnet can take a long time to upload") was written for attachment uploads and never
- * revisited for receipts. That is why `Read status` failed while asserting behaviour that works.
+ * Measured on devnet across three runs: 31s once, and over 60s on another — so the cost is not fixed, and
+ * a bound sized from one sample is not enough. 90s is the only value observed to pass. The old shared
+ * ceiling was 20s, and its comment ("a gif on mainnet can take a long time to upload") was written for
+ * attachment uploads and never revisited for receipts.
+ *
+ * The spread is worth understanding rather than absorbing: a 2x range suggests the receipt waits on a poll
+ * cycle rather than on network latency, in which case the right bound is one poll interval and this number
+ * should be derived rather than observed.
  */
 const STATUS_TIMEOUT_MS: Record<MessageStatus, number> = {
   failed: 20_000,
   sent: 20_000,
-  read: 60_000,
+  read: 90_000,
 };
 
 export const waitForMessageStatus = async (
