@@ -27,6 +27,14 @@ const TAG = 'OVERPRO';
  * only "exactly `PRO_MAX_CHARS`" survives all four. The last two are a pair — `boundary` ends at the
  * limit and `overflow` is `boundary` plus the character past it — so dropping either would leave an
  * assertion that a client keeping the whole body also satisfies.
+ *
+ * **No "Read more" click, unlike the mobile twin's `expandLongMessages`.** Desktop's collapse is a pure
+ * CSS clamp — `StyledMessageBubble` sets `-webkit-line-clamp` and `overflow: hidden` while `!expanded`,
+ * over a node that already holds the whole body — and the locator's `text` option is `:has-text`, a
+ * TEXT-CONTENT match that clipped overflow does not hide. So every marker below is readable while the
+ * bubble is folded, and expanding first would change nothing. What this spec measures is what the
+ * recipient STORED, not what it painted; the clamp itself is untested here and needs a different probe
+ * (the Read more button, or `clientHeight` against `scrollHeight`).
  */
 test_Alice_1W_Bob_0W_friends(
   `A ${OVER_PRO_LIMIT_CHARS}-character message from a Pro sender`,
@@ -35,6 +43,8 @@ test_Alice_1W_Bob_0W_friends(
     // before the message is parsed is read as no proof at all.
     await sendOverProLimitMessage({ from: bob, to: alice.getUser(), network, tag: TAG });
 
+    // The anchor. Without it "the tail is missing" is equally well explained by the message never
+    // arriving, and every assertion below would pass before the behaviour under test happened.
     await alice.waitForElement({
       locator: Conversation.messageContent,
       options: { text: early(TAG), maxWaitMs: MESSAGE_DELIVERY_TIMEOUT_MS },
@@ -65,6 +75,8 @@ test_Alice_1W_Bob_0W_friends(
       );
     }
 
+    // Paired with the `boundary` wait above: `boundary` ends on PRO_MAX_CHARS and `overflow` is
+    // `boundary` plus the one character past it, so only a body of exactly PRO_MAX_CHARS satisfies both.
     try {
       await alice.hasElementPoppedUpThatShouldnt(Conversation.messageContent, overflow(TAG));
     } catch {
