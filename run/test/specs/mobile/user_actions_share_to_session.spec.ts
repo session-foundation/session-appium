@@ -71,10 +71,9 @@ async function shareToSession(platform: SupportedPlatformsType, testInfo: TestIn
     await handlePhotosFirstTimeOpen(alice1);
     if (platform === 'ios') {
       await alice1.clickOnByAccessibilityID('Select');
-      await alice1.matchAndTapImage(
-        { strategy: 'xpath', selector: `//XCUIElementTypeImage` },
-        testImage
-      );
+      // Unnamed, unlike the in-app picker: this is the Photos app's own grid and its thumbnails have
+      // not been checked for `PXGGridLayout-Info`, so the candidate set stays as it was.
+      await alice1.matchAndTapImage({ type: 'XCUIElementTypeImage' }, testImage);
     }
     await alice1.onAndroid().clickOnElementAll(new ImageName(alice1));
     await alice1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Share' });

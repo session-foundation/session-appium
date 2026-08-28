@@ -8,7 +8,7 @@ import { DeviceWrapper } from '../../types/DeviceWrapper';
 const TARGET_GROUP_ID = 'group.com.apple.FileProvider.LocalStorage';
 
 /**
- * Utility for copying a file from the local 'media' directory to the current iOS simulator's
+ * Utility for copying a file from the local fixture directory to the current iOS simulator's
  * "Downloads" folder (inside the Files app group container) on disk, if not already present.
  *
  * Motivation: 'xcrun simctl addmedia' does not support PDFs, and downloading files in tests is unreliable.
@@ -41,7 +41,7 @@ function getSimulatorDownloadsPath(
 }
 
 /**
- * Copies a file from the 'media' directory to the simulator's "Downloads" folder on disk if not already present.
+ * Copies a file from the fixture directory to the simulator's "Downloads" folder on disk if not already present.
  */
 export function copyFileToSimulator(device: DeviceWrapper, fileName: string): void {
   const sourcePath = path.join(mediaFolder, fileName);

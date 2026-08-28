@@ -45,7 +45,10 @@ bothPlatformsIt({
 /**
  * The mobile half of "does the animated-display-picture gate read the file or its name".
  *
- * The fixture is the animated GIF the other avatar specs use, byte for byte, under a `.png` name. A
+ * The fixture is an animated GIF under a `.png` name: the colour inverse of the GIF the other avatar
+ * specs use. The inversion is load-bearing on iOS, where the file is chosen out of the photo picker by
+ * matching its pixels — an identical twin in the same library is picked between by tree order alone,
+ * and the two share a picker label as well, so nothing else separates them. A
  * client that decides "is this animated?" from the extension lets a standard user upload it — and the
  * picture then animates for everyone, because what recipients render is the file rather than the
  * sender's claim about it.

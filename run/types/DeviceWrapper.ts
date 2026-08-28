@@ -137,6 +137,81 @@ type PollResult<T = undefined> = {
   error?: string;
 };
 
+/** A rect from the accessibility tree, in points. */
+type PickerRect = { height: number; width: number; x: number; y: number };
+
+/**
+ * A candidate set in an iOS picker, addressed by element type and optionally by accessibility name.
+ *
+ * `name` is what makes the photo grid separable from the app behind the sheet: every thumbnail carries
+ * `PXGGridLayout-Info`, while the app's own images carry their asset names. Measured on the
+ * profile-picture picker, the unfiltered set was 23 elements of which 10 were photos.
+ */
+type PickerCandidates = { name?: string; type: 'XCUIElementTypeCell' | 'XCUIElementTypeImage' };
+
+/**
+ * Pull the candidates' rects straight out of the page source.
+ *
+ * The tree already carries `x`/`y`/`width`/`height`, so this is a parse rather than an element query.
+ * Asking XCUITest for the same elements costs multiples of reading them: on the profile-picture picker,
+ * 4969ms for `//XCUIElementTypeImage` against 1352ms for the whole page source.
+ *
+ * `visible` is not consulted. Every element in that picker reports `visible="false"` — the app is behind
+ * a sheet and the grid's own thumbnails are marked the same way — so filtering on it discards the
+ * targets. Geometry is the reliable test.
+ */
+function parsePickerRects(source: string, type: string, name?: string): PickerRect[] {
+  const screenWidth = windowWidthFromSource(source);
+  const screenHeight = windowHeightFromSource(source);
+  const tags = source.match(new RegExp(`<${type}\\b[^>]*>`, 'g')) ?? [];
+  const rects: PickerRect[] = [];
+
+  for (const tag of tags) {
+    if (name !== undefined && !tag.includes(`name="${name}"`)) {
+      continue;
+    }
+    const num = (attr: string): number | null => {
+      const m = tag.match(new RegExp(`\\b${attr}="(-?\\d+)"`));
+      return m ? Number(m[1]) : null;
+    };
+    const x = num('x');
+    const y = num('y');
+    const width = num('width');
+    const height = num('height');
+    if (x === null || y === null || width === null || height === null) {
+      continue;
+    }
+    // Off-screen and zero-area candidates cannot be tapped and cannot be cropped out of a screenshot of
+    // the screen, so they are dropped before either is attempted.
+    if (width <= 0 || height <= 0) {
+      continue;
+    }
+    if (x < 0 || y < 0 || x + width > screenWidth || y + height > screenHeight) {
+      continue;
+    }
+    rects.push({ x, y, width, height });
+  }
+  return rects;
+}
+
+function windowWidthFromSource(source: string): number {
+  return applicationDimension(source, 'width');
+}
+
+function windowHeightFromSource(source: string): number {
+  return applicationDimension(source, 'height');
+}
+
+/** The application element frames the screen, so its size is the point-space the rects are expressed in. */
+function applicationDimension(source: string, attr: 'height' | 'width'): number {
+  const app = source.match(/<XCUIElementTypeApplication\b[^>]*>/)?.[0];
+  const value = app?.match(new RegExp(`\\b${attr}="(\\d+)"`))?.[1];
+  if (!value) {
+    throw new Error(`Could not read the application ${attr} from the page source`);
+  }
+  return Number(value);
+}
+
 export class DeviceWrapper implements IMobileWrapper {
   private readonly device: AndroidUiautomator2Driver | XCUITestDriver;
   public readonly udid: string;
@@ -1149,106 +1224,96 @@ export class DeviceWrapper implements IMobileWrapper {
    * @throws If no suitable match is found among the candidate elements.
    */
   public async matchAndTapImage(
-    locator: StrategyExtractionObj,
+    candidates: PickerCandidates,
     referenceImageName: string
   ): Promise<void> {
     const threshold = 0.85;
+    const { type, name } = candidates;
 
-    // Retry findElements with exponential backoff — photo picker may not have rendered yet
-    let elements = await this.findElements(locator.strategy, locator.selector);
-    if (elements.length === 0) {
-      let delay = 100;
-      const maxWait = 5000;
-      const start = Date.now();
-      while (elements.length === 0 && Date.now() - start < maxWait) {
-        await sleepFor(delay);
-        delay = Math.min(delay * 2, 1600);
-        elements = await this.findElements(locator.strategy, locator.selector);
-      }
-    }
-
-    this.info(
-      `[matchAndTapImage] Starting image matching: ${elements.length} elements with ${locator.strategy} "${locator.selector}"`
-    );
-
-    // Load the reference image buffer from disk once
     const referencePath = path.join(mediaFolder, referenceImageName);
     await fs.access(referencePath).catch(() => {
       throw new Error(`Reference image not found: ${referencePath}`);
     });
     const referenceBuffer = await fs.readFile(referencePath);
-    // Reference metadata never changes across elements
-    const refMeta = await sharp(referenceBuffer).metadata();
 
-    // Phase 1: screenshot + comparison in parallel
+    /**
+     * The picker's grid populates after its chrome does, so an empty result means "not yet", not "not
+     * there". `Collections` resolves while the grid is still loading, and everything queried at that
+     * moment belongs to the app underneath the sheet.
+     */
+    let source = await this.getPageSource();
+    let rects = parsePickerRects(source, type, name);
+    if (rects.length === 0) {
+      const deadline = Date.now() + 10_000;
+      while (rects.length === 0 && Date.now() < deadline) {
+        await sleepFor(500);
+        source = await this.getPageSource();
+        rects = parsePickerRects(source, type, name);
+      }
+    }
+
+    this.info(
+      `[matchAndTapImage] ${rects.length} candidates of type ${type}${name ? ` named "${name}"` : ''}`
+    );
+
+    /**
+     * One screenshot for the whole screen, cropped locally per candidate.
+     *
+     * The alternative is an element screenshot each, and those are round-trips that WDA serialises — so
+     * they cost the same whether issued together or in sequence. Measured on the profile-picture picker:
+     * 586ms per element screenshot against 1352ms for the page source that yields every rect at once.
+     */
+    const screenshot = Buffer.from(await this.getScreenshot(), 'base64');
+    const shot = sharp(screenshot);
+    const shotMeta = await shot.metadata();
+    /** Screenshots are in device pixels and the tree is in points, so everything scales by this. */
+    const scale = (shotMeta.width ?? 1) / windowWidthFromSource(source);
+
     const results = await Promise.all(
-      elements.map(async el => {
-        const base64 = await this.getElementScreenshot(el.ELEMENT);
-        const elementBuffer = Buffer.from(base64, 'base64');
-
-        const elementMeta = await sharp(elementBuffer).metadata();
-
-        let resizedRef: Buffer;
-        let resizedMeta: Awaited<ReturnType<typeof sharp.prototype.metadata>>;
-
-        if (elementMeta.width === refMeta.width && elementMeta.height === refMeta.height) {
-          // Skip resizing if reference already matches the screenshot dimensions
-          resizedRef = referenceBuffer;
-          resizedMeta = refMeta;
-        } else {
-          resizedRef = await sharp(referenceBuffer)
-            .resize(elementMeta.width, elementMeta.height)
-            .toBuffer();
-          resizedMeta = await sharp(resizedRef).metadata();
-        }
-
+      rects.map(async rect => {
+        const crop = {
+          left: Math.round(rect.x * scale),
+          top: Math.round(rect.y * scale),
+          width: Math.round(rect.width * scale),
+          height: Math.round(rect.height * scale),
+        };
         try {
-          const { rect: matchRect, score } = await getImageOccurrence(elementBuffer, resizedRef, {
-            threshold,
-          });
-          return { el, matchRect, score, resizedMeta };
+          const cropped = await sharp(screenshot).extract(crop).toBuffer();
+          const resizedRef = await sharp(referenceBuffer)
+            .resize(crop.width, crop.height)
+            .toBuffer();
+          const { score } = await getImageOccurrence(cropped, resizedRef, { threshold: -1 });
+          return { rect, score };
         } catch {
           return null;
         }
       })
     );
 
-    type MatchResult = NonNullable<(typeof results)[number]>;
-    const bestResult = results
-      .filter((r): r is MatchResult => r !== null)
-      .reduce<MatchResult | null>((best, r) => (!best || r.score > best.score ? r : best), null);
+    const best = results
+      .filter((r): r is { rect: PickerRect; score: number } => r !== null)
+      .reduce<{
+        rect: PickerRect;
+        score: number;
+      } | null>((acc, r) => (!acc || r.score > acc.score ? r : acc), null);
 
-    if (!bestResult) {
-      console.log(
-        `[matchAndTapImage] No matching image found among ${elements.length} elements for ${locator.strategy} "${locator.selector}"`
+    if (!best || best.score < threshold) {
+      throw new Error(
+        `[matchAndTapImage] No candidate matched ${referenceImageName} above ${threshold} among ` +
+          `${rects.length} of type ${type}${name ? ` named "${name}"` : ''}. Best score: ` +
+          `${best ? best.score.toFixed(3) : 'none'}.`
       );
-      throw new Error('Unable to find the expected UI element on screen');
-    }
-
-    // Phase 2: fetch rect only for the winning element to determine tap coords
-    const rect = await this.getElementRect(bestResult.el.ELEMENT);
-
-    if (!rect) {
-      throw new Error('Unable to get rect for matched element');
     }
 
     /**
-     * Matching is done on a resized reference image to account for device pixel density.
-     * However, the coordinates returned by getImageOccurrence are relative to the resized buffer,
-     * *not* the original screen element. This leads to incorrect tap positions unless we
-     * scale the match result back down to the actual dimensions of the element.
-     * The logic below handles this scaling correction, ensuring the tap lands at the correct
-     * screen coordinates — even when Retina displays and image resizing are involved.
+     * The reference is resized to the candidate's own size, so a match covers the whole crop and its
+     * centre is the candidate's centre. Tapping that directly is what the previous scaling correction
+     * arrived at, without a second point/pixel conversion to get wrong.
      */
-    const { matchRect, resizedMeta } = bestResult;
-    const scaleX = rect.width / (resizedMeta.width ?? rect.width);
-    const scaleY = rect.height / (resizedMeta.height ?? rect.height);
-    const matchCenterX = matchRect.x + Math.floor(matchRect.width / 2);
-    const matchCenterY = matchRect.y + Math.floor(matchRect.height / 2);
-    const tapX = Math.round(rect.x + matchCenterX * scaleX);
-    const tapY = Math.round(rect.y + matchCenterY * scaleY);
-
-    await clickOnCoordinates(this, { x: tapX, y: tapY });
+    await clickOnCoordinates(this, {
+      x: Math.round(best.rect.x + best.rect.width / 2),
+      y: Math.round(best.rect.y + best.rect.height / 2),
+    });
   }
 
   /**
@@ -2126,10 +2191,7 @@ export class DeviceWrapper implements IMobileWrapper {
         strategy: 'accessibility id',
         selector: 'Recents',
       });
-      await this.matchAndTapImage(
-        { strategy: 'xpath', selector: `//XCUIElementTypeCell` },
-        testImage
-      );
+      await this.matchAndTapImage({ type: 'XCUIElementTypeCell' }, testImage);
     } else if (this.isAndroid()) {
       // Push file first
       await this.pushMediaToDevice(testImage);
@@ -2173,10 +2235,7 @@ export class DeviceWrapper implements IMobileWrapper {
     });
     await this.waitForTextElementToBePresent({ strategy: 'accessibility id', selector: 'Recents' });
     // A video can't be matched by its thumbnail so we use a video thumbnail file
-    await this.matchAndTapImage(
-      { strategy: 'xpath', selector: `//XCUIElementTypeCell` },
-      testVideoThumbnail
-    );
+    await this.matchAndTapImage({ type: 'XCUIElementTypeCell' }, testVideoThumbnail);
     await this.sendMessage(message);
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
@@ -2412,8 +2471,10 @@ export class DeviceWrapper implements IMobileWrapper {
         strategy: 'accessibility id',
         selector: 'Collections',
       });
+      // Named, not every image on screen: the app behind the sheet contributes its own, and only the
+      // grid's thumbnails carry this name.
       await this.matchAndTapImage(
-        { strategy: 'xpath', selector: `//XCUIElementTypeImage` },
+        { type: 'XCUIElementTypeImage', name: 'PXGGridLayout-Info' },
         uploadPicture
       );
       await this.clickOnByAccessibilityID('Done');
