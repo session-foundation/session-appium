@@ -2,11 +2,10 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
-import { SafariAddressBar, URLInputField } from '../../locators/browsers';
 import { OpenLinkButton } from '../../locators/network_page';
 import { DonationsMenuItem, UserSettings } from '../../locators/settings';
 import { newUser } from '../../utils/create_account';
-import { handleChromeFirstTimeOpen } from '../../utils/handle_first_open';
+import { getBrowserUrlField } from '../../utils/handle_first_open';
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
@@ -35,14 +34,7 @@ async function donateLinkout(platform: SupportedPlatformsType, testInfo: TestInf
   await device.clickOnElementAll(new DonationsMenuItem(device));
   await checkOpenUrlDialogStrings(device, linkURL);
   await device.clickOnElementAll(new OpenLinkButton(device));
-  if (platform === 'ios') {
-    // Tap the Safari address bar to reveal the URL
-    await device.clickOnElementAll(new SafariAddressBar(device));
-  } else {
-    // Chrome can throw some modals on first open
-    await handleChromeFirstTimeOpen(device);
-  }
-  const urlField = await device.waitForTextElementToBePresent(new URLInputField(device));
+  const urlField = await getBrowserUrlField(device);
   const actualUrlField = await device.getTextFromElement(urlField);
   const fullRetrievedURL = ensureHttpsURL(actualUrlField);
   // Verify that it's the correct URL

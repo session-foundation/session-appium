@@ -1,5 +1,10 @@
 import { DeviceWrapper } from '../../types/DeviceWrapper';
-import { ChromeNotificationsNegativeButton, ChromeUseWithoutAnAccount } from '../locators/browsers';
+import {
+  ChromeNotificationsNegativeButton,
+  ChromeUseWithoutAnAccount,
+  SafariAddressBar,
+  URLInputField,
+} from '../locators/browsers';
 import { iOSPhotosContinuebutton } from '../locators/external';
 
 // First time open of Chrome triggers an account check and a notifications modal.
@@ -64,4 +69,40 @@ export async function handlePhotosFirstTimeOpen(device: DeviceWrapper) {
       await device.clickOnCoordinates(550, 500); // Tap outside of the sign-in modal to dismiss
     }
   }
+}
+
+/**
+ * Bring the browser's URL field on screen and return it.
+ *
+ * The two browsers need opposite handling. Chrome can raise first-open modals that have to be dismissed
+ * before anything is readable. Safari raises nothing, but collapses the address bar to the domain alone
+ * (`TabBarItemTitle`) and expands the full `URL` field only once tapped.
+ *
+ * That tap is retried rather than waited on. A tap landing while Safari is still coming up is swallowed —
+ * the element is present and tappable before it will act on it — and the field then never appears, which
+ * surfaces as `URL` not found several lines later rather than as a missed tap. There is no state that
+ * distinguishes "not ready" from "ready", and a second tap on an already-expanded bar is harmless.
+ */
+export async function getBrowserUrlField(device: DeviceWrapper) {
+  if (!device.isIOS()) {
+    await handleChromeFirstTimeOpen(device);
+    return device.waitForTextElementToBePresent(new URLInputField(device));
+  }
+
+  const attempts = 3;
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    await device.clickOnElementAll(new SafariAddressBar(device));
+    const revealed = await device.doesElementExist({
+      ...new URLInputField(device).build(),
+      maxWait: 5_000,
+    });
+    if (revealed) {
+      break;
+    }
+    device.log(`Safari address bar did not expand (attempt ${attempt}/${attempts}), tapping again`);
+  }
+
+  // Reached either expanded or out of attempts; the wait produces the failure so it reads like any
+  // other missing element.
+  return device.waitForTextElementToBePresent(new URLInputField(device));
 }
