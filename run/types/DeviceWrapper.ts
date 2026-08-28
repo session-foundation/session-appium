@@ -2909,6 +2909,20 @@ export class DeviceWrapper implements IMobileWrapper {
         await this.clickOnCoordinates(150, 150);
         break;
     }
+
+    /**
+     * Confirm it actually went, rather than that it was clicked.
+     *
+     * The click returns before the modal has finished closing, so the next step can land on the overlay
+     * and fail looking for whatever is behind it — several steps from the dismissal, and reading as a
+     * missing control rather than a modal that is still up. Measured on Android: the renew CTA was still
+     * on screen when the spec went looking for the home screen, and the failure named the plus button.
+     *
+     * Waits on the heading, the same element the presence check above reads, so a dismissal is confirmed
+     * against the thing that defined the CTA as showing in the first place.
+     */
+    await this.verifyElementNotPresent({ ...new CTAHeading(this).build(), maxWait: 10_000 });
+
     return true;
   }
 
