@@ -10,7 +10,6 @@ import { sendOverProLimitMessage } from '../../../shared/pro_message';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { ConversationItem } from '../../locators/home';
 import { open_Alice1_Bob0_friends } from '../../state_builder';
-import { sleepFor } from '../../utils';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 
@@ -100,8 +99,6 @@ async function overProLimitMessage(platform: SupportedPlatformsType, testInfo: T
       );
     }
   });
-
-  await sleepFor(10000);
 
   await closeApp(device);
 }
