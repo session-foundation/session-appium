@@ -4,12 +4,12 @@ import dotenv from 'dotenv';
 import type { ServiceNetwork } from '../run/types/target';
 
 import {
+  devicesRequired,
   PARALLEL_TIER_NAMES,
   PARALLEL_TIERS,
   type ParallelPass,
   type ParallelTierName,
   passGrep,
-  simulatorsRequired,
 } from '../run/constants/parallelism';
 import { type Simulator } from '../run/test/utils/capabilities_ios';
 import { ALLOWED_NETWORKS } from '../run/test/utils/network_target';
@@ -186,7 +186,7 @@ function validate(args: ParsedArgs): number {
       );
       process.exit(1);
     }
-    const needed = simulatorsRequired(PARALLEL_TIERS[args.tier]);
+    const needed = devicesRequired(PARALLEL_TIERS[args.tier]);
     if (needed > MAX_SIMULATORS) {
       console.error(
         `Tier "${args.tier}" needs ${needed} simulators, but the maximum is ${MAX_SIMULATORS}.`
@@ -229,7 +229,7 @@ function printTiers(): void {
   for (const name of PARALLEL_TIER_NAMES) {
     const tier = PARALLEL_TIERS[name];
     console.log(`  ${name} — ${tier.summary}`);
-    console.log(`    simulators needed: ${simulatorsRequired(tier)}`);
+    console.log(`    simulators needed: ${devicesRequired(tier)}`);
     for (const pass of tier.passes) {
       console.log(
         `      @${pass.devices}-devices  x${pass.workers} worker(s)  ` +

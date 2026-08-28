@@ -102,12 +102,79 @@ export const PARALLEL_TIERS = {
   },
 } as const satisfies Record<string, ParallelTier>;
 
+/**
+ * Emulator-parallelism tiers, the Android counterpart of the table above.
+ *
+ * The mechanics are identical - `openAndroidApp` offsets each worker's pool by `TEST_PARALLEL_INDEX`
+ * exactly as `openiOSApp` does, and `DEVICES_PER_TEST_COUNT` is the same single global per
+ * invocation - so parallelism is expressed the same way, as one pass per device class.
+ *
+ * **The worker counts here are UNMEASURED.** They are the arithmetic that fills the pool
+ * (`devices * workers <= emulators`), not findings. The iOS numbers above do not transfer: a booted
+ * emulator is a QEMU virtual machine costing gigabytes of RAM, where a simulator is a process tree,
+ * so the two saturate a host for entirely different reasons. Treat a first run on any of these as a
+ * measurement, and lower the workers before concluding a flake is the app's fault.
+ *
+ * RAM is the binding constraint, and it is not subtle. Measured on the 64 GB Linux runner with four
+ * emulators up: 5.4-7.4 GB PSS each, 24 GB total, essentially all private, so there is no shared-page
+ * inflation to discount. Eight lands near 50 GB. Check `free -g` against the tier before running one.
+ *
+ * Unlike the iOS runner, nothing here provisions anything: Appium will not boot an emulator, so the
+ * pool has to be up before the run starts (`pnpm create-emulators <n>`).
+ */
+export const ANDROID_PARALLEL_TIERS = {
+  /** 4 emulators — the pool the suite shipped with. 3- and 4-device specs stay serial. */
+  conservative: {
+    summary: '4 emulators — safest; 3- and 4-device specs stay serial',
+    passes: [
+      { devices: 1, workers: 4 },
+      { devices: 2, workers: 2 },
+      { devices: 3, workers: 1 },
+      { devices: 4, workers: 1 },
+    ],
+  },
+
+  /** 6 emulators — every pass but `@4-devices` gets at least two workers. ~37 GB of emulator RAM. */
+  standard: {
+    summary: '6 emulators — every pass but @4-devices parallelises',
+    passes: [
+      { devices: 1, workers: 6 },
+      { devices: 2, workers: 3 },
+      { devices: 3, workers: 2 },
+      { devices: 4, workers: 1 },
+    ],
+  },
+
+  /**
+   * 8 emulators, the `MAX_EMULATORS` cap. The only tier in which `@4-devices` parallelises at all.
+   *
+   * Near 50 GB of emulator RAM before the tests do anything, so this wants a 64 GB host and nothing
+   * else running on it - on the Linux runner that means both GitHub Actions runner services stopped,
+   * not just one.
+   */
+  full: {
+    summary: '8 emulators — fills the pool; needs a 64 GB host to itself',
+    passes: [
+      { devices: 1, workers: 8 },
+      { devices: 2, workers: 4 },
+      { devices: 3, workers: 2 },
+      { devices: 4, workers: 2 },
+    ],
+  },
+} as const satisfies Record<string, ParallelTier>;
+
+export type AndroidParallelTierName = keyof typeof ANDROID_PARALLEL_TIERS;
+
+export const ANDROID_PARALLEL_TIER_NAMES = Object.keys(
+  ANDROID_PARALLEL_TIERS
+) as AndroidParallelTierName[];
+
 export type ParallelTierName = keyof typeof PARALLEL_TIERS;
 
 export const PARALLEL_TIER_NAMES = Object.keys(PARALLEL_TIERS) as ParallelTierName[];
 
-/** Simulators a tier needs: the largest single pass, since passes run one after another. */
-export function simulatorsRequired(tier: ParallelTier): number {
+/** Devices a tier needs: the largest single pass, since passes run one after another. */
+export function devicesRequired(tier: ParallelTier): number {
   return Math.max(...tier.passes.map(p => p.devices * p.workers));
 }
 

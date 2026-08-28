@@ -36,8 +36,15 @@ export const AVD_RAM_MB = 4192;
 /** The suite's first udid; each subsequent emulator is +2 (adb's console/adb port pairing). */
 export const BASE_PORT = 5554;
 
-/** `capabilities_android.ts` declares exactly this many udids. */
-export const MAX_EMULATORS = 4;
+/**
+ * Size of the emulator pool, and the count `capabilities_android.ts` builds its udid list from.
+ *
+ * Bounded by host RAM, not by anything in the suite. Measured on the 64 GB Linux runner: four
+ * emulators sit at 5.4-7.4 GB PSS each (24 GB total, essentially all private), leaving eight at
+ * roughly 50 GB and ~11 GB of headroom. Raise this only after measuring on the host in question - an
+ * over-subscribed host fails with timeouts indistinguishable from product bugs.
+ */
+export const MAX_EMULATORS = 8;
 
 /** The command-line tools bundle, used only when provisioning a CI machine from scratch. */
 export const CMDLINE_TOOLS_ZIP = 'commandlinetools-linux-11076708_latest.zip';
