@@ -1522,6 +1522,14 @@ export class DeviceWrapper implements IMobileWrapper {
         }
         return null;
       }
+      // A `label` on the locator narrows the "is it gone" question the same way it narrows "is it
+      // present". Without this an id shared by several rows - a pin marker, say - reports "still there"
+      // off a DIFFERENT row's copy, and the wait can never pass while any of them survives.
+      const label = 'label' in locator ? locator.label : undefined;
+      if (label) {
+        const elements = await this.findElements(locator.strategy, locator.selector, true);
+        return await this.findMatchingLabelInElementArray(elements, label);
+      }
       return await this.findElement(locator.strategy, locator.selector, true);
     } catch {
       return null;

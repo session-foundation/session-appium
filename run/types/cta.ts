@@ -6,6 +6,7 @@ export type CTAType =
   | 'donate'
   | 'longerMessages'
   | 'pinnedConversations'
+  | 'pinnedConversationsOverLimit'
   | 'pinnedConversationsRenew'
   | 'proExpired'
   | 'proExpiringSoon';
@@ -32,6 +33,13 @@ export type CTAConfig = {
   positiveButton?: string;
   features?: string[];
 };
+
+/** Shared by every pinned-conversation CTA; they differ only in their heading and body. */
+const PIN_CTA_FEATURES = [
+  tStripped('proFeatureListPinnedConversations'),
+  tStripped('proFeatureListLongerMessages'),
+  tStripped('proFeatureListLoadsMore'),
+];
 
 export const ctaConfigs: Record<CTAType, CTAConfig> = {
   donate: {
@@ -89,37 +97,40 @@ export const ctaConfigs: Record<CTAType, CTAConfig> = {
       tStripped('proFeatureListAnimatedDisplayPicture'),
     ],
   },
+  pinnedConversations: {
+    heading: tStripped('upgradeTo'),
+    body: tStripped('proCallToActionPinnedConversationsMoreThan', { limit: '5' }),
+    negativeButton: tStripped('cancel'),
+    positiveButton: tStripped('theContinue'),
+    features: PIN_CTA_FEATURES,
+  },
   /**
-   * The pinned-conversation CTA a LAPSED subscriber sees, as distinct from the one a standard user sees.
+   * The same CTA raised by an account ALREADY holding more pins than the limit, which only a seeded
+   * config can produce.
    *
-   * The clients pick this body from two axes — whether the user is over the standard limit, and whether
-   * they previously subscribed — so "the pinned conversations CTA" is four different pieces of copy, not
-   * one. This is over-the-limit + previously-subscribed: the only cell reachable by letting a real
-   * subscription end, and the one `pinnedConversations` below would silently mismatch.
+   * A different token, not an oversight: the clients branch on it deliberately, and telling someone
+   * holding six pins "want more than 5 pins?" would read as nonsense. Android picks between the two in
+   * `ProComponents.kt`, crossed with whether the plan has expired.
+   */
+  pinnedConversationsOverLimit: {
+    heading: tStripped('upgradeTo'),
+    body: tStripped('proCallToActionPinnedConversations'),
+    negativeButton: tStripped('cancel'),
+    positiveButton: tStripped('theContinue'),
+    features: PIN_CTA_FEATURES,
+  },
+  /**
+   * The same CTA again for someone over the limit who PREVIOUSLY SUBSCRIBED, rather than never having.
    *
-   * Note the body takes no `limit`: the standard-user copy names the number it is offering to raise,
-   * and this one has nothing to name because the user already has more than it.
+   * The clients pick the body from two axes — over the standard limit or not, previously subscribed or
+   * not — so "the pinned conversations CTA" is four pieces of copy, not one. This is the cell reachable
+   * by letting a real subscription end, and it is the only one that asks to renew rather than upgrade.
    */
   pinnedConversationsRenew: {
     heading: tStripped('renew'),
     body: tStripped('proRenewPinMoreConversations'),
     negativeButton: tStripped('cancel'),
     positiveButton: tStripped('theContinue'),
-    features: [
-      tStripped('proFeatureListPinnedConversations'),
-      tStripped('proFeatureListLongerMessages'),
-      tStripped('proFeatureListLoadsMore'),
-    ],
-  },
-  pinnedConversations: {
-    heading: tStripped('upgradeTo'),
-    body: tStripped('proCallToActionPinnedConversationsMoreThan', { limit: '5' }),
-    negativeButton: tStripped('cancel'),
-    positiveButton: tStripped('theContinue'),
-    features: [
-      tStripped('proFeatureListPinnedConversations'),
-      tStripped('proFeatureListLongerMessages'),
-      tStripped('proFeatureListLoadsMore'),
-    ],
+    features: PIN_CTA_FEATURES,
   },
 };

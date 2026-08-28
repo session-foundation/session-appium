@@ -61,15 +61,18 @@ export class ConversationPinnedIcon extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
+        // Legacy xpath: the Android icon carries no content description, so it can only be reached
+        // through the row's hierarchy. See `iconPinned` in `view_conversation.xml`.
         return {
           strategy: 'xpath',
           selector: `//android.view.ViewGroup[android.widget.TextView[@content-desc='Conversation list item' and @text='${this.name}']]/android.widget.ImageView[@resource-id='network.loki.messenger:id/iconPinned']`,
         } as const;
       case 'ios':
-        // The marker is identical in every row, so iOS carries the conversation name in the IDENTIFIER
-        // rather than the label — a label would be read aloud, and the screen reader has already announced
-        // the name from the cell. Matching the composite id therefore ties the marker to its row without
-        // the id+text pairing that breaks whenever an id is added to an element.
+        // The marker is identical in every row, so the conversation name is what tells them apart, and
+        // `FullConversationCell` puts it in the IDENTIFIER rather than the label - a label would be read
+        // aloud right after the screen reader has already announced the same name from the cell. Matching
+        // the composite id also avoids pairing an id with text, which breaks the moment an id is added to
+        // an element: the display text moves to `@label` and the pair no longer matches.
         return {
           strategy: 'accessibility id',
           selector: `Pinned icon: ${this.name}`,

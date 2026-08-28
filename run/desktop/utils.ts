@@ -3,7 +3,7 @@
 // Also adapted: doWhileWithMax aborts on closed-window errors, and checkPathLight's default
 // timeout was lowered from 500000 to 20_000
 
-import { ElementHandle, expect, Page } from '@playwright/test';
+import { ElementHandle, Page } from '@playwright/test';
 
 import { ellipsizeForLog, MAX_SELECTOR_LOG_LENGTH, MAX_TEXT_LOG_LENGTH } from '../shared/log_text';
 import { sleepFor } from '../shared/promise_utils';
@@ -861,8 +861,9 @@ export function formatTimeOption(option: DMTimeOption) {
   return formattedTime;
 }
 
-// Shared cross-platform helper (mobile + desktop) lives in run/shared/url.ts.
+// Shared cross-platform helpers (mobile + desktop) live under run/shared/.
 export { assertUrlIsReachable } from '../shared/url';
+export { assertPinOrder } from '../shared/conversation_order';
 
 export async function scrollToBottomIfNecessary(window: Page): Promise<void> {
   const canScroll = await doesElementExist(window, Conversation.scrollToBottomButton);
@@ -883,27 +884,4 @@ export async function getConversationOrder(window: Page): Promise<string[]> {
   const items = await window.$$(`[data-testid="${HomeScreen.conversationItemName.selector}"]`);
   const texts = await Promise.all(items.map(item => item.innerText()));
   return texts.map(t => t.trim()).filter(t => t.length > 0);
-}
-
-// Asserts pinned conversations float to the top maintaining relative order,
-// followed by unpinned in their original order.
-// Pass an empty pinnedNames array to assert the order is fully restored (e.g. after unpinning).
-export function assertPinOrder(
-  beforeOrder: string[],
-  pinnedNames: string[],
-  afterOrder: string[]
-): void {
-  const pinnedSet = new Set(pinnedNames);
-  const pinnedExpected: string[] = [];
-  const unpinnedExpected: string[] = [];
-  for (const name of beforeOrder) {
-    if (pinnedSet.has(name)) {
-      pinnedExpected.push(name);
-    } else {
-      unpinnedExpected.push(name);
-    }
-  }
-  const expected = [...pinnedExpected, ...unpinnedExpected];
-
-  expect(afterOrder, 'Conversations are not in the correct order').toEqual(expected);
 }

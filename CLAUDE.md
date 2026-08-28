@@ -126,16 +126,11 @@ Only a subset matters per platform (all read in `run/test/utils/binaries.ts` /
     `vouchers.tsv` is mounted), so a rebuild invalidates `TEST_PRO_BACKEND_ED_PK`. A stale key is not a
     connection error: the client reads every proof as invalid and *silently strips Pro content*, which
     looks like an app bug. Re-read it from the logs after any recreate.
-  - **The local backend runs on a compressed clock**, so proofs live **~300s instead of ~30 days**
-    (`PROVIDER_TESTING_PROOF_EXPIRY_SHAPE`: 290s clamp, 10s "day", 1s renewal lead). The backend does
-    read `SESH_PRO_BACKEND_PROVIDER_TESTING_ENV`, but the compose stack never sets it —
-    `pro-backend/docker/entrypoint.sh` writes `provider_testing_env = true` straight into `config.ini`
-    instead, unconditionally. So `docker inspect` shows nothing and reads as "not in testing mode",
-    which is the opposite of the truth: check the `config.ini` or the startup log, not the container
-    env. The clients' `PRO_RENEWAL_LEAD` is a hardcoded 60 minutes and does not compress, so a renewal
-    target is permanently in the past. All three clients now absorb that with a 60s floor
-    (`lastProofRequestAt`) — Android's landed last and hot-looped until it did. Assume this before
-    diagnosing any Pro expiry, renewal or timing behaviour locally.
+  - **Proofs live a real ~30 days.** The backend no longer runs the compressed clock it once did, so
+    do not plan a spec around a proof lapsing inside a run — nothing expires on its own any more, and a
+    test that waits for one waits forever. Seeder actions take a `durationSeconds` for that instead
+    (`grantProPayment`, `fetchProProof`, `sendProMessage`), which is the only way to get a short-lived
+    entitlement now. Read the expiry the seeder returns rather than assuming either shape.
 
   `pnpm test-pro-keys` pins the Pro master-key derivation to libsession's committed vectors, with no
   device and no backend — the cheapest first check when a grant appears not to take.
@@ -327,6 +322,39 @@ an existing spec (e.g. `run/test/specs/app_disguise_icons.spec.ts`).
   - The `text` filter is an **exact** match after normalisation (`findMatchingTextInElementArray`),
     not a substring one — asserting a prefix of a long message fails against a body that is present
     and correct.
+- **Address by id, then assert the copy.** An id says the client rendered the right *control*; only the
+  copy says it rendered the right *words* in it, and the two fail independently — a control keeps its
+  identifier through a copy change, so an id-only lookup stays green against a wrong, empty or swapped
+  string. On a destructive or irreversible flow that is the difference between pressing Cancel and
+  pressing Clear. So a spec that acts on a labelled control should check both.
+
+  Where the copy lives is per-platform, and it is not a preference:
+
+  - **iOS** puts it on `label`. An accessibility identifier becomes the element's `name` and displaces
+    the display text, so `label` is the only place left (`findMatchingLabelInElementArray`).
+  - **Desktop** takes `text` in `waitForElement`'s options — `:has-text()`, already a substring match.
+  - **Android** Compose *controls* report no text of their own: the label is a child node, so the node
+    addressed by id has nothing to compare. Only text-bearing nodes (a dialog body, a heading) can be
+    checked in place. `expectControlCopy` (`run/test/utils/element_copy.ts`) does the platform split and
+    skips loudly rather than passing quietly.
+
+  A trap worth knowing about copy that spans a `<br/>`. `tStripped` collapses the break to a single
+  space, and a locator `text`/`label` filter compares against the raw rendered value — where the break
+  is a newline on mobile and nothing at all in a DOM `textContent`. So the filter never matches. Read
+  the element, **collapse its whitespace** (`replace(/\s+/g, ' ').trim()`), and assert `toContain` the
+  whole `tStripped` token; do not assert a fragment, which pins less. And where an Android id is *derived from* the
+  display string — `AlertDialog` falls back to a button's own text when the call site gives it no
+  `qaTag` — the id lookup already covers the copy, but say so, because that is a property of the call
+  site and not of the locator.
+- **Desktop already has the primitives for both halves — use them rather than hand-rolling.**
+  `clickOnWithText(locator, text)` is the id-plus-copy click. `checkModalStrings(heading, description,
+  modalId)` asserts a modal's title and body together, scoped to `[data-modal-id="…"]` so another modal
+  carrying the same generic `modal-description` slot cannot satisfy it. Reach for a bare
+  `waitForElement` on `modal-description` only when there is no modal id to scope to.
+
+  `checkModalStrings` does that normalisation for you: it reads `innerText`, where a break renders as a
+  newline, then collapses whitespace — landing on exactly what `tStripped` produces for the same token.
+  Verified against `proClearAllDataDevice`, which spans two breaks.
 - `runOnlyOnIOS` / `runOnlyOnAndroid` (`run/test/utils/run_on.ts`) gate
   platform-specific steps inside a shared spec.
 - Lint/format: `pnpm lint` (prettier + eslint). `pnpm tsc` for typecheck.
