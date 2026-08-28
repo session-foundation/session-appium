@@ -152,9 +152,9 @@ type PickerCandidates = { name?: string; type: 'XCUIElementTypeCell' | 'XCUIElem
 /**
  * Pull the candidates' rects straight out of the page source.
  *
- * Deliberately not an element query: the tree carries `x`/`y`/`width`/`height` already, and asking
- * XCUITest for the same elements costs multiples of reading them. Measured on the profile-picture
- * picker: 4969ms for `//XCUIElementTypeImage` against 1352ms for the whole page source.
+ * The tree already carries `x`/`y`/`width`/`height`, so this is a parse rather than an element query.
+ * Asking XCUITest for the same elements costs multiples of reading them: on the profile-picture picker,
+ * 4969ms for `//XCUIElementTypeImage` against 1352ms for the whole page source.
  *
  * `visible` is not consulted. Every element in that picker reports `visible="false"` — the app is behind
  * a sheet and the grid's own thumbnails are marked the same way — so filtering on it discards the
@@ -1238,8 +1238,8 @@ export class DeviceWrapper implements IMobileWrapper {
 
     /**
      * The picker's grid populates after its chrome does, so an empty result means "not yet", not "not
-     * there". Measured: `Collections` resolves while the grid is still loading, and everything queried at
-     * that moment belongs to the app underneath the sheet.
+     * there". `Collections` resolves while the grid is still loading, and everything queried at that
+     * moment belongs to the app underneath the sheet.
      */
     let source = await this.getPageSource();
     let rects = parsePickerRects(source, type, name);
