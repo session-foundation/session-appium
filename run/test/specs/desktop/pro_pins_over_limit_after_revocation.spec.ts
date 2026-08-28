@@ -18,9 +18,9 @@ const PINS_WHILE_PRO = STANDARD_PIN_LIMIT + 1;
 /**
  * The desktop half of "pins over the standard limit survive Pro being revoked".
  *
- * `pin_unpin_limit` covers the two static states — five for a standard user, more for a subscriber —
- * and no desktop spec crosses between them: of the six that call `revokeAccountPro`, none touches a pin.
- * So the transition is untested here, and it is the one a real subscriber goes through.
+ * `pin_unpin_limit` covers the two static states — five pins for a standard user, more for a subscriber.
+ * This covers the transition between them, which is the path a real subscriber takes and which neither
+ * static case exercises.
  *
  * Not a mirror of the mobile spec. Desktop selects its own CTA copy through
  * `UseTogglePinConversationHandler`, which picks `PRO_PINNED_CONVERSATION_LIMIT_GRANDFATHERED` when the

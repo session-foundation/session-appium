@@ -109,8 +109,8 @@ async function nonProPinnedLimit(platform: SupportedPlatformsType, testInfo: Tes
   await test.step('Capture conversation order before pinning', async () => {
     beforeOrder = await getConversationOrder(device);
   });
-  // Deliberately not the first N. `assertPinOrder` partitions `beforeOrder` into pinned and unpinned and
-  // expects the pinned ones first, so for a prefix selection the expected order is `beforeOrder` itself
+  // The pinned set must not be a PREFIX of `beforeOrder`. `assertPinOrder` partitions it into pinned and
+  // unpinned and expects the pinned ones first, so for a prefix the expected order is `beforeOrder` itself
   // and the assertion cannot fail. Every order assertion below depends on this offset.
   const toPin = contactNames.slice(1, STANDARD_PIN_LIMIT + 1);
   const overLimit = contactNames[STANDARD_PIN_LIMIT + 1];

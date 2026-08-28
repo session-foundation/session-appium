@@ -2937,8 +2937,8 @@ export class DeviceWrapper implements IMobileWrapper {
      *
      * The click returns before the modal has finished closing, so the next step can land on the overlay
      * and fail looking for whatever is behind it — several steps from the dismissal, and reading as a
-     * missing control rather than a modal that is still up. Measured on Android: the renew CTA was still
-     * on screen when the spec went looking for the home screen, and the failure named the plus button.
+     * missing control rather than a modal that is still up: on Android a CTA can still be on screen when
+     * a spec goes looking for the home screen, and the failure then names the plus button.
      *
      * Waits on the heading, the same element the presence check above reads, so a dismissal is confirmed
      * against the thing that defined the CTA as showing in the first place.

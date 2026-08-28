@@ -81,10 +81,10 @@ async function pinsOverLimitAfterRevocation(platform: SupportedPlatformsType, te
   // Pinned only after the grant. Doing it earlier would stop at the standard limit, which is the thing
   // being escaped — and would read as this spec passing while testing the ordinary case.
   //
-  // Deliberately NOT the first N. `assertPinOrder` expects the pinned names hoisted to the top of the
-  // order they already had, so pinning a PREFIX of an already-ordered list expects the list unchanged, and
-  // every assertion below then passes whether or not anything was pinned. Skipping the first contact is
-  // what gives those assertions something to fail on.
+  // The pinned set must not be a PREFIX of the starting order. `assertPinOrder` expects the pinned names
+  // hoisted to the top of the order they already had, so for a prefix the expected order is the starting
+  // one and every assertion below holds whether or not anything was pinned. The offset is what gives them
+  // something to fail on.
   const pinned = contactNames.slice(1, PINS_WHILE_PRO + 1);
   /** Never pinned, so opening it as a composer does not disturb the order under test. */
   const spare = contactNames[0];
@@ -134,10 +134,10 @@ async function pinsOverLimitAfterRevocation(platform: SupportedPlatformsType, te
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Pinned Conversations CTA'), async () => {
     await device.pinConversation(overLimit);
     await device.checkCTA('pinnedConversationsRenew');
-    // Dismissed through `dismissCTA` rather than clicking the button directly: the click returns before
-    // the modal closes, and the next step reads the conversation list behind it. Measured on Android —
-    // the renew CTA was still on screen when the order assertion ran, and the failure named the plus
-    // button rather than the modal.
+    // Dismissed through `dismissCTA` rather than by clicking the button, because the click returns before
+    // the modal closes and the next step reads the conversation list behind it. On Android the CTA can
+    // still be on screen when the order assertion runs, and the failure then names the plus button rather
+    // than the modal that caused it.
     await device.dismissCTA('negativeButton');
   });
 
