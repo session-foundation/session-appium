@@ -1,19 +1,22 @@
-import { spawn, spawnSync } from 'child_process';
+import { spawnSync } from 'child_process';
 import dotenv from 'dotenv';
-
-import type { ServiceNetwork } from '../run/types/target';
 
 import {
   ANDROID_PARALLEL_TIER_NAMES,
   ANDROID_PARALLEL_TIERS,
   type AndroidParallelTierName,
-  devicesRequired,
-  type ParallelPass,
-  passGrep,
 } from '../run/constants/parallelism';
 import { getAdbFullPath } from '../run/test/utils/binaries';
-import { ALLOWED_NETWORKS } from '../run/test/utils/network_target';
 import { BASE_PORT, MAX_EMULATORS } from './android_config';
+import {
+  type ParallelArgsBase,
+  parseParallelArgs,
+  printTiers,
+  printTierSummary,
+  runPlaywright,
+  runTierPasses,
+  validateParallelArgs,
+} from './parallel_shared';
 
 /**
  * Parallel Android test runner — the counterpart of `run_ios_parallel.ts`.
@@ -50,81 +53,23 @@ dotenv.config({ quiet: true });
 
 const DEFAULT_GREP = '@android';
 
-type ParsedArgs = {
-  workers: number;
-  devicesPerWorker: number;
-  grep: string;
-  tier?: AndroidParallelTierName;
-  listTiers: boolean;
-  /** Set when the caller passed --workers/--devices-per-worker, so --tier can reject the combination. */
-  explicitPools: boolean;
-  network?: string;
-  passthrough: string[];
-};
+type ParsedArgs = ParallelArgsBase & { tier?: AndroidParallelTierName };
 
 function parseArgs(argv: string[]): ParsedArgs {
-  const args: ParsedArgs = {
-    workers: 1,
-    devicesPerWorker: 4,
-    grep: DEFAULT_GREP,
-    listTiers: false,
-    explicitPools: false,
-    passthrough: [],
-  };
-
-  // Everything after a lone `--` is forwarded verbatim to Playwright.
-  const sepIndex = argv.indexOf('--');
-  const ownArgs = sepIndex === -1 ? argv : argv.slice(0, sepIndex);
-  if (sepIndex !== -1) {
-    args.passthrough = argv.slice(sepIndex + 1);
-  }
-
-  // Accepts both `--flag value` and `--flag=value`.
-  const readValue = (current: string, next: string | undefined): [string, boolean] => {
-    const eq = current.indexOf('=');
-    if (eq !== -1) {
-      return [current.slice(eq + 1), false];
-    }
-    return [next ?? '', true];
-  };
-
-  for (let i = 0; i < ownArgs.length; i++) {
-    const arg = ownArgs[i];
-    if (arg === '--list-tiers') {
-      args.listTiers = true;
-    } else if (arg.startsWith('--tier')) {
-      const [value, consumedNext] = readValue(arg, ownArgs[i + 1]);
-      if (!ANDROID_PARALLEL_TIER_NAMES.includes(value as AndroidParallelTierName)) {
-        console.error(`Invalid --tier "${value}". Use ${ANDROID_PARALLEL_TIER_NAMES.join(' | ')}.`);
-        process.exit(1);
-      }
-      args.tier = value as AndroidParallelTierName;
-      if (consumedNext) i++;
-    } else if (arg.startsWith('--workers')) {
-      const [value, consumedNext] = readValue(arg, ownArgs[i + 1]);
-      args.workers = parseInt(value);
-      args.explicitPools = true;
-      if (consumedNext) i++;
-    } else if (arg.startsWith('--devices-per-worker')) {
-      const [value, consumedNext] = readValue(arg, ownArgs[i + 1]);
-      args.devicesPerWorker = parseInt(value);
-      args.explicitPools = true;
-      if (consumedNext) i++;
-    } else if (arg.startsWith('--grep')) {
-      const [value, consumedNext] = readValue(arg, ownArgs[i + 1]);
-      args.grep = value;
-      if (consumedNext) i++;
-    } else if (arg.startsWith('--network')) {
-      const [value, consumedNext] = readValue(arg, ownArgs[i + 1]);
-      args.network = value;
-      if (consumedNext) i++;
-    } else {
-      console.error(`Unknown argument: "${arg}". Forward Playwright args after a "--" separator.`);
-      process.exit(1);
-    }
-  }
-
-  return args;
+  return parseParallelArgs<ParsedArgs>({
+    argv,
+    tierNames: ANDROID_PARALLEL_TIER_NAMES,
+    defaults: {
+      // Defaults to the whole suite on one worker: the pool has to be booted already, so guessing at
+      // a wider one would fail the pool check rather than run anything.
+      workers: 1,
+      devicesPerWorker: 4,
+      grep: DEFAULT_GREP,
+      listTiers: false,
+      explicitPools: false,
+      passthrough: [],
+    },
+  });
 }
 
 /** The udids a pool of `count` emulators occupies, in the order the suite allocates them. */
@@ -160,14 +105,7 @@ function attachedEmulators(): Set<string> {
  * `Invalid actual capability given: N`, which reads as a suite bug rather than a missing emulator.
  */
 function requirePool(needed: number): void {
-  if (needed > MAX_EMULATORS) {
-    console.error(
-      `This run needs ${needed} emulators but the suite declares ${MAX_EMULATORS} udids ` +
-        `(MAX_EMULATORS in scripts/android_config.ts).`
-    );
-    process.exit(1);
-  }
-
+  // `needed <= MAX_EMULATORS` already, from the shared validator.
   const wanted = poolUdids(needed);
   const attached = attachedEmulators();
   const missing = wanted.filter(udid => !attached.has(udid));
@@ -189,97 +127,28 @@ function validate(args: ParsedArgs): number {
     console.error('ANDROID_APK is not set — point it at a QA/AQA build first.');
     process.exit(1);
   }
-  // Validated before anything runs: an unknown value (a "devent" typo) would otherwise be caught
-  // only once global-setup resolves the network, after the pool check has already passed.
-  if (args.network && !ALLOWED_NETWORKS.includes(args.network as ServiceNetwork)) {
-    console.error(`Invalid --network "${args.network}". Use ${ALLOWED_NETWORKS.join(' | ')}.`);
-    process.exit(1);
-  }
 
-  if (args.tier) {
-    if (args.explicitPools) {
-      console.error(
-        '--tier sets the workers and devices for each pass; drop --workers/--devices-per-worker.'
-      );
-      process.exit(1);
-    }
-    return devicesRequired(ANDROID_PARALLEL_TIERS[args.tier]);
-  }
-
-  if (!Number.isInteger(args.workers) || args.workers < 1) {
-    console.error(`--workers must be a positive integer, got "${args.workers}".`);
-    process.exit(1);
-  }
-  if (!Number.isInteger(args.devicesPerWorker) || args.devicesPerWorker < 1) {
-    console.error(
-      `--devices-per-worker must be a positive integer, got "${args.devicesPerWorker}".`
-    );
-    process.exit(1);
-  }
-
-  return args.workers * args.devicesPerWorker;
-}
-
-function printTiers(): void {
-  console.log(
-    '\nAvailable tiers (worker counts are unmeasured — see run/constants/parallelism.ts):\n'
-  );
-  for (const name of ANDROID_PARALLEL_TIER_NAMES) {
-    const tier = ANDROID_PARALLEL_TIERS[name];
-    console.log(`  ${name} — ${tier.summary}`);
-    console.log(`    emulators needed: ${devicesRequired(tier)}`);
-    for (const pass of tier.passes) {
-      console.log(
-        `      @${pass.devices}-devices  x${pass.workers} worker(s)  ` +
-          `(${pass.devices * pass.workers} emulators)`
-      );
-    }
-    console.log('');
-  }
-}
-
-/** Runs one Playwright invocation to completion and resolves with its exit status. */
-function runPlaywright(playwrightArgs: string[], env: NodeJS.ProcessEnv): Promise<number> {
-  return new Promise((resolve, reject) => {
-    console.log(`\nRunning: npx ${playwrightArgs.join(' ')}\n`);
-    const child = spawn('npx', playwrightArgs, { stdio: 'inherit', env });
-
-    // Attached per invocation and detached on exit. A tiered run spawns one child per pass, so
-    // leaving these registered would leak listeners and signal already-dead children.
-    const forward = (signal: NodeJS.Signals) => () => child.kill(signal);
-    const onInt = forward('SIGINT');
-    const onTerm = forward('SIGTERM');
-    process.on('SIGINT', onInt);
-    process.on('SIGTERM', onTerm);
-    const detach = () => {
-      process.off('SIGINT', onInt);
-      process.off('SIGTERM', onTerm);
-    };
-
-    child.on('error', err => {
-      detach();
-      reject(err);
-    });
-    child.on('exit', (code, signal) => {
-      detach();
-      resolve(code ?? (signal ? 1 : 0));
-    });
+  return validateParallelArgs({
+    args,
+    tiers: ANDROID_PARALLEL_TIERS,
+    maxDevices: MAX_EMULATORS,
+    deviceNoun: 'emulator',
   });
 }
 
-function printTierSummary(name: string, results: { pass: ParallelPass; code: number }[]): void {
-  console.log(`\n=== tier "${name}" summary ===`);
-  for (const { pass, code } of results) {
-    const status = code === 0 ? 'pass' : `FAILED (exit ${code})`;
-    console.log(`  @${pass.devices}-devices x${pass.workers} worker(s): ${status}`);
-  }
-  console.log('');
+function showTiers(): void {
+  printTiers({
+    tiers: ANDROID_PARALLEL_TIERS,
+    tierNames: ANDROID_PARALLEL_TIER_NAMES,
+    deviceNoun: 'emulator',
+    preamble: 'Available tiers (worker counts are unmeasured — see run/constants/parallelism.ts):',
+  });
 }
 
 async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2));
   if (args.listTiers) {
-    printTiers();
+    showTiers();
     return;
   }
 
@@ -298,54 +167,31 @@ async function main(): Promise<void> {
     childEnv.NETWORK_TARGET = args.network;
   }
 
+  // `--project mobile` because the Android specs share the project with iOS and, unlike `@ios`, the
+  // `@android` tag alone does not exclude the desktop project's own titles.
+  const projectArgs = ['--project', 'mobile'];
+
   try {
     if (args.tier) {
-      const tier = ANDROID_PARALLEL_TIERS[args.tier];
-      const results: { pass: ParallelPass; code: number }[] = [];
-
-      for (const pass of tier.passes) {
-        // The pass owns the platform and device-count filter; a caller-supplied --grep is ANDed on
-        // top as a further lookahead rather than replacing it.
-        const grep =
-          args.grep === DEFAULT_GREP
-            ? passGrep(pass, 'android')
-            : `${passGrep(pass, 'android')}(?=.*${args.grep})`;
-
-        console.log(
-          `\n=== tier "${args.tier}": @${pass.devices}-devices, ${pass.workers} worker(s), ` +
-            `${pass.devices * pass.workers} emulator(s) ===`
-        );
-
-        const code = await runPlaywright(
-          [
-            'playwright',
-            'test',
-            '--project',
-            'mobile',
-            '--grep',
-            grep,
-            // An empty pass is not a failure: an extra --grep can legitimately clear one device
-            // class while the others still have work to do.
-            '--pass-with-no-tests',
-            ...args.passthrough,
-          ],
-          {
-            ...childEnv,
-            DEVICES_PER_TEST_COUNT: String(pass.devices),
-            PLAYWRIGHT_WORKERS_COUNT_ANDROID: String(pass.workers),
-          }
-        );
-        // Deliberately not bailing on the first failure — a regression run is worth completing so
-        // you see every device class, not just up to the first one that broke.
-        results.push({ pass, code });
-      }
+      const results = await runTierPasses({
+        tierName: args.tier,
+        tier: ANDROID_PARALLEL_TIERS[args.tier],
+        platform: 'android',
+        grep: args.grep,
+        defaultGrep: DEFAULT_GREP,
+        workersEnvVar: 'PLAYWRIGHT_WORKERS_COUNT_ANDROID',
+        deviceNoun: 'emulator',
+        baseEnv: childEnv,
+        playwrightArgs: projectArgs,
+        passthrough: args.passthrough,
+      });
 
       printTierSummary(args.tier, results);
       process.exit(results.some(r => r.code !== 0) ? 1 : 0);
     }
 
     const code = await runPlaywright(
-      ['playwright', 'test', '--project', 'mobile', '--grep', args.grep, ...args.passthrough],
+      ['playwright', 'test', ...projectArgs, '--grep', args.grep, ...args.passthrough],
       childEnv
     );
     // Preserve the child's exit status so CI/other callers see the real result.
