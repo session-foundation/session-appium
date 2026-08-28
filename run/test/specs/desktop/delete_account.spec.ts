@@ -34,11 +34,12 @@ sessionTestTwoWindows('Delete account from swarm', async ([windowA, windowB]) =>
     // Confirm deletion by clicking Clear, twice
     await windowA.clickOnMatchingText(tStripped('clear'));
     await windowA.clickOnMatchingText(tStripped('clear'));
-    await windowA.waitForLoadingAnimationToFinish(Global.loadingSpinner.selector);
-    // await sleepFor(7500);
-    // Wait for window to close and reopen
-
-    // await windowA.close();
+    // The delete restarts the app, so the spinner is optional at both ends: on a fast network it
+    // can be gone before we look, and when we do catch it, it leaves with the window.
+    await windowA.waitForLoadingAnimationToFinish(Global.loadingSpinner.selector, {
+      appearWithinMs: 1_000,
+      windowMayClose: true,
+    });
     restoringWindows = await openAppsAndWaitWindows(1); // not using sessionTest here as we need to close and reopen one of the window
     const [restoringWindowPage] = restoringWindows;
     const restoringWindow = new DesktopWrapper(restoringWindowPage, 'alice-restoring');

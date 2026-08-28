@@ -4,6 +4,7 @@ import { isString } from 'lodash';
 
 import type { ProContext } from './pro_context';
 
+import { BASE_PORT, MAX_EMULATORS } from '../../../scripts/android_config';
 import { getAndroidApk } from './binaries';
 import { buildAndroidLaunchExtras } from './devnet_android';
 dotenv.config({ quiet: true });
@@ -49,7 +50,13 @@ const sharedCapabilities: W3CUiautomator2DriverCaps['alwaysMatch'] = {
   'appium:enforceAppInstall': true,
 };
 
-const udids = ['emulator-5554', 'emulator-5556', 'emulator-5558', 'emulator-5560'];
+// Derived rather than listed: the pool size and the port step already live in `android_config`, and
+// spelling the udids out here meant growing the pool was a two-file change with nothing to catch a
+// half-done one.
+const udids = Array.from(
+  { length: MAX_EMULATORS },
+  (_, i) => `emulator-${BASE_PORT + i * 2}` as const
+);
 
 const emulatorCapabilities: W3CUiautomator2DriverCaps['alwaysMatch'][] = udids.map(udid => ({
   ...sharedCapabilities,

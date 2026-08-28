@@ -6,8 +6,6 @@ import { mediaFolder } from '../../constants/testfiles';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 
 const TARGET_GROUP_ID = 'group.com.apple.FileProvider.LocalStorage';
-/** The one fixture directory, shared with `create_ios_simulators`, so the two cannot drift apart. */
-const MEDIA_ROOT = mediaFolder;
 
 /**
  * Utility for copying a file from the local fixture directory to the current iOS simulator's
@@ -46,7 +44,7 @@ function getSimulatorDownloadsPath(
  * Copies a file from the fixture directory to the simulator's "Downloads" folder on disk if not already present.
  */
 export function copyFileToSimulator(device: DeviceWrapper, fileName: string): void {
-  const sourcePath = path.join(MEDIA_ROOT, fileName);
+  const sourcePath = path.join(mediaFolder, fileName);
 
   const groupContainerPath = getFilesAppGroupContainerPath(device.udid);
   const { downloadsPath, destinationPath } = getSimulatorDownloadsPath(

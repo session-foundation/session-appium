@@ -1,21 +1,15 @@
-import { spawn } from 'child_process';
 import dotenv from 'dotenv';
-
-import type { ServiceNetwork } from '../run/types/target';
 
 import {
   PARALLEL_TIER_NAMES,
   PARALLEL_TIERS,
-  type ParallelPass,
   type ParallelTierName,
-  passGrep,
-  simulatorsRequired,
 } from '../run/constants/parallelism';
 import { type Simulator } from '../run/test/utils/capabilities_ios';
-import { ALLOWED_NETWORKS } from '../run/test/utils/network_target';
 import { ensureWdaBuilt } from './build_wda';
 import { createIOSSimulators, resolveDeviceConfig } from './create_ios_simulators';
 import { deleteSimulators } from './ios_shared';
+import { type ParallelArgsBase, runParallelSuite } from './parallel_shared';
 
 /**
  * Self-contained parallel iOS test runner.
@@ -81,139 +75,11 @@ const MAX_SIMULATORS = 12;
 
 const DEFAULT_GREP = '@ios';
 
-type ParsedArgs = {
-  workers: number;
-  devicesPerWorker: number;
-  grep: string;
+type ParsedArgs = ParallelArgsBase & {
   keep: boolean;
   tier?: ParallelTierName;
-  listTiers: boolean;
-  /** Set when the caller passed --workers/--devices-per-worker, so --tier can reject the combination. */
-  explicitPools: boolean;
   runtime?: string;
-  network?: string;
-  passthrough: string[];
 };
-
-function parseArgs(argv: string[]): ParsedArgs {
-  const args: ParsedArgs = {
-    workers: 2,
-    devicesPerWorker: 2,
-    grep: DEFAULT_GREP,
-    keep: false,
-    listTiers: false,
-    explicitPools: false,
-    passthrough: [],
-  };
-
-  // Everything after a lone `--` is forwarded verbatim to Playwright.
-  const sepIndex = argv.indexOf('--');
-  const ownArgs = sepIndex === -1 ? argv : argv.slice(0, sepIndex);
-  if (sepIndex !== -1) {
-    args.passthrough = argv.slice(sepIndex + 1);
-  }
-
-  // Accepts both `--flag value` and `--flag=value`.
-  const readValue = (current: string, next: string | undefined): [string, boolean] => {
-    const eq = current.indexOf('=');
-    if (eq !== -1) {
-      return [current.slice(eq + 1), false];
-    }
-    return [next ?? '', true];
-  };
-
-  for (let i = 0; i < ownArgs.length; i++) {
-    const arg = ownArgs[i];
-    if (arg === '--keep') {
-      args.keep = true;
-    } else if (arg === '--list-tiers') {
-      args.listTiers = true;
-    } else if (arg.startsWith('--tier')) {
-      const [value, consumedNext] = readValue(arg, ownArgs[i + 1]);
-      if (!PARALLEL_TIER_NAMES.includes(value as ParallelTierName)) {
-        console.error(`Invalid --tier "${value}". Use ${PARALLEL_TIER_NAMES.join(' | ')}.`);
-        process.exit(1);
-      }
-      args.tier = value as ParallelTierName;
-      if (consumedNext) i++;
-    } else if (arg.startsWith('--workers')) {
-      const [value, consumedNext] = readValue(arg, ownArgs[i + 1]);
-      args.workers = parseInt(value);
-      args.explicitPools = true;
-      if (consumedNext) i++;
-    } else if (arg.startsWith('--devices-per-worker')) {
-      const [value, consumedNext] = readValue(arg, ownArgs[i + 1]);
-      args.devicesPerWorker = parseInt(value);
-      args.explicitPools = true;
-      if (consumedNext) i++;
-    } else if (arg.startsWith('--grep')) {
-      const [value, consumedNext] = readValue(arg, ownArgs[i + 1]);
-      args.grep = value;
-      if (consumedNext) i++;
-    } else if (arg.startsWith('--runtime')) {
-      const [value, consumedNext] = readValue(arg, ownArgs[i + 1]);
-      args.runtime = value;
-      if (consumedNext) i++;
-    } else if (arg.startsWith('--network')) {
-      const [value, consumedNext] = readValue(arg, ownArgs[i + 1]);
-      args.network = value;
-      if (consumedNext) i++;
-    } else {
-      console.error(`Unknown argument: "${arg}". Forward Playwright args after a "--" separator.`);
-      process.exit(1);
-    }
-  }
-
-  return args;
-}
-
-function validate(args: ParsedArgs): number {
-  if (!process.env.IOS_APP_PATH_PREFIX) {
-    console.error('IOS_APP_PATH_PREFIX is not set — point it at a simulator Session.app first.');
-    process.exit(1);
-  }
-  // Validate --network before provisioning: an unknown value (e.g. a "devent" typo) would
-  // otherwise create the whole simulator pool and spawn Playwright before failing downstream.
-  if (args.network && !ALLOWED_NETWORKS.includes(args.network as ServiceNetwork)) {
-    console.error(`Invalid --network "${args.network}". Use ${ALLOWED_NETWORKS.join(' | ')}.`);
-    process.exit(1);
-  }
-  if (args.tier) {
-    if (args.explicitPools) {
-      console.error(
-        `--tier sets devices-per-worker and workers per pass, so it cannot be combined with ` +
-          `--workers / --devices-per-worker. Drop one or the other.`
-      );
-      process.exit(1);
-    }
-    const needed = simulatorsRequired(PARALLEL_TIERS[args.tier]);
-    if (needed > MAX_SIMULATORS) {
-      console.error(
-        `Tier "${args.tier}" needs ${needed} simulators, but the maximum is ${MAX_SIMULATORS}.`
-      );
-      process.exit(1);
-    }
-    return needed;
-  }
-  if (isNaN(args.workers) || args.workers < 1) {
-    console.error(`Invalid --workers value: ${args.workers}`);
-    process.exit(1);
-  }
-  if (isNaN(args.devicesPerWorker) || args.devicesPerWorker < 1) {
-    console.error(`Invalid --devices-per-worker value: ${args.devicesPerWorker}`);
-    process.exit(1);
-  }
-  const totalSimulators = args.workers * args.devicesPerWorker;
-  if (totalSimulators > MAX_SIMULATORS) {
-    console.error(
-      `Requested ${args.workers} workers x ${args.devicesPerWorker} devices-per-worker = ` +
-        `${totalSimulators} simulators, but the maximum is ${MAX_SIMULATORS}. ` +
-        `Lower --workers or --devices-per-worker.`
-    );
-    process.exit(1);
-  }
-  return totalSimulators;
-}
 
 function printKeepInfo(simulators: Simulator[]): void {
   console.log(`\nLeaving ${simulators.length} simulator(s) in place (--keep).`);
@@ -224,67 +90,18 @@ function printKeepInfo(simulators: Simulator[]): void {
   console.log('`xcrun simctl delete <udid>`.\n');
 }
 
-function printTiers(): void {
-  console.log('\nAvailable tiers (see run/constants/parallelism.ts for the measurements):\n');
-  for (const name of PARALLEL_TIER_NAMES) {
-    const tier = PARALLEL_TIERS[name];
-    console.log(`  ${name} — ${tier.summary}`);
-    console.log(`    simulators needed: ${simulatorsRequired(tier)}`);
-    for (const pass of tier.passes) {
-      console.log(
-        `      @${pass.devices}-devices  x${pass.workers} worker(s)  ` +
-          `(${pass.devices * pass.workers} sims)`
-      );
-    }
-    console.log('');
+/**
+ * The throwaway pool, which is all this runner does that the Android one cannot.
+ *
+ * The UDIDs go into the child's environment only: `capabilities_ios` reads IOS_N_SIMULATOR from
+ * process.env and its own `dotenv.config()` does not override an already-set var, so these win over
+ * any .env entries and the developer's .env is left untouched.
+ */
+function createPool(args: ParsedArgs, totalSimulators: number) {
+  if (!process.env.IOS_APP_PATH_PREFIX) {
+    console.error('IOS_APP_PATH_PREFIX is not set — point it at a simulator Session.app first.');
+    process.exit(1);
   }
-}
-
-/** Runs one Playwright invocation to completion and resolves with its exit status. */
-function runPlaywright(playwrightArgs: string[], env: NodeJS.ProcessEnv): Promise<number> {
-  return new Promise((resolve, reject) => {
-    console.log(`\nRunning: npx ${playwrightArgs.join(' ')}\n`);
-    const child = spawn('npx', playwrightArgs, { stdio: 'inherit', env });
-
-    // Attached per invocation and detached on exit. A tiered run spawns one child per pass, so
-    // leaving these registered would leak listeners and signal already-dead children.
-    const forward = (signal: NodeJS.Signals) => () => child.kill(signal);
-    const onInt = forward('SIGINT');
-    const onTerm = forward('SIGTERM');
-    process.on('SIGINT', onInt);
-    process.on('SIGTERM', onTerm);
-    const detach = () => {
-      process.off('SIGINT', onInt);
-      process.off('SIGTERM', onTerm);
-    };
-
-    child.on('error', err => {
-      detach();
-      reject(err);
-    });
-    child.on('exit', (code, signal) => {
-      detach();
-      resolve(code ?? (signal ? 1 : 0));
-    });
-  });
-}
-
-function printTierSummary(name: string, results: { pass: ParallelPass; code: number }[]): void {
-  console.log(`\n=== tier "${name}" summary ===`);
-  for (const { pass, code } of results) {
-    const status = code === 0 ? 'pass' : `FAILED (exit ${code})`;
-    console.log(`  @${pass.devices}-devices x${pass.workers} worker(s): ${status}`);
-  }
-  console.log('');
-}
-
-async function main(): Promise<void> {
-  const args = parseArgs(process.argv.slice(2));
-  if (args.listTiers) {
-    printTiers();
-    return;
-  }
-  const totalSimulators = validate(args);
 
   // Build the WebDriverAgent runner once up front so the driver reuses it across every simulator
   // instead of building/launching WDA per session (the slowest, flakiest part of a cold-sim
@@ -299,95 +116,49 @@ async function main(): Promise<void> {
   const deviceConfig = resolveDeviceConfig({ runtime: args.runtime });
   const simulators = createIOSSimulators({ ...deviceConfig, totalSimulators });
 
-  // Inject the freshly-created UDIDs into the child's environment only. capabilities_ios reads
-  // IOS_N_SIMULATOR from process.env; dotenv.config() there does NOT override already-set vars,
-  // so these win over any .env entries and the developer's .env is left untouched.
-  const childEnv: NodeJS.ProcessEnv = { ...process.env };
+  const env: NodeJS.ProcessEnv = {};
   simulators.forEach((sim, i) => {
-    childEnv[`IOS_${i + 1}_SIMULATOR`] = sim.udid;
+    env[`IOS_${i + 1}_SIMULATOR`] = sim.udid;
   });
-  childEnv.PLATFORM = 'ios';
-  childEnv.PLAYWRIGHT_WORKERS_COUNT_IOS = String(args.workers);
-  childEnv.DEVICES_PER_TEST_COUNT = String(args.devicesPerWorker);
-  childEnv._TESTING = childEnv._TESTING ?? '1';
-  // Service network selection. Devnet also needs DEVNET_SEED_URL in .env — the pubkey and storage
-  // ports are discovered from that seed node (see run/test/utils/network_target.ts), so nothing else
-  // is required. Left unset here so .env's NETWORK_TARGET is respected.
-  if (args.network) {
-    childEnv.NETWORK_TARGET = args.network;
-  }
 
-  let cleanedUp = false;
-  const cleanup = () => {
-    if (cleanedUp) {
-      return;
-    }
-    cleanedUp = true;
-    if (args.keep) {
-      printKeepInfo(simulators);
-      return;
-    }
-    console.log('\nDeleting temporary simulators...');
-    const deleted = deleteSimulators(simulators.map(s => s.udid));
-    console.log(`✓ Deleted ${deleted} simulator(s)`);
-  };
-
-  try {
-    if (args.tier) {
-      const tier = PARALLEL_TIERS[args.tier];
-      const results: { pass: ParallelPass; code: number }[] = [];
-
-      for (const pass of tier.passes) {
-        // The pass owns the platform and device-count filter; a caller-supplied --grep is ANDed on
-        // top as a further lookahead rather than replacing it, so `--grep '@ios @high-risk'` narrows
-        // each pass instead of selecting the wrong device class.
-        const grep =
-          args.grep === DEFAULT_GREP ? passGrep(pass) : `${passGrep(pass)}(?=.*${args.grep})`;
-
-        console.log(
-          `\n=== tier "${args.tier}": @${pass.devices}-devices, ${pass.workers} worker(s), ` +
-            `${pass.devices * pass.workers} simulator(s) ===`
-        );
-
-        const code = await runPlaywright(
-          [
-            'playwright',
-            'test',
-            '--grep',
-            grep,
-            // An empty pass is not a failure: an extra --grep can legitimately clear one device
-            // class while the others still have work to do.
-            '--pass-with-no-tests',
-            ...args.passthrough,
-          ],
-          {
-            ...childEnv,
-            DEVICES_PER_TEST_COUNT: String(pass.devices),
-            PLAYWRIGHT_WORKERS_COUNT_IOS: String(pass.workers),
-          }
-        );
-        // Deliberately not bailing on the first failure — a regression run is worth completing so
-        // you see every device class, not just up to the first one that broke.
-        results.push({ pass, code });
+  return {
+    env,
+    cleanup: () => {
+      if (args.keep) {
+        printKeepInfo(simulators);
+        return;
       }
-
-      printTierSummary(args.tier, results);
-      cleanup();
-      process.exit(results.some(r => r.code !== 0) ? 1 : 0);
-    }
-
-    const code = await runPlaywright(
-      ['playwright', 'test', '--grep', args.grep, ...args.passthrough],
-      childEnv
-    );
-    cleanup();
-    // Preserve the child's exit status so CI/other callers see the real result.
-    process.exit(code);
-  } catch (err) {
-    console.error('Failed to start Playwright:', err);
-    cleanup();
-    process.exit(1);
-  }
+      console.log('\nDeleting temporary simulators...');
+      const deleted = deleteSimulators(simulators.map(s => s.udid));
+      console.log(`✓ Deleted ${deleted} simulator(s)`);
+    },
+  };
 }
 
-void main();
+void runParallelSuite<ParsedArgs>(
+  {
+    platform: 'ios',
+    deviceNoun: 'simulator',
+    defaultGrep: DEFAULT_GREP,
+    workersEnvVar: 'PLAYWRIGHT_WORKERS_COUNT_IOS',
+    maxDevices: MAX_SIMULATORS,
+    tiers: PARALLEL_TIERS,
+    tierNames: PARALLEL_TIER_NAMES,
+    tiersPreamble: 'Available tiers (see run/constants/parallelism.ts for the measurements):',
+    defaults: {
+      workers: 2,
+      devicesPerWorker: 2,
+      grep: DEFAULT_GREP,
+      keep: false,
+      listTiers: false,
+      explicitPools: false,
+      passthrough: [],
+    },
+    extraFlags: {
+      boolean: { '--keep': args => void (args.keep = true) },
+      value: { '--runtime': (args, value) => void (args.runtime = value) },
+    },
+    prepareDevices: createPool,
+  },
+  process.argv.slice(2)
+);
